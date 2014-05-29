@@ -1,0 +1,18 @@
+#!wing
+#!version=5.0
+##################################################################
+# Wing IDE project file                                          #
+##################################################################
+[project attributes]
+proj.directory-list = [{'dirloc': loc('.'),
+                        'excludes': (),
+                        'filter': '*',
+                        'include_hidden': False,
+                        'recursive': True,
+                        'watch_for_changes': True}]
+proj.file-type = 'shared'
+proj.launch-config = {loc('../../../../usr/local/bin/old_dev_appserver.py'): (''\
+        'project',
+        (u'.\n',
+         ''))}
+proj.main-file = loc('../../../../usr/local/bin/old_dev_appserver.py')
