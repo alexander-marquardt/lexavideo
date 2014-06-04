@@ -1,3 +1,10 @@
+/*
+ *  Copyright (c) 2014 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+ */
 var RTCPeerConnection = null;
 var getUserMedia = null;
 var attachMediaStream = null;
@@ -13,7 +20,7 @@ function trace(text) {
   console.log((performance.now() / 1000).toFixed(3) + ": " + text);
 }
 function maybeFixConfiguration(pcConfig) {
-  if (pcConfig == null) {
+  if (!pcConfig) {
     return;
   }
   for (var i = 0; i < pcConfig.iceServers.length; i++) {
@@ -107,24 +114,18 @@ if (navigator.mozGetUserMedia) {
     to.play();
   };
 
-  // Fake get{Video,Audio}Tracks
-  if (!MediaStream.prototype.getVideoTracks) {
-    MediaStream.prototype.getVideoTracks = function() {
-      return [];
-    };
-  }
-
-  if (!MediaStream.prototype.getAudioTracks) {
-    MediaStream.prototype.getAudioTracks = function() {
-      return [];
-    };
-  }
 } else if (navigator.webkitGetUserMedia) {
   console.log("This appears to be Chrome");
 
   webrtcDetectedBrowser = "chrome";
-  webrtcDetectedVersion =
-         parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2], 10);
+  // Temporary fix until crbug/374263 is fixed.
+  // Setting Chrome version to 999, if version is unavailable.
+  var result = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+  if (result !== null) {
+    webrtcDetectedVersion = parseInt(result[2], 10);
+  } else {
+    webrtcDetectedVersion = 999;
+  }
 
   // Creates iceServer from the url for Chrome M33 and earlier.
   createIceServer = function(url, username, password) {
