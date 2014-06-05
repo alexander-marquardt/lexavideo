@@ -115,7 +115,7 @@ def on_message(room, user, message):
   client_id = make_client_id(room, user)
   if room.is_connected(user):
     channel.send_message(client_id, message)
-    logging.info('Delivered message to user ' + user)
+    logging.info('Delivered message to user ' + user +":\n" + message)
   else:
     new_message = Message(client_id = client_id, msg = message)
     new_message.put()
@@ -273,8 +273,10 @@ def connect_user_to_room(room_key, user):
 
 class ConnectPage(webapp2.RequestHandler):
   def post(self):
+    logging.info("ConnectPage post: %s" % self.request.body)
     key = self.request.get('from')
     room_key, user = key.split('/')
+    logging.info("ConnectPage room_key = %s user = %s\n" %(room_key, user))
     with LOCK:
       room = connect_user_to_room(room_key, user)
       if room and room.has_user(user):
@@ -301,6 +303,7 @@ class DisconnectPage(webapp2.RequestHandler):
 class MessagePage(webapp2.RequestHandler):
   def post(self):
     message = self.request.body
+    logging.info("MessagePage message is: %s" % message)
     room_key = self.request.get('r')
     user = self.request.get('u')
     with LOCK:
@@ -401,7 +404,7 @@ class MainPage(webapp2.RequestHandler):
       room_key = generate_random(8)
 
     if not room_key:
-      room_key = generate_random(8)
+      room_key = "room-" + generate_random(3)
       redirect = '/?r=' + room_key
       redirect = append_url_arguments(self.request, redirect)
       self.redirect(redirect)
@@ -409,12 +412,16 @@ class MainPage(webapp2.RequestHandler):
       return
 
     user = None
+    
+    # ARM - initially the "initiator" value was confusing to me -- but I now see that it applies to the
+    # initiator of the call as opposed to the creator of the room (the 2nd person will initiate the cal)
     initiator = 0
     with LOCK:
       room = Room.get_by_key_name(room_key)
       if not room and debug != "full":
         # New room.
-        user = generate_random(8)
+        # user = generate_random(8)
+        user = "CREATOR-" + generate_random(8)
         room = Room(key_name = room_key)
         room.add_user(user)
         if debug != 'loopback':
@@ -422,9 +429,11 @@ class MainPage(webapp2.RequestHandler):
         else:
           room.add_user(user)
           initiator = 1
+        
       elif room and room.get_occupancy() == 1 and debug != 'full':
         # 1 occupant.
-        user = generate_random(8)
+        # user = generate_random(8)
+        user = "JOINER-" + generate_random(8)
         room.add_user(user)
         initiator = 1
       else:

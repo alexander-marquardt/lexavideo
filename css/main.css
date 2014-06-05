@@ -1,7 +1,7 @@
 a:link { color: #FFFFFF; }
 a:visited {color: #FFFFFF; }
 html, body {
-  background-color: #000000;
+  background-color: #FFFFFF;
   height: 100%;
   font-family: Verdana, Arial, Helvetica, sans-serif;
 }
@@ -21,7 +21,7 @@ footer {
   text-align: center;
 }
 #container {
-  background-color: #000000;
+  background-color: #FFF;
   position: absolute;
   height: 100%;
   width: 100%;

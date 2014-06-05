@@ -46,6 +46,7 @@ function initialize() {
   maybeRequestTurn();
 
   // Caller is always ready to create peerConnection.
+  // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
   signalingReady = initiator;
 
   if (mediaConstraints.audio === false &&
@@ -112,10 +113,11 @@ function onTurnResult() {
     if (iceServers !== null) {
       pcConfig.iceServers = pcConfig.iceServers.concat(iceServers);
     }
+    console.log("Got pcConfig.iceServers:" + pcConfig.iceServers + "\n");
   } else {
     messageError('No TURN server; unlikely that media will traverse networks.  '
                  + 'If this persists please report it to '
-                 + 'discuss-webrtc@googlegroups.com.');
+                 + 'info@lexabit.com');
   }
   // If TURN request failed, continue the call with default STUN.
   turnDone = true;
@@ -307,6 +309,7 @@ function onChannelMessage(message) {
       // Early candidates before offer at present.
       msgQueue.unshift(msg);
       // Callee creates PeerConnection
+      // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
       signalingReady = true;
       maybeStart();
     } else {

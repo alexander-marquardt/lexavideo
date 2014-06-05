@@ -32,13 +32,19 @@
   var audio_receive_codec = '{{ audio_receive_codec }}';
   setTimeout(initialize, 1);
 </script>
+
+
 <div id="container" ondblclick="enterFullScreen()">
+    <div id="id-vidochat-logo">
+        <img src="images/videochathub.jpg"/>
+    </div>
   <div id="card">
     <div id="local">
-      <video id="localVideo" autoplay="autoplay" muted="true"/>
+      <video id="localVideo" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
     </div>
     <div id="remote">
       <video id="remoteVideo" autoplay="autoplay">
+          You must update to a newer version of Chrome or Firefox to use video
       </video>
       <div id="mini">
         <video id="miniVideo" autoplay="autoplay" muted="true"/>
