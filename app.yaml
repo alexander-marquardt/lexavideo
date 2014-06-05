@@ -1,5 +1,5 @@
-application: apprtc
-version: 6
+application: virtualvideoapp
+version: 2014-06-05-1345
 runtime: python27
 threadsafe: true
 api_version: 1
@@ -19,7 +19,7 @@ handlers:
 
 - url: /.*
   script: apprtc.app
-  secure: always
+  #secure: always
 
 inbound_services:
 - channel_presence
