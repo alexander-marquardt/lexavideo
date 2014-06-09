@@ -7,7 +7,9 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
+
 module.exports = function (grunt) {
+  var livereload_port = 35729;
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
@@ -35,7 +37,7 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all'],
         options: {
-          livereload: 35729
+          livereload: livereload_port
         }
       },
       jsTest: {
@@ -51,7 +53,7 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          livereload: 35729
+          livereload: livereload_port
         },
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
@@ -59,6 +61,18 @@ module.exports = function (grunt) {
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
+    },
+
+    shell: {
+        killLivereload :{
+            // sometimes a livereload port doesn't get released and so we just make sure that it is killed before
+            // trying to watch on the same port.
+            options: {
+                failOnError: false
+            },
+            command: 'curl localhost:' + livereload_port + '/kill'
+
+        }
     },
 
     // The actual grunt server settings
@@ -386,6 +400,7 @@ module.exports = function (grunt) {
       'concurrent:server',
       'autoprefixer',
       //'connect:livereload',
+      'shell:killLivereload',
       'watch'
     ]);
   });
