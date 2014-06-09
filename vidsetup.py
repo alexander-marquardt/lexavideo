@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, datetime, re, codecs, subprocess
+import os, datetime, re, codecs, subprocess, logging
 
 
 VERSION_ID = "2014-06-06-2145"
@@ -10,9 +10,9 @@ VERSION_ID = "2014-06-06-2145"
 # mask any changes that are made to jss/css between server restarts -- therefore this value 
 # should be set to True for developing/debugging js/css on the local development server (the original
 # js/css files would be accessed instead of the combined/minimized js/css files).
-DEBUGGING_ON_CLIENT = True
+DEBUG_BUILD = True
 
-if  DEBUGGING_ON_CLIENT:
+if  DEBUG_BUILD:
     BASE_STATIC_DIR = "client/app"
     STYLES_STATIC_DIR = "client/.tmp/styles"
 else:    
@@ -21,7 +21,7 @@ else:
     
 
 ENABLE_LIVE_RELOAD = True    
-if not DEBUGGING_ON_CLIENT:
+if not DEBUG_BUILD:
     # We don't want to upload code to the server with live-reload enabled, so turn it off unless we 
     # are debugging code.
     ENABLE_LIVE_RELOAD = False
@@ -66,7 +66,7 @@ def run_grunt(grunt_arg, subprocess_function):
 def run_grunt_jobs():
     
 
-    if DEBUGGING_ON_CLIENT:
+    if DEBUG_BUILD:
         # If we are accessing the non-compressed static files, we are probably developing and therefore want to see updates
         run_grunt('serve', subprocess.Popen)    
     else: 

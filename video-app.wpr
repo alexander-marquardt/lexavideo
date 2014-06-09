@@ -23,12 +23,12 @@ proj.directory-list = [{'dirloc': loc('.'),
                         'recursive': True,
                         'watch_for_changes': True}]
 proj.file-type = 'shared'
-proj.launch-config = {loc('../../../../usr/local/bin/dev_appserver.py'): ('p'\
-        'roject',
-        (u'. --host 10.211.55.2 --port 8000',
-         '')),
-                      loc('../../../../usr/local/bin/old_dev_appserver.py'): (''\
+proj.launch-config = {loc('../../../../usr/local/bin/old_dev_appserver.py'): (''\
         'project',
-        (u'--address=10.211.55.2 --port=8000  . ',
+        (u' . ',
+         '')),
+                      loc('../../../../usr/local/google_appengine/old_dev_appserver.py'): (''\
+        'project',
+        (u'.',
          ''))}
-proj.main-file = loc('../../../../usr/local/bin/old_dev_appserver.py')
+proj.main-file = loc('run_app.py')
