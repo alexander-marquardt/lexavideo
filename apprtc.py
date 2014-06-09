@@ -22,7 +22,8 @@ class MainPage(webapp2.RequestHandler):
   """The main UI page, renders the 'index.html' template."""
   def get(self):
 
-    template_values = {}
+    template_values = {'DEBUGGING_ON_CLIENT' : vidsetup.DEBUGGING_ON_CLIENT,
+                       'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD}
     target_page = 'index.html'
     template = jinja_environment.get_template(target_page)
     self.response.out.write(template.render(template_values))
