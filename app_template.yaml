@@ -1,0 +1,46 @@
+application: virtualvideoapp
+version: VERSION_ID
+runtime: python27
+threadsafe: true
+api_version: 1
+
+handlers:
+
+- url: /views
+  static_dir: BASE_STATIC_DIR/views
+
+- url: /images
+  static_dir: BASE_STATIC_DIR/images
+
+- url: /scripts
+  static_dir: BASE_STATIC_DIR/scripts
+
+- url: /styles
+  static_dir: STYLES_STATIC_DIR
+  
+- url: /bower_components
+  static_dir: BASE_STATIC_DIR/bower_components
+
+- url: /.*
+  script: apprtc.app
+  #secure: always
+
+inbound_services:
+- channel_presence
+
+libraries:
+- name: jinja2
+  version: latest
+
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.swp$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^client/node_modules/.*
+- ^client/.*\.json$
+- ^client/test/.*
+- ^client/Gruntfile\.js
