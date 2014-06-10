@@ -20,7 +20,7 @@ else:
     STYLES_STATIC_DIR = "client/dist/styles"
     
 
-ENABLE_LIVE_RELOAD = True    
+ENABLE_LIVE_RELOAD = False    
 if not DEBUG_BUILD:
     # We don't want to upload code to the server with live-reload enabled, so turn it off unless we 
     # are debugging code.

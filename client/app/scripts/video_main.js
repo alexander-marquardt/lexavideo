@@ -1,10 +1,92 @@
+
+// declare functions that are called before they are defined
+var openChannel;
+var maybeRequestTurn;
+var onTurnResult;
+var resetStatus;
+var doGetUserMedia;
+var maybeStart;
+var setStatus;
+var doCall;
+var calleeStart;
+var mergeConstraints;
+var setLocalAndSendMessage;
+var sendMessage;
+var processSignalingMessage;
+var onAddIceCandidateSuccess;
+var onAddIceCandidateError;
+var onChannelOpened;
+var onChannelMessage;
+var onChannelError;
+var onChannelClosed;
+var messageError;
+var onUserMediaSuccess;
+var onUserMediaError;
+var onCreateSessionDescriptionError;
+var onSetSessionDescriptionSuccess;
+var onSetSessionDescriptionError;
+var iceCandidateType;
+var onIceCandidate;
+var onRemoteStreamAdded;
+var onSignalingStateChanged;
+var onIceConnectionStateChanged;
+var onRemoteStreamRemoved;
+var onRemoteHangup;
+var stop;
+var waitForRemoteVideo;
+var transitionToActive;
+var transitionToWaiting;
+var transitionToDone;
+var noteIceCandidate;
+var updateInfoDiv;
+var showInfoDiv;
+var maybePreferAudioSendCodec;
+var maybePreferAudioReceiveCodec;
+var preferAudioCodec;
+var addStereo;
+var extractSdp;
+var setDefaultCodec;
+var removeCN;
+
+// define externally defined variables so that jshint doesn't give warnings
+/* global alert */
+/* global errorMessages */
+/* global roomKey */
+/* global mediaConstraints */
+/* global initiator */
+/* global goog */
+/* global turnUrl */
+/* global pcConfig */
+/* global createIceServers */
+/* global getUserMedia */
+/* global roomLink */
+/* global RTCPeerConnection */
+/* global pcConstraints */
+/* global channelToken */
+/* global offerConstraints */
+/* global RTCSessionDescription */
+/* global stereo */
+/* global me */
+/* global RTCIceCandidate */
+/* global attachMediaStream */
+/* global reattachMediaStream */
+/* global audioSendCodec */
+/* global audioReceiveCodec */
+
+
+/* exported initiator */
+/* exported initialize */
+/* exported onHangup */
+/* exported enterFullScreen */
+
+// define variables
 var localVideo;
 var miniVideo;
 var remoteVideo;
+var videoTracks;
 var hasLocalStream;
 var localStream;
 var remoteStream;
-var channel;
 var pc;
 var socket;
 var xmlhttp;
@@ -13,6 +95,9 @@ var turnDone = false;
 var channelReady = false;
 var signalingReady = false;
 var msgQueue = [];
+var containerDiv;
+var cardElem;
+
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {'mandatory': {
                       'OfferToReceiveAudio': true,
@@ -24,6 +109,7 @@ var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 var infoDivErrors = [];
 
 function initialize() {
+  var i;
   if (errorMessages.length > 0) {
     for (i = 0; i < errorMessages.length; ++i) {
       window.alert(errorMessages[i]);
@@ -32,7 +118,7 @@ function initialize() {
   }
 
   console.log('Initializing; room=' + roomKey + '.');
-  card = document.getElementById('card');
+  cardElem = document.getElementById('card');
   localVideo = document.getElementById('localVideo');
   // Reset localVideo display to center.
   localVideo.addEventListener('loadedmetadata', function(){
@@ -59,7 +145,7 @@ function initialize() {
   }
 }
 
-function openChannel() {
+openChannel = function() {
   console.log('Opening channel.');
   var channel = new goog.appengine.Channel(channelToken);
   var handler = {
@@ -69,11 +155,11 @@ function openChannel() {
     'onclose': onChannelClosed
   };
   socket = channel.open(handler);
-}
+};
 
-function maybeRequestTurn() {
+maybeRequestTurn = function() {
   // Allow to skip turn by passing ts=false to apprtc.
-  if (turnUrl == '') {
+  if (turnUrl === '') {
     turnDone = true;
     return;
   }
@@ -100,9 +186,10 @@ function maybeRequestTurn() {
   xmlhttp.send();
 }
 
-function onTurnResult() {
-  if (xmlhttp.readyState !== 4)
+onTurnResult = function() {
+  if (xmlhttp.readyState !== 4) {
     return;
+  }
 
   if (xmlhttp.status === 200) {
     var turnServer = JSON.parse(xmlhttp.responseText);
@@ -113,18 +200,18 @@ function onTurnResult() {
     if (iceServers !== null) {
       pcConfig.iceServers = pcConfig.iceServers.concat(iceServers);
     }
-    console.log("Got pcConfig.iceServers:" + pcConfig.iceServers + "\n");
+    console.log('Got pcConfig.iceServers:' + pcConfig.iceServers + '\n');
   } else {
-    messageError('No TURN server; unlikely that media will traverse networks.  '
-                 + 'If this persists please report it to '
-                 + 'info@lexabit.com');
+    messageError('No TURN server; unlikely that media will traverse networks.  ' +
+                 'If this persists please report it to ' +
+                 'info@lexabit.com');
   }
   // If TURN request failed, continue the call with default STUN.
   turnDone = true;
   maybeStart();
-}
+};
 
-function resetStatus() {
+resetStatus = function() {
   if (!initiator) {
     setStatus('Waiting for someone to join: \
               <a href=' + roomLink + '>' + roomLink + '</a>');
@@ -133,7 +220,7 @@ function resetStatus() {
   }
 }
 
-function doGetUserMedia() {
+var doGetUserMedia = function() {
   // Call into getUserMedia via the polyfill (adapter.js).
   try {
     getUserMedia(mediaConstraints, onUserMediaSuccess,
@@ -144,7 +231,7 @@ function doGetUserMedia() {
     alert('getUserMedia() failed. Is this a WebRTC capable browser?');
     messageError('getUserMedia failed with exception: ' + e.message);
   }
-}
+};
 
 function createPeerConnection() {
   try {
@@ -446,7 +533,7 @@ function waitForRemoteVideo() {
 function transitionToActive() {
   reattachMediaStream(miniVideo, localVideo);
   remoteVideo.style.opacity = 1;
-  card.style.webkitTransform = 'rotateY(180deg)';
+  cardElem.style.webkitTransform = 'rotateY(180deg)';
   setTimeout(function() { localVideo.src = ''; }, 500);
   setTimeout(function() { miniVideo.style.opacity = 1; }, 1000);
   // Reset window display according to the asperio of remote video.
@@ -456,7 +543,7 @@ function transitionToActive() {
 }
 
 function transitionToWaiting() {
-  card.style.webkitTransform = 'rotateY(0deg)';
+  cardElem.style.webkitTransform = 'rotateY(0deg)';
   setTimeout(function() {
                localVideo.src = miniVideo.src;
                miniVideo.src = '';
