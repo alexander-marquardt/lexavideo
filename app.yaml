@@ -18,6 +18,10 @@ handlers:
 - url: /bower_components
   static_dir: client/app/bower_components
 
+- url: /favicon.ico
+  static_files: favicon.ico
+  upload: favicon.ico
+
 - url: /.*
   script: apprtc.app
   #secure: always
