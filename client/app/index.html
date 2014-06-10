@@ -16,17 +16,13 @@
     <!-- the following line is used by grunt-usemin to detect which css it should combine this block into -->    
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/video_main.css" />
     <!-- endbuild -->
 
 
-
     <link rel="canonical" href="{{ room_link }}"/>
-    <link rel="stylesheet" href="styles/video_main.css" />
 
-    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
-    <script src="/scripts/main.js"></script>
-    <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
-    <script src="/scripts/adapter.js"></script>
+
 
   </head>
   <body ng-app="angularBaseApp">
@@ -35,6 +31,9 @@
     <![endif]-->
 
     {% include "views/main.html" %}
+
+    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
@@ -53,6 +52,8 @@
     <![endif]-->
 
     <!-- build:js scripts/vendor.js -->
+
+
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
@@ -78,6 +79,10 @@
     <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/video_main.js"></script>
+    <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
+    <script src="scripts/adapter.js"></script>
+
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/about.js"></script>
@@ -87,6 +92,10 @@
     <script src="//localhost:35729/livereload.js"></script>
     {% endif %}
 
-
+    <script type="text/javascript">
+        angular.element(document).ready(function() {
+            setTimeout(initialize, 1);
+        });
+    </script>
 </body>
 </html>
