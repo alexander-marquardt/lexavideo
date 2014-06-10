@@ -38,3 +38,7 @@ proprietary/
 Regions
 
 client/build_settings.json
+
+# Webstorm related
+.idea
+.idea/*

@@ -9,7 +9,7 @@
 
 
 module.exports = function (grunt) {
-  var livereload_port = 35729;
+  var livereloadPort = 35729;
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
@@ -37,7 +37,7 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all'],
         options: {
-          livereload: livereload_port
+          livereload: livereloadPort
         }
       },
       jsTest: {
@@ -53,7 +53,7 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          livereload: livereload_port
+          livereload: livereloadPort
         },
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
@@ -70,7 +70,7 @@ module.exports = function (grunt) {
             options: {
                 failOnError: false
             },
-            command: 'curl localhost:' + livereload_port + '/kill'
+            command: 'curl localhost:' + livereloadPort + '/kill'
 
         }
     },

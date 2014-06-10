@@ -17,29 +17,24 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+
+
+
+    <link rel="canonical" href="{{ room_link }}"/>
+    <link rel="stylesheet" href="styles/video_main.css" />
+
+    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+    <script src="/scripts/main.js"></script>
+    <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
+    <script src="/scripts/adapter.js"></script>
+
   </head>
   <body ng-app="angularBaseApp">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <!-- Add your site or application content here -->
-    <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a ng-href="#">Home</a></li>
-          <li><a ng-href="#/about">About</a></li>
-          <li><a ng-href="#">Contact</a></li>
-        </ul>
-        <h3 class="text-muted">angularBase</h3>
-      </div>
-
-      <div ng-view=""></div>
-
-      <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-      </div>
-    </div>
+    {% include "views/main.html" %}
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>

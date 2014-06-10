@@ -6,9 +6,6 @@ api_version: 1
 
 handlers:
 
-- url: /views
-  static_dir: client/app/views
-
 - url: /images
   static_dir: client/app/images
 
