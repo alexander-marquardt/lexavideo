@@ -1,5 +1,5 @@
 application: virtualvideoapp
-version: 2014-06-06-2145
+version: 2014-06-09-2310
 runtime: python27
 threadsafe: true
 api_version: 1
