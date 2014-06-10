@@ -319,24 +319,26 @@ setLocalAndSendMessage = function(sessionDescription) {
 };
 
 function setRemote(message) {
+  function onSetRemoteDescriptionSuccess() {
+      console.log("Set remote session description success.");
+      // By now all addstream events for the setRemoteDescription have fired.
+      // So we can know if the peer is sending any stream or is only receiving.
+      if (remoteStream) {
+        waitForRemoteVideo();
+      } else {
+        console.log("Not receiving any stream.");
+        transitionToActive();
+      }
+    };
   // Set Opus in Stereo, if stereo enabled.
-  if (stereo)
+  if (stereo) {
     message.sdp = addStereo(message.sdp);
+  }
   message.sdp = maybePreferAudioSendCodec(message.sdp);
   pc.setRemoteDescription(new RTCSessionDescription(message),
        onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
 
-  function onSetRemoteDescriptionSuccess() {
-    console.log("Set remote session description success.");
-    // By now all addstream events for the setRemoteDescription have fired.
-    // So we can know if the peer is sending any stream or is only receiving.
-    if (remoteStream) {
-      waitForRemoteVideo();
-    } else {
-      console.log("Not receiving any stream.");
-      transitionToActive();
-    }
-  }
+
 }
 
 function sendMessage(message) {
