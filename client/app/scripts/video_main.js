@@ -253,7 +253,7 @@ function createPeerConnection() {
   pc.oniceconnectionstatechange = onIceConnectionStateChanged;
 }
 
-function maybeStart() {
+maybeStart = function() {
   if (!started && signalingReady && channelReady && turnDone &&
       (localStream || !hasLocalStream)) {
     setStatus('Connecting...');
@@ -268,31 +268,33 @@ function maybeStart() {
     }
     started = true;
 
-    if (initiator)
+    if (initiator) {
       doCall();
-    else
+    }
+    else {
       calleeStart();
+    }
   }
-}
+};
 
-function setStatus(state) {
+setStatus = function(state) {
   document.getElementById('status').innerHTML = state;
-}
+};
 
-function doCall() {
+doCall = function() {
   var constraints = mergeConstraints(offerConstraints, sdpConstraints);
   console.log('Sending offer to peer, with constraints: \n' +
               '  \'' + JSON.stringify(constraints) + '\'.')
   pc.createOffer(setLocalAndSendMessage,
                  onCreateSessionDescriptionError, constraints);
-}
+};
 
-function calleeStart() {
+calleeStart = function() {
   // Callee starts to process cached offer and other messages.
   while (msgQueue.length > 0) {
     processSignalingMessage(msgQueue.shift());
   }
-}
+};
 
 function doAnswer() {
   console.log('Sending answer to peer.');
@@ -300,21 +302,21 @@ function doAnswer() {
                   onCreateSessionDescriptionError, sdpConstraints);
 }
 
-function mergeConstraints(cons1, cons2) {
+mergeConstraints = function(cons1, cons2) {
   var merged = cons1;
   for (var name in cons2.mandatory) {
     merged.mandatory[name] = cons2.mandatory[name];
   }
   merged.optional.concat(cons2.optional);
   return merged;
-}
+};
 
-function setLocalAndSendMessage(sessionDescription) {
+setLocalAndSendMessage = function(sessionDescription) {
   sessionDescription.sdp = maybePreferAudioReceiveCodec(sessionDescription.sdp);
   pc.setLocalDescription(sessionDescription,
        onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
   sendMessage(sessionDescription);
-}
+};
 
 function setRemote(message) {
   // Set Opus in Stereo, if stereo enabled.
