@@ -32,7 +32,6 @@
 
     {% include "views/main.html" %}
 
-    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
 
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -51,9 +50,8 @@
     <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
+    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
     <!-- build:js scripts/vendor.js -->
-
-
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
@@ -94,8 +92,11 @@
 
     <script type="text/javascript">
         angular.element(document).ready(function() {
-            setTimeout(initialize, 1);
+            initialize();
         });
     </script>
+
+
+
 </body>
 </html>
