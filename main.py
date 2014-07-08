@@ -22,6 +22,8 @@ import threading
 from google.appengine.api import channel
 from google.appengine.ext import db
 
+from video_src import http_helpers
+
 # We "hack" the directory that jinja looks for the template files so that it is always pointing to
 # the correct location, irregardless of if we are in the debug or production build. 
 jinja_environment = jinja2.Environment(
@@ -498,3 +500,6 @@ app = webapp2.WSGIApplication([
     ('/_ah/channel/connected/', ConnectPage),
     ('/_ah/channel/disconnected/', DisconnectPage)
   ], debug=True)
+
+app.error_handlers[404] = http_helpers.handle_404
+app.error_handlers[500] = http_helpers.handle_500
