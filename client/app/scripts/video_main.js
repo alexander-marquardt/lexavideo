@@ -112,42 +112,44 @@ var cardElem;
 
 angular.module('videoApp', []);
 
-function initialize() {
-  var i;
-  if (errorMessages.length > 0) {
-    for (i = 0; i < errorMessages.length; ++i) {
-      window.alert(errorMessages[i]);
-    }
-    return;
-  }
 
-  console.log('Initializing; room=' + roomKey + '.');
-  cardElem = document.getElementById('card');
-  localVideo = document.getElementById('localVideo');
-  // Reset localVideo display to center.
-  localVideo.addEventListener('loadedmetadata', function(){
-    window.onresize();});
-  miniVideo = document.getElementById('miniVideo');
-  remoteVideo = document.getElementById('remoteVideo');
-  resetStatus();
-  // NOTE: AppRTCClient.java searches & parses this line; update there when
-  // changing here.
-  openChannel();
-  maybeRequestTurn();
+angular.module("videoApp")
+    .run(function() {
+        var i;
+        if (errorMessages.length > 0) {
+            for (i = 0; i < errorMessages.length; ++i) {
+                window.alert(errorMessages[i]);
+            }
+            return;
+        }
 
-  // Caller is always ready to create peerConnection.
-  // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
-  signalingReady = initiator;
+        console.log('Initializing; room=' + roomKey + '.');
+        cardElem = document.getElementById('card');
+        localVideo = document.getElementById('localVideo');
+        // Reset localVideo display to center.
+        localVideo.addEventListener('loadedmetadata', function(){
+            window.onresize();});
+        miniVideo = document.getElementById('miniVideo');
+        remoteVideo = document.getElementById('remoteVideo');
+        resetStatus();
+        // NOTE: AppRTCClient.java searches & parses this line; update there when
+        // changing here.
+        openChannel();
+        maybeRequestTurn();
 
-  if (mediaConstraints.audio === false &&
-      mediaConstraints.video === false) {
-    hasLocalStream = false;
-    maybeStart();
-  } else {
-    hasLocalStream = true;
-    doGetUserMedia();
-  }
-}
+        // Caller is always ready to create peerConnection.
+        // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
+        signalingReady = initiator;
+
+        if (mediaConstraints.audio === false &&
+            mediaConstraints.video === false) {
+            hasLocalStream = false;
+            maybeStart();
+        } else {
+            hasLocalStream = true;
+            doGetUserMedia();
+        }
+    });
 
 openChannel = function() {
   console.log('Opening channel.');
