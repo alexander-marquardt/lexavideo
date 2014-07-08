@@ -10,12 +10,6 @@ sys.path.append("/usr/local/google_appengine")
 # This comes before the dev_appserver call because that call runs infinitely
 vidsetup.customize_files()
 
-if vidsetup.DEBUG_BUILD:
-    from old_dev_appserver import *
-    run_file("/usr/local/google_appengine/old_dev_appserver.py", globals())
-
-else: 
-    from dev_appserver import *
-    _run_file("/usr/local/google_appengine/dev_appserver.py", globals())
-    
+from old_dev_appserver import *
+run_file("/usr/local/google_appengine/old_dev_appserver.py", globals())
 

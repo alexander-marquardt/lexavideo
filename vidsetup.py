@@ -10,7 +10,8 @@ VERSION_ID = "2014-06-09-2310"
 # mask any changes that are made to jss/css between server restarts -- therefore this value 
 # should be set to True for developing/debugging js/css on the local development server (the original
 # js/css files would be accessed instead of the combined/minimized js/css files).
-DEBUG_BUILD = True
+DEBUG_BUILD = False
+RUN_GRUNT = False
 
 if  DEBUG_BUILD:
     BASE_STATIC_DIR = "client/app"
@@ -65,14 +66,14 @@ def run_grunt(grunt_arg, subprocess_function):
     
 def run_grunt_jobs():
     
-
-    if DEBUG_BUILD:
-        # If we are accessing the non-compressed static files, we are probably developing and therefore want to see updates
-        run_grunt('serve', subprocess.Popen)    
-    else: 
-        # only run the grunt build scripts if we are currently accessing the compressed static files (ie. client/dist instead of client/app). 
-        # Otherwise, we are directly accessing/debugging the source static files, and minimizing would serve no purpose.
-        run_grunt('build', subprocess.call)
+    if RUN_GRUNT:
+        if DEBUG_BUILD:
+            # If we are accessing the non-compressed static files, we are probably developing and therefore want to see updates
+            run_grunt('serve', subprocess.Popen)    
+        else: 
+            # only run the grunt build scripts if we are currently accessing the compressed static files (ie. client/dist instead of client/app). 
+            # Otherwise, we are directly accessing/debugging the source static files, and minimizing would serve no purpose.
+            run_grunt('build', subprocess.call)
 
         
 def customize_files():
