@@ -467,7 +467,7 @@ class MainPage(webapp2.RequestHandler):
     media_constraints = make_media_stream_constraints(audio, video)
     template_values = {'error_messages': error_messages,
                        'token': token,
-                       'me': user,
+                       'my_username': user,
                        'room_key': room_key,
                        'room_link': room_link,
                        'call_initiator': call_initiator,

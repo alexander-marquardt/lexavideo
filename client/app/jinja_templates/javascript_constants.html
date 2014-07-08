@@ -1,7 +1,7 @@
 <script type="text/javascript">
   var errorMessages = {{ error_messages }};
   var channelToken = '{{ token }}';
-  var me = '{{ me }}';
+  var me = '{{ my_username }}';
   var roomKey = '{{ room_key }}';
   var roomLink = '{{ room_link }}';
   var initiator = {{ call_initiator }};
@@ -15,13 +15,19 @@
   var audioReceiveCodec = '{{ audio_receive_codec }}';
 
 
-    /* jshint ignore: start */
-    angular.module("videoApp.mainConstants", [])
-        .constant("errorMessages", errorMessages)
-        .constant("channelToken", channelToken)
-        .constant("me", me)
-        .constant("roomKey", roomKey)
-        .constant("initiator", initiator);
-    /* jshint ignore: end */
+    angular.module('videoApp.mainConstants', [])
+            .constant('errorMessagesConstant', errorMessages)
+            .constant('channelToken', channelToken)
+            .constant('myUsername', me)
+            .constant('roomKey', roomKey)
+            .constant('initiator', initiator)
+            .constant('pcConfig', pcConfig)
+            .constant('pcConstraints', pcConstraints)
+            .constant('offerConstraints', offerConstraints)
+            .constant('mediaConstraints', mediaConstraints)
+            .constant('turnUrl', turnUrl)
+            .constant('stereo', stereo)
+            .constant('audioSendCodec', audioSendCodec)
+            .constant('audioReceiveCodec', audioReceiveCodec);
 
 </script>

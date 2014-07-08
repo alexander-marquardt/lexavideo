@@ -1,9 +1,9 @@
 /**
  * Created by alexandermarquardt on 2014-07-08.
  */
-"use strict";
+'use strict';
 
 angular.module('videoApp')
-.controller('mainVideoCtrl', function ($scope) {
+.controller('mainVideoCtrl', function () {
 
 });

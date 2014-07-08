@@ -1,15 +1,12 @@
 'use strict';
 
-angular.module('videoApp', ['videoApp.mainConstants']);
+var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 
 
 
 
 // declare functions that are called before they are defined
-var openChannel;
-var maybeRequestTurn;
-var onTurnResult;
 var resetStatus;
 var doGetUserMedia;
 var maybeStart;
@@ -57,7 +54,6 @@ var removeCN;
 
 // define externally defined variables so that jshint doesn't give warnings
 /* global alert */
-/* global errorMessages */
 /* global roomKey */
 /* global mediaConstraints */
 /* global initiator */
@@ -116,17 +112,17 @@ var infoDivErrors = [];
 var cardElem;
 
 
-angular.module("videoApp")
-    .run(function() {
+videoApp
+    .run(function($log, errorMessagesConstant, channelService, turnService) {
         var i;
-        if (errorMessages.length > 0) {
-            for (i = 0; i < errorMessages.length; ++i) {
-                window.alert(errorMessages[i]);
+        if (errorMessagesConstant.length > 0) {
+            for (i = 0; i < errorMessagesConstant.length; ++i) {
+                window.alert(errorMessagesConstant[i]);
             }
             return;
         }
 
-        console.log('Initializing; room=' + roomKey + '.');
+        $log.log('Initializing; room=' + roomKey + '.');
         cardElem = document.getElementById('card');
         localVideo = document.getElementById('localVideo');
         // Reset localVideo display to center.
@@ -137,8 +133,8 @@ angular.module("videoApp")
         resetStatus();
         // NOTE: AppRTCClient.java searches & parses this line; update there when
         // changing here.
-        openChannel();
-        maybeRequestTurn();
+        channelService.openChannel();
+        turnService.maybeRequestTurn();
 
         // Caller is always ready to create peerConnection.
         // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
@@ -154,71 +150,81 @@ angular.module("videoApp")
         }
     });
 
-openChannel = function() {
-  console.log('Opening channel.');
-  var channel = new goog.appengine.Channel(channelToken);
-  var handler = {
-    'onopen': onChannelOpened,
-    'onmessage': onChannelMessage,
-    'onerror': onChannelError,
-    'onclose': onChannelClosed
-  };
-  socket = channel.open(handler);
-};
+videoApp.factory('channelService', function($log) {
+    var handler = {
+      'onopen': onChannelOpened,
+      'onmessage': onChannelMessage,
+      'onerror': onChannelError,
+      'onclose': onChannelClosed
+    };
 
-maybeRequestTurn = function() {
-  // Allow to skip turn by passing ts=false to apprtc.
-  if (turnUrl === '') {
-    turnDone = true;
-    return;
-  }
+    return {
+        openChannel: function() {
+            $log.log('Opening channel.');
+            var channel = new goog.appengine.Channel(channelToken);
+            socket = channel.open(handler);
+        }
+    };
+});
 
-  for (var i = 0, len = pcConfig.iceServers.length; i < len; i++) {
-    if (pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
-      turnDone = true;
-      return;
-    }
-  }
+videoApp.factory('turnService', function($log) {
 
-  var currentDomain = document.domain;
-  if (currentDomain.search('localhost') === -1 &&
-      currentDomain.search('apprtc') === -1) {
-    // Not authorized domain. Try with default STUN instead.
-    turnDone = true;
-    return;
-  }
+    return {
+        maybeRequestTurn : function() {
+            // Allow to skip turn by passing ts=false to apprtc.
+            if (turnUrl === '') {
+                turnDone = true;
+                return;
+            }
 
-  // No TURN server. Get one from computeengineondemand.appspot.com.
-  xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = onTurnResult;
-  xmlhttp.open('GET', turnUrl, true);
-  xmlhttp.send();
-};
+            for (var i = 0, len = pcConfig.iceServers.length; i < len; i++) {
+                if (pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
+                    turnDone = true;
+                    return;
+                }
+            }
 
-onTurnResult = function() {
-  if (xmlhttp.readyState !== 4) {
-    return;
-  }
+            var currentDomain = document.domain;
+            if (currentDomain.search('localhost') === -1 &&
+                currentDomain.search('apprtc') === -1) {
+                // Not authorized domain. Try with default STUN instead.
+                turnDone = true;
+                return;
+            }
 
-  if (xmlhttp.status === 200) {
-    var turnServer = JSON.parse(xmlhttp.responseText);
-    // Create turnUris using the polyfill (adapter.js).
-    var iceServers = createIceServers(turnServer.uris,
-                                      turnServer.username,
-                                      turnServer.password);
-    if (iceServers !== null) {
-      pcConfig.iceServers = pcConfig.iceServers.concat(iceServers);
-    }
-    console.log('Got pcConfig.iceServers:' + pcConfig.iceServers + '\n');
-  } else {
-    messageError('No TURN server; unlikely that media will traverse networks.  ' +
-                 'If this persists please report it to ' +
-                 'info@lexabit.com');
-  }
-  // If TURN request failed, continue the call with default STUN.
-  turnDone = true;
-  maybeStart();
-};
+            // No TURN server. Get one from computeengineondemand.appspot.com.
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = this.onTurnResult;
+            xmlhttp.open('GET', turnUrl, true);
+            xmlhttp.send();
+        },
+        onTurnResult : function() {
+          if (xmlhttp.readyState !== 4) {
+            return;
+          }
+
+          if (xmlhttp.status === 200) {
+            var turnServer = JSON.parse(xmlhttp.responseText);
+            // Create turnUris using the polyfill (adapter.js).
+            var iceServers = createIceServers(turnServer.uris,
+                                              turnServer.username,
+                                              turnServer.password);
+            if (iceServers !== null) {
+              pcConfig.iceServers = pcConfig.iceServers.concat(iceServers);
+            }
+            $log.log('Got pcConfig.iceServers:' + pcConfig.iceServers + '\n');
+          } else {
+            messageError('No TURN server; unlikely that media will traverse networks.  ' +
+                         'If this persists please report it to ' +
+                         'info@lexabit.com');
+          }
+          // If TURN request failed, continue the call with default STUN.
+          turnDone = true;
+          maybeStart();
+        }
+    };
+});
+
 
 resetStatus = function() {
   if (!initiator) {
@@ -337,7 +343,8 @@ function setRemote(message) {
        console.log('Not receiving any stream.');
        transitionToActive();
      }
-  };
+  }
+
   // Set Opus in Stereo, if stereo enabled.
   if (stereo) {
     message.sdp = addStereo(message.sdp);
@@ -519,7 +526,7 @@ function onHangup() {
 
 onRemoteHangup = function() {
   console.log('Session terminated.');
-  initiator = 0;
+  initiator = 0;   // jshint ignore:line
   transitionToWaiting();
   stop();
 };
