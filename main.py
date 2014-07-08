@@ -8,7 +8,7 @@ This module demonstrates the WebRTC API by implementing a simple video chat app.
 """
 
 
-import vidsetup
+import setup_video_project
 
 import cgi
 import logging
@@ -22,10 +22,12 @@ import threading
 from google.appengine.api import channel
 from google.appengine.ext import db
 
+from video_src import http_helpers, status_reporting
+
 # We "hack" the directory that jinja looks for the template files so that it is always pointing to
 # the correct location, irregardless of if we are in the debug or production build. 
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/" + vidsetup.BASE_STATIC_DIR))
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/" + setup_video_project.BASE_STATIC_DIR))
 
 
 # Lock for syncing DB operation in concurrent requests handling.
@@ -477,7 +479,7 @@ class MainPage(webapp2.RequestHandler):
                        'stereo': stereo,
                        'audio_send_codec': audio_send_codec,
                        'audio_receive_codec': audio_receive_codec,
-                       'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD
+                       'ENABLE_LIVE_RELOAD' : setup_video_project.ENABLE_LIVE_RELOAD
                       }
     if unittest:
       target_page = 'test/test_' + unittest + '.html'
@@ -498,3 +500,7 @@ app = webapp2.WSGIApplication([
     ('/_ah/channel/connected/', ConnectPage),
     ('/_ah/channel/disconnected/', DisconnectPage)
   ], debug=True)
+
+
+app.error_handlers[404] = http_helpers.handle_404
+app.error_handlers[500] = http_helpers.handle_500

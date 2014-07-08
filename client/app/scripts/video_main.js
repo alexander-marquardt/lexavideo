@@ -329,7 +329,7 @@ function setRemote(message) {
        console.log('Not receiving any stream.');
        transitionToActive();
      }
-  };
+  }
   // Set Opus in Stereo, if stereo enabled.
   if (stereo) {
     message.sdp = addStereo(message.sdp);
@@ -511,7 +511,7 @@ function onHangup() {
 
 onRemoteHangup = function() {
   console.log('Session terminated.');
-  initiator = 0;
+  initiator = 0;  //jshint ignore:line
   transitionToWaiting();
   stop();
 };

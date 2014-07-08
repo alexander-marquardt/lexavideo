@@ -26,7 +26,7 @@ handlers:
   upload: favicon.ico
 
 - url: /.*
-  script: apprtc.app
+  script: main.app
   #secure: always
 
 inbound_services:

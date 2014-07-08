@@ -19,6 +19,9 @@ else:
     BASE_STATIC_DIR = "client/dist"
     STYLES_STATIC_DIR = "client/dist/styles"
     
+# Sometimes we want to run "grunt serve" from a seperate shell since we may stop and restart the debugger numerous times
+# Might consider passing this asa command-line option in the future.
+RUN_GRUNT = False
 
 ENABLE_LIVE_RELOAD = False    
 if not DEBUG_BUILD:
@@ -57,10 +60,12 @@ def generate_app_yaml():
 def run_grunt(grunt_arg, subprocess_function):
 
     os.chdir("client")
+    print "Grunt runner: Switched directory to: %s" % os.getcwd()
     pargs = ['grunt', grunt_arg]
+    print "Starting %s" % pargs
     process = subprocess_function(pargs,  stderr=subprocess.STDOUT)    
     os.chdir("..")
-    print "Switched directory back to: %s" % os.getcwd()
+    print "Grunt runner: Switched directory back to: %s" % os.getcwd()
     
     
 def run_grunt_jobs():
@@ -84,8 +89,12 @@ def customize_files():
     print "**********************************************************************"
     
     generate_app_yaml()
-    run_grunt_jobs()
-
+    
+    if RUN_GRUNT:
+        print "**********************************************************************"
+        print "Running Grunt tasks"
+        run_grunt_jobs()
+        print "**********************************************************************"
         
 
 if __name__ == "__main__":
