@@ -109,6 +109,9 @@ var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 var infoDivErrors = [];
 var cardElem;
 
+
+angular.module('videoApp', []);
+
 function initialize() {
   var i;
   if (errorMessages.length > 0) {
