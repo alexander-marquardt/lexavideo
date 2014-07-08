@@ -7,8 +7,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 
 // declare functions that are called before they are defined
-var resetStatus;
-var doGetUserMedia;
 var maybeStart;
 var setStatus;
 var doCall;
@@ -112,7 +110,7 @@ var cardElem;
 
 
 videoApp
-    .run(function($log, errorMessagesConstant, channelService, turnService) {
+    .run(function($log, errorMessagesConstant, channelService, turnService, peerService, mediaService) {
         var i;
         if (errorMessagesConstant.length > 0) {
             for (i = 0; i < errorMessagesConstant.length; ++i) {
@@ -129,7 +127,7 @@ videoApp
             window.onresize();});
         miniVideo = document.getElementById('miniVideo');
         remoteVideo = document.getElementById('remoteVideo');
-        resetStatus();
+        peerService.resetStatus();
         // NOTE: AppRTCClient.java searches & parses this line; update there when
         // changing here.
         channelService.openChannel();
@@ -145,7 +143,7 @@ videoApp
             maybeStart();
         } else {
             hasLocalStream = true;
-            doGetUserMedia();
+            mediaService.doGetUserMedia();
         }
     });
 
@@ -230,26 +228,39 @@ videoApp.factory('turnService', function($log) {
 });
 
 
-resetStatus = function() {
-  if (!initiator) {
-    setStatus('Waiting for someone to join:  <a href=' + roomLink + '>' + roomLink + '</a>');
-  } else {
-    setStatus('Initializing...');
-  }
-};
+videoApp.factory('peerService', function() {
 
-doGetUserMedia = function() {
-  // Call into getUserMedia via the polyfill (adapter.js).
-  try {
-    getUserMedia(mediaConstraints, onUserMediaSuccess,
-                 onUserMediaError);
-    console.log('Requested access to local media with mediaConstraints:\n' +
-                '  \'' + JSON.stringify(mediaConstraints) + '\'');
-  } catch (e) {
-    alert('getUserMedia() failed. Is this a WebRTC capable browser?');
-    messageError('getUserMedia failed with exception: ' + e.message);
-  }
-};
+    return {
+        resetStatus : function() {
+          if (!initiator) {
+            setStatus('Waiting for someone to join:  <a href=' + roomLink + '>' + roomLink + '</a>');
+          } else {
+            setStatus('Initializing...');
+          }
+        }
+    };
+});
+
+videoApp.factory('mediaService', function() {
+
+    return  {
+        doGetUserMedia  : function() {
+            // Call into getUserMedia via the polyfill (adapter.js).
+            try {
+                getUserMedia(mediaConstraints, onUserMediaSuccess,
+                    onUserMediaError);
+                console.log('Requested access to local media with mediaConstraints:\n' +
+                    '  \'' + JSON.stringify(mediaConstraints) + '\'');
+            } catch (e) {
+                alert('getUserMedia() failed. Is this a WebRTC capable browser?');
+                messageError('getUserMedia failed with exception: ' + e.message);
+            }
+        }
+    };
+});
+
+
+
 
 function createPeerConnection() {
   try {
@@ -581,7 +592,10 @@ transitionToWaiting = function() {
             }, 500);
   miniVideo.style.opacity = 0;
   remoteVideo.style.opacity = 0;
-  resetStatus();
+
+    // this is temporary hack while we transition to angular
+    var injector = angular.element($('#container')).injector();
+    injector.get('peerService').resetStatus();
 };
 
 transitionToDone = function() {
