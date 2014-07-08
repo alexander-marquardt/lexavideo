@@ -94,7 +94,6 @@ var pc;
 var socket;
 var xmlhttp;
 var started = false;
-var turnDone = false;
 var channelReady = false;
 var signalingReady = false;
 var msgQueue = [];
@@ -169,7 +168,12 @@ videoApp.factory('channelService', function($log) {
 
 videoApp.factory('turnService', function($log) {
 
+    var turnDone = false;
+
     return {
+        getTurnDone: function () {
+            return turnDone;
+        },
         maybeRequestTurn : function() {
             // Allow to skip turn by passing ts=false to apprtc.
             if (turnUrl === '') {
@@ -268,27 +272,32 @@ function createPeerConnection() {
 }
 
 maybeStart = function() {
-  if (!started && signalingReady && channelReady && turnDone &&
-      (localStream || !hasLocalStream)) {
-    setStatus('Connecting...');
-    console.log('Creating PeerConnection.');
-    createPeerConnection();
 
-    if (hasLocalStream) {
-      console.log('Adding local stream.');
-      pc.addStream(localStream);
-    } else {
-      console.log('Not sending any stream.');
-    }
-    started = true;
+    // this is temporary hack while we transition to angular
+    var injector = angular.element($('#container')).injector();
+    var turnDone = injector.get('turnService').getTurnDone();
 
-    if (initiator) {
-      doCall();
+    if (!started && signalingReady && channelReady && turnDone &&
+        (localStream || !hasLocalStream)) {
+        setStatus('Connecting...');
+        console.log('Creating PeerConnection.');
+        createPeerConnection();
+
+        if (hasLocalStream) {
+            console.log('Adding local stream.');
+            pc.addStream(localStream);
+        } else {
+            console.log('Not sending any stream.');
+        }
+        started = true;
+
+        if (initiator) {
+            doCall();
+        }
+        else {
+            calleeStart();
+        }
     }
-    else {
-      calleeStart();
-    }
-  }
 };
 
 setStatus = function(state) {
