@@ -1,0 +1,17 @@
+<script type="text/javascript">
+  var errorMessages = {{ error_messages }};
+  var channelToken = '{{ token }}';
+  var me = '{{ me }}';
+  var roomKey = '{{ room_key }}';
+  var roomLink = '{{ room_link }}';
+  var initiator = {{ call_initiator }};
+  var pcConfig = {{ pc_config | safe }};
+  var pcConstraints = {{ pc_constraints | safe }};
+  var offerConstraints = {{ offer_constraints | safe }};
+  var mediaConstraints = {{ media_constraints | safe }};
+  var turnUrl = '{{ turn_url }}';
+  var stereo = {{ stereo }};
+  var audioSendCodec = '{{ audio_send_codec }}';
+  var audioReceiveCodec = '{{ audio_receive_codec }}';
+
+</script>
