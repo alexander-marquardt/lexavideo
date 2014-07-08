@@ -6,6 +6,9 @@ api_version: 1
 
 handlers:
 
+- url: /views
+  static_dir: BASE_STATIC_DIR/views
+
 - url: /images
   static_dir: BASE_STATIC_DIR/images
 
@@ -23,7 +26,7 @@ handlers:
   upload: favicon.ico
 
 - url: /.*
-  script: apprtc.app
+  script: main.app
   #secure: always
 
 inbound_services:
