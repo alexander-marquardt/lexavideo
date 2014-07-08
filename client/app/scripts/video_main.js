@@ -1,5 +1,11 @@
 'use strict';
 
+angular.module('videoApp', ['videoApp.mainConstants']);
+
+
+
+
+
 // declare functions that are called before they are defined
 var openChannel;
 var maybeRequestTurn;
@@ -108,9 +114,6 @@ var isAudioMuted = false;
 var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 var infoDivErrors = [];
 var cardElem;
-
-
-angular.module('videoApp', []);
 
 
 angular.module("videoApp")
