@@ -14,6 +14,9 @@ handlers:
 
 - url: /scripts
   static_dir: BASE_STATIC_DIR/scripts
+  
+- url: /unminified_scripts
+  static_dir: client/app/scripts
 
 - url: /styles
   static_dir: STYLES_STATIC_DIR

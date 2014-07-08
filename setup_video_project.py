@@ -9,8 +9,8 @@ VERSION_ID = "2014-06-09-2310"
 # and css files. This combining/minimizing is only done on upload or on  development server initialization, so this will
 # mask any changes that are made to jss/css between server restarts -- therefore this value 
 # should be set to True for developing/debugging js/css on the local development server (the original
-# js/css files would be accessed instead of the combined/minimized js/css files).
-DEBUG_BUILD = True
+# js/css files will therefore be accessed instead of the combined/minimized js/css files).
+DEBUG_BUILD = False
 
 if  DEBUG_BUILD:
     BASE_STATIC_DIR = "client/app"

@@ -4,7 +4,7 @@
 
 
 /* jshint ignore: start */
-angular.module("videoApp")
+angular.module("videoApp.constants")
     .constant("errorMessages", errorMessages)
     .constant("channelToken", channelToken)
     .constant("me", me)

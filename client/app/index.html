@@ -51,10 +51,11 @@
     <![endif]-->
 
     <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+
+
     <!-- build:js scripts/vendor.js -->
 
     <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
-    <script src="scripts/adapter.js"></script>
 
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -80,12 +81,17 @@
     <!-- endbower -->
     <!-- endbuild -->
 
+    {% include "jinja_templates/javascript_constants.html" %}
+
+    <script src="unminified_scripts/adapter.js"></script>
+
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script>
         angular.module("videoApp", ['videoApp.services']);
     </script>
-    <script src="scripts/ng-services/video-app-constants.js"></script>
-    <script src="scripts/ng-controllers/outer-video-controller.js"></script>
+
+    <script src="scripts/ng_services/video_app_constants.js"></script>
+    <script src="scripts/ng_controllers/outer_video_controller.js"></script>
     <script src="scripts/video_main.js"></script>
     <!-- endbuild -->
 
@@ -93,13 +99,6 @@
     <script src="//localhost:35729/livereload.js"></script>
     {% endif %}
 
-    <script type="text/javascript">
-        angular.element(document).ready(function() {
-            var ngInjector = angular.element($('#videoApp')).injector();
-            var initializeService = ngInjector.get('initializeService');
-            initializeService.initialize();
-        });
-    </script>
 
 
 
