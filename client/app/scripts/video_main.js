@@ -7,8 +7,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 
 // declare functions that are called before they are defined
-var doCall;
-var calleeStart;
 var mergeConstraints;
 var setLocalAndSendMessage;
 var sendMessage;
@@ -333,15 +331,39 @@ videoApp.factory('callService', function(turnServiceSupport, peerService, userFe
                 started = true;
 
                 if (initiator) {
-                    doCall();
+                    this.doCall();
                 }
                 else {
-                    calleeStart();
+                    this.calleeStart();
                 }
             }
+        },
+
+        doCall : function() {
+            var constraints = mergeConstraints(offerConstraints, sdpConstraints);
+            console.log('Sending offer to peer, with constraints: \n' +
+                '  \'' + JSON.stringify(constraints) + '\'.');
+            pc.createOffer(setLocalAndSendMessage,
+                onCreateSessionDescriptionError, constraints);
+        },
+
+        calleeStart : function() {
+            // Callee starts to process cached offer and other messages.
+            while (msgQueue.length > 0) {
+                processSignalingMessage(msgQueue.shift());
+            }
+        },
+        doAnswer : function() {
+          console.log('Sending answer to peer.');
+          pc.createAnswer(setLocalAndSendMessage,
+                          onCreateSessionDescriptionError, sdpConstraints);
         }
+
     };
 });
+
+
+
 
 
 videoApp.factory('mediaService', function(callService) {
@@ -394,27 +416,6 @@ videoApp.factory('userFeedbackService', function() {
     };
 });
 
-
-doCall = function() {
-  var constraints = mergeConstraints(offerConstraints, sdpConstraints);
-  console.log('Sending offer to peer, with constraints: \n' +
-              '  \'' + JSON.stringify(constraints) + '\'.');
-  pc.createOffer(setLocalAndSendMessage,
-                 onCreateSessionDescriptionError, constraints);
-};
-
-calleeStart = function() {
-  // Callee starts to process cached offer and other messages.
-  while (msgQueue.length > 0) {
-    processSignalingMessage(msgQueue.shift());
-  }
-};
-
-function doAnswer() {
-  console.log('Sending answer to peer.');
-  pc.createAnswer(setLocalAndSendMessage,
-                  onCreateSessionDescriptionError, sdpConstraints);
-}
 
 mergeConstraints = function(cons1, cons2) {
   var merged = cons1;
@@ -476,7 +477,9 @@ processSignalingMessage = function(message) {
 
   if (message.type === 'offer') {
     setRemote(message);
-    doAnswer();
+      var myinjector = angular.element($('#container')).injector();
+      myinjector.get('callService').doAnswer();
+      
   } else if (message.type === 'answer') {
     setRemote(message);
   } else if (message.type === 'candidate') {
