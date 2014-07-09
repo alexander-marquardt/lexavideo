@@ -13,7 +13,6 @@ var onChannelError;
 var onChannelClosed;
 var onUserMediaSuccess;
 var onUserMediaError;
-var iceCandidateType;
 var onRemoteHangup;
 var stop;
 var waitForRemoteVideo;
@@ -320,13 +319,31 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
         userNotificationService.messageError('Failed to add Ice Candidate: ' + error.toString());
     }
 
+    function iceCandidateType(candidateSDP) {
+        if (candidateSDP.indexOf('typ relay ') >= 0) {
+            return 'TURN';
+        }
+        if (candidateSDP.indexOf('typ srflx ') >= 0) {
+            return 'STUN';
+        }
+        if (candidateSDP.indexOf('typ host ') >= 0) {
+            return 'HOST';
+        }
+        return 'UNKNOWN';
+    }
+
+
+
+
     return {
+
         setLocalAndSendMessage : function(sessionDescription) {
             sessionDescription.sdp = maybePreferAudioReceiveCodec(sessionDescription.sdp);
             pc.setLocalDescription(sessionDescription,
                 onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
             messageService.sendMessage(sessionDescription);
         },
+
 
         processSignalingMessage : function(message) {
             if (!started) {
@@ -350,24 +367,25 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
             } else if (message.type === 'bye') {
                 onRemoteHangup();
             }
+        },
+
+        onIceCandidate : function(event) {
+            if (event.candidate) {
+                messageService.sendMessage({type: 'candidate',
+                    label: event.candidate.sdpMLineIndex,
+                    id: event.candidate.sdpMid,
+                    candidate: event.candidate.candidate});
+                noteIceCandidate('Local', iceCandidateType(event.candidate.candidate));
+            } else {
+                $log.log('End of candidates.');
+            }
         }
     };
 });
 
-videoApp.factory('peerService', function($log, userNotificationService, messageService) {
+videoApp.factory('peerService', function($log, userNotificationService, signallingService) {
 
 
-    function onIceCandidate(event) {
-        if (event.candidate) {
-            messageService.sendMessage({type: 'candidate',
-                label: event.candidate.sdpMLineIndex,
-                id: event.candidate.sdpMid,
-                candidate: event.candidate.candidate});
-            noteIceCandidate('Local', iceCandidateType(event.candidate.candidate));
-        } else {
-            $log.log('End of candidates.');
-        }
-    }
 
     function onRemoteStreamAdded(event) {
         $log.log('Remote stream added.');
@@ -401,7 +419,7 @@ videoApp.factory('peerService', function($log, userNotificationService, messageS
           try {
             // Create an RTCPeerConnection via the polyfill (adapter.js).
             pc = new RTCPeerConnection(pcConfig, pcConstraints);
-            pc.onicecandidate = onIceCandidate;
+            pc.onicecandidate = signallingService.onIceCandidate;
             console.log('Created RTCPeerConnnection with:\n' +
                         '  config: \'' + JSON.stringify(pcConfig) + '\';\n' +
                         '  constraints: \'' + JSON.stringify(pcConstraints) + '\'.');
@@ -552,20 +570,6 @@ videoApp.factory('userNotificationService', function() {
 
 
 
-
-
-iceCandidateType = function(candidateSDP) {
-  if (candidateSDP.indexOf('typ relay ') >= 0) {
-    return 'TURN';
-  }
-  if (candidateSDP.indexOf('typ srflx ') >= 0) {
-    return 'STUN';
-  }
-  if (candidateSDP.indexOf('typ host ') >= 0) {
-    return 'HOST';
-  }
-  return 'UNKNOWN';
-};
 
 
 
