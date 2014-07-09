@@ -7,7 +7,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 
 // declare functions that are called before they are defined
-var setLocalAndSendMessage;
 var sendMessage;
 var processSignalingMessage;
 var onAddIceCandidateSuccess;
@@ -274,6 +273,18 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
     };
 });
 
+videoApp.factory('signallingService', function() {
+
+
+    return {
+        setLocalAndSendMessage : function(sessionDescription) {
+            sessionDescription.sdp = maybePreferAudioReceiveCodec(sessionDescription.sdp);
+            pc.setLocalDescription(sessionDescription,
+                onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
+            sendMessage(sessionDescription);
+        }
+    };
+});
 
 videoApp.factory('peerService', function(userFeedbackService) {
 
@@ -309,7 +320,7 @@ videoApp.factory('peerService', function(userFeedbackService) {
     };
 });
 
-videoApp.factory('callService', function($log, turnServiceSupport, peerService, userFeedbackService) {
+videoApp.factory('callService', function($log, turnServiceSupport, peerService, signallingService, userFeedbackService) {
 
 
     var mergeConstraints = function(cons1, cons2) {
@@ -325,7 +336,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         var constraints = mergeConstraints(offerConstraints, sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
-        pc.createOffer(setLocalAndSendMessage,
+        pc.createOffer(signallingService.setLocalAndSendMessage,
             onCreateSessionDescriptionError, constraints);
     };
 
@@ -366,7 +377,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
         doAnswer : function() {
             $log.log('Sending answer to peer.');
-            pc.createAnswer(setLocalAndSendMessage,
+            pc.createAnswer(signallingService.setLocalAndSendMessage,
                 onCreateSessionDescriptionError, sdpConstraints);
         }
 
@@ -429,13 +440,6 @@ videoApp.factory('userFeedbackService', function() {
 
 
 
-
-setLocalAndSendMessage = function(sessionDescription) {
-  sessionDescription.sdp = maybePreferAudioReceiveCodec(sessionDescription.sdp);
-  pc.setLocalDescription(sessionDescription,
-       onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
-  sendMessage(sessionDescription);
-};
 
 function setRemote(message) {
   function onSetRemoteDescriptionSuccess(){
