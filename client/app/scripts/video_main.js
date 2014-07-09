@@ -309,7 +309,7 @@ videoApp.factory('peerService', function(userFeedbackService) {
     };
 });
 
-videoApp.factory('callService', function(turnServiceSupport, peerService, userFeedbackService) {
+videoApp.factory('callService', function($log, turnServiceSupport, peerService, userFeedbackService) {
 
 
     var mergeConstraints = function(cons1, cons2) {
@@ -321,6 +321,20 @@ videoApp.factory('callService', function(turnServiceSupport, peerService, userFe
         return merged;
     };
 
+    var doCall = function() {
+        var constraints = mergeConstraints(offerConstraints, sdpConstraints);
+        $log.log('Sending offer to peer, with constraints: \n' +
+            '  \'' + JSON.stringify(constraints) + '\'.');
+        pc.createOffer(setLocalAndSendMessage,
+            onCreateSessionDescriptionError, constraints);
+    };
+
+    var calleeStart = function() {
+        // Callee starts to process cached offer and other messages.
+        while (msgQueue.length > 0) {
+            processSignalingMessage(msgQueue.shift());
+        }
+    };
 
     return {
         maybeStart : function() {
@@ -330,42 +344,28 @@ videoApp.factory('callService', function(turnServiceSupport, peerService, userFe
             if (!started && signalingReady && channelReady && turnDone &&
                 (localStream || !hasLocalStream)) {
                 userFeedbackService.setStatus('Connecting...');
-                console.log('Creating PeerConnection.');
+                $log.log('Creating PeerConnection.');
                 peerService.createPeerConnection();
 
                 if (hasLocalStream) {
-                    console.log('Adding local stream.');
+                    $log.log('Adding local stream.');
                     pc.addStream(localStream);
                 } else {
-                    console.log('Not sending any stream.');
+                    $log.log('Not sending any stream.');
                 }
                 started = true;
 
                 if (initiator) {
-                    this.doCall();
+                    doCall();
                 }
                 else {
-                    this.calleeStart();
+                    calleeStart();
                 }
             }
         },
 
-        doCall : function() {
-            var constraints = mergeConstraints(offerConstraints, sdpConstraints);
-            console.log('Sending offer to peer, with constraints: \n' +
-                '  \'' + JSON.stringify(constraints) + '\'.');
-            pc.createOffer(setLocalAndSendMessage,
-                onCreateSessionDescriptionError, constraints);
-        },
-
-        calleeStart : function() {
-            // Callee starts to process cached offer and other messages.
-            while (msgQueue.length > 0) {
-                processSignalingMessage(msgQueue.shift());
-            }
-        },
         doAnswer : function() {
-            console.log('Sending answer to peer.');
+            $log.log('Sending answer to peer.');
             pc.createAnswer(setLocalAndSendMessage,
                 onCreateSessionDescriptionError, sdpConstraints);
         }
