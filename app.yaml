@@ -1,5 +1,5 @@
 application: virtualvideoapp
-version: 2014-07-08-1703
+version: 2014-07-08-2241
 runtime: python27
 threadsafe: true
 api_version: 1
@@ -16,7 +16,7 @@ handlers:
   static_dir: client/app/scripts
 
 - url: /styles
-  static_dir: client/.tmp/styles
+  static_dir: client/tmp/styles
   
 - url: /bower_components
   static_dir: client/app/bower_components

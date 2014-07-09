@@ -1,0 +1,130 @@
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\000031}}
+a:link {
+  color: #FFFFFF;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\000032}}
+a:visited {
+  color: #FFFFFF;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\000033}}
+html, body {
+  background-color: #FFFFFF;
+  height: 100%;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\000038}}
+body {
+  margin: 0;
+  padding: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000312}}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 28px;
+  background-color: #3F3F3F;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 28px;
+  text-align: center;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000323}}
+#container {
+  background-color: #FFF;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  margin: 0px auto;
+  -webkit-perspective: 1000;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000331}}
+#card {
+  -webkit-transition-duration: 2s;
+  -webkit-transform-style: preserve-3d;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000335}}
+#local {
+  position: absolute;
+  width: 100%;
+  transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  -webkit-backface-visibility: hidden;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000342}}
+#remote {
+  position: absolute;
+  width: 100%;
+  -webkit-transform: rotateY(180deg);
+  -webkit-backface-visibility: hidden;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000348}}
+#mini {
+  position: absolute;
+  height: 30%;
+  width: 30%;
+  bottom: 32px;
+  right: 4px;
+  opacity: 1.0;
+  transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000358}}
+#localVideo {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 2s;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000365}}
+#remoteVideo {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 2s;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000372}}
+#miniVideo {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 2s;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000379}}
+#hangup {
+  font-size: 13px;
+  font-weight: bold;
+  color: #FFFFFF;
+  width: 128px;
+  height: 24px;
+  background-color: #808080;
+  border-style: solid;
+  border-color: #FFFFFF;
+  margin: 2px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/alexandermarquardt\/Lexabit\/my-video-app\/client\/app\/styles\/video_main\.scss}line{font-family:\0000389}}
+#infoDiv {
+  position: absolute;
+  float: right;
+  background-color: grey;
+  margin: 2px;
+  display: none;
+}

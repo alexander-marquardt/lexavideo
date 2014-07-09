@@ -7,7 +7,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 
 // declare functions that are called before they are defined
-var maybeStart;
 var setStatus;
 var doCall;
 var calleeStart;
@@ -49,6 +48,7 @@ var addStereo;
 var extractSdp;
 var setDefaultCodec;
 var removeCN;
+
 
 // define externally defined variables so that jshint doesn't give warnings
 /* global alert */
@@ -110,7 +110,7 @@ var cardElem;
 
 
 videoApp
-    .run(function($log, errorMessagesConstant, channelService, turnService, peerService, mediaService) {
+    .run(function($log, errorMessagesConstant, channelService, turnService, peerService, callService, mediaService) {
         var i;
         if (errorMessagesConstant.length > 0) {
             for (i = 0; i < errorMessagesConstant.length; ++i) {
@@ -140,14 +140,56 @@ videoApp
         if (mediaConstraints.audio === false &&
             mediaConstraints.video === false) {
             hasLocalStream = false;
-            maybeStart();
+            callService.maybeStart();
         } else {
             hasLocalStream = true;
             mediaService.doGetUserMedia();
         }
     });
 
-videoApp.factory('channelService', function($log) {
+
+
+
+
+videoApp.factory('channelService', function($log, callService) {
+
+    onChannelOpened = function() {
+      console.log('Channel opened.');
+      channelReady = true;
+      callService.maybeStart();
+    };
+
+    onChannelMessage = function(message) {
+      console.log('S->C: ' + message.data);
+      var msg = JSON.parse(message.data);
+      // Since the turn response is async and also GAE might disorder the
+      // Message delivery due to possible datastore query at server side,
+      // So callee needs to cache messages before peerConnection is created.
+      if (!initiator && !started) {
+        if (msg.type === 'offer') {
+          // Add offer to the beginning of msgQueue, since we can't handle
+          // Early candidates before offer at present.
+          msgQueue.unshift(msg);
+          // Callee creates PeerConnection
+          // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
+          signalingReady = true;
+          callService.maybeStart();
+        } else {
+          msgQueue.push(msg);
+        }
+      } else {
+        processSignalingMessage(msg);
+      }
+    };
+
+    onChannelError = function() {
+      messageError('Channel error.');
+    };
+
+    onChannelClosed = function() {
+      console.log('Channel closed.');
+    };
+
     var handler = {
       'onopen': onChannelOpened,
       'onmessage': onChannelMessage,
@@ -164,24 +206,27 @@ videoApp.factory('channelService', function($log) {
     };
 });
 
-videoApp.factory('turnService', function($log) {
+videoApp.service('turnServiceSupport', function () {
 
-    var turnDone = false;
+        this.turnDone = false;
+
+});
+
+
+videoApp.factory('turnService', function($log, peerService, callService, turnServiceSupport) {
 
     return {
-        getTurnDone: function () {
-            return turnDone;
-        },
+
         maybeRequestTurn : function() {
             // Allow to skip turn by passing ts=false to apprtc.
             if (turnUrl === '') {
-                turnDone = true;
+                turnServiceSupport.turnDone = true;
                 return;
             }
 
             for (var i = 0, len = pcConfig.iceServers.length; i < len; i++) {
                 if (pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
-                    turnDone = true;
+                    turnServiceSupport.turnDone = true;
                     return;
                 }
             }
@@ -190,7 +235,7 @@ videoApp.factory('turnService', function($log) {
             if (currentDomain.search('localhost') === -1 &&
                 currentDomain.search('apprtc') === -1) {
                 // Not authorized domain. Try with default STUN instead.
-                turnDone = true;
+                turnServiceSupport.turnDone = true;
                 return;
             }
 
@@ -221,8 +266,8 @@ videoApp.factory('turnService', function($log) {
                          'info@lexabit.com');
           }
           // If TURN request failed, continue the call with default STUN.
-          turnDone = true;
-          maybeStart();
+          turnServiceSupport.turnDone = true;
+          callService.maybeStart();
         }
     };
 });
@@ -237,11 +282,86 @@ videoApp.factory('peerService', function() {
           } else {
             setStatus('Initializing...');
           }
+        },
+
+
+        createPeerConnection : function() {
+          try {
+            // Create an RTCPeerConnection via the polyfill (adapter.js).
+            pc = new RTCPeerConnection(pcConfig, pcConstraints);
+            pc.onicecandidate = onIceCandidate;
+            console.log('Created RTCPeerConnnection with:\n' +
+                        '  config: \'' + JSON.stringify(pcConfig) + '\';\n' +
+                        '  constraints: \'' + JSON.stringify(pcConstraints) + '\'.');
+          } catch (e) {
+            messageError('Failed to create PeerConnection, exception: ' + e.message);
+            alert('Cannot create RTCPeerConnection object; ' +
+                  'WebRTC is not supported by this browser.');
+            return;
+          }
+          pc.onaddstream = onRemoteStreamAdded;
+          pc.onremovestream = onRemoteStreamRemoved;
+          pc.onsignalingstatechange = onSignalingStateChanged;
+          pc.oniceconnectionstatechange = onIceConnectionStateChanged;
         }
     };
 });
 
-videoApp.factory('mediaService', function() {
+videoApp.factory('callService', function(turnServiceSupport, peerService) {
+    return {
+        maybeStart : function() {
+
+            var turnDone = turnServiceSupport.turnDone;
+
+            if (!started && signalingReady && channelReady && turnDone &&
+                (localStream || !hasLocalStream)) {
+                setStatus('Connecting...');
+                console.log('Creating PeerConnection.');
+                peerService.createPeerConnection();
+
+                if (hasLocalStream) {
+                    console.log('Adding local stream.');
+                    pc.addStream(localStream);
+                } else {
+                    console.log('Not sending any stream.');
+                }
+                started = true;
+
+                if (initiator) {
+                    doCall();
+                }
+                else {
+                    calleeStart();
+                }
+            }
+        }
+    };
+});
+
+
+videoApp.factory('mediaService', function(callService) {
+
+    onUserMediaSuccess = function(stream) {
+        console.log('User has granted access to local media.');
+        // Call the polyfill wrapper to attach the media stream to this element.
+        attachMediaStream(localVideo, stream);
+        localVideo.style.opacity = 1;
+        localStream = stream;
+        // Caller creates PeerConnection.
+        callService.maybeStart();
+    };
+
+    onUserMediaError = function(error) {
+        messageError('Failed to get access to local media. Error code was ' +
+            error.code + '. Continuing without sending a stream.');
+        alert('Failed to get access to local media. Error code was ' +
+            error.code + '. Continuing without sending a stream.');
+
+        hasLocalStream = false;
+        callService.maybeStart();
+    };
+
+
 
     return  {
         doGetUserMedia  : function() {
@@ -262,54 +382,7 @@ videoApp.factory('mediaService', function() {
 
 
 
-function createPeerConnection() {
-  try {
-    // Create an RTCPeerConnection via the polyfill (adapter.js).
-    pc = new RTCPeerConnection(pcConfig, pcConstraints);
-    pc.onicecandidate = onIceCandidate;
-    console.log('Created RTCPeerConnnection with:\n' +
-                '  config: \'' + JSON.stringify(pcConfig) + '\';\n' +
-                '  constraints: \'' + JSON.stringify(pcConstraints) + '\'.');
-  } catch (e) {
-    messageError('Failed to create PeerConnection, exception: ' + e.message);
-    alert('Cannot create RTCPeerConnection object; ' +
-          'WebRTC is not supported by this browser.');
-    return;
-  }
-  pc.onaddstream = onRemoteStreamAdded;
-  pc.onremovestream = onRemoteStreamRemoved;
-  pc.onsignalingstatechange = onSignalingStateChanged;
-  pc.oniceconnectionstatechange = onIceConnectionStateChanged;
-}
 
-maybeStart = function() {
-
-    // this is temporary hack while we transition to angular
-    var injector = angular.element($('#container')).injector();
-    var turnDone = injector.get('turnService').getTurnDone();
-
-    if (!started && signalingReady && channelReady && turnDone &&
-        (localStream || !hasLocalStream)) {
-        setStatus('Connecting...');
-        console.log('Creating PeerConnection.');
-        createPeerConnection();
-
-        if (hasLocalStream) {
-            console.log('Adding local stream.');
-            pc.addStream(localStream);
-        } else {
-            console.log('Not sending any stream.');
-        }
-        started = true;
-
-        if (initiator) {
-            doCall();
-        }
-        else {
-            calleeStart();
-        }
-    }
-};
 
 setStatus = function(state) {
   document.getElementById('status').innerHTML = state;
@@ -376,6 +449,7 @@ function setRemote(message) {
 
 }
 
+
 sendMessage = function(message) {
   var msgString = JSON.stringify(message);
   console.log('C->S: ' + msgString);
@@ -417,42 +491,7 @@ onAddIceCandidateError = function(error) {
   messageError('Failed to add Ice Candidate: ' + error.toString());
 };
 
-onChannelOpened = function() {
-  console.log('Channel opened.');
-  channelReady = true;
-  maybeStart();
-};
 
-onChannelMessage = function(message) {
-  console.log('S->C: ' + message.data);
-  var msg = JSON.parse(message.data);
-  // Since the turn response is async and also GAE might disorder the
-  // Message delivery due to possible datastore query at server side,
-  // So callee needs to cache messages before peerConnection is created.
-  if (!initiator && !started) {
-    if (msg.type === 'offer') {
-      // Add offer to the beginning of msgQueue, since we can't handle
-      // Early candidates before offer at present.
-      msgQueue.unshift(msg);
-      // Callee creates PeerConnection
-      // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
-      signalingReady = true;
-      maybeStart();
-    } else {
-      msgQueue.push(msg);
-    }
-  } else {
-    processSignalingMessage(msg);
-  }
-};
-
-onChannelError = function() {
-  messageError('Channel error.');
-};
-
-onChannelClosed = function() {
-  console.log('Channel closed.');
-};
 
 messageError = function(msg) {
   console.log(msg);
@@ -460,25 +499,6 @@ messageError = function(msg) {
   updateInfoDiv();
 };
 
-onUserMediaSuccess = function(stream) {
-  console.log('User has granted access to local media.');
-  // Call the polyfill wrapper to attach the media stream to this element.
-  attachMediaStream(localVideo, stream);
-  localVideo.style.opacity = 1;
-  localStream = stream;
-  // Caller creates PeerConnection.
-  maybeStart();
-};
-
-onUserMediaError = function(error) {
-  messageError('Failed to get access to local media. Error code was ' +
-               error.code + '. Continuing without sending a stream.');
-  alert('Failed to get access to local media. Error code was ' +
-        error.code + '. Continuing without sending a stream.');
-
-  hasLocalStream = false;
-  maybeStart();
-};
 
 onCreateSessionDescriptionError = function(error) {
   messageError('Failed to create session description: ' + error.toString());
@@ -593,7 +613,6 @@ transitionToWaiting = function() {
   miniVideo.style.opacity = 0;
   remoteVideo.style.opacity = 0;
 
-    // this is temporary hack while we transition to angular
     var injector = angular.element($('#container')).injector();
     injector.get('peerService').resetStatus();
 };
