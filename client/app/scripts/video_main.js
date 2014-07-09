@@ -207,8 +207,14 @@ videoApp.factory('channelService', function($log, callService) {
 });
 
 videoApp.service('turnServiceSupport', function () {
+    // This function tracks some variables that are needed by multiple services, where one of the services has
+    // a dependency on the other one.
+    // In order to prevent circular dependencies, this variable needs to be in its own service, even though
+    // it could logically fit into the turnService service.
 
-        this.turnDone = false;
+    // Note that this is called as a service vs. a factory, which means that it will be invoked with the "new" keyword.
+    // Therefore, we have direct access to the "this" for the turnServiceSupport object.
+    this.turnDone = false;
 
 });
 
