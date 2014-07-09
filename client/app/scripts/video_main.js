@@ -601,9 +601,14 @@ videoApp.factory('mediaService', function(callService, userNotificationService) 
 
 videoApp.factory('userNotificationService', function() {
     // TODO: This should be made into a directive !!!
+    var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
-            document.getElementById('status').innerHTML = state;
+            currentState = state;
+            // document.getElementById('status').innerHTML = state;
+        },
+        getStatus: function() {
+            return currentState;
         },
         messageError : function(msg) {
             console.log(msg);
@@ -613,7 +618,20 @@ videoApp.factory('userNotificationService', function() {
     };
 });
 
+videoApp.directive('currentState', function(userNotificationService) {
 
+    alert('Initializing currentState');
+
+    return {
+        restrict: 'AE',
+        scope: false,
+        link: function(scope) {
+            alert('hit directive');
+            scope.state = userNotificationService.getStatus();
+            scope.state = 'I FEEL GOOD';
+        }
+    };
+});
 
 
 
