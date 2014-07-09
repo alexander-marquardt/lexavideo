@@ -11,10 +11,8 @@ var onChannelOpened;
 var onChannelMessage;
 var onChannelError;
 var onChannelClosed;
-var messageError;
 var onUserMediaSuccess;
 var onUserMediaError;
-var onSetSessionDescriptionError;
 var iceCandidateType;
 var onRemoteHangup;
 var stop;
@@ -135,7 +133,7 @@ videoApp
 
 
 
-videoApp.factory('channelService', function($log, callService, signallingService) {
+videoApp.factory('channelService', function($log, callService, signallingService, userNotificationService) {
 
     onChannelOpened = function() {
       console.log('Channel opened.');
@@ -167,7 +165,7 @@ videoApp.factory('channelService', function($log, callService, signallingService
     };
 
     onChannelError = function() {
-      messageError('Channel error.');
+        userNotificationService.messageError('Channel error.');
     };
 
     onChannelClosed = function() {
@@ -203,7 +201,7 @@ videoApp.service('turnServiceSupport', function () {
 });
 
 
-videoApp.factory('turnService', function($log, peerService, callService, turnServiceSupport) {
+videoApp.factory('turnService', function($log, peerService, callService, turnServiceSupport, userNotificationService) {
 
     return {
 
@@ -251,7 +249,7 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
             }
             $log.log('Got pcConfig.iceServers:' + pcConfig.iceServers + '\n');
           } else {
-            messageError('No TURN server; unlikely that media will traverse networks.  ' +
+              userNotificationService.messageError('No TURN server; unlikely that media will traverse networks.  ' +
                          'If this persists please report it to ' +
                          'info@lexabit.com');
           }
@@ -280,8 +278,12 @@ videoApp.factory('messageService', function() {
 });
 
 
-videoApp.factory('signallingService', function($log, messageService) {
+videoApp.factory('signallingService', function($log, messageService, userNotificationService) {
 
+
+    function onSetSessionDescriptionError(error) {
+        userNotificationService.messageError('Failed to set session description: ' + error.toString());
+    }
 
     function onSetSessionDescriptionSuccess() {
         $log.log('Set session description success.');
@@ -315,7 +317,7 @@ videoApp.factory('signallingService', function($log, messageService) {
     }
 
     function onAddIceCandidateError(error) {
-        messageError('Failed to add Ice Candidate: ' + error.toString());
+        userNotificationService.messageError('Failed to add Ice Candidate: ' + error.toString());
     }
 
     return {
@@ -328,7 +330,7 @@ videoApp.factory('signallingService', function($log, messageService) {
 
         processSignalingMessage : function(message) {
             if (!started) {
-                messageError('peerConnection has not been created yet!');
+                userNotificationService.messageError('peerConnection has not been created yet!');
                 return;
             }
 
@@ -352,7 +354,7 @@ videoApp.factory('signallingService', function($log, messageService) {
     };
 });
 
-videoApp.factory('peerService', function($log, userFeedbackService, messageService) {
+videoApp.factory('peerService', function($log, userNotificationService, messageService) {
 
 
     function onIceCandidate(event) {
@@ -388,9 +390,9 @@ videoApp.factory('peerService', function($log, userFeedbackService, messageServi
     return {
         resetStatus : function() {
           if (!initiator) {
-              userFeedbackService.setStatus('Waiting for someone to join:  <a href=' + roomLink + '>' + roomLink + '</a>');
+              userNotificationService.setStatus('Waiting for someone to join:  <a href=' + roomLink + '>' + roomLink + '</a>');
           } else {
-              userFeedbackService.setStatus('Initializing...');
+              userNotificationService.setStatus('Initializing...');
           }
         },
 
@@ -404,7 +406,7 @@ videoApp.factory('peerService', function($log, userFeedbackService, messageServi
                         '  config: \'' + JSON.stringify(pcConfig) + '\';\n' +
                         '  constraints: \'' + JSON.stringify(pcConstraints) + '\'.');
           } catch (e) {
-            messageError('Failed to create PeerConnection, exception: ' + e.message);
+              userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
             alert('Cannot create RTCPeerConnection object; ' +
                   'WebRTC is not supported by this browser.');
             return;
@@ -417,12 +419,12 @@ videoApp.factory('peerService', function($log, userFeedbackService, messageServi
     };
 });
 
-videoApp.factory('callService', function($log, turnServiceSupport, peerService, signallingService, userFeedbackService) {
+videoApp.factory('callService', function($log, turnServiceSupport, peerService, signallingService, userNotificationService) {
 
 
 
     function onCreateSessionDescriptionError(error) {
-        messageError('Failed to create session description: ' + error.toString());
+        userNotificationService.messageError('Failed to create session description: ' + error.toString());
     }
 
     function mergeConstraints(cons1, cons2) {
@@ -456,7 +458,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
             if (!started && signalingReady && channelReady && turnDone &&
                 (localStream || !hasLocalStream)) {
-                userFeedbackService.setStatus('Connecting...');
+                userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
                 peerService.createPeerConnection();
 
@@ -490,7 +492,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
 
 
-videoApp.factory('mediaService', function(callService) {
+videoApp.factory('mediaService', function(callService, userNotificationService) {
 
     onUserMediaSuccess = function(stream) {
         console.log('User has granted access to local media.');
@@ -503,7 +505,7 @@ videoApp.factory('mediaService', function(callService) {
     };
 
     onUserMediaError = function(error) {
-        messageError('Failed to get access to local media. Error code was ' +
+        userNotificationService.messageError('Failed to get access to local media. Error code was ' +
             error.code + '. Continuing without sending a stream.');
         alert('Failed to get access to local media. Error code was ' +
             error.code + '. Continuing without sending a stream.');
@@ -524,18 +526,23 @@ videoApp.factory('mediaService', function(callService) {
                     '  \'' + JSON.stringify(mediaConstraints) + '\'');
             } catch (e) {
                 alert('getUserMedia() failed. Is this a WebRTC capable browser?');
-                messageError('getUserMedia failed with exception: ' + e.message);
+                userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
             }
         }
     };
 });
 
 
-videoApp.factory('userFeedbackService', function() {
+videoApp.factory('userNotificationService', function() {
     // NOTE: This should be made into a directive !!! TODO
     return {
         setStatus: function(state) {
             document.getElementById('status').innerHTML = state;
+        },
+        messageError : function(msg) {
+            console.log(msg);
+            infoDivErrors.push(msg);
+            updateInfoDiv();
         }
     };
 });
@@ -543,17 +550,9 @@ videoApp.factory('userFeedbackService', function() {
 
 
 
-messageError = function(msg) {
-  console.log(msg);
-  infoDivErrors.push(msg);
-  updateInfoDiv();
-};
 
 
 
-onSetSessionDescriptionError = function(error) {
-  messageError('Failed to set session description: ' + error.toString());
-};
 
 iceCandidateType = function(candidateSDP) {
   if (candidateSDP.indexOf('typ relay ') >= 0) {
@@ -616,7 +615,7 @@ transitionToActive = function() {
   // Reset window display according to the asperio of remote video.
   window.onresize();
 var myinjector = angular.element($('#container')).injector();
-myinjector.get('userFeedbackService').setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' onclick=\'onHangup()\' />');
+myinjector.get('userNotificationService').setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' onclick=\'onHangup()\' />');
 };
 
 transitionToWaiting = function() {
@@ -639,7 +638,7 @@ transitionToDone = function() {
   miniVideo.style.opacity = 0;
 
     var myinjector = angular.element($('#container')).injector();
-    myinjector.get('userFeedbackService').setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
+    myinjector.get('userNotificationService').setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
 };
 
 function enterFullScreen() {
