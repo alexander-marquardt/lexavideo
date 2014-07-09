@@ -7,7 +7,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 
 // declare functions that are called before they are defined
-var sendMessage;
 var onChannelOpened;
 var onChannelMessage;
 var onChannelError;
@@ -15,8 +14,6 @@ var onChannelClosed;
 var messageError;
 var onUserMediaSuccess;
 var onUserMediaError;
-var onCreateSessionDescriptionError;
-var onSetSessionDescriptionSuccess;
 var onSetSessionDescriptionError;
 var iceCandidateType;
 var onRemoteHangup;
@@ -265,13 +262,35 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
     };
 });
 
-videoApp.factory('signallingService', function($log) {
 
+videoApp.factory('messageService', function() {
+
+    return {
+        sendMessage : function(message) {
+            var msgString = JSON.stringify(message);
+            console.log('C->S: ' + msgString);
+            // NOTE: AppRTCClient.java searches & parses this line; update there when
+            // changing here.
+            var path = '/message?r=' + roomKey + '&u=' + me;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', path, true);
+            xhr.send(msgString);
+        }
+    };
+});
+
+
+videoApp.factory('signallingService', function($log, messageService) {
+
+
+    function onSetSessionDescriptionSuccess() {
+        $log.log('Set session description success.');
+    }
 
 
     function setRemote(message) {
         function onSetRemoteDescriptionSuccess(){
-            console.log('Set remote session description success.');
+            $log.log('Set remote session description success.');
             // By now all addstream events for the setRemoteDescription have fired.
             // So we can know if the peer is sending any stream or is only receiving.
             if (remoteStream) {
@@ -304,7 +323,7 @@ videoApp.factory('signallingService', function($log) {
             sessionDescription.sdp = maybePreferAudioReceiveCodec(sessionDescription.sdp);
             pc.setLocalDescription(sessionDescription,
                 onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
-            sendMessage(sessionDescription);
+            messageService.sendMessage(sessionDescription);
         },
 
         processSignalingMessage : function(message) {
@@ -333,12 +352,12 @@ videoApp.factory('signallingService', function($log) {
     };
 });
 
-videoApp.factory('peerService', function($log, userFeedbackService) {
+videoApp.factory('peerService', function($log, userFeedbackService, messageService) {
 
 
     function onIceCandidate(event) {
         if (event.candidate) {
-            sendMessage({type: 'candidate',
+            messageService.sendMessage({type: 'candidate',
                 label: event.candidate.sdpMLineIndex,
                 id: event.candidate.sdpMid,
                 candidate: event.candidate.candidate});
@@ -401,29 +420,34 @@ videoApp.factory('peerService', function($log, userFeedbackService) {
 videoApp.factory('callService', function($log, turnServiceSupport, peerService, signallingService, userFeedbackService) {
 
 
-    var mergeConstraints = function(cons1, cons2) {
+
+    function onCreateSessionDescriptionError(error) {
+        messageError('Failed to create session description: ' + error.toString());
+    }
+
+    function mergeConstraints(cons1, cons2) {
         var merged = cons1;
         for (var name in cons2.mandatory) {
             merged.mandatory[name] = cons2.mandatory[name];
         }
         merged.optional.concat(cons2.optional);
         return merged;
-    };
+    }
 
-    var doCall = function() {
+    function doCall() {
         var constraints = mergeConstraints(offerConstraints, sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
         pc.createOffer(signallingService.setLocalAndSendMessage,
             onCreateSessionDescriptionError, constraints);
-    };
+    }
 
-    var calleeStart = function() {
+    function calleeStart() {
         // Callee starts to process cached offer and other messages.
         while (msgQueue.length > 0) {
             signallingService.processSignalingMessage(msgQueue.shift());
         }
-    };
+    }
 
     return {
         maybeStart : function() {
@@ -519,18 +543,6 @@ videoApp.factory('userFeedbackService', function() {
 
 
 
-
-sendMessage = function(message) {
-  var msgString = JSON.stringify(message);
-  console.log('C->S: ' + msgString);
-  // NOTE: AppRTCClient.java searches & parses this line; update there when
-  // changing here.
-  var path = '/message?r=' + roomKey + '&u=' + me;
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', path, true);
-  xhr.send(msgString);
-};
-
 messageError = function(msg) {
   console.log(msg);
   infoDivErrors.push(msg);
@@ -538,13 +550,6 @@ messageError = function(msg) {
 };
 
 
-onCreateSessionDescriptionError = function(error) {
-  messageError('Failed to create session description: ' + error.toString());
-};
-
-onSetSessionDescriptionSuccess = function() {
-  console.log('Set session description success.');
-};
 
 onSetSessionDescriptionError = function(error) {
   messageError('Failed to set session description: ' + error.toString());
@@ -918,7 +923,9 @@ removeCN = function(sdpLines, mLineIndex) {
 // Send BYE on refreshing(or leaving) a demo page
 // to ensure the room is cleaned for next session.
 window.onbeforeunload = function() {
-  sendMessage({type: 'bye'});
+
+    var myinjector = angular.element($('#container')).injector();
+    myinjector.get('messageService').sendMessage({type: 'bye'});
 };
 
 // Set the video diplaying in the center of window.
