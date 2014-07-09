@@ -47,4 +47,5 @@ skip_files:
 - ^client/.*\.json$
 - ^client/test/.*
 - ^client/Gruntfile\.js
-- ^(.*/)?\..*$
+SKIP_DOT_DIRS
+SKIP_APP_DIRS
