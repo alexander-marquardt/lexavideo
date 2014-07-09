@@ -43,8 +43,8 @@ skip_files:
 - ^(.*/)?.*\.swp$
 - ^(.*/)?.*\.py[co]$
 - ^(.*/)?.*/RCS/.*$
-- ^(.*/)?\..*$
 - ^client/node_modules/.*
 - ^client/.*\.json$
 - ^client/test/.*
 - ^client/Gruntfile\.js
+- ^(.*/)?\..*$
