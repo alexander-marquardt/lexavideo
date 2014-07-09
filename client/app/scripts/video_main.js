@@ -15,8 +15,6 @@ var onUserMediaSuccess;
 var onUserMediaError;
 var onRemoteHangup;
 var stop;
-var waitForRemoteVideo;
-var transitionToActive;
 var transitionToWaiting;
 var transitionToDone;
 var noteIceCandidate;
@@ -91,7 +89,7 @@ var infoDivErrors = [];
 var cardElem;
 
 videoApp
-    .run(function($log, errorMessagesConstant, channelService, turnService, peerService, callService, mediaService) {
+    .run(function($log, errorMessagesConstant, channelService, turnService, peerService, callService, mediaService, messageService) {
         var i;
         if (errorMessagesConstant.length > 0) {
             for (i = 0; i < errorMessagesConstant.length; ++i) {
@@ -126,10 +124,39 @@ videoApp
             hasLocalStream = true;
             mediaService.doGetUserMedia();
         }
+
+
+        // Send BYE on refreshing(or leaving) a demo page
+        // to ensure the room is cleaned for next session.
+        window.onbeforeunload = function() {
+            messageService.sendMessage({type: 'bye'});
+        };
+
+        // Set the video diplaying in the center of window.
+        // TODO - Move this into a directive!!!!
+        window.onresize = function(){
+            var aspectRatio;
+            if (remoteVideo.style.opacity === '1') {
+                aspectRatio = remoteVideo.videoWidth/remoteVideo.videoHeight;
+            } else if (localVideo.style.opacity === '1') {
+                aspectRatio = localVideo.videoWidth/localVideo.videoHeight;
+            } else {
+                return;
+            }
+
+            var innerHeight = this.innerHeight;
+            var innerWidth = this.innerWidth;
+            var videoWidth = innerWidth < aspectRatio * window.innerHeight ?
+                innerWidth : aspectRatio * window.innerHeight;
+            var videoHeight = innerHeight < window.innerWidth / aspectRatio ?
+                innerHeight : window.innerWidth / aspectRatio;
+            containerDiv = document.getElementById('container');
+            containerDiv.style.width = videoWidth + 'px';
+            containerDiv.style.height = videoHeight + 'px';
+            containerDiv.style.left = (innerWidth - videoWidth) / 2 + 'px';
+            containerDiv.style.top = (innerHeight - videoHeight) / 2 + 'px';
+        };
     });
-
-
-
 
 
 videoApp.factory('channelService', function($log, callService, signallingService, userNotificationService) {
@@ -286,6 +313,27 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
 
     function onSetSessionDescriptionSuccess() {
         $log.log('Set session description success.');
+    }
+
+    function waitForRemoteVideo() {
+      // Call the getVideoTracks method via adapter.js.
+      videoTracks = remoteStream.getVideoTracks();
+      if (videoTracks.length === 0 || remoteVideo.currentTime > 0) {
+        transitionToActive();
+      } else {
+        setTimeout(waitForRemoteVideo, 100);
+      }
+    }
+
+    function transitionToActive() {
+      reattachMediaStream(miniVideo, localVideo);
+      remoteVideo.style.opacity = 1;
+      cardElem.style.webkitTransform = 'rotateY(180deg)';
+      setTimeout(function() { localVideo.src = ''; }, 500);
+      setTimeout(function() { miniVideo.style.opacity = 1; }, 1000);
+      // Reset window display according to the asperio of remote video.
+      window.onresize();
+      userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' onclick=\'onHangup()\' />');
     }
 
 
@@ -552,7 +600,7 @@ videoApp.factory('mediaService', function(callService, userNotificationService) 
 
 
 videoApp.factory('userNotificationService', function() {
-    // NOTE: This should be made into a directive !!! TODO
+    // TODO: This should be made into a directive !!!
     return {
         setStatus: function(state) {
             document.getElementById('status').innerHTML = state;
@@ -600,27 +648,6 @@ stop = function() {
   msgQueue.length = 0;
 };
 
-waitForRemoteVideo = function() {
-  // Call the getVideoTracks method via adapter.js.
-  videoTracks = remoteStream.getVideoTracks();
-  if (videoTracks.length === 0 || remoteVideo.currentTime > 0) {
-    transitionToActive();
-  } else {
-    setTimeout(waitForRemoteVideo, 100);
-  }
-};
-
-transitionToActive = function() {
-  reattachMediaStream(miniVideo, localVideo);
-  remoteVideo.style.opacity = 1;
-  cardElem.style.webkitTransform = 'rotateY(180deg)';
-  setTimeout(function() { localVideo.src = ''; }, 500);
-  setTimeout(function() { miniVideo.style.opacity = 1; }, 1000);
-  // Reset window display according to the asperio of remote video.
-  window.onresize();
-var myinjector = angular.element($('#container')).injector();
-myinjector.get('userNotificationService').setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' onclick=\'onHangup()\' />');
-};
 
 transitionToWaiting = function() {
   cardElem.style.webkitTransform = 'rotateY(0deg)';
@@ -923,34 +950,3 @@ removeCN = function(sdpLines, mLineIndex) {
   return sdpLines;
 };
 
-// Send BYE on refreshing(or leaving) a demo page
-// to ensure the room is cleaned for next session.
-window.onbeforeunload = function() {
-
-    var myinjector = angular.element($('#container')).injector();
-    myinjector.get('messageService').sendMessage({type: 'bye'});
-};
-
-// Set the video diplaying in the center of window.
-window.onresize = function(){
-  var aspectRatio;
-  if (remoteVideo.style.opacity === '1') {
-    aspectRatio = remoteVideo.videoWidth/remoteVideo.videoHeight;
-  } else if (localVideo.style.opacity === '1') {
-    aspectRatio = localVideo.videoWidth/localVideo.videoHeight;
-  } else {
-    return;
-  }
-
-  var innerHeight = this.innerHeight;
-  var innerWidth = this.innerWidth;
-  var videoWidth = innerWidth < aspectRatio * window.innerHeight ?
-                   innerWidth : aspectRatio * window.innerHeight;
-  var videoHeight = innerHeight < window.innerWidth / aspectRatio ?
-                    innerHeight : window.innerWidth / aspectRatio;
-  containerDiv = document.getElementById('container');
-  containerDiv.style.width = videoWidth + 'px';
-  containerDiv.style.height = videoHeight + 'px';
-  containerDiv.style.left = (innerWidth - videoWidth) / 2 + 'px';
-  containerDiv.style.top = (innerHeight - videoHeight) / 2 + 'px';
-};
