@@ -8,7 +8,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 // declare functions that are called before they are defined
 var sendMessage;
-var processSignalingMessage;
 var onAddIceCandidateSuccess;
 var onAddIceCandidateError;
 var onChannelOpened;
@@ -146,7 +145,7 @@ videoApp
 
 
 
-videoApp.factory('channelService', function($log, callService) {
+videoApp.factory('channelService', function($log, callService, signallingService) {
 
     onChannelOpened = function() {
       console.log('Channel opened.');
@@ -173,7 +172,7 @@ videoApp.factory('channelService', function($log, callService) {
           msgQueue.push(msg);
         }
       } else {
-        processSignalingMessage(msg);
+        signallingService.processSignalingMessage(msg);
       }
     };
 
@@ -276,12 +275,60 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
 videoApp.factory('signallingService', function() {
 
 
+
+    function setRemote(message) {
+        function onSetRemoteDescriptionSuccess(){
+            console.log('Set remote session description success.');
+            // By now all addstream events for the setRemoteDescription have fired.
+            // So we can know if the peer is sending any stream or is only receiving.
+            if (remoteStream) {
+                waitForRemoteVideo();
+            } else {
+                console.log('Not receiving any stream.');
+                transitionToActive();
+            }
+        }
+
+        // Set Opus in Stereo, if stereo enabled.
+        if (stereo) {
+            message.sdp = addStereo(message.sdp);
+        }
+        message.sdp = maybePreferAudioSendCodec(message.sdp);
+        pc.setRemoteDescription(new RTCSessionDescription(message),
+            onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
+    }
+
+
     return {
         setLocalAndSendMessage : function(sessionDescription) {
             sessionDescription.sdp = maybePreferAudioReceiveCodec(sessionDescription.sdp);
             pc.setLocalDescription(sessionDescription,
                 onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
             sendMessage(sessionDescription);
+        },
+
+        processSignalingMessage : function(message) {
+            if (!started) {
+                messageError('peerConnection has not been created yet!');
+                return;
+            }
+
+            if (message.type === 'offer') {
+                setRemote(message);
+                var myinjector = angular.element($('#container')).injector();
+                myinjector.get('callService').doAnswer();
+
+            } else if (message.type === 'answer') {
+                setRemote(message);
+            } else if (message.type === 'candidate') {
+                var candidate = new RTCIceCandidate({sdpMLineIndex: message.label,
+                    candidate: message.candidate});
+                noteIceCandidate('Remote', iceCandidateType(message.candidate));
+                pc.addIceCandidate(candidate,
+                    onAddIceCandidateSuccess, onAddIceCandidateError);
+            } else if (message.type === 'bye') {
+                onRemoteHangup();
+            }
         }
     };
 });
@@ -343,7 +390,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
     var calleeStart = function() {
         // Callee starts to process cached offer and other messages.
         while (msgQueue.length > 0) {
-            processSignalingMessage(msgQueue.shift());
+            signallingService.processSignalingMessage(msgQueue.shift());
         }
     };
 
@@ -441,30 +488,6 @@ videoApp.factory('userFeedbackService', function() {
 
 
 
-function setRemote(message) {
-  function onSetRemoteDescriptionSuccess(){
-     console.log('Set remote session description success.');
-     // By now all addstream events for the setRemoteDescription have fired.
-     // So we can know if the peer is sending any stream or is only receiving.
-     if (remoteStream) {
-       waitForRemoteVideo();
-     } else {
-       console.log('Not receiving any stream.');
-       transitionToActive();
-     }
-  }
-
-  // Set Opus in Stereo, if stereo enabled.
-  if (stereo) {
-    message.sdp = addStereo(message.sdp);
-  }
-  message.sdp = maybePreferAudioSendCodec(message.sdp);
-  pc.setRemoteDescription(new RTCSessionDescription(message),
-       onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
-
-
-}
-
 
 sendMessage = function(message) {
   var msgString = JSON.stringify(message);
@@ -477,29 +500,7 @@ sendMessage = function(message) {
   xhr.send(msgString);
 };
 
-processSignalingMessage = function(message) {
-  if (!started) {
-    messageError('peerConnection has not been created yet!');
-    return;
-  }
 
-  if (message.type === 'offer') {
-    setRemote(message);
-      var myinjector = angular.element($('#container')).injector();
-      myinjector.get('callService').doAnswer();
-
-  } else if (message.type === 'answer') {
-    setRemote(message);
-  } else if (message.type === 'candidate') {
-    var candidate = new RTCIceCandidate({sdpMLineIndex: message.label,
-                                         candidate: message.candidate});
-    noteIceCandidate('Remote', iceCandidateType(message.candidate));
-    pc.addIceCandidate(candidate,
-                       onAddIceCandidateSuccess, onAddIceCandidateError);
-  } else if (message.type === 'bye') {
-    onRemoteHangup();
-  }
-};
 
 onAddIceCandidateSuccess = function() {
   console.log('AddIceCandidate success.');
