@@ -620,15 +620,12 @@ videoApp.factory('userNotificationService', function() {
 
 videoApp.directive('currentState', function(userNotificationService) {
 
-    alert('Initializing currentState');
 
     return {
         restrict: 'AE',
         scope: false,
         link: function(scope) {
-            alert('hit directive');
             scope.state = userNotificationService.getStatus();
-            scope.state = 'I FEEL GOOD';
         }
     };
 });
