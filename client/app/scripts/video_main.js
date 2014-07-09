@@ -8,8 +8,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 // declare functions that are called before they are defined
 var sendMessage;
-var onAddIceCandidateSuccess;
-var onAddIceCandidateError;
 var onChannelOpened;
 var onChannelMessage;
 var onChannelError;
@@ -21,11 +19,6 @@ var onCreateSessionDescriptionError;
 var onSetSessionDescriptionSuccess;
 var onSetSessionDescriptionError;
 var iceCandidateType;
-var onIceCandidate;
-var onRemoteStreamAdded;
-var onSignalingStateChanged;
-var onIceConnectionStateChanged;
-var onRemoteStreamRemoved;
 var onRemoteHangup;
 var stop;
 var waitForRemoteVideo;
@@ -272,7 +265,7 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
     };
 });
 
-videoApp.factory('signallingService', function() {
+videoApp.factory('signallingService', function($log) {
 
 
 
@@ -298,6 +291,13 @@ videoApp.factory('signallingService', function() {
             onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
     }
 
+    function onAddIceCandidateSuccess() {
+        $log.log('AddIceCandidate success.');
+    }
+
+    function onAddIceCandidateError(error) {
+        messageError('Failed to add Ice Candidate: ' + error.toString());
+    }
 
     return {
         setLocalAndSendMessage : function(sessionDescription) {
@@ -333,7 +333,38 @@ videoApp.factory('signallingService', function() {
     };
 });
 
-videoApp.factory('peerService', function(userFeedbackService) {
+videoApp.factory('peerService', function($log, userFeedbackService) {
+
+
+    function onIceCandidate(event) {
+        if (event.candidate) {
+            sendMessage({type: 'candidate',
+                label: event.candidate.sdpMLineIndex,
+                id: event.candidate.sdpMid,
+                candidate: event.candidate.candidate});
+            noteIceCandidate('Local', iceCandidateType(event.candidate.candidate));
+        } else {
+            $log.log('End of candidates.');
+        }
+    }
+
+    function onRemoteStreamAdded(event) {
+        $log.log('Remote stream added.');
+        attachMediaStream(remoteVideo, event.stream);
+        remoteStream = event.stream;
+    }
+
+    function onRemoteStreamRemoved() {
+        $log.log('Remote stream removed.');
+    }
+
+    function onSignalingStateChanged() {
+        updateInfoDiv();
+    }
+
+    function onIceConnectionStateChanged() {
+        updateInfoDiv();
+    }
 
     return {
         resetStatus : function() {
@@ -500,18 +531,6 @@ sendMessage = function(message) {
   xhr.send(msgString);
 };
 
-
-
-onAddIceCandidateSuccess = function() {
-  console.log('AddIceCandidate success.');
-};
-
-onAddIceCandidateError = function(error) {
-  messageError('Failed to add Ice Candidate: ' + error.toString());
-};
-
-
-
 messageError = function(msg) {
   console.log(msg);
   infoDivErrors.push(msg);
@@ -544,35 +563,7 @@ iceCandidateType = function(candidateSDP) {
   return 'UNKNOWN';
 };
 
-onIceCandidate = function(event) {
-  if (event.candidate) {
-    sendMessage({type: 'candidate',
-                 label: event.candidate.sdpMLineIndex,
-                 id: event.candidate.sdpMid,
-                 candidate: event.candidate.candidate});
-    noteIceCandidate('Local', iceCandidateType(event.candidate.candidate));
-  } else {
-    console.log('End of candidates.');
-  }
-};
 
-onRemoteStreamAdded = function(event) {
-  console.log('Remote stream added.');
-  attachMediaStream(remoteVideo, event.stream);
-  remoteStream = event.stream;
-};
-
-onRemoteStreamRemoved = function() {
-  console.log('Remote stream removed.');
-};
-
-onSignalingStateChanged = function() {
-  updateInfoDiv();
-};
-
-onIceConnectionStateChanged = function() {
-  updateInfoDiv();
-};
 
 function onHangup() {
   console.log('Hanging up.');
