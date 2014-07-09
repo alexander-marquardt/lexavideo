@@ -7,7 +7,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 
 // declare functions that are called before they are defined
-var mergeConstraints;
 var setLocalAndSendMessage;
 var sendMessage;
 var processSignalingMessage;
@@ -311,6 +310,18 @@ videoApp.factory('peerService', function(userFeedbackService) {
 });
 
 videoApp.factory('callService', function(turnServiceSupport, peerService, userFeedbackService) {
+
+
+    var mergeConstraints = function(cons1, cons2) {
+        var merged = cons1;
+        for (var name in cons2.mandatory) {
+            merged.mandatory[name] = cons2.mandatory[name];
+        }
+        merged.optional.concat(cons2.optional);
+        return merged;
+    };
+
+
     return {
         maybeStart : function() {
 
@@ -354,9 +365,9 @@ videoApp.factory('callService', function(turnServiceSupport, peerService, userFe
             }
         },
         doAnswer : function() {
-          console.log('Sending answer to peer.');
-          pc.createAnswer(setLocalAndSendMessage,
-                          onCreateSessionDescriptionError, sdpConstraints);
+            console.log('Sending answer to peer.');
+            pc.createAnswer(setLocalAndSendMessage,
+                onCreateSessionDescriptionError, sdpConstraints);
         }
 
     };
@@ -417,14 +428,7 @@ videoApp.factory('userFeedbackService', function() {
 });
 
 
-mergeConstraints = function(cons1, cons2) {
-  var merged = cons1;
-  for (var name in cons2.mandatory) {
-    merged.mandatory[name] = cons2.mandatory[name];
-  }
-  merged.optional.concat(cons2.optional);
-  return merged;
-};
+
 
 setLocalAndSendMessage = function(sessionDescription) {
   sessionDescription.sdp = maybePreferAudioReceiveCodec(sessionDescription.sdp);
@@ -479,7 +483,7 @@ processSignalingMessage = function(message) {
     setRemote(message);
       var myinjector = angular.element($('#container')).injector();
       myinjector.get('callService').doAnswer();
-      
+
   } else if (message.type === 'answer') {
     setRemote(message);
   } else if (message.type === 'candidate') {
