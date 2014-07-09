@@ -7,7 +7,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 
 // declare functions that are called before they are defined
-var setStatus;
 var doCall;
 var calleeStart;
 var mergeConstraints;
@@ -51,6 +50,7 @@ var removeCN;
 
 
 // define externally defined variables so that jshint doesn't give warnings
+/* global $ */
 /* global alert */
 /* global roomKey */
 /* global mediaConstraints */
@@ -107,7 +107,6 @@ var isAudioMuted = false;
 var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 var infoDivErrors = [];
 var cardElem;
-
 
 videoApp
     .run(function($log, errorMessagesConstant, channelService, turnService, peerService, callService, mediaService) {
@@ -279,14 +278,14 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
 });
 
 
-videoApp.factory('peerService', function() {
+videoApp.factory('peerService', function(userFeedbackService) {
 
     return {
         resetStatus : function() {
           if (!initiator) {
-            setStatus('Waiting for someone to join:  <a href=' + roomLink + '>' + roomLink + '</a>');
+              userFeedbackService.setStatus('Waiting for someone to join:  <a href=' + roomLink + '>' + roomLink + '</a>');
           } else {
-            setStatus('Initializing...');
+              userFeedbackService.setStatus('Initializing...');
           }
         },
 
@@ -313,7 +312,7 @@ videoApp.factory('peerService', function() {
     };
 });
 
-videoApp.factory('callService', function(turnServiceSupport, peerService) {
+videoApp.factory('callService', function(turnServiceSupport, peerService, userFeedbackService) {
     return {
         maybeStart : function() {
 
@@ -321,7 +320,7 @@ videoApp.factory('callService', function(turnServiceSupport, peerService) {
 
             if (!started && signalingReady && channelReady && turnDone &&
                 (localStream || !hasLocalStream)) {
-                setStatus('Connecting...');
+                userFeedbackService.setStatus('Connecting...');
                 console.log('Creating PeerConnection.');
                 peerService.createPeerConnection();
 
@@ -386,13 +385,15 @@ videoApp.factory('mediaService', function(callService) {
 });
 
 
+videoApp.factory('userFeedbackService', function() {
+    // NOTE: This should be made into a directive !!! TODO
+    return {
+        setStatus: function(state) {
+            document.getElementById('status').innerHTML = state;
+        }
+    };
+});
 
-
-
-
-setStatus = function(state) {
-  document.getElementById('status').innerHTML = state;
-};
 
 doCall = function() {
   var constraints = mergeConstraints(offerConstraints, sdpConstraints);
@@ -606,7 +607,8 @@ transitionToActive = function() {
   setTimeout(function() { miniVideo.style.opacity = 1; }, 1000);
   // Reset window display according to the asperio of remote video.
   window.onresize();
-  setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' onclick=\'onHangup()\' />');
+var myinjector = angular.element($('#container')).injector();
+myinjector.get('userFeedbackService').setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' onclick=\'onHangup()\' />');
 };
 
 transitionToWaiting = function() {
@@ -619,15 +621,17 @@ transitionToWaiting = function() {
   miniVideo.style.opacity = 0;
   remoteVideo.style.opacity = 0;
 
-    var injector = angular.element($('#container')).injector();
-    injector.get('peerService').resetStatus();
+  var myinjector = angular.element($('#container')).injector();
+  myinjector.get('peerService').resetStatus();
 };
 
 transitionToDone = function() {
   localVideo.style.opacity = 0;
   remoteVideo.style.opacity = 0;
   miniVideo.style.opacity = 0;
-  setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
+
+    var myinjector = angular.element($('#container')).injector();
+    myinjector.get('userFeedbackService').setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
 };
 
 function enterFullScreen() {
