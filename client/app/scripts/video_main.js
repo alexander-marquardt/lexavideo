@@ -599,13 +599,14 @@ videoApp.factory('mediaService', function(callService, userNotificationService) 
 });
 
 
-videoApp.factory('userNotificationService', function() {
-    // TODO: This should be made into a directive !!!
+videoApp.factory('userNotificationService', function($rootScope) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
-            currentState = state;
-            // document.getElementById('status').innerHTML = state;
+            $rootScope.$apply(function() {
+                currentState = state;
+                // document.getElementById('status').innerHTML = state;
+            });
         },
         getStatus: function() {
             return currentState;
@@ -618,16 +619,10 @@ videoApp.factory('userNotificationService', function() {
     };
 });
 
-videoApp.directive('currentState', function(userNotificationService) {
-
-
-    return {
-        restrict: 'AE',
-        scope: false,
-        link: function(scope) {
-            scope.state = userNotificationService.getStatus();
-        }
-    };
+videoApp.controller('currentStateCtrl', function($scope, userNotificationService) {
+    $scope.$watch(userNotificationService.getStatus, function (newValue) {
+        $scope.currentState = newValue;
+    });
 });
 
 
