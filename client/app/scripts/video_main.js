@@ -103,30 +103,7 @@ videoApp
             messageService.sendMessage({type: 'bye'});
         };
 
-        // Set the video diplaying in the center of window.
-        // TODO - Move this into a directive!!!!
-        window.onresize = function(){
-            var aspectRatio;
-            if (remoteVideo.style.opacity === '1') {
-                aspectRatio = remoteVideo.videoWidth/remoteVideo.videoHeight;
-            } else if (localVideo.style.opacity === '1') {
-                aspectRatio = localVideo.videoWidth/localVideo.videoHeight;
-            } else {
-                return;
-            }
 
-            var innerHeight = this.innerHeight;
-            var innerWidth = this.innerWidth;
-            var videoWidth = innerWidth < aspectRatio * window.innerHeight ?
-                innerWidth : aspectRatio * window.innerHeight;
-            var videoHeight = innerHeight < window.innerWidth / aspectRatio ?
-                innerHeight : window.innerWidth / aspectRatio;
-            containerDiv = document.getElementById('container');
-            containerDiv.style.width = videoWidth + 'px';
-            containerDiv.style.height = videoHeight + 'px';
-            containerDiv.style.left = (innerWidth - videoWidth) / 2 + 'px';
-            containerDiv.style.top = (innerHeight - videoHeight) / 2 + 'px';
-        };
     });
 
 
@@ -381,6 +358,12 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
         infoDivService.updateInfoDiv();
     };
 
+    var doAnswer = function() {
+        $log.log('Sending answer to peer.');
+        pc.createAnswer(this.setLocalAndSendMessage,
+            onCreateSessionDescriptionError, sdpConstraints);
+    };
+
 
     return {
 
@@ -404,6 +387,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
         },
 
 
+
         processSignalingMessage : function(message) {
             if (!started) {
                 userNotificationService.messageError('peerConnection has not been created yet!');
@@ -412,8 +396,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
 
             if (message.type === 'offer') {
                 setRemote(message);
-                var myinjector = angular.element($('#container')).injector();
-                myinjector.get('callService').doAnswer();
+                doAnswer();
 
             } else if (message.type === 'answer') {
                 setRemote(message);
@@ -527,8 +510,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
       remoteVideo.style.opacity = 0;
       miniVideo.style.opacity = 0;
 
-        var myinjector = angular.element($('#container')).injector();
-        myinjector.get('userNotificationService').setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
+      userNotificationService.setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
     };
 
     return {
@@ -559,11 +541,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
             }
         },
 
-        doAnswer : function() {
-            $log.log('Sending answer to peer.');
-            pc.createAnswer(signallingService.setLocalAndSendMessage,
-                onCreateSessionDescriptionError, sdpConstraints);
-        },
+
         doHangup : function() {
              console.log('Hanging up.');
              transitionToDone();
@@ -974,5 +952,49 @@ videoApp.directive('monitorControlKeys', function ($document, $log, infoDivServi
 });
 
 
+videoApp.directive('videoContainer', function($window) {
+    return {
+        restrict : 'AE',
+        link: function(scope, elem, attrs) {
+            // Set the video diplaying in the center of window.
+            $window.onresize = function(){
+                var videoAspectRatio;
+                if (remoteVideo.style.opacity === '1') {
+                    videoAspectRatio = remoteVideo.videoWidth/remoteVideo.videoHeight;
+                } else if (localVideo.style.opacity === '1') {
+                    videoAspectRatio = localVideo.videoWidth/localVideo.videoHeight;
+                } else {
+                    return;
+                }
+
+                var innerHeight = $window.innerHeight;
+                var innerWidth = $window.innerWidth;
+                var innerAspectRatio = innerWidth/innerHeight;
+                var videoHeight, videoWidth;
+
+                if (innerAspectRatio <= videoAspectRatio) {
+                    // the video needs to be have height reduced to keep aspect ratio and stay inside window
+                    videoWidth = innerWidth;
+                    videoHeight = innerWidth / videoAspectRatio;
+                }
+                else {
+                    // the video needs to have the width reduce to keep aspect ratio and stay inside window
+                    videoHeight = innerHeight;
+                    videoWidth = innerHeight * videoAspectRatio;
+                }
+
+                elem.prop.width = videoWidth + 'px';
+                elem.prop.height = videoHeight + 'px';
+                elem.prop.left = (innerWidth - videoWidth) / 2 + 'px';
+                elem.prop.top = 0 + 'px';
+            };
+        }
+    }
+});
+
+// TODO move this into a directive or controller - it is currently called directly from the html
+function enterFullScreen() {
+  container.webkitRequestFullScreen();
+}
 
 
