@@ -13,18 +13,11 @@ var onChannelError;
 var onChannelClosed;
 var onUserMediaSuccess;
 var onUserMediaError;
-var stop;
-var transitionToDone;
 var noteIceCandidate;
 var updateInfoDiv;
 var showInfoDiv;
-var maybePreferAudioSendCodec;
-var maybePreferAudioReceiveCodec;
-var preferAudioCodec;
-var addStereo;
-var extractSdp;
+
 var setDefaultCodec;
-var removeCN;
 
 
 // define externally defined variables so that jshint doesn't give warnings
@@ -301,7 +294,7 @@ videoApp.factory('messageService', function() {
 });
 
 
-videoApp.factory('signallingService', function($log, messageService, userNotificationService) {
+videoApp.factory('signallingService', function($log, messageService, userNotificationService, codecsService) {
 
 
     function onSetSessionDescriptionError(error) {
@@ -349,9 +342,9 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
 
         // Set Opus in Stereo, if stereo enabled.
         if (stereo) {
-            message.sdp = addStereo(message.sdp);
+            message.sdp = codecsService.addStereo(message.sdp);
         }
-        message.sdp = maybePreferAudioSendCodec(message.sdp);
+        message.sdp = codecsService.maybePreferAudioSendCodec(message.sdp);
         pc.setRemoteDescription(new RTCSessionDescription(message),
             onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
     }
@@ -391,6 +384,19 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     };
 
 
+    var stop = function() {
+         started = false;
+         signalingReady = false;
+         isAudioMuted = false;
+         isVideoMuted = false;
+         pc.close();
+         pc = null;
+         remoteStream = null;
+         msgQueue.length = 0;
+       };
+
+
+
     function onRemoteHangup() {
         $log.log('Session terminated.');
         initiator = 0;   // jshint ignore:line
@@ -403,7 +409,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
 
 
         setLocalAndSendMessage : function(sessionDescription) {
-            sessionDescription.sdp = maybePreferAudioReceiveCodec(sessionDescription.sdp);
+            sessionDescription.sdp = codecsService.maybePreferAudioReceiveCodec(sessionDescription.sdp);
             pc.setLocalDescription(sessionDescription,
                 onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
             messageService.sendMessage(sessionDescription);
@@ -528,6 +534,15 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         }
     }
 
+    var transitionToDone = function() {
+      localVideo.style.opacity = 0;
+      remoteVideo.style.opacity = 0;
+      miniVideo.style.opacity = 0;
+
+        var myinjector = angular.element($('#container')).injector();
+        myinjector.get('userNotificationService').setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
+    };
+
     return {
         maybeStart : function() {
 
@@ -565,7 +580,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
              console.log('Hanging up.');
              transitionToDone();
              localStream.stop();
-             stop();
+             signallingService.stop();
              // will trigger BYE from server
              socket.close();
         }
@@ -623,7 +638,6 @@ videoApp.factory('userNotificationService', function($rootScope) {
         setStatus: function(state) {
             $rootScope.$apply(function() {
                 currentState = state;
-                // document.getElementById('status').innerHTML = state;
             });
         },
         getStatus: function() {
@@ -642,6 +656,162 @@ videoApp.factory('userNotificationService', function($rootScope) {
           }
         }
     };
+});
+
+videoApp.factory('codecsService', function(){
+
+
+
+    // Strip CN from sdp before CN constraints is ready.
+    var removeCN = function(sdpLines, mLineIndex) {
+      var mLineElements = sdpLines[mLineIndex].split(' ');
+      // Scan from end for the convenience of removing an item.
+      for (var i = sdpLines.length-1; i >= 0; i--) {
+        var payload = extractSdp(sdpLines[i], /a=rtpmap:(\d+) CN\/\d+/i);
+        if (payload) {
+          var cnPos = mLineElements.indexOf(payload);
+          if (cnPos !== -1) {
+            // Remove CN payload from m line.
+            mLineElements.splice(cnPos, 1);
+          }
+          // Remove CN line in sdp
+          sdpLines.splice(i, 1);
+        }
+      }
+
+      sdpLines[mLineIndex] = mLineElements.join(' ');
+      return sdpLines;
+    };
+
+
+    var extractSdp = function(sdpLine, pattern) {
+        var result = sdpLine.match(pattern);
+        return (result && result.length === 2)? result[1]: null;
+    };
+
+    // Set the selected codec to the first in m line.
+    var setDefaultCodec = function(mLine, payload) {
+        var elements = mLine.split(' ');
+        var newLine = [];
+        var index = 0;
+        for (var i = 0; i < elements.length; i++) {
+            if (index === 3) { // Format of media starts from the fourth.
+                newLine[index++] = payload; // Put target payload to the first.
+            }
+            if (elements[i] !== payload) {
+                newLine[index++] = elements[i];
+            }
+        }
+        return newLine.join(' ');
+    };
+
+
+    // Set |codec| as the default audio codec if it's present.
+    // The format of |codec| is 'NAME/RATE', e.g. 'opus/48000'.
+    var preferAudioCodec = function(sdp, codec) {
+        var fields = codec.split('/');
+        if (fields.length !== 2) {
+            console.log('Invalid codec setting: ' + codec);
+            return sdp;
+        }
+        var name = fields[0];
+        var rate = fields[1];
+        var sdpLines = sdp.split('\r\n');
+        var mLineIndex = null;
+        var i;
+
+        // Search for m line.
+        for (i = 0; i < sdpLines.length; i++) {
+            if (sdpLines[i].search('m=audio') !== -1) {
+                mLineIndex = i;
+                break;
+            }
+        }
+        if (mLineIndex === null) {
+            return sdp;
+        }
+
+        // If the codec is available, set it as the default in m line.
+        for (i = 0; i < sdpLines.length; i++) {
+            if (sdpLines[i].search(name + '/' + rate) !== -1) {
+                var regexp = new RegExp(':(\\d+) ' + name + '\\/' + rate, 'i');
+                var payload = extractSdp(sdpLines[i], regexp);
+                if (payload) {
+                    sdpLines[mLineIndex] = setDefaultCodec(sdpLines[mLineIndex],
+                        payload);
+                }
+                break;
+            }
+        }
+
+        // Remove CN in m line and sdp.
+        sdpLines = removeCN(sdpLines, mLineIndex);
+
+        sdp = sdpLines.join('\r\n');
+        return sdp;
+    };
+
+
+
+
+    return {
+
+        maybePreferAudioSendCodec : function(sdp) {
+            if (audioSendCodec === '') {
+                console.log('No preference on audio send codec.');
+                return sdp;
+            }
+            console.log('Prefer audio send codec: ' + audioSendCodec);
+            return preferAudioCodec(sdp, audioSendCodec);
+        },
+
+        maybePreferAudioReceiveCodec : function(sdp) {
+            if (audioReceiveCodec === '') {
+                console.log('No preference on audio receive codec.');
+                return sdp;
+            }
+            console.log('Prefer audio receive codec: ' + audioReceiveCodec);
+            return preferAudioCodec(sdp, audioReceiveCodec);
+        },
+
+        // Set Opus in stereo if stereo is enabled.
+        addStereo : function(sdp) {
+            var sdpLines = sdp.split('\r\n');
+            var opusPayload = null;
+            var i;
+
+            // Find opus payload.
+            for (i = 0; i < sdpLines.length; i++) {
+                if (sdpLines[i].search('opus/48000') !== -1) {
+                    opusPayload = extractSdp(sdpLines[i], /:(\d+) opus\/48000/i);
+                    break;
+                }
+            }
+
+            var fmtpLineIndex = null;
+            // Find the payload in fmtp line.
+            for (i = 0; i < sdpLines.length; i++) {
+                if (sdpLines[i].search('a=fmtp') !== -1) {
+                    var payload = extractSdp(sdpLines[i], /a=fmtp:(\d+)/ );
+                    if (payload === opusPayload) {
+                        fmtpLineIndex = i;
+                        break;
+                    }
+                }
+            }
+            // No fmtp line found.
+            if (fmtpLineIndex === null) {
+                return sdp;
+            }
+
+            // Append stereo=1 to fmtp line.
+            sdpLines[fmtpLineIndex] = sdpLines[fmtpLineIndex].concat(' stereo=1');
+
+            sdp = sdpLines.join('\r\n');
+            return sdp;
+        }
+    }
+
 });
 
 
@@ -666,27 +836,6 @@ videoApp.directive('currentState', function(userNotificationService, $compile, $
 });
 
 
-stop = function() {
-  started = false;
-  signalingReady = false;
-  isAudioMuted = false;
-  isVideoMuted = false;
-  pc.close();
-  pc = null;
-  remoteStream = null;
-  msgQueue.length = 0;
-};
-
-
-
-transitionToDone = function() {
-  localVideo.style.opacity = 0;
-  remoteVideo.style.opacity = 0;
-  miniVideo.style.opacity = 0;
-
-    var myinjector = angular.element($('#container')).injector();
-    myinjector.get('userNotificationService').setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
-};
 
 function enterFullScreen() {
   containerDiv.webkitRequestFullScreen();
@@ -824,145 +973,5 @@ document.onkeydown = function(event) {
   }
 };
 
-maybePreferAudioSendCodec = function(sdp) {
-  if (audioSendCodec === '') {
-    console.log('No preference on audio send codec.');
-    return sdp;
-  }
-  console.log('Prefer audio send codec: ' + audioSendCodec);
-  return preferAudioCodec(sdp, audioSendCodec);
-};
 
-maybePreferAudioReceiveCodec = function(sdp) {
-  if (audioReceiveCodec === '') {
-    console.log('No preference on audio receive codec.');
-    return sdp;
-  }
-  console.log('Prefer audio receive codec: ' + audioReceiveCodec);
-  return preferAudioCodec(sdp, audioReceiveCodec);
-};
-
-// Set |codec| as the default audio codec if it's present.
-// The format of |codec| is 'NAME/RATE', e.g. 'opus/48000'.
-preferAudioCodec = function(sdp, codec) {
-  var fields = codec.split('/');
-  if (fields.length !== 2) {
-    console.log('Invalid codec setting: ' + codec);
-    return sdp;
-  }
-  var name = fields[0];
-  var rate = fields[1];
-  var sdpLines = sdp.split('\r\n');
-  var mLineIndex = null;
-  var i;
-
-  // Search for m line.
-  for (i = 0; i < sdpLines.length; i++) {
-      if (sdpLines[i].search('m=audio') !== -1) {
-        mLineIndex = i;
-        break;
-      }
-  }
-  if (mLineIndex === null) {
-    return sdp;
-  }
-
-  // If the codec is available, set it as the default in m line.
-  for (i = 0; i < sdpLines.length; i++) {
-    if (sdpLines[i].search(name + '/' + rate) !== -1) {
-      var regexp = new RegExp(':(\\d+) ' + name + '\\/' + rate, 'i');
-      var payload = extractSdp(sdpLines[i], regexp);
-      if (payload) {
-        sdpLines[mLineIndex] = setDefaultCodec(sdpLines[mLineIndex],
-                                               payload);
-      }
-      break;
-    }
-  }
-
-  // Remove CN in m line and sdp.
-  sdpLines = removeCN(sdpLines, mLineIndex);
-
-  sdp = sdpLines.join('\r\n');
-  return sdp;
-};
-
-// Set Opus in stereo if stereo is enabled.
-addStereo = function(sdp) {
-  var sdpLines = sdp.split('\r\n');
-  var opusPayload = null;
-  var i;
-
-  // Find opus payload.
-  for (i = 0; i < sdpLines.length; i++) {
-    if (sdpLines[i].search('opus/48000') !== -1) {
-      opusPayload = extractSdp(sdpLines[i], /:(\d+) opus\/48000/i);
-      break;
-    }
-  }
-
-  var fmtpLineIndex = null;
-  // Find the payload in fmtp line.
-  for (i = 0; i < sdpLines.length; i++) {
-    if (sdpLines[i].search('a=fmtp') !== -1) {
-      var payload = extractSdp(sdpLines[i], /a=fmtp:(\d+)/ );
-      if (payload === opusPayload) {
-        fmtpLineIndex = i;
-        break;
-      }
-    }
-  }
-  // No fmtp line found.
-  if (fmtpLineIndex === null) {
-    return sdp;
-  }
-
-  // Append stereo=1 to fmtp line.
-  sdpLines[fmtpLineIndex] = sdpLines[fmtpLineIndex].concat(' stereo=1');
-
-  sdp = sdpLines.join('\r\n');
-  return sdp;
-};
-
-extractSdp = function(sdpLine, pattern) {
-  var result = sdpLine.match(pattern);
-  return (result && result.length === 2)? result[1]: null;
-};
-
-// Set the selected codec to the first in m line.
-setDefaultCodec = function(mLine, payload) {
-  var elements = mLine.split(' ');
-  var newLine = [];
-  var index = 0;
-  for (var i = 0; i < elements.length; i++) {
-    if (index === 3) { // Format of media starts from the fourth.
-      newLine[index++] = payload; // Put target payload to the first.
-    }
-    if (elements[i] !== payload) {
-      newLine[index++] = elements[i];
-    }
-  }
-  return newLine.join(' ');
-};
-
-// Strip CN from sdp before CN constraints is ready.
-removeCN = function(sdpLines, mLineIndex) {
-  var mLineElements = sdpLines[mLineIndex].split(' ');
-  // Scan from end for the convenience of removing an item.
-  for (var i = sdpLines.length-1; i >= 0; i--) {
-    var payload = extractSdp(sdpLines[i], /a=rtpmap:(\d+) CN\/\d+/i);
-    if (payload) {
-      var cnPos = mLineElements.indexOf(payload);
-      if (cnPos !== -1) {
-        // Remove CN payload from m line.
-        mLineElements.splice(cnPos, 1);
-      }
-      // Remove CN line in sdp
-      sdpLines.splice(i, 1);
-    }
-  }
-
-  sdpLines[mLineIndex] = mLineElements.join(' ');
-  return sdpLines;
-};
 
