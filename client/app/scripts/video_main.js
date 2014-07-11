@@ -840,7 +840,7 @@ videoApp.service('infoDivService', function () {
                     contents += '  ' + type + '\n';
                 }
             }
-            if (pc !== null) {
+            if (pc) {
                 contents += 'Gathering: ' + pc.iceGatheringState + '\n';
                 contents += '</pre>\n';
                 contents += '<pre>PC State:\n';
