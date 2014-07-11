@@ -2,20 +2,6 @@
 
 var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
-
-
-
-
-// declare functions that are called before they are defined
-var onChannelOpened;
-var onChannelMessage;
-var onChannelError;
-var onChannelClosed;
-var onUserMediaSuccess;
-var onUserMediaError;
-var updateInfoDiv;
-var showInfoDiv;
-
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
 /* global alert */
@@ -44,7 +30,6 @@ var showInfoDiv;
 
 /* exported initiator */
 /* exported initialize */
-/* exported enterFullScreen */
 
 // define variables
 var localVideo;
@@ -67,11 +52,11 @@ var containerDiv;
 var sdpConstraints = {'mandatory': {
                       'OfferToReceiveAudio': true,
                       'OfferToReceiveVideo': true }};
+
 var isVideoMuted = false;
 var isAudioMuted = false;
 // Types of gathered ICE Candidates.
 var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
-var infoDivErrors = [];
 var cardElem;
 
 videoApp
@@ -147,13 +132,13 @@ videoApp
 
 videoApp.factory('channelService', function($log, callService, signallingService, userNotificationService) {
 
-    onChannelOpened = function() {
+    var onChannelOpened = function() {
       console.log('Channel opened.');
       channelReady = true;
       callService.maybeStart();
     };
 
-    onChannelMessage = function(message) {
+    var onChannelMessage = function(message) {
       console.log('S->C: ' + message.data);
       var msg = JSON.parse(message.data);
       // Since the turn response is async and also GAE might disorder the
@@ -176,11 +161,11 @@ videoApp.factory('channelService', function($log, callService, signallingService
       }
     };
 
-    onChannelError = function() {
+    var onChannelError = function() {
         userNotificationService.messageError('Channel error.');
     };
 
-    onChannelClosed = function() {
+    var onChannelClosed = function() {
       console.log('Channel closed.');
     };
 
@@ -290,7 +275,8 @@ videoApp.factory('messageService', function() {
 });
 
 
-videoApp.factory('signallingService', function($log, messageService, userNotificationService, codecsService) {
+videoApp.factory('signallingService', function($log, messageService, userNotificationService,
+                                               codecsService, infoDivService) {
 
 
     var onSetSessionDescriptionError = function(error) {
@@ -392,7 +378,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
             return;
         }
         gatheredIceCandidateTypes[location][type] = 1;
-        updateInfoDiv();
+        infoDivService.updateInfoDiv();
     };
 
 
@@ -456,7 +442,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     };
 });
 
-videoApp.factory('peerService', function($log, userNotificationService, signallingService) {
+videoApp.factory('peerService', function($log, userNotificationService, signallingService, infoDivService) {
 
 
 
@@ -471,11 +457,11 @@ videoApp.factory('peerService', function($log, userNotificationService, signalli
     };
 
     var onSignalingStateChanged = function() {
-        updateInfoDiv();
+        infoDivService.updateInfoDiv();
     };
 
     var onIceConnectionStateChanged = function() {
-        updateInfoDiv();
+        infoDivService.updateInfoDiv();
     };
 
     return {
@@ -595,7 +581,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
 videoApp.factory('mediaService', function(callService, userNotificationService) {
 
-    onUserMediaSuccess = function(stream) {
+    var onUserMediaSuccess = function(stream) {
         console.log('User has granted access to local media.');
         // Call the polyfill wrapper to attach the media stream to this element.
         attachMediaStream(localVideo, stream);
@@ -605,7 +591,7 @@ videoApp.factory('mediaService', function(callService, userNotificationService) 
         callService.maybeStart();
     };
 
-    onUserMediaError = function(error) {
+    var onUserMediaError = function(error) {
         userNotificationService.messageError('Failed to get access to local media. Error code was ' +
             error.code + '. Continuing without sending a stream.');
         alert('Failed to get access to local media. Error code was ' +
@@ -634,7 +620,7 @@ videoApp.factory('mediaService', function(callService, userNotificationService) 
 });
 
 
-videoApp.factory('userNotificationService', function($timeout) {
+videoApp.factory('userNotificationService', function($timeout, infoDivService) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
@@ -649,8 +635,8 @@ videoApp.factory('userNotificationService', function($timeout) {
         },
         messageError : function(msg) {
             console.log(msg);
-            infoDivErrors.push(msg);
-            updateInfoDiv();
+            infoDivService.pushInfoDivErrors(msg);
+            infoDivService.updateInfoDiv();
         },
         resetStatus : function() {
           if (!initiator) {
@@ -663,8 +649,6 @@ videoApp.factory('userNotificationService', function($timeout) {
 });
 
 videoApp.factory('codecsService', function(){
-
-
 
     // Strip CN from sdp before CN constraints is ready.
     var removeCN = function(sdpLines, mLineIndex) {
@@ -819,11 +803,73 @@ videoApp.factory('codecsService', function(){
 });
 
 
+videoApp.service('infoDivService', function () {
+
+
+    var infoDivErrors = [];
+
+    var getInfoDiv = function() {
+        return document.getElementById('infoDiv');
+    };
+
+    var showInfoDiv = function() {
+         var div = getInfoDiv();
+         div.style.display = 'block';
+     };
+
+    return {
+
+        pushInfoDivErrors : function(msg) {
+            infoDivErrors.push(msg);
+        },
+
+        toggleInfoDiv : function() {
+            var div = getInfoDiv();
+            if (div.style.display === 'block') {
+                div.style.display = 'none';
+            } else {
+                showInfoDiv();
+            }
+        },
+
+        updateInfoDiv : function() {
+            var contents = '<pre>Gathered ICE Candidates\n';
+            for (var endpoint in gatheredIceCandidateTypes) {
+                contents += endpoint + ':\n';
+                for (var type in gatheredIceCandidateTypes[endpoint]) {
+                    contents += '  ' + type + '\n';
+                }
+            }
+            if (pc !== null) {
+                contents += 'Gathering: ' + pc.iceGatheringState + '\n';
+                contents += '</pre>\n';
+                contents += '<pre>PC State:\n';
+                contents += 'Signaling: ' + pc.signalingState + '\n';
+                contents += 'ICE: ' + pc.iceConnectionState + '\n';
+            }
+            var div = getInfoDiv();
+            div.innerHTML = contents + '</pre>';
+
+            for (var msg in infoDivErrors) {
+                div.innerHTML += '<p style="background-color: red; color: yellow;">' +
+                    infoDivErrors[msg] + '</p>';
+            }
+            if (infoDivErrors.length) {
+                showInfoDiv();
+            }
+        }
+    };
+});
+
+
 videoApp.directive('currentState', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'AE',
         scope: false, // set to false so that directive scope is used for transcluded expressions
         link: function(scope, elem) {
+
+            // we include doHangup on the scope because some of the getStatus calls can include
+            // html that expects a doHangup function to be available.
             scope.doHangup = callService.doHangup;
 
             scope.$watch(userNotificationService.getStatus, function (statusHtml) {
@@ -839,136 +885,94 @@ videoApp.directive('currentState', function(userNotificationService, $compile, $
     };
 });
 
+videoApp.directive('monitorControlKeys', function ($document, $log, infoDivService) {
 
+    var toggleVideoMute = function() {
+        // Call the getVideoTracks method via adapter.js.
+        var i;
+        videoTracks = localStream.getVideoTracks();
 
-var enterFullScreen = function() {
-  containerDiv.webkitRequestFullScreen();
-};
+        if (videoTracks.length === 0) {
+            console.log('No local video available.');
+            return;
+        }
 
+        if (isVideoMuted) {
+            for (i = 0; i < videoTracks.length; i++) {
+                videoTracks[i].enabled = true;
+            }
+            console.log('Video unmuted.');
+        } else {
+            for (i = 0; i < videoTracks.length; i++) {
+                videoTracks[i].enabled = false;
+            }
+            console.log('Video muted.');
+        }
 
-var getInfoDiv = function() {
-  return document.getElementById('infoDiv');
-};
+        isVideoMuted = !isVideoMuted;
+    };
 
-updateInfoDiv = function() {
-  var contents = '<pre>Gathered ICE Candidates\n';
-  for (var endpoint in gatheredIceCandidateTypes) {
-    contents += endpoint + ':\n';
-    for (var type in gatheredIceCandidateTypes[endpoint]) {
-      contents += '  ' + type + '\n';
-    }
-  }
-  if (pc !== null) {
-    contents += 'Gathering: ' + pc.iceGatheringState + '\n';
-    contents += '</pre>\n';
-    contents += '<pre>PC State:\n';
-    contents += 'Signaling: ' + pc.signalingState + '\n';
-    contents += 'ICE: ' + pc.iceConnectionState + '\n';
-  }
-  var div = getInfoDiv();
-  div.innerHTML = contents + '</pre>';
+    var toggleAudioMute = function() {
+        var i;
+        // Call the getAudioTracks method via adapter.js.
+        var audioTracks = localStream.getAudioTracks();
 
-  for (var msg in infoDivErrors) {
-    div.innerHTML += '<p style="background-color: red; color: yellow;">' +
-                     infoDivErrors[msg] + '</p>';
-  }
-  if (infoDivErrors.length) {
-    showInfoDiv();
-  }
-};
+        if (audioTracks.length === 0) {
+            console.log('No local audio available.');
+            return;
+        }
 
-var toggleInfoDiv = function() {
-  var div = getInfoDiv();
-  if (div.style.display === 'block') {
-    div.style.display = 'none';
-  } else {
-    showInfoDiv();
-  }
-};
+        if (isAudioMuted) {
+            for (i = 0; i < audioTracks.length; i++) {
+                audioTracks[i].enabled = true;
+            }
+            console.log('Audio unmuted.');
+        } else {
+            for (i = 0; i < audioTracks.length; i++){
+                audioTracks[i].enabled = false;
+            }
+            console.log('Audio muted.');
+        }
 
-showInfoDiv = function() {
-  var div = getInfoDiv();
-  div.style.display = 'block';
-};
+        isAudioMuted = !isAudioMuted;
+    };
 
-var toggleVideoMute = function() {
-  // Call the getVideoTracks method via adapter.js.
-  var i;
-  videoTracks = localStream.getVideoTracks();
+    return {
+        restrict : 'AE',
+        link: function() {
+            // Mac: hotkey is Command.
+            // Non-Mac: hotkey is Control.
+            // <hotkey>-D: toggle audio mute.
+            // <hotkey>-E: toggle video mute.
+            // <hotkey>-I: toggle Info box.
+            // Return false to screen out original Chrome shortcuts.
+            $document.on('keydown', function(event) {
+                $log.log('Key pressed ' + event.keyCode);
+                var hotkey = event.ctrlKey;
+                if (navigator.appVersion.indexOf('Mac') !== -1) {
+                    hotkey = event.metaKey;
+                }
+                if (!hotkey) {
+                    return;
+                }
+                switch (event.keyCode) {
+                    case 68:
+                        toggleAudioMute();
+                        return false;
+                    case 69:
+                        toggleVideoMute();
+                        return false;
+                    case 73:
+                        infoDivService.toggleInfoDiv();
+                        return false;
+                    default:
+                        return;
+                }
+            });
+        }
+    };
+});
 
-  if (videoTracks.length === 0) {
-    console.log('No local video available.');
-    return;
-  }
-
-  if (isVideoMuted) {
-    for (i = 0; i < videoTracks.length; i++) {
-      videoTracks[i].enabled = true;
-    }
-    console.log('Video unmuted.');
-  } else {
-    for (i = 0; i < videoTracks.length; i++) {
-      videoTracks[i].enabled = false;
-    }
-    console.log('Video muted.');
-  }
-
-  isVideoMuted = !isVideoMuted;
-};
-
-var toggleAudioMute = function() {
-  var i;
-  // Call the getAudioTracks method via adapter.js.
-  var audioTracks = localStream.getAudioTracks();
-
-  if (audioTracks.length === 0) {
-    console.log('No local audio available.');
-    return;
-  }
-
-  if (isAudioMuted) {
-    for (i = 0; i < audioTracks.length; i++) {
-      audioTracks[i].enabled = true;
-    }
-    console.log('Audio unmuted.');
-  } else {
-    for (i = 0; i < audioTracks.length; i++){
-      audioTracks[i].enabled = false;
-    }
-    console.log('Audio muted.');
-  }
-
-  isAudioMuted = !isAudioMuted;
-};
-
-// Mac: hotkey is Command.
-// Non-Mac: hotkey is Control.
-// <hotkey>-D: toggle audio mute.
-// <hotkey>-E: toggle video mute.
-// <hotkey>-I: toggle Info box.
-// Return false to screen out original Chrome shortcuts.
-document.onkeydown = function(event) {
-  var hotkey = event.ctrlKey;
-  if (navigator.appVersion.indexOf('Mac') !== -1) {
-    hotkey = event.metaKey;
-  }
-  if (!hotkey) {
-    return;
-  }
-  switch (event.keyCode) {
-    case 68:
-      toggleAudioMute();
-      return false;
-    case 69:
-      toggleVideoMute();
-      return false;
-    case 73:
-      toggleInfoDiv();
-      return false;
-    default:
-      return;
-  }
-};
 
 
 
