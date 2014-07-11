@@ -384,28 +384,26 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     };
 
 
-    var stop = function() {
-         started = false;
-         signalingReady = false;
-         isAudioMuted = false;
-         isVideoMuted = false;
-         pc.close();
-         pc = null;
-         remoteStream = null;
-         msgQueue.length = 0;
-       };
-
-
-
     function onRemoteHangup() {
         $log.log('Session terminated.');
         initiator = 0;   // jshint ignore:line
         transitionToWaiting();
-        stop();
+        this.stop();
     }
 
 
     return {
+
+        stop : function() {
+            started = false;
+            signalingReady = false;
+            isAudioMuted = false;
+            isVideoMuted = false;
+            pc.close();
+            pc = null;
+            remoteStream = null;
+            msgQueue.length = 0;
+        },
 
 
         setLocalAndSendMessage : function(sessionDescription) {
@@ -632,11 +630,13 @@ videoApp.factory('mediaService', function(callService, userNotificationService) 
 });
 
 
-videoApp.factory('userNotificationService', function($rootScope) {
+videoApp.factory('userNotificationService', function($timeout) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
-            $rootScope.$apply(function() {
+
+            // use $timeout to ensure that $apply is called after the current digest cycle.
+            $timeout(function() {
                 currentState = state;
             });
         },
