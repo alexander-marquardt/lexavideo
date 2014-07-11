@@ -57,7 +57,6 @@ var removeCN;
 
 /* exported initiator */
 /* exported initialize */
-/* exported onHangup */
 /* exported enterFullScreen */
 
 // define variables
@@ -333,7 +332,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
       setTimeout(function() { miniVideo.style.opacity = 1; }, 1000);
       // Reset window display according to the asperio of remote video.
       window.onresize();
-      userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' onclick=\'onHangup()\' />');
+      userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
     }
 
 
@@ -549,8 +548,15 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
             $log.log('Sending answer to peer.');
             pc.createAnswer(signallingService.setLocalAndSendMessage,
                 onCreateSessionDescriptionError, sdpConstraints);
+        },
+        doHangup : function() {
+             console.log('Hanging up.');
+             transitionToDone();
+             localStream.stop();
+             stop();
+             // will trigger BYE from server
+             socket.close();
         }
-
     };
 });
 
@@ -619,26 +625,27 @@ videoApp.factory('userNotificationService', function($rootScope) {
     };
 });
 
-videoApp.controller('currentStateCtrl', function($scope, userNotificationService) {
-    $scope.$watch(userNotificationService.getStatus, function (newValue) {
-        $scope.currentState = newValue;
-    });
+
+videoApp.directive('currentState', function(userNotificationService, $compile, $sce, callService) {
+    return {
+        restrict: 'AE',
+        scope: false, // set to false so that directive scope is used for transcluded expressions
+        link: function(scope, elem) {
+            scope.doHangup = callService.doHangup;
+
+            scope.$watch(userNotificationService.getStatus, function (statusHtml) {
+                
+                var el = angular.element('<span/>');
+                el.append(statusHtml);
+                var compileFn = $compile(el);
+                compileFn(scope);
+                elem.html('');
+                elem.append(el);
+            });
+        }
+    };
 });
 
-
-
-
-
-
-
-function onHangup() {
-  console.log('Hanging up.');
-  transitionToDone();
-  localStream.stop();
-  stop();
-  // will trigger BYE from server
-  socket.close();
-}
 
 onRemoteHangup = function() {
   console.log('Session terminated.');
