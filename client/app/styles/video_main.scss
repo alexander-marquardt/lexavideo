@@ -21,8 +21,7 @@ footer {
   text-align: center;
 }
 #container {
-  background-color: #FFF;
-  position: absolute;
+  //position: absolute;
   height: 100%;
   width: 100%;
   margin: 0px auto;
@@ -91,5 +90,5 @@ footer {
   float: right;
   background-color: grey;
   margin: 2px;
-  //display: none;
+  display: none;
 }
