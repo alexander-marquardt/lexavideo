@@ -13,9 +13,7 @@ var onChannelError;
 var onChannelClosed;
 var onUserMediaSuccess;
 var onUserMediaError;
-var onRemoteHangup;
 var stop;
-var transitionToWaiting;
 var transitionToDone;
 var noteIceCandidate;
 var updateInfoDiv;
@@ -88,7 +86,7 @@ var infoDivErrors = [];
 var cardElem;
 
 videoApp
-    .run(function($log, errorMessagesConstant, channelService, turnService, peerService, callService, mediaService, messageService) {
+    .run(function($log, errorMessagesConstant, channelService, turnService, peerService, callService, userNotificationService, mediaService, messageService) {
         var i;
         if (errorMessagesConstant.length > 0) {
             for (i = 0; i < errorMessagesConstant.length; ++i) {
@@ -105,7 +103,7 @@ videoApp
             window.onresize();});
         miniVideo = document.getElementById('miniVideo');
         remoteVideo = document.getElementById('remoteVideo');
-        peerService.resetStatus();
+        userNotificationService.resetStatus();
         // NOTE: AppRTCClient.java searches & parses this line; update there when
         // changing here.
         channelService.openChannel();
@@ -379,10 +377,30 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
         return 'UNKNOWN';
     }
 
+    var transitionToWaiting = function() {
+        cardElem.style.webkitTransform = 'rotateY(0deg)';
+        setTimeout(function() {
+            localVideo.src = miniVideo.src;
+            miniVideo.src = '';
+            remoteVideo.src = '';
+        }, 500);
+        miniVideo.style.opacity = 0;
+        remoteVideo.style.opacity = 0;
 
+        userNotificationService.resetStatus();
+    };
+
+
+    function onRemoteHangup() {
+        $log.log('Session terminated.');
+        initiator = 0;   // jshint ignore:line
+        transitionToWaiting();
+        stop();
+    }
 
 
     return {
+
 
         setLocalAndSendMessage : function(sessionDescription) {
             sessionDescription.sdp = maybePreferAudioReceiveCodec(sessionDescription.sdp);
@@ -453,13 +471,7 @@ videoApp.factory('peerService', function($log, userNotificationService, signalli
     }
 
     return {
-        resetStatus : function() {
-          if (!initiator) {
-              userNotificationService.setStatus('Waiting for someone to join:  <a href=' + roomLink + '>' + roomLink + '</a>');
-          } else {
-              userNotificationService.setStatus('Initializing...');
-          }
-        },
+
 
 
         createPeerConnection : function() {
@@ -621,6 +633,13 @@ videoApp.factory('userNotificationService', function($rootScope) {
             console.log(msg);
             infoDivErrors.push(msg);
             updateInfoDiv();
+        },
+        resetStatus : function() {
+          if (!initiator) {
+              this.setStatus('Waiting for someone to join:  <a href=' + roomLink + '>' + roomLink + '</a>');
+          } else {
+              this.setStatus('Initializing...');
+          }
         }
     };
 });
@@ -634,7 +653,7 @@ videoApp.directive('currentState', function(userNotificationService, $compile, $
             scope.doHangup = callService.doHangup;
 
             scope.$watch(userNotificationService.getStatus, function (statusHtml) {
-                
+
                 var el = angular.element('<span/>');
                 el.append(statusHtml);
                 var compileFn = $compile(el);
@@ -646,13 +665,6 @@ videoApp.directive('currentState', function(userNotificationService, $compile, $
     };
 });
 
-
-onRemoteHangup = function() {
-  console.log('Session terminated.');
-  initiator = 0;   // jshint ignore:line
-  transitionToWaiting();
-  stop();
-};
 
 stop = function() {
   started = false;
@@ -666,19 +678,6 @@ stop = function() {
 };
 
 
-transitionToWaiting = function() {
-  cardElem.style.webkitTransform = 'rotateY(0deg)';
-  setTimeout(function() {
-               localVideo.src = miniVideo.src;
-               miniVideo.src = '';
-               remoteVideo.src = '';
-            }, 500);
-  miniVideo.style.opacity = 0;
-  remoteVideo.style.opacity = 0;
-
-  var myinjector = angular.element($('#container')).injector();
-  myinjector.get('peerService').resetStatus();
-};
 
 transitionToDone = function() {
   localVideo.style.opacity = 0;
