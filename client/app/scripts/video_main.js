@@ -13,12 +13,8 @@ var onChannelError;
 var onChannelClosed;
 var onUserMediaSuccess;
 var onUserMediaError;
-var noteIceCandidate;
 var updateInfoDiv;
 var showInfoDiv;
-
-var setDefaultCodec;
-
 
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
@@ -297,15 +293,15 @@ videoApp.factory('messageService', function() {
 videoApp.factory('signallingService', function($log, messageService, userNotificationService, codecsService) {
 
 
-    function onSetSessionDescriptionError(error) {
+    var onSetSessionDescriptionError = function(error) {
         userNotificationService.messageError('Failed to set session description: ' + error.toString());
-    }
+    };
 
-    function onSetSessionDescriptionSuccess() {
+    var onSetSessionDescriptionSuccess = function() {
         $log.log('Set session description success.');
-    }
+    };
 
-    function waitForRemoteVideo() {
+    var waitForRemoteVideo = function() {
       // Call the getVideoTracks method via adapter.js.
       videoTracks = remoteStream.getVideoTracks();
       if (videoTracks.length === 0 || remoteVideo.currentTime > 0) {
@@ -313,9 +309,9 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
       } else {
         setTimeout(waitForRemoteVideo, 100);
       }
-    }
+    };
 
-    function transitionToActive() {
+    var transitionToActive = function() {
       reattachMediaStream(miniVideo, localVideo);
       remoteVideo.style.opacity = 1;
       cardElem.style.webkitTransform = 'rotateY(180deg)';
@@ -324,11 +320,11 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
       // Reset window display according to the asperio of remote video.
       window.onresize();
       userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
-    }
+    };
 
 
-    function setRemote(message) {
-        function onSetRemoteDescriptionSuccess(){
+    var setRemote = function(message) {
+        var onSetRemoteDescriptionSuccess = function(){
             $log.log('Set remote session description success.');
             // By now all addstream events for the setRemoteDescription have fired.
             // So we can know if the peer is sending any stream or is only receiving.
@@ -338,7 +334,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
                 console.log('Not receiving any stream.');
                 transitionToActive();
             }
-        }
+        };
 
         // Set Opus in Stereo, if stereo enabled.
         if (stereo) {
@@ -347,17 +343,17 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
         message.sdp = codecsService.maybePreferAudioSendCodec(message.sdp);
         pc.setRemoteDescription(new RTCSessionDescription(message),
             onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
-    }
+    };
 
-    function onAddIceCandidateSuccess() {
+    var onAddIceCandidateSuccess = function() {
         $log.log('AddIceCandidate success.');
-    }
+    };
 
-    function onAddIceCandidateError(error) {
+    var onAddIceCandidateError = function(error) {
         userNotificationService.messageError('Failed to add Ice Candidate: ' + error.toString());
-    }
+    };
 
-    function iceCandidateType(candidateSDP) {
+    var iceCandidateType = function(candidateSDP) {
         if (candidateSDP.indexOf('typ relay ') >= 0) {
             return 'TURN';
         }
@@ -368,7 +364,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
             return 'HOST';
         }
         return 'UNKNOWN';
-    }
+    };
 
     var transitionToWaiting = function() {
         cardElem.style.webkitTransform = 'rotateY(0deg)';
@@ -384,12 +380,20 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     };
 
 
-    function onRemoteHangup() {
+    var onRemoteHangup = function() {
         $log.log('Session terminated.');
         initiator = 0;   // jshint ignore:line
         transitionToWaiting();
         this.stop();
-    }
+    };
+
+    var noteIceCandidate = function(location, type) {
+        if (gatheredIceCandidateTypes[location][type]) {
+            return;
+        }
+        gatheredIceCandidateTypes[location][type] = 1;
+        updateInfoDiv();
+    };
 
 
     return {
@@ -456,23 +460,23 @@ videoApp.factory('peerService', function($log, userNotificationService, signalli
 
 
 
-    function onRemoteStreamAdded(event) {
+    var onRemoteStreamAdded = function(event) {
         $log.log('Remote stream added.');
         attachMediaStream(remoteVideo, event.stream);
         remoteStream = event.stream;
-    }
+    };
 
-    function onRemoteStreamRemoved() {
+    var onRemoteStreamRemoved = function() {
         $log.log('Remote stream removed.');
-    }
+    };
 
-    function onSignalingStateChanged() {
+    var onSignalingStateChanged = function() {
         updateInfoDiv();
-    }
+    };
 
-    function onIceConnectionStateChanged() {
+    var onIceConnectionStateChanged = function() {
         updateInfoDiv();
-    }
+    };
 
     return {
 
@@ -504,33 +508,33 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
 
 
-    function onCreateSessionDescriptionError(error) {
+    var onCreateSessionDescriptionError = function(error) {
         userNotificationService.messageError('Failed to create session description: ' + error.toString());
-    }
+    };
 
-    function mergeConstraints(cons1, cons2) {
+    var mergeConstraints = function(cons1, cons2) {
         var merged = cons1;
         for (var name in cons2.mandatory) {
             merged.mandatory[name] = cons2.mandatory[name];
         }
         merged.optional.concat(cons2.optional);
         return merged;
-    }
+    };
 
-    function doCall() {
+    var doCall = function() {
         var constraints = mergeConstraints(offerConstraints, sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
         pc.createOffer(signallingService.setLocalAndSendMessage,
             onCreateSessionDescriptionError, constraints);
-    }
+    };
 
-    function calleeStart() {
+    var calleeStart = function() {
         // Callee starts to process cached offer and other messages.
         while (msgQueue.length > 0) {
             signallingService.processSignalingMessage(msgQueue.shift());
         }
-    }
+    };
 
     var transitionToDone = function() {
       localVideo.style.opacity = 0;
@@ -810,7 +814,7 @@ videoApp.factory('codecsService', function(){
             sdp = sdpLines.join('\r\n');
             return sdp;
         }
-    }
+    };
 
 });
 
@@ -837,21 +841,14 @@ videoApp.directive('currentState', function(userNotificationService, $compile, $
 
 
 
-function enterFullScreen() {
+var enterFullScreen = function() {
   containerDiv.webkitRequestFullScreen();
-}
-
-noteIceCandidate = function(location, type) {
-  if (gatheredIceCandidateTypes[location][type]) {
-    return;
-  }
-  gatheredIceCandidateTypes[location][type] = 1;
-  updateInfoDiv();
 };
 
-function getInfoDiv() {
+
+var getInfoDiv = function() {
   return document.getElementById('infoDiv');
-}
+};
 
 updateInfoDiv = function() {
   var contents = '<pre>Gathered ICE Candidates\n';
@@ -880,21 +877,21 @@ updateInfoDiv = function() {
   }
 };
 
-function toggleInfoDiv() {
+var toggleInfoDiv = function() {
   var div = getInfoDiv();
   if (div.style.display === 'block') {
     div.style.display = 'none';
   } else {
     showInfoDiv();
   }
-}
+};
 
 showInfoDiv = function() {
   var div = getInfoDiv();
   div.style.display = 'block';
 };
 
-function toggleVideoMute() {
+var toggleVideoMute = function() {
   // Call the getVideoTracks method via adapter.js.
   var i;
   videoTracks = localStream.getVideoTracks();
@@ -917,9 +914,9 @@ function toggleVideoMute() {
   }
 
   isVideoMuted = !isVideoMuted;
-}
+};
 
-function toggleAudioMute() {
+var toggleAudioMute = function() {
   var i;
   // Call the getAudioTracks method via adapter.js.
   var audioTracks = localStream.getAudioTracks();
@@ -942,7 +939,7 @@ function toggleAudioMute() {
   }
 
   isAudioMuted = !isAudioMuted;
-}
+};
 
 // Mac: hotkey is Command.
 // Non-Mac: hotkey is Control.
