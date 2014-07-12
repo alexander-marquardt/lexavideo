@@ -346,11 +346,11 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     };
 
 
-    var onRemoteHangup = function() {
+    var onRemoteHangup = function(self) {
         $log.log('Session terminated.');
         initiator = 0;   // jshint ignore:line
         transitionToWaiting();
-        this.stop();
+        self.stop();
     };
 
     var noteIceCandidate = function(location, type) {
@@ -361,9 +361,9 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
         infoDivService.updateInfoDiv();
     };
 
-    var doAnswer = function() {
+    var doAnswer = function(self) {
         $log.log('Sending answer to peer.');
-        pc.createAnswer(this.setLocalAndSendMessage,
+        pc.createAnswer(self.setLocalAndSendMessage,
             onCreateSessionDescriptionError, sdpConstraints);
     };
 
@@ -399,7 +399,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
 
             if (message.type === 'offer') {
                 setRemote(message);
-                doAnswer.call(this);
+                doAnswer(this);
 
             } else if (message.type === 'answer') {
                 setRemote(message);
@@ -410,7 +410,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
                 pc.addIceCandidate(candidate,
                     onAddIceCandidateSuccess, onAddIceCandidateError);
             } else if (message.type === 'bye') {
-                onRemoteHangup.call(this);
+                onRemoteHangup(this);
             }
         },
 
