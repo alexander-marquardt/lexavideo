@@ -399,7 +399,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
 
             if (message.type === 'offer') {
                 setRemote(message);
-                doAnswer();
+                doAnswer.call(this);
 
             } else if (message.type === 'answer') {
                 setRemote(message);
@@ -410,7 +410,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
                 pc.addIceCandidate(candidate,
                     onAddIceCandidateSuccess, onAddIceCandidateError);
             } else if (message.type === 'bye') {
-                onRemoteHangup();
+                onRemoteHangup.call(this);
             }
         },
 
@@ -844,7 +844,7 @@ videoApp.service('infoDivService', function () {
 videoApp.directive('currentState', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'AE',
-        scope: false, // set to false so that directive scope is used for transcluded expressions
+        scope: {},
         link: function(scope, elem) {
 
             // we include doHangup on the scope because some of the getStatus calls can include
