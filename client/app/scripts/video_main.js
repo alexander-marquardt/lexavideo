@@ -844,7 +844,6 @@ videoApp.service('infoDivService', function () {
 videoApp.directive('currentState', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'AE',
-        scope: {},
         link: function(scope, elem) {
 
             // we include doHangup on the scope because some of the getStatus calls can include
