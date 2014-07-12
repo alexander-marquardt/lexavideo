@@ -841,7 +841,7 @@ videoApp.service('infoDivService', function () {
 });
 
 
-videoApp.directive('currentState', function(userNotificationService, $compile, $sce, callService) {
+videoApp.directive('callStatus', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'AE',
         link: function(scope, elem) {
