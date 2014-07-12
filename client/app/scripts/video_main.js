@@ -3,7 +3,6 @@
 var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 // define externally defined variables so that jshint doesn't give warnings
-/* global $ */
 /* global alert */
 /* global roomKey */
 /* global mediaConstraints */
@@ -46,7 +45,6 @@ var started = false;
 var channelReady = false;
 var signalingReady = false;
 var msgQueue = [];
-var containerDiv;
 
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {'mandatory': {
@@ -105,6 +103,7 @@ videoApp
 
 
     });
+
 
 
 videoApp.factory('channelService', function($log, callService, signallingService, userNotificationService) {
@@ -262,6 +261,10 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
 
     var onSetSessionDescriptionSuccess = function() {
         $log.log('Set session description success.');
+    };
+
+    var onCreateSessionDescriptionError = function(error) {
+        userNotificationService.messageError('Failed to create session description: ' + error.toString());
     };
 
     var waitForRemoteVideo = function() {
@@ -477,9 +480,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
 
 
-    var onCreateSessionDescriptionError = function(error) {
-        userNotificationService.messageError('Failed to create session description: ' + error.toString());
-    };
+
 
     var mergeConstraints = function(cons1, cons2) {
         var merged = cons1;
@@ -495,7 +496,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
         pc.createOffer(signallingService.setLocalAndSendMessage,
-            onCreateSessionDescriptionError, constraints);
+            signallingService.onCreateSessionDescriptionError, constraints);
     };
 
     var calleeStart = function() {
@@ -955,7 +956,12 @@ videoApp.directive('monitorControlKeys', function ($document, $log, infoDivServi
 videoApp.directive('videoContainer', function($window) {
     return {
         restrict : 'AE',
-        link: function(scope, elem, attrs) {
+        link: function(scope, elem) {
+
+            scope.enterFullScreen = function () {
+                container.webkitRequestFullScreen();
+            };
+
             // Set the video diplaying in the center of window.
             $window.onresize = function(){
                 var videoAspectRatio;
@@ -989,12 +995,8 @@ videoApp.directive('videoContainer', function($window) {
                 elem.prop.top = 0 + 'px';
             };
         }
-    }
+    };
 });
 
-// TODO move this into a directive or controller - it is currently called directly from the html
-function enterFullScreen() {
-  container.webkitRequestFullScreen();
-}
 
 
