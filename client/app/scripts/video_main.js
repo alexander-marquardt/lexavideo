@@ -957,10 +957,11 @@ videoApp.directive('videoContainer', function($window) {
     return {
         restrict : 'AE',
         link: function(scope, elem) {
-
+/*
             scope.enterFullScreen = function () {
-                container.webkitRequestFullScreen();
-            };
+                // TODO -- this will probably fail on other browsers -- investigate if extra code is needed.
+                elem[0].webkitRequestFullScreen();
+            };*/
 
             // Set the video diplaying in the center of window.
             $window.onresize = function(){
