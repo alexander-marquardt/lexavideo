@@ -46,9 +46,9 @@ videoApp.factory('globalVarsService', function (constantsService) {
     return {
         initiator : constantsService.initiator,
         pcConfig : constantsService.pcConfig,
-        localVideo : document.getElementById('localVideo'),
-        miniVideo : document.getElementById('miniVideo'),
-        remoteVideo : document.getElementById('remoteVideo')
+        localVideo : $('#localVideo')[0],
+        miniVideo : $('#miniVideo')[0],
+        remoteVideo : $('#remoteVideo')[0]
     };
 });
 
