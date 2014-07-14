@@ -437,10 +437,10 @@ videoApp.factory('peerService', function($log, userNotificationService, sessionS
 
 
 
-    var onRemoteStreamAdded = function(event) {
+    var onRemoteStreamAdded = function(mediaStreamEvent) {
         $log.log('Remote stream added.');
-        attachMediaStream(globalVarsService.remoteVideo, event.stream);
-        remoteStream = event.stream;
+        attachMediaStream(globalVarsService.remoteVideo, mediaStreamEvent.stream);
+        remoteStream = mediaStreamEvent.stream;
     };
 
     var onRemoteStreamRemoved = function() {
