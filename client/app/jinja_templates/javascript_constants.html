@@ -16,10 +16,6 @@
 
 
     angular.module('videoApp.mainConstants', [])
-            .constant('errorMessagesConstant', errorMessages)
-            .constant('channelToken', channelToken)
-            .constant('myUsername', me)
-            .constant('roomKey', roomKey)
             .constant('initiator', initiator)
             .constant('pcConfig', pcConfig)
             .constant('pcConstraints', pcConstraints)
@@ -28,6 +24,25 @@
             .constant('turnUrl', turnUrl)
             .constant('stereo', stereo)
             .constant('audioSendCodec', audioSendCodec)
-            .constant('audioReceiveCodec', audioReceiveCodec);
+            .constant('audioReceiveCodec', audioReceiveCodec)
+            .factory('constantsService', function() {
+                return {
+                    errorMessages : {{ error_messages }},
+                    channelToken : '{{ token }}',
+                    myUsername : '{{ my_username }}',
+                    roomKey : '{{ room_key }}',
+                    roomLink : '{{ room_link }}',
+                    initiator : {{ call_initiator }},
+                    pcConfig : pcConfig,
+                    pcConstraints : pcConstraints,
+                    offerConstraints : offerConstraints,
+                    mediaConstraints : mediaConstraints,
+                    turnUrl : turnUrl,
+                    stereo : stereo,
+                    audioSendCodec : audioSendCodec,
+                    audioReceiveCodec : audioReceiveCodec
+                }
+            });
+
 
 </script>

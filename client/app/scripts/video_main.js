@@ -4,7 +4,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 // define externally defined variables so that jshint doesn't give warnings
 /* global alert */
-/* global roomKey */
 /* global mediaConstraints */
 /* global initiator */
 /* global goog */
@@ -15,11 +14,9 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* global roomLink */
 /* global RTCPeerConnection */
 /* global pcConstraints */
-/* global channelToken */
 /* global offerConstraints */
 /* global RTCSessionDescription */
 /* global stereo */
-/* global me */
 /* global RTCIceCandidate */
 /* global attachMediaStream */
 /* global reattachMediaStream */
@@ -58,16 +55,16 @@ var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 var cardElem;
 
 videoApp
-    .run(function($log, errorMessagesConstant, channelService, turnService, peerService, callService, userNotificationService, mediaService, messageService) {
+    .run(function($log, constantsService, channelService, turnService, peerService, callService, userNotificationService, mediaService, messageService) {
         var i;
-        if (errorMessagesConstant.length > 0) {
-            for (i = 0; i < errorMessagesConstant.length; ++i) {
-                window.alert(errorMessagesConstant[i]);
+        if (constantsService.errorMessages.length > 0) {
+            for (i = 0; i < constantsService.errorMessages.length; ++i) {
+                window.alert(constantsService.errorMessages[i]);
             }
             return;
         }
 
-        $log.log('Initializing; room=' + roomKey + '.');
+        $log.log('Initializing; room=' + constantsService.roomKey + '.');
         cardElem = document.getElementById('card');
         localVideo = document.getElementById('localVideo');
         // Reset localVideo display to center.
@@ -106,7 +103,7 @@ videoApp
 
 
 
-videoApp.factory('channelService', function($log, callService, signallingService, userNotificationService) {
+videoApp.factory('channelService', function($log, constantsService, callService, signallingService, userNotificationService) {
 
     var onChannelOpened = function() {
       console.log('Channel opened.');
@@ -155,7 +152,7 @@ videoApp.factory('channelService', function($log, callService, signallingService
     return {
         openChannel: function() {
             $log.log('Opening channel.');
-            var channel = new goog.appengine.Channel(channelToken);
+            var channel = new goog.appengine.Channel(constantsService.channelToken);
             socket = channel.open(handler);
         }
     };
@@ -234,7 +231,7 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
 });
 
 
-videoApp.factory('messageService', function() {
+videoApp.factory('messageService', function(constantsService) {
 
     return {
         sendMessage : function(message) {
@@ -242,7 +239,7 @@ videoApp.factory('messageService', function() {
             console.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
-            var path = '/message?r=' + roomKey + '&u=' + me;
+            var path = '/message?r=' + constantsService.roomKey + '&u=' + constantsService.me;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', path, true);
             xhr.send(msgString);
