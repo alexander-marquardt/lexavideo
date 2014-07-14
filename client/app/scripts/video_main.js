@@ -3,6 +3,7 @@
 var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 // define externally defined variables so that jshint doesn't give warnings
+/* global $ */
 /* global alert */
 /* global goog */
 /* global createIceServers */
@@ -18,9 +19,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* exported initialize */
 
 // define variables
-var localVideo;
-var miniVideo;
-var remoteVideo;
 var videoTracks;
 var hasLocalStream;
 var localStream;
@@ -47,9 +45,12 @@ var cardElem;
 videoApp.factory('globalVarsService', function (constantsService) {
     return {
         initiator : constantsService.initiator,
-        pcConfig : constantsService.pcConfig
-    }
-})
+        pcConfig : constantsService.pcConfig,
+        localVideo : document.getElementById('localVideo'),
+        miniVideo : document.getElementById('miniVideo'),
+        remoteVideo : document.getElementById('remoteVideo')
+    };
+});
 
 videoApp
     .run(function($log, constantsService, channelService, turnService, peerService, callService, userNotificationService,
@@ -64,12 +65,11 @@ videoApp
 
         $log.log('Initializing; room=' + constantsService.roomKey + '.');
         cardElem = document.getElementById('card');
-        localVideo = document.getElementById('localVideo');
+
         // Reset localVideo display to center.
-        localVideo.addEventListener('loadedmetadata', function(){
+        globalVarsService.localVideo.addEventListener('loadedmetadata', function(){
             window.onresize();});
-        miniVideo = document.getElementById('miniVideo');
-        remoteVideo = document.getElementById('remoteVideo');
+
         userNotificationService.resetStatus();
         // NOTE: AppRTCClient.java searches & parses this line; update there when
         // changing here.
@@ -101,7 +101,7 @@ videoApp
 
 
 
-videoApp.factory('channelService', function($log, constantsService, callService, signallingService, userNotificationService, globalVarsService) {
+videoApp.factory('channelService', function($log, constantsService, callService, sessionService, userNotificationService, globalVarsService) {
 
     var onChannelOpened = function() {
       console.log('Channel opened.');
@@ -128,7 +128,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
           msgQueue.push(msg);
         }
       } else {
-        signallingService.processSignalingMessage(msg);
+        sessionService.processSignalingMessage(msg);
       }
     };
 
@@ -247,7 +247,7 @@ videoApp.factory('messageService', function(constantsService) {
 });
 
 
-videoApp.factory('signallingService', function($log, messageService, userNotificationService,
+videoApp.factory('sessionService', function($log, messageService, userNotificationService,
     codecsService, infoDivService, globalVarsService, constantsService) {
 
 
@@ -266,7 +266,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     var waitForRemoteVideo = function() {
       // Call the getVideoTracks method via adapter.js.
       videoTracks = remoteStream.getVideoTracks();
-      if (videoTracks.length === 0 || remoteVideo.currentTime > 0) {
+      if (videoTracks.length === 0 || globalVarsService.remoteVideo.currentTime > 0) {
         transitionToActive();
       } else {
         setTimeout(waitForRemoteVideo, 100);
@@ -274,11 +274,11 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     };
 
     var transitionToActive = function() {
-      reattachMediaStream(miniVideo, localVideo);
-      remoteVideo.style.opacity = 1;
+      reattachMediaStream(globalVarsService.miniVideo, globalVarsService.localVideo);
+        globalVarsService.remoteVideo.style.opacity = 1;
       cardElem.style.webkitTransform = 'rotateY(180deg)';
-      setTimeout(function() { localVideo.src = ''; }, 500);
-      setTimeout(function() { miniVideo.style.opacity = 1; }, 1000);
+      setTimeout(function() { globalVarsService.localVideo.src = ''; }, 500);
+      setTimeout(function() { globalVarsService.miniVideo.style.opacity = 1; }, 1000);
       // Reset window display according to the asperio of remote video.
       window.onresize();
       userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
@@ -331,12 +331,12 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     var transitionToWaiting = function() {
         cardElem.style.webkitTransform = 'rotateY(0deg)';
         setTimeout(function() {
-            localVideo.src = miniVideo.src;
-            miniVideo.src = '';
-            remoteVideo.src = '';
+            globalVarsService.localVideo.src = globalVarsService.miniVideo.src;
+            globalVarsService.miniVideo.src = '';
+            globalVarsService.remoteVideo.src = '';
         }, 500);
-        miniVideo.style.opacity = 0;
-        remoteVideo.style.opacity = 0;
+        globalVarsService.miniVideo.style.opacity = 0;
+        globalVarsService.remoteVideo.style.opacity = 0;
 
         userNotificationService.resetStatus();
     };
@@ -425,13 +425,13 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     };
 });
 
-videoApp.factory('peerService', function($log, userNotificationService, signallingService, infoDivService, globalVarsService, constantsService) {
+videoApp.factory('peerService', function($log, userNotificationService, sessionService, infoDivService, globalVarsService, constantsService) {
 
 
 
     var onRemoteStreamAdded = function(event) {
         $log.log('Remote stream added.');
-        attachMediaStream(remoteVideo, event.stream);
+        attachMediaStream(globalVarsService.remoteVideo, event.stream);
         remoteStream = event.stream;
     };
 
@@ -455,7 +455,7 @@ videoApp.factory('peerService', function($log, userNotificationService, signalli
           try {
             // Create an RTCPeerConnection via the polyfill (adapter.js).
             pc = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
-            pc.onicecandidate = signallingService.onIceCandidate;
+            pc.onicecandidate = sessionService.onIceCandidate;
             console.log('Created RTCPeerConnnection with:\n' +
                         '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
                         '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
@@ -473,7 +473,7 @@ videoApp.factory('peerService', function($log, userNotificationService, signalli
     };
 });
 
-videoApp.factory('callService', function($log, turnServiceSupport, peerService, signallingService,
+videoApp.factory('callService', function($log, turnServiceSupport, peerService, sessionService,
                                          userNotificationService, constantsService, globalVarsService) {
 
 
@@ -493,21 +493,21 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         var constraints = mergeConstraints(constantsService.offerConstraints, sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
-        pc.createOffer(signallingService.setLocalAndSendMessage,
-            signallingService.onCreateSessionDescriptionError, constraints);
+        pc.createOffer(sessionService.setLocalAndSendMessage,
+            sessionService.onCreateSessionDescriptionError, constraints);
     };
 
     var calleeStart = function() {
         // Callee starts to process cached offer and other messages.
         while (msgQueue.length > 0) {
-            signallingService.processSignalingMessage(msgQueue.shift());
+            sessionService.processSignalingMessage(msgQueue.shift());
         }
     };
 
     var transitionToDone = function() {
-      localVideo.style.opacity = 0;
-      remoteVideo.style.opacity = 0;
-      miniVideo.style.opacity = 0;
+        globalVarsService.localVideo.style.opacity = 0;
+        globalVarsService.remoteVideo.style.opacity = 0;
+        globalVarsService.miniVideo.style.opacity = 0;
 
       userNotificationService.setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
     };
@@ -545,7 +545,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
              console.log('Hanging up.');
              transitionToDone();
              localStream.stop();
-             signallingService.stop();
+             sessionService.stop();
              // will trigger BYE from server
              socket.close();
         }
@@ -556,13 +556,13 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
 
 
-videoApp.factory('mediaService', function(callService, userNotificationService, constantsService) {
+videoApp.factory('mediaService', function(callService, userNotificationService, constantsService, globalVarsService) {
 
     var onUserMediaSuccess = function(stream) {
         console.log('User has granted access to local media.');
         // Call the polyfill wrapper to attach the media stream to this element.
-        attachMediaStream(localVideo, stream);
-        localVideo.style.opacity = 1;
+        attachMediaStream(globalVarsService.localVideo, stream);
+        globalVarsService.localVideo.style.opacity = 1;
         localStream = stream;
         // Caller creates PeerConnection.
         callService.maybeStart();
@@ -950,7 +950,7 @@ videoApp.directive('monitorControlKeys', function ($document, $log, infoDivServi
 });
 
 
-videoApp.directive('videoContainer', function($window) {
+videoApp.directive('videoContainer', function($window, globalVarsService) {
     return {
         restrict : 'AE',
         link: function(scope, elem) {
@@ -963,10 +963,10 @@ videoApp.directive('videoContainer', function($window) {
             // Set the video diplaying in the center of window.
             $window.onresize = function(){
                 var videoAspectRatio;
-                if (remoteVideo.style.opacity === '1') {
-                    videoAspectRatio = remoteVideo.videoWidth/remoteVideo.videoHeight;
-                } else if (localVideo.style.opacity === '1') {
-                    videoAspectRatio = localVideo.videoWidth/localVideo.videoHeight;
+                if (globalVarsService.remoteVideo.style.opacity === '1') {
+                    videoAspectRatio = globalVarsService.remoteVideo.videoWidth/globalVarsService.remoteVideo.videoHeight;
+                } else if (globalVarsService.localVideo.style.opacity === '1') {
+                    videoAspectRatio = globalVarsService.localVideo.videoWidth/globalVarsService.localVideo.videoHeight;
                 } else {
                     return;
                 }
