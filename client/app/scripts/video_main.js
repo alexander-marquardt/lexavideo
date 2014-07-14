@@ -8,7 +8,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* global goog */
 /* global createIceServers */
 /* global getUserMedia */
-/* global roomLink */
 /* global RTCPeerConnection */
 /* global RTCSessionDescription */
 /* global RTCIceCandidate */
@@ -27,7 +26,6 @@ var pc;
 var socket;
 var xmlhttp;
 var started = false;
-var channelReady = false;
 var signalingReady = false;
 var msgQueue = [];
 
@@ -100,12 +98,18 @@ videoApp
     });
 
 
+videoApp.service('channelServiceSupport', function() {
+    this.channelReady = false;
+});
 
-videoApp.factory('channelService', function($log, constantsService, callService, sessionService, userNotificationService, globalVarsService) {
+videoApp.factory('channelService', function($log, constantsService, callService, sessionService, userNotificationService,
+                                            channelServiceSupport, globalVarsService) {
+
+
 
     var onChannelOpened = function() {
       console.log('Channel opened.');
-      channelReady = true;
+      channelServiceSupport.channelReady = true;
       callService.maybeStart();
     };
 
@@ -122,6 +126,8 @@ videoApp.factory('channelService', function($log, constantsService, callService,
           msgQueue.unshift(msg);
           // Callee creates PeerConnection
           // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
+          // On the other hand, caller is the person who calls the callee, and is currently the second
+          // person to join the chatroom.
           signalingReady = true;
           callService.maybeStart();
         } else {
@@ -134,10 +140,12 @@ videoApp.factory('channelService', function($log, constantsService, callService,
 
     var onChannelError = function() {
         userNotificationService.messageError('Channel error.');
+        channelServiceSupport.channelReady = false;
     };
 
     var onChannelClosed = function() {
       console.log('Channel closed.');
+      channelServiceSupport.channelReady = false;
     };
 
     var handler = {
@@ -152,7 +160,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
             $log.log('Opening channel.');
             var channel = new goog.appengine.Channel(constantsService.channelToken);
             socket = channel.open(handler);
-        }
+        },
     };
 });
 
@@ -473,7 +481,7 @@ videoApp.factory('peerService', function($log, userNotificationService, sessionS
     };
 });
 
-videoApp.factory('callService', function($log, turnServiceSupport, peerService, sessionService,
+videoApp.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
                                          userNotificationService, constantsService, globalVarsService) {
 
 
@@ -509,7 +517,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         globalVarsService.remoteVideo.style.opacity = 0;
         globalVarsService.miniVideo.style.opacity = 0;
 
-      userNotificationService.setStatus('You have left the call. <a href=' + roomLink + '>Click here</a> to rejoin.');
+      userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
     };
 
     return {
@@ -517,7 +525,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
             var turnDone = turnServiceSupport.turnDone;
 
-            if (!started && signalingReady && channelReady && turnDone &&
+            if (!started && signalingReady && channelServiceSupport.channelReady && turnDone &&
                 (localStream || !hasLocalStream)) {
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
