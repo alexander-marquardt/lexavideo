@@ -4,17 +4,12 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 // define externally defined variables so that jshint doesn't give warnings
 /* global alert */
-/* global mediaConstraints */
-/* global initiator */
 /* global goog */
 /* global turnUrl */
-/* global pcConfig */
 /* global createIceServers */
 /* global getUserMedia */
 /* global roomLink */
 /* global RTCPeerConnection */
-/* global pcConstraints */
-/* global offerConstraints */
 /* global RTCSessionDescription */
 /* global stereo */
 /* global RTCIceCandidate */
@@ -24,7 +19,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* global audioReceiveCodec */
 
 
-/* exported initiator */
 /* exported initialize */
 
 // define variables
@@ -54,8 +48,16 @@ var isAudioMuted = false;
 var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 var cardElem;
 
+videoApp.factory('globalVarsService', function (constantsService) {
+    return {
+        initiator : constantsService.initiator,
+        pcConfig : constantsService.pcConfig
+    }
+})
+
 videoApp
-    .run(function($log, constantsService, channelService, turnService, peerService, callService, userNotificationService, mediaService, messageService) {
+    .run(function($log, constantsService, channelService, turnService, peerService, callService, userNotificationService,
+                  mediaService, messageService, globalVarsService) {
         var i;
         if (constantsService.errorMessages.length > 0) {
             for (i = 0; i < constantsService.errorMessages.length; ++i) {
@@ -80,10 +82,10 @@ videoApp
 
         // Caller is always ready to create peerConnection.
         // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
-        signalingReady = initiator;
+        signalingReady = globalVarsService.initiator;
 
-        if (mediaConstraints.audio === false &&
-            mediaConstraints.video === false) {
+        if (constantsService.mediaConstraints.audio === false &&
+            constantsService.mediaConstraints.video === false) {
             hasLocalStream = false;
             callService.maybeStart();
         } else {
@@ -103,7 +105,7 @@ videoApp
 
 
 
-videoApp.factory('channelService', function($log, constantsService, callService, signallingService, userNotificationService) {
+videoApp.factory('channelService', function($log, constantsService, callService, signallingService, userNotificationService, globalVarsService) {
 
     var onChannelOpened = function() {
       console.log('Channel opened.');
@@ -117,7 +119,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
       // Since the turn response is async and also GAE might disorder the
       // Message delivery due to possible datastore query at server side,
       // So callee needs to cache messages before peerConnection is created.
-      if (!initiator && !started) {
+      if (!globalVarsService.initiator && !started) {
         if (msg.type === 'offer') {
           // Add offer to the beginning of msgQueue, since we can't handle
           // Early candidates before offer at present.
@@ -171,7 +173,7 @@ videoApp.service('turnServiceSupport', function () {
 });
 
 
-videoApp.factory('turnService', function($log, peerService, callService, turnServiceSupport, userNotificationService) {
+videoApp.factory('turnService', function($log, peerService, callService, turnServiceSupport, userNotificationService, globalVarsService) {
 
     return {
 
@@ -182,8 +184,8 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
                 return;
             }
 
-            for (var i = 0, len = pcConfig.iceServers.length; i < len; i++) {
-                if (pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
+            for (var i = 0, len = globalVarsService.pcConfig.iceServers.length; i < len; i++) {
+                if (globalVarsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
                     turnServiceSupport.turnDone = true;
                     return;
                 }
@@ -215,9 +217,9 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
                                               turnServer.username,
                                               turnServer.password);
             if (iceServers !== null) {
-              pcConfig.iceServers = pcConfig.iceServers.concat(iceServers);
+                globalVarsService.pcConfig.iceServers = globalVarsService.pcConfig.iceServers.concat(iceServers);
             }
-            $log.log('Got pcConfig.iceServers:' + pcConfig.iceServers + '\n');
+            $log.log('Got pcConfig.iceServers:' + globalVarsService.pcConfig.iceServers + '\n');
           } else {
               userNotificationService.messageError('No TURN server; unlikely that media will traverse networks.  ' +
                          'If this persists please report it to ' +
@@ -239,7 +241,7 @@ videoApp.factory('messageService', function(constantsService) {
             console.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
-            var path = '/message?r=' + constantsService.roomKey + '&u=' + constantsService.me;
+            var path = '/message?r=' + constantsService.roomKey + '&u=' + constantsService.myUsername;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', path, true);
             xhr.send(msgString);
@@ -249,7 +251,7 @@ videoApp.factory('messageService', function(constantsService) {
 
 
 videoApp.factory('signallingService', function($log, messageService, userNotificationService,
-                                               codecsService, infoDivService) {
+                                               codecsService, infoDivService, globalVarsService) {
 
 
     var onSetSessionDescriptionError = function(error) {
@@ -345,7 +347,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
 
     var onRemoteHangup = function(self) {
         $log.log('Session terminated.');
-        initiator = 0;   // jshint ignore:line
+        globalVarsService.initiator = 0;   // jshint ignore:line
         transitionToWaiting();
         self.stop();
     };
@@ -366,6 +368,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
 
 
     return {
+
 
         stop : function() {
             started = false;
@@ -425,7 +428,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
     };
 });
 
-videoApp.factory('peerService', function($log, userNotificationService, signallingService, infoDivService) {
+videoApp.factory('peerService', function($log, userNotificationService, signallingService, infoDivService, globalVarsService, constantsService) {
 
 
 
@@ -454,11 +457,11 @@ videoApp.factory('peerService', function($log, userNotificationService, signalli
         createPeerConnection : function() {
           try {
             // Create an RTCPeerConnection via the polyfill (adapter.js).
-            pc = new RTCPeerConnection(pcConfig, pcConstraints);
+            pc = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
             pc.onicecandidate = signallingService.onIceCandidate;
             console.log('Created RTCPeerConnnection with:\n' +
-                        '  config: \'' + JSON.stringify(pcConfig) + '\';\n' +
-                        '  constraints: \'' + JSON.stringify(pcConstraints) + '\'.');
+                        '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
+                        '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
           } catch (e) {
               userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
             alert('Cannot create RTCPeerConnection object; ' +
@@ -473,7 +476,8 @@ videoApp.factory('peerService', function($log, userNotificationService, signalli
     };
 });
 
-videoApp.factory('callService', function($log, turnServiceSupport, peerService, signallingService, userNotificationService) {
+videoApp.factory('callService', function($log, turnServiceSupport, peerService, signallingService,
+                                         userNotificationService, constantsService, globalVarsService) {
 
 
 
@@ -489,7 +493,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
     };
 
     var doCall = function() {
-        var constraints = mergeConstraints(offerConstraints, sdpConstraints);
+        var constraints = mergeConstraints(constantsService.offerConstraints, sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
         pc.createOffer(signallingService.setLocalAndSendMessage,
@@ -530,7 +534,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
                 }
                 started = true;
 
-                if (initiator) {
+                if (globalVarsService.initiator) {
                     doCall();
                 }
                 else {
@@ -555,7 +559,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
 
 
-videoApp.factory('mediaService', function(callService, userNotificationService) {
+videoApp.factory('mediaService', function(callService, userNotificationService, constantsService) {
 
     var onUserMediaSuccess = function(stream) {
         console.log('User has granted access to local media.');
@@ -583,10 +587,10 @@ videoApp.factory('mediaService', function(callService, userNotificationService) 
         doGetUserMedia  : function() {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
-                getUserMedia(mediaConstraints, onUserMediaSuccess,
+                getUserMedia(constantsService.mediaConstraints, onUserMediaSuccess,
                     onUserMediaError);
                 console.log('Requested access to local media with mediaConstraints:\n' +
-                    '  \'' + JSON.stringify(mediaConstraints) + '\'');
+                    '  \'' + JSON.stringify(constantsService.mediaConstraints) + '\'');
             } catch (e) {
                 alert('getUserMedia() failed. Is this a WebRTC capable browser?');
                 userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
@@ -596,7 +600,7 @@ videoApp.factory('mediaService', function(callService, userNotificationService) 
 });
 
 
-videoApp.factory('userNotificationService', function($timeout, infoDivService) {
+videoApp.factory('userNotificationService', function($timeout, infoDivService, constantsService, globalVarsService) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
@@ -615,8 +619,8 @@ videoApp.factory('userNotificationService', function($timeout, infoDivService) {
             infoDivService.updateInfoDiv();
         },
         resetStatus : function() {
-          if (!initiator) {
-              this.setStatus('Waiting for someone to join:  <a href=' + roomLink + '>' + roomLink + '</a>');
+          if (!globalVarsService.initiator) {
+              this.setStatus('Waiting for someone to join:  <a href=' + constantsService.roomLink + '>' + constantsService.roomLink + '</a>');
           } else {
               this.setStatus('Initializing...');
           }

@@ -1,14 +1,5 @@
 <script type="text/javascript">
-  var errorMessages = {{ error_messages }};
-  var channelToken = '{{ token }}';
-  var me = '{{ my_username }}';
-  var roomKey = '{{ room_key }}';
-  var roomLink = '{{ room_link }}';
-  var initiator = {{ call_initiator }};
-  var pcConfig = {{ pc_config | safe }};
-  var pcConstraints = {{ pc_constraints | safe }};
-  var offerConstraints = {{ offer_constraints | safe }};
-  var mediaConstraints = {{ media_constraints | safe }};
+
   var turnUrl = '{{ turn_url }}';
   var stereo = {{ stereo }};
   var audioSendCodec = '{{ audio_send_codec }}';
@@ -16,11 +7,6 @@
 
 
     angular.module('videoApp.mainConstants', [])
-            .constant('initiator', initiator)
-            .constant('pcConfig', pcConfig)
-            .constant('pcConstraints', pcConstraints)
-            .constant('offerConstraints', offerConstraints)
-            .constant('mediaConstraints', mediaConstraints)
             .constant('turnUrl', turnUrl)
             .constant('stereo', stereo)
             .constant('audioSendCodec', audioSendCodec)
@@ -33,10 +19,10 @@
                     roomKey : '{{ room_key }}',
                     roomLink : '{{ room_link }}',
                     initiator : {{ call_initiator }},
-                    pcConfig : pcConfig,
-                    pcConstraints : pcConstraints,
-                    offerConstraints : offerConstraints,
-                    mediaConstraints : mediaConstraints,
+                    pcConfig : {{ pc_config | safe }},
+                    pcConstraints : {{ pc_constraints | safe }},
+                    offerConstraints : {{ offer_constraints | safe }},
+                    mediaConstraints : {{ media_constraints | safe }},
                     turnUrl : turnUrl,
                     stereo : stereo,
                     audioSendCodec : audioSendCodec,
