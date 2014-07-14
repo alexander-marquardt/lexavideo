@@ -5,18 +5,14 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 // define externally defined variables so that jshint doesn't give warnings
 /* global alert */
 /* global goog */
-/* global turnUrl */
 /* global createIceServers */
 /* global getUserMedia */
 /* global roomLink */
 /* global RTCPeerConnection */
 /* global RTCSessionDescription */
-/* global stereo */
 /* global RTCIceCandidate */
 /* global attachMediaStream */
 /* global reattachMediaStream */
-/* global audioSendCodec */
-/* global audioReceiveCodec */
 
 
 /* exported initialize */
@@ -173,13 +169,14 @@ videoApp.service('turnServiceSupport', function () {
 });
 
 
-videoApp.factory('turnService', function($log, peerService, callService, turnServiceSupport, userNotificationService, globalVarsService) {
+videoApp.factory('turnService', function($log, peerService, callService, turnServiceSupport, userNotificationService,
+                                         constantsService, globalVarsService) {
 
     return {
 
         maybeRequestTurn : function() {
             // Allow to skip turn by passing ts=false to apprtc.
-            if (turnUrl === '') {
+            if (constantsService.turnUrl === '') {
                 turnServiceSupport.turnDone = true;
                 return;
             }
@@ -202,7 +199,7 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
             // No TURN server. Get one from computeengineondemand.appspot.com.
             xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = this.onTurnResult;
-            xmlhttp.open('GET', turnUrl, true);
+            xmlhttp.open('GET', constantsService.turnUrl, true);
             xmlhttp.send();
         },
         onTurnResult : function() {
@@ -251,7 +248,7 @@ videoApp.factory('messageService', function(constantsService) {
 
 
 videoApp.factory('signallingService', function($log, messageService, userNotificationService,
-                                               codecsService, infoDivService, globalVarsService) {
+    codecsService, infoDivService, globalVarsService, constantsService) {
 
 
     var onSetSessionDescriptionError = function(error) {
@@ -302,7 +299,7 @@ videoApp.factory('signallingService', function($log, messageService, userNotific
         };
 
         // Set Opus in Stereo, if stereo enabled.
-        if (stereo) {
+        if (constantsService.stereo) {
             message.sdp = codecsService.addStereo(message.sdp);
         }
         message.sdp = codecsService.maybePreferAudioSendCodec(message.sdp);
@@ -628,7 +625,7 @@ videoApp.factory('userNotificationService', function($timeout, infoDivService, c
     };
 });
 
-videoApp.factory('codecsService', function(){
+videoApp.factory('codecsService', function(constantsService){
 
     // Strip CN from sdp before CN constraints is ready.
     var removeCN = function(sdpLines, mLineIndex) {
@@ -725,21 +722,21 @@ videoApp.factory('codecsService', function(){
     return {
 
         maybePreferAudioSendCodec : function(sdp) {
-            if (audioSendCodec === '') {
+            if (constantsService.audioSendCodec === '') {
                 console.log('No preference on audio send codec.');
                 return sdp;
             }
-            console.log('Prefer audio send codec: ' + audioSendCodec);
-            return preferAudioCodec(sdp, audioSendCodec);
+            console.log('Prefer audio send codec: ' + constantsService.audioSendCodec);
+            return preferAudioCodec(sdp, constantsService.audioSendCodec);
         },
 
         maybePreferAudioReceiveCodec : function(sdp) {
-            if (audioReceiveCodec === '') {
+            if (constantsService.audioReceiveCodec === '') {
                 console.log('No preference on audio receive codec.');
                 return sdp;
             }
-            console.log('Prefer audio receive codec: ' + audioReceiveCodec);
-            return preferAudioCodec(sdp, audioReceiveCodec);
+            console.log('Prefer audio receive codec: ' + constantsService.audioReceiveCodec);
+            return preferAudioCodec(sdp, constantsService.audioReceiveCodec);
         },
 
         // Set Opus in stereo if stereo is enabled.

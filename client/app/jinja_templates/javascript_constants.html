@@ -1,34 +1,26 @@
 <script type="text/javascript">
 
-  var turnUrl = '{{ turn_url }}';
-  var stereo = {{ stereo }};
-  var audioSendCodec = '{{ audio_send_codec }}';
-  var audioReceiveCodec = '{{ audio_receive_codec }}';
 
 
-    angular.module('videoApp.mainConstants', [])
-            .constant('turnUrl', turnUrl)
-            .constant('stereo', stereo)
-            .constant('audioSendCodec', audioSendCodec)
-            .constant('audioReceiveCodec', audioReceiveCodec)
-            .factory('constantsService', function() {
-                return {
-                    errorMessages : {{ error_messages }},
-                    channelToken : '{{ token }}',
-                    myUsername : '{{ my_username }}',
-                    roomKey : '{{ room_key }}',
-                    roomLink : '{{ room_link }}',
-                    initiator : {{ call_initiator }},
-                    pcConfig : {{ pc_config | safe }},
-                    pcConstraints : {{ pc_constraints | safe }},
-                    offerConstraints : {{ offer_constraints | safe }},
-                    mediaConstraints : {{ media_constraints | safe }},
-                    turnUrl : turnUrl,
-                    stereo : stereo,
-                    audioSendCodec : audioSendCodec,
-                    audioReceiveCodec : audioReceiveCodec
-                }
-            });
+angular.module('videoApp.mainConstants', [])
+    .factory('constantsService', function() {
+        return {
+            errorMessages : {{ error_messages }},
+            channelToken : '{{ token }}',
+            myUsername : '{{ my_username }}',
+            roomKey : '{{ room_key }}',
+            roomLink : '{{ room_link }}',
+            initiator : {{ call_initiator }},
+            pcConfig : {{ pc_config | safe }},
+            pcConstraints : {{ pc_constraints | safe }},
+            offerConstraints : {{ offer_constraints | safe }},
+            mediaConstraints : {{ media_constraints | safe }},
+            turnUrl : '{{ turn_url }}',
+            stereo : {{ stereo }},
+            audioSendCodec : '{{ audio_send_codec }}',
+            audioReceiveCodec : '{{ audio_receive_codec }}'
+        }
+    });
 
 
 </script>
