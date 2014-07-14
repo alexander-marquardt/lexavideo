@@ -973,8 +973,9 @@ videoApp.directive('videoContainer', function($window) {
                     return;
                 }
 
-                var innerHeight = $window.innerHeight;
+                var innerHeight =$window.innerHeight - $('#id-vidochat-logo').height() - $('#footer').height();
                 var innerWidth = $window.innerWidth;
+
                 var innerAspectRatio = innerWidth/innerHeight;
                 var videoHeight, videoWidth;
 
@@ -989,10 +990,10 @@ videoApp.directive('videoContainer', function($window) {
                     videoWidth = innerHeight * videoAspectRatio;
                 }
 
-                elem.prop.width = videoWidth + 'px';
-                elem.prop.height = videoHeight + 'px';
-                elem.prop.left = (innerWidth - videoWidth) / 2 + 'px';
-                elem.prop.top = 0 + 'px';
+                elem.width(videoWidth + 'px');
+                elem.height(videoHeight + 'px');
+//                elem.prop.left = (innerWidth - videoWidth) / 2 + 'px';
+//                elem.prop.top = 0 + 'px';
             };
         }
     };
