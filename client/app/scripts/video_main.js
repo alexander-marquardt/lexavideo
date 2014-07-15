@@ -22,7 +22,6 @@ var videoTracks;
 var hasLocalStream;
 var localStream;
 var remoteStream;
-var pc;
 var socket;
 var xmlhttp;
 var started = false;
@@ -296,12 +295,12 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
             return;
         }
         gatheredIceCandidateTypes[location][type] = 1;
-        infoDivService.updateInfoDiv();
+        infoDivService.updateIceInfoDiv();
     };
 });
 
 videoApp.factory('sessionService', function($log, messageService, userNotificationService,
-    codecsService, infoDivService, globalVarsService, constantsService, iceService) {
+    codecsService, infoDivService, globalVarsService, constantsService, iceService, peerService) {
 
 
     var onSetSessionDescriptionError = function(error) {
@@ -356,7 +355,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
             message.sdp = codecsService.addStereo(message.sdp);
         }
         message.sdp = codecsService.maybePreferAudioSendCodec(message.sdp);
-        pc.setRemoteDescription(new RTCSessionDescription(message),
+        peerService.getPc().setRemoteDescription(new RTCSessionDescription(message),
             onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
     };
 
@@ -385,7 +384,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
 
     var doAnswer = function(self) {
         $log.log('Sending answer to peer.');
-        pc.createAnswer(self.setLocalAndSendMessage,
+        peerService.getPc().createAnswer(self.setLocalAndSendMessage,
             onCreateSessionDescriptionError, sdpConstraints);
     };
 
@@ -398,8 +397,8 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
             signalingReady = false;
             isAudioMuted = false;
             isVideoMuted = false;
-            pc.close();
-            pc = null;
+            peerService.getPc().close();
+            peerService.setPc(null);
             remoteStream = null;
             msgQueue.length = 0;
         },
@@ -407,7 +406,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
 
         setLocalAndSendMessage : function(sessionDescription) {
             sessionDescription.sdp = codecsService.maybePreferAudioReceiveCodec(sessionDescription.sdp);
-            pc.setLocalDescription(sessionDescription,
+            peerService.getPc().setLocalDescription(sessionDescription,
                 onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
             messageService.sendMessage(sessionDescription);
         },
@@ -430,7 +429,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
                 var candidate = new RTCIceCandidate({sdpMLineIndex: message.label,
                     candidate: message.candidate});
                 iceService.noteIceCandidate('Remote', iceService.iceCandidateType(message.candidate));
-                pc.addIceCandidate(candidate,
+                peerService.getPc().addIceCandidate(candidate,
                     iceService.onAddIceCandidateSuccess, iceService.onAddIceCandidateError);
             } else if (message.type === 'bye') {
                 onRemoteHangup(this);
@@ -439,10 +438,22 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
     };
 });
 
-videoApp.factory('peerService', function($log, userNotificationService, sessionService, infoDivService,
+videoApp.factory('peerService', function($log, userNotificationService, infoDivService,
                                          iceService, globalVarsService, constantsService) {
 
 
+    var peerConnection = null;
+
+    var pcStatus = function () {
+        var contents = '';
+        if (peerConnection) {
+            contents += 'Gathering: ' + peerConnection.iceGatheringState + '\n';
+            contents += 'PC State:\n';
+            contents += 'Signaling: ' + peerConnection.signalingState + '\n';
+            contents += 'ICE: ' + peerConnection.iceConnectionState + '\n';
+        }
+        return contents;
+    };
 
     var onRemoteStreamAdded = function(mediaStreamEvent) {
         $log.log('Remote stream added.');
@@ -455,35 +466,44 @@ videoApp.factory('peerService', function($log, userNotificationService, sessionS
     };
 
     var onSignalingStateChanged = function() {
-        infoDivService.updateInfoDiv();
+        infoDivService.updatePcInfoDiv(pcStatus());
     };
 
     var onIceConnectionStateChanged = function() {
-        infoDivService.updateInfoDiv();
+        infoDivService.updatePcInfoDiv(pcStatus());
     };
+
+
 
     return {
 
+        getPc : function() {
+            return peerConnection;
+        },
 
+        setPc : function(value) {
+            peerConnection = value;
+        },
 
         createPeerConnection : function() {
-          try {
-            // Create an RTCPeerConnection via the polyfill (adapter.js).
-            pc = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
-            pc.onicecandidate = iceService.onIceCandidate;
-            console.log('Created RTCPeerConnnection with:\n' +
-                        '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
-                        '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
-          } catch (e) {
-              userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
-            alert('Cannot create RTCPeerConnection object; ' +
-                  'WebRTC is not supported by this browser.');
-            return;
-          }
-          pc.onaddstream = onRemoteStreamAdded;
-          pc.onremovestream = onRemoteStreamRemoved;
-          pc.onsignalingstatechange = onSignalingStateChanged;
-          pc.oniceconnectionstatechange = onIceConnectionStateChanged;
+            try {
+                // Create an RTCPeerConnection via the polyfill (adapter.js).
+                peerConnection = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
+                peerConnection.onicecandidate = iceService.onIceCandidate;
+                console.log('Created RTCPeerConnnection with:\n' +
+                    '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
+                    '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
+            } catch (e) {
+                userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
+                alert('Cannot create RTCPeerConnection object; ' +
+                    'WebRTC is not supported by this browser.');
+                return;
+            }
+            peerConnection.onaddstream = onRemoteStreamAdded;
+            peerConnection.onremovestream = onRemoteStreamRemoved;
+            peerConnection.onsignalingstatechange = onSignalingStateChanged;
+            peerConnection.oniceconnectionstatechange = onIceConnectionStateChanged;
+
         }
     };
 });
@@ -508,7 +528,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         var constraints = mergeConstraints(constantsService.offerConstraints, sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
-        pc.createOffer(sessionService.setLocalAndSendMessage,
+        peerService.getPc().createOffer(sessionService.setLocalAndSendMessage,
             sessionService.onCreateSessionDescriptionError, constraints);
     };
 
@@ -540,7 +560,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
                 if (hasLocalStream) {
                     $log.log('Adding local stream.');
-                    pc.addStream(localStream);
+                    peerService.getPc().addStream(localStream);
                 } else {
                     $log.log('Not sending any stream.');
                 }
@@ -628,7 +648,7 @@ videoApp.factory('userNotificationService', function($timeout, infoDivService, c
         messageError : function(msg) {
             console.log(msg);
             infoDivService.pushInfoDivErrors(msg);
-            infoDivService.updateInfoDiv();
+            infoDivService.updateErrorsInfoDiv();
         },
         resetStatus : function() {
           if (!globalVarsService.initiator) {
@@ -801,7 +821,7 @@ videoApp.service('infoDivService', function () {
     var infoDivErrors = [];
 
     var getInfoDiv = function() {
-        return document.getElementById('infoDiv');
+        return $('#infoDiv')[0];
     };
 
     var showInfoDiv = function() {
@@ -824,28 +844,30 @@ videoApp.service('infoDivService', function () {
             }
         },
 
-        updateInfoDiv : function() {
+        updateIceInfoDiv : function() {
             var contents = '<pre>Gathered ICE Candidates\n';
             for (var endpoint in gatheredIceCandidateTypes) {
                 contents += endpoint + ':\n';
                 for (var type in gatheredIceCandidateTypes[endpoint]) {
                     contents += '  ' + type + '\n';
                 }
-            }
-            if (pc) {
-                contents += 'Gathering: ' + pc.iceGatheringState + '\n';
                 contents += '</pre>\n';
-                contents += '<pre>PC State:\n';
-                contents += 'Signaling: ' + pc.signalingState + '\n';
-                contents += 'ICE: ' + pc.iceConnectionState + '\n';
             }
-            var div = getInfoDiv();
-            div.innerHTML = contents + '</pre>';
+            $('#iceInfoDiv').html(contents);
+        },
 
+        updatePcInfoDiv : function (contents) {
+            $('#pcInfoDiv').html(contents);
+        },
+
+        updateErrorsInfoDiv : function () {
+            var contents = '';
             for (var msg in infoDivErrors) {
-                div.innerHTML += '<p style="background-color: red; color: yellow;">' +
+                contents += '<p style="background-color: red; color: yellow;">' +
                     infoDivErrors[msg] + '</p>';
             }
+            $('#errorsInfoDiv').html(contents);
+
             if (infoDivErrors.length) {
                 showInfoDiv();
             }
