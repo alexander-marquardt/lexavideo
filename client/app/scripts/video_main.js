@@ -113,28 +113,30 @@ videoApp.factory('channelService', function($log, constantsService, callService,
     };
 
     var onChannelMessage = function(message) {
-      console.log('S->C: ' + message.data);
-      var msg = JSON.parse(message.data);
-      // Since the turn response is async and also GAE might disorder the
-      // Message delivery due to possible datastore query at server side,
-      // So callee needs to cache messages before peerConnection is created.
-      if (!globalVarsService.initiator && !started) {
-        if (msg.type === 'offer') {
-          // Add offer to the beginning of msgQueue, since we can't handle
-          // Early candidates before offer at present.
-          msgQueue.unshift(msg);
-          // Callee creates PeerConnection
-          // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
-          // On the other hand, caller is the person who calls the callee, and is currently the second
-          // person to join the chatroom.
-          signalingReady = true;
-          callService.maybeStart();
+        console.log('S->C: ' + message.data);
+        var msg = JSON.parse(message.data);
+        // Since the turn response is async and also GAE might disorder the
+        // Message delivery due to possible datastore query at server side,
+        // So callee needs to cache messages before peerConnection is created.
+        if (!globalVarsService.initiator && !started) {
+            if (msg.type === 'offer') {
+                // Add offer to the beginning of msgQueue, since we can't handle
+                // Early candidates before offer at present.
+                // unshift adds the msg to the beginning of the array.
+                msgQueue.unshift(msg);
+                // Callee creates PeerConnection
+                // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
+                // On the other hand, caller is the person who calls the callee, and is currently the second
+                // person to join the chatroom.
+                signalingReady = true;
+                callService.maybeStart();
+            } else {
+                // push adds the msg to the end of the array.
+                msgQueue.push(msg);
+            }
         } else {
-          msgQueue.push(msg);
+            sessionService.processSignalingMessage(msg);
         }
-      } else {
-        sessionService.processSignalingMessage(msg);
-      }
     };
 
     var onChannelError = function() {
