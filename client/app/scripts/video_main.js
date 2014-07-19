@@ -23,7 +23,6 @@ var hasLocalStream;
 var localStream;
 var remoteStream;
 var socket;
-var xmlhttp;
 var started = false;
 
 // Set up audio and video regardless of what devices are present.
@@ -200,8 +199,36 @@ videoApp.service('turnServiceSupport', function () {
 });
 
 
-videoApp.factory('turnService', function($log, peerService, callService, turnServiceSupport, userNotificationService,
+videoApp.factory('turnService', function($log, $http, peerService, callService, turnServiceSupport, userNotificationService,
                                          constantsService, globalVarsService) {
+
+
+    var onTurnResult = function(response) {
+
+        var turnServer = response.data;
+        // Create turnUris using the polyfill (adapter.js).
+        var iceServers = createIceServers(turnServer.uris,
+            turnServer.username,
+            turnServer.password);
+        if (iceServers !== null) {
+            globalVarsService.pcConfig.iceServers = globalVarsService.pcConfig.iceServers.concat(iceServers);
+        }
+        $log.log('Got pcConfig.iceServers:' + globalVarsService.pcConfig.iceServers + '\n');
+    };
+
+    var onTurnError = function() {
+
+        userNotificationService.messageError('No TURN server; unlikely that media will traverse networks.  ' +
+            'If this persists please report it to ' +
+            'info@lexabit.com');
+    };
+
+
+    var afterTurnRequest = function() {
+        // Even if TURN request failed, continue the call with default STUN.
+        turnServiceSupport.turnDone = true;
+        callService.maybeStart();
+    };
 
     return {
 
@@ -228,34 +255,7 @@ videoApp.factory('turnService', function($log, peerService, callService, turnSer
             }
 
             // No TURN server. Get one from computeengineondemand.appspot.com.
-            xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = this.onTurnResult;
-            xmlhttp.open('GET', constantsService.turnUrl, true);
-            xmlhttp.send();
-        },
-        onTurnResult : function() {
-          if (xmlhttp.readyState !== 4) {
-            return;
-          }
-
-          if (xmlhttp.status === 200) {
-            var turnServer = JSON.parse(xmlhttp.responseText);
-            // Create turnUris using the polyfill (adapter.js).
-            var iceServers = createIceServers(turnServer.uris,
-                                              turnServer.username,
-                                              turnServer.password);
-            if (iceServers !== null) {
-                globalVarsService.pcConfig.iceServers = globalVarsService.pcConfig.iceServers.concat(iceServers);
-            }
-            $log.log('Got pcConfig.iceServers:' + globalVarsService.pcConfig.iceServers + '\n');
-          } else {
-              userNotificationService.messageError('No TURN server; unlikely that media will traverse networks.  ' +
-                         'If this persists please report it to ' +
-                         'info@lexabit.com');
-          }
-          // If TURN request failed, continue the call with default STUN.
-          turnServiceSupport.turnDone = true;
-          callService.maybeStart();
+            $http.get(constantsService.turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest);
         }
     };
 });
@@ -575,10 +575,10 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
     return {
         maybeStart : function() {
 
-            var turnDone = turnServiceSupport.turnDone;
 
-            if (!started && globalVarsService.signalingReady && channelServiceSupport.channelReady && turnDone &&
-                (localStream || !hasLocalStream)) {
+            if (!started && globalVarsService.signalingReady && channelServiceSupport.channelReady &&
+                turnServiceSupport.turnDone && (localStream || !hasLocalStream)) {
+                
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
                 peerService.createPeerConnection();
