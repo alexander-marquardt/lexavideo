@@ -14,11 +14,13 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* global attachMediaStream */
 /* global reattachMediaStream */
 
+// TODO - remove all console.log and replace with $log.log
+// TODO - remove all javascript timers. replace with angular.
+
 
 /* exported initialize */
 
 // define variables
-var hasLocalStream;
 var localStream;
 var socket;
 var started = false;
@@ -76,10 +78,10 @@ videoApp
 
         if (constantsService.mediaConstraints.audio === false &&
             constantsService.mediaConstraints.video === false) {
-            hasLocalStream = false;
+            callService.hasLocalStream = false;
             callService.maybeStart();
         } else {
-            hasLocalStream = true;
+            callService.hasLocalStream = true;
             callService.doGetUserMedia();
         }
 
@@ -543,8 +545,6 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
 
 
-
-
     var mergeConstraints = function(cons1, cons2) {
         var merged = cons1;
         for (var name in cons2.mandatory) {
@@ -596,23 +596,25 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
             alert('Failed to get access to local media. Error code was ' +
                 error.code + '. Continuing without sending a stream.');
 
-            hasLocalStream = false;
+            self.hasLocalStream = false;
             self.maybeStart();
         };
     };
 
     return {
+        hasLocalStream : false,
+
         maybeStart : function() {
 
 
             if (!started && globalVarsService.signalingReady && channelServiceSupport.channelReady &&
-                turnServiceSupport.turnDone && (localStream || !hasLocalStream)) {
+                turnServiceSupport.turnDone && (localStream || !this.hasLocalStream)) {
 
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
                 peerService.createPeerConnection();
 
-                if (hasLocalStream) {
+                if (this.hasLocalStream) {
                     $log.log('Adding local stream.');
                     peerService.pc.addStream(localStream);
                 } else {
