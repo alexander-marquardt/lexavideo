@@ -18,7 +18,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* exported initialize */
 
 // define variables
-var videoTracks;
 var hasLocalStream;
 var localStream;
 var socket;
@@ -40,6 +39,7 @@ videoApp.factory('globalVarsService', function (constantsService) {
         initiator : constantsService.initiator,
         pcConfig : constantsService.pcConfig,
         signalingReady : false,
+        videoTracks: null,
         localVideo : $('#localVideo')[0],
         miniVideo : $('#miniVideo')[0],
         remoteVideo : $('#remoteVideo')[0]
@@ -328,6 +328,7 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
     };
 });
 
+
 videoApp.factory('sessionService', function($log, messageService, userNotificationService,
     codecsService, infoDivService, globalVarsService, constantsService, iceService, peerService,
     channelMessageService) {
@@ -344,8 +345,8 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
 
     var waitForRemoteVideo = function() {
       // Call the getVideoTracks method via adapter.js.
-      videoTracks = peerService.remoteStream.getVideoTracks();
-      if (videoTracks.length === 0 || globalVarsService.remoteVideo.currentTime > 0) {
+        globalVarsService.videoTracks = peerService.remoteStream.getVideoTracks();
+      if (globalVarsService.videoTracks.length === 0 || globalVarsService.remoteVideo.currentTime > 0) {
         transitionToActive();
       } else {
         setTimeout(waitForRemoteVideo, 100);
@@ -501,7 +502,7 @@ videoApp.service('peerService', function($log, userNotificationService, infoDivS
     var onSignalingStateChanged = function(self){
         return function() {
             infoDivService.updatePcInfoDiv(pcStatus(self));
-        }
+        };
     };
 
     var onIceConnectionStateChanged = function(self) {
@@ -534,7 +535,7 @@ videoApp.service('peerService', function($log, userNotificationService, infoDivS
         this.pc.onsignalingstatechange = onSignalingStateChanged(this);
         this.pc.oniceconnectionstatechange = onIceConnectionStateChanged(this);
 
-    }
+    };
 });
 
 videoApp.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
@@ -919,26 +920,26 @@ videoApp.directive('callStatus', function(userNotificationService, $compile, $sc
     };
 });
 
-videoApp.directive('monitorControlKeys', function ($document, $log, infoDivService) {
+videoApp.directive('monitorControlKeys', function ($document, $log, infoDivService, globalVarsService) {
 
     var toggleVideoMute = function() {
         // Call the getVideoTracks method via adapter.js.
         var i;
-        videoTracks = localStream.getVideoTracks();
+        globalVarsService.videoTracks = localStream.getVideoTracks();
 
-        if (videoTracks.length === 0) {
+        if (globalVarsService.videoTracks.length === 0) {
             console.log('No local video available.');
             return;
         }
 
         if (isVideoMuted) {
-            for (i = 0; i < videoTracks.length; i++) {
-                videoTracks[i].enabled = true;
+            for (i = 0; i < globalVarsService.videoTracks.length; i++) {
+                globalVarsService.videoTracks[i].enabled = true;
             }
             console.log('Video unmuted.');
         } else {
-            for (i = 0; i < videoTracks.length; i++) {
-                videoTracks[i].enabled = false;
+            for (i = 0; i < globalVarsService.videoTracks.length; i++) {
+                globalVarsService.videoTracks[i].enabled = false;
             }
             console.log('Video muted.');
         }
