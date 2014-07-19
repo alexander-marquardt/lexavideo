@@ -261,18 +261,24 @@ videoApp.factory('turnService', function($log, $http, peerService, callService, 
 });
 
 
-videoApp.factory('messageService', function(constantsService) {
+videoApp.factory('messageService', function($http, $log, constantsService) {
 
     return {
         sendMessage : function(message) {
             var msgString = JSON.stringify(message);
-            console.log('C->S: ' + msgString);
+            $log.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
             var path = '/message?r=' + constantsService.roomKey + '&u=' + constantsService.myUsername;
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', path, true);
-            xhr.send(msgString);
+
+            $http.post(path, msgString).then(
+                function(/*response*/) {
+                    //$log.log('Post success. Got response status: ' + response.statusText);
+                },
+                function(/*response*/) {
+                    //$log.log('Post error. Got response status: ' + response.statusText);
+                }
+            );
         }
     };
 });
@@ -578,7 +584,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
             if (!started && globalVarsService.signalingReady && channelServiceSupport.channelReady &&
                 turnServiceSupport.turnDone && (localStream || !hasLocalStream)) {
-                
+
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
                 peerService.createPeerConnection();
