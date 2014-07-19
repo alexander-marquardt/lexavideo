@@ -49,7 +49,7 @@ videoApp.factory('globalVarsService', function (constantsService) {
 
 videoApp
     .run(function($log, constantsService, channelService, turnService, peerService, callService, userNotificationService,
-                  mediaService, messageService, globalVarsService) {
+                  messageService, globalVarsService) {
         var i;
         if (constantsService.errorMessages.length > 0) {
             for (i = 0; i < constantsService.errorMessages.length; ++i) {
@@ -81,7 +81,7 @@ videoApp
             callService.maybeStart();
         } else {
             hasLocalStream = true;
-            mediaService.doGetUserMedia();
+            callService.doGetUserMedia();
         }
 
 
@@ -578,6 +578,30 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
       userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
     };
 
+    var onUserMediaSuccess = function(self) {
+        return function(stream) {
+            console.log('User has granted access to local media.');
+            // Call the polyfill wrapper to attach the media stream to this element.
+            attachMediaStream(globalVarsService.localVideo, stream);
+            globalVarsService.localVideo.style.opacity = 1;
+            localStream = stream;
+            // Caller creates PeerConnection.
+            self.maybeStart();
+        };
+    };
+
+    var onUserMediaError = function(self) {
+        return function(error) {
+            userNotificationService.messageError('Failed to get access to local media. Error code was ' +
+                error.code + '. Continuing without sending a stream.');
+            alert('Failed to get access to local media. Error code was ' +
+                error.code + '. Continuing without sending a stream.');
+
+            hasLocalStream = false;
+            self.maybeStart();
+        };
+    };
+
     return {
         maybeStart : function() {
 
@@ -606,7 +630,6 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
             }
         },
 
-
         doHangup : function() {
              console.log('Hanging up.');
              transitionToDone();
@@ -614,44 +637,13 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
              sessionService.stop();
              // will trigger BYE from server
              socket.close();
-        }
-    };
-});
+        },
 
-
-
-
-
-videoApp.factory('mediaService', function(callService, userNotificationService, constantsService, globalVarsService) {
-
-    var onUserMediaSuccess = function(stream) {
-        console.log('User has granted access to local media.');
-        // Call the polyfill wrapper to attach the media stream to this element.
-        attachMediaStream(globalVarsService.localVideo, stream);
-        globalVarsService.localVideo.style.opacity = 1;
-        localStream = stream;
-        // Caller creates PeerConnection.
-        callService.maybeStart();
-    };
-
-    var onUserMediaError = function(error) {
-        userNotificationService.messageError('Failed to get access to local media. Error code was ' +
-            error.code + '. Continuing without sending a stream.');
-        alert('Failed to get access to local media. Error code was ' +
-            error.code + '. Continuing without sending a stream.');
-
-        hasLocalStream = false;
-        callService.maybeStart();
-    };
-
-
-
-    return  {
         doGetUserMedia  : function() {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
-                getUserMedia(constantsService.mediaConstraints, onUserMediaSuccess,
-                    onUserMediaError);
+                getUserMedia(constantsService.mediaConstraints, onUserMediaSuccess(this),
+                    onUserMediaError(this));
                 console.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(constantsService.mediaConstraints) + '\'');
             } catch (e) {
