@@ -26,7 +26,6 @@ var socket;
 var xmlhttp;
 var started = false;
 var signalingReady = false;
-var msgQueue = [];
 
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {'mandatory': {
@@ -97,12 +96,37 @@ videoApp
     });
 
 
+videoApp.service('channelMessageService', function() {
+    var msgQueue = [];
+
+    return {
+        clearQueue : function() {
+            msgQueue.length = 0;
+        },
+        unshift : function(msg) {
+            // adds the msg to the beginning of the array.
+            return msgQueue.unshift(msg);
+        },
+        push: function(msg) {
+            // adds the msg to the end of the array.
+            return msgQueue.push(msg);
+        },
+        shift : function() {
+            // pull the first element out of the array and return it.
+            return msgQueue.shift();
+        },
+        getQueueLength : function() {
+            return msgQueue.length;
+        }
+    };
+});
+
 videoApp.service('channelServiceSupport', function() {
     this.channelReady = false;
 });
 
 videoApp.factory('channelService', function($log, constantsService, callService, sessionService, userNotificationService,
-                                            channelServiceSupport, globalVarsService) {
+                                            channelServiceSupport, globalVarsService, channelMessageService) {
 
 
 
@@ -122,8 +146,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
             if (msg.type === 'offer') {
                 // Add offer to the beginning of msgQueue, since we can't handle
                 // Early candidates before offer at present.
-                // unshift adds the msg to the beginning of the array.
-                msgQueue.unshift(msg);
+                channelMessageService.unshift(msg);
                 // Callee creates PeerConnection
                 // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
                 // On the other hand, caller is the person who calls the callee, and is currently the second
@@ -131,8 +154,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
                 signalingReady = true;
                 callService.maybeStart();
             } else {
-                // push adds the msg to the end of the array.
-                msgQueue.push(msg);
+                channelMessageService.push(msg);
             }
         } else {
             sessionService.processSignalingMessage(msg);
@@ -302,7 +324,8 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
 });
 
 videoApp.factory('sessionService', function($log, messageService, userNotificationService,
-    codecsService, infoDivService, globalVarsService, constantsService, iceService, peerService) {
+    codecsService, infoDivService, globalVarsService, constantsService, iceService, peerService,
+    channelMessageService) {
 
 
     var onSetSessionDescriptionError = function(error) {
@@ -402,7 +425,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
             peerService.getPc().close();
             peerService.setPc(null);
             remoteStream = null;
-            msgQueue.length = 0;
+            channelMessageService.clearQueue();
         },
 
 
@@ -511,7 +534,7 @@ videoApp.factory('peerService', function($log, userNotificationService, infoDivS
 });
 
 videoApp.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
-                                         userNotificationService, constantsService, globalVarsService) {
+                                         userNotificationService, constantsService, globalVarsService, channelMessageService) {
 
 
 
@@ -536,8 +559,8 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
     var calleeStart = function() {
         // Callee starts to process cached offer and other messages.
-        while (msgQueue.length > 0) {
-            sessionService.processSignalingMessage(msgQueue.shift());
+        while (channelMessageService.getQueueLength() > 0) {
+            sessionService.processSignalingMessage(channelMessageService.shift());
         }
     };
 
