@@ -25,7 +25,6 @@ var remoteStream;
 var socket;
 var xmlhttp;
 var started = false;
-var signalingReady = false;
 
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {'mandatory': {
@@ -42,6 +41,7 @@ videoApp.factory('globalVarsService', function (constantsService) {
     return {
         initiator : constantsService.initiator,
         pcConfig : constantsService.pcConfig,
+        signalingReady : false,
         localVideo : $('#localVideo')[0],
         miniVideo : $('#miniVideo')[0],
         remoteVideo : $('#remoteVideo')[0]
@@ -74,7 +74,7 @@ videoApp
 
         // Caller is always ready to create peerConnection.
         // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
-        signalingReady = globalVarsService.initiator;
+        globalVarsService.signalingReady = globalVarsService.initiator;
 
         if (constantsService.mediaConstraints.audio === false &&
             constantsService.mediaConstraints.video === false) {
@@ -151,7 +151,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
                 // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
                 // On the other hand, caller is the person who calls the callee, and is currently the second
                 // person to join the chatroom.
-                signalingReady = true;
+                globalVarsService.signalingReady = true;
                 callService.maybeStart();
             } else {
                 channelMessageService.push(msg);
@@ -183,7 +183,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
             $log.log('Opening channel.');
             var channel = new goog.appengine.Channel(constantsService.channelToken);
             socket = channel.open(handler);
-        },
+        }
     };
 });
 
@@ -419,7 +419,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
 
         stop : function() {
             started = false;
-            signalingReady = false;
+            globalVarsService.signalingReady = false;
             isAudioMuted = false;
             isVideoMuted = false;
             peerService.getPc().close();
@@ -577,7 +577,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
             var turnDone = turnServiceSupport.turnDone;
 
-            if (!started && signalingReady && channelServiceSupport.channelReady && turnDone &&
+            if (!started && globalVarsService.signalingReady && channelServiceSupport.channelReady && turnDone &&
                 (localStream || !hasLocalStream)) {
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
