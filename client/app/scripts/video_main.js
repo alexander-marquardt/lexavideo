@@ -336,9 +336,6 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
         $log.log('Set session description success.');
     };
 
-    var onCreateSessionDescriptionError = function(error) {
-        userNotificationService.messageError('Failed to create session description: ' + error.toString());
-    };
 
     var waitForRemoteVideo = function() {
       // Call the getVideoTracks method via adapter.js.
@@ -410,12 +407,15 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
     var doAnswer = function(self) {
         $log.log('Sending answer to peer.');
         peerService.getPc().createAnswer(self.setLocalAndSendMessage,
-            onCreateSessionDescriptionError, sdpConstraints);
+            self.onCreateSessionDescriptionError, sdpConstraints);
     };
 
 
     return {
 
+        onCreateSessionDescriptionError : function(error) {
+            userNotificationService.messageError('Failed to create session description: ' + error.toString());
+        },
 
         stop : function() {
             started = false;
