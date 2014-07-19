@@ -21,7 +21,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 var videoTracks;
 var hasLocalStream;
 var localStream;
-var remoteStream;
 var socket;
 var started = false;
 
@@ -345,7 +344,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
 
     var waitForRemoteVideo = function() {
       // Call the getVideoTracks method via adapter.js.
-      videoTracks = remoteStream.getVideoTracks();
+      videoTracks = peerService.remoteStream.getVideoTracks();
       if (videoTracks.length === 0 || globalVarsService.remoteVideo.currentTime > 0) {
         transitionToActive();
       } else {
@@ -370,7 +369,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
             $log.log('Set remote session description success.');
             // By now all addstream events for the setRemoteDescription have fired.
             // So we can know if the peer is sending any stream or is only receiving.
-            if (remoteStream) {
+            if (peerService.remoteStream) {
                 waitForRemoteVideo();
             } else {
                 console.log('Not receiving any stream.');
@@ -383,7 +382,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
             message.sdp = codecsService.addStereo(message.sdp);
         }
         message.sdp = codecsService.maybePreferAudioSendCodec(message.sdp);
-        peerService.getPc().setRemoteDescription(new RTCSessionDescription(message),
+        peerService.pc.setRemoteDescription(new RTCSessionDescription(message),
             onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
     };
 
@@ -412,7 +411,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
 
     var doAnswer = function(self) {
         $log.log('Sending answer to peer.');
-        peerService.getPc().createAnswer(self.setLocalAndSendMessage,
+        peerService.pc.createAnswer(self.setLocalAndSendMessage,
             self.onCreateSessionDescriptionError, sdpConstraints);
     };
 
@@ -428,16 +427,16 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
             globalVarsService.signalingReady = false;
             isAudioMuted = false;
             isVideoMuted = false;
-            peerService.getPc().close();
-            peerService.setPc(null);
-            remoteStream = null;
+            peerService.pc.close();
+            peerService.pc = null;
+            peerService.remoteStream = null;
             channelMessageService.clearQueue();
         },
 
 
         setLocalAndSendMessage : function(sessionDescription) {
             sessionDescription.sdp = codecsService.maybePreferAudioReceiveCodec(sessionDescription.sdp);
-            peerService.getPc().setLocalDescription(sessionDescription,
+            peerService.pc.setLocalDescription(sessionDescription,
                 onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
             messageService.sendMessage(sessionDescription);
         },
@@ -460,7 +459,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
                 var candidate = new RTCIceCandidate({sdpMLineIndex: message.label,
                     candidate: message.candidate});
                 iceService.noteIceCandidate('Remote', iceService.iceCandidateType(message.candidate));
-                peerService.getPc().addIceCandidate(candidate,
+                peerService.pc.addIceCandidate(candidate,
                     iceService.onAddIceCandidateSuccess, iceService.onAddIceCandidateError);
             } else if (message.type === 'bye') {
                 onRemoteHangup(this);
@@ -469,74 +468,73 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
     };
 });
 
-videoApp.factory('peerService', function($log, userNotificationService, infoDivService,
+videoApp.service('peerService', function($log, userNotificationService, infoDivService,
                                          iceService, globalVarsService, constantsService) {
 
 
-    var peerConnection = null;
 
-    var pcStatus = function () {
+    /* "private" methods */
+    var pcStatus = function (self) {
         var contents = '';
-        if (peerConnection) {
-            contents += 'Gathering: ' + peerConnection.iceGatheringState + '\n';
+        if (self.pc) {
+            contents += 'Gathering: ' + self.pc.iceGatheringState + '\n';
             contents += 'PC State:\n';
-            contents += 'Signaling: ' + peerConnection.signalingState + '\n';
-            contents += 'ICE: ' + peerConnection.iceConnectionState + '\n';
+            contents += 'Signaling: ' + self.pc.signalingState + '\n';
+            contents += 'ICE: ' + self.pc.iceConnectionState + '\n';
         }
         return contents;
     };
 
-    var onRemoteStreamAdded = function(mediaStreamEvent) {
-        $log.log('Remote stream added.');
-        attachMediaStream(globalVarsService.remoteVideo, mediaStreamEvent.stream);
-        remoteStream = mediaStreamEvent.stream;
+    var onRemoteStreamAdded = function(self) {
+        return function(mediaStreamEvent) {
+            $log.log('Remote stream added.');
+            attachMediaStream(globalVarsService.remoteVideo, mediaStreamEvent.stream);
+            self.remoteStream = mediaStreamEvent.stream;
+        };
     };
+
 
     var onRemoteStreamRemoved = function() {
         $log.log('Remote stream removed.');
     };
 
-    var onSignalingStateChanged = function() {
-        infoDivService.updatePcInfoDiv(pcStatus());
-    };
-
-    var onIceConnectionStateChanged = function() {
-        infoDivService.updatePcInfoDiv(pcStatus());
-    };
-
-
-
-    return {
-
-        getPc : function() {
-            return peerConnection;
-        },
-
-        setPc : function(value) {
-            peerConnection = value;
-        },
-
-        createPeerConnection : function() {
-            try {
-                // Create an RTCPeerConnection via the polyfill (adapter.js).
-                peerConnection = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
-                peerConnection.onicecandidate = iceService.onIceCandidate;
-                console.log('Created RTCPeerConnnection with:\n' +
-                    '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
-                    '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
-            } catch (e) {
-                userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
-                alert('Cannot create RTCPeerConnection object; ' +
-                    'WebRTC is not supported by this browser.');
-                return;
-            }
-            peerConnection.onaddstream = onRemoteStreamAdded;
-            peerConnection.onremovestream = onRemoteStreamRemoved;
-            peerConnection.onsignalingstatechange = onSignalingStateChanged;
-            peerConnection.oniceconnectionstatechange = onIceConnectionStateChanged;
-
+    var onSignalingStateChanged = function(self){
+        return function() {
+            infoDivService.updatePcInfoDiv(pcStatus(self));
         }
     };
+
+    var onIceConnectionStateChanged = function(self) {
+        return function() {
+            infoDivService.updatePcInfoDiv(pcStatus(self));
+        };
+    };
+
+
+    /* Externally visible variables and methods */
+    this.pc = null;
+    this.remoteStream = null;
+
+    this.createPeerConnection = function() {
+        try {
+            // Create an RTCPeerConnection via the polyfill (adapter.js).
+            this.pc = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
+            this.pc.onicecandidate = iceService.onIceCandidate;
+            console.log('Created RTCPeerConnnection with:\n' +
+                '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
+                '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
+        } catch (e) {
+            userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
+            alert('Cannot create RTCPeerConnection object; ' +
+                'WebRTC is not supported by this browser.');
+            return;
+        }
+        this.pc.onaddstream = onRemoteStreamAdded(this);
+        this.pc.onremovestream = onRemoteStreamRemoved;
+        this.pc.onsignalingstatechange = onSignalingStateChanged(this);
+        this.pc.oniceconnectionstatechange = onIceConnectionStateChanged(this);
+
+    }
 });
 
 videoApp.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
@@ -559,7 +557,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         var constraints = mergeConstraints(constantsService.offerConstraints, sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
-        peerService.getPc().createOffer(sessionService.setLocalAndSendMessage,
+        peerService.pc.createOffer(sessionService.setLocalAndSendMessage,
             sessionService.onCreateSessionDescriptionError, constraints);
     };
 
@@ -615,7 +613,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
                 if (hasLocalStream) {
                     $log.log('Adding local stream.');
-                    peerService.getPc().addStream(localStream);
+                    peerService.pc.addStream(localStream);
                 } else {
                     $log.log('Not sending any stream.');
                 }
