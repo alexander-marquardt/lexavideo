@@ -471,7 +471,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
     };
 });
 
-videoApp.service('peerService', function($log, userNotificationService, infoDivService,
+videoApp.factory('peerService', function($log, userNotificationService, infoDivService,
                                          iceService, globalVarsService, constantsService) {
 
 
@@ -515,28 +515,28 @@ videoApp.service('peerService', function($log, userNotificationService, infoDivS
 
 
     /* Externally visible variables and methods */
-    this.pc = null;
-    this.remoteStream = null;
-
-    this.createPeerConnection = function() {
-        try {
-            // Create an RTCPeerConnection via the polyfill (adapter.js).
-            this.pc = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
-            this.pc.onicecandidate = iceService.onIceCandidate;
-            console.log('Created RTCPeerConnnection with:\n' +
-                '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
-                '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
-        } catch (e) {
-            userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
-            alert('Cannot create RTCPeerConnection object; ' +
-                'WebRTC is not supported by this browser.');
-            return;
+    return {
+        pc : null,
+        remoteStream : null,
+        createPeerConnection : function() {
+            try {
+                // Create an RTCPeerConnection via the polyfill (adapter.js).
+                this.pc = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
+                this.pc.onicecandidate = iceService.onIceCandidate;
+                console.log('Created RTCPeerConnnection with:\n' +
+                    '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
+                    '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
+            } catch (e) {
+                userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
+                alert('Cannot create RTCPeerConnection object; ' +
+                    'WebRTC is not supported by this browser.');
+                return;
+            }
+            this.pc.onaddstream = onRemoteStreamAdded(this);
+            this.pc.onremovestream = onRemoteStreamRemoved;
+            this.pc.onsignalingstatechange = onSignalingStateChanged(this);
+            this.pc.oniceconnectionstatechange = onIceConnectionStateChanged(this);
         }
-        this.pc.onaddstream = onRemoteStreamAdded(this);
-        this.pc.onremovestream = onRemoteStreamRemoved;
-        this.pc.onsignalingstatechange = onSignalingStateChanged(this);
-        this.pc.oniceconnectionstatechange = onIceConnectionStateChanged(this);
-
     };
 });
 
