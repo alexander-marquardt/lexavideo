@@ -40,9 +40,9 @@ videoApp.factory('globalVarsService', function (constantsService) {
         pcConfig : constantsService.pcConfig,
         signalingReady : false,
         videoTracks: null,
-        localVideo : $('#localVideo')[0],
-        miniVideo : $('#miniVideo')[0],
-        remoteVideo : $('#remoteVideo')[0]
+        localVideoDiv : $('#localVideo')[0],
+        miniVideoDiv : $('#miniVideo')[0],
+        remoteVideoDiv : $('#remoteVideo')[0]
     };
 });
 
@@ -60,8 +60,8 @@ videoApp
         $log.log('Initializing; room=' + constantsService.roomKey + '.');
         cardElem = document.getElementById('card');
 
-        // Reset localVideo display to center.
-        globalVarsService.localVideo.addEventListener('loadedmetadata', function(){
+        // Reset localVideoDiv display to center.
+        globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
             window.onresize();});
 
         userNotificationService.resetStatus();
@@ -347,7 +347,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
     var waitForRemoteVideo = function() {
       // Call the getVideoTracks method via adapter.js.
         globalVarsService.videoTracks = peerService.remoteStream.getVideoTracks();
-      if (globalVarsService.videoTracks.length === 0 || globalVarsService.remoteVideo.currentTime > 0) {
+      if (globalVarsService.videoTracks.length === 0 || globalVarsService.remoteVideoDiv.currentTime > 0) {
         transitionToActive();
       } else {
         setTimeout(waitForRemoteVideo, 100);
@@ -355,11 +355,11 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
     };
 
     var transitionToActive = function() {
-      reattachMediaStream(globalVarsService.miniVideo, globalVarsService.localVideo);
-        globalVarsService.remoteVideo.style.opacity = 1;
+      reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
+        globalVarsService.remoteVideoDiv.style.opacity = 1;
       cardElem.style.webkitTransform = 'rotateY(180deg)';
-      setTimeout(function() { globalVarsService.localVideo.src = ''; }, 500);
-      setTimeout(function() { globalVarsService.miniVideo.style.opacity = 1; }, 1000);
+      setTimeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
+      setTimeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
       // Reset window display according to the asperio of remote video.
       window.onresize();
       userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
@@ -392,12 +392,12 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
     var transitionToWaiting = function() {
         cardElem.style.webkitTransform = 'rotateY(0deg)';
         setTimeout(function() {
-            globalVarsService.localVideo.src = globalVarsService.miniVideo.src;
-            globalVarsService.miniVideo.src = '';
-            globalVarsService.remoteVideo.src = '';
+            globalVarsService.localVideoDiv.src = globalVarsService.miniVideoDiv.src;
+            globalVarsService.miniVideoDiv.src = '';
+            globalVarsService.remoteVideoDiv.src = '';
         }, 500);
-        globalVarsService.miniVideo.style.opacity = 0;
-        globalVarsService.remoteVideo.style.opacity = 0;
+        globalVarsService.miniVideoDiv.style.opacity = 0;
+        globalVarsService.remoteVideoDiv.style.opacity = 0;
 
         userNotificationService.resetStatus();
     };
@@ -490,7 +490,7 @@ videoApp.factory('peerService', function($log, userNotificationService, infoDivS
     var onRemoteStreamAdded = function(self) {
         return function(mediaStreamEvent) {
             $log.log('Remote stream added.');
-            attachMediaStream(globalVarsService.remoteVideo, mediaStreamEvent.stream);
+            attachMediaStream(globalVarsService.remoteVideoDiv, mediaStreamEvent.stream);
             self.remoteStream = mediaStreamEvent.stream;
         };
     };
@@ -570,9 +570,9 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
     };
 
     var transitionToDone = function() {
-        globalVarsService.localVideo.style.opacity = 0;
-        globalVarsService.remoteVideo.style.opacity = 0;
-        globalVarsService.miniVideo.style.opacity = 0;
+        globalVarsService.localVideoDiv.style.opacity = 0;
+        globalVarsService.remoteVideoDiv.style.opacity = 0;
+        globalVarsService.miniVideoDiv.style.opacity = 0;
 
       userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
     };
@@ -581,8 +581,8 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         return function(stream) {
             $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
-            attachMediaStream(globalVarsService.localVideo, stream);
-            globalVarsService.localVideo.style.opacity = 1;
+            attachMediaStream(globalVarsService.localVideoDiv, stream);
+            globalVarsService.localVideoDiv.style.opacity = 1;
             localStream = stream;
             // Caller creates PeerConnection.
             self.maybeStart();
@@ -1032,10 +1032,10 @@ videoApp.directive('videoContainer', function($window, globalVarsService) {
             // Set the video diplaying in the center of window.
             $window.onresize = function(){
                 var videoAspectRatio;
-                if (globalVarsService.remoteVideo.style.opacity === '1') {
-                    videoAspectRatio = globalVarsService.remoteVideo.videoWidth/globalVarsService.remoteVideo.videoHeight;
-                } else if (globalVarsService.localVideo.style.opacity === '1') {
-                    videoAspectRatio = globalVarsService.localVideo.videoWidth/globalVarsService.localVideo.videoHeight;
+                if (globalVarsService.remoteVideoDiv.style.opacity === '1') {
+                    videoAspectRatio = globalVarsService.remoteVideoDiv.videoWidth/globalVarsService.remoteVideoDiv.videoHeight;
+                } else if (globalVarsService.localVideoDiv.style.opacity === '1') {
+                    videoAspectRatio = globalVarsService.localVideoDiv.videoWidth/globalVarsService.localVideoDiv.videoHeight;
                 } else {
                     return;
                 }
