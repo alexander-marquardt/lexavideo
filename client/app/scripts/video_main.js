@@ -14,14 +14,13 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* global attachMediaStream */
 /* global reattachMediaStream */
 
-// TODO - remove all console.log and replace with $log.log
 // TODO - remove all javascript timers. replace with angular.
+// TODO - wrap all adapter.js calls with angular functions
 
 
 /* exported initialize */
 
 // define variables
-var localStream;
 var socket;
 var started = false;
 
@@ -131,13 +130,13 @@ videoApp.factory('channelService', function($log, constantsService, callService,
 
 
     var onChannelOpened = function() {
-      console.log('Channel opened.');
+      $log.log('Channel opened.');
       channelServiceSupport.channelReady = true;
       callService.maybeStart();
     };
 
     var onChannelMessage = function(message) {
-        console.log('S->C: ' + message.data);
+        $log.log('S->C: ' + message.data);
         var msg = JSON.parse(message.data);
         // Since the turn response is async and also GAE might disorder the
         // Message delivery due to possible datastore query at server side,
@@ -167,7 +166,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
     };
 
     var onChannelClosed = function() {
-      console.log('Channel closed.');
+      $log.log('Channel closed.');
       channelServiceSupport.channelReady = false;
     };
 
@@ -375,7 +374,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
             if (peerService.remoteStream) {
                 waitForRemoteVideo();
             } else {
-                console.log('Not receiving any stream.');
+                $log.log('Not receiving any stream.');
                 transitionToActive();
             }
         };
@@ -523,7 +522,7 @@ videoApp.factory('peerService', function($log, userNotificationService, infoDivS
                 // Create an RTCPeerConnection via the polyfill (adapter.js).
                 this.pc = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
                 this.pc.onicecandidate = iceService.onIceCandidate;
-                console.log('Created RTCPeerConnnection with:\n' +
+                $log.log('Created RTCPeerConnnection with:\n' +
                     '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
                     '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
             } catch (e) {
@@ -544,6 +543,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
                                          userNotificationService, constantsService, globalVarsService, channelMessageService) {
 
 
+    var localStream;
 
     var mergeConstraints = function(cons1, cons2) {
         var merged = cons1;
@@ -579,7 +579,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
     var onUserMediaSuccess = function(self) {
         return function(stream) {
-            console.log('User has granted access to local media.');
+            $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
             attachMediaStream(globalVarsService.localVideo, stream);
             globalVarsService.localVideo.style.opacity = 1;
@@ -632,7 +632,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         },
 
         doHangup : function() {
-             console.log('Hanging up.');
+             $log.log('Hanging up.');
              transitionToDone();
              localStream.stop();
              sessionService.stop();
@@ -645,18 +645,69 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
             try {
                 getUserMedia(constantsService.mediaConstraints, onUserMediaSuccess(this),
                     onUserMediaError(this));
-                console.log('Requested access to local media with mediaConstraints:\n' +
+                $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(constantsService.mediaConstraints) + '\'');
             } catch (e) {
                 alert('getUserMedia() failed. Is this a WebRTC capable browser?');
                 userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
             }
+        },
+
+
+        toggleVideoMute : function() {
+            // Call the getVideoTracks method via adapter.js.
+            var i;
+            globalVarsService.videoTracks = localStream.getVideoTracks();
+
+            if (globalVarsService.videoTracks.length === 0) {
+                $log.log('No local video available.');
+                return;
+            }
+
+            if (isVideoMuted) {
+                for (i = 0; i < globalVarsService.videoTracks.length; i++) {
+                    globalVarsService.videoTracks[i].enabled = true;
+                }
+                $log.log('Video unmuted.');
+            } else {
+                for (i = 0; i < globalVarsService.videoTracks.length; i++) {
+                    globalVarsService.videoTracks[i].enabled = false;
+                }
+                $log.log('Video muted.');
+            }
+
+            isVideoMuted = !isVideoMuted;
+        },
+
+        toggleAudioMute : function() {
+            var i;
+            // Call the getAudioTracks method via adapter.js.
+            var audioTracks = localStream.getAudioTracks();
+
+            if (audioTracks.length === 0) {
+                $log.log('No local audio available.');
+                return;
+            }
+
+            if (isAudioMuted) {
+                for (i = 0; i < audioTracks.length; i++) {
+                    audioTracks[i].enabled = true;
+                }
+                $log.log('Audio unmuted.');
+            } else {
+                for (i = 0; i < audioTracks.length; i++){
+                    audioTracks[i].enabled = false;
+                }
+                $log.log('Audio muted.');
+            }
+
+            isAudioMuted = !isAudioMuted;
         }
     };
 });
 
 
-videoApp.factory('userNotificationService', function($timeout, infoDivService, constantsService, globalVarsService) {
+videoApp.factory('userNotificationService', function($log, $timeout, infoDivService, constantsService, globalVarsService) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
@@ -670,7 +721,7 @@ videoApp.factory('userNotificationService', function($timeout, infoDivService, c
             return currentState;
         },
         messageError : function(msg) {
-            console.log(msg);
+            $log.log(msg);
             infoDivService.pushInfoDivErrors(msg);
             infoDivService.updateErrorsInfoDiv();
         },
@@ -684,7 +735,7 @@ videoApp.factory('userNotificationService', function($timeout, infoDivService, c
     };
 });
 
-videoApp.factory('codecsService', function(constantsService){
+videoApp.factory('codecsService', function($log, constantsService){
 
     // Strip CN from sdp before CN constraints is ready.
     var removeCN = function(sdpLines, mLineIndex) {
@@ -735,7 +786,7 @@ videoApp.factory('codecsService', function(constantsService){
     var preferAudioCodec = function(sdp, codec) {
         var fields = codec.split('/');
         if (fields.length !== 2) {
-            console.log('Invalid codec setting: ' + codec);
+            $log.log('Invalid codec setting: ' + codec);
             return sdp;
         }
         var name = fields[0];
@@ -782,19 +833,19 @@ videoApp.factory('codecsService', function(constantsService){
 
         maybePreferAudioSendCodec : function(sdp) {
             if (constantsService.audioSendCodec === '') {
-                console.log('No preference on audio send codec.');
+                $log.log('No preference on audio send codec.');
                 return sdp;
             }
-            console.log('Prefer audio send codec: ' + constantsService.audioSendCodec);
+            $log.log('Prefer audio send codec: ' + constantsService.audioSendCodec);
             return preferAudioCodec(sdp, constantsService.audioSendCodec);
         },
 
         maybePreferAudioReceiveCodec : function(sdp) {
             if (constantsService.audioReceiveCodec === '') {
-                console.log('No preference on audio receive codec.');
+                $log.log('No preference on audio receive codec.');
                 return sdp;
             }
-            console.log('Prefer audio receive codec: ' + constantsService.audioReceiveCodec);
+            $log.log('Prefer audio receive codec: ' + constantsService.audioReceiveCodec);
             return preferAudioCodec(sdp, constantsService.audioReceiveCodec);
         },
 
@@ -839,19 +890,27 @@ videoApp.factory('codecsService', function(constantsService){
 });
 
 
-videoApp.service('infoDivService', function () {
+videoApp.service('infoDivService', function ($log) {
 
 
     var infoDivErrors = [];
+    var div;
 
     var getInfoDiv = function() {
         return $('#infoDiv')[0];
     };
 
+    var hideInfoDiv = function() {
+        div.style.display = 'none';
+        $log.log('Hiding infoDiv');
+    };
+
     var showInfoDiv = function() {
-         var div = getInfoDiv();
          div.style.display = 'block';
+        $log.log('Showing infoDiv');
      };
+
+    div = getInfoDiv();
 
     return {
 
@@ -860,9 +919,8 @@ videoApp.service('infoDivService', function () {
         },
 
         toggleInfoDiv : function() {
-            var div = getInfoDiv();
             if (div.style.display === 'block') {
-                div.style.display = 'none';
+                hideInfoDiv();
             } else {
                 showInfoDiv();
             }
@@ -922,57 +980,8 @@ videoApp.directive('callStatus', function(userNotificationService, $compile, $sc
     };
 });
 
-videoApp.directive('monitorControlKeys', function ($document, $log, infoDivService, globalVarsService) {
+videoApp.directive('monitorControlKeys', function ($document, $log, infoDivService, callService) {
 
-    var toggleVideoMute = function() {
-        // Call the getVideoTracks method via adapter.js.
-        var i;
-        globalVarsService.videoTracks = localStream.getVideoTracks();
-
-        if (globalVarsService.videoTracks.length === 0) {
-            console.log('No local video available.');
-            return;
-        }
-
-        if (isVideoMuted) {
-            for (i = 0; i < globalVarsService.videoTracks.length; i++) {
-                globalVarsService.videoTracks[i].enabled = true;
-            }
-            console.log('Video unmuted.');
-        } else {
-            for (i = 0; i < globalVarsService.videoTracks.length; i++) {
-                globalVarsService.videoTracks[i].enabled = false;
-            }
-            console.log('Video muted.');
-        }
-
-        isVideoMuted = !isVideoMuted;
-    };
-
-    var toggleAudioMute = function() {
-        var i;
-        // Call the getAudioTracks method via adapter.js.
-        var audioTracks = localStream.getAudioTracks();
-
-        if (audioTracks.length === 0) {
-            console.log('No local audio available.');
-            return;
-        }
-
-        if (isAudioMuted) {
-            for (i = 0; i < audioTracks.length; i++) {
-                audioTracks[i].enabled = true;
-            }
-            console.log('Audio unmuted.');
-        } else {
-            for (i = 0; i < audioTracks.length; i++){
-                audioTracks[i].enabled = false;
-            }
-            console.log('Audio muted.');
-        }
-
-        isAudioMuted = !isAudioMuted;
-    };
 
     return {
         restrict : 'AE',
@@ -994,10 +1003,10 @@ videoApp.directive('monitorControlKeys', function ($document, $log, infoDivServi
                 }
                 switch (event.keyCode) {
                     case 68:
-                        toggleAudioMute();
+                        callService.toggleAudioMute();
                         return false;
                     case 69:
-                        toggleVideoMute();
+                        callService.toggleVideoMute();
                         return false;
                     case 73:
                         infoDivService.toggleInfoDiv();
