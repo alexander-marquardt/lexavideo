@@ -20,18 +20,24 @@
         </div>
         </div>
     </div>
-    <footer id="footer" call-status></footer>
 </div>
 
 <!-- the following divs are outside of the standard page flow -->
+<footer id="footer" call-status></footer>
+
 <div id="infoDiv">
-    <div id="iceInfoDiv"></div>
-    <div id="pcInfoDiv"></div>
-    <div id="errorsInfoDiv"></div>
+    <div class="page-header">
+        <h3>Diagnostic information</h3>
+    </div>
+    <div class="panel">
+        <div id="iceInfoDiv"></div>
+        <div id="pcInfoDiv"></div>
+        <div id="errorsInfoDiv"></div>
+    </div>
 
 </div>
 
-<!-- the following divs are for behind-the-scenes directive acitvation -->
+<!-- the following div is for monitoring of control key presses -->
 <div  monitor-control-keys></div>
 
 {% endraw %}

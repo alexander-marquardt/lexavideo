@@ -927,13 +927,12 @@ videoApp.service('infoDivService', function ($log) {
         },
 
         updateIceInfoDiv : function() {
-            var contents = '<pre>Gathered ICE Candidates\n';
+            var contents = 'Gathered ICE Candidates\n';
             for (var endpoint in gatheredIceCandidateTypes) {
                 contents += endpoint + ':\n';
                 for (var type in gatheredIceCandidateTypes[endpoint]) {
                     contents += '  ' + type + '\n';
                 }
-                contents += '</pre>\n';
             }
             $('#iceInfoDiv').html(contents);
         },

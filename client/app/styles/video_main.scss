@@ -86,9 +86,12 @@ footer {
  margin: 2px;
 }
 #infoDiv {
-  position: absolute;
-  float: right;
-  background-color: grey;
-  margin: 2px;
+  position: fixed;
+  width: 400px;
+  margin-left: -200px;
+  left: 50%;
+  top: 25%;
   display: none;
+  z-index: 10;
+  background: #FFFFFF;
 }
