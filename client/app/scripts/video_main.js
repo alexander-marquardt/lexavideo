@@ -21,7 +21,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* exported initialize */
 
 // define variables
-var socket;
 var started = false;
 
 // Set up audio and video regardless of what devices are present.
@@ -122,6 +121,7 @@ videoApp.service('channelMessageService', function() {
 
 videoApp.service('channelServiceSupport', function() {
     this.channelReady = false;
+    this.socket = null;
 });
 
 videoApp.factory('channelService', function($log, constantsService, callService, sessionService, userNotificationService,
@@ -181,7 +181,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
         openChannel: function() {
             $log.log('Opening channel.');
             var channel = new goog.appengine.Channel(constantsService.channelToken);
-            socket = channel.open(handler);
+            channelServiceSupport.socket = channel.open(handler);
         }
     };
 });
@@ -637,7 +637,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
              localStream.stop();
              sessionService.stop();
              // will trigger BYE from server
-             socket.close();
+            channelServiceSupport.socket.close();
         },
 
         doGetUserMedia  : function() {
