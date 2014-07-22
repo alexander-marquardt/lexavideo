@@ -1070,14 +1070,18 @@ videoApp.directive('videoContainer', function($window, globalVarsService, sessio
             };*/
             
             angular.element($window).on('resize', function() {
+                // if the window is resized, then resize the video.
                 setVideoContainerDimensions();
             });
 
             scope.$watch(sessionService.getSessionIsActive, function() {
+                // If session status changes, then resize the video (the remote video
+                // might have different dimensions than the local video)
                 setVideoContainerDimensions();
             });
 
             globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
+                // once the metadata is loaded, the dimensions of the video are known.
                 setVideoContainerDimensions();
             });
 
