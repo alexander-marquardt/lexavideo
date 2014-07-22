@@ -17,15 +17,7 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 // TODO - remove all javascript timers. replace with angular.
 // TODO - wrap all adapter.js calls with angular functions
 
-
-/* exported initialize */
-
-
-
-
-
 // Types of gathered ICE Candidates.
-var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 var cardElem;
 
 videoApp.factory('globalVarsService', function (constantsService) {
@@ -289,6 +281,19 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
 
     var self = this;
 
+    var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
+
+    var updateInfoDiv = function() {
+        var contents = 'Gathered ICE Candidates\n';
+        for (var endpoint in gatheredIceCandidateTypes) {
+            contents += endpoint + ':\n';
+            for (var type in gatheredIceCandidateTypes[endpoint]) {
+                contents += '  ' + type + '\n';
+            }
+        }
+        infoDivService.updateIceInfoDiv(contents);
+    };
+
     this.onIceCandidate = function(event) {
         if (event.candidate) {
             messageService.sendMessage({type: 'candidate',
@@ -327,7 +332,7 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
             return;
         }
         gatheredIceCandidateTypes[location][type] = 1;
-        infoDivService.updateIceInfoDiv();
+        updateInfoDiv();
     };
 });
 
@@ -928,14 +933,7 @@ videoApp.service('infoDivService', function ($log) {
             }
         },
 
-        updateIceInfoDiv : function() {
-            var contents = 'Gathered ICE Candidates\n';
-            for (var endpoint in gatheredIceCandidateTypes) {
-                contents += endpoint + ':\n';
-                for (var type in gatheredIceCandidateTypes[endpoint]) {
-                    contents += '  ' + type + '\n';
-                }
-            }
+        updateIceInfoDiv : function(contents) {
             $('#iceInfoDiv').html(contents);
         },
 
