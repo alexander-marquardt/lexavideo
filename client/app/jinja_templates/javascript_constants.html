@@ -4,6 +4,9 @@
 
 angular.module('videoApp.mainConstants', [])
     .factory('constantsService', function() {
+            /* Provides constant values that are sent from the server to the client when the page is loaded,
+               and that will not be changed.
+             */
         return {
             errorMessages : {{ error_messages }},
             channelToken : '{{ token }}',

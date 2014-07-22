@@ -19,7 +19,12 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 
 videoApp.factory('globalVarsService', function (constantsService) {
+            /* This services provides access to variables that are used by multiple services, and that don't
+               fit easily into any of the currently defined services. These variables may be accessed and
+               modified directly from anywhere in the code. 
+             */
     return {
+
         initiator : constantsService.initiator,
         pcConfig : constantsService.pcConfig,
         signalingReady : false,
@@ -27,6 +32,8 @@ videoApp.factory('globalVarsService', function (constantsService) {
         isVideoMuted : false,
         isAudioMuted : false,
         videoTracks: null,
+
+        // Provide global access to certain dom elements that are used in multiple services/directives.
         localVideoDiv : $('#local-video')[0],
         miniVideoDiv : $('#mini-video')[0],
         remoteVideoDiv : $('#remote-video')[0],
