@@ -31,20 +31,20 @@ footer {
   -webkit-transition-duration: 2s;
   -webkit-transform-style: preserve-3d;
 }
-#local {
+#local-div {
   position: absolute;
   width: 100%;
   transform: scale(-1, 1);
   -webkit-transform: scale(-1, 1);
   -webkit-backface-visibility: hidden;
 }
-#remote {
+#remote-div {
   position: absolute;
   width: 100%;
   -webkit-transform: rotateY(180deg);
   -webkit-backface-visibility: hidden;
 }
-#mini {
+#mini-div {
   position: absolute;
   height: 30%;
   width: 30%;
