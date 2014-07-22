@@ -14,7 +14,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* global attachMediaStream */
 /* global reattachMediaStream */
 
-// TODO - remove all javascript setTimeout. replace with angular. Same for window..
 // TODO - wrap all adapter.js calls with angular functions
 
 
@@ -47,7 +46,7 @@ videoApp
         var i;
         if (constantsService.errorMessages.length > 0) {
             for (i = 0; i < constantsService.errorMessages.length; ++i) {
-                window.alert(constantsService.errorMessages[i]);
+                $window.alert(constantsService.errorMessages[i]);
             }
             return;
         }
@@ -76,7 +75,7 @@ videoApp
 
         // Send BYE on refreshing(or leaving) a demo page
         // to ensure the room is cleaned for next session.
-        window.onbeforeunload = function() {
+        $window.onbeforeunload = function() {
             messageService.sendMessage({type: 'bye'});
         };
 
@@ -1003,7 +1002,8 @@ videoApp.directive('monitorControlKeys', function ($document, $log, infoDivServi
 });
 
 
-videoApp.directive('videoContainer', function($window, $log, globalVarsService, constantsService,
+videoApp.directive('videoContainer', function($window, $log, $timeout,
+                                              globalVarsService, constantsService,
                                               sessionService, userNotificationService) {
     return {
         restrict : 'AE',
@@ -1013,14 +1013,14 @@ videoApp.directive('videoContainer', function($window, $log, globalVarsService, 
                 reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
                 globalVarsService.remoteVideoDiv.style.opacity = 1;
                 globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
-                setTimeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
-                setTimeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
+                $timeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
+                $timeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
                 userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
             };
 
             var transitionVideoToWaiting = function() {
                 globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
-                setTimeout(function() {
+                $timeout(function() {
                     globalVarsService.localVideoDiv.src = globalVarsService.miniVideoDiv.src;
                     globalVarsService.miniVideoDiv.src = '';
                     globalVarsService.remoteVideoDiv.src = '';
