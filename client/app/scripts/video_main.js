@@ -1068,7 +1068,10 @@ videoApp.directive('videoContainer', function($window, globalVarsService, sessio
                 // This will probably fail on non-Chrome browsers -- investigate if extra code is needed.
                 elem[0].webkitRequestFullScreen();
             };*/
-
+            
+            angular.element($window).on('resize', function() {
+                setVideoContainerDimensions();
+            });
 
             scope.$watch(sessionService.getSessionIsActive, function() {
                 setVideoContainerDimensions();
