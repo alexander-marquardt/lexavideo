@@ -392,27 +392,17 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, messageSe
     };
 
 
-    var transitionToWaiting = function() {
-        globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
-        setTimeout(function() {
-            globalVarsService.localVideoDiv.src = globalVarsService.miniVideoDiv.src;
-            globalVarsService.miniVideoDiv.src = '';
-            globalVarsService.remoteVideoDiv.src = '';
-        }, 500);
-        globalVarsService.miniVideoDiv.style.opacity = 0;
-        globalVarsService.remoteVideoDiv.style.opacity = 0;
+    var transitionSessionToWaiting = function() {
         $rootScope.$apply(function() {
             sessionIsActive = false;
         });
-
-        userNotificationService.resetStatus();
     };
 
 
     var onRemoteHangup = function(self) {
         $log.log('Session terminated.');
         globalVarsService.initiator = 0;   // jshint ignore:line
-        transitionToWaiting();
+        transitionSessionToWaiting();
         self.stop();
     };
 
@@ -1036,6 +1026,20 @@ videoApp.directive('videoContainer', function($window, globalVarsService, sessio
                 userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
             };
 
+            var transitionVideoToWaiting = function() {
+                globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
+                setTimeout(function() {
+                    globalVarsService.localVideoDiv.src = globalVarsService.miniVideoDiv.src;
+                    globalVarsService.miniVideoDiv.src = '';
+                    globalVarsService.remoteVideoDiv.src = '';
+                }, 500);
+                globalVarsService.miniVideoDiv.style.opacity = 0;
+                globalVarsService.remoteVideoDiv.style.opacity = 0;
+
+                userNotificationService.resetStatus();
+            };
+
+
 
             var setVideoContainerDimensions = function(){
 
@@ -1089,6 +1093,8 @@ videoApp.directive('videoContainer', function($window, globalVarsService, sessio
                 setVideoContainerDimensions();
                 if (isActive) {
                     transitionVideoToActive();
+                } else {
+                    transitionVideoToWaiting();
                 }
             });
 
