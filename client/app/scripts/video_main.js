@@ -278,7 +278,7 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
     var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 
     // self is necessary because some functions are called as methods of other objects which lose the
-    // referencd to "this". 
+    // referencd to "this".
     var self = this;
 
 
@@ -356,23 +356,16 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, messageSe
       // Call the getVideoTracks method via adapter.js.
         globalVarsService.videoTracks = peerService.remoteStream.getVideoTracks();
       if (globalVarsService.videoTracks.length === 0 || globalVarsService.remoteVideoDiv.currentTime > 0) {
-        transitionToActive();
+        transitionSessionToActive();
       } else {
         setTimeout(waitForRemoteVideo, 100);
       }
     };
 
-    var transitionToActive = function() {
-        reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
-        globalVarsService.remoteVideoDiv.style.opacity = 1;
-        globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
-        setTimeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
-        setTimeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
-        // Reset window display according to the asperio of remote video.
+    var transitionSessionToActive = function() {
         $rootScope.$apply(function() {
             sessionIsActive = true;
         });
-        userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
     };
 
 
@@ -385,7 +378,7 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, messageSe
                 waitForRemoteVideo();
             } else {
                 $log.log('Not receiving any stream.');
-                transitionToActive();
+                transitionSessionToActive();
             }
         };
 
@@ -1029,10 +1022,20 @@ videoApp.directive('monitorControlKeys', function ($document, $log, infoDivServi
 });
 
 
-videoApp.directive('videoContainer', function($window, globalVarsService, sessionService) {
+videoApp.directive('videoContainer', function($window, globalVarsService, sessionService, userNotificationService) {
     return {
         restrict : 'AE',
         link: function(scope, elem) {
+
+            var transitionVideoToActive = function() {
+                reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
+                globalVarsService.remoteVideoDiv.style.opacity = 1;
+                globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
+                setTimeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
+                setTimeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
+                userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
+            };
+
 
             var setVideoContainerDimensions = function(){
 
@@ -1080,10 +1083,13 @@ videoApp.directive('videoContainer', function($window, globalVarsService, sessio
                 setVideoContainerDimensions();
             });
 
-            scope.$watch(sessionService.getSessionIsActive, function() {
+            scope.$watch(sessionService.getSessionIsActive, function(isActive) {
                 // If session status changes, then resize the video (the remote video
                 // might have different dimensions than the local video)
                 setVideoContainerDimensions();
+                if (isActive) {
+                    transitionVideoToActive();
+                }
             });
 
             globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
