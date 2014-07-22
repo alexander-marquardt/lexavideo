@@ -21,13 +21,9 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* exported initialize */
 
 
-// Set up audio and video regardless of what devices are present.
-var sdpConstraints = {'mandatory': {
-                      'OfferToReceiveAudio': true,
-                      'OfferToReceiveVideo': true }};
 
-var isVideoMuted = false;
-var isAudioMuted = false;
+
+
 // Types of gathered ICE Candidates.
 var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 var cardElem;
@@ -38,10 +34,17 @@ videoApp.factory('globalVarsService', function (constantsService) {
         pcConfig : constantsService.pcConfig,
         signalingReady : false,
         started : false,
+        isVideoMuted : false,
+        isAudioMuted : false,
         videoTracks: null,
         localVideoDiv : $('#localVideo')[0],
         miniVideoDiv : $('#miniVideo')[0],
-        remoteVideoDiv : $('#remoteVideo')[0]
+        remoteVideoDiv : $('#remoteVideo')[0],
+
+        // Set up audio and video regardless of what devices are present.
+        sdpConstraints : {'mandatory': {
+            'OfferToReceiveAudio': true,
+            'OfferToReceiveVideo': true }}
     };
 });
 
@@ -413,7 +416,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
     var doAnswer = function(self) {
         $log.log('Sending answer to peer.');
         peerService.pc.createAnswer(self.setLocalAndSendMessage,
-            self.onCreateSessionDescriptionError, sdpConstraints);
+            self.onCreateSessionDescriptionError, globalVarsService.sdpConstraints);
     };
 
 
@@ -426,8 +429,8 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
         stop : function() {
             globalVarsService.started = false;
             globalVarsService.signalingReady = false;
-            isAudioMuted = false;
-            isVideoMuted = false;
+            globalVarsService.isAudioMuted = false;
+            globalVarsService.isVideoMuted = false;
             peerService.pc.close();
             peerService.pc = null;
             peerService.remoteStream = null;
@@ -554,7 +557,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
     };
 
     var doCall = function() {
-        var constraints = mergeConstraints(constantsService.offerConstraints, sdpConstraints);
+        var constraints = mergeConstraints(constantsService.offerConstraints, globalVarsService.sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
         peerService.pc.createOffer(sessionService.setLocalAndSendMessage,
@@ -663,7 +666,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
                 return;
             }
 
-            if (isVideoMuted) {
+            if (globalVarsService.isVideoMuted) {
                 for (i = 0; i < globalVarsService.videoTracks.length; i++) {
                     globalVarsService.videoTracks[i].enabled = true;
                 }
@@ -675,7 +678,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
                 $log.log('Video muted.');
             }
 
-            isVideoMuted = !isVideoMuted;
+            globalVarsService.isVideoMuted = !globalVarsService.isVideoMuted;
         },
 
         toggleAudioMute : function() {
@@ -688,7 +691,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
                 return;
             }
 
-            if (isAudioMuted) {
+            if (globalVarsService.isAudioMuted) {
                 for (i = 0; i < audioTracks.length; i++) {
                     audioTracks[i].enabled = true;
                 }
@@ -700,7 +703,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
                 $log.log('Audio muted.');
             }
 
-            isAudioMuted = !isAudioMuted;
+            globalVarsService.isAudioMuted = !globalVarsService.isAudioMuted;
         }
     };
 });
