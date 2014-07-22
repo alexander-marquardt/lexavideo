@@ -279,8 +279,6 @@ videoApp.factory('messageService', function($http, $log, constantsService) {
 
 videoApp.service('iceService', function($log, messageService, userNotificationService, infoDivService) {
 
-    var self = this;
-
     var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 
     var updateInfoDiv = function() {
@@ -300,7 +298,7 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
                 label: event.candidate.sdpMLineIndex,
                 id: event.candidate.sdpMid,
                 candidate: event.candidate.candidate});
-            self.noteIceCandidate('Local', self.iceCandidateType(event.candidate.candidate));
+            this.noteIceCandidate('Local', this.iceCandidateType(event.candidate.candidate));
         } else {
             $log.log('End of candidates.');
         }
