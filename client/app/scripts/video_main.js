@@ -14,7 +14,7 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* global attachMediaStream */
 /* global reattachMediaStream */
 
-// TODO - remove all javascript timers. replace with angular.
+// TODO - remove all javascript setTimeout. replace with angular. Same for window..
 // TODO - wrap all adapter.js calls with angular functions
 
 
@@ -41,7 +41,8 @@ videoApp.factory('globalVarsService', function (constantsService) {
 });
 
 videoApp
-    .run(function($log, constantsService, channelService, turnService, peerService, callService, userNotificationService,
+    .run(function($log, $window, constantsService, channelService, turnService,
+                  peerService, callService, userNotificationService,
                   messageService, globalVarsService) {
         var i;
         if (constantsService.errorMessages.length > 0) {
@@ -55,7 +56,7 @@ videoApp
 
         // Reset localVideoDiv display to center.
         globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
-            window.onresize();});
+            $window.setVideoContainerDimensions();});
 
         userNotificationService.resetStatus();
         // NOTE: AppRTCClient.java searches & parses this line; update there when
@@ -334,7 +335,7 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
 });
 
 
-videoApp.factory('sessionService', function($log, messageService, userNotificationService,
+videoApp.factory('sessionService', function($log, $window, messageService, userNotificationService,
     codecsService, infoDivService, globalVarsService, constantsService, iceService, peerService,
     channelMessageService) {
 
@@ -365,7 +366,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
         setTimeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
         setTimeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
         // Reset window display according to the asperio of remote video.
-        window.onresize();
+        $window.setVideoContainerDimensions();
         userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
     };
 
@@ -1027,7 +1028,7 @@ videoApp.directive('videoContainer', function($window, globalVarsService) {
             };*/
 
             // Set the video diplaying in the center of window.
-            $window.onresize = function(){
+            $window.setVideoContainerDimensions = function(){
                 var videoAspectRatio;
                 if (globalVarsService.remoteVideoDiv.style.opacity === '1') {
                     videoAspectRatio = globalVarsService.remoteVideoDiv.videoWidth/globalVarsService.remoteVideoDiv.videoHeight;
@@ -1037,7 +1038,7 @@ videoApp.directive('videoContainer', function($window, globalVarsService) {
                     return;
                 }
 
-                var innerHeight =$window.innerHeight - $('#id-vidochat-logo').height() - $('#footer').height();
+                var innerHeight = $window.innerHeight - $('#id-vidochat-logo').height() - $('#footer').height();
                 var innerWidth = $window.innerWidth;
 
                 var innerAspectRatio = innerWidth/innerHeight;
