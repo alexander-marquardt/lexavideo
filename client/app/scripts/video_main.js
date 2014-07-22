@@ -29,9 +29,9 @@ videoApp.factory('globalVarsService', function (constantsService) {
         isVideoMuted : false,
         isAudioMuted : false,
         videoTracks: null,
-        localVideoDiv : $('#localVideo')[0],
-        miniVideoDiv : $('#miniVideo')[0],
-        remoteVideoDiv : $('#remoteVideo')[0],
+        localVideoDiv : $('#local-video')[0],
+        miniVideoDiv : $('#mini-video')[0],
+        remoteVideoDiv : $('#remote-video')[0],
 
         // Set up audio and video regardless of what devices are present.
         sdpConstraints : {'mandatory': {
