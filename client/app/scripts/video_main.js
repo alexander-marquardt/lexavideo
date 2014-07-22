@@ -902,17 +902,17 @@ videoApp.service('infoDivService', function ($log) {
     var div;
 
     var getInfoDiv = function() {
-        return $('#infoDiv')[0];
+        return $('#info-div')[0];
     };
 
     var hideInfoDiv = function() {
         div.style.display = 'none';
-        $log.log('Hiding infoDiv');
+        $log.log('Hiding info-div');
     };
 
     var showInfoDiv = function() {
          div.style.display = 'block';
-        $log.log('Showing infoDiv');
+        $log.log('Showing info-div');
      };
 
     div = getInfoDiv();
