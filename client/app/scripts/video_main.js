@@ -1022,7 +1022,7 @@ videoApp.directive('videoContainer', function($window, globalVarsService) {
         link: function(scope, elem) {
 /*
             scope.enterFullScreen = function () {
-                // TODO -- this will probably fail on other browsers -- investigate if extra code is needed.
+                // This will probably fail on non-Chrome browsers -- investigate if extra code is needed.
                 elem[0].webkitRequestFullScreen();
             };*/
 
