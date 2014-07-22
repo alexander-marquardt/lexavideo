@@ -277,6 +277,11 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
 
     var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 
+    // self is necessary because some functions are called as methods of other objects which lose the
+    // referencd to "this". 
+    var self = this;
+
+
     var updateInfoDiv = function() {
         var contents = 'Gathered ICE Candidates\n';
         for (var endpoint in gatheredIceCandidateTypes) {
@@ -286,26 +291,6 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
             }
         }
         infoDivService.updateIceInfoDiv(contents);
-    };
-
-    this.onIceCandidate = function(event) {
-        if (event.candidate) {
-            messageService.sendMessage({type: 'candidate',
-                label: event.candidate.sdpMLineIndex,
-                id: event.candidate.sdpMid,
-                candidate: event.candidate.candidate});
-            this.noteIceCandidate('Local', this.iceCandidateType(event.candidate.candidate));
-        } else {
-            $log.log('End of candidates.');
-        }
-    };
-
-    this.onAddIceCandidateSuccess = function() {
-        $log.log('AddIceCandidate success.');
-    };
-
-    this.onAddIceCandidateError = function(error) {
-        userNotificationService.messageError('Failed to add Ice Candidate: ' + error.toString());
     };
 
     this.iceCandidateType = function(candidateSDP) {
@@ -328,6 +313,27 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
         gatheredIceCandidateTypes[location][type] = 1;
         updateInfoDiv();
     };
+    this.onIceCandidate = function(event) {
+        if (event.candidate) {
+            messageService.sendMessage({type: 'candidate',
+                label: event.candidate.sdpMLineIndex,
+                id: event.candidate.sdpMid,
+                candidate: event.candidate.candidate});
+            self.noteIceCandidate('Local', self.iceCandidateType(event.candidate.candidate));
+        } else {
+            $log.log('End of candidates.');
+        }
+    };
+
+    this.onAddIceCandidateSuccess = function() {
+        $log.log('AddIceCandidate success.');
+    };
+
+    this.onAddIceCandidateError = function(error) {
+        userNotificationService.messageError('Failed to add Ice Candidate: ' + error.toString());
+    };
+
+
 });
 
 
