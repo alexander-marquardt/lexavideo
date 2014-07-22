@@ -337,11 +337,13 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
 });
 
 
-videoApp.factory('sessionService', function($log, $window, $rootScope, messageService, userNotificationService,
-    codecsService, infoDivService, globalVarsService, constantsService, iceService, peerService,
-    channelMessageService) {
+videoApp.factory('sessionService', function($log, $window, $rootScope, $timeout,
+                                            messageService, userNotificationService,
+                                            codecsService, infoDivService, globalVarsService,
+                                            constantsService, iceService, peerService,
+                                            channelMessageService) {
 
-    var sessionIsActive = false;
+    var sessionStatus = 'waiting'; // "waiting", "active", or "done"
 
     var onSetSessionDescriptionError = function(error) {
         userNotificationService.messageError('Failed to set session description: ' + error.toString());
@@ -356,18 +358,17 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, messageSe
       // Call the getVideoTracks method via adapter.js.
         globalVarsService.videoTracks = peerService.remoteStream.getVideoTracks();
       if (globalVarsService.videoTracks.length === 0 || globalVarsService.remoteVideoDiv.currentTime > 0) {
-        transitionSessionToActive();
+          transitionSessionStatus('active');
       } else {
-        setTimeout(waitForRemoteVideo, 100);
+        $timeout(waitForRemoteVideo, 100);
       }
     };
 
-    var transitionSessionToActive = function() {
-        $rootScope.$apply(function() {
-            sessionIsActive = true;
+    var transitionSessionStatus = function(status) {
+        $timeout(function() {
+            sessionStatus = status;
         });
     };
-
 
     var setRemote = function(message) {
         var onSetRemoteDescriptionSuccess = function(){
@@ -378,7 +379,7 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, messageSe
                 waitForRemoteVideo();
             } else {
                 $log.log('Not receiving any stream.');
-                transitionSessionToActive();
+                transitionSessionStatus('active');
             }
         };
 
@@ -391,18 +392,10 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, messageSe
             onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
     };
 
-
-    var transitionSessionToWaiting = function() {
-        $rootScope.$apply(function() {
-            sessionIsActive = false;
-        });
-    };
-
-
     var onRemoteHangup = function(self) {
         $log.log('Session terminated.');
         globalVarsService.initiator = 0;   // jshint ignore:line
-        transitionSessionToWaiting();
+        transitionSessionStatus('waiting');
         self.stop();
     };
 
@@ -416,8 +409,13 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, messageSe
 
     return {
 
-        getSessionIsActive : function() {
-            return sessionIsActive;
+        getSessionStatus : function() {
+            return sessionStatus;
+        },
+
+        transitionSessionStatus : function(status) {
+            // accessor function to execute the "private" transitionSessionStatus
+            transitionSessionStatus(status);
         },
 
         onCreateSessionDescriptionError : function(error) {
@@ -569,13 +567,6 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         }
     };
 
-    var transitionToDone = function() {
-        globalVarsService.localVideoDiv.style.opacity = 0;
-        globalVarsService.remoteVideoDiv.style.opacity = 0;
-        globalVarsService.miniVideoDiv.style.opacity = 0;
-
-      userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
-    };
 
     var onUserMediaSuccess = function(self) {
         return function(stream) {
@@ -633,7 +624,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 
         doHangup : function() {
              $log.log('Hanging up.');
-             transitionToDone();
+             sessionService.transitionSessionStatus('done');
              localStream.stop();
              sessionService.stop();
              // will trigger BYE from server
@@ -1012,7 +1003,8 @@ videoApp.directive('monitorControlKeys', function ($document, $log, infoDivServi
 });
 
 
-videoApp.directive('videoContainer', function($window, globalVarsService, sessionService, userNotificationService) {
+videoApp.directive('videoContainer', function($window, $log, globalVarsService, constantsService,
+                                              sessionService, userNotificationService) {
     return {
         restrict : 'AE',
         link: function(scope, elem) {
@@ -1039,6 +1031,14 @@ videoApp.directive('videoContainer', function($window, globalVarsService, sessio
                 userNotificationService.resetStatus();
             };
 
+
+            var transitionVideoToDone = function() {
+                globalVarsService.localVideoDiv.style.opacity = 0;
+                globalVarsService.remoteVideoDiv.style.opacity = 0;
+                globalVarsService.miniVideoDiv.style.opacity = 0;
+
+              userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
+            };
 
 
             var setVideoContainerDimensions = function(){
@@ -1087,15 +1087,20 @@ videoApp.directive('videoContainer', function($window, globalVarsService, sessio
                 setVideoContainerDimensions();
             });
 
-            scope.$watch(sessionService.getSessionIsActive, function(isActive) {
+            scope.$watch(sessionService.getSessionStatus, function(status) {
                 // If session status changes, then resize the video (the remote video
                 // might have different dimensions than the local video)
                 setVideoContainerDimensions();
-                if (isActive) {
+                if (status === 'active') {
                     transitionVideoToActive();
-                } else {
+                } else if (status === 'waiting') {
                     transitionVideoToWaiting();
+                } else if (status === 'done') {
+                    transitionVideoToDone();
+                } else {
+                    $log.log('Error, unknown status received');
                 }
+
             });
 
             globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
