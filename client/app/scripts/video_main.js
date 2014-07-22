@@ -17,8 +17,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 // TODO - remove all javascript timers. replace with angular.
 // TODO - wrap all adapter.js calls with angular functions
 
-// Types of gathered ICE Candidates.
-var cardElem;
 
 videoApp.factory('globalVarsService', function (constantsService) {
     return {
@@ -32,6 +30,8 @@ videoApp.factory('globalVarsService', function (constantsService) {
         localVideoDiv : $('#local-video')[0],
         miniVideoDiv : $('#mini-video')[0],
         remoteVideoDiv : $('#remote-video')[0],
+        cardElemDiv : $('#card-elem')[0],
+
 
         // Set up audio and video regardless of what devices are present.
         sdpConstraints : {'mandatory': {
@@ -52,7 +52,6 @@ videoApp
         }
 
         $log.log('Initializing; room=' + constantsService.roomKey + '.');
-        cardElem = document.getElementById('card');
 
         // Reset localVideoDiv display to center.
         globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
@@ -360,14 +359,14 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
     };
 
     var transitionToActive = function() {
-      reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
+        reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
         globalVarsService.remoteVideoDiv.style.opacity = 1;
-      cardElem.style.webkitTransform = 'rotateY(180deg)';
-      setTimeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
-      setTimeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
-      // Reset window display according to the asperio of remote video.
-      window.onresize();
-      userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
+        globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
+        setTimeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
+        setTimeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
+        // Reset window display according to the asperio of remote video.
+        window.onresize();
+        userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
     };
 
 
@@ -395,7 +394,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
 
 
     var transitionToWaiting = function() {
-        cardElem.style.webkitTransform = 'rotateY(0deg)';
+        globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
         setTimeout(function() {
             globalVarsService.localVideoDiv.src = globalVarsService.miniVideoDiv.src;
             globalVarsService.miniVideoDiv.src = '';
