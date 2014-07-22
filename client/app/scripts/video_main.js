@@ -54,10 +54,6 @@ videoApp
 
         $log.log('Initializing; room=' + constantsService.roomKey + '.');
 
-        // Reset localVideoDiv display to center.
-        globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
-            $window.setVideoContainerDimensions();});
-
         userNotificationService.resetStatus();
         // NOTE: AppRTCClient.java searches & parses this line; update there when
         // changing here.
@@ -335,10 +331,11 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
 });
 
 
-videoApp.factory('sessionService', function($log, $window, messageService, userNotificationService,
+videoApp.factory('sessionService', function($log, $window, $rootScope, messageService, userNotificationService,
     codecsService, infoDivService, globalVarsService, constantsService, iceService, peerService,
     channelMessageService) {
 
+    var sessionIsActive = false;
 
     var onSetSessionDescriptionError = function(error) {
         userNotificationService.messageError('Failed to set session description: ' + error.toString());
@@ -366,7 +363,9 @@ videoApp.factory('sessionService', function($log, $window, messageService, userN
         setTimeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
         setTimeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
         // Reset window display according to the asperio of remote video.
-        $window.setVideoContainerDimensions();
+        $rootScope.$apply(function() {
+            sessionIsActive = true;
+        });
         userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
     };
 
@@ -403,6 +402,9 @@ videoApp.factory('sessionService', function($log, $window, messageService, userN
         }, 500);
         globalVarsService.miniVideoDiv.style.opacity = 0;
         globalVarsService.remoteVideoDiv.style.opacity = 0;
+        $rootScope.$apply(function() {
+            sessionIsActive = false;
+        });
 
         userNotificationService.resetStatus();
     };
@@ -424,6 +426,10 @@ videoApp.factory('sessionService', function($log, $window, messageService, userN
 
 
     return {
+
+        getSessionIsActive : function() {
+            return sessionIsActive;
+        },
 
         onCreateSessionDescriptionError : function(error) {
             userNotificationService.messageError('Failed to create session description: ' + error.toString());
@@ -1017,18 +1023,15 @@ videoApp.directive('monitorControlKeys', function ($document, $log, infoDivServi
 });
 
 
-videoApp.directive('videoContainer', function($window, globalVarsService) {
+videoApp.directive('videoContainer', function($window, globalVarsService, sessionService) {
     return {
         restrict : 'AE',
         link: function(scope, elem) {
-/*
-            scope.enterFullScreen = function () {
-                // This will probably fail on non-Chrome browsers -- investigate if extra code is needed.
-                elem[0].webkitRequestFullScreen();
-            };*/
 
-            // Set the video diplaying in the center of window.
-            $window.setVideoContainerDimensions = function(){
+            var setVideoContainerDimensions = function(){
+
+                // Set the video winddow size and location.
+
                 var videoAspectRatio;
                 if (globalVarsService.remoteVideoDiv.style.opacity === '1') {
                     videoAspectRatio = globalVarsService.remoteVideoDiv.videoWidth/globalVarsService.remoteVideoDiv.videoHeight;
@@ -1057,9 +1060,24 @@ videoApp.directive('videoContainer', function($window, globalVarsService) {
 
                 elem.width(videoWidth + 'px');
                 elem.height(videoHeight + 'px');
-//                elem.prop.left = (innerWidth - videoWidth) / 2 + 'px';
-//                elem.prop.top = 0 + 'px';
+                //                elem.prop.left = (innerWidth - videoWidth) / 2 + 'px';
+                //                elem.prop.top = 0 + 'px';
             };
+/*
+            scope.enterFullScreen = function () {
+                // This will probably fail on non-Chrome browsers -- investigate if extra code is needed.
+                elem[0].webkitRequestFullScreen();
+            };*/
+
+
+            scope.$watch(sessionService.getSessionIsActive, function() {
+                setVideoContainerDimensions();
+            });
+
+            globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
+                setVideoContainerDimensions();
+            });
+
         }
     };
 });
