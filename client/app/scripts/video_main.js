@@ -6,6 +6,9 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* global $ */
 /* global alert */
 /* global goog */
+
+/* The following globally defined functions come from adapter.js, which is a "shim" to make sure that
+   webRTC works in both Chrome and Firefox. */
 /* global createIceServers */
 /* global getUserMedia */
 /* global RTCPeerConnection */
@@ -38,6 +41,21 @@ videoApp.factory('globalVarsService', function (constantsService) {
             'OfferToReceiveVideo': true }}
     };
 });
+
+
+videoApp.service('adapterService', function () {
+    /* simple wrapper for global functions contained in adapter.js. This will make it
+       easier to do unit testing in the future.
+     */
+    this.myCreateIceServers = createIceServers;
+    this.myRTCPeerConnection = RTCPeerConnection;
+    this.myRTCSessionDescription = RTCSessionDescription;
+    this.myGetUserMedia = getUserMedia;
+    this.myAttachMediaStream = attachMediaStream;
+    this.myReattachMediaStream = reattachMediaStream;
+    this.myRTCIceCandidate = RTCIceCandidate;
+});
+
 
 videoApp
     .run(function($log, $window, constantsService, channelService, turnService,
@@ -189,14 +207,14 @@ videoApp.service('turnServiceSupport', function () {
 
 
 videoApp.factory('turnService', function($log, $http, peerService, callService, turnServiceSupport, userNotificationService,
-                                         constantsService, globalVarsService) {
+                                         constantsService, globalVarsService, adapterService) {
 
 
     var onTurnResult = function(response) {
 
         var turnServer = response.data;
         // Create turnUris using the polyfill (adapter.js).
-        var iceServers = createIceServers(turnServer.uris,
+        var iceServers = adapterService.myCreateIceServers(turnServer.uris,
             turnServer.username,
             turnServer.password);
         if (iceServers !== null) {
@@ -340,7 +358,7 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, $timeout,
                                             messageService, userNotificationService,
                                             codecsService, infoDivService, globalVarsService,
                                             constantsService, iceService, peerService,
-                                            channelMessageService) {
+                                            channelMessageService, adapterService) {
 
     var sessionStatus = 'waiting'; // "waiting", "active", or "done"
 
@@ -387,7 +405,7 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, $timeout,
             message.sdp = codecsService.addStereo(message.sdp);
         }
         message.sdp = codecsService.maybePreferAudioSendCodec(message.sdp);
-        peerService.pc.setRemoteDescription(new RTCSessionDescription(message),
+        peerService.pc.setRemoteDescription(new adapterService.myRTCSessionDescription(message),
             onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
     };
 
@@ -455,7 +473,7 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, $timeout,
             } else if (message.type === 'answer') {
                 setRemote(message);
             } else if (message.type === 'candidate') {
-                var candidate = new RTCIceCandidate({sdpMLineIndex: message.label,
+                var candidate = new adapterService.myRTCIceCandidate({sdpMLineIndex: message.label,
                     candidate: message.candidate});
                 iceService.noteIceCandidate('Remote', iceService.iceCandidateType(message.candidate));
                 peerService.pc.addIceCandidate(candidate,
@@ -468,7 +486,8 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, $timeout,
 });
 
 videoApp.factory('peerService', function($log, userNotificationService, infoDivService,
-                                         iceService, globalVarsService, constantsService) {
+                                         iceService, globalVarsService, constantsService,
+                                         adapterService) {
 
 
 
@@ -487,7 +506,7 @@ videoApp.factory('peerService', function($log, userNotificationService, infoDivS
     var onRemoteStreamAdded = function(self) {
         return function(mediaStreamEvent) {
             $log.log('Remote stream added.');
-            attachMediaStream(globalVarsService.remoteVideoDiv, mediaStreamEvent.stream);
+            adapterService.myAttachMediaStream(globalVarsService.remoteVideoDiv, mediaStreamEvent.stream);
             self.remoteStream = mediaStreamEvent.stream;
         };
     };
@@ -517,7 +536,7 @@ videoApp.factory('peerService', function($log, userNotificationService, infoDivS
         createPeerConnection : function() {
             try {
                 // Create an RTCPeerConnection via the polyfill (adapter.js).
-                this.pc = new RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
+                this.pc = new adapterService.myRTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
                 this.pc.onicecandidate = iceService.onIceCandidate;
                 $log.log('Created RTCPeerConnnection with:\n' +
                     '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
@@ -537,7 +556,8 @@ videoApp.factory('peerService', function($log, userNotificationService, infoDivS
 });
 
 videoApp.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
-                                         userNotificationService, constantsService, globalVarsService, channelMessageService) {
+                                         userNotificationService, constantsService, globalVarsService, channelMessageService,
+                                         adapterService) {
 
 
     var localStream;
@@ -571,7 +591,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         return function(stream) {
             $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
-            attachMediaStream(globalVarsService.localVideoDiv, stream);
+            adapterService.myAttachMediaStream(globalVarsService.localVideoDiv, stream);
             globalVarsService.localVideoDiv.style.opacity = 1;
             localStream = stream;
             // Caller creates PeerConnection.
@@ -633,7 +653,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         doGetUserMedia  : function() {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
-                getUserMedia(constantsService.mediaConstraints, onUserMediaSuccess(this),
+                adapterService.myGetUserMedia(constantsService.mediaConstraints, onUserMediaSuccess(this),
                     onUserMediaError(this));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(constantsService.mediaConstraints) + '\'');
@@ -1004,13 +1024,14 @@ videoApp.directive('monitorControlKeys', function ($document, $log, infoDivServi
 
 videoApp.directive('videoContainer', function($window, $log, $timeout,
                                               globalVarsService, constantsService,
-                                              sessionService, userNotificationService) {
+                                              sessionService, userNotificationService,
+                                              adapterService) {
     return {
         restrict : 'AE',
         link: function(scope, elem) {
 
             var transitionVideoToActive = function() {
-                reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
+                adapterService.myReattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
                 globalVarsService.remoteVideoDiv.style.opacity = 1;
                 globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
                 $timeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
