@@ -20,8 +20,6 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 
 /* exported initialize */
 
-// define variables
-var started = false;
 
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {'mandatory': {
@@ -39,6 +37,7 @@ videoApp.factory('globalVarsService', function (constantsService) {
         initiator : constantsService.initiator,
         pcConfig : constantsService.pcConfig,
         signalingReady : false,
+        started : false,
         videoTracks: null,
         localVideoDiv : $('#localVideo')[0],
         miniVideoDiv : $('#miniVideo')[0],
@@ -141,7 +140,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
         // Since the turn response is async and also GAE might disorder the
         // Message delivery due to possible datastore query at server side,
         // So callee needs to cache messages before peerConnection is created.
-        if (!globalVarsService.initiator && !started) {
+        if (!globalVarsService.initiator && !globalVarsService.started) {
             if (msg.type === 'offer') {
                 // Add offer to the beginning of msgQueue, since we can't handle
                 // Early candidates before offer at present.
@@ -425,7 +424,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
         },
 
         stop : function() {
-            started = false;
+            globalVarsService.started = false;
             globalVarsService.signalingReady = false;
             isAudioMuted = false;
             isVideoMuted = false;
@@ -446,7 +445,7 @@ videoApp.factory('sessionService', function($log, messageService, userNotificati
 
 
         processSignalingMessage : function(message) {
-            if (!started) {
+            if (!globalVarsService.started) {
                 userNotificationService.messageError('peerConnection has not been created yet!');
                 return;
             }
@@ -607,7 +606,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
         maybeStart : function() {
 
 
-            if (!started && globalVarsService.signalingReady && channelServiceSupport.channelReady &&
+            if (!globalVarsService.started && globalVarsService.signalingReady && channelServiceSupport.channelReady &&
                 turnServiceSupport.turnDone && (localStream || !this.hasLocalStream)) {
 
                 userNotificationService.setStatus('Connecting...');
@@ -620,7 +619,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
                 } else {
                     $log.log('Not sending any stream.');
                 }
-                started = true;
+                globalVarsService.started = true;
 
                 if (globalVarsService.initiator) {
                     doCall();
