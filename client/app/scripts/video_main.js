@@ -21,7 +21,7 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 videoApp.factory('globalVarsService', function (constantsService) {
             /* This services provides access to variables that are used by multiple services, and that don't
                fit easily into any of the currently defined services. These variables may be accessed and
-               modified directly from anywhere in the code. 
+               modified directly from anywhere in the code.
              */
     return {
 
@@ -139,7 +139,9 @@ videoApp.service('channelServiceSupport', function() {
 videoApp.factory('channelService', function($log, constantsService, callService, sessionService, userNotificationService,
                                             channelServiceSupport, globalVarsService, channelMessageService) {
 
-
+    /*
+    Provides functionality for opening up and handling callbacks from the Google App-engine "Channel API".
+     */
 
     var onChannelOpened = function() {
       $log.log('Channel opened.');
@@ -275,6 +277,9 @@ videoApp.factory('turnService', function($log, $http, peerService, callService, 
 
 videoApp.factory('messageService', function($http, $log, constantsService) {
 
+    /*
+    Functionality for posting messages to the server.
+     */
     return {
         sendMessage : function(message) {
             var msgString = JSON.stringify(message);
@@ -296,6 +301,10 @@ videoApp.factory('messageService', function($http, $log, constantsService) {
 });
 
 videoApp.service('iceService', function($log, messageService, userNotificationService, infoDivService) {
+    /*
+    ICE = Interactive Connectivity Establishment.
+    This service provides ICE methods that are used when setting up a peer connection.
+     */
 
     var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 
