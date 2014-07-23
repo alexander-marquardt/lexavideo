@@ -16,7 +16,7 @@
     <!-- the following line is used by grunt-usemin to detect which css it should combine this block into -->    
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/video_main.css" />
+    <link rel="stylesheet" href="styles/videoApp.css" />
     <!-- endbuild -->
 
 
@@ -78,12 +78,14 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    {% include "jinja_templates/javascript_constants.html" %}
+    {% include "jinja_templates/videoAppMainConstants.html" %}
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
     <script src="scripts/adapter.js"></script>
-    <script src="scripts/video_main.js"></script>
+    <script src="scripts/videoApp.js"></script>
+    <script src="scripts/ng_services/videoAppServices.js"></script>
+    <script src="scripts/ng_directives/videoAppDirectives.js"></script>
     <script src="scripts/ng_controllers/mainVideoController.js"></script>
 
     <!-- endbuild -->

@@ -1,6 +1,7 @@
 'use strict';
 
-var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
+var videoAppServices = angular.module('videoApp.services', []);
+
 
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
@@ -18,7 +19,8 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants']);
 /* global reattachMediaStream */
 
 
-videoApp.factory('globalVarsService', function (constantsService) {
+
+videoAppServices.factory('globalVarsService', function (constantsService) {
             /* This services provides access to variables that are used by multiple services, and that don't
                fit easily into any of the currently defined services. These variables may be accessed and
                modified directly from anywhere in the code.
@@ -48,7 +50,7 @@ videoApp.factory('globalVarsService', function (constantsService) {
 });
 
 
-videoApp.service('adapterService', function () {
+videoAppServices.service('adapterService', function () {
     /* simple wrapper for global functions contained in adapter.js. This will make it
        easier to do unit testing in the future.
      */
@@ -61,52 +63,7 @@ videoApp.service('adapterService', function () {
     this.RTCIceCandidate = RTCIceCandidate;
 });
 
-
-videoApp
-    .run(function($log, $window, constantsService, channelService, turnService,
-                  peerService, callService, userNotificationService,
-                  messageService, globalVarsService) {
-        var i;
-        if (constantsService.errorMessages.length > 0) {
-            for (i = 0; i < constantsService.errorMessages.length; ++i) {
-                $window.alert(constantsService.errorMessages[i]);
-            }
-            return;
-        }
-
-        $log.log('Initializing; room=' + constantsService.roomKey + '.');
-
-        userNotificationService.resetStatus();
-        // NOTE: AppRTCClient.java searches & parses this line; update there when
-        // changing here.
-        channelService.openChannel();
-        turnService.maybeRequestTurn();
-
-        // Caller is always ready to create peerConnection.
-        // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
-        globalVarsService.signalingReady = globalVarsService.initiator;
-
-        if (constantsService.mediaConstraints.audio === false &&
-            constantsService.mediaConstraints.video === false) {
-            callService.hasLocalStream = false;
-            callService.maybeStart();
-        } else {
-            callService.hasLocalStream = true;
-            callService.doGetUserMedia();
-        }
-
-
-        // Send BYE on refreshing(or leaving) a demo page
-        // to ensure the room is cleaned for next session.
-        $window.onbeforeunload = function() {
-            messageService.sendMessage({type: 'bye'});
-        };
-
-
-    });
-
-
-videoApp.service('channelMessageService', function() {
+videoAppServices.service('channelMessageService', function() {
     var msgQueue = [];
 
     return {
@@ -131,12 +88,12 @@ videoApp.service('channelMessageService', function() {
     };
 });
 
-videoApp.service('channelServiceSupport', function() {
+videoAppServices.service('channelServiceSupport', function() {
     this.channelReady = false;
     this.socket = null;
 });
 
-videoApp.factory('channelService', function($log, constantsService, callService, sessionService, userNotificationService,
+videoAppServices.factory('channelService', function($log, constantsService, callService, sessionService, userNotificationService,
                                             channelServiceSupport, globalVarsService, channelMessageService) {
 
     /*
@@ -200,7 +157,7 @@ videoApp.factory('channelService', function($log, constantsService, callService,
     };
 });
 
-videoApp.service('turnServiceSupport', function () {
+videoAppServices.service('turnServiceSupport', function () {
     // This function tracks some variables that are needed by multiple services, where one of the services has
     // a dependency on the other one.
     // In order to prevent circular dependencies, this variable needs to be in its own service, even though
@@ -213,7 +170,7 @@ videoApp.service('turnServiceSupport', function () {
 });
 
 
-videoApp.factory('turnService', function($log, $http, peerService, callService, turnServiceSupport, userNotificationService,
+videoAppServices.factory('turnService', function($log, $http, peerService, callService, turnServiceSupport, userNotificationService,
                                          constantsService, globalVarsService, adapterService) {
 
 
@@ -275,7 +232,7 @@ videoApp.factory('turnService', function($log, $http, peerService, callService, 
 });
 
 
-videoApp.factory('messageService', function($http, $log, constantsService) {
+videoAppServices.factory('messageService', function($http, $log, constantsService) {
 
     /*
     Functionality for posting messages to the server.
@@ -300,7 +257,7 @@ videoApp.factory('messageService', function($http, $log, constantsService) {
     };
 });
 
-videoApp.service('iceService', function($log, messageService, userNotificationService, infoDivService) {
+videoAppServices.service('iceService', function($log, messageService, userNotificationService, infoDivService) {
     /*
     ICE = Interactive Connectivity Establishment.
     This service provides ICE methods that are used when setting up a peer connection.
@@ -368,7 +325,7 @@ videoApp.service('iceService', function($log, messageService, userNotificationSe
 });
 
 
-videoApp.factory('sessionService', function($log, $window, $rootScope, $timeout,
+videoAppServices.factory('sessionService', function($log, $window, $rootScope, $timeout,
                                             messageService, userNotificationService,
                                             codecsService, infoDivService, globalVarsService,
                                             constantsService, iceService, peerService,
@@ -499,7 +456,7 @@ videoApp.factory('sessionService', function($log, $window, $rootScope, $timeout,
     };
 });
 
-videoApp.factory('peerService', function($log, userNotificationService, infoDivService,
+videoAppServices.factory('peerService', function($log, userNotificationService, infoDivService,
                                          iceService, globalVarsService, constantsService,
                                          adapterService) {
 
@@ -569,7 +526,7 @@ videoApp.factory('peerService', function($log, userNotificationService, infoDivS
     };
 });
 
-videoApp.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
+videoAppServices.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
                                          userNotificationService, constantsService, globalVarsService, channelMessageService,
                                          adapterService) {
 
@@ -731,7 +688,7 @@ videoApp.factory('callService', function($log, turnServiceSupport, peerService, 
 });
 
 
-videoApp.factory('userNotificationService', function($log, $timeout, infoDivService, constantsService, globalVarsService) {
+videoAppServices.factory('userNotificationService', function($log, $timeout, infoDivService, constantsService, globalVarsService) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
@@ -759,7 +716,7 @@ videoApp.factory('userNotificationService', function($log, $timeout, infoDivServ
     };
 });
 
-videoApp.factory('codecsService', function($log, constantsService){
+videoAppServices.factory('codecsService', function($log, constantsService){
 
     // Strip CN from sdp before CN constraints is ready.
     var removeCN = function(sdpLines, mLineIndex) {
@@ -914,7 +871,7 @@ videoApp.factory('codecsService', function($log, constantsService){
 });
 
 
-videoApp.service('infoDivService', function ($log) {
+videoAppServices.service('infoDivService', function ($log) {
 
 
     var infoDivErrors = [];
@@ -969,180 +926,6 @@ videoApp.service('infoDivService', function ($log) {
             if (infoDivErrors.length) {
                 showInfoDiv();
             }
-        }
-    };
-});
-
-
-videoApp.directive('callStatus', function(userNotificationService, $compile, $sce, callService) {
-    return {
-        restrict: 'AE',
-        link: function(scope, elem) {
-
-            // we include doHangup on the scope because some of the getStatus calls can include
-            // html that expects a doHangup function to be available.
-            scope.doHangup = callService.doHangup;
-
-            scope.$watch(userNotificationService.getStatus, function (statusHtml) {
-
-                var el = angular.element('<span/>');
-                el.append(statusHtml);
-                var compileFn = $compile(el);
-                compileFn(scope);
-                elem.html('');
-                elem.append(el);
-            });
-        }
-    };
-});
-
-videoApp.directive('monitorControlKeys', function ($document, $log, infoDivService, callService) {
-
-
-    return {
-        restrict : 'AE',
-        link: function() {
-            // Mac: hotkey is Command.
-            // Non-Mac: hotkey is Control.
-            // <hotkey>-D: toggle audio mute.
-            // <hotkey>-E: toggle video mute.
-            // <hotkey>-I: toggle Info box.
-            // Return false to screen out original Chrome shortcuts.
-            $document.on('keydown', function(event) {
-                $log.log('Key pressed ' + event.keyCode);
-                var hotkey = event.ctrlKey;
-                if (navigator.appVersion.indexOf('Mac') !== -1) {
-                    hotkey = event.metaKey;
-                }
-                if (!hotkey) {
-                    return;
-                }
-                switch (event.keyCode) {
-                    case 68:
-                        callService.toggleAudioMute();
-                        return false;
-                    case 69:
-                        callService.toggleVideoMute();
-                        return false;
-                    case 73:
-                        infoDivService.toggleInfoDiv();
-                        return false;
-                    default:
-                        return;
-                }
-            });
-        }
-    };
-});
-
-
-videoApp.directive('videoContainer', function($window, $log, $timeout,
-                                              globalVarsService, constantsService,
-                                              sessionService, userNotificationService,
-                                              adapterService) {
-    return {
-        restrict : 'AE',
-        link: function(scope, elem) {
-
-            var transitionVideoToActive = function() {
-                adapterService.reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
-                globalVarsService.remoteVideoDiv.style.opacity = 1;
-                globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
-                $timeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
-                $timeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
-                userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
-            };
-
-            var transitionVideoToWaiting = function() {
-                globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
-                $timeout(function() {
-                    globalVarsService.localVideoDiv.src = globalVarsService.miniVideoDiv.src;
-                    globalVarsService.miniVideoDiv.src = '';
-                    globalVarsService.remoteVideoDiv.src = '';
-                }, 500);
-                globalVarsService.miniVideoDiv.style.opacity = 0;
-                globalVarsService.remoteVideoDiv.style.opacity = 0;
-
-                userNotificationService.resetStatus();
-            };
-
-
-            var transitionVideoToDone = function() {
-                globalVarsService.localVideoDiv.style.opacity = 0;
-                globalVarsService.remoteVideoDiv.style.opacity = 0;
-                globalVarsService.miniVideoDiv.style.opacity = 0;
-
-              userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
-            };
-
-
-            var setVideoContainerDimensions = function(){
-
-                // Set the video winddow size and location.
-
-                var videoAspectRatio;
-                if (globalVarsService.remoteVideoDiv.style.opacity === '1') {
-                    videoAspectRatio = globalVarsService.remoteVideoDiv.videoWidth/globalVarsService.remoteVideoDiv.videoHeight;
-                } else if (globalVarsService.localVideoDiv.style.opacity === '1') {
-                    videoAspectRatio = globalVarsService.localVideoDiv.videoWidth/globalVarsService.localVideoDiv.videoHeight;
-                } else {
-                    return;
-                }
-
-                var innerHeight = $window.innerHeight - $('#id-vidochat-logo').height() - $('#footer').height();
-                var innerWidth = $window.innerWidth;
-
-                var innerAspectRatio = innerWidth/innerHeight;
-                var videoHeight, videoWidth;
-
-                if (innerAspectRatio <= videoAspectRatio) {
-                    // the video needs to be have height reduced to keep aspect ratio and stay inside window
-                    videoWidth = innerWidth;
-                    videoHeight = innerWidth / videoAspectRatio;
-                }
-                else {
-                    // the video needs to have the width reduce to keep aspect ratio and stay inside window
-                    videoHeight = innerHeight;
-                    videoWidth = innerHeight * videoAspectRatio;
-                }
-
-                elem.width(videoWidth + 'px');
-                elem.height(videoHeight + 'px');
-                //                elem.prop.left = (innerWidth - videoWidth) / 2 + 'px';
-                //                elem.prop.top = 0 + 'px';
-            };
-/*
-            scope.enterFullScreen = function () {
-                // This will probably fail on non-Chrome browsers -- investigate if extra code is needed.
-                elem[0].webkitRequestFullScreen();
-            };*/
-            
-            angular.element($window).on('resize', function() {
-                // if the window is resized, then resize the video.
-                setVideoContainerDimensions();
-            });
-
-            scope.$watch(sessionService.getSessionStatus, function(status) {
-                // If session status changes, then resize the video (the remote video
-                // might have different dimensions than the local video)
-                setVideoContainerDimensions();
-                if (status === 'active') {
-                    transitionVideoToActive();
-                } else if (status === 'waiting') {
-                    transitionVideoToWaiting();
-                } else if (status === 'done') {
-                    transitionVideoToDone();
-                } else {
-                    $log.log('Error, unknown status received');
-                }
-
-            });
-
-            globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
-                // once the metadata is loaded, the dimensions of the video are known.
-                setVideoContainerDimensions();
-            });
-
         }
     };
 });
