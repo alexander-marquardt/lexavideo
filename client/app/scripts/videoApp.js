@@ -4,7 +4,7 @@ var videoApp = angular.module('videoApp', ['videoApp.mainConstants', 'videoApp.d
 videoApp.run(function($log, $window, constantsService, channelService, turnService,
               peerService, callService, userNotificationService,
               messageService, globalVarsService) {
-    
+
     var i;
     if (constantsService.errorMessages.length > 0) {
         for (i = 0; i < constantsService.errorMessages.length; ++i) {

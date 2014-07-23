@@ -4,7 +4,7 @@
         <img src="images/videochathub.jpg"/>
     </div>
     <div id="container"><!-- ng-dblclick="enterFullScreen()" >-->
-        <div video-container>
+        <div video-container-directive>
         <div id="card-elem">
             <div id="local-div">
                 <video id="local-video" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
@@ -23,7 +23,7 @@
 </div>
 
 <!-- the following divs are outside of the standard page flow -->
-<footer id="footer" call-status></footer>
+<footer id="footer" call-status-directive></footer>
 
 <div id="info-div">
     <div class="page-header">
@@ -38,6 +38,6 @@
 </div>
 
 <!-- the following div is for monitoring of control key presses -->
-<div  monitor-control-keys></div>
+<div  monitor-control-keys-directive></div>
 
 {% endraw %}

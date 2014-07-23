@@ -5,7 +5,7 @@ var videoAppDirectives = angular.module('videoApp.directives', []);
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
 
-videoAppDirectives.directive('callStatus', function(userNotificationService, $compile, $sce, callService) {
+videoAppDirectives.directive('callStatusDirective', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'AE',
         link: function(scope, elem) {
@@ -27,7 +27,7 @@ videoAppDirectives.directive('callStatus', function(userNotificationService, $co
     };
 });
 
-videoAppDirectives.directive('monitorControlKeys', function ($document, $log, infoDivService, callService) {
+videoAppDirectives.directive('monitorControlKeysDirective', function ($document, $log, infoDivService, callService) {
 
 
     return {
@@ -67,7 +67,7 @@ videoAppDirectives.directive('monitorControlKeys', function ($document, $log, in
 });
 
 
-videoAppDirectives.directive('videoContainer', function($window, $log, $timeout,
+videoAppDirectives.directive('videoContainerDirective', function($window, $log, $timeout,
                                               globalVarsService, constantsService,
                                               sessionService, userNotificationService,
                                               adapterService) {
