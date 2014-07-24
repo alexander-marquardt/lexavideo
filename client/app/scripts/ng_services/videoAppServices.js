@@ -39,7 +39,6 @@ videoAppServices.factory('globalVarsService', function (constantsService) {
         localVideoDiv : $('#local-video')[0],
         miniVideoDiv : $('#mini-video')[0],
         remoteVideoDiv : $('#remote-video')[0],
-        cardElemDiv : $('#card-elem')[0],
 
 
         // Set up audio and video regardless of what devices are present.

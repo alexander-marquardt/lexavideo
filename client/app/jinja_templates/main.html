@@ -4,20 +4,20 @@
         <img src="images/videochathub.jpg"/>
     </div>
     <div id="container"><!-- ng-dblclick="enterFullScreen()" >-->
-        <div video-container-directive>
-        <div id="card-elem">
-            <div id="local-div">
-                <video id="local-video" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
-            </div>
-            <div id="remote-div">
-                <video id="remote-video" autoplay="autoplay">
-                    You must update to a newer version of Chrome or Firefox to use video
-                </video>
-                <div id="mini-div">
-                    <video id="mini-video" autoplay="autoplay" muted="true"/>
+        <div video-container-directive monitor-control-keys-directive>
+            <div id="card-elem">
+                <div id="local-div">
+                    <video id="local-video" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
+                </div>
+                <div id="remote-div">
+                    <video id="remote-video" autoplay="autoplay">
+                        You must update to a newer version of Chrome or Firefox to use video
+                    </video>
+                    <div id="mini-div">
+                        <video id="mini-video" autoplay="autoplay" muted="true"/>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 </div>
@@ -37,7 +37,6 @@
 
 </div>
 
-<!-- the following div is for monitoring of control key presses -->
-<div  monitor-control-keys-directive></div>
+
 
 {% endraw %}

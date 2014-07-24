@@ -75,17 +75,19 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
         restrict : 'AE',
         link: function(scope, elem) {
 
+            var cardElemDiv = $('#card-elem')[0];
+
             var transitionVideoToActive = function() {
                 adapterService.reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
                 globalVarsService.remoteVideoDiv.style.opacity = 1;
-                globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
+                cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
                 $timeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
                 $timeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
                 userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
             };
 
             var transitionVideoToWaiting = function() {
-                globalVarsService.cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
+                cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
                 $timeout(function() {
                     globalVarsService.localVideoDiv.src = globalVarsService.miniVideoDiv.src;
                     globalVarsService.miniVideoDiv.src = '';
