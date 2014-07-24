@@ -78,6 +78,8 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
             var cardElemDiv = $('#card-elem')[0];
             var localVideoDiv = $('#local-video')[0];
+            var miniVideoDiv = $('#mini-video')[0];
+            var remoteVideoDiv = $('#remote-video')[0];
 
 
             function initializeVideoCallSetup() {
@@ -103,8 +105,8 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                 userNotificationService.resetStatus();
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
-                channelService.openChannel();
-                turnService.maybeRequestTurn();
+                channelService.openChannel(remoteVideoDiv);
+                turnService.maybeRequestTurn(remoteVideoDiv);
 
                 // Caller is always ready to create peerConnection.
                 // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
@@ -116,29 +118,29 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                     callService.maybeStart();
                 } else {
                     callService.hasLocalStream = true;
-                    callService.doGetUserMedia(localVideoDiv);
+                    callService.doGetUserMedia(localVideoDiv, remoteVideoDiv);
                 }
             }
 
 
             var transitionVideoToActive = function() {
-                adapterService.reattachMediaStream(globalVarsService.miniVideoDiv, localVideoDiv);
-                globalVarsService.remoteVideoDiv.style.opacity = 1;
+                adapterService.reattachMediaStream(miniVideoDiv, localVideoDiv);
+                remoteVideoDiv.style.opacity = 1;
                 cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
                 $timeout(function() { localVideoDiv.src = ''; }, 500);
-                $timeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
+                $timeout(function() { miniVideoDiv.style.opacity = 1; }, 1000);
                 userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
             };
 
             var transitionVideoToWaiting = function() {
                 cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
                 $timeout(function() {
-                    localVideoDiv.src = globalVarsService.miniVideoDiv.src;
-                    globalVarsService.miniVideoDiv.src = '';
-                    globalVarsService.remoteVideoDiv.src = '';
+                    localVideoDiv.src = miniVideoDiv.src;
+                    miniVideoDiv.src = '';
+                    remoteVideoDiv.src = '';
                 }, 500);
-                globalVarsService.miniVideoDiv.style.opacity = 0;
-                globalVarsService.remoteVideoDiv.style.opacity = 0;
+                miniVideoDiv.style.opacity = 0;
+                remoteVideoDiv.style.opacity = 0;
 
                 userNotificationService.resetStatus();
             };
@@ -146,8 +148,8 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
             var transitionVideoToDone = function() {
                 localVideoDiv.style.opacity = 0;
-                globalVarsService.remoteVideoDiv.style.opacity = 0;
-                globalVarsService.miniVideoDiv.style.opacity = 0;
+                remoteVideoDiv.style.opacity = 0;
+                miniVideoDiv.style.opacity = 0;
 
               userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
             };
@@ -158,8 +160,8 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                 // Set the video winddow size and location.
 
                 var videoAspectRatio;
-                if (globalVarsService.remoteVideoDiv.style.opacity === '1') {
-                    videoAspectRatio = globalVarsService.remoteVideoDiv.videoWidth/globalVarsService.remoteVideoDiv.videoHeight;
+                if (remoteVideoDiv.style.opacity === '1') {
+                    videoAspectRatio = remoteVideoDiv.videoWidth/remoteVideoDiv.videoHeight;
                 } else if (localVideoDiv.style.opacity === '1') {
                     videoAspectRatio = localVideoDiv.videoWidth/localVideoDiv.videoHeight;
                 } else {
