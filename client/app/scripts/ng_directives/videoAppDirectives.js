@@ -70,18 +70,62 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
 videoAppDirectives.directive('videoContainerDirective', function($window, $log, $timeout,
                                               globalVarsService, constantsService,
                                               sessionService, userNotificationService,
-                                              adapterService) {
+                                              adapterService, channelService, turnService,
+                                              callService, messageService) {
     return {
         restrict : 'AE',
         link: function(scope, elem) {
 
             var cardElemDiv = $('#card-elem')[0];
+            var localVideoDiv = $('#local-video')[0];
+
+
+            function initializeVideoCallSetup() {
+
+                var i;
+                if (constantsService.errorMessages.length > 0) {
+                    for (i = 0; i < constantsService.errorMessages.length; ++i) {
+                        $window.alert(constantsService.errorMessages[i]);
+                    }
+                    return;
+                }
+
+                // Send BYE on refreshing(or leaving) a demo page
+                // to ensure the room is cleaned for next session.
+                $window.onbeforeunload = function() {
+                    messageService.sendMessage({type: 'bye'});
+                };
+
+
+
+                $log.log('Initializing; room=' + constantsService.roomKey + '.');
+
+                userNotificationService.resetStatus();
+                // NOTE: AppRTCClient.java searches & parses this line; update there when
+                // changing here.
+                channelService.openChannel();
+                turnService.maybeRequestTurn();
+
+                // Caller is always ready to create peerConnection.
+                // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
+                globalVarsService.signalingReady = globalVarsService.initiator;
+
+                if (constantsService.mediaConstraints.audio === false &&
+                    constantsService.mediaConstraints.video === false) {
+                    callService.hasLocalStream = false;
+                    callService.maybeStart();
+                } else {
+                    callService.hasLocalStream = true;
+                    callService.doGetUserMedia(localVideoDiv);
+                }
+            }
+
 
             var transitionVideoToActive = function() {
-                adapterService.reattachMediaStream(globalVarsService.miniVideoDiv, globalVarsService.localVideoDiv);
+                adapterService.reattachMediaStream(globalVarsService.miniVideoDiv, localVideoDiv);
                 globalVarsService.remoteVideoDiv.style.opacity = 1;
                 cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
-                $timeout(function() { globalVarsService.localVideoDiv.src = ''; }, 500);
+                $timeout(function() { localVideoDiv.src = ''; }, 500);
                 $timeout(function() { globalVarsService.miniVideoDiv.style.opacity = 1; }, 1000);
                 userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
             };
@@ -89,7 +133,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
             var transitionVideoToWaiting = function() {
                 cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
                 $timeout(function() {
-                    globalVarsService.localVideoDiv.src = globalVarsService.miniVideoDiv.src;
+                    localVideoDiv.src = globalVarsService.miniVideoDiv.src;
                     globalVarsService.miniVideoDiv.src = '';
                     globalVarsService.remoteVideoDiv.src = '';
                 }, 500);
@@ -101,7 +145,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
 
             var transitionVideoToDone = function() {
-                globalVarsService.localVideoDiv.style.opacity = 0;
+                localVideoDiv.style.opacity = 0;
                 globalVarsService.remoteVideoDiv.style.opacity = 0;
                 globalVarsService.miniVideoDiv.style.opacity = 0;
 
@@ -116,8 +160,8 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                 var videoAspectRatio;
                 if (globalVarsService.remoteVideoDiv.style.opacity === '1') {
                     videoAspectRatio = globalVarsService.remoteVideoDiv.videoWidth/globalVarsService.remoteVideoDiv.videoHeight;
-                } else if (globalVarsService.localVideoDiv.style.opacity === '1') {
-                    videoAspectRatio = globalVarsService.localVideoDiv.videoWidth/globalVarsService.localVideoDiv.videoHeight;
+                } else if (localVideoDiv.style.opacity === '1') {
+                    videoAspectRatio = localVideoDiv.videoWidth/localVideoDiv.videoHeight;
                 } else {
                     return;
                 }
@@ -150,6 +194,11 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                 elem[0].webkitRequestFullScreen();
             };*/
 
+
+            initializeVideoCallSetup();
+
+
+
             angular.element($window).on('resize', function() {
                 // if the window is resized, then resize the video.
                 setVideoContainerDimensions();
@@ -171,7 +220,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
             });
 
-            globalVarsService.localVideoDiv.addEventListener('loadedmetadata', function(){
+            localVideoDiv.addEventListener('loadedmetadata', function(){
                 // once the metadata is loaded, the dimensions of the video are known.
                 setVideoContainerDimensions();
             });

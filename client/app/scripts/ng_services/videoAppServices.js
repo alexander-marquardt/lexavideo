@@ -36,7 +36,6 @@ videoAppServices.factory('globalVarsService', function (constantsService) {
         videoTracks: null,
 
         // Provide global access to certain dom elements that are used in multiple services/directives.
-        localVideoDiv : $('#local-video')[0],
         miniVideoDiv : $('#mini-video')[0],
         remoteVideoDiv : $('#remote-video')[0],
 
@@ -557,12 +556,12 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
     };
 
 
-    var onUserMediaSuccess = function(self) {
+    var onUserMediaSuccess = function(self, localVideoDiv) {
         return function(stream) {
             $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
-            adapterService.attachMediaStream(globalVarsService.localVideoDiv, stream);
-            globalVarsService.localVideoDiv.style.opacity = 1;
+            adapterService.attachMediaStream(localVideoDiv, stream);
+            localVideoDiv.style.opacity = 1;
             localStream = stream;
             // Caller creates PeerConnection.
             self.maybeStart();
@@ -620,10 +619,10 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
             channelServiceSupport.socket.close();
         },
 
-        doGetUserMedia  : function() {
+        doGetUserMedia  : function(localVideoDiv) {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
-                adapterService.getUserMedia(constantsService.mediaConstraints, onUserMediaSuccess(this),
+                adapterService.getUserMedia(constantsService.mediaConstraints, onUserMediaSuccess(this, localVideoDiv),
                     onUserMediaError(this));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(constantsService.mediaConstraints) + '\'');
