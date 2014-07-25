@@ -213,7 +213,9 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                 // If session status changes, then resize the video (the remote video
                 // might have different dimensions than the local video)
                 setVideoContainerDimensions();
-                if (status === 'active') {
+                if (status === 'initializing') {
+                   $log.log('sessionStatus is set to "initializing"');
+                } else if (status === 'active') {
                     transitionVideoToActive();
                 } else if (status === 'waiting') {
                     transitionVideoToWaiting();

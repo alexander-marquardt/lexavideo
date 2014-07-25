@@ -332,7 +332,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
                                             constantsService, iceService, peerService,
                                             channelMessageService, adapterService) {
 
-    var sessionStatus = 'waiting'; // "waiting", "active", or "done"
+    var sessionStatus = 'initializing'; // "initializing", "waiting", "active", or "done"
 
     var onSetSessionDescriptionError = function(error) {
         userNotificationService.messageError('Failed to set session description: ' + error.toString());
