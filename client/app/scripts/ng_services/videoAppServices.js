@@ -103,7 +103,7 @@ videoAppServices.factory('channelService', function($log, constantsService, call
 
     var onChannelMessage = function(remoteVideoDiv) {
         return function(message) {
-            $log.log('S->C: ' + message.data);
+            // $log.log('S->C: ' + message.data);
             var msg = JSON.parse(message.data);
             // Since the turn response is async and also GAE might disorder the
             // Message delivery due to possible datastore query at server side,
@@ -241,7 +241,7 @@ videoAppServices.factory('messageService', function($http, $log, constantsServic
     return {
         sendMessage : function(message) {
             var msgString = JSON.stringify(message);
-            $log.log('C->S: ' + msgString);
+            // $log.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
             var path = '/message?r=' + constantsService.roomKey + '&u=' + constantsService.myUsername;

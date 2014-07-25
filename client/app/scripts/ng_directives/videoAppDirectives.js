@@ -124,6 +124,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
 
             var transitionVideoToActive = function() {
+                $log.log('\n\n*** Executing transitionVideoToActive ***\n\n');
                 adapterService.reattachMediaStream(miniVideoDiv, localVideoDiv);
                 remoteVideoDiv.style.opacity = 1;
                 cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
@@ -133,6 +134,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
             };
 
             var transitionVideoToWaiting = function() {
+                $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
                 cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
                 $timeout(function() {
                     localVideoDiv.src = miniVideoDiv.src;
@@ -147,6 +149,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
 
             var transitionVideoToDone = function() {
+                $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');                
                 localVideoDiv.style.opacity = 0;
                 remoteVideoDiv.style.opacity = 0;
                 miniVideoDiv.style.opacity = 0;
