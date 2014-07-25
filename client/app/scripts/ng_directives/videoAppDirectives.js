@@ -81,7 +81,8 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
             var miniVideoDiv = $('#mini-video')[0];
 
             var remoteVideoObject = {
-                 remoteVideoDiv : $('#remote-video')[0]
+                remoteVideoDiv : $('#remote-video')[0],
+                videoTracks: null
             };
 
 

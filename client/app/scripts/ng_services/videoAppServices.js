@@ -33,7 +33,6 @@ videoAppServices.factory('globalVarsService', function (constantsService) {
         started : false,
         isVideoMuted : false,
         isAudioMuted : false,
-        videoTracks: null,
 
         // Set up audio and video regardless of what devices are present.
         sdpConstraints : {'mandatory': {
@@ -347,8 +346,8 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
         var innerWaitForRemoteVideo = function() {
             // Call the getVideoTracks method via adapter.js.
-            globalVarsService.videoTracks = peerService.remoteStream.getVideoTracks();
-            if (globalVarsService.videoTracks.length === 0 || remoteVideoObject.remoteVideoDiv.currentTime > 0) {
+            remoteVideoObject.videoTracks = peerService.remoteStream.getVideoTracks();
+            if (remoteVideoObject.videoTracks.length === 0 || remoteVideoObject.remoteVideoDiv.currentTime > 0) {
                 transitionSessionStatus('active');
             } else {
                 $timeout(innerWaitForRemoteVideo, 100);
@@ -641,24 +640,24 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         },
 
 
-        toggleVideoMute : function() {
+        toggleVideoMute : function(remoteVideoObject) {
             // Call the getVideoTracks method via adapter.js.
             var i;
-            globalVarsService.videoTracks = localStream.getVideoTracks();
+            remoteVideoObject.videoTracks = localStream.getVideoTracks();
 
-            if (globalVarsService.videoTracks.length === 0) {
+            if (remoteVideoObject.videoTracks.length === 0) {
                 $log.log('No local video available.');
                 return;
             }
 
             if (globalVarsService.isVideoMuted) {
-                for (i = 0; i < globalVarsService.videoTracks.length; i++) {
-                    globalVarsService.videoTracks[i].enabled = true;
+                for (i = 0; i < remoteVideoObject.videoTracks.length; i++) {
+                    remoteVideoObject.videoTracks[i].enabled = true;
                 }
                 $log.log('Video unmuted.');
             } else {
-                for (i = 0; i < globalVarsService.videoTracks.length; i++) {
-                    globalVarsService.videoTracks[i].enabled = false;
+                for (i = 0; i < remoteVideoObject.videoTracks.length; i++) {
+                    remoteVideoObject.videoTracks[i].enabled = false;
                 }
                 $log.log('Video muted.');
             }
