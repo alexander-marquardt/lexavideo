@@ -8,6 +8,7 @@ var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.servic
 videoAppDirectives.directive('callStatusDirective', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'A',
+
         link: function(scope, elem) {
 
             // we include doHangup on the scope because some of the getStatus calls can include
@@ -32,8 +33,11 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
 
     return {
         restrict : 'A',
-        require: 'videoContainerDirective',
-        link: function(scope, element, attrs, videoContainerDirectiveCtrl) {
+        scope : {
+            remoteVideoObject: '='
+        },
+
+        link: function(scope) {
             // Mac: hotkey is Command.
             // Non-Mac: hotkey is Control.
             // <hotkey>-D: toggle audio mute.
@@ -54,7 +58,7 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
                         callService.toggleAudioMute();
                         return false;
                     case 69:
-                        callService.toggleVideoMute(videoContainerDirectiveCtrl.remoteVideoObject);
+                        callService.toggleVideoMute(scope.remoteVideoObject);
                         return false;
                     case 73:
                         infoDivService.toggleInfoDiv();
@@ -75,23 +79,16 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                                               callService, messageService) {
     return {
         restrict : 'A',
-        require: 'videoContainerDirective', // require it's own controller
-        scope: {}, // isolate scope
-        controller: function($scope) {
-            var remoteVideoObject = {
-                remoteVideoDiv : $('#remote-video')[0],
-                videoTracks: null
-            };
-
-            this.remoteVideoObject = remoteVideoObject;
+        scope : {
+            remoteVideoObject: '='
         },
-        link: function(scope, elem, attrs, selfCtrl) {
+        link: function(scope, elem) {
 
             var cardElemDiv = $('#card-elem')[0];
             var localVideoDiv = $('#local-video')[0];
             var miniVideoDiv = $('#mini-video')[0];
 
-            var remoteVideoObject = selfCtrl.remoteVideoObject;
+            var remoteVideoObject = scope.remoteVideoObject;
 
             function initializeVideoCallSetup() {
 
@@ -141,7 +138,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                 cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
                 $timeout(function() { localVideoDiv.src = ''; }, 500);
                 $timeout(function() { miniVideoDiv.style.opacity = 1; }, 1000);
-                userNotificationService.setStatus('<input type=\'button\' id=\'hangup\' value=\'Hang up\' ng-click=\'doHangup()\' />');
+                userNotificationService.setStatus('<input type="button" id="hangup" value="Hang up" ng-click="doHangup()" />');
             };
 
             var transitionVideoToWaiting = function() {

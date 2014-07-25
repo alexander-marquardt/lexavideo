@@ -1,10 +1,11 @@
 {% raw %}
+<div id="id-vidochat-logo">
+    <img src="images/videochathub.jpg"/>
+</div>
+
 <div ng-controller="mainVideoCtrl">
-    <div id="id-vidochat-logo">
-        <img src="images/videochathub.jpg"/>
-    </div>
     <div id="container"><!-- ng-dblclick="enterFullScreen()" >-->
-        <div video-container-directive monitor-control-keys-directive>
+        <div video-container-directive remote-video-object="remoteVideoObject">
             <div id="card-elem">
                 <div id="local-div">
                     <video id="local-video" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
@@ -19,11 +20,15 @@
                 </div>
             </div>
         </div>
+        <div monitor-control-keys-directive remote-video-object="remoteVideoObject">
+        </div>
     </div>
+    <!-- Footer div is at the bottom of the page, but is placed here so that it
+    has access to the video-container-directive's scope -->
+    <footer id="footer" call-status-directive></footer>
 </div>
 
 <!-- the following divs are outside of the standard page flow -->
-<footer id="footer" call-status-directive></footer>
 
 <div id="info-div">
     <div class="page-header">
