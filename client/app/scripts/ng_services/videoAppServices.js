@@ -92,15 +92,15 @@ videoAppServices.factory('channelService', function($log, constantsService, call
     Provides functionality for opening up and handling callbacks from the Google App-engine "Channel API".
      */
 
-    var onChannelOpened = function(remoteVideoObject) {
+    var onChannelOpened = function(localVideoObject, remoteVideoObject) {
         return function () {
             $log.log('Channel opened.');
             channelServiceSupport.channelReady = true;
-            callService.maybeStart(remoteVideoObject);
+            callService.maybeStart(localVideoObject, remoteVideoObject);
         };
     };
 
-    var onChannelMessage = function(remoteVideoObject) {
+    var onChannelMessage = function(localVideoObject, remoteVideoObject) {
         return function(message) {
             // $log.log('S->C: ' + message.data);
             var msg = JSON.parse(message.data);
@@ -117,12 +117,12 @@ videoAppServices.factory('channelService', function($log, constantsService, call
                     // On the other hand, caller is the person who calls the callee, and is currently the second
                     // person to join the chatroom.
                     globalVarsService.signalingReady = true;
-                    callService.maybeStart(remoteVideoObject);
+                    callService.maybeStart(localVideoObject, remoteVideoObject);
                 } else {
                     channelMessageService.push(msg);
                 }
             } else {
-                sessionService.processSignalingMessage(msg, remoteVideoObject);
+                sessionService.processSignalingMessage(msg, localVideoObject, remoteVideoObject);
             }
         };
     };
@@ -137,20 +137,20 @@ videoAppServices.factory('channelService', function($log, constantsService, call
       channelServiceSupport.channelReady = false;
     };
 
-    var handler = function(remoteVideoObject) {
+    var handler = function(localVideoObject, remoteVideoObject) {
         return {
-            'onopen': onChannelOpened(remoteVideoObject),
-            'onmessage': onChannelMessage(remoteVideoObject),
+            'onopen': onChannelOpened(localVideoObject, remoteVideoObject),
+            'onmessage': onChannelMessage(localVideoObject, remoteVideoObject),
             'onerror': onChannelError,
             'onclose': onChannelClosed
         };
     };
 
     return {
-        openChannel: function(remoteVideoObject) {
+        openChannel: function(localVideoObject, remoteVideoObject) {
             $log.log('Opening channel.');
             var channel = new goog.appengine.Channel(constantsService.channelToken);
-            channelServiceSupport.socket = channel.open(handler(remoteVideoObject));
+            channelServiceSupport.socket = channel.open(handler(localVideoObject, remoteVideoObject));
         }
     };
 });
@@ -193,17 +193,17 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
     };
 
 
-    var afterTurnRequest = function(remoteVideoObject) {
+    var afterTurnRequest = function(localVideoObject, remoteVideoObject) {
         return function () {
             // Even if TURN request failed, continue the call with default STUN.
             turnServiceSupport.turnDone = true;
-            callService.maybeStart(remoteVideoObject);
+            callService.maybeStart(localVideoObject, remoteVideoObject);
         };
     };
 
     return {
 
-        maybeRequestTurn : function(remoteVideoObject) {
+        maybeRequestTurn : function(localVideoObject, remoteVideoObject) {
             // Allow to skip turn by passing ts=false to apprtc.
             if (constantsService.turnUrl === '') {
                 turnServiceSupport.turnDone = true;
@@ -226,7 +226,7 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
             }
 
             // No TURN server. Get one from computeengineondemand.appspot.com.
-            $http.get(constantsService.turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest(remoteVideoObject));
+            $http.get(constantsService.turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest(localVideoObject, remoteVideoObject));
         }
     };
 });
@@ -342,12 +342,12 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
     };
 
 
-    var waitForRemoteVideo = function(remoteVideoObject) {
+    var waitForRemoteVideo = function(localVideoObject, remoteVideoObject) {
 
         var innerWaitForRemoteVideo = function() {
             // Call the getVideoTracks method via adapter.js.
-            remoteVideoObject.videoTracks = peerService.remoteStream.getVideoTracks();
-            if (remoteVideoObject.videoTracks.length === 0 || remoteVideoObject.remoteVideoDiv.currentTime > 0) {
+            localVideoObject.videoTracks = peerService.remoteStream.getVideoTracks();
+            if (localVideoObject.videoTracks.length === 0 || remoteVideoObject.remoteVideoDiv.currentTime > 0) {
                 transitionSessionStatus('active');
             } else {
                 $timeout(innerWaitForRemoteVideo, 100);
@@ -362,13 +362,13 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
         });
     };
 
-    var setRemote = function(message, remoteVideoObject) {
+    var setRemote = function(message, localVideoObject, remoteVideoObject) {
         var onSetRemoteDescriptionSuccess = function(){
             $log.log('Set remote session description success.');
             // By now all addstream events for the setRemoteDescription have fired.
             // So we can know if the peer is sending any stream or is only receiving.
             if (peerService.remoteStream) {
-                waitForRemoteVideo(remoteVideoObject);
+                waitForRemoteVideo(localVideoObject, remoteVideoObject);
             } else {
                 $log.log('Not receiving any stream.');
                 transitionSessionStatus('active');
@@ -435,18 +435,18 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
 
 
-        processSignalingMessage : function(message, remoteVideoObject) {
+        processSignalingMessage : function(message, localVideoObject, remoteVideoObject) {
             if (!globalVarsService.started) {
                 userNotificationService.messageError('peerConnection has not been created yet!');
                 return;
             }
 
             if (message.type === 'offer') {
-                setRemote(message, remoteVideoObject);
+                setRemote(message, localVideoObject, remoteVideoObject);
                 doAnswer(this);
 
             } else if (message.type === 'answer') {
-                setRemote(message, remoteVideoObject);
+                setRemote(message, localVideoObject, remoteVideoObject);
             } else if (message.type === 'candidate') {
                 var candidate = new adapterService.RTCIceCandidate({sdpMLineIndex: message.label,
                     candidate: message.candidate});
@@ -478,7 +478,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
         return contents;
     };
 
-    var onRemoteStreamAdded = function(self, remoteVideoObject) {
+    var onRemoteStreamAdded = function(self, localVideoObject, remoteVideoObject) {
         return function(mediaStreamEvent) {
             $log.log('Remote stream added.');
             adapterService.attachMediaStream(remoteVideoObject.remoteVideoDiv, mediaStreamEvent.stream);
@@ -508,7 +508,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
     return {
         pc : null,
         remoteStream : null,
-        createPeerConnection : function(remoteVideoObject) {
+        createPeerConnection : function(localVideoObject, remoteVideoObject) {
             try {
                 // Create an RTCPeerConnection via the polyfill (adapter.js).
                 this.pc = new adapterService.RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
@@ -522,7 +522,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
                     'WebRTC is not supported by this browser.');
                 return;
             }
-            this.pc.onaddstream = onRemoteStreamAdded(this, remoteVideoObject);
+            this.pc.onaddstream = onRemoteStreamAdded(this, localVideoObject, remoteVideoObject);
             this.pc.onremovestream = onRemoteStreamRemoved;
             this.pc.onsignalingstatechange = onSignalingStateChanged(this);
             this.pc.oniceconnectionstatechange = onIceConnectionStateChanged(this);
@@ -554,15 +554,15 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
             sessionService.onCreateSessionDescriptionError, constraints);
     };
 
-    var calleeStart = function(remoteVideoObject) {
+    var calleeStart = function(localVideoObject, remoteVideoObject) {
         // Callee starts to process cached offer and other messages.
         while (channelMessageService.getQueueLength() > 0) {
-            sessionService.processSignalingMessage(channelMessageService.shift(), remoteVideoObject);
+            sessionService.processSignalingMessage(channelMessageService.shift(), localVideoObject, remoteVideoObject);
         }
     };
 
 
-    var onUserMediaSuccess = function(self, localVideoDiv, remoteVideoObject) {
+    var onUserMediaSuccess = function(self, localVideoDiv, localVideoObject, remoteVideoObject) {
         return function(stream) {
             $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
@@ -570,11 +570,11 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
             localVideoDiv.style.opacity = 1;
             localStream = stream;
             // Caller creates PeerConnection.
-            self.maybeStart(remoteVideoObject);
+            self.maybeStart(localVideoObject, remoteVideoObject);
         };
     };
 
-    var onUserMediaError = function(self, remoteVideoObject) {
+    var onUserMediaError = function(self, localVideoObject, remoteVideoObject) {
         return function(error) {
             userNotificationService.messageError('Failed to get access to local media. Error code was ' +
                 error.code + '. Continuing without sending a stream.');
@@ -582,14 +582,14 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 error.code + '. Continuing without sending a stream.');
 
             self.hasLocalStream = false;
-            self.maybeStart(remoteVideoObject);
+            self.maybeStart(localVideoObject, remoteVideoObject);
         };
     };
 
     return {
         hasLocalStream : false,
 
-        maybeStart : function(remoteVideoObject) {
+        maybeStart : function(localVideoObject, remoteVideoObject) {
 
 
             if (!globalVarsService.started && globalVarsService.signalingReady && channelServiceSupport.channelReady &&
@@ -597,7 +597,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
-                peerService.createPeerConnection(remoteVideoObject);
+                peerService.createPeerConnection(localVideoObject, remoteVideoObject);
 
                 if (this.hasLocalStream) {
                     $log.log('Adding local stream.');
@@ -611,7 +611,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                     doCall();
                 }
                 else {
-                    calleeStart(remoteVideoObject);
+                    calleeStart(localVideoObject, remoteVideoObject);
                 }
             }
         },
@@ -625,12 +625,12 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
             channelServiceSupport.socket.close();
         },
 
-        doGetUserMedia  : function(localVideoDiv, remoteVideoObject) {
+        doGetUserMedia  : function(localVideoDiv, localVideoObject, remoteVideoObject) {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
                 adapterService.getUserMedia(constantsService.mediaConstraints,
-                    onUserMediaSuccess(this, localVideoDiv, remoteVideoObject),
-                    onUserMediaError(this, remoteVideoObject));
+                    onUserMediaSuccess(this, localVideoDiv, localVideoObject, remoteVideoObject),
+                    onUserMediaError(this, localVideoObject, remoteVideoObject));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(constantsService.mediaConstraints) + '\'');
             } catch (e) {
@@ -640,24 +640,24 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         },
 
 
-        toggleVideoMute : function(remoteVideoObject) {
+        toggleVideoMute : function(localVideoObject) {
             // Call the getVideoTracks method via adapter.js.
             var i;
-            remoteVideoObject.videoTracks = localStream.getVideoTracks();
+            localVideoObject.videoTracks = localStream.getVideoTracks();
 
-            if (remoteVideoObject.videoTracks.length === 0) {
+            if (localVideoObject.videoTracks.length === 0) {
                 $log.log('No local video available.');
                 return;
             }
 
             if (globalVarsService.isVideoMuted) {
-                for (i = 0; i < remoteVideoObject.videoTracks.length; i++) {
-                    remoteVideoObject.videoTracks[i].enabled = true;
+                for (i = 0; i < localVideoObject.videoTracks.length; i++) {
+                    localVideoObject.videoTracks[i].enabled = true;
                 }
                 $log.log('Video unmuted.');
             } else {
-                for (i = 0; i < remoteVideoObject.videoTracks.length; i++) {
-                    remoteVideoObject.videoTracks[i].enabled = false;
+                for (i = 0; i < localVideoObject.videoTracks.length; i++) {
+                    localVideoObject.videoTracks[i].enabled = false;
                 }
                 $log.log('Video muted.');
             }

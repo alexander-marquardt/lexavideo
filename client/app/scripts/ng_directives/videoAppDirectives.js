@@ -56,7 +56,7 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
                         callService.toggleAudioMute();
                         return false;
                     case 69:
-                        callService.toggleVideoMute(vidCtrl.remoteVideoObject);
+                        callService.toggleVideoMute(vidCtrl.localVideoObject);
                         return false;
                     case 73:
                         infoDivService.toggleInfoDiv();
@@ -86,6 +86,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
             var miniVideoDiv = $('#mini-video')[0];
 
             var remoteVideoObject = vidCtrl.remoteVideoObject;
+            var localVideoObject = vidCtrl.localVideoObject;
 
             function initializeVideoCallSetup() {
 
@@ -110,8 +111,8 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                 userNotificationService.resetStatus();
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
-                channelService.openChannel(remoteVideoObject);
-                turnService.maybeRequestTurn(remoteVideoObject);
+                channelService.openChannel(localVideoObject, remoteVideoObject);
+                turnService.maybeRequestTurn(localVideoObject, remoteVideoObject);
 
                 // Caller is always ready to create peerConnection.
                 // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
@@ -123,7 +124,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                     callService.maybeStart();
                 } else {
                     callService.hasLocalStream = true;
-                    callService.doGetUserMedia(localVideoDiv, remoteVideoObject);
+                    callService.doGetUserMedia(localVideoDiv, localVideoObject, remoteVideoObject);
                 }
             }
 

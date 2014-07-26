@@ -9,7 +9,10 @@
 angular.module('videoApp')
     .controller('mainVideoCtrl', function () {
         this.remoteVideoObject = {
-            remoteVideoDiv : $('#remote-video')[0],
+            remoteVideoDiv : $('#remote-video')[0]
+        };
+
+        this.localVideoObject = {
             videoTracks: null
         };
 });
