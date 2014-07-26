@@ -345,8 +345,8 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
         var innerWaitForRemoteVideo = function() {
             // Call the getVideoTracks method via adapter.js.
-            localVideoObject.videoTracks = peerService.remoteStream.getVideoTracks();
-            if (localVideoObject.videoTracks.length === 0 || remoteVideoObject.remoteVideoDiv.currentTime > 0) {
+            var videoTracks = peerService.remoteStream.getVideoTracks();
+            if (videoTracks.length === 0 || remoteVideoObject.remoteVideoDiv.currentTime > 0) {
                 transitionSessionStatus('active');
             } else {
                 $timeout(innerWaitForRemoteVideo, 100);
@@ -644,21 +644,21 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         toggleVideoMute : function(localVideoObject) {
             // Call the getVideoTracks method via adapter.js.
             var i;
-            localVideoObject.videoTracks = localStream.getVideoTracks();
+            var videoTracks = localStream.getVideoTracks();
 
-            if (localVideoObject.videoTracks.length === 0) {
+            if (videoTracks.length === 0) {
                 $log.log('No local video available.');
                 return;
             }
 
             if (localVideoObject.isVideoMuted) {
-                for (i = 0; i < localVideoObject.videoTracks.length; i++) {
-                    localVideoObject.videoTracks[i].enabled = true;
+                for (i = 0; i < videoTracks.length; i++) {
+                    videoTracks[i].enabled = true;
                 }
                 $log.log('Video unmuted.');
             } else {
-                for (i = 0; i < localVideoObject.videoTracks.length; i++) {
-                    localVideoObject.videoTracks[i].enabled = false;
+                for (i = 0; i < videoTracks.length; i++) {
+                    videoTracks[i].enabled = false;
                 }
                 $log.log('Video muted.');
             }

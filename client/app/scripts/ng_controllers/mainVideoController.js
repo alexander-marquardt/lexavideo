@@ -13,7 +13,6 @@ angular.module('videoApp')
         };
 
         this.localVideoObject = {
-            videoTracks: null,
             isVideoMuted : false,
             isAudioMuted : false
         };
