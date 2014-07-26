@@ -18,6 +18,12 @@ angular.module('videoApp.mainConstants', [])
             mediaConstraints : {{ media_constraints | safe }},
             turnUrl : '{{ turn_url }}',
             stereo : {{ stereo }},
+            audioSendBitrate : '{{ asbr }}',
+            audioRecvBitrate : '{{ arbr }}',
+            videoSendBitrate : '{{ vsbr }}',
+            videoRecvBitrate : '{{ vrbr }}',
+            videoSendInitialBitrate : '{{ vsibr }}',
+            stereoscopic : '{{ ssr }}',
             audioSendCodec : '{{ audio_send_codec }}',
             audioReceiveCodec : '{{ audio_receive_codec }}'
         }

@@ -377,6 +377,10 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
             message.sdp = codecsService.addStereo(message.sdp);
         }
         message.sdp = codecsService.maybePreferAudioSendCodec(message.sdp);
+        message.sdp = codecsService.maybeSetAudioSendBitRate(message.sdp);
+        message.sdp = codecsService.maybeSetVideoSendBitRate(message.sdp);
+        message.sdp = codecsService.maybeSetVideoSendInitialBitRate(message.sdp);
+
         peerService.pc.setRemoteDescription(new adapterService.RTCSessionDescription(message),
             onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
     };
@@ -428,6 +432,9 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
         setLocalAndSendMessage : function(sessionDescription) {
             sessionDescription.sdp = codecsService.maybePreferAudioReceiveCodec(sessionDescription.sdp);
+            sessionDescription.sdp = codecsService.maybeSetAudioReceiveBitRate(sessionDescription.sdp);
+            sessionDescription.sdp = codecsService.maybeSetVideoReceiveBitRate(sessionDescription.sdp);
+
             peerService.pc.setLocalDescription(sessionDescription,
                 onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
             messageService.sendMessage(sessionDescription);
@@ -723,7 +730,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, inf
     };
 });
 
-videoAppServices.factory('codecsService', function($log, constantsService){
+videoAppServices.factory('codecsService', function($log, constantsService, userNotificationService){
 
     // Strip CN from sdp before CN constraints is ready.
     var removeCN = function(sdpLines, mLineIndex) {
@@ -767,6 +774,28 @@ videoAppServices.factory('codecsService', function($log, constantsService){
         }
         return newLine.join(' ');
     };
+
+
+    // Find the line in sdpLines that starts with |prefix|, and, if specified,
+    // contains |substr| (case-insensitive search).
+    function findLine(sdpLines, prefix, substr) {
+        return findLineInRange(sdpLines, 0, -1, prefix, substr);
+    }
+
+    // Find the line in sdpLines[startLine...endLine - 1] that starts with |prefix|
+    // and, if specified, contains |substr| (case-insensitive search).
+    function findLineInRange(sdpLines, startLine, endLine, prefix, substr) {
+        var realEndLine = endLine !== -1 ? endLine : sdpLines.length;
+        for (var i = startLine; i < realEndLine; ++i) {
+            if (sdpLines[i].indexOf(prefix) === 0) {
+                if (!substr ||
+                    sdpLines[i].toLowerCase().indexOf(substr.toLowerCase()) !== -1) {
+                    return i;
+                }
+            }
+        }
+        return null;
+    }
 
 
     // Set |codec| as the default audio codec if it's present.
@@ -815,10 +844,126 @@ videoAppServices.factory('codecsService', function($log, constantsService){
     };
 
 
+    // Adds a b=AS:bitrate line to the m=mediaType section.
+    var preferBitRate = function(sdp, bitrate, mediaType) {
+        var sdpLines = sdp.split('\r\n');
 
+        // Find m line for the given mediaType.
+        var mLineIndex = findLine(sdpLines, 'm=', mediaType);
+        if (mLineIndex === null) {
+            userNotificationService.messageError('Failed to add bandwidth line to sdp, as no m-line found');
+            return sdp;
+        }
+
+        // Find next m-line if any.
+        var nextMLineIndex = findLineInRange(sdpLines, mLineIndex + 1, -1, 'm=');
+        if (nextMLineIndex === null) {
+            nextMLineIndex = sdpLines.length;
+        }
+
+        // Find c-line corresponding to the m-line.
+        var cLineIndex = findLineInRange(sdpLines, mLineIndex + 1, nextMLineIndex,
+            'c=');
+        if (cLineIndex === null) {
+            userNotificationService.messageError('Failed to add bandwidth line to sdp, as no c-line found');
+            return sdp;
+        }
+
+        // Check if bandwidth line already exists between c-line and next m-line.
+        var bLineIndex = findLineInRange(sdpLines, cLineIndex + 1, nextMLineIndex,
+            'b=AS');
+        if (bLineIndex) {
+            sdpLines.splice(bLineIndex, 1);
+        }
+
+        // Create the b (bandwidth) sdp line.
+        var bwLine = 'b=AS:' + bitrate;
+        // As per RFC 4566, the b line should follow after c-line.
+        sdpLines.splice(cLineIndex + 1, 0, bwLine);
+        sdp = sdpLines.join('\r\n');
+        return sdp;
+    };
+
+    // Gets the codec payload type from an a=rtpmap:X line.
+    function getCodecPayloadType(sdpLine) {
+        var pattern = new RegExp('a=rtpmap:(\\d+) \\w+\\/\\d+');
+        var result = sdpLine.match(pattern);
+        return (result && result.length === 2) ? result[1] : null;
+    }
 
     return {
 
+        // Adds an a=fmtp: x-google-min-bitrate=kbps line, if constantsService.videoSendInitialBitrate
+        // is specified. We'll also add a x-google-min-bitrate value, since the max
+        // must be >= the min.
+        maybeSetVideoSendInitialBitRate : function(sdp) {
+            if (!constantsService.videoSendInitialBitrate) {
+                return sdp;
+            }
+
+            // Validate the initial bitrate value.
+            var maxBitrate = constantsService.videoSendInitialBitrate;
+            if (constantsService.videoSendBitrate) {
+                if (constantsService.videoSendInitialBitrate > constantsService.videoSendBitrate) {
+                    userNotificationService.messageError('Clamping initial bitrate to max bitrate of ' +
+                        constantsService.videoSendBitrate + ' kbps.');
+                    constantsService.videoSendInitialBitrate = constantsService.videoSendBitrate;
+                }
+                maxBitrate = constantsService.videoSendBitrate;
+            }
+
+            var sdpLines = sdp.split('\r\n');
+
+            // Search for m line.
+            var mLineIndex = findLine(sdpLines, 'm=', 'video');
+            if (mLineIndex === null) {
+                userNotificationService.messageError('Failed to find video m-line');
+                return sdp;
+            }
+
+            var vp8RtpmapIndex = findLine(sdpLines, 'a=rtpmap', 'VP8/90000');
+            var vp8Payload = getCodecPayloadType(sdpLines[vp8RtpmapIndex]);
+            var vp8Fmtp = 'a=fmtp:' + vp8Payload + ' x-google-min-bitrate=' +
+                constantsService.videoSendInitialBitrate.toString() + '; x-google-max-bitrate=' +
+                maxBitrate.toString();
+            sdpLines.splice(vp8RtpmapIndex + 1, 0, vp8Fmtp);
+            return sdpLines.join('\r\n');
+        },
+
+        maybeSetAudioSendBitRate : function(sdp) {
+            if (!constantsService.audioSendBitrate) {
+                return sdp;
+            }
+            $log.log('Prefer audio send bitrate: ' + constantsService.audioSendBitrate);
+            return preferBitRate(sdp, constantsService.audioSendBitrate, 'audio');
+        },
+
+        maybeSetAudioReceiveBitRate : function (sdp) {
+            if (!constantsService.audioRecvBitrate) {
+                return sdp;
+            }
+            $log.log('Prefer audio receive bitrate: ' + constantsService.audioRecvBitrate);
+            return preferBitRate(sdp, constantsService.audioRecvBitrate, 'audio');
+        },
+
+
+        maybeSetVideoSendBitRate : function (sdp) {
+            if (!constantsService.videoSendBitrate) {
+                return sdp;
+            }
+            $log.log('Prefer video send bitrate: ' + constantsService.videoSendBitrate);
+            return preferBitRate(sdp, constantsService.videoSendBitrate, 'video');
+        },
+
+        maybeSetVideoReceiveBitRate : function(sdp) {
+            if (!constantsService.videoRecvBitrate) {
+                return sdp;
+            }
+            $log.log('Prefer video receive bitrate: ' + constantsService.videoRecvBitrate);
+            return preferBitRate(sdp, constantsService.videoRecvBitrate, 'video');
+        },
+
+        
         maybePreferAudioSendCodec : function(sdp) {
             if (constantsService.audioSendCodec === '') {
                 $log.log('No preference on audio send codec.');
