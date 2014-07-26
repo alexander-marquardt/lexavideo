@@ -8,10 +8,10 @@ angular.module('videoApp.mainConstants', [])
         return {
             errorMessages : {{ error_messages }},
             channelToken : '{{ token }}',
-            myUsername : '{{ my_username }}',
+            myUsername : '{{ me }}',
             roomKey : '{{ room_key }}',
             roomLink : '{{ room_link }}',
-            initiator : {{ call_initiator }},
+            initiator : {{ initiator }},
             pcConfig : {{ pc_config | safe }},
             pcConstraints : {{ pc_constraints | safe }},
             offerConstraints : {{ offer_constraints | safe }},
