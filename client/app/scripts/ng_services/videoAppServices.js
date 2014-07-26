@@ -29,8 +29,6 @@ videoAppServices.factory('globalVarsService', function (constantsService) {
 
         initiator : constantsService.initiator,
         pcConfig : constantsService.pcConfig,
-        started : false,
-
 
         // Set up audio and video regardless of what devices are present.
         sdpConstraints : {'mandatory': {
@@ -105,7 +103,7 @@ videoAppServices.factory('channelService', function($log, constantsService, call
             // Since the turn response is async and also GAE might disorder the
             // Message delivery due to possible datastore query at server side,
             // So callee needs to cache messages before peerConnection is created.
-            if (!globalVarsService.initiator && !globalVarsService.started) {
+            if (!globalVarsService.initiator && !sessionService.started) {
                 if (msg.type === 'offer') {
                     // Add offer to the beginning of msgQueue, since we can't handle
                     // Early candidates before offer at present.
@@ -120,7 +118,7 @@ videoAppServices.factory('channelService', function($log, constantsService, call
                     channelMessageService.push(msg);
                 }
             } else {
-                sessionService.processSignalingMessage(msg, localVideoObject, remoteVideoObject);
+                sessionService.processSignalingMessage(sessionService, msg, localVideoObject, remoteVideoObject);
             }
         };
     };
@@ -400,6 +398,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
     return {
 
+        started : false,
         signalingReady : false,
 
         getSessionStatus : function() {
@@ -416,7 +415,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
         },
 
         stop : function(self, localVideoObject) {
-            globalVarsService.started = false;
+            self.started = false;
             self.signalingReady = false;
             localVideoObject.isAudioMuted = false;
             localVideoObject.isVideoMuted = false;
@@ -436,8 +435,8 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
 
 
-        processSignalingMessage : function(message, localVideoObject, remoteVideoObject) {
-            if (!globalVarsService.started) {
+        processSignalingMessage : function(self, message, localVideoObject, remoteVideoObject) {
+            if (!self.started) {
                 userNotificationService.messageError('peerConnection has not been created yet!');
                 return;
             }
@@ -558,7 +557,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
     var calleeStart = function(localVideoObject, remoteVideoObject) {
         // Callee starts to process cached offer and other messages.
         while (channelMessageService.getQueueLength() > 0) {
-            sessionService.processSignalingMessage(channelMessageService.shift(), localVideoObject, remoteVideoObject);
+            sessionService.processSignalingMessage(sessionService, channelMessageService.shift(), localVideoObject, remoteVideoObject);
         }
     };
 
@@ -593,7 +592,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         maybeStart : function(localVideoObject, remoteVideoObject) {
 
 
-            if (!globalVarsService.started && sessionService.signalingReady && channelServiceSupport.channelReady &&
+            if (!sessionService.started && sessionService.signalingReady && channelServiceSupport.channelReady &&
                 turnServiceSupport.turnDone && (localStream || !this.hasLocalStream)) {
 
                 userNotificationService.setStatus('Connecting...');
@@ -606,7 +605,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 } else {
                     $log.log('Not sending any stream.');
                 }
-                globalVarsService.started = true;
+                sessionService.started = true;
 
                 if (globalVarsService.initiator) {
                     doCall();
