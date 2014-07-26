@@ -7,12 +7,9 @@
 /* global $ */
 
 angular.module('videoApp')
-    .controller('mainVideoCtrl', function ($scope) {
-        $scope.remoteVideoObject = {
+    .controller('mainVideoCtrl', function () {
+        this.remoteVideoObject = {
             remoteVideoDiv : $('#remote-video')[0],
             videoTracks: null
         };
-
-        $scope.color = {col: '#333'};
-
 });

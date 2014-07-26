@@ -8,7 +8,6 @@ var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.servic
 videoAppDirectives.directive('callStatusDirective', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'A',
-
         link: function(scope, elem) {
 
             // we include doHangup on the scope because some of the getStatus calls can include
@@ -36,8 +35,9 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
         scope : {
             remoteVideoObject: '='
         },
+        controller: 'mainVideoCtrl',
+        link: function(scope, elem, attrs, vidCtrl) {
 
-        link: function(scope) {
             // Mac: hotkey is Command.
             // Non-Mac: hotkey is Control.
             // <hotkey>-D: toggle audio mute.
@@ -58,7 +58,7 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
                         callService.toggleAudioMute();
                         return false;
                     case 69:
-                        callService.toggleVideoMute(scope.remoteVideoObject);
+                        callService.toggleVideoMute(vidCtrl.remoteVideoObject);
                         return false;
                     case 73:
                         infoDivService.toggleInfoDiv();
@@ -82,13 +82,14 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
         scope : {
             remoteVideoObject: '='
         },
-        link: function(scope, elem) {
+        controller: 'mainVideoCtrl',
+        link: function(scope, elem, attrs, vidCtrl) {
 
             var cardElemDiv = $('#card-elem')[0];
             var localVideoDiv = $('#local-video')[0];
             var miniVideoDiv = $('#mini-video')[0];
 
-            var remoteVideoObject = scope.remoteVideoObject;
+            var remoteVideoObject = vidCtrl.remoteVideoObject;
 
             function initializeVideoCallSetup() {
 
