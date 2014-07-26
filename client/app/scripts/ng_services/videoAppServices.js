@@ -29,7 +29,6 @@ videoAppServices.factory('globalVarsService', function (constantsService) {
 
         initiator : constantsService.initiator,
         pcConfig : constantsService.pcConfig,
-        signalingReady : false,
         started : false,
 
 
@@ -115,7 +114,7 @@ videoAppServices.factory('channelService', function($log, constantsService, call
                     // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
                     // On the other hand, caller is the person who calls the callee, and is currently the second
                     // person to join the chatroom.
-                    globalVarsService.signalingReady = true;
+                    sessionService.signalingReady = true;
                     callService.maybeStart(localVideoObject, remoteVideoObject);
                 } else {
                     channelMessageService.push(msg);
@@ -332,6 +331,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
     var sessionStatus = 'initializing'; // "initializing", "waiting", "active", or "done"
 
+
     var onSetSessionDescriptionError = function(error) {
         userNotificationService.messageError('Failed to set session description: ' + error.toString());
     };
@@ -385,9 +385,9 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
     var onRemoteHangup = function(self, localVideoObject) {
         $log.log('Session terminated.');
-        globalVarsService.initiator = 0;   // jshint ignore:line
+        globalVarsService.initiator = 0;
         transitionSessionStatus('waiting');
-        self.stop(localVideoObject);
+        self.stop(self, localVideoObject);
     };
 
 
@@ -399,6 +399,8 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
 
     return {
+
+        signalingReady : false,
 
         getSessionStatus : function() {
             return sessionStatus;
@@ -413,9 +415,9 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
             userNotificationService.messageError('Failed to create session description: ' + error.toString());
         },
 
-        stop : function(localVideoObject) {
+        stop : function(self, localVideoObject) {
             globalVarsService.started = false;
-            globalVarsService.signalingReady = false;
+            self.signalingReady = false;
             localVideoObject.isAudioMuted = false;
             localVideoObject.isVideoMuted = false;
             peerService.pc.close();
@@ -591,7 +593,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         maybeStart : function(localVideoObject, remoteVideoObject) {
 
 
-            if (!globalVarsService.started && globalVarsService.signalingReady && channelServiceSupport.channelReady &&
+            if (!globalVarsService.started && sessionService.signalingReady && channelServiceSupport.channelReady &&
                 turnServiceSupport.turnDone && (localStream || !this.hasLocalStream)) {
 
                 userNotificationService.setStatus('Connecting...');
@@ -620,7 +622,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 $log.log('Hanging up.');
                 sessionService.transitionSessionStatus('done');
                 localStream.stop();
-                sessionService.stop(localVideoObject);
+                sessionService.stop(sessionService, localVideoObject);
                 // will trigger BYE from server
                 channelServiceSupport.socket.close();
             };

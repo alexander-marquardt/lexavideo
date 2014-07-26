@@ -82,12 +82,14 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
         controller: 'mainVideoCtrl',
         link: function(scope, elem, attrs, vidCtrl) {
 
+            var remoteVideoObject = vidCtrl.remoteVideoObject;
+            var localVideoObject = vidCtrl.localVideoObject;
+
             var cardElemDiv = $('#card-elem')[0];
             var localVideoDiv = $('#local-video')[0];
             var miniVideoDiv = $('#mini-video')[0];
 
-            var remoteVideoObject = vidCtrl.remoteVideoObject;
-            var localVideoObject = vidCtrl.localVideoObject;
+
 
             function initializeVideoCallSetup() {
 
@@ -117,7 +119,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
                 // Caller is always ready to create peerConnection.
                 // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
-                globalVarsService.signalingReady = globalVarsService.initiator;
+                sessionService.signalingReady = globalVarsService.initiator;
 
                 if (constantsService.mediaConstraints.audio === false &&
                     constantsService.mediaConstraints.video === false) {
