@@ -32,9 +32,7 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
 
     return {
         restrict : 'A',
-        scope : {
-            remoteVideoObject: '='
-        },
+        scope : {},
         controller: 'mainVideoCtrl',
         link: function(scope, elem, attrs, vidCtrl) {
 
@@ -79,9 +77,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
                                               callService, messageService) {
     return {
         restrict : 'A',
-        scope : {
-            remoteVideoObject: '='
-        },
+        scope : {},
         controller: 'mainVideoCtrl',
         link: function(scope, elem, attrs, vidCtrl) {
 
