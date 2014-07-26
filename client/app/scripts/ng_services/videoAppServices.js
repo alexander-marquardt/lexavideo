@@ -31,8 +31,7 @@ videoAppServices.factory('globalVarsService', function (constantsService) {
         pcConfig : constantsService.pcConfig,
         signalingReady : false,
         started : false,
-        isVideoMuted : false,
-        isAudioMuted : false,
+
 
         // Set up audio and video regardless of what devices are present.
         sdpConstraints : {'mandatory': {
@@ -384,11 +383,11 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
             onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
     };
 
-    var onRemoteHangup = function(self) {
+    var onRemoteHangup = function(self, localVideoObject) {
         $log.log('Session terminated.');
         globalVarsService.initiator = 0;   // jshint ignore:line
         transitionSessionStatus('waiting');
-        self.stop();
+        self.stop(localVideoObject);
     };
 
 
@@ -414,11 +413,11 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
             userNotificationService.messageError('Failed to create session description: ' + error.toString());
         },
 
-        stop : function() {
+        stop : function(localVideoObject) {
             globalVarsService.started = false;
             globalVarsService.signalingReady = false;
-            globalVarsService.isAudioMuted = false;
-            globalVarsService.isVideoMuted = false;
+            localVideoObject.isAudioMuted = false;
+            localVideoObject.isVideoMuted = false;
             peerService.pc.close();
             peerService.pc = null;
             peerService.remoteStream = null;
@@ -454,7 +453,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
                 peerService.pc.addIceCandidate(candidate,
                     iceService.onAddIceCandidateSuccess, iceService.onAddIceCandidateError);
             } else if (message.type === 'bye') {
-                onRemoteHangup(this);
+                onRemoteHangup(this, localVideoObject);
             }
         }
     };
@@ -616,13 +615,15 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
             }
         },
 
-        doHangup : function() {
-             $log.log('Hanging up.');
-             sessionService.transitionSessionStatus('done');
-             localStream.stop();
-             sessionService.stop();
-             // will trigger BYE from server
-            channelServiceSupport.socket.close();
+        doHangup : function(localVideoObject) {
+            return function() {
+                $log.log('Hanging up.');
+                sessionService.transitionSessionStatus('done');
+                localStream.stop();
+                sessionService.stop(localVideoObject);
+                // will trigger BYE from server
+                channelServiceSupport.socket.close();
+            };
         },
 
         doGetUserMedia  : function(localVideoDiv, localVideoObject, remoteVideoObject) {
@@ -650,7 +651,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 return;
             }
 
-            if (globalVarsService.isVideoMuted) {
+            if (localVideoObject.isVideoMuted) {
                 for (i = 0; i < localVideoObject.videoTracks.length; i++) {
                     localVideoObject.videoTracks[i].enabled = true;
                 }
@@ -662,10 +663,10 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 $log.log('Video muted.');
             }
 
-            globalVarsService.isVideoMuted = !globalVarsService.isVideoMuted;
+            localVideoObject.isVideoMuted = !localVideoObject.isVideoMuted;
         },
 
-        toggleAudioMute : function() {
+        toggleAudioMute : function(localVideoObject) {
             var i;
             // Call the getAudioTracks method via adapter.js.
             var audioTracks = localStream.getAudioTracks();
@@ -675,7 +676,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 return;
             }
 
-            if (globalVarsService.isAudioMuted) {
+            if (localVideoObject.isAudioMuted) {
                 for (i = 0; i < audioTracks.length; i++) {
                     audioTracks[i].enabled = true;
                 }
@@ -687,7 +688,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 $log.log('Audio muted.');
             }
 
-            globalVarsService.isAudioMuted = !globalVarsService.isAudioMuted;
+            localVideoObject.isAudioMuted = !localVideoObject.isAudioMuted;
         }
     };
 });

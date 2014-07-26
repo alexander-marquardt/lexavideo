@@ -8,11 +8,12 @@ var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.servic
 videoAppDirectives.directive('callStatusDirective', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'A',
-        link: function(scope, elem) {
+        controller: 'mainVideoCtrl',
+        link: function(scope, elem, attrs, vidCtrl) {
 
             // we include doHangup on the scope because some of the getStatus calls can include
             // html that expects a doHangup function to be available.
-            scope.doHangup = callService.doHangup;
+            scope.doHangup = callService.doHangup(vidCtrl.localVideoObject);
 
             scope.$watch(userNotificationService.getStatus, function (statusHtml) {
 
@@ -53,7 +54,7 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
                 }
                 switch (event.keyCode) {
                     case 68:
-                        callService.toggleAudioMute();
+                        callService.toggleAudioMute(vidCtrl.localVideoObject);
                         return false;
                     case 69:
                         callService.toggleVideoMute(vidCtrl.localVideoObject);
