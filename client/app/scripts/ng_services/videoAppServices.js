@@ -588,25 +588,29 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
             alert('Failed to get access to local media. Error code was ' +
                 error.code + '. Continuing without sending a stream.');
 
-            self.hasLocalStream = false;
+            self.hasAudioOrVideoMediaConstraints = false;
             self.maybeStart(localVideoObject, remoteVideoObject);
         };
     };
 
     return {
-        hasLocalStream : false,
+        hasAudioOrVideoMediaConstraints : false,
+
+        getLocalStream : function() {
+            return localStream;
+        },
 
         maybeStart : function(localVideoObject, remoteVideoObject) {
 
 
             if (!sessionService.started && sessionService.signalingReady && channelServiceSupport.channelReady &&
-                turnServiceSupport.turnDone && (localStream || !this.hasLocalStream)) {
+                turnServiceSupport.turnDone && (localStream || !this.hasAudioOrVideoMediaConstraints)) {
 
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
                 peerService.createPeerConnection(localVideoObject, remoteVideoObject);
 
-                if (this.hasLocalStream) {
+                if (this.hasAudioOrVideoMediaConstraints) {
                     $log.log('Adding local stream.');
                     peerService.pc.addStream(localStream);
                 } else {
