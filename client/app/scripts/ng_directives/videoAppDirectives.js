@@ -153,7 +153,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
                 // Set the video winddow size and location.
 
-                var videoAspectRatio = 1280 / 720;
+                var videoAspectRatio = 2 * 1280 / 720;
 
                 var innerHeight = $window.innerHeight - $('#id-vidochat-logo').height() - $('#footer').height();
                 var innerWidth = $window.innerWidth;

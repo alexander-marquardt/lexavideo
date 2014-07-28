@@ -134,11 +134,11 @@ def on_message(room, user, message):
   client_id = make_client_id(room, user)
   if room.is_connected(user):
     channel.send_message(client_id, message)
-    logging.info('Delivered message to user ' + user)
+    #logging.info('Delivered message to user ' + user)
   else:
     new_message = Message(client_id = client_id, msg = message)
     new_message.put()
-    logging.info('Saved message for user ' + user)
+    #logging.info('Saved message for user ' + user)
 
 def add_media_track_constraint(track_constraints, constraint_string):
   tokens = constraint_string.split(':')
@@ -418,6 +418,8 @@ class MainPage(webapp2.RequestHandler):
       video = 'mandatory:minWidth=1280,mandatory:minHeight=720'
     elif not hd and not video and get_hd_default(user_agent) == 'true':
       video = 'optional:minWidth=1280,optional:minHeight=720'
+      
+    video = 'mandatory:minWidth=1280,mandatory:minHeight=720'
 
     if self.request.get('minre') or self.request.get('maxre'):
       message = ('The "minre" and "maxre" parameters are no longer supported. '
