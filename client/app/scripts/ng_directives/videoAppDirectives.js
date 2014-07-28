@@ -87,7 +87,6 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
             var cardElemDiv = $('#card-elem')[0];
             var localVideoDiv = $('#local-video')[0];
-            var miniVideoDiv = $('#mini-video')[0];
 
 
 
@@ -134,36 +133,19 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
             var transitionVideoToActive = function() {
                 $log.log('\n\n*** Executing transitionVideoToActive ***\n\n');
-                adapterService.reattachMediaStream(miniVideoDiv, localVideoDiv);
-                remoteVideoObject.remoteVideoDiv.style.opacity = 1;
-                cardElemDiv.style.webkitTransform = 'rotateY(180deg)';
-                $timeout(function() { localVideoDiv.src = ''; }, 500);
-                $timeout(function() { miniVideoDiv.style.opacity = 1; }, 1000);
                 userNotificationService.setStatus('<input type="button" id="hangup" value="Hang up" ng-click="doHangup()" />');
             };
 
             var transitionVideoToWaiting = function() {
                 $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
                 cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
-                $timeout(function() {
-                    localVideoDiv.src = miniVideoDiv.src;
-                    miniVideoDiv.src = '';
-                    remoteVideoObject.remoteVideoDiv.src = '';
-                }, 500);
-                miniVideoDiv.style.opacity = 0;
-                remoteVideoObject.remoteVideoDiv.style.opacity = 0;
-
                 userNotificationService.resetStatus();
             };
 
 
             var transitionVideoToDone = function() {
                 $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');                
-                localVideoDiv.style.opacity = 0;
-                remoteVideoObject.remoteVideoDiv.style.opacity = 0;
-                miniVideoDiv.style.opacity = 0;
-
-              userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
+                userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
             };
 
 
@@ -171,14 +153,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
                 // Set the video winddow size and location.
 
-                var videoAspectRatio;
-                if (remoteVideoObject.remoteVideoDiv.style.opacity === '1') {
-                    videoAspectRatio = remoteVideoObject.remoteVideoDiv.videoWidth/remoteVideoObject.remoteVideoDiv.videoHeight;
-                } else if (localVideoDiv.style.opacity === '1') {
-                    videoAspectRatio = localVideoDiv.videoWidth/localVideoDiv.videoHeight;
-                } else {
-                    return;
-                }
+                var videoAspectRatio = 1280 / 720;
 
                 var innerHeight = $window.innerHeight - $('#id-vidochat-logo').height() - $('#footer').height();
                 var innerWidth = $window.innerWidth;
