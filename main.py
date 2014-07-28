@@ -419,7 +419,10 @@ class MainPage(webapp2.RequestHandler):
     elif not hd and not video and get_hd_default(user_agent) == 'true':
       video = 'optional:minWidth=1280,optional:minHeight=720'
       
-    video = 'mandatory:minWidth=1280,mandatory:minHeight=720'
+    # ARM - hack - set video to '' because using the above settings seems to cause firefox to
+    # set the local video to a strange aspect ratio that is too tall. This happens only
+    # after the non-firefox user leaves a call, and then rejoins it.
+    video = ''
 
     if self.request.get('minre') or self.request.get('maxre'):
       message = ('The "minre" and "maxre" parameters are no longer supported. '
