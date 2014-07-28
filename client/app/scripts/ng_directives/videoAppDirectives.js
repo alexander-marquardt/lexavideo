@@ -250,7 +250,7 @@ videoAppDirectives.directive('asciiVideoContainerDirective', function($timeout, 
                     videoElement.play();
                     $interval(function() {
                         try {
-                            localCanvasContext.drawImage(videoStream, 0, 0 , 400, 400);
+                            localCanvasContext.drawImage(videoElement, 0, 0 , 400, 400);
                         } catch (e) {
                             $log.log('Error drawing image in canvas' + e);
                         }
