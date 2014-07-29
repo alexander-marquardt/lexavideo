@@ -63,6 +63,14 @@ footer {
   -webkit-transition-duration: 1s;
 }
 
+#ascii-container {
+	font-family: 'Courier New', 'Courier', monospace;
+	font-size: 3px;
+	line-height: 3px;
+	letter-spacing: -0.5px;
+	text-align: center;
+}
+
 #hangup {
  font-size: 13px; font-weight: bold;
  color: #FFFFFF;
