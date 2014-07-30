@@ -1,60 +1,68 @@
 {% raw %}
-<div id="id-vidochat-logo">
-    <img src="images/videochathub.jpg"/>
-</div>
+<div class="container">
 
-<div ng-controller="mainVideoCtrl">
-    <div id="container"><!-- ng-dblclick="enterFullScreen()" >-->
+    <div class="row" id="id-vidochat-logo">
+        <div class="col-xs-12">
+            <img src="images/videochathub.jpg"/>
+        </div>
+    </div>
 
-        <!-- remoteVideoObject is defined in the mainVideoCtrl scope -->
-        <div video-container-directive>
-            <div id="card-elem">
-                <div id="local-div">
-                    Local Video
-                    <video id="local-video" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
-                </div>
-                <div id="remote-div">
-                    Remote Video
-                    <video id="remote-video" autoplay="autoplay">
-                        You must update to a newer version of Chrome or Firefox to use video
-                    </video>
+    <div ng-controller="mainVideoCtrl">
+        <div class="row">
+            <div video-container-directive>
+                <div id="card-elem">
+                    <div class="col-sm-6" id="local-div">
+                        Local Video
+                        <video id="local-video" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
+                    </div>
+                    <div class="col-sm-6" id="remote-div">
+                        Remote Video
+                        <video id="remote-video" autoplay="autoplay">
+                            You must update to a newer version of Chrome or Firefox to use video
+                        </video>
+                    </div>
                 </div>
             </div>
         </div>
-        <div ascii-video-container-directive>
-            Canvas Directive
-            <canvas id="local-ascii-canvas" width="320" height="240">
-                Local ascii canvas
-            </canvas>
-            <canvas id="remote-ascii-canvas">
 
-            </canvas>
+        <div class="row">
+            <div ascii-video-container-directive>
+                <div class="col-sm-6">
+                    Canvas Directive
+                    <canvas id="local-ascii-canvas" width="320" height="240">
+                        Local ascii canvas
+                    </canvas>
+                </div>
+                <div class="col-sm-6">
+                    <pre id="ascii-container"></pre>
+                    <canvas id="remote-ascii-canvas">
 
+                    </canvas>
+                </div>
+            </div>
 
+            <div monitor-control-keys-directive ></div>
         </div>
-        <pre id="ascii-container"></pre>
-        <div monitor-control-keys-directive >
+
+        <!-- Footer div is at the bottom of the page, but is placed here so that it
+        has access to the main-video-ctrl scope -->
+        <footer id="footer" call-status-directive></footer>
+    </div>
+
+    <!-- the following divs are outside of the standard page flow -->
+
+    <div id="info-div">
+        <div class="page-header">
+            <h3>Diagnostic information</h3>
         </div>
+        <div class="panel">
+            <div id="iceInfoDiv"></div>
+            <div id="pcInfoDiv"></div>
+            <div id="errorsInfoDiv"></div>
+        </div>
+
     </div>
-    <!-- Footer div is at the bottom of the page, but is placed here so that it
-    has access to the video-container-directive's scope -->
-    <footer id="footer" call-status-directive></footer>
 </div>
-
-<!-- the following divs are outside of the standard page flow -->
-
-<div id="info-div">
-    <div class="page-header">
-        <h3>Diagnostic information</h3>
-    </div>
-    <div class="panel">
-        <div id="iceInfoDiv"></div>
-        <div id="pcInfoDiv"></div>
-        <div id="errorsInfoDiv"></div>
-    </div>
-
-</div>
-
 
 
 {% endraw %}

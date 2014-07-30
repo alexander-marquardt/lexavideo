@@ -149,34 +149,6 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
             };
 
 
-            var setVideoContainerDimensions = function(){
-
-                // Set the video winddow size and location.
-
-                var videoAspectRatio = 2 * 1280 / 720;
-
-                var innerHeight = $window.innerHeight - $('#id-vidochat-logo').height() - $('#footer').height();
-                var innerWidth = $window.innerWidth;
-
-                var innerAspectRatio = innerWidth/innerHeight;
-                var videoHeight, videoWidth;
-
-                if (innerAspectRatio <= videoAspectRatio) {
-                    // the video needs to be have height reduced to keep aspect ratio and stay inside window
-                    videoWidth = innerWidth;
-                    videoHeight = innerWidth / videoAspectRatio;
-                }
-                else {
-                    // the video needs to have the width reduce to keep aspect ratio and stay inside window
-                    videoHeight = innerHeight;
-                    videoWidth = innerHeight * videoAspectRatio;
-                }
-
-                elem.width(videoWidth + 'px');
-                elem.height(videoHeight + 'px');
-                //                elem.prop.left = (innerWidth - videoWidth) / 2 + 'px';
-                //                elem.prop.top = 0 + 'px';
-            };
 /*
             scope.enterFullScreen = function () {
                 // This will probably fail on non-Chrome browsers -- investigate if extra code is needed.
@@ -187,16 +159,9 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
             initializeVideoCallSetup();
 
 
-
-            angular.element($window).on('resize', function() {
-                // if the window is resized, then resize the video.
-                setVideoContainerDimensions();
-            });
-
             scope.$watch(sessionService.getSessionStatus, function(status) {
                 // If session status changes, then resize the video (the remote video
                 // might have different dimensions than the local video)
-                setVideoContainerDimensions();
                 if (status === 'initializing') {
                    $log.log('sessionStatus is set to "initializing"');
                 } else if (status === 'active') {
@@ -211,10 +176,6 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
             });
 
-            localVideoDiv.addEventListener('loadedmetadata', function(){
-                // once the metadata is loaded, the dimensions of the video are known.
-                setVideoContainerDimensions();
-            });
 
         }
     };
