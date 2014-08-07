@@ -40,48 +40,57 @@ body {
   //-webkit-backface-visibility: hidden;
 }
 
-video {
+$sm-vid-width: 345px;
+$md-vid-width: 455px;
+$lg-vid-width : 555px;
+
+.video-sizing {
   /* Extra small devices (phones, less than 768px) */
-  $width : 345px;
-  width: $width;
-  height: $width * 3/4;
+  width: $sm-vid-width;
+  height: $sm-vid-width * 3/4;
 
   /* Small devices (tablets, 768px and up) */
   @media (min-width: $screen-sm-min) {
-    $width : 345px;
-    width: $width;
-    height: $width * 3/4;
+    width: $sm-vid-width;
+    height: $sm-vid-width * 3/4;
   }
 
   /* Medium devices (desktops, 992px and up) */
   @media (min-width: $screen-md-min) {
-    $width : 455px;
-    width: $width;
-    height: $width * 3/4;
+    width: $md-vid-width;
+    height: $md-vid-width * 3/4;
   }
 
   /* Large devices (large desktops, 1200px and up) */
   @media (min-width: $screen-lg-min) {
-    $width : 555px;
-    width: $width;
-    height: $width * 3/4;
+    width: $lg-vid-width;
+    height: $lg-vid-width * 3/4;
   }
 }
 
 video {
+  @extend .video-sizing;
   opacity: 1;
   -webkit-transition-property: opacity;
   -webkit-transition-duration: 1s;
 }
 
 #ascii-container {
-	font-family: 'Courier New', 'Courier', monospace;
-	font-size: 5px;
-	line-height: 5px;
-	letter-spacing: -0.75px;
-	text-align: center;
-    padding: 0;
+  @extend .video-sizing;
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 5px;
+  line-height: 5px;
+  letter-spacing: -0.75px;
+  text-align: center;
+  padding: 0;
+  display: table-cell;
+  vertical-align: middle;
 }
+
+.ascii-drawing-text {
+  display: inline-block;
+}
+
 
 #info-div {
   position: fixed;

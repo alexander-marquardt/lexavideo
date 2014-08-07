@@ -16,7 +16,8 @@ asciiVideoDirectives.directive('asciiVideoContainerDirective', function($timeout
     var localCanvas = $('#local-ascii-canvas')[0];
     var localCanvasContext = localCanvas.getContext('2d');
     var videoElement = document.createElement('video');
-    var asciiContainer = $('#ascii-container')[0];
+    var $asciiContainer = $('#ascii-container');
+    var $asciiDrawingTextElement = $asciiContainer.find('.ascii-drawing-text');
 
     var canvasOptions = {
         width : 160,
@@ -92,7 +93,7 @@ asciiVideoDirectives.directive('asciiVideoContainerDirective', function($timeout
         asciiFromCanvas(canvas, {
             contrast: 128,
             callback: function(asciiString) {
-                asciiContainer.innerHTML = asciiString;
+                $asciiDrawingTextElement.html(asciiString);
             }
         });
     };
