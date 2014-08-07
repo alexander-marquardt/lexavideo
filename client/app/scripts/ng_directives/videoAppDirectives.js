@@ -85,7 +85,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
             var remoteVideoObject = vidCtrl.remoteVideoObject;
             var localVideoObject = vidCtrl.localVideoObject;
 
-            var cardElemDiv = $('#card-elem')[0];
+            // var cardElemDiv = $('#card-elem')[0];
             var localVideoDiv = $('#local-video')[0];
 
 
@@ -133,7 +133,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
             var transitionVideoToActive = function() {
                 $log.log('\n\n*** Executing transitionVideoToActive ***\n\n');
-                userNotificationService.setStatus('<input type="button" class="btn btn-default navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
+                userNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
             };
 
             var transitionVideoToWaiting = function() {

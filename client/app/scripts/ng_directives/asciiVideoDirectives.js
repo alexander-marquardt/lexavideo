@@ -19,8 +19,9 @@ asciiVideoDirectives.directive('asciiVideoContainerDirective', function($timeout
     var asciiContainer = $('#ascii-container')[0];
 
     var canvasOptions = {
-        width : 320,
-        height : 240
+        width : 160,
+        height : 120,
+        fps: 3
     };
 
     function asciiFromCanvas(canvas, options) {
@@ -125,13 +126,17 @@ asciiVideoDirectives.directive('asciiVideoContainerDirective', function($timeout
                         } catch (e) {
                             $log.log('Error drawing image in canvas' + e);
                         }
-                    }, Math.round(1000 / 2));
+                    }, Math.round(1000 / canvasOptions.fps));
                 } else {
                     $timeout(waitForLocalStream, 200);
                 }
             }
 
+            localCanvas.width = canvasOptions.width;
+            localCanvas.height = canvasOptions.height;
+
             waitForLocalStream();
+
         }
     };
 });
