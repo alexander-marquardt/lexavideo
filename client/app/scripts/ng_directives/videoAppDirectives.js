@@ -17,7 +17,7 @@ videoAppDirectives.directive('callStatusDirective', function(userNotificationSer
 
             scope.$watch(userNotificationService.getStatus, function (statusHtml) {
 
-                var el = angular.element('<span/>');
+                var el = angular.element('<navbar class="navbar-text"/>');
                 el.append(statusHtml);
                 var compileFn = $compile(el);
                 compileFn(scope);
@@ -133,19 +133,19 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log, 
 
             var transitionVideoToActive = function() {
                 $log.log('\n\n*** Executing transitionVideoToActive ***\n\n');
-                userNotificationService.setStatus('<input type="button" id="hangup" value="Hang up" ng-click="doHangup()" />');
+                userNotificationService.setStatus('<input type="button" class="btn btn-default navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
             };
 
             var transitionVideoToWaiting = function() {
                 $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
-                cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
+                // cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
                 userNotificationService.resetStatus();
             };
 
 
             var transitionVideoToDone = function() {
                 $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');                
-                userNotificationService.setStatus('You have left the call. <a href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
+                userNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
             };
 
 

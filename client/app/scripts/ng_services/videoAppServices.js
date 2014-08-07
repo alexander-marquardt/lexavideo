@@ -726,7 +726,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, inf
         },
         resetStatus : function() {
           if (!globalVarsService.initiator) {
-              this.setStatus('Waiting for someone to join:  <a href=' + constantsService.roomLink + '>' + constantsService.roomLink + '</a>');
+              this.setStatus('Waiting for someone to join:  <a lass="navbar-link" href=' + constantsService.roomLink + '>' + constantsService.roomLink + '</a>');
           } else {
               this.setStatus('Initializing...');
           }
