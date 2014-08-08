@@ -30,23 +30,25 @@
         </div>
 
         <div class="row">
-            <div generate-ascii-video-directive>
-                <div class="col-sm-6">
+            <div class="col-sm-6">
+                <div generate-ascii-video-directive>
                     <div>Canvas Directive</div>
                     <div>
                         <canvas id="local-ascii-canvas" width="320" height="240">
                             Local ascii canvas -- width and height modified by javascript
                         </canvas>
                         <div>Ascii Container</div>
-                        <pre id="ascii-container"><span class="ascii-drawing-text">Ascii drawing goes here</span></pre>
+                        <pre id="local-ascii-container"><span class="ascii-drawing-text">Ascii drawing goes here</span></pre>
                     </div>
                 </div>
-                <div class="col-sm-6">
+            </div>
 
-                    <div>Remote Ascii Canvas</div>
-                    <canvas id="remote-ascii-canvas">
+            <div class="col-sm-6">
+                <div show-ascii-video-directive>
 
-                    </canvas>
+                    <div>Remote Ascii Container</div>
+                    <pre id="remote-ascii-container"><span class="ascii-drawing-text">Ascii drawing goes here</span></pre>
+
                 </div>
             </div>
 

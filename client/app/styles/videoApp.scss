@@ -75,19 +75,20 @@ video {
   -webkit-transition-duration: 1s;
 }
 
-#ascii-container {
+#local-ascii-container, #remote-ascii-container {
   @extend .video-sizing;
+  padding: 0;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+
+}
+
+.ascii-drawing-text {
   font-family: 'Courier New', 'Courier', monospace;
   font-size: 4px;
   line-height: 4px;
   letter-spacing: -0.6px;
-  text-align: center;
-  padding: 0;
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.ascii-drawing-text {
   display: inline-block;
 }
 
