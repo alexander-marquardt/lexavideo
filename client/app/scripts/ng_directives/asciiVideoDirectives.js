@@ -134,8 +134,10 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
                     videoElement.play();
                     $interval(function() {
                         try {
-                            localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
-                            onFrame(localCanvas, scope.asciiVideoObject);
+                            if (scope.activeDivs.showLocalAsciiVideo) {
+                                localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
+                                onFrame(localCanvas, scope.asciiVideoObject);
+                            }
                         } catch (e) {
                             $log.log('Error drawing image in canvas' + e);
                         }
