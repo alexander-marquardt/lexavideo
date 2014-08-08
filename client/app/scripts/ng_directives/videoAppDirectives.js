@@ -85,12 +85,11 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
             var remoteVideoObject = vidCtrl.remoteVideoObject;
             var localVideoObject = vidCtrl.localVideoObject;
 
-            // var cardElemDiv = $('#card-elem')[0];
             var localVideoDiv = $('#local-video')[0];
 
 
 
-            function initializeVideoCallSetup() {
+            var initializeVideoCallSetup = function() {
 
                 var i;
                 if (constantsService.errorMessages.length > 0) {
@@ -128,7 +127,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                     callService.hasAudioOrVideoMediaConstraints = true;
                     callService.doGetUserMedia(localVideoDiv, localVideoObject, remoteVideoObject);
                 }
-            }
+            }(); // self calling function
 
 
             var transitionVideoToActive = function() {
@@ -138,7 +137,6 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
             var transitionVideoToWaiting = function() {
                 $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
-                // cardElemDiv.style.webkitTransform = 'rotateY(0deg)';
                 userNotificationService.resetStatus();
             };
 
@@ -154,9 +152,6 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                 // This will probably fail on non-Chrome browsers -- investigate if extra code is needed.
                 elem[0].webkitRequestFullScreen();
             };*/
-
-
-            initializeVideoCallSetup();
 
 
             scope.$watch(sessionService.getSessionStatus, function(status) {
