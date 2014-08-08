@@ -21,4 +21,19 @@ angular.module('videoApp')
             compressedVideoFrame : null,
             videoFrameUpdated : false
         };
+
+        $scope.activeDivs = {
+            showLocalHdVideo : true,
+            showLocalAsciiVideo : false
+        };
+
+        $scope.localHdVideoOn = function() {
+            $scope.activeDivs.showLocalHdVideo = true;
+            $scope.activeDivs.showLocalAsciiVideo = false;
+        };
+
+        $scope.localAsciiVideoOn = function() {
+            $scope.activeDivs.showLocalHdVideo = false;
+            $scope.activeDivs.showLocalAsciiVideo = true;
+        };
 });
