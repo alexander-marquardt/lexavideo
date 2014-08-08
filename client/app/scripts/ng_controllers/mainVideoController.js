@@ -7,7 +7,7 @@
 /* global $ */
 
 angular.module('videoApp')
-    .controller('mainVideoCtrl', function () {
+    .controller('mainVideoCtrl', function ($scope) {
         this.remoteVideoObject = {
             remoteVideoDiv : $('#remote-video')[0]
         };
@@ -17,7 +17,7 @@ angular.module('videoApp')
             isAudioMuted : false
         };
 
-        this.asciiVideoObject = {
+        $scope.asciiVideoObject = {
             compressedVideoFrame : null,
             videoFrameUpdated : false
         };

@@ -71,7 +71,7 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
 });
 
 
-videoAppDirectives.directive('videoContainerDirective', function($window, $log, $timeout,
+videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                                               globalVarsService, constantsService,
                                               sessionService, userNotificationService,
                                               adapterService, channelService, turnService,
