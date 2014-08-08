@@ -109,7 +109,10 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
         link: function(scope) {
 
             var videoElement = document.createElement('video');
-            var localCanvas = $('#local-ascii-canvas')[0];
+            var localCanvas = document.createElement('canvas');
+            localCanvas.width = canvasOptions.width;
+            localCanvas.height = canvasOptions.height;
+
             var localCanvasContext = localCanvas.getContext('2d');
 
             function waitForLocalStream() {
@@ -142,8 +145,7 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
                 }
             }
 
-            localCanvas.width = canvasOptions.width;
-            localCanvas.height = canvasOptions.height;
+
 
             waitForLocalStream();
 
