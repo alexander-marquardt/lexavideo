@@ -13,14 +13,14 @@
 
                 <div class="col-sm-6" id="local-div" class="text-center">
                     <div class="text-center">
-                        <div id="local-video-wrapper-div" ng-show="activeDivs.showLocalHdVideo" class="text-center">
+                        <div id="local-hd-video-wrapper-div" ng-show="activeDivs.showLocalHdVideo" >
                             <h4>Transmitting HD Video</h4>
                             <div>
                                 <video id="local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
                             </div>
                         </div>
 
-                        <div id="generate-ascii-video-directive" generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" class="text-center">
+                        <div id="local-ascii-video-wrapper-div" generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
                             <div>
                                 <h4>Transmitting ASCII Video</h4>
                                 <pre id="local-ascii-container"><span class="ascii-drawing-text">Local ascii drawing goes here</span></pre>
@@ -30,10 +30,10 @@
                     <div class="text-center">
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm"
-                                    ng-class="(activeDivs.showLocalHdVideo) ? 'btn-primary' : 'btn-default'"
+                                    ng-class="(activeDivs.showLocalHdVideo) ? 'btn-primary disabled' : 'btn-default'"
                                     ng-click="localHdVideoOn()">HD Video</button>
                             <button type="button" class="btn btn-sm"
-                                    ng-class="(activeDivs.showLocalAsciiVideo) ? 'btn-primary' : 'btn-default'"
+                                    ng-class="(activeDivs.showLocalAsciiVideo) ? 'btn-primary disabled' : 'btn-default'"
                                     ng-click="localAsciiVideoOn()">ASCII Video</button>
                         </div>
                     </div>
