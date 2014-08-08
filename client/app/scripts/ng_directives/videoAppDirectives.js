@@ -85,11 +85,11 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
             var remoteVideoObject = vidCtrl.remoteVideoObject;
             var localVideoObject = vidCtrl.localVideoObject;
 
-            var localVideoDiv = $('#local-video')[0];
+            var localVideoElem = $('#local-video-element')[0];
 
 
 
-            var initializeVideoCallSetup = function() {
+            (function() {
 
                 var i;
                 if (constantsService.errorMessages.length > 0) {
@@ -125,9 +125,9 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                     callService.maybeStart();
                 } else {
                     callService.hasAudioOrVideoMediaConstraints = true;
-                    callService.doGetUserMedia(localVideoDiv, localVideoObject, remoteVideoObject);
+                    callService.doGetUserMedia(localVideoElem, localVideoObject, remoteVideoObject);
                 }
-            }(); // self calling function
+            })(); // self calling function
 
 
             var transitionVideoToActive = function() {

@@ -9,7 +9,7 @@
 angular.module('videoApp')
     .controller('mainVideoCtrl', function ($scope) {
         this.remoteVideoObject = {
-            remoteVideoDiv : $('#remote-video')[0]
+            remoteVideoElem : $('#remote-video-element')[0]
         };
 
         this.localVideoObject = {

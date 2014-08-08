@@ -344,7 +344,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
         var innerWaitForRemoteVideo = function() {
             // Call the getVideoTracks method via adapter.js.
             var videoTracks = peerService.remoteStream.getVideoTracks();
-            if (videoTracks.length === 0 || remoteVideoObject.remoteVideoDiv.currentTime > 0) {
+            if (videoTracks.length === 0 || remoteVideoObject.remoteVideoElem.currentTime > 0) {
                 transitionSessionStatus('active');
             } else {
                 $timeout(innerWaitForRemoteVideo, 100);
@@ -488,7 +488,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
     var onRemoteStreamAdded = function(self, localVideoObject, remoteVideoObject) {
         return function(mediaStreamEvent) {
             $log.log('Remote stream added.');
-            adapterService.attachMediaStream(remoteVideoObject.remoteVideoDiv, mediaStreamEvent.stream);
+            adapterService.attachMediaStream(remoteVideoObject.remoteVideoElem, mediaStreamEvent.stream);
             self.remoteStream = mediaStreamEvent.stream;
         };
     };
@@ -711,7 +711,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, inf
     return {
         setStatus: function(state) {
 
-            // use $timeout to ensure that $apply is called after the current digest cycle.
+            // use r to ensure that $apply is called after the current digest cycle.
             $timeout(function() {
                 currentState = state;
             });

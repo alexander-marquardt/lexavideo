@@ -10,16 +10,28 @@
     <div ng-controller="mainVideoCtrl">
         <div class="row">
             <div video-container-directive>
+
                 <div class="col-sm-6" id="local-div">
-                    <div>Local Video</div>
-                    <div>
-                        <video id="local-video" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
+                    <div id="local-video-wrapper-div">
+                        <div>Local Video</div>
+                        <div>
+                            <video id="local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
+                        </div>
+                    </div>
+
+                    <div generate-ascii-video-directive>
+                        <div>
+                            <div>Ascii Container</div>
+                            <pre id="local-ascii-container"><span class="ascii-drawing-text">Local ascii drawing goes here</span></pre>
+                        </div>
                     </div>
                 </div>
+
+
                 <div class="col-sm-6" id="remote-div">
                     <div>Remote Video</div>
                     <div>
-                        <video id="remote-video" autoplay="autoplay">
+                        <video id="remote-video-element" autoplay="autoplay">
                             You must update to a newer version of Chrome or Firefox to use video
                         </video>
                     </div>
@@ -29,12 +41,7 @@
 
         <div class="row">
             <div class="col-sm-6">
-                <div generate-ascii-video-directive>
-                    <div>
-                        <div>Ascii Container</div>
-                        <pre id="local-ascii-container"><span class="ascii-drawing-text">Local ascii drawing goes here</span></pre>
-                    </div>
-                </div>
+
             </div>
 
             <div class="col-sm-6">
