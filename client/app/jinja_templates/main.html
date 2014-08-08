@@ -15,14 +15,14 @@
                     <div class="text-center">
                         <div id="local-hd-video-wrapper-div" ng-show="activeDivs.showLocalHdVideo" >
                             <h4>Transmitting HD Video</h4>
-                            <div>
+                            <div style="display:inline-block">
                                 <video id="local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
                             </div>
                         </div>
 
                         <div id="local-ascii-video-wrapper-div" generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
-                            <div>
-                                <h4>Transmitting ASCII Video</h4>
+                            <h4>Transmitting ASCII Video</h4>
+                            <div style="display:inline-block">
                                 <pre id="local-ascii-container"><span class="ascii-drawing-text">Local ascii drawing goes here</span></pre>
                             </div>
                         </div>
