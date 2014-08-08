@@ -16,4 +16,9 @@ angular.module('videoApp')
             isVideoMuted : false,
             isAudioMuted : false
         };
+
+        this.asciiVideoObject = {
+            compressedVideoFrame : null,
+            videoFrameUpdated : false
+        };
 });

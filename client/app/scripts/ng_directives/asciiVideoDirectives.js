@@ -6,18 +6,16 @@
 
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
+/* global LZString */
 
 var asciiVideoDirectives = angular.module('asciiVideo.directives', ['videoApp.services']);
 
 
 
-asciiVideoDirectives.directive('asciiVideoContainerDirective', function($timeout, $interval, $log, callService) {
 
-    var localCanvas = $('#local-ascii-canvas')[0];
-    var localCanvasContext = localCanvas.getContext('2d');
-    var videoElement = document.createElement('video');
-    var $asciiContainer = $('#ascii-container');
-    var $asciiDrawingTextElement = $asciiContainer.find('.ascii-drawing-text');
+asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, callService) {
+
+    var $asciiDrawingTextElement = $('#ascii-container').find('.ascii-drawing-text');
 
     var canvasOptions = {
         width : 160,
@@ -88,12 +86,19 @@ asciiVideoDirectives.directive('asciiVideoContainerDirective', function($timeout
     }
 
 
-    var onFrame = function(canvas) {
+    var onFrame = function(canvas, scope, asciiVideoObject) {
 
         asciiFromCanvas(canvas, {
             contrast: 128,
             callback: function(asciiString) {
                 $asciiDrawingTextElement.html(asciiString);
+                var compressedString = LZString.compress(asciiString);
+                // send the compressed string to the remote user (through the server)
+
+                scope.$apply(function() {
+                    asciiVideoObject.frameUpdated = true;
+                    asciiVideoObject.compressedVideoFrame = compressedString;
+                });
             }
         });
     };
@@ -101,7 +106,12 @@ asciiVideoDirectives.directive('asciiVideoContainerDirective', function($timeout
     return {
         restrict: 'A',
         scope: {},
-        link: function() {
+        controller: 'mainVideoCtrl',
+        link: function(scope, elem, attrs, vidCtrl) {
+
+            var videoElement = document.createElement('video');
+            var localCanvas = $('#local-ascii-canvas')[0];
+            var localCanvasContext = localCanvas.getContext('2d');
 
             function waitForLocalStream() {
                 var videoStream = callService.getLocalStream();
@@ -123,7 +133,7 @@ asciiVideoDirectives.directive('asciiVideoContainerDirective', function($timeout
                     $interval(function() {
                         try {
                             localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
-                            onFrame(localCanvas);
+                            onFrame(localCanvas, scope, vidCtrl.asciiVideoObject);
                         } catch (e) {
                             $log.log('Error drawing image in canvas' + e);
                         }
@@ -140,4 +150,24 @@ asciiVideoDirectives.directive('asciiVideoContainerDirective', function($timeout
 
         }
     };
+});
+
+asciiVideoDirectives.directive('showAsciiVideoDirective', function() {
+
+    return {
+            restrict: 'A',
+            scope: {},
+            controller: 'mainVideoCtrl',
+            link: function(scope, elem, attrs, vidCtrl) {
+                scope.$watch(vidCtrl.asciiVideoObject.videoFrameUpdated, function() {
+
+                    vidCtrl.asciiVideoObject.videoFrameUpdated = false;
+                    //var videoFrameString = LZString.decompress(vidCtrl.asciiVideoObject.compressedVideoFrame);
+
+
+
+                });
+            }
+    };
+
 });
