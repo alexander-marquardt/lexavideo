@@ -94,25 +94,33 @@ def make_loopback_answer(message):
   message = message.replace("a=ice-options:google-ice\\r\\n", "")
   return message
 
-def handle_message(room, user, message):
-  message_obj = json.loads(message)
-  other_user = room.get_other_user(user)
-  room_key = room.key().id_or_name()
-  if message_obj['type'] == 'bye':
+
+def handle_sdp_message(message, message_obj, room, user, other_user, room_key):
+  
+  message_payload = message_obj['messagePayload']
+  if message_payload['type'] == 'bye':
     # This would remove the other_user in loopback test too.
     # So check its availability before forwarding Bye message.
     room.remove_user(user)
     logging.info('User ' + user + ' quit from room ' + room_key)
     logging.info('Room ' + room_key + ' has state ' + str(room))
   if other_user and room.has_user(other_user):
-    if message_obj['type'] == 'offer':
+    if message_payload['type'] == 'offer':
       # Special case the loopback scenario.
       if other_user == user:
         message = make_loopback_answer(message)
     on_message(room, other_user, message)
   else:
     # For unittest
-    on_message(room, user, message)
+    on_message(room, user, message)  
+    
+
+def handle_message(room, user, message):
+  message_obj = json.loads(message)
+  other_user = room.get_other_user(user)
+  room_key = room.key().id_or_name()
+  if message_obj['messageType'] == 'sdp':
+    handle_sdp_message(message, message_obj, room, user, other_user, room_key)
 
 def get_saved_messages(client_id):
   return Message.gql("WHERE client_id = :id", id=client_id)
@@ -336,8 +344,13 @@ class DisconnectPage(webapp2.RequestHandler):
         logging.info('User ' + user + ' removed from room ' + room_key)
         logging.info('Room ' + room_key + ' has state ' + str(room))
         if other_user and other_user != user:
+          
+          message_object = {"messageType": "sdp",
+                            "messagePayload" : {
+                              "type" : "bye"
+                            }}
           channel.send_message(make_client_id(room, other_user),
-                               '{"type":"bye"}')
+                               json.dumps(message_object))
           logging.info('Sent BYE to ' + other_user)
     logging.warning('User ' + user + ' disconnected from room ' + room_key)
 

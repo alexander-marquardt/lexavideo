@@ -99,26 +99,32 @@ videoAppServices.factory('channelService', function($log, constantsService, call
     var onChannelMessage = function(localVideoObject, remoteVideoObject) {
         return function(message) {
             // $log.log('S->C: ' + message.data);
-            var msg = JSON.parse(message.data);
-            // Since the turn response is async and also GAE might disorder the
-            // Message delivery due to possible datastore query at server side,
-            // So callee needs to cache messages before peerConnection is created.
-            if (!globalVarsService.initiator && !sessionService.started) {
-                if (msg.type === 'offer') {
-                    // Add offer to the beginning of msgQueue, since we can't handle
-                    // Early candidates before offer at present.
-                    channelMessageService.unshift(msg);
-                    // Callee creates PeerConnection
-                    // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
-                    // On the other hand, caller is the person who calls the callee, and is currently the second
-                    // person to join the chatroom.
-                    sessionService.signalingReady = true;
-                    callService.maybeStart(localVideoObject, remoteVideoObject);
+            var messageObject = JSON.parse(message.data);
+            if (messageObject.messageType === 'sdp') {
+                var sdpObject = messageObject.messagePayload;
+                // Since the turn response is async and also GAE might disorder the
+                // Message delivery due to possible datastore query at server side,
+                // So callee needs to cache messages before peerConnection is created.
+                if (!globalVarsService.initiator && !sessionService.started) {
+                    if (sdpObject.type === 'offer') {
+                        // Add offer to the beginning of msgQueue, since we can't handle
+                        // Early candidates before offer at present.
+                        channelMessageService.unshift(sdpObject);
+                        // Callee creates PeerConnection
+                        // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
+                        // On the other hand, caller is the person who calls the callee, and is currently the second
+                        // person to join the chatroom.
+                        sessionService.signalingReady = true;
+                        callService.maybeStart(localVideoObject, remoteVideoObject);
+                    } else {
+                        channelMessageService.push(sdpObject);
+                    }
                 } else {
-                    channelMessageService.push(msg);
+                    sessionService.processSignalingMessage(sessionService, sdpObject, localVideoObject, remoteVideoObject);
                 }
-            } else {
-                sessionService.processSignalingMessage(sessionService, msg, localVideoObject, remoteVideoObject);
+            }
+            else {
+                $log.log('Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
             }
         };
     };
@@ -234,13 +240,29 @@ videoAppServices.factory('messageService', function($http, $log, constantsServic
     Functionality for posting messages to the server.
      */
     return {
-        sendMessage : function(message) {
+        sendMessage : function(messageType, messagePayload) {
+            /*
+            messageType: string indicating if this is a signalling message or some other kind of message
+                         that is being sent over the Appengine Channel API.
+                         Allowed values:
+                         'sdp' - setting up peer to peer connection
+                         'video' - sending video/images through the server
+                         'chat' - chat messages sent through the server
+            messagePayload: an object containing data that will be send from one peer to another through the server.
+                     Note: this data will be serialized automatically by AngularJS into a JSON object/string.
+             */
+
+            var messageObject = {
+                'messageType': messageType,
+                'messagePayload': messagePayload
+            };
+
             // $log.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
             var path = '/message?r=' + constantsService.roomKey + '&u=' + constantsService.myUsername;
 
-            $http.post(path, message).then(
+            $http.post(path, messageObject).then(
                 function(/*response*/) {
                     //$log.log('Post success. Got response status: ' + response.statusText);
                 },
@@ -298,7 +320,7 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
     };
     this.onIceCandidate = function(event) {
         if (event.candidate) {
-            messageService.sendMessage({type: 'candidate',
+            messageService.sendMessage('sdp', {type: 'candidate',
                 label: event.candidate.sdpMLineIndex,
                 id: event.candidate.sdpMid,
                 candidate: event.candidate.candidate});
@@ -436,7 +458,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
             peerService.pc.setLocalDescription(sessionDescription,
                 onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
-            messageService.sendMessage(sessionDescription);
+            messageService.sendMessage('sdp', sessionDescription);
         },
 
 

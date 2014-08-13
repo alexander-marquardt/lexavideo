@@ -102,7 +102,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                 // Send BYE on refreshing(or leaving) a demo page
                 // to ensure the room is cleaned for next session.
                 $window.onbeforeunload = function() {
-                    messageService.sendMessage({type: 'bye'});
+                    messageService.sendMessage('sdp', {type: 'bye'});
                 };
 
 
