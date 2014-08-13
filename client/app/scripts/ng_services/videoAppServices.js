@@ -558,12 +558,65 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
     };
 });
 
+
+videoAppServices.service('streamService', function($log) {
+
+    this.localStream = null;
+
+});
+
+videoAppServices.factory('mediaService', function($log, constantsService, adapterService, userNotificationService,
+                          callService, streamService) {
+
+
+    var onUserMediaSuccess = function(localVideoDiv, localVideoObject, remoteVideoObject) {
+        return function(stream) {
+            $log.log('User has granted access to local media.');
+            // Call the polyfill wrapper to attach the media stream to this element.
+            adapterService.attachMediaStream(localVideoDiv, stream);
+            localVideoDiv.style.opacity = 1;
+            streamService.localStream = stream;
+            // Caller creates PeerConnection.
+            callService.maybeStart(localVideoObject, remoteVideoObject);
+        };
+    };
+
+    var onUserMediaError = function(localVideoObject, remoteVideoObject) {
+        return function(error) {
+            userNotificationService.messageError('Failed to get access to local media. Error code was ' +
+                error.code + '. Continuing without sending a stream.');
+            alert('Failed to get access to local media. Error code was ' +
+                error.code + '. Continuing without sending a stream.');
+
+            callService.hasAudioOrVideoMediaConstraints = false;
+            callService.maybeStart(localVideoObject, remoteVideoObject);
+        };
+    };
+
+    return {
+
+
+        doGetUserMedia  : function(localVideoDiv, localVideoObject, remoteVideoObject) {
+            // Call into getUserMedia via the polyfill (adapter.js).
+            try {
+                adapterService.getUserMedia(constantsService.mediaConstraints,
+                    onUserMediaSuccess(localVideoDiv, localVideoObject, remoteVideoObject),
+                    onUserMediaError(localVideoObject, remoteVideoObject));
+                $log.log('Requested access to local media with mediaConstraints:\n' +
+                    '  \'' + JSON.stringify(constantsService.mediaConstraints) + '\'');
+            } catch (e) {
+                alert('getUserMedia() failed. Is this a WebRTC capable browser?');
+                userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
+            }
+        }
+    }
+});
+
 videoAppServices.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
                                          userNotificationService, constantsService, globalVarsService, channelMessageService,
-                                         adapterService) {
+                                         streamService) {
 
 
-    var localStream;
 
     var mergeConstraints = function(cons1, cons2) {
         var merged = cons1;
@@ -590,42 +643,17 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
     };
 
 
-    var onUserMediaSuccess = function(self, localVideoDiv, localVideoObject, remoteVideoObject) {
-        return function(stream) {
-            $log.log('User has granted access to local media.');
-            // Call the polyfill wrapper to attach the media stream to this element.
-            adapterService.attachMediaStream(localVideoDiv, stream);
-            localVideoDiv.style.opacity = 1;
-            localStream = stream;
-            // Caller creates PeerConnection.
-            self.maybeStart(localVideoObject, remoteVideoObject);
-        };
-    };
-
-    var onUserMediaError = function(self, localVideoObject, remoteVideoObject) {
-        return function(error) {
-            userNotificationService.messageError('Failed to get access to local media. Error code was ' +
-                error.code + '. Continuing without sending a stream.');
-            alert('Failed to get access to local media. Error code was ' +
-                error.code + '. Continuing without sending a stream.');
-
-            self.hasAudioOrVideoMediaConstraints = false;
-            self.maybeStart(localVideoObject, remoteVideoObject);
-        };
-    };
 
     return {
         hasAudioOrVideoMediaConstraints : false,
 
-        getLocalStream : function() {
-            return localStream;
-        },
+
 
         maybeStart : function(localVideoObject, remoteVideoObject) {
 
 
             if (!sessionService.started && sessionService.signalingReady && channelServiceSupport.channelReady &&
-                turnServiceSupport.turnDone && (localStream || !this.hasAudioOrVideoMediaConstraints)) {
+                turnServiceSupport.turnDone && (streamService.localStream || !this.hasAudioOrVideoMediaConstraints)) {
 
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
@@ -633,7 +661,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
                 if (this.hasAudioOrVideoMediaConstraints) {
                     $log.log('Adding local stream.');
-                    peerService.pc.addStream(localStream);
+                    peerService.pc.addStream(streamService.localStream);
                 } else {
                     $log.log('Not sending any stream.');
                 }
@@ -652,32 +680,20 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
             return function() {
                 $log.log('Hanging up.');
                 sessionService.transitionSessionStatus('done');
-                localStream.stop();
+                streamService.localStream.stop();
                 sessionService.stop(sessionService, localVideoObject);
                 // will trigger BYE from server
                 channelServiceSupport.socket.close();
             };
         },
 
-        doGetUserMedia  : function(localVideoDiv, localVideoObject, remoteVideoObject) {
-            // Call into getUserMedia via the polyfill (adapter.js).
-            try {
-                adapterService.getUserMedia(constantsService.mediaConstraints,
-                    onUserMediaSuccess(this, localVideoDiv, localVideoObject, remoteVideoObject),
-                    onUserMediaError(this, localVideoObject, remoteVideoObject));
-                $log.log('Requested access to local media with mediaConstraints:\n' +
-                    '  \'' + JSON.stringify(constantsService.mediaConstraints) + '\'');
-            } catch (e) {
-                alert('getUserMedia() failed. Is this a WebRTC capable browser?');
-                userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
-            }
-        },
+
 
 
         toggleVideoMute : function(localVideoObject) {
             // Call the getVideoTracks method via adapter.js.
             var i;
-            var videoTracks = localStream.getVideoTracks();
+            var videoTracks = streamService.localStream.getVideoTracks();
 
             if (videoTracks.length === 0) {
                 $log.log('No local video available.');
@@ -702,7 +718,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         toggleAudioMute : function(localVideoObject) {
             var i;
             // Call the getAudioTracks method via adapter.js.
-            var audioTracks = localStream.getAudioTracks();
+            var audioTracks = streamService.localStream.getAudioTracks();
 
             if (audioTracks.length === 0) {
                 $log.log('No local audio available.');

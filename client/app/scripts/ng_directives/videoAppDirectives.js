@@ -75,7 +75,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                                               globalVarsService, constantsService,
                                               sessionService, userNotificationService,
                                               adapterService, channelService, turnService,
-                                              callService, messageService) {
+                                              callService, mediaService, messageService) {
     return {
         restrict : 'A',
         scope : {},
@@ -125,7 +125,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                     callService.maybeStart();
                 } else {
                     callService.hasAudioOrVideoMediaConstraints = true;
-                    callService.doGetUserMedia(localVideoElem, localVideoObject, remoteVideoObject);
+                    mediaService.doGetUserMedia(localVideoElem, localVideoObject, remoteVideoObject);
                 }
             })(); // self calling function
 

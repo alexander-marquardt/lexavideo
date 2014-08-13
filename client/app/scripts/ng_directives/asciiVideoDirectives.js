@@ -13,7 +13,7 @@ var asciiVideoDirectives = angular.module('asciiVideo.directives', ['videoApp.se
 
 
 
-asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, callService) {
+asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, streamService) {
 
     var $asciiDrawingTextElement = $('#local-ascii-container').find('.ascii-drawing-text');
 
@@ -116,9 +116,8 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
             var localCanvasContext = localCanvas.getContext('2d');
 
             function waitForLocalStream() {
-                var videoStream = callService.getLocalStream();
 
-                if (videoStream) {
+                if (streamService.localStream) {
 
                     $interval(function() {
                         try {
