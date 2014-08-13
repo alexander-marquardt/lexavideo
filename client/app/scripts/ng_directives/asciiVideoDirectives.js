@@ -108,7 +108,7 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
         restrict: 'A',
         link: function(scope) {
 
-            var videoElement = document.createElement('video');
+            var videoElement = $('#local-video-element')[0];
             var localCanvas = document.createElement('canvas');
             localCanvas.width = canvasOptions.width;
             localCanvas.height = canvasOptions.height;
@@ -120,18 +120,6 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
 
                 if (videoStream) {
 
-                    videoElement.setAttribute('width', canvasOptions.width);
-                    videoElement.setAttribute('height', canvasOptions.height);
-
-
-                    if (videoElement.mozSrcObject !== undefined) { // hack for Firefox < 19
-                        videoElement.mozSrcObject = videoStream;
-                    } else {
-                        videoElement.src = (window.URL && window.URL.createObjectURL(videoStream)) || videoStream;
-                    }
-
-
-                    videoElement.play();
                     $interval(function() {
                         try {
                             if (scope.activeDivs.showLocalAsciiVideo) {
