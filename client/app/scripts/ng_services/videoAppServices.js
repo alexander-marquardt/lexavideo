@@ -235,13 +235,12 @@ videoAppServices.factory('messageService', function($http, $log, constantsServic
      */
     return {
         sendMessage : function(message) {
-            var msgString = JSON.stringify(message);
             // $log.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
             var path = '/message?r=' + constantsService.roomKey + '&u=' + constantsService.myUsername;
 
-            $http.post(path, msgString).then(
+            $http.post(path, message).then(
                 function(/*response*/) {
                     //$log.log('Post success. Got response status: ' + response.statusText);
                 },
