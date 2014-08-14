@@ -78,6 +78,7 @@ $lg-vid-width : 553px;
   @extend .video-sizing;
 }
 
+
 video {
   opacity: 1;
   -webkit-transition-property: opacity;
@@ -105,6 +106,7 @@ video {
   -webkit-transition-property: opacity;
   -webkit-transition-duration: 1s;
 }
+
 
 #local-ascii-container, #remote-ascii-container {
   @extend .video-sizing;
@@ -160,6 +162,13 @@ pre#local-ascii-container {
   margin-bottom: 10px;
   background-color: #f5f5f5;
   border: 1px solid #e3e3d3;
+
+  @media (max-width: $screen-xs-max) {
+    // because the video width on xs devices is set to 100%, we need to set the width here in order to
+    // show the video box at the correct size while waiting for the video to load.
+    width: 100%;
+    heigt: 100%;
+  }
 }
 
 #dummy-xs-div {
