@@ -76,6 +76,8 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                                               sessionService, userNotificationService,
                                               adapterService, channelService, turnService,
                                               callService, mediaService, messageService) {
+    var sessionStatus;
+
     return {
         restrict : 'A',
         scope : {},
@@ -131,16 +133,6 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
 
             var transitionVideoToActive = function() {
-                reattachMediaStream(vidCtrl.remoteVideoObject.miniVideoElem, vidCtrl.localVideoObject.localVideoElem);
-                vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 1;
-
-                if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
-                    // we are dealing with a small viewport, and should therefore hide the local video as it is
-                    // embedded in a small window inside the remote video.
-                    vidCtrl.localVideoObject.localVideoWrapper.style.display = 'none';
-                    vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
-                }
-
                 $log.log('\n\n*** Executing transitionVideoToActive ***\n\n');
                 userNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
             };
@@ -154,19 +146,44 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
             var transitionVideoToDone = function() {
                 $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');
-                vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 0;
-
-                if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
-                    // we are dealing with a small viewport with only a single video window.
-                    // Therefore we should show the local video and hide the remote video
-                    vidCtrl.localVideoObject.localVideoWrapper.style.display = 'inline';
-                    vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'none';
-                }
-
                 userNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + serverConstantsService.roomLink + '>Click here</a> to rejoin.');
             };
 
+            var enableAllVideoWindows = function() {
+                // if it is a wider screen, then show both windows
+                vidCtrl.localVideoObject.localVideoWrapper.style.display = 'inline';
+                vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
+            };
 
+            var resizeVideoWindows = function() {
+
+                if (sessionStatus = 'active') {
+                    if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
+                        reattachMediaStream(vidCtrl.remoteVideoObject.miniVideoElem, vidCtrl.localVideoObject.localVideoElem);
+                        vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 1;
+                        // we are dealing with a small viewport, and should therefore hide the local video as it is
+                        // embedded in a small window inside the remote video.
+                        vidCtrl.localVideoObject.localVideoWrapper.style.display = 'none';
+                        vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
+                    } else {
+                        enableAllVideoWindows();
+                        vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 0;
+                    }
+                }
+                else {
+                    if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
+                        // we are dealing with a small viewport with only a single video window.
+                        // Therefore we should show the local video and hide the remote video
+                        vidCtrl.localVideoObject.localVideoWrapper.style.display = 'inline';
+                        vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'none';
+                        vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 0;
+                    } else {
+                        enableAllVideoWindows();
+                        vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 0;
+                    }
+                }
+
+            };
 /*
             scope.enterFullScreen = function () {
                 // This will probably fail on non-Chrome browsers -- investigate if extra code is needed.
@@ -189,9 +206,16 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                     $log.log('Error, unknown status received');
                 }
 
+                sessionStatus = status;
+                resizeVideoWindows();
+
             });
 
-
+            $(window).resize(function() {
+                // calling jquery window.resize instead of angular watching for resize on the $window service should be slightly
+                // more efficient.
+                resizeVideoWindows();
+            })
         }
     };
 });
