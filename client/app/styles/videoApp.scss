@@ -40,15 +40,15 @@ body {
   //-webkit-backface-visibility: hidden;
 }
 
-$xs-vid-width: 190px;
+$xs-vid-width: 268px;
 $sm-vid-width: 333px;
 $md-vid-width: 443px;
-$lg-vid-width : 543px;
+$lg-vid-width : 553px;
 
 .video-sizing {
   /* Extra small devices (phones, less than 768px) */
-  width: 100%;
-  height: 100%;
+  width: $xs-vid-width;
+  height: $xs-vid-width * 3/4;
 
   /* Small devices (tablets, 768px and up) */
   @media (min-width: $screen-sm-min) {
@@ -93,31 +93,27 @@ video {
 
 .ascii-drawing-text {
   font-family: 'Courier New', 'Courier', monospace;
-  font-size: 4px;
-  line-height: 4px;
+  font-size: $xs-vid-width / 90;
+  line-height: $xs-vid-width / 90;
   letter-spacing: -0.1em;
   display: inline-block;
-
 
   @media (min-width: $screen-sm-min) {
     font-size: $sm-vid-width / 80;
     line-height: $sm-vid-width / 80;
     letter-spacing: -0.1em;
-
   }
 
   @media (min-width: $screen-md-min) {
-    font-size: $md-vid-width / 79;
-    line-height: $md-vid-width / 79;
+    font-size: $md-vid-width / 80;
+    line-height: $md-vid-width / 80;
     letter-spacing: -0.18em;
-
   }
 
   @media (min-width: $screen-lg-min) {
-    font-size: $lg-vid-width / 78;
-    line-height: $lg-vid-width / 78;
+    font-size: $lg-vid-width / 80;
+    line-height: $lg-vid-width / 80;
     letter-spacing: -0.18em;
-
   }
 }
 
