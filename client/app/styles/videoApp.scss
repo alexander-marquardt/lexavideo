@@ -69,17 +69,29 @@ $lg-vid-width : 553px;
   }
 }
 
-video {
+.video-normal-div {
   @extend .video-sizing;
+}
+
+video {
   opacity: 1;
   -webkit-transition-property: opacity;
   -webkit-transition-duration: 1s;
   display: block; // remove 5 px gap at bottom
 }
 
-.light-gray-border {
-  border: 1px solid #cccccc;
-  background-color: whitesmoke;
+#mini-video-element {
+  position: absolute;
+  height: 30%;
+  width: 30%;
+  bottom: 0px;
+  right: 0px;
+  opacity: 1.0;
+  transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  @media (min-width: $screen-sm-min) {
+    display: none;
+  }
 }
 
 #local-ascii-container, #remote-ascii-container {

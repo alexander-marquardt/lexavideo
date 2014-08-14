@@ -16,7 +16,7 @@
                         <div id="local-hd-video-wrapper-div" ng-show="activeDivs.showLocalHdVideo" >
                             <h4>Transmitting HD Video</h4>
                             <div style="display:inline-block" class="my-well" >
-                                <video id="local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
+                                <video class="video-normal-div" id="local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
                             </div>
                         </div>
 
@@ -40,12 +40,17 @@
                 </div>
 
                 <div class="col-sm-6" id="remote-div">
-                    <div class="text-center">
+                    <div class="text-center" >
                         <h4>Remote Video</h4>
                         <div style="display:inline-block" class="my-well">
-                            <video  id="remote-video-element" autoplay="autoplay">
-                                You must update to a newer version of Chrome or Firefox to use video
-                            </video>
+                            <div style="position: relative">
+                                <video class="video-normal-div" id="remote-video-element" autoplay="autoplay">
+                                    You must update to a newer version of Chrome or Firefox to use video
+                                </video>
+                                <div id="mini-video-div">
+                                    <video id="mini-video-element" autoplay="autoplay" muted="true"/>
+                                </div>
+                            </div>
                         </div>
                     </div>  
                 </div>
