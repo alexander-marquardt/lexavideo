@@ -131,18 +131,23 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
 
             var transitionVideoToActive = function() {
+                reattachMediaStream(vidCtrl.remoteVideoObject.miniVideoElem, vidCtrl.localVideoObject.localVideoElem);
+                vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 1;
+
                 $log.log('\n\n*** Executing transitionVideoToActive ***\n\n');
                 userNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
             };
 
             var transitionVideoToWaiting = function() {
                 $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
+                vidCtrl.remoteVideoObject.miniVideoElem.src = '';
                 userNotificationService.resetStatus();
             };
 
 
             var transitionVideoToDone = function() {
-                $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');                
+                $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');
+                vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 0;
                 userNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + constantsService.roomLink + '>Click here</a> to rejoin.');
             };
 
