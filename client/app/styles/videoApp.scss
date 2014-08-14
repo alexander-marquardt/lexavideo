@@ -90,8 +90,8 @@ video {
   position: absolute;
   height: 30%;
   width: 30%;
-  bottom: 0px;
-  right: 0px;
+  top: 0px;
+  left: 0px;
   opacity: 1.0;
   @media (min-width: $screen-sm-min) {
     // this mini-video is only intended for xs screens - hide for anything larger
