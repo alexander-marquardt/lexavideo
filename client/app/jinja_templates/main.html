@@ -43,8 +43,8 @@
                 <div class="col-sm-6" id="id-remote-video-wrapper-div">
                     <div class="text-center" >
                         <h4>Remote Video</h4>
-                        <div  class="cl-my-well">
-                            <div style="display:inline-block">
+                        <div>
+                            <div  class="cl-my-well" style="display:inline-block">
                                 <div style="position: relative">
                                     <video class="cl-video-normal-div" id="id-remote-video-element" autoplay="autoplay">
                                         You must update to a newer version of Chrome or Firefox to use video
@@ -65,13 +65,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-group cl-hide-on-larger-than-xs">
-                            <button type="button" class="btn btn-sm"
-                                    ng-class="(activeDivs.showLocalHdVideo) ? 'btn-primary disabled' : 'btn-default'"
-                                    ng-click="localHdVideoOn()">HD Video</button>
-                            <button type="button" class="btn btn-sm"
-                                    ng-class="(activeDivs.showLocalAsciiVideo) ? 'btn-primary disabled' : 'btn-default'"
-                                    ng-click="localAsciiVideoOn()">ASCII Video</button>
+                        <div>
+                            <div class="btn-group cl-hide-on-larger-than-xs">
+                                <button type="button" class="btn btn-sm"
+                                        ng-class="(activeDivs.showLocalHdVideo) ? 'btn-primary disabled' : 'btn-default'"
+                                        ng-click="localHdVideoOn()">HD Video</button>
+                                <button type="button" class="btn btn-sm"
+                                        ng-class="(activeDivs.showLocalAsciiVideo) ? 'btn-primary disabled' : 'btn-default'"
+                                        ng-click="localAsciiVideoOn()">ASCII Video</button>
+                            </div>
                         </div>
 
                     </div>  

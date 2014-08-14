@@ -13,19 +13,19 @@ api_version: 1
 handlers:
 
 - url: /views
-  static_dir: client/dist/views
+  static_dir: client/app/views
 
 - url: /images
-  static_dir: client/dist/images
+  static_dir: client/app/images
 
 - url: /scripts
-  static_dir: client/dist/scripts
+  static_dir: client/app/scripts
 
 - url: /styles
-  static_dir: client/dist/styles
+  static_dir: client/.tmp/styles
   
 - url: /bower_components
-  static_dir: client/dist/bower_components
+  static_dir: client/app/bower_components
 
 - url: /favicon.ico
   static_files: favicon.ico
@@ -53,5 +53,5 @@ skip_files:
 - ^client/.*\.json$
 - ^client/test/.*
 - ^client/Gruntfile\.js
-- ^(.*/)?\..*$
-- ^client/app/.*
+
+

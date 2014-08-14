@@ -166,8 +166,8 @@ pre.cl-local-ascii-container {
   @media (max-width: $screen-xs-max) {
     // because the video width on xs devices is set to 100%, we need to set the width here in order to
     // show the video box at the correct size while waiting for the video to load.
-    width: 100%;
-    heigt: 100%;
+    width: 50%;
+    heigt: 50%;
   }
 }
 
