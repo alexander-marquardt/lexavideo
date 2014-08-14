@@ -88,7 +88,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
             var remoteVideoObject = vidCtrl.remoteVideoObject;
             var localVideoObject = vidCtrl.localVideoObject;
 
-            var localVideoElem = $('#local-video-element')[0];
+            var localVideoElem = $('#id-local-video-element')[0];
 
 
 

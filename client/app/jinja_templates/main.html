@@ -1,7 +1,7 @@
 {% raw %}
 <div class="container">
 
-    <div class="row" id="id-vidochat-logo">
+    <div class="row" id="id-videochat-logo">
         <div class="col-xs-7">
             <img class="img-responsive" src="images/videochathub.jpg"/>
         </div>
@@ -11,23 +11,22 @@
         <div class="row">
             <div video-container-directive>
 
-                <div class="col-sm-6" id="local-video-wrapper-div">
+                <div class="col-sm-6" id="id-local-video-wrapper-div">
                     <div class="text-center">
-                        <div id="local-hd-video-wrapper-div" ng-show="activeDivs.showLocalHdVideo" >
+                        <div id="id-local-hd-video-wrapper-div" ng-show="activeDivs.showLocalHdVideo" >
                             <h4>Transmitting HD Video</h4>
-                            <div style="display:inline-block" class="my-well" >
-                                <video class="video-normal-div" id="local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
+                            <div style="display:inline-block" class="cl-my-well" >
+                                <video class="cl-video-normal-div" id="id-local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
                             </div>
                         </div>
 
-                        <div id="local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
+                        <div id="id-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
                             <h4>Transmitting ASCII Video</h4>
-                            <div style="display:inline-block" class="my-well">
-                                <pre id="local-ascii-container"><span class="ascii-drawing-text">Local ascii drawing goes here</span></pre>
+                            <div style="display:inline-block" class="cl-my-well">
+                                <pre id="id-local-ascii-container"><span class="cl-ascii-drawing-text">Local ascii drawing goes here</span></pre>
                             </div>
                         </div>
-                    </div>
-                    <div class="text-center">
+
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm"
                                     ng-class="(activeDivs.showLocalHdVideo) ? 'btn-primary disabled' : 'btn-default'"
@@ -39,19 +38,28 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6" id="remote-video-wrapper-div">
+                <div class="col-sm-6" id="id-remote-video-wrapper-div">
                     <div class="text-center" >
                         <h4>Remote Video</h4>
-                        <div style="display:inline-block" class="my-well">
+                        <div style="display:inline-block" class="cl-my-well">
                             <div style="position: relative">
-                                <video class="video-normal-div" id="remote-video-element" autoplay="autoplay">
+                                <video class="cl-video-normal-div" id="id-remote-video-element" autoplay="autoplay">
                                     You must update to a newer version of Chrome or Firefox to use video
                                 </video>
-                                <div id="mini-video-div">
-                                    <video id="mini-video-element" autoplay="autoplay" muted="true"/>
+                                <div id="id-mini-video-div">
+                                    <video id="id-mini-video-element" autoplay="autoplay" muted="true"/>
                                 </div>
                             </div>
                         </div>
+                        <div class="btn-group cl-hide-on-larger-than-xs">
+                            <button type="button" class="btn btn-sm"
+                                    ng-class="(activeDivs.showLocalHdVideo) ? 'btn-primary disabled' : 'btn-default'"
+                                    ng-click="localHdVideoOn()">HD Video</button>
+                            <button type="button" class="btn btn-sm"
+                                    ng-class="(activeDivs.showLocalAsciiVideo) ? 'btn-primary disabled' : 'btn-default'"
+                                    ng-click="localAsciiVideoOn()">ASCII Video</button>
+                        </div>
+
                     </div>  
                 </div>
             </div>
@@ -65,8 +73,8 @@
             <div class="col-sm-6">
                 <div class="text-center" show-ascii-video-directive>
                     <h4>Remote Ascii Container</h4>
-                    <div style="display:inline-block" class="my-well">
-                        <pre id="remote-ascii-container"><span class="ascii-drawing-text">Remote ascii drawing goes here</span></pre>
+                    <div style="display:inline-block" class="cl-my-well">
+                        <pre id="id-remote-ascii-container"><span class="cl-ascii-drawing-text">Remote ascii drawing goes here</span></pre>
                     </div>
                 </div>
             </div>
@@ -81,7 +89,7 @@
 
     <!-- the following divs are outside of the standard page flow -->
 
-    <div id="info-div">
+    <div id="id-info-div">
         <div class="page-header">
             <h3>Diagnostic information</h3>
         </div>
@@ -94,6 +102,6 @@
     </div>
 </div>
 
-<div id="dummy-xs-div"></div>
+<div id="id-dummy-xs-div"></div>
 
 {% endraw %}

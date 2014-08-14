@@ -25,7 +25,7 @@ videoAppServices.factory('globalVarsService', function (serverConstantsService) 
                fit easily into any of the currently defined services. These variables may be accessed and
                modified directly from anywhere in the code.
              */
-    var screenXsMax = $('#dummy-xs-div').width();
+    var screenXsMax = $('#id-dummy-xs-div').width();
     return {
 
         initiator : serverConstantsService.initiator,
@@ -1099,17 +1099,17 @@ videoAppServices.service('infoDivService', function ($log) {
     var div;
 
     var getInfoDiv = function() {
-        return $('#info-div')[0];
+        return $('#id-info-div')[0];
     };
 
     var hideInfoDiv = function() {
         div.style.display = 'none';
-        $log.log('Hiding info-div');
+        $log.log('Hiding id-info-div');
     };
 
     var showInfoDiv = function() {
          div.style.display = 'block';
-        $log.log('Showing info-div');
+        $log.log('Showing id-info-div');
      };
 
     div = getInfoDiv();

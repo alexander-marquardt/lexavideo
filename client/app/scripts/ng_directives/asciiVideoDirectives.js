@@ -15,7 +15,7 @@ var asciiVideoDirectives = angular.module('asciiVideo.directives', ['videoApp.se
 
 asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, streamService, messageService) {
 
-    var $asciiDrawingTextElement = $('#local-ascii-container').find('.ascii-drawing-text');
+    var $asciiDrawingTextElement = $('#id-local-ascii-container').find('.cl-ascii-drawing-text');
 
     var canvasOptions = {
         width : 160,
@@ -108,7 +108,7 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
         restrict: 'A',
         link: function(scope) {
 
-            var videoElement = $('#local-video-element')[0];
+            var videoElement = $('#id-local-video-element')[0];
             var localCanvas = document.createElement('canvas');
             localCanvas.width = canvasOptions.width;
             localCanvas.height = canvasOptions.height;
@@ -144,7 +144,7 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
 
 asciiVideoDirectives.directive('showAsciiVideoDirective', function(channelService) {
 
-    var $asciiDrawingTextElement = $('#remote-ascii-container').find('.ascii-drawing-text');
+    var $asciiDrawingTextElement = $('#id-remote-ascii-container').find('.cl-ascii-drawing-text');
 
     return {
             restrict: 'A',
