@@ -40,14 +40,15 @@ body {
   //-webkit-backface-visibility: hidden;
 }
 
-$sm-vid-width: 345px;
-$md-vid-width: 455px;
-$lg-vid-width : 555px;
+$xs-vid-width: 333px;
+$sm-vid-width: 333px;
+$md-vid-width: 443px;
+$lg-vid-width : 543px;
 
 .video-sizing {
   /* Extra small devices (phones, less than 768px) */
-  width: $sm-vid-width;
-  height: $sm-vid-width * 3/4;
+  width: $xs-vid-width;
+  height: $xs-vid-width * 3/4;
 
   /* Small devices (tablets, 768px and up) */
   @media (min-width: $screen-sm-min) {
@@ -73,6 +74,12 @@ video {
   opacity: 1;
   -webkit-transition-property: opacity;
   -webkit-transition-duration: 1s;
+  display: block; // remove 5 px gap at bottom
+}
+
+.light-gray-border {
+  border: 1px solid #cccccc;
+  background-color: whitesmoke;
 }
 
 #local-ascii-container, #remote-ascii-container {
@@ -92,6 +99,9 @@ video {
   display: inline-block;
 }
 
+pre#local-ascii-container {
+  border: none;
+}
 
 #info-div {
   position: fixed;
@@ -102,4 +112,10 @@ video {
   display: none;
   z-index: 10;
   background: #FFFFFF;
+}
+
+.my-well {
+  margin-bottom: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3d3;
 }
