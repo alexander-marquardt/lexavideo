@@ -15,8 +15,6 @@ var asciiVideoDirectives = angular.module('asciiVideo.directives', ['videoApp.se
 
 asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, streamService, messageService) {
 
-    var $asciiDrawingTextElement = $('#id-local-ascii-container').find('.cl-ascii-drawing-text');
-
     var canvasOptions = {
         width : 160,
         height : 120,
@@ -86,7 +84,7 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
     }
 
 
-    var onFrame = function(canvas) {
+    var onFrame = function(canvas, $asciiDrawingTextElement) {
 
         asciiFromCanvas(canvas, {
             contrast: 128,
@@ -106,7 +104,9 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
 
     return {
         restrict: 'A',
-        link: function(scope) {
+        link: function(scope, elem) {
+
+            var $asciiDrawingTextElement = angular.element(elem).find('.cl-local-ascii-container').find('.cl-ascii-drawing-text');
 
             var videoElement = $('#id-local-video-element')[0];
             var localCanvas = document.createElement('canvas');
@@ -123,7 +123,7 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
                         try {
                             if (scope.activeDivs.showLocalAsciiVideo) {
                                 localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
-                                onFrame(localCanvas, scope.asciiVideoObject);
+                                onFrame(localCanvas, $asciiDrawingTextElement);
                             }
                         } catch (e) {
                             $log.log('Error drawing image in canvas' + e);
@@ -140,23 +140,4 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
 
         }
     };
-});
-
-asciiVideoDirectives.directive('showAsciiVideoDirective', function(channelService) {
-
-    var $asciiDrawingTextElement = $('#id-remote-ascii-container').find('.cl-ascii-drawing-text');
-
-    return {
-            restrict: 'A',
-            link: function(scope) {
-                scope.$watch(channelService.getAsciiVideoFrameUpdated(channelService), function() {
-
-                    channelService.asciiVideoObject.videoFrameUpdated = false;
-                    //
-                    var asciiString = LZString.decompressFromUTF16(channelService.asciiVideoObject.compressedVideoFrame);
-                    $asciiDrawingTextElement.html(asciiString);
-                });
-            }
-    };
-
 });

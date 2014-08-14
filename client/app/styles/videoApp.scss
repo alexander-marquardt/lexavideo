@@ -28,7 +28,7 @@ body {
   -webkit-transition-duration: 2s;
   -webkit-transform-style: preserve-3d;
 }
-#id-local-video-wrapper-div {
+.cl-local-video-wrapper-div {
   //position: absolute;
   //transform: scale(-1, 1);
   //-webkit-transform: scale(-1, 1);
@@ -108,7 +108,7 @@ video {
 }
 
 
-#id-local-ascii-container, #id-remote-ascii-container {
+.cl-local-ascii-container, #id-remote-ascii-container {
   @extend .cl-video-sizing;
   padding: 0;
   display: table-cell;

@@ -20,10 +20,10 @@
                             </div>
                         </div>
 
-                        <div id="id-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
+                        <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
                             <h4>Transmitting ASCII Video</h4>
                             <div style="display:inline-block" class="cl-my-well">
-                                <pre id="id-local-ascii-container"><span class="cl-ascii-drawing-text">Local ascii drawing goes here</span></pre>
+                                <pre class="cl-local-ascii-container"><span id="id-ascii-span" class="cl-ascii-drawing-text">Local ascii drawing goes here</span></pre>
                             </div>
                         </div>
 
@@ -47,7 +47,17 @@
                                     You must update to a newer version of Chrome or Firefox to use video
                                 </video>
                                 <div id="id-mini-video-div">
-                                    <video id="id-mini-video-element" autoplay="autoplay" muted="true"/>
+
+                                    <div id="id-local-hd-mini-video-wrapper-div" ng-show="activeDivs.showLocalHdVideo">
+                                        <video id="id-mini-video-element" autoplay="autoplay" muted="true"/>
+                                    </div>
+
+                                    <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
+                                        <div  style="display:inline-block" >
+                                            <pre class="cl-local-ascii-container"><span id="id-ascii-mini-span" class="cl-ascii-drawing-text">Local ascii drawing goes here</span></pre>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
