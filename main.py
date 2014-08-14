@@ -20,7 +20,7 @@ import threading
 from google.appengine.api import channel
 from google.appengine.ext import db
 
-from video_src import http_helpers
+from video_src import http_helpers, status_reporting
 
 
 # We "hack" the directory that jinja looks for the template files so that it is always pointing to
@@ -95,32 +95,37 @@ def make_loopback_answer(message):
   return message
 
 
-def handle_sdp_message(message, message_obj, room, user, other_user, room_key):
-  
-  message_payload = message_obj['messagePayload']
-  if message_payload['type'] == 'bye':
-    # This would remove the other_user in loopback test too.
-    # So check its availability before forwarding Bye message.
-    room.remove_user(user)
-    logging.info('User ' + user + ' quit from room ' + room_key)
-    logging.info('Room ' + room_key + ' has state ' + str(room))
-  if other_user and room.has_user(other_user):
-    if message_payload['type'] == 'offer':
-      # Special case the loopback scenario.
-      if other_user == user:
-        message = make_loopback_answer(message)
-    on_message(room, other_user, message)
-  else:
-    # For unittest
-    on_message(room, user, message)  
-    
 
 def handle_message(room, user, message):
-  message_obj = json.loads(message)
-  other_user = room.get_other_user(user)
-  room_key = room.key().id_or_name()
-  if message_obj['messageType'] == 'sdp':
-    handle_sdp_message(message, message_obj, room, user, other_user, room_key)
+  # This function passes a message from one user in a given "room" to the other user in the same room.
+  # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
+  # as for passing video and other information from one user to the other. 
+  
+  try:
+    message_obj = json.loads(message)
+    other_user = room.get_other_user(user)
+    room_key = room.key().id_or_name()
+
+    message_payload = message_obj['messagePayload']
+    if message_payload['type'] == 'bye':
+      # This would remove the other_user in loopback test too.
+      # So check its availability before forwarding Bye message.
+      room.remove_user(user)
+      logging.info('User ' + user + ' quit from room ' + room_key)
+      logging.info('Room ' + room_key + ' has state ' + str(room))
+    if other_user and room.has_user(other_user):
+      if message_payload['type'] == 'offer' and other_user == user:
+        # Special case the loopback scenario.
+        message = make_loopback_answer(message)
+        
+      on_message(room, other_user, message)
+      
+    else:
+      # For unittest
+      on_message(room, user, message)
+
+  except:
+    status_reporting.log_call_stack_and_traceback(logging.error)
 
 def get_saved_messages(client_id):
   return Message.gql("WHERE client_id = :id", id=client_id)

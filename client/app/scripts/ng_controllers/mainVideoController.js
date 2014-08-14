@@ -17,16 +17,14 @@ angular.module('videoApp')
             isAudioMuted : false
         };
 
-        $scope.asciiVideoObject = {
-            compressedVideoFrame : null,
-            videoFrameUpdated : false
-        };
+
 
         $scope.activeDivs = {
             showLocalHdVideo : true,
             showLocalAsciiVideo : false
         };
 
+        // TODO - combine these booleans into a string that indicates current video to show.
         $scope.localHdVideoOn = function() {
             $scope.activeDivs.showLocalHdVideo = true;
             $scope.activeDivs.showLocalAsciiVideo = false;

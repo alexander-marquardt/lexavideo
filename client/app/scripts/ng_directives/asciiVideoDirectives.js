@@ -13,7 +13,7 @@ var asciiVideoDirectives = angular.module('asciiVideo.directives', ['videoApp.se
 
 
 
-asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, streamService) {
+asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, streamService, messageService) {
 
     var $asciiDrawingTextElement = $('#local-ascii-container').find('.ascii-drawing-text');
 
@@ -86,19 +86,19 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
     }
 
 
-    var onFrame = function(canvas, asciiVideoObject) {
+    var onFrame = function(canvas) {
 
         asciiFromCanvas(canvas, {
             contrast: 128,
             callback: function(asciiString) {
                 $asciiDrawingTextElement.html(asciiString);
-                var compressedString = LZString.compress(asciiString);
+                // var compressedString = LZString.compress(asciiString);
                 // send the compressed string to the remote user (through the server)
 
                 // use $timeout to ensure that $apply is called after the current digest cycle.
                 $timeout(function() {
-                    asciiVideoObject.videoFrameUpdated = true;
-                    asciiVideoObject.compressedVideoFrame = compressedString;
+                    messageService.sendMessage('video', {type: 'ascii', compressedVideoString: asciiString});
+
                 });
             }
         });
@@ -142,18 +142,19 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
     };
 });
 
-asciiVideoDirectives.directive('showAsciiVideoDirective', function() {
+asciiVideoDirectives.directive('showAsciiVideoDirective', function(channelService) {
 
     var $asciiDrawingTextElement = $('#remote-ascii-container').find('.ascii-drawing-text');
 
     return {
             restrict: 'A',
             link: function(scope) {
-                scope.$watch('asciiVideoObject.videoFrameUpdated', function() {
+                scope.$watch(channelService.getAsciiVideoFrameUpdated(channelService), function() {
 
-                    scope.asciiVideoObject.videoFrameUpdated = false;
-                    var asciiString = LZString.decompress(scope.asciiVideoObject.compressedVideoFrame);
-                    $asciiDrawingTextElement.html(asciiString);
+                    channelService.asciiVideoObject.videoFrameUpdated = false;
+                    //
+                    // var asciiString = LZString.decompress(channelService.asciiVideoObject.compressedVideoFrame);
+                    $asciiDrawingTextElement.html(channelService.asciiVideoObject.compressedVideoFrame);
                 });
             }
     };

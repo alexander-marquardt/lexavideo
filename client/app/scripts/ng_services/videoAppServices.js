@@ -81,7 +81,7 @@ videoAppServices.service('channelServiceSupport', function() {
     this.socket = null;
 });
 
-videoAppServices.factory('channelService', function($log, constantsService, callService, sessionService, userNotificationService,
+videoAppServices.factory('channelService', function($log, $timeout, constantsService, callService, sessionService, userNotificationService,
                                             channelServiceSupport, globalVarsService, channelMessageService) {
 
     /*
@@ -96,7 +96,7 @@ videoAppServices.factory('channelService', function($log, constantsService, call
         };
     };
 
-    var onChannelMessage = function(localVideoObject, remoteVideoObject) {
+    var onChannelMessage = function(self, localVideoObject, remoteVideoObject) {
         return function(message) {
             // $log.log('S->C: ' + message.data);
             var messageObject = JSON.parse(message.data);
@@ -123,6 +123,18 @@ videoAppServices.factory('channelService', function($log, constantsService, call
                     sessionService.processSignalingMessage(sessionService, sdpObject, localVideoObject, remoteVideoObject);
                 }
             }
+            else if (messageObject.messageType === 'video') {
+
+                if (messageObject.messagePayload.type === 'ascii') {
+                    $timeout(function () {
+                        self.asciiVideoObject.videoFrameUpdated = true;
+                        self.asciiVideoObject.compressedVideoFrame = messageObject.messagePayload.compressedVideoString;
+                    });
+                }
+                else {
+                    $log.log('Error: unknown video type received: ' + messageObject.messagePayload.type);
+                }
+            }
             else {
                 $log.log('Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
             }
@@ -139,10 +151,10 @@ videoAppServices.factory('channelService', function($log, constantsService, call
       channelServiceSupport.channelReady = false;
     };
 
-    var handler = function(localVideoObject, remoteVideoObject) {
+    var handler = function(self, localVideoObject, remoteVideoObject) {
         return {
             'onopen': onChannelOpened(localVideoObject, remoteVideoObject),
-            'onmessage': onChannelMessage(localVideoObject, remoteVideoObject),
+            'onmessage': onChannelMessage(self, localVideoObject, remoteVideoObject),
             'onerror': onChannelError,
             'onclose': onChannelClosed
         };
@@ -152,7 +164,16 @@ videoAppServices.factory('channelService', function($log, constantsService, call
         openChannel: function(localVideoObject, remoteVideoObject) {
             $log.log('Opening channel.');
             var channel = new goog.appengine.Channel(constantsService.channelToken);
-            channelServiceSupport.socket = channel.open(handler(localVideoObject, remoteVideoObject));
+            channelServiceSupport.socket = channel.open(handler(this, localVideoObject, remoteVideoObject));
+        },
+        asciiVideoObject : {
+            compressedVideoFrame : null,
+            videoFrameUpdated : false
+        },
+        getAsciiVideoFrameUpdated : function(self) {
+            return function() {
+                return self.asciiVideoObject.videoFrameUpdated;
+            }
         }
     };
 });
@@ -559,7 +580,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
 });
 
 
-videoAppServices.service('streamService', function($log) {
+videoAppServices.service('streamService', function() {
 
     this.localStream = null;
 
@@ -609,7 +630,7 @@ videoAppServices.factory('mediaService', function($log, constantsService, adapte
                 userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
             }
         }
-    }
+    };
 });
 
 videoAppServices.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
