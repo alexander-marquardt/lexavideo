@@ -5,7 +5,7 @@
 # then this will happen automatically
 
 application: virtualvideoapp
-version: 2014-08-13-2034
+version: 2014-08-14-1811
 runtime: python27
 threadsafe: true
 api_version: 1
@@ -13,19 +13,19 @@ api_version: 1
 handlers:
 
 - url: /views
-  static_dir: client/app/views
+  static_dir: client/dist/views
 
 - url: /images
-  static_dir: client/app/images
+  static_dir: client/dist/images
 
 - url: /scripts
-  static_dir: client/app/scripts
+  static_dir: client/dist/scripts
 
 - url: /styles
-  static_dir: client/.tmp/styles
+  static_dir: client/dist/styles
   
 - url: /bower_components
-  static_dir: client/app/bower_components
+  static_dir: client/dist/bower_components
 
 - url: /favicon.ico
   static_files: favicon.ico
@@ -53,5 +53,5 @@ skip_files:
 - ^client/.*\.json$
 - ^client/test/.*
 - ^client/Gruntfile\.js
-
-
+- ^(.*/)?\..*$
+- ^client/app/.*

@@ -17,7 +17,7 @@ def run_grunt(grunt_arg, subprocess_function):
 def run_grunt_jobs():
     
     if vidsetup.RUN_GRUNT:
-        if DEBUG_BUILD:
+        if vidsetup.DEBUG_BUILD:
             # If we are accessing the non-compressed static files, we are probably developing and therefore want to see updates
             run_grunt('serve', subprocess.Popen)    
         else: 
