@@ -141,3 +141,23 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
         }
     };
 });
+
+
+asciiVideoDirectives.directive('showAsciiVideoDirective', function(channelService) {
+
+    var $asciiDrawingTextElement = $('#id-remote-ascii-container').find('.cl-ascii-drawing-text');
+
+    return {
+            restrict: 'A',
+            link: function(scope) {
+                scope.$watch(channelService.getAsciiVideoFrameUpdated(channelService), function() {
+
+                    channelService.asciiVideoObject.videoFrameUpdated = false;
+                    //
+                    var asciiString = LZString.decompressFromUTF16(channelService.asciiVideoObject.compressedVideoFrame);
+                    $asciiDrawingTextElement.html(asciiString);
+                });
+            }
+    };
+
+});
