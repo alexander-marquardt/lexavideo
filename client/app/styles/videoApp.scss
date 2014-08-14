@@ -28,16 +28,21 @@ body {
   -webkit-transition-duration: 2s;
   -webkit-transform-style: preserve-3d;
 }
-#local-div {
+#local-video-wrapper-div {
   //position: absolute;
   //transform: scale(-1, 1);
   //-webkit-transform: scale(-1, 1);
   //-webkit-backface-visibility: hidden;
 }
-#remote-div {
+#remote-video-wrapper-div {
   //position: absolute;
   //-webkit-transform: rotateY(180deg);
   //-webkit-backface-visibility: hidden;
+  @media (max-width: $screen-xs-max) {
+    // initially is hidden on xs devices until we receive a remote stream, at which point the local-wrapper-div will
+    // be hidden and this div displayed.
+    display: none;
+  }
 }
 
 $xs-vid-width: 268px;
@@ -155,4 +160,10 @@ pre#local-ascii-container {
   margin-bottom: 10px;
   background-color: #f5f5f5;
   border: 1px solid #e3e3d3;
+}
+
+#dummy-xs-div {
+  // This is used by the javascript to determined the max width for xs screens.
+  display: none;
+  width: $screen-xs-max;
 }

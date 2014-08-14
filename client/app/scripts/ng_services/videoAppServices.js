@@ -20,20 +20,27 @@ var videoAppServices = angular.module('videoApp.services', ['videoApp.mainConsta
 
 
 
-videoAppServices.factory('globalVarsService', function (constantsService) {
+videoAppServices.factory('globalVarsService', function (serverConstantsService) {
             /* This services provides access to variables that are used by multiple services, and that don't
                fit easily into any of the currently defined services. These variables may be accessed and
                modified directly from anywhere in the code.
              */
+    var screenXsMax = $('#dummy-xs-div').width();
     return {
 
-        initiator : constantsService.initiator,
-        pcConfig : constantsService.pcConfig,
+        initiator : serverConstantsService.initiator,
+        pcConfig : serverConstantsService.pcConfig,
 
         // Set up audio and video regardless of what devices are present.
         sdpConstraints : {'mandatory': {
             'OfferToReceiveAudio': true,
-            'OfferToReceiveVideo': true }}
+            'OfferToReceiveVideo': true }
+        },
+
+        // the following value should match the value defined in bootstrap for $screen-xs-max. This will be
+        // used for enabling and disabling the remote/local video windows on small devices for which only one
+        // or the other will be shown.
+        screenXsMax : screenXsMax
     };
 });
 
@@ -81,7 +88,7 @@ videoAppServices.service('channelServiceSupport', function() {
     this.socket = null;
 });
 
-videoAppServices.factory('channelService', function($log, $timeout, constantsService, callService, sessionService, userNotificationService,
+videoAppServices.factory('channelService', function($log, $timeout, serverConstantsService, callService, sessionService, userNotificationService,
                                             channelServiceSupport, globalVarsService, channelMessageService) {
 
     /*
@@ -163,7 +170,7 @@ videoAppServices.factory('channelService', function($log, $timeout, constantsSer
     return {
         openChannel: function(localVideoObject, remoteVideoObject) {
             $log.log('Opening channel.');
-            var channel = new goog.appengine.Channel(constantsService.channelToken);
+            var channel = new goog.appengine.Channel(serverConstantsService.channelToken);
             channelServiceSupport.socket = channel.open(handler(this, localVideoObject, remoteVideoObject));
         },
         asciiVideoObject : {
@@ -192,7 +199,7 @@ videoAppServices.service('turnServiceSupport', function () {
 
 
 videoAppServices.factory('turnService', function($log, $http, peerService, callService, turnServiceSupport, userNotificationService,
-                                         constantsService, globalVarsService, adapterService) {
+                                         serverConstantsService, globalVarsService, adapterService) {
 
 
     var onTurnResult = function(response) {
@@ -228,7 +235,7 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
 
         maybeRequestTurn : function(localVideoObject, remoteVideoObject) {
             // Allow to skip turn by passing ts=false to apprtc.
-            if (constantsService.turnUrl === '') {
+            if (serverConstantsService.turnUrl === '') {
                 turnServiceSupport.turnDone = true;
                 return;
             }
@@ -249,13 +256,13 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
             }
 
             // No TURN server. Get one from computeengineondemand.appspot.com.
-            $http.get(constantsService.turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest(localVideoObject, remoteVideoObject));
+            $http.get(serverConstantsService.turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest(localVideoObject, remoteVideoObject));
         }
     };
 });
 
 
-videoAppServices.factory('messageService', function($http, $log, constantsService) {
+videoAppServices.factory('messageService', function($http, $log, serverConstantsService) {
 
     /*
     Functionality for posting messages to the server.
@@ -281,7 +288,7 @@ videoAppServices.factory('messageService', function($http, $log, constantsServic
             // $log.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
-            var path = '/message?r=' + constantsService.roomKey + '&u=' + constantsService.myUsername;
+            var path = '/message?r=' + serverConstantsService.roomKey + '&u=' + serverConstantsService.myUsername;
 
             $http.post(path, messageObject).then(
                 function(/*response*/) {
@@ -366,7 +373,7 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
 videoAppServices.factory('sessionService', function($log, $window, $rootScope, $timeout,
                                             messageService, userNotificationService,
                                             codecsService, infoDivService, globalVarsService,
-                                            constantsService, iceService, peerService,
+                                            serverConstantsService, iceService, peerService,
                                             channelMessageService, adapterService) {
 
     var sessionStatus = 'initializing'; // "initializing", "waiting", "active", or "done"
@@ -415,7 +422,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
         };
 
         // Set Opus in Stereo, if stereo enabled.
-        if (constantsService.stereo) {
+        if (serverConstantsService.stereo) {
             message.sdp = codecsService.addStereo(message.sdp);
         }
         message.sdp = codecsService.maybePreferAudioSendCodec(message.sdp);
@@ -510,7 +517,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 });
 
 videoAppServices.factory('peerService', function($log, userNotificationService, infoDivService,
-                                         iceService, globalVarsService, constantsService,
+                                         iceService, globalVarsService, serverConstantsService,
                                          adapterService) {
 
 
@@ -560,11 +567,11 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
         createPeerConnection : function(localVideoObject, remoteVideoObject) {
             try {
                 // Create an RTCPeerConnection via the polyfill (adapter.js).
-                this.pc = new adapterService.RTCPeerConnection(globalVarsService.pcConfig, constantsService.pcConstraints);
+                this.pc = new adapterService.RTCPeerConnection(globalVarsService.pcConfig, serverConstantsService.pcConstraints);
                 this.pc.onicecandidate = iceService.onIceCandidate;
                 $log.log('Created RTCPeerConnnection with:\n' +
                     '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
-                    '  constraints: \'' + JSON.stringify(constantsService.pcConstraints) + '\'.');
+                    '  constraints: \'' + JSON.stringify(serverConstantsService.pcConstraints) + '\'.');
             } catch (e) {
                 userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
                 alert('Cannot create RTCPeerConnection object; ' +
@@ -586,7 +593,7 @@ videoAppServices.service('streamService', function() {
 
 });
 
-videoAppServices.factory('mediaService', function($log, constantsService, adapterService, userNotificationService,
+videoAppServices.factory('mediaService', function($log, serverConstantsService, adapterService, userNotificationService,
                           callService, streamService) {
 
 
@@ -620,11 +627,11 @@ videoAppServices.factory('mediaService', function($log, constantsService, adapte
         doGetUserMedia  : function(localVideoDiv, localVideoObject, remoteVideoObject) {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
-                adapterService.getUserMedia(constantsService.mediaConstraints,
+                adapterService.getUserMedia(serverConstantsService.mediaConstraints,
                     onUserMediaSuccess(localVideoDiv, localVideoObject, remoteVideoObject),
                     onUserMediaError(localVideoObject, remoteVideoObject));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
-                    '  \'' + JSON.stringify(constantsService.mediaConstraints) + '\'');
+                    '  \'' + JSON.stringify(serverConstantsService.mediaConstraints) + '\'');
             } catch (e) {
                 alert('getUserMedia() failed. Is this a WebRTC capable browser?');
                 userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
@@ -634,7 +641,7 @@ videoAppServices.factory('mediaService', function($log, constantsService, adapte
 });
 
 videoAppServices.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
-                                         userNotificationService, constantsService, globalVarsService, channelMessageService,
+                                         userNotificationService, serverConstantsService, globalVarsService, channelMessageService,
                                          streamService) {
 
 
@@ -649,7 +656,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
     };
 
     var doCall = function() {
-        var constraints = mergeConstraints(constantsService.offerConstraints, globalVarsService.sdpConstraints);
+        var constraints = mergeConstraints(serverConstantsService.offerConstraints, globalVarsService.sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
         peerService.pc.createOffer(sessionService.setLocalAndSendMessage,
@@ -764,7 +771,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 });
 
 
-videoAppServices.factory('userNotificationService', function($log, $timeout, infoDivService, constantsService, globalVarsService) {
+videoAppServices.factory('userNotificationService', function($log, $timeout, infoDivService, serverConstantsService, globalVarsService) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
@@ -784,7 +791,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, inf
         },
         resetStatus : function() {
           if (!globalVarsService.initiator) {
-              this.setStatus('Waiting for someone to join:  <a lass="navbar-link" href=' + constantsService.roomLink + '>' + constantsService.roomLink + '</a>');
+              this.setStatus('Waiting for someone to join:  <a lass="navbar-link" href=' + serverConstantsService.roomLink + '>' + serverConstantsService.roomLink + '</a>');
           } else {
               this.setStatus('Initializing...');
           }
@@ -792,7 +799,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, inf
     };
 });
 
-videoAppServices.factory('codecsService', function($log, constantsService, userNotificationService){
+videoAppServices.factory('codecsService', function($log, serverConstantsService, userNotificationService){
 
     // Strip CN from sdp before CN constraints is ready.
     var removeCN = function(sdpLines, mLineIndex) {
@@ -955,23 +962,23 @@ videoAppServices.factory('codecsService', function($log, constantsService, userN
 
     return {
 
-        // Adds an a=fmtp: x-google-min-bitrate=kbps line, if constantsService.videoSendInitialBitrate
+        // Adds an a=fmtp: x-google-min-bitrate=kbps line, if serverConstantsService.videoSendInitialBitrate
         // is specified. We'll also add a x-google-min-bitrate value, since the max
         // must be >= the min.
         maybeSetVideoSendInitialBitRate : function(sdp) {
-            if (!constantsService.videoSendInitialBitrate) {
+            if (!serverConstantsService.videoSendInitialBitrate) {
                 return sdp;
             }
 
             // Validate the initial bitrate value.
-            var maxBitrate = constantsService.videoSendInitialBitrate;
-            if (constantsService.videoSendBitrate) {
-                if (constantsService.videoSendInitialBitrate > constantsService.videoSendBitrate) {
+            var maxBitrate = serverConstantsService.videoSendInitialBitrate;
+            if (serverConstantsService.videoSendBitrate) {
+                if (serverConstantsService.videoSendInitialBitrate > serverConstantsService.videoSendBitrate) {
                     userNotificationService.messageError('Clamping initial bitrate to max bitrate of ' +
-                        constantsService.videoSendBitrate + ' kbps.');
-                    constantsService.videoSendInitialBitrate = constantsService.videoSendBitrate;
+                        serverConstantsService.videoSendBitrate + ' kbps.');
+                    serverConstantsService.videoSendInitialBitrate = serverConstantsService.videoSendBitrate;
                 }
-                maxBitrate = constantsService.videoSendBitrate;
+                maxBitrate = serverConstantsService.videoSendBitrate;
             }
 
             var sdpLines = sdp.split('\r\n');
@@ -986,62 +993,62 @@ videoAppServices.factory('codecsService', function($log, constantsService, userN
             var vp8RtpmapIndex = findLine(sdpLines, 'a=rtpmap', 'VP8/90000');
             var vp8Payload = getCodecPayloadType(sdpLines[vp8RtpmapIndex]);
             var vp8Fmtp = 'a=fmtp:' + vp8Payload + ' x-google-min-bitrate=' +
-                constantsService.videoSendInitialBitrate.toString() + '; x-google-max-bitrate=' +
+                serverConstantsService.videoSendInitialBitrate.toString() + '; x-google-max-bitrate=' +
                 maxBitrate.toString();
             sdpLines.splice(vp8RtpmapIndex + 1, 0, vp8Fmtp);
             return sdpLines.join('\r\n');
         },
 
         maybeSetAudioSendBitRate : function(sdp) {
-            if (!constantsService.audioSendBitrate) {
+            if (!serverConstantsService.audioSendBitrate) {
                 return sdp;
             }
-            $log.log('Prefer audio send bitrate: ' + constantsService.audioSendBitrate);
-            return preferBitRate(sdp, constantsService.audioSendBitrate, 'audio');
+            $log.log('Prefer audio send bitrate: ' + serverConstantsService.audioSendBitrate);
+            return preferBitRate(sdp, serverConstantsService.audioSendBitrate, 'audio');
         },
 
         maybeSetAudioReceiveBitRate : function (sdp) {
-            if (!constantsService.audioRecvBitrate) {
+            if (!serverConstantsService.audioRecvBitrate) {
                 return sdp;
             }
-            $log.log('Prefer audio receive bitrate: ' + constantsService.audioRecvBitrate);
-            return preferBitRate(sdp, constantsService.audioRecvBitrate, 'audio');
+            $log.log('Prefer audio receive bitrate: ' + serverConstantsService.audioRecvBitrate);
+            return preferBitRate(sdp, serverConstantsService.audioRecvBitrate, 'audio');
         },
 
 
         maybeSetVideoSendBitRate : function (sdp) {
-            if (!constantsService.videoSendBitrate) {
+            if (!serverConstantsService.videoSendBitrate) {
                 return sdp;
             }
-            $log.log('Prefer video send bitrate: ' + constantsService.videoSendBitrate);
-            return preferBitRate(sdp, constantsService.videoSendBitrate, 'video');
+            $log.log('Prefer video send bitrate: ' + serverConstantsService.videoSendBitrate);
+            return preferBitRate(sdp, serverConstantsService.videoSendBitrate, 'video');
         },
 
         maybeSetVideoReceiveBitRate : function(sdp) {
-            if (!constantsService.videoRecvBitrate) {
+            if (!serverConstantsService.videoRecvBitrate) {
                 return sdp;
             }
-            $log.log('Prefer video receive bitrate: ' + constantsService.videoRecvBitrate);
-            return preferBitRate(sdp, constantsService.videoRecvBitrate, 'video');
+            $log.log('Prefer video receive bitrate: ' + serverConstantsService.videoRecvBitrate);
+            return preferBitRate(sdp, serverConstantsService.videoRecvBitrate, 'video');
         },
 
         
         maybePreferAudioSendCodec : function(sdp) {
-            if (constantsService.audioSendCodec === '') {
+            if (serverConstantsService.audioSendCodec === '') {
                 $log.log('No preference on audio send codec.');
                 return sdp;
             }
-            $log.log('Prefer audio send codec: ' + constantsService.audioSendCodec);
-            return preferAudioCodec(sdp, constantsService.audioSendCodec);
+            $log.log('Prefer audio send codec: ' + serverConstantsService.audioSendCodec);
+            return preferAudioCodec(sdp, serverConstantsService.audioSendCodec);
         },
 
         maybePreferAudioReceiveCodec : function(sdp) {
-            if (constantsService.audioReceiveCodec === '') {
+            if (serverConstantsService.audioReceiveCodec === '') {
                 $log.log('No preference on audio receive codec.');
                 return sdp;
             }
-            $log.log('Prefer audio receive codec: ' + constantsService.audioReceiveCodec);
-            return preferAudioCodec(sdp, constantsService.audioReceiveCodec);
+            $log.log('Prefer audio receive codec: ' + serverConstantsService.audioReceiveCodec);
+            return preferAudioCodec(sdp, serverConstantsService.audioReceiveCodec);
         },
 
         // Set Opus in stereo if stereo is enabled.
