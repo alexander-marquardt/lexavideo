@@ -22,8 +22,10 @@
 
                         <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
                             <h4>Transmitting ASCII Video</h4>
-                            <div style="display:inline-block" class="cl-my-well">
-                                <pre class="cl-local-ascii-container"><span id="id-ascii-span" class="cl-ascii-drawing-text">Local ascii drawing goes here</span></pre>
+                            <div class="cl-my-well">
+                                <div style="display:inline-block" >
+                                    <pre class="cl-local-ascii-container"><span id="id-ascii-span" class="cl-ascii-drawing-text">Local ascii drawing goes here</span></pre>
+                                </div>
                             </div>
                         </div>
 
@@ -41,23 +43,25 @@
                 <div class="col-sm-6" id="id-remote-video-wrapper-div">
                     <div class="text-center" >
                         <h4>Remote Video</h4>
-                        <div style="display:inline-block" class="cl-my-well">
-                            <div style="position: relative">
-                                <video class="cl-video-normal-div" id="id-remote-video-element" autoplay="autoplay">
-                                    You must update to a newer version of Chrome or Firefox to use video
-                                </video>
-                                <div id="id-mini-video-div">
+                        <div  class="cl-my-well">
+                            <div style="display:inline-block">
+                                <div style="position: relative">
+                                    <video class="cl-video-normal-div" id="id-remote-video-element" autoplay="autoplay">
+                                        You must update to a newer version of Chrome or Firefox to use video
+                                    </video>
+                                    <div id="id-mini-video-div">
 
-                                    <div id="id-local-hd-mini-video-wrapper-div" ng-show="activeDivs.showLocalHdVideo">
-                                        <video id="id-mini-video-element" autoplay="autoplay" muted="true"/>
-                                    </div>
-
-                                    <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
-                                        <div  style="display:inline-block" >
-                                            <pre class="cl-local-ascii-container"><span id="id-ascii-mini-span" class="cl-ascii-drawing-text">Local ascii drawing goes here</span></pre>
+                                        <div id="id-local-hd-mini-video-wrapper-div" ng-show="activeDivs.showLocalHdVideo">
+                                            <video id="id-mini-video-element" autoplay="autoplay" muted="true"/>
                                         </div>
-                                    </div>
 
+                                        <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="activeDivs.showLocalAsciiVideo" >
+                                            <div  style="display:inline-block" >
+                                                <pre class="cl-local-ascii-container"><span id="id-ascii-mini-span" class="cl-ascii-drawing-text">Local ascii drawing goes here</span></pre>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
