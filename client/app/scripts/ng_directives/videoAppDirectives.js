@@ -4,6 +4,7 @@ var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.servic
 
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
+/* global viewportSize */
 
 videoAppDirectives.directive('callStatusDirective', function(userNotificationService, $compile, $sce, callService) {
     return {
@@ -157,9 +158,9 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
             var resizeVideoWindows = function() {
 
-                if (sessionStatus = 'active') {
+                if (sessionStatus === 'active') {
                     if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
-                        reattachMediaStream(vidCtrl.remoteVideoObject.miniVideoElem, vidCtrl.localVideoObject.localVideoElem);
+                        adapterService.reattachMediaStream(vidCtrl.remoteVideoObject.miniVideoElem, vidCtrl.localVideoObject.localVideoElem);
                         vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 1;
                         // we are dealing with a small viewport, and should therefore hide the local video as it is
                         // embedded in a small window inside the remote video.
@@ -215,7 +216,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                 // calling jquery window.resize instead of angular watching for resize on the $window service should be slightly
                 // more efficient.
                 resizeVideoWindows();
-            })
+            });
         }
     };
 });
