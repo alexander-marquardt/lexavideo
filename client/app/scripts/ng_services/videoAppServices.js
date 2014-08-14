@@ -173,7 +173,7 @@ videoAppServices.factory('channelService', function($log, $timeout, constantsSer
         getAsciiVideoFrameUpdated : function(self) {
             return function() {
                 return self.asciiVideoObject.videoFrameUpdated;
-            }
+            };
         }
     };
 });

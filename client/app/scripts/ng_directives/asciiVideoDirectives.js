@@ -92,12 +92,12 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
             contrast: 128,
             callback: function(asciiString) {
                 $asciiDrawingTextElement.html(asciiString);
-                // var compressedString = LZString.compress(asciiString);
+                var compressedString = LZString.compressToUTF16(asciiString);
                 // send the compressed string to the remote user (through the server)
 
                 // use $timeout to ensure that $apply is called after the current digest cycle.
                 $timeout(function() {
-                    messageService.sendMessage('video', {type: 'ascii', compressedVideoString: asciiString});
+                    messageService.sendMessage('video', {type: 'ascii', compressedVideoString: compressedString});
 
                 });
             }
@@ -153,8 +153,8 @@ asciiVideoDirectives.directive('showAsciiVideoDirective', function(channelServic
 
                     channelService.asciiVideoObject.videoFrameUpdated = false;
                     //
-                    // var asciiString = LZString.decompress(channelService.asciiVideoObject.compressedVideoFrame);
-                    $asciiDrawingTextElement.html(channelService.asciiVideoObject.compressedVideoFrame);
+                    var asciiString = LZString.decompressFromUTF16(channelService.asciiVideoObject.compressedVideoFrame);
+                    $asciiDrawingTextElement.html(asciiString);
                 });
             }
     };
