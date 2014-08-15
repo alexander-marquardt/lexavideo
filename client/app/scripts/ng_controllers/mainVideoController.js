@@ -20,21 +20,20 @@ angular.module('videoApp')
 
         };
 
-        this.localVideoObject = {
+        $scope.localVideoObject = this.localVideoObject = {
             localVideoElem :  $('#id-local-video-element')[0],
             localVideoWrapper : $('#id-local-video-wrapper-div')[0],
             isVideoMuted : false,
-            isAudioMuted : false
+            isAudioMuted : false,
+            videoType : 'hdVideo'
         };
 
 
-        $scope.activeDivs = {
-            localVideoType : 'hdVideo'
-        };
+
 
         $scope.setLocalVideoType = function(videoType) {
             // videoType should be 'hdVideo' or 'asciiVideo'
-            $scope.activeDivs.localVideoType = videoType;
+            $scope.localVideoObject.videoType = videoType;
 
             if (videoType !== 'hdVideo') {
                 peerService.removeLocalVideoStream(streamService.localStream);

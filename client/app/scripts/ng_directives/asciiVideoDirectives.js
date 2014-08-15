@@ -121,7 +121,7 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
 
                     $interval(function() {
                         try {
-                            if (scope.activeDivs.localVideoType === 'asciiVideo') {
+                            if (scope.localVideoObject.videoType === 'asciiVideo') {
                                 localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
                                 onFrame(localCanvas, $asciiDrawingTextElement);
                             }
