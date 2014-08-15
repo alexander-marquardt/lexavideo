@@ -521,8 +521,6 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
                                          adapterService) {
 
 
-
-    /* "private" methods */
     var pcStatus = function (self) {
         var contents = '';
         if (self.pc) {
@@ -582,6 +580,16 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
             this.pc.onremovestream = onRemoteStreamRemoved;
             this.pc.onsignalingstatechange = onSignalingStateChanged(this);
             this.pc.oniceconnectionstatechange = onIceConnectionStateChanged(this);
+        },
+        removeLocalVideoStream : function(localStream) {
+            if (this.pc) {
+                this.pc.removeStream(localStream);
+            }
+        },
+        addLocalVideoStream : function(localStream) {
+            if (this.pc) {
+                this.pc.addStream(localStream);
+            }
         }
     };
 });
@@ -689,7 +697,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
                 if (this.hasAudioOrVideoMediaConstraints) {
                     $log.log('Adding local stream.');
-                    peerService.pc.addStream(streamService.localStream);
+                    peerService.addLocalVideoStream(streamService.localStream);
                 } else {
                     $log.log('Not sending any stream.');
                 }
