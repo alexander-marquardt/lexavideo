@@ -50,10 +50,12 @@ $sm-vid-width: 333px;
 $md-vid-width: 443px;
 $lg-vid-width : 553px;
 
+$mini-video-width-percentage : 30%;
+
 .cl-video-sizing {
   /* Extra small devices (phones, less than 768px) */
-  width: 100%;
-  height: 100%;
+  width: $xs-vid-width;
+  height: $xs-vid-width * 3/4;
 
   /* Small devices (tablets, 768px and up) */
   @media (min-width: $screen-sm-min) {
@@ -86,13 +88,17 @@ video {
   display: block; // remove 5 px gap at bottom
 }
 
+
+
 #id-mini-video-div {
   position: absolute;
-  height: 30%;
-  width: 30%;
+  height: $mini-video-width-percentage;
+  width: $mini-video-width-percentage;
   top: 0px;
   left: 0px;
   opacity: 1.0;
+  border: 1px solid  #f5f5f5;
+
   @media (min-width: $screen-sm-min) {
     // this mini-video is only intended for xs screens - hide for anything larger
     display: none;
@@ -107,20 +113,28 @@ video {
   -webkit-transition-duration: 1s;
 }
 
-
-.cl-local-ascii-container, #id-remote-ascii-container {
-  @extend .cl-video-sizing;
+.cl-ascii-container {
   padding: 0;
   display: table-cell;
   vertical-align: middle;
   text-align: center;
+}
 
+#id-local-ascii-container, #id-remote-ascii-container {
+  @extend .cl-video-sizing;
+  @extend .cl-ascii-container;
+}
+
+#id-local-mini-ascii-container {
+  width: ($mini-video-width-percentage / 100%) * $xs-vid-width;
+  height: ($mini-video-width-percentage / 100%) * $xs-vid-width * 3/4;
+  @extend .cl-ascii-container;
 }
 
 .cl-ascii-drawing-text {
   font-family: 'Courier New', 'Courier', monospace;
-  font-size: $xs-vid-width / 90;
-  line-height: $xs-vid-width / 90;
+  font-size: $xs-vid-width / 80;
+  line-height: $xs-vid-width / 80;
   letter-spacing: -0.1em;
   display: inline-block;
 
@@ -143,8 +157,17 @@ video {
   }
 }
 
+
+#id-ascii-mini-span {
+  // override the defaults for the mini-span
+  font-size: ($mini-video-width-percentage / 100%) * ($xs-vid-width / 80);
+  line-height:($mini-video-width-percentage / 100%) * ($xs-vid-width / 80);
+  letter-spacing: -0.05em;
+}
+
 pre.cl-local-ascii-container {
   border: none;
+  border-radius: 0px;
 }
 
 #id-info-div {
@@ -162,13 +185,6 @@ pre.cl-local-ascii-container {
   margin-bottom: 10px;
   background-color: #f5f5f5;
   border: 1px solid #e3e3d3;
-
-  @media (max-width: $screen-xs-max) {
-    // because the video width on xs devices is set to 100%, we need to set the width here in order to
-    // show the video box at the correct size while waiting for the video to load.
-    width: 50%;
-    heigt: 50%;
-  }
 }
 
 .cl-hide-on-larger-than-xs {
