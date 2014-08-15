@@ -28,20 +28,12 @@ angular.module('videoApp')
         };
 
 
-
         $scope.activeDivs = {
-            showLocalHdVideo : true,
-            showLocalAsciiVideo : false
+            localVideoType : 'hdVideo'
         };
 
-        // TODO - combine these booleans into a string that indicates current video to show.
-        $scope.localHdVideoOn = function() {
-            $scope.activeDivs.showLocalHdVideo = true;
-            $scope.activeDivs.showLocalAsciiVideo = false;
-        };
-
-        $scope.localAsciiVideoOn = function() {
-            $scope.activeDivs.showLocalHdVideo = false;
-            $scope.activeDivs.showLocalAsciiVideo = true;
-        };
+        $scope.setLocalVideoType = function(videoType) {
+            // videoType should be 'hdVideo' or 'asciiVideo'
+            $scope.activeDivs.localVideoType = videoType;
+        }
 });
