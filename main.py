@@ -103,6 +103,7 @@ def handle_message(room, user, message):
   
   try:
     message_obj = json.loads(message)
+    message = message.decode("utf-8")
     other_user = room.get_other_user(user)
     room_key = room.key().id_or_name()
 
