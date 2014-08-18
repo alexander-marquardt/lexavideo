@@ -210,6 +210,10 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
             });
 
+            scope.$watch('remoteVideoObject.videoType', function(value) {
+                $log.log('Remote videoType is now: ' + value);
+            });
+
             $(window).resize(function() {
                 // calling jquery window.resize instead of angular watching for resize on the $window service should be slightly
                 // more efficient.

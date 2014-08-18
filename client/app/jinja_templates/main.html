@@ -8,6 +8,7 @@
     </div>
 
     <div ng-controller="mainVideoCtrl">
+
         <div class="row">
             <div video-container-directive>
 
@@ -34,14 +35,24 @@
                             <button type="button" class="btn btn-sm"
                                     ng-class="(localVideoObject.videoType == 'asciiVideo') ? 'btn-primary disabled' : 'btn-default'"
                                     ng-click="setLocalVideoType('asciiVideo')">ASCII Video</button>
-                        </div> 
+                        </div>
+
+                        <div>
+                            RECEIVING  {{remoteVideoObject.videoType}}
+                            Sending  {{localVideoObject.videoType}}
+                        </div>
+
+
                     </div>
                 </div>
 
+
+
                 <div class="col-sm-6" id="id-remote-video-wrapper-div">
                     <div class="text-center" >
-                        <h4>Remote Video</h4>
-                        <div>
+                        <div ng-show="(remoteVideoObject.videoType == 'hdVideo')">
+                            <h4>Receiving HD Video</h4>
+
                             <div  class="cl-my-well" style="display:inline-block">
                                 <div style="position: relative">
                                     <video class="cl-video-normal-div" id="id-remote-video-element" autoplay="autoplay">
@@ -64,8 +75,8 @@
                             </div>
                         </div>
 
-                        <div show-ascii-video-directive>
-                            <h4>Remote Ascii Container</h4>
+                        <div show-ascii-video-directive ng-show="(remoteVideoObject.videoType == 'asciiVideo')">
+                            <h4>Receiving ASCII Video</h4>
                             <div style="display:inline-block" class="cl-my-well">
                                 <pre id="id-remote-ascii-container"><span class="cl-ascii-drawing-text cl-ascii-normal-span">Remote ascii drawing goes here</span></pre>
                             </div>

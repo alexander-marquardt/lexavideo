@@ -13,12 +13,21 @@ var asciiVideoDirectives = angular.module('asciiVideo.directives', ['videoApp.se
 
 
 
-asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, streamService, messageService) {
+asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, streamService, messageService, serverConstantsService) {
+
+    var fps;
+    if (serverConstantsService.debugBuildEnabled) {
+        // when using the development server, sending too much information over the channel API seems to saturate
+        // the server -- slow down the fps for develpment
+        fps = 0.2;
+    } else {
+        fps = 2;
+    }
 
     var canvasOptions = {
         width : 160,
         height : 120,
-        fps: 3
+        fps: fps
     };
 
     function asciiFromCanvas(canvas, options) {
@@ -90,13 +99,13 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
             contrast: 128,
             callback: function(asciiString) {
                 $asciiDrawingTextElement.html(asciiString);
-                var compressedString = LZString.compressToUTF16(asciiString);
+                // var compressedString = LZString.compressToUTF16(asciiString);
                 // send the compressed string to the remote user (through the server)
 
                 // use $timeout to ensure that $apply is called after the current digest cycle.
                 $timeout(function() {
-                    messageService.sendMessage('video', {type: 'ascii', compressedVideoString: compressedString});
-
+                    //messageService.sendMessage('videoStream', {streamType: 'asciiVideo', compressedVideoString: compressedString});
+                    messageService.sendMessage('videoStream', {streamType: 'asciiVideo', compressedVideoString: 'TESTING'});
                 });
             }
         });

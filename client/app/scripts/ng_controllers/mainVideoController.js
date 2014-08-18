@@ -8,11 +8,11 @@
 
 angular.module('videoApp')
     .controller('mainVideoCtrl', function ($scope, $log, messageService) {
-        
+
         $scope.remoteVideoObject = this.remoteVideoObject = {
             remoteVideoElem : $('#id-remote-video-element')[0],
             remoteVideoWrapper : $('#id-remote-video-wrapper-div')[0],
-            videoType : 'asciiVideo'
+            videoType : 'hdVideo'
         };
 
         $scope.localVideoObject = this.localVideoObject = {

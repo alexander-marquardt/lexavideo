@@ -130,8 +130,8 @@ videoAppServices.factory('channelService', function($log, $timeout, serverConsta
                     sessionService.processSignalingMessage(sessionService, sdpObject, localVideoObject, remoteVideoObject);
                 }
             }
-            else if (messageObject.messageType === 'video') {
-                if (messageObject.messagePayload.type === 'ascii') {
+            else if (messageObject.messageType === 'videoStream') {
+                if (messageObject.messagePayload.streamType === 'asciiVideo') {
                     $timeout(function () {
                         self.asciiVideoObject.videoFrameUpdated = true;
                         self.asciiVideoObject.compressedVideoFrame = messageObject.messagePayload.compressedVideoString;
@@ -144,12 +144,16 @@ videoAppServices.factory('channelService', function($log, $timeout, serverConsta
             else if (messageObject.messageType === 'videoStatus') {
                 if (messageObject.messagePayload.statusType === 'asciiVideoStatus') {
                     if (messageObject.messagePayload.streamStatus === 'transmitting') {
-                        remoteVideoObject.videoType = 'asciiVideo';
+                        $timeout(function() {
+                            remoteVideoObject.videoType = 'asciiVideo';
+                        });
                     }
                 }
                 else if (messageObject.messagePayload.statusType === 'hdVideoStatus') {
                     if (messageObject.messagePayload.streamStatus === 'transmitting') {
-                        remoteVideoObject.videoType = 'hdVideo';
+                        $timeout(function() {
+                            remoteVideoObject.videoType = 'hdVideo';
+                        });
                     }
                 } else {
                     $log.log('Error: Unkonwn messagePayload.statusType received: ' + messageObject.messagePayload.statusType);

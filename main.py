@@ -107,23 +107,28 @@ def handle_message(room, user, message):
     other_user = room.get_other_user(user)
     room_key = room.key().id_or_name()
 
+    message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
-    if message_payload['type'] == 'bye':
+    
+    if message_type == 'sdp' and message_payload['type'] == 'bye':
       # This would remove the other_user in loopback test too.
       # So check its availability before forwarding Bye message.
       room.remove_user(user)
       logging.info('User ' + user + ' quit from room ' + room_key)
       logging.info('Room ' + room_key + ' has state ' + str(room))
+      
     if other_user and room.has_user(other_user):
-      if message_payload['type'] == 'offer' and other_user == user:
+      if message_type == 'sdp' and message_payload['type'] == 'offer' and other_user == user:
         # Special case the loopback scenario.
-        message = make_loopback_answer(message)
+        #message = make_loopback_answer(message)
+        pass
         
       on_message(room, other_user, message)
       
     else:
       # For unittest
-      on_message(room, user, message)
+      #on_message(room, user, message)
+      pass
 
   except:
     status_reporting.log_call_stack_and_traceback(logging.error)
@@ -590,6 +595,7 @@ class MainPage(webapp2.RequestHandler):
       'include_vr_js': include_vr_js,
       'meta_viewport': meta_viewport,
       'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
+      'DEBUG_BUILD' : vidsetup.DEBUG_BUILD,
       
     }
 
