@@ -7,7 +7,7 @@
 /* global $ */
 
 angular.module('videoApp')
-    .controller('mainVideoCtrl', function ($scope, peerService, streamService) {
+    .controller('mainVideoCtrl', function ($scope) {
         this.remoteVideoObject = {
             remoteVideoElem : $('#id-remote-video-element')[0],
             remoteVideoWrapper : $('#id-remote-video-wrapper-div')[0],
@@ -35,10 +35,5 @@ angular.module('videoApp')
             // videoType should be 'hdVideo' or 'asciiVideo'
             $scope.localVideoObject.videoType = videoType;
 
-            if (videoType !== 'hdVideo') {
-                peerService.removeLocalVideoStream(streamService.localStream);
-            } else {
-                peerService.addLocalVideoStream(streamService.localStream);
-            }
-        }
+        };
 });

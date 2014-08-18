@@ -581,14 +581,17 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
             this.pc.onsignalingstatechange = onSignalingStateChanged(this);
             this.pc.oniceconnectionstatechange = onIceConnectionStateChanged(this);
         },
-        removeLocalVideoStream : function(localStream) {
+        removeLocalVideoStream : function(/*localStream*/) {
             if (this.pc) {
-                this.pc.removeStream(localStream);
+                $log.log('This functionality is not supported by Firefox as of Aug 18 2014, and therefore should not be used.');
+                //this.pc.removeStream(localStream);
             }
         },
         addLocalVideoStream : function(localStream) {
             if (this.pc) {
                 this.pc.addStream(localStream);
+            } else {
+                $log.log('** Error: no peer connection has been established, and therefore we cannot add the stream to it.');
             }
         }
     };
