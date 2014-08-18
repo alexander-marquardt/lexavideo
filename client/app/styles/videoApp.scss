@@ -64,7 +64,6 @@ $video-width-480: $viewport-480 - 2px;
 $video-width-600: $viewport-600 - 2px;
 
 
-$xs-vid-width: 268px; // TODO  - remove this
 $sm-vid-width: 333px;
 $md-vid-width: 443px;
 $lg-vid-width : 553px;
@@ -192,37 +191,70 @@ video {
 
 .cl-ascii-drawing-text {
   font-family: 'Courier New', 'Courier', monospace;
-  font-size: $xs-vid-width / $characters-per-row;
-  line-height: $xs-vid-width / $characters-per-row;
-  letter-spacing: -0.1em;
   display: inline-block;
+
+  font-size: $video-width-320 / $characters-per-row;
+  line-height: $video-width-320 / $characters-per-row;
+  letter-spacing: -0.1em;
+
+  @media (min-width: $video-width-360) {
+    font-size: $video-width-360 / $characters-per-row;
+    line-height: $video-width-360 / $characters-per-row;
+  }
+  @media (min-width: $video-width-400) {
+    font-size: $video-width-400 / $characters-per-row;
+    line-height: $video-width-400 / $characters-per-row;
+  }
+  @media (min-width: $video-width-480) {
+    font-size: $video-width-480 / $characters-per-row;
+    line-height: $video-width-480 / $characters-per-row;
+  }
+  @media (min-width: $video-width-600) {
+    font-size: $video-width-600 / $characters-per-row;
+    line-height: $video-width-600 / $characters-per-row;
+  }
 
   @media (min-width: $screen-sm-min) {
     font-size: $sm-vid-width / $characters-per-row;
     line-height: $sm-vid-width / $characters-per-row;
-    letter-spacing: -0.1em;
   }
 
   @media (min-width: $screen-md-min) {
     font-size: $md-vid-width / $characters-per-row;
     line-height: $md-vid-width / $characters-per-row;
-    letter-spacing: -0.18em;
   }
 
   @media (min-width: $screen-lg-min) {
     font-size: $lg-vid-width / $characters-per-row;
     line-height: $lg-vid-width / $characters-per-row;
-    letter-spacing: -0.18em;
   }
 }
 
 
 #id-ascii-mini-span {
-  // override the defaults for the mini-span
-  font-size: ($mini-video-width-percentage / 100%) * ($xs-vid-width / $characters-per-row);
-  line-height:($mini-video-width-percentage / 100%) * ($xs-vid-width / $characters-per-row);
-  letter-spacing: -0.05em;
+  // This is applied when the ascii text is being shown in the "mini-video" window
+  font-size: ($mini-video-width-percentage / 100%) * ($video-width-320 / $characters-per-row);
+  line-height:($mini-video-width-percentage / 100%) * ($video-width-320 / $characters-per-row);
+  letter-spacing: -0.1em;
+
+  @media (min-width: $viewport-360) {
+    font-size: ($mini-video-width-percentage / 100%) * ($video-width-360 / $characters-per-row);
+    line-height: ($mini-video-width-percentage / 100%) * ($video-width-360 / $characters-per-row);
+  }
+  @media (min-width: $viewport-400) {
+    font-size: ($mini-video-width-percentage / 100%) * ($video-width-400 / $characters-per-row);
+    line-height: ($mini-video-width-percentage / 100%) * ($video-width-400 / $characters-per-row);
+  }
+  @media (min-width: $viewport-480) {
+    font-size: ($mini-video-width-percentage / 100%) * ($video-width-480 / $characters-per-row);
+    line-height: ($mini-video-width-percentage / 100%) * ($video-width-480 / $characters-per-row);
+  }
+  @media (min-width: $viewport-600) {
+    font-size: ($mini-video-width-percentage / 100%) * ($video-width-600 / $characters-per-row);
+    line-height: ($mini-video-width-percentage / 100%) * ($video-width-600 / $characters-per-row);
+  }
 }
+
 
 pre.cl-local-ascii-container {
   border: none;
