@@ -52,27 +52,30 @@ $lg-vid-width : 553px;
 
 $mini-video-width-percentage : 30%;
 
+$video-aspect-ratio : 3/4;
+$characters-per-row : 80;
+
 .cl-video-sizing {
   /* Extra small devices (phones, less than 768px) */
   width: $xs-vid-width;
-  height: $xs-vid-width * 3/4;
+  height: $xs-vid-width * $video-aspect-ratio;
 
   /* Small devices (tablets, 768px and up) */
   @media (min-width: $screen-sm-min) {
     width: $sm-vid-width;
-    height: $sm-vid-width * 3/4;
+    height: $sm-vid-width * $video-aspect-ratio;
   }
 
   /* Medium devices (desktops, 992px and up) */
   @media (min-width: $screen-md-min) {
     width: $md-vid-width;
-    height: $md-vid-width * 3/4;
+    height: $md-vid-width * $video-aspect-ratio;
   }
 
   /* Large devices (large desktops, 1200px and up) */
   @media (min-width: $screen-lg-min) {
     width: $lg-vid-width;
-    height: $lg-vid-width * 3/4;
+    height: $lg-vid-width * $video-aspect-ratio;
   }
 }
 
@@ -127,32 +130,32 @@ video {
 
 #id-local-mini-ascii-container {
   width: ($mini-video-width-percentage / 100%) * $xs-vid-width;
-  height: ($mini-video-width-percentage / 100%) * $xs-vid-width * 3/4;
+  height: ($mini-video-width-percentage / 100%) * $xs-vid-width * $video-aspect-ratio;
   @extend .cl-ascii-container;
 }
 
 .cl-ascii-drawing-text {
   font-family: 'Courier New', 'Courier', monospace;
-  font-size: $xs-vid-width / 80;
-  line-height: $xs-vid-width / 80;
+  font-size: $xs-vid-width / $characters-per-row;
+  line-height: $xs-vid-width / $characters-per-row;
   letter-spacing: -0.1em;
   display: inline-block;
 
   @media (min-width: $screen-sm-min) {
-    font-size: $sm-vid-width / 80;
-    line-height: $sm-vid-width / 80;
+    font-size: $sm-vid-width / $characters-per-row;
+    line-height: $sm-vid-width / $characters-per-row;
     letter-spacing: -0.1em;
   }
 
   @media (min-width: $screen-md-min) {
-    font-size: $md-vid-width / 80;
-    line-height: $md-vid-width / 80;
+    font-size: $md-vid-width / $characters-per-row;
+    line-height: $md-vid-width / $characters-per-row;
     letter-spacing: -0.18em;
   }
 
   @media (min-width: $screen-lg-min) {
-    font-size: $lg-vid-width / 80;
-    line-height: $lg-vid-width / 80;
+    font-size: $lg-vid-width / $characters-per-row;
+    line-height: $lg-vid-width / $characters-per-row;
     letter-spacing: -0.18em;
   }
 }
@@ -160,8 +163,8 @@ video {
 
 #id-ascii-mini-span {
   // override the defaults for the mini-span
-  font-size: ($mini-video-width-percentage / 100%) * ($xs-vid-width / 80);
-  line-height:($mini-video-width-percentage / 100%) * ($xs-vid-width / 80);
+  font-size: ($mini-video-width-percentage / 100%) * ($xs-vid-width / $characters-per-row);
+  line-height:($mini-video-width-percentage / 100%) * ($xs-vid-width / $characters-per-row);
   letter-spacing: -0.05em;
 }
 
