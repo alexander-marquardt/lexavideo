@@ -10,19 +10,13 @@ angular.module('videoApp')
     .controller('mainVideoCtrl', function ($scope) {
         this.remoteVideoObject = {
             remoteVideoElem : $('#id-remote-video-element')[0],
-            remoteVideoWrapper : $('#id-remote-video-wrapper-div')[0],
-
-            // miniVideoElem is (somewhat arbitrarily) placed inside remoteVideoObject because it is
-            // physically embedded in the remote video in the html.
-            // The miniVideoElem will be used for showing local video on xs displays.
-            miniVideoElem: $('#id-mini-video-element')[0]
-
-
+            remoteVideoWrapper : $('#id-remote-video-wrapper-div')[0]
         };
 
         $scope.localVideoObject = this.localVideoObject = {
             localVideoElem :  $('#id-local-video-element')[0],
             localVideoWrapper : $('#id-local-video-wrapper-div')[0],
+            miniVideoElem: $('#id-mini-video-element')[0],
             isVideoMuted : false,
             isAudioMuted : false,
             videoType : 'hdVideo'

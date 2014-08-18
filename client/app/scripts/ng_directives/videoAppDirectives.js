@@ -140,7 +140,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
             var transitionVideoToWaiting = function() {
                 $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
-                vidCtrl.remoteVideoObject.miniVideoElem.src = '';
+                vidCtrl.localVideoObject.miniVideoElem.src = '';
                 userNotificationService.resetStatus();
             };
 
@@ -160,15 +160,15 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
                 if (sessionStatus === 'active') {
                     if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
-                        adapterService.reattachMediaStream(vidCtrl.remoteVideoObject.miniVideoElem, vidCtrl.localVideoObject.localVideoElem);
-                        vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 1;
+                        adapterService.reattachMediaStream(vidCtrl.localVideoObject.miniVideoElem, vidCtrl.localVideoObject.localVideoElem);
+                        vidCtrl.localVideoObject.miniVideoElem.style.opacity = 1;
                         // we are dealing with a small viewport, and should therefore hide the local video as it is
                         // embedded in a small window inside the remote video.
                         vidCtrl.localVideoObject.localVideoWrapper.style.display = 'none';
                         vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
                     } else {
                         enableAllVideoWindows();
-                        vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 0;
+                        vidCtrl.localVideoObject.miniVideoElem.style.opacity = 0;
                     }
                 }
                 else {
@@ -177,10 +177,10 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                         // Therefore we should show the local video and hide the remote video
                         vidCtrl.localVideoObject.localVideoWrapper.style.display = 'inline';
                         vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'none';
-                        vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 0;
+                        vidCtrl.localVideoObject.miniVideoElem.style.opacity = 0;
                     } else {
                         enableAllVideoWindows();
-                        vidCtrl.remoteVideoObject.miniVideoElem.style.opacity = 0;
+                        vidCtrl.localVideoObject.miniVideoElem.style.opacity = 0;
                     }
                 }
 
