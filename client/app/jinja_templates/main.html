@@ -47,9 +47,9 @@
                                     <video class="cl-video-normal-div" id="id-remote-video-element" autoplay="autoplay">
                                         You must update to a newer version of Chrome or Firefox to use video
                                     </video>
-                                    <div id="id-mini-video-div">
+                                    <div class="cl-mini-video-div">
 
-                                        <div id="id-local-hd-mini-video-wrapper-div" ng-show="(localVideoObject.videoType == 'hdVideo')">
+                                        <div class="class-local-hd-mini-video-wrapper-div" ng-show="(localVideoObject.videoType == 'hdVideo')">
                                             <video id="id-mini-video-element" autoplay="autoplay" muted="true"/>
                                         </div>
 
@@ -63,6 +63,14 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div show-ascii-video-directive>
+                            <h4>Remote Ascii Container</h4>
+                            <div style="display:inline-block" class="cl-my-well">
+                                <pre id="id-remote-ascii-container"><span class="cl-ascii-drawing-text cl-ascii-normal-span">Remote ascii drawing goes here</span></pre>
+                            </div>
+                        </div>
+
                         <div class = "cl-hide-on-larger-than-xs">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm"
@@ -74,30 +82,19 @@
                             </div>
                         </div>
 
-                    </div>  
-                </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-sm-6">
-
-            </div>
-
-            <div class="col-sm-6">
-                <div class="text-center" show-ascii-video-directive>
-                    <h4>Remote Ascii Container</h4>
-                    <div style="display:inline-block" class="cl-my-well">
-                        <pre id="id-remote-ascii-container"><span class="cl-ascii-drawing-text cl-ascii-normal-span">Remote ascii drawing goes here</span></pre>
                     </div>
                 </div>
             </div>
-
-            <div monitor-control-keys-directive ></div>
         </div>
+
+
+        <div monitor-control-keys-directive ></div>
+
 
         <!-- Footer div is at the bottom of the page, but is placed here so that it
         has access to the main-video-ctrl scope -->
+        <div
         <nav class="navbar navbar-inverse navbar-fixed-bottom" call-status-directive></nav>
     </div>
 

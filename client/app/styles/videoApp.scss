@@ -130,7 +130,7 @@ video {
 
 
 
-#id-mini-video-div {
+.cl-mini-video-div {
   position: absolute;
   height: $mini-video-width-percentage;
   width: $mini-video-width-percentage;
@@ -196,7 +196,7 @@ video {
 }
 
 .cl-ascii-normal-span {
-  
+
   font-size: $video-width-320 / $characters-per-row;
   line-height: $video-width-320 / $characters-per-row;
   letter-spacing: -0.1em;
