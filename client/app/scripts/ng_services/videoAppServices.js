@@ -131,7 +131,6 @@ videoAppServices.factory('channelService', function($log, $timeout, serverConsta
                 }
             }
             else if (messageObject.messageType === 'video') {
-
                 if (messageObject.messagePayload.type === 'ascii') {
                     $timeout(function () {
                         self.asciiVideoObject.videoFrameUpdated = true;
@@ -142,8 +141,22 @@ videoAppServices.factory('channelService', function($log, $timeout, serverConsta
                     $log.log('Error: unknown video type received: ' + messageObject.messagePayload.type);
                 }
             }
+            else if (messageObject.messageType === 'videoStatus') {
+                if (messageObject.messagePayload.statusType === 'asciiVideoStatus') {
+                    if (messageObject.messagePayload.streamStatus === 'transmitting') {
+                        remoteVideoObject.videoType = 'asciiVideo';
+                    }
+                }
+                else if (messageObject.messagePayload.statusType === 'hdVideoStatus') {
+                    if (messageObject.messagePayload.streamStatus === 'transmitting') {
+                        remoteVideoObject.videoType = 'hdVideo';
+                    }
+                } else {
+                    $log.log('Error: Unkonwn messagePayload.statusType received: ' + messageObject.messagePayload.statusType);
+                }
+            }
             else {
-                $log.log('Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
+                $log.log('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
             }
         };
     };
