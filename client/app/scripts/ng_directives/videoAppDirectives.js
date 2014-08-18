@@ -87,9 +87,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
             var remoteVideoObject = vidCtrl.remoteVideoObject;
             var localVideoObject = vidCtrl.localVideoObject;
-
-            var localVideoElem = $('#id-local-video-element')[0];
-
+            var localVideoElem = localVideoObject.localVideoElem;
 
 
             (function() {
@@ -140,7 +138,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
             var transitionVideoToWaiting = function() {
                 $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
-                vidCtrl.localVideoObject.miniVideoElem.src = '';
+                localVideoObject.miniVideoElem.src = '';
                 userNotificationService.resetStatus();
             };
 
@@ -152,35 +150,35 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
             var enableAllVideoWindows = function() {
                 // if it is a wider screen, then show both windows
-                vidCtrl.localVideoObject.localVideoWrapper.style.display = 'inline';
-                vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
+                localVideoObject.localVideoWrapper.style.display = 'inline';
+                remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
             };
 
             var resizeVideoWindows = function() {
 
                 if (sessionStatus === 'active') {
                     if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
-                        adapterService.reattachMediaStream(vidCtrl.localVideoObject.miniVideoElem, vidCtrl.localVideoObject.localVideoElem);
-                        vidCtrl.localVideoObject.miniVideoElem.style.opacity = 1;
+                        adapterService.reattachMediaStream(localVideoObject.miniVideoElem, localVideoObject.localVideoElem);
+                        localVideoObject.miniVideoElem.style.opacity = 1;
                         // we are dealing with a small viewport, and should therefore hide the local video as it is
                         // embedded in a small window inside the remote video.
-                        vidCtrl.localVideoObject.localVideoWrapper.style.display = 'none';
-                        vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
+                        localVideoObject.localVideoWrapper.style.display = 'none';
+                        remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
                     } else {
                         enableAllVideoWindows();
-                        vidCtrl.localVideoObject.miniVideoElem.style.opacity = 0;
+                        localVideoObject.miniVideoElem.style.opacity = 0;
                     }
                 }
                 else {
                     if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
                         // we are dealing with a small viewport with only a single video window.
                         // Therefore we should show the local video and hide the remote video
-                        vidCtrl.localVideoObject.localVideoWrapper.style.display = 'inline';
-                        vidCtrl.remoteVideoObject.remoteVideoWrapper.style.display = 'none';
-                        vidCtrl.localVideoObject.miniVideoElem.style.opacity = 0;
+                        localVideoObject.localVideoWrapper.style.display = 'inline';
+                        remoteVideoObject.remoteVideoWrapper.style.display = 'none';
+                        localVideoObject.miniVideoElem.style.opacity = 0;
                     } else {
                         enableAllVideoWindows();
-                        vidCtrl.localVideoObject.miniVideoElem.style.opacity = 0;
+                        localVideoObject.miniVideoElem.style.opacity = 0;
                     }
                 }
 
