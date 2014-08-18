@@ -189,10 +189,14 @@ video {
   }
 }
 
+
 .cl-ascii-drawing-text {
   font-family: 'Courier New', 'Courier', monospace;
   display: inline-block;
+}
 
+.cl-ascii-normal-span {
+  
   font-size: $video-width-320 / $characters-per-row;
   line-height: $video-width-320 / $characters-per-row;
   letter-spacing: -0.1em;
