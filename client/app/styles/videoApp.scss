@@ -165,7 +165,7 @@ video {
   @extend .cl-ascii-container;
 }
 
-#id-local-mini-ascii-container {
+.cl-local-mini-ascii-container {
   @extend .cl-ascii-container;
 
   width: ($mini-video-width-percentage / 100%) * $video-width-320;
@@ -231,7 +231,7 @@ video {
 }
 
 
-#id-ascii-mini-span {
+.cl-ascii-mini-span {
   // This is applied when the ascii text is being shown in the "mini-video" window
   font-size: ($mini-video-width-percentage / 100%) * ($video-width-320 / $characters-per-row);
   line-height:($mini-video-width-percentage / 100%) * ($video-width-320 / $characters-per-row);
