@@ -114,7 +114,8 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
         restrict: 'A',
         link: function(scope, elem) {
 
-            var $asciiDrawingTextElement = angular.element(elem).find('.cl-local-ascii-container').find('.cl-ascii-drawing-text');
+            var frameInterval;
+            var $asciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
 
             var videoElement = $('#id-local-video-element')[0];
             var localCanvas = document.createElement('canvas');
@@ -123,28 +124,45 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
 
             var localCanvasContext = localCanvas.getContext('2d');
 
-            function waitForLocalStream() {
+            var getImageFromVideo = function() {
+                try {
+                    if (scope.localVideoObject.videoType === 'asciiVideo') {
+                        localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
+                        onFrame(localCanvas, $asciiDrawingTextElement);
+                    }
+                } catch (e) {
+                    $log.log('Error drawing image in canvas' + e);
+                }
+            };
+
+            function getAsciiVideoFromLocalStream() {
 
                 if (streamService.localStream) {
-
-                    $interval(function() {
-                        try {
-                            if (scope.localVideoObject.videoType === 'asciiVideo') {
-                                localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
-                                onFrame(localCanvas, $asciiDrawingTextElement);
-                            }
-                        } catch (e) {
-                            $log.log('Error drawing image in canvas' + e);
-                        }
+                    getImageFromVideo(); // get the image without waiting for the first interval's delay
+                    frameInterval = $interval(function() {
+                        getImageFromVideo();
                     }, Math.round(1000 / canvasOptions.fps));
                 } else {
-                    $timeout(waitForLocalStream, 200);
+                    $timeout(getAsciiVideoFromLocalStream, 200);
                 }
             }
 
+            function watchLocalVideoType() {
+                return scope.localVideoObject.videoType;
+            }
 
+            scope.$watch(watchLocalVideoType, function(newValue, oldValue) {
+                if (newValue === 'asciiVideo') {
+                    getAsciiVideoFromLocalStream();
+                    $log.log('Getting local ascii video');
+                } else {
+                    // stop asciiVideo
+                    $interval.cancel(frameInterval);
+                    $log.log('Cancelled local ascii video');
+                }
+                $log.log('Local videoType is now: ' + newValue + ' Old value was: ' + oldValue);
+            });
 
-            waitForLocalStream();
 
         }
     };
@@ -153,11 +171,12 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
 
 asciiVideoDirectives.directive('showAsciiVideoDirective', function(channelService) {
 
-    var $asciiDrawingTextElement = $('#id-remote-ascii-container').find('.cl-ascii-drawing-text');
 
     return {
             restrict: 'A',
-            link: function(scope) {
+            link: function(scope, elem) {
+                var $asciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
+
                 scope.$watch(channelService.getAsciiVideoFrameUpdated(channelService), function() {
 
                     channelService.asciiVideoObject.videoFrameUpdated = false;

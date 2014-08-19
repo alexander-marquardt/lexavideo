@@ -209,8 +209,8 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
                 return scope.remoteVideoObject.videoType;
             }
 
-            scope.$watch(watchRemoteVideoType, function(value) {
-                $log.log('Remote videoType is now: ' + value);
+            scope.$watch(watchRemoteVideoType, function(newValue, oldValue) {
+                $log.log('Remote videoType is now: ' + newValue + ' Old value was: ' + oldValue);
             });
 
             $(window).resize(function() {

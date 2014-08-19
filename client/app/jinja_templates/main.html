@@ -5,12 +5,14 @@
     <div class="cl-mini-video-div">
 
         <div class="cl-local-hd-mini-video-wrapper-div" ng-show="(localVideoObject.videoType == 'hdVideo')">
-            <video class="cl-mini-video-element" autoplay="autoplay" muted="true"/>
+            <div  style="display:inline-block">
+                <video class="cl-mini-video-element" autoplay="autoplay" muted="true"/>
+            </div>
         </div>
 
         <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="(localVideoObject.videoType == 'asciiVideo')" >
-            <div  style="display:inline-block" >
-                <pre class="cl-local-ascii-container cl-local-mini-ascii-container"><span class="cl-ascii-drawing-text cl-ascii-mini-span">Local ascii drawing goes here</span></pre>
+            <div  style="display:inline-block" class="cl-my-mini-well">
+                <pre class="cl-ascii-container cl-mini-ascii-container-sizing"><span class="cl-ascii-drawing-text cl-ascii-mini-span">Local ascii drawing goes here</span></pre>
             </div>
         </div>
 
@@ -36,14 +38,14 @@
                         <div id="id-local-hd-video-wrapper-div" ng-show="(localVideoObject.videoType == 'hdVideo')" >
                             <h4>Transmitting HD Video</h4>
                             <div style="display:inline-block" class="cl-my-well" >
-                                <video class="cl-video-normal-div" id="id-local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
+                                <video class="cl-video-sizing" id="id-local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
                             </div>
                         </div>
 
                         <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="(localVideoObject.videoType == 'asciiVideo')" >
                             <h4>Transmitting ASCII Video</h4>
                             <div class="cl-my-well" style="display:inline-block" >
-                                <pre id="id-local-ascii-container"  class="cl-local-ascii-container"><span id="id-ascii-span" class="cl-ascii-drawing-text cl-ascii-normal-span">Local ascii drawing goes here</span></pre>
+                                <pre class="cl-ascii-container cl-video-sizing"><span id="id-ascii-span" class="cl-ascii-drawing-text cl-ascii-normal-span">Local ascii drawing goes here</span></pre>
                             </div>
                         </div>
 
@@ -67,7 +69,7 @@
 
                             <div  class="cl-my-well" style="display:inline-block">
                                 <div style="position: relative">
-                                    <video class="cl-video-normal-div" id="id-remote-video-element" autoplay="autoplay">
+                                    <video class="cl-video-sizing" id="id-remote-video-element" autoplay="autoplay">
                                         You must update to a newer version of Chrome or Firefox to use video
                                     </video>
                                     <div mini-video-template-directive></div>
@@ -78,7 +80,10 @@
                         <div show-ascii-video-directive ng-show="(remoteVideoObject.videoType == 'asciiVideo')">
                             <h4>Receiving ASCII Video</h4>
                             <div style="display:inline-block" class="cl-my-well">
-                                <pre id="id-remote-ascii-container"><span class="cl-ascii-drawing-text cl-ascii-normal-span">Remote ascii drawing goes here</span></pre>
+                                <div style="position: relative">
+                                    <pre class = "cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">Remote ascii drawing goes here</span></pre>
+                                    <div mini-video-template-directive></div>
+                                </div>
                             </div>
                         </div>
 
