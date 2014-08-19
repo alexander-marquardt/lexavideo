@@ -7,13 +7,16 @@
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
 /* global LZString */
+/* global viewportSize */
 
 var asciiVideoDirectives = angular.module('asciiVideo.directives', ['videoApp.services']);
 
 
 
 
-asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeout, $interval, $log, streamService, messageService, serverConstantsService) {
+asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeout, $interval, $log, streamService,
+                                                                         messageService, serverConstantsService,
+                                                                         globalVarsService, sessionService) {
 
     var fps;
     if (serverConstantsService.debugBuildEnabled) {
@@ -115,9 +118,10 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
         link: function(scope, elem) {
 
             var frameInterval;
+            var getStreamTimeout;
+            var videoElement = $('#id-local-video-element')[0];
             var $asciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
 
-            var videoElement = $('#id-local-video-element')[0];
             var localCanvas = document.createElement('canvas');
             localCanvas.width = canvasOptions.width;
             localCanvas.height = canvasOptions.height;
@@ -143,33 +147,80 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
                         getImageFromVideo();
                     }, Math.round(1000 / canvasOptions.fps));
                 } else {
-                    $timeout(getAsciiVideoFromLocalStream, 200);
+                    getStreamTimeout = $timeout(getAsciiVideoFromLocalStream, 200);
                 }
             }
 
-            function watchLocalVideoType() {
-                return scope.localVideoObject.videoType;
+
+            
+            function cancelLocalAsciiVideoTimers() {
+                $interval.cancel(frameInterval);
+                $timeout.cancel(getStreamTimeout);
+            }
+            
+            function startAsciiVideoFromAppropriateWindow() {
+                // we are transmitting ASCII video, however we only want to generate/display/transmit ASCII
+                // video from a single source no matter how many places this directive might appear. 
+                // Therefore, we check to see if this directive is defined on the div that is currently
+                // being displayed, and only then will the asciiVideo be generated.
+
+
+                // cancel existing intervals and timers - they will be re-started by the code below.
+                cancelLocalAsciiVideoTimers();
+
+                if (viewportSize.getWidth() > globalVarsService.screenXsMax || sessionService.getSessionStatus() !== 'active') {
+                    // This is not an xs display or we have not started a session. Therefore the ascii video should 
+                    // be generated only if this directive is declared on #id-local-ascii-video-wrapper-div as that 
+                    // is the div that is currently visible to the user.
+                    if (angular.element(elem).attr('id') === 'id-local-ascii-video-wrapper-div') { //id is without "#"
+                        getAsciiVideoFromLocalStream();
+                        $log.log('Getting local ascii video from: ' + angular.element(elem).attr('id'));
+                    }
+                } else {
+                    // This is an xs display, and therefore we need to look at which remote video type is 
+                    // currently being displayed (ascii or hd), and then select the correct mini-video window
+                    // (remember that the mini-video window is shown inside the currently displayed remote video window).
+                    if (scope.remoteVideoObject.videoType === 'hdVideo') {
+                        if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div').length === 1) {
+                            getAsciiVideoFromLocalStream();
+                            $log.log('Getting local ascii video from mini-video inside hdVideo window');
+                        }
+                    }
+                    if (scope.remoteVideoObject.videoType === 'asciiVideo') {
+                        if (angular.element(elem).parents('#id-remote-ascii-video-wrapper-div').length === 1) {
+                            getAsciiVideoFromLocalStream();
+                            $log.log('Getting local ascii video from mini-video inside asciiVideo window');
+                        }
+                    }
+                }
             }
 
-            scope.$watch(watchLocalVideoType, function(newValue, oldValue) {
+            scope.$watch('localVideoObject.videoType', function(newValue, oldValue) {
                 if (newValue === 'asciiVideo') {
-                    getAsciiVideoFromLocalStream();
-                    $log.log('Getting local ascii video');
+                    startAsciiVideoFromAppropriateWindow();
                 } else {
                     // stop asciiVideo
-                    $interval.cancel(frameInterval);
+                    cancelLocalAsciiVideoTimers();
                     $log.log('Cancelled local ascii video');
                 }
                 $log.log('Local videoType is now: ' + newValue + ' Old value was: ' + oldValue);
             });
 
+            $(window).resize(function() {
+                startAsciiVideoFromAppropriateWindow();
+            });
 
+            scope.$watch('remoteVideoObject.videoType', function() {
+                // if the remote videoType has changed, then we need to activate the mini-window that is located
+                // inside the currently active remote video window.
+                startAsciiVideoFromAppropriateWindow();
+            });
         }
     };
 });
 
 
-asciiVideoDirectives.directive('lxDrawAsciiVideoDirective', function(channelService) {
+asciiVideoDirectives.directive('lxDrawRemoteAsciiVideoDirective', function(channelService) {
 
 
     return {

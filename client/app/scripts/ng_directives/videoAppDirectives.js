@@ -256,10 +256,10 @@ videoAppDirectives.directive('lxMiniVideoTemplateDirective', function($log) {
         restrict : 'A',
         templateUrl: 'mini-video-template.html', // this is defined in angular's "template cache"
         link: function(scope, elem) {
-            if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div')) {
+            if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div').length === 1) {
                 scope.localVideoObject.miniVideoElemInsideRemoteHd = angular.element(elem).find('.cl-mini-video-element')[0];
             }
-            else if (angular.element(elem).parents('#id-remote-ascii-video-wrapper-div')) {
+            else if (angular.element(elem).parents('#id-remote-ascii-video-wrapper-div').length === 1) {
                 scope.localVideoObject.miniVideoElemInsideRemoteAscii = angular.element(elem).find('.cl-mini-video-element')[0];
             }
             else {
