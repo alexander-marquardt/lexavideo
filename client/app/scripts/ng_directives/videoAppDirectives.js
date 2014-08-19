@@ -147,7 +147,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 userNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + serverConstantsService.roomLink + '>Click here</a> to rejoin.');
             };
 
-            var enableAllVideoWindows = function() {
+            var enablePrincipalVideoWindows = function() {
                 // if it is a wider screen, then show both windows
                 localVideoObject.localVideoWrapper.style.display = 'inline';
                 remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
@@ -186,7 +186,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                         localVideoObject.localVideoWrapper.style.display = 'none';
                         remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
                     } else {
-                        enableAllVideoWindows();
+                        enablePrincipalVideoWindows();
                         hideMiniVideoElems();
                     }
                 }
@@ -198,7 +198,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                         remoteVideoObject.remoteVideoWrapper.style.display = 'none';
                         hideMiniVideoElems();
                     } else {
-                        enableAllVideoWindows();
+                        enablePrincipalVideoWindows();
                         hideMiniVideoElems();
                     }
                 }
@@ -239,8 +239,6 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
                     removeMiniVideoElemsSrc();
                     reattachMediaStreamToMiniVideoElems();
-                } else {
-                    removeMiniVideoElemsSrc();
                 }
             });
 
