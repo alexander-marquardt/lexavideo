@@ -9,13 +9,13 @@
 angular.module('videoApp')
     .controller('mainVideoCtrl', function ($scope, $log, messageService) {
 
-        $scope.remoteVideoObject = this.remoteVideoObject = {
+        $scope.remoteVideoObject = {
             remoteVideoElem : $('#id-remote-video-element')[0],
             remoteVideoWrapper : $('#id-remote-video-wrapper-div')[0],
             videoType : 'hdVideo'
         };
 
-        $scope.localVideoObject = this.localVideoObject = {
+        $scope.localVideoObject = {
             localVideoElem :  $('#id-local-video-element')[0],
             localVideoWrapper : $('#id-local-video-wrapper-div')[0],
             miniVideoElem: $('#id-mini-video-element')[0],

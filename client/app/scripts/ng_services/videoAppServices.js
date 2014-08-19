@@ -88,8 +88,9 @@ videoAppServices.service('channelServiceSupport', function() {
     this.socket = null;
 });
 
-videoAppServices.factory('channelService', function($log, $timeout, serverConstantsService, callService, sessionService, userNotificationService,
-                                            channelServiceSupport, globalVarsService, channelMessageService) {
+videoAppServices.factory('channelService', function($log, $timeout, $rootScope, serverConstantsService,
+                                                    callService, sessionService, userNotificationService,
+                                                    channelServiceSupport, globalVarsService, channelMessageService) {
 
     /*
     Provides functionality for opening up and handling callbacks from the Google App-engine "Channel API".
@@ -144,14 +145,14 @@ videoAppServices.factory('channelService', function($log, $timeout, serverConsta
             else if (messageObject.messageType === 'videoStatus') {
                 if (messageObject.messagePayload.statusType === 'asciiVideoStatus') {
                     if (messageObject.messagePayload.streamStatus === 'transmitting') {
-                        $timeout(function() {
+                        $rootScope.$apply(function() {
                             remoteVideoObject.videoType = 'asciiVideo';
                         });
                     }
                 }
                 else if (messageObject.messagePayload.statusType === 'hdVideoStatus') {
                     if (messageObject.messagePayload.streamStatus === 'transmitting') {
-                        $timeout(function() {
+                        $rootScope.$apply(function() {
                             remoteVideoObject.videoType = 'hdVideo';
                         });
                     }

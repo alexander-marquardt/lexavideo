@@ -9,12 +9,11 @@ var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.servic
 videoAppDirectives.directive('callStatusDirective', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'A',
-        controller: 'mainVideoCtrl',
-        link: function(scope, elem, attrs, vidCtrl) {
+        link: function(scope, elem) {
 
             // we include doHangup on the scope because some of the getStatus calls can include
             // html that expects a doHangup function to be available.
-            scope.doHangup = callService.doHangup(vidCtrl.localVideoObject);
+            scope.doHangup = callService.doHangup(scope.localVideoObject);
 
             scope.$watch(userNotificationService.getStatus, function (statusHtml) {
 
@@ -34,9 +33,7 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
 
     return {
         restrict : 'A',
-        scope : {},
-        controller: 'mainVideoCtrl',
-        link: function(scope, elem, attrs, vidCtrl) {
+        link: function(scope) {
 
             // Mac: hotkey is Command.
             // Non-Mac: hotkey is Control.
@@ -55,10 +52,10 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
                 }
                 switch (event.keyCode) {
                     case 68:
-                        callService.toggleAudioMute(vidCtrl.localVideoObject);
+                        callService.toggleAudioMute(scope.localVideoObject);
                         return false;
                     case 69:
-                        callService.toggleVideoMute(vidCtrl.localVideoObject);
+                        callService.toggleVideoMute(scope.localVideoObject);
                         return false;
                     case 73:
                         infoDivService.toggleInfoDiv();
@@ -81,12 +78,10 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
     return {
         restrict : 'A',
-        scope : {},
-        controller: 'mainVideoCtrl',
-        link: function(scope, elem, attrs, vidCtrl) {
+        link: function(scope) {
 
-            var remoteVideoObject = vidCtrl.remoteVideoObject;
-            var localVideoObject = vidCtrl.localVideoObject;
+            var remoteVideoObject = scope.remoteVideoObject;
+            var localVideoObject = scope.localVideoObject;
             var localVideoElem = localVideoObject.localVideoElem;
 
 
@@ -210,7 +205,11 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
 
             });
 
-            scope.$watch('remoteVideoObject.videoType', function(value) {
+            function watchRemoteVideoType() {
+                return scope.remoteVideoObject.videoType;
+            }
+
+            scope.$watch(watchRemoteVideoType, function(value) {
                 $log.log('Remote videoType is now: ' + value);
             });
 
