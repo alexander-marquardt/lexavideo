@@ -99,13 +99,12 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
             contrast: 128,
             callback: function(asciiString) {
                 $asciiDrawingTextElement.html(asciiString);
-                // var compressedString = LZString.compressToUTF16(asciiString);
+                var compressedString = LZString.compressToUTF16(asciiString);
                 // send the compressed string to the remote user (through the server)
 
                 // use $timeout to ensure that $apply is called after the current digest cycle.
                 $timeout(function() {
-                    //messageService.sendMessage('videoStream', {streamType: 'asciiVideo', compressedVideoString: compressedString});
-                    messageService.sendMessage('videoStream', {streamType: 'asciiVideo', compressedVideoString: 'TESTING'});
+                    messageService.sendMessage('videoStream', {streamType: 'asciiVideo', compressedVideoString: compressedString});
                 });
             }
         });
