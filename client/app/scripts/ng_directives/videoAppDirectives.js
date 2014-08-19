@@ -176,7 +176,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 }
             };
 
-            var resizeVideoWindows = function() {
+            var setupForCurrentDisplaySize = function() {
 
                 if (sessionStatus === 'active') {
                     if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
@@ -212,8 +212,9 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
 
             scope.$watch(sessionService.getSessionStatus, function(status) {
-                // If session status changes, then resize the video (the remote video
-                // might have different dimensions than the local video)
+
+                // get a local copy of the current session status, and take appropriate action.
+                sessionStatus = status;
                 if (status === 'initializing') {
                    $log.log('sessionStatus is set to "initializing"');
                 } else if (status === 'active') {
@@ -226,8 +227,10 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                     $log.log('Error, unknown status received');
                 }
 
-                sessionStatus = status;
-                resizeVideoWindows();
+
+                // If session status changes, then make sure to setup the current view based on the display
+                // size and the current connection status.
+                setupForCurrentDisplaySize();
 
             });
 
@@ -245,7 +248,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             $(window).resize(function() {
                 // calling jquery window.resize instead of angular watching for resize on the $window service should be slightly
                 // more efficient.
-                resizeVideoWindows();
+                setupForCurrentDisplaySize();
             });
         }
     };
