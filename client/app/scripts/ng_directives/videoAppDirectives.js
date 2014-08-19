@@ -131,12 +131,16 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 userNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
             };
 
-            var transitionVideoToWaiting = function() {
-                $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
-                localVideoObject.miniVideoElem.src = '';
-                userNotificationService.resetStatus();
+            var removeMiniVideoElemsSrc = function() {
+                if (localVideoObject.miniVideoElemInsideRemoteHd) {localVideoObject.miniVideoElemInsideRemoteHd.src = '';}
+                if (localVideoObject.miniVideoElemInsideRemoteAscii) {localVideoObject.miniVideoElemInsideRemoteAscii.src = '';}
             };
 
+            var transitionVideoToWaiting = function() {
+                $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
+                removeMiniVideoElemsSrc();
+                userNotificationService.resetStatus();
+            };
 
             var transitionVideoToDone = function() {
                 $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');
@@ -149,19 +153,41 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
             };
 
+            var hideMiniVideoElems = function() {
+                if (localVideoObject.miniVideoElemInsideRemoteHd) {localVideoObject.miniVideoElemInsideRemoteHd.style.opacity = 0;}
+                if (localVideoObject.miniVideoElemInsideRemoteAscii) {localVideoObject.miniVideoElemInsideRemoteAscii.style.opacity = 0;}
+                removeMiniVideoElemsSrc();
+            };
+
+            var showMiniVideoElems = function() {
+                if (localVideoObject.miniVideoElemInsideRemoteHd) {localVideoObject.miniVideoElemInsideRemoteHd.style.opacity = 1;}
+                if (localVideoObject.miniVideoElemInsideRemoteAscii) {localVideoObject.miniVideoElemInsideRemoteAscii.style.opacity = 1;}
+                reattachMediaStreamToMiniVideoElems();
+            };
+
+            var reattachMediaStreamToMiniVideoElems = function() {
+                if (remoteVideoObject.videoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
+                    adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
+                }
+                else if (remoteVideoObject.videoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
+                    adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
+                } else {
+                    $log.log('Error: unknown videoType: ' + remoteVideoObject.videoType);
+                }
+            };
+
             var resizeVideoWindows = function() {
 
                 if (sessionStatus === 'active') {
                     if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
-                        adapterService.reattachMediaStream(localVideoObject.miniVideoElem, localVideoObject.localVideoElem);
-                        localVideoObject.miniVideoElem.style.opacity = 1;
+                        showMiniVideoElems();
                         // we are dealing with a small viewport, and should therefore hide the local video as it is
-                        // embedded in a small window inside the remote video.
+                        // now embedded in a small window inside the remote video.
                         localVideoObject.localVideoWrapper.style.display = 'none';
                         remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
                     } else {
                         enableAllVideoWindows();
-                        localVideoObject.miniVideoElem.style.opacity = 0;
+                        hideMiniVideoElems();
                     }
                 }
                 else {
@@ -170,10 +196,10 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                         // Therefore we should show the local video and hide the remote video
                         localVideoObject.localVideoWrapper.style.display = 'inline';
                         remoteVideoObject.remoteVideoWrapper.style.display = 'none';
-                        localVideoObject.miniVideoElem.style.opacity = 0;
+                        hideMiniVideoElems();
                     } else {
                         enableAllVideoWindows();
-                        localVideoObject.miniVideoElem.style.opacity = 0;
+                        hideMiniVideoElems();
                     }
                 }
 
@@ -211,6 +237,9 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             scope.$watch(watchRemoteVideoType, function(newValue, oldValue) {
                 $log.log('Remote videoType is now: ' + newValue + ' Old value was: ' + oldValue);
+                if (viewportSize.getWidth() > globalVarsService.screenXsMax) {
+                    reattachMediaStreamToMiniVideoElems();
+                }
             });
 
             $(window).resize(function() {
@@ -222,12 +251,21 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
     };
 });
 
-videoAppDirectives.directive('lxMiniVideoTemplateDirective', function() {
+videoAppDirectives.directive('lxMiniVideoTemplateDirective', function($log) {
     return {
         restrict : 'A',
         templateUrl: 'mini-video-template.html', // this is defined in angular's "template cache"
         link: function(scope, elem) {
-            scope.localVideoObject.miniVideoElem = angular.element(elem).find('.cl-mini-video-element')[0];
+            if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div')) {
+                scope.localVideoObject.miniVideoElemInsideRemoteHd = angular.element(elem).find('.cl-mini-video-element')[0];
+            }
+            else if (angular.element(elem).parents('#id-remote-ascii-video-wrapper-div')) {
+                scope.localVideoObject.miniVideoElemInsideRemoteAscii = angular.element(elem).find('.cl-mini-video-element')[0];
+            }
+            else {
+                $log.log('Error: directive lx-mini-video-template-directive must be inside either ' +
+                    'id-remote-hd-video-wrapper-div, or id-remote-ascii-video-wrapper-div');
+            }
         }
     };
 });
