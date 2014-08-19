@@ -18,7 +18,7 @@ angular.module('videoApp')
         $scope.localVideoObject = {
             localVideoElem :  $('#id-local-video-element')[0],
             localVideoWrapper : $('#id-local-video-wrapper-div')[0],
-            miniVideoElem: $('#id-mini-video-element')[0],
+            miniVideoElem: 'To be set in miniVideoTemplateDirective',
             isVideoMuted : false,
             isAudioMuted : false,
             videoType : 'hdVideo'

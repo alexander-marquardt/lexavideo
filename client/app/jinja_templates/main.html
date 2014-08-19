@@ -1,4 +1,23 @@
 {% raw %}
+
+<script type="text/ng-template" id="mini-video-template.html">
+
+    <div class="cl-mini-video-div">
+
+        <div class="cl-local-hd-mini-video-wrapper-div" ng-show="(localVideoObject.videoType == 'hdVideo')">
+            <video class="cl-mini-video-element" autoplay="autoplay" muted="true"/>
+        </div>
+
+        <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="(localVideoObject.videoType == 'asciiVideo')" >
+            <div  style="display:inline-block" >
+                <pre class="cl-local-ascii-container cl-local-mini-ascii-container"><span class="cl-ascii-drawing-text cl-ascii-mini-span">Local ascii drawing goes here</span></pre>
+            </div>
+        </div>
+
+    </div>
+
+</script>
+
 <div class="container">
 
     <div class="row" id="id-videochat-logo">
@@ -36,13 +55,6 @@
                                     ng-class="(localVideoObject.videoType == 'asciiVideo') ? 'btn-primary disabled' : 'btn-default'"
                                     ng-click="setLocalVideoType('asciiVideo')">ASCII Video</button>
                         </div>
-
-                        <div>
-                            RECEIVING  {{remoteVideoObject.videoType}}
-                            Sending  {{localVideoObject.videoType}}
-                        </div>
-
-
                     </div>
                 </div>
 
@@ -58,19 +70,7 @@
                                     <video class="cl-video-normal-div" id="id-remote-video-element" autoplay="autoplay">
                                         You must update to a newer version of Chrome or Firefox to use video
                                     </video>
-                                    <div class="cl-mini-video-div">
-
-                                        <div class="class-local-hd-mini-video-wrapper-div" ng-show="(localVideoObject.videoType == 'hdVideo')">
-                                            <video id="id-mini-video-element" autoplay="autoplay" muted="true"/>
-                                        </div>
-
-                                        <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="(localVideoObject.videoType == 'asciiVideo')" >
-                                            <div  style="display:inline-block" >
-                                                <pre class="cl-local-ascii-container cl-local-mini-ascii-container"><span class="cl-ascii-drawing-text cl-ascii-mini-span">Local ascii drawing goes here</span></pre>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                                    <div mini-video-template-directive></div>
                                 </div>
                             </div>
                         </div>

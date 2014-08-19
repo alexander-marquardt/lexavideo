@@ -222,3 +222,12 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
     };
 });
 
+videoAppDirectives.directive('miniVideoTemplateDirective', function() {
+    return {
+        restrict : 'A',
+        templateUrl: 'mini-video-template.html', // this is defined in angular's "template cache"
+        link: function(scope, elem) {
+            scope.localVideoObject.miniVideoElem = angular.element(elem).find('.cl-mini-video-element')[0];
+        }
+    };
+});
