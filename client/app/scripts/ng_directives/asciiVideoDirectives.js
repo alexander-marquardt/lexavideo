@@ -13,7 +13,7 @@ var asciiVideoDirectives = angular.module('asciiVideo.directives', ['videoApp.se
 
 
 
-asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout, $interval, $log, streamService, messageService, serverConstantsService) {
+asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeout, $interval, $log, streamService, messageService, serverConstantsService) {
 
     var fps;
     if (serverConstantsService.debugBuildEnabled) {
@@ -169,7 +169,7 @@ asciiVideoDirectives.directive('generateAsciiVideoDirective', function($timeout,
 });
 
 
-asciiVideoDirectives.directive('showAsciiVideoDirective', function(channelService) {
+asciiVideoDirectives.directive('lxDrawAsciiVideoDirective', function(channelService) {
 
 
     return {

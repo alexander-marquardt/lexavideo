@@ -6,7 +6,7 @@ var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.servic
 /* global $ */
 /* global viewportSize */
 
-videoAppDirectives.directive('callStatusDirective', function(userNotificationService, $compile, $sce, callService) {
+videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationService, $compile, $sce, callService) {
     return {
         restrict: 'A',
         link: function(scope, elem) {
@@ -28,7 +28,7 @@ videoAppDirectives.directive('callStatusDirective', function(userNotificationSer
     };
 });
 
-videoAppDirectives.directive('monitorControlKeysDirective', function ($document, $log, infoDivService, callService) {
+videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($document, $log, infoDivService, callService) {
 
 
     return {
@@ -69,7 +69,7 @@ videoAppDirectives.directive('monitorControlKeysDirective', function ($document,
 });
 
 
-videoAppDirectives.directive('videoContainerDirective', function($window, $log,
+videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log,
                                               globalVarsService, serverConstantsService,
                                               sessionService, userNotificationService,
                                               adapterService, channelService, turnService,
@@ -222,7 +222,7 @@ videoAppDirectives.directive('videoContainerDirective', function($window, $log,
     };
 });
 
-videoAppDirectives.directive('miniVideoTemplateDirective', function() {
+videoAppDirectives.directive('lxMiniVideoTemplateDirective', function() {
     return {
         restrict : 'A',
         templateUrl: 'mini-video-template.html', // this is defined in angular's "template cache"

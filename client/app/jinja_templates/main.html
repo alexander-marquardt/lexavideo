@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="(localVideoObject.videoType == 'asciiVideo')" >
+        <div class="cl-local-ascii-video-wrapper-div"  lx-generate-ascii-video-directive ng-show="(localVideoObject.videoType == 'asciiVideo')" >
             <div  style="display:inline-block" class="cl-mini-well">
                 <pre class="cl-ascii-container cl-mini-ascii-container-sizing"><span class="cl-ascii-drawing-text cl-ascii-mini-span">Local ascii drawing goes here</span></pre>
             </div>
@@ -31,7 +31,7 @@
     <div ng-controller="mainVideoCtrl">
 
         <div class="row">
-            <div video-container-directive>
+            <div lx-video-container-directive>
 
                 <div class="col-sm-6" id="id-local-video-wrapper-div">
                     <div class="text-center">
@@ -42,7 +42,7 @@
                             </div>
                         </div>
 
-                        <div class="cl-local-ascii-video-wrapper-div"  generate-ascii-video-directive ng-show="(localVideoObject.videoType == 'asciiVideo')" >
+                        <div class="cl-local-ascii-video-wrapper-div"  lx-generate-ascii-video-directive ng-show="(localVideoObject.videoType == 'asciiVideo')" >
                             <h4>Transmitting ASCII Video</h4>
                             <div class="cl-my-well" style="display:inline-block" >
                                 <pre class="cl-ascii-container cl-video-sizing"><span id="id-ascii-span" class="cl-ascii-drawing-text cl-ascii-normal-span">Local ascii drawing goes here</span></pre>
@@ -72,17 +72,19 @@
                                     <video class="cl-video-sizing" id="id-remote-video-element" autoplay="autoplay">
                                         You must update to a newer version of Chrome or Firefox to use video
                                     </video>
-                                    <div mini-video-template-directive></div>
+                                    <div lx-mini-video-template-directive></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div show-ascii-video-directive ng-show="(remoteVideoObject.videoType == 'asciiVideo')">
+                        <div lx-draw-ascii-video-directive ng-show="(remoteVideoObject.videoType == 'asciiVideo')">
                             <h4>Receiving ASCII Video</h4>
                             <div style="display:inline-block" class="cl-my-well">
                                 <div style="position: relative">
-                                    <pre class = "cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">Remote ascii drawing goes here</span></pre>
-                                    <div mini-video-template-directive></div>
+                                    <pre class = "cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
+                                        Remote ascii drawing goes here</span>
+                                    </pre>
+                                    <div lx-mini-video-template-directive></div>
                                 </div>
                             </div>
                         </div>
@@ -105,13 +107,13 @@
         </div>
 
 
-        <div monitor-control-keys-directive ></div>
+        <div lx-monitor-control-keys-directive ></div>
 
 
         <!-- Footer div is at the bottom of the page, but is placed here so that it
         has access to the main-video-ctrl scope -->
 
-        <nav class="navbar navbar-inverse navbar-fixed-bottom" call-status-directive></nav>
+        <nav class="navbar navbar-inverse navbar-fixed-bottom" lx-call-status-directive></nav>
     </div>
 
     <!-- the following divs are outside of the standard page flow -->
