@@ -143,8 +143,8 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                 }
             }
            else if (messageObject.messageType === 'videoSettings') {
-                if (messageObject.messagePayload.requestToSetVideoToType) {
-                    remoteVideoObject.requestedVideoType = messageObject.messagePayload.requestToSetVideoToType;
+                if (messageObject.messagePayload.settingsType === 'requestVideoType') {
+                    remoteVideoObject.requestedVideoType = messageObject.messagePayload.requestVideoType;
                 } else {
                     $log.log('Error: Unknown messagePayload received: ' + JSON.stringify(messageObject));
                 }
@@ -198,7 +198,7 @@ videoAppServices.factory('negotiateVideoType', function($log, messageService) {
 
     return {
         sendRequestForVideoType : function (videoType) {
-            messageService.sendMessage('videoSettings', {requestToSetVideoToType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', requestVideoType: videoType});
         }
     };
 });
@@ -715,7 +715,9 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
-                peerService.createPeerConnection(localVideoObject, remoteVideoObject);
+
+                // TODO - this must be re-enabled for HD video functionality to work correctly.
+                //peerService.createPeerConnection(localVideoObject, remoteVideoObject);
 
                 if (this.hasAudioOrVideoMediaConstraints) {
                     $log.log('Adding local stream.');

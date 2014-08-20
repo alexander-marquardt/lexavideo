@@ -22,7 +22,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
     if (serverConstantsService.debugBuildEnabled) {
         // when using the development server, sending too much information over the channel API seems to saturate
         // the server -- slow down the fps for develpment
-        fps = 0.2;
+        fps = 0.5;
     } else {
         fps = 2;
     }
