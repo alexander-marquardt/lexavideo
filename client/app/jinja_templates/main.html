@@ -45,7 +45,10 @@
                         <div id="id-local-ascii-video-wrapper-div"  lx-generate-ascii-video-directive ng-show="(localVideoObject.videoType == 'asciiVideo')" >
                             <h4>Transmitting ASCII Video</h4>
                             <div class="cl-my-well" style="display:inline-block" >
-                                <pre class="cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">Local ascii drawing goes here</span></pre>
+                                <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
+                                <pre class="cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
+                                    Local ascii drawing goes here
+                                </span></pre>
                             </div>
                         </div>
 
@@ -81,9 +84,10 @@
                             <h4>Receiving ASCII Video</h4>
                             <div style="display:inline-block" class="cl-my-well">
                                 <div style="position: relative">
+                                    <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
                                     <pre class = "cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
-                                        Remote ascii drawing goes here</span>
-                                    </pre>
+                                        Remote ascii drawing goes here
+                                    </span></pre>
                                     <div lx-mini-video-template-directive></div>
                                 </div>
                             </div>
