@@ -119,6 +119,8 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
 
             var frameInterval;
             var getStreamTimeout;
+            var thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // mostly just used for debugging
+
             var videoElement = $('#id-local-video-element')[0];
             var $asciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
 
@@ -168,12 +170,15 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
                 // cancel existing intervals and timers - they will be re-started by the code below.
                 cancelLocalAsciiVideoTimers();
 
+                thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // this should only be true for a single directive at a time
+
                 if (viewportSize.getWidth() > globalVarsService.screenXsMax || sessionService.getSessionStatus() !== 'active') {
                     // This is not an xs display or we have not started a session. Therefore the ascii video should 
                     // be generated only if this directive is declared on #id-local-ascii-video-wrapper-div as that 
                     // is the div that is currently visible to the user.
                     if (angular.element(elem).attr('id') === 'id-local-ascii-video-wrapper-div') { //id is without "#"
                         getAsciiVideoFromLocalStream();
+                        thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
                         $log.log('Getting local ascii video from: ' + angular.element(elem).attr('id'));
                     }
                 } else {
@@ -183,27 +188,30 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
                     if (scope.remoteVideoObject.videoType === 'hdVideo') {
                         if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div').length === 1) {
                             getAsciiVideoFromLocalStream();
+                            thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
                             $log.log('Getting local ascii video from mini-video inside hdVideo window');
                         }
                     }
                     if (scope.remoteVideoObject.videoType === 'asciiVideo') {
                         if (angular.element(elem).parents('#id-remote-ascii-video-wrapper-div').length === 1) {
                             getAsciiVideoFromLocalStream();
+                            thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
                             $log.log('Getting local ascii video from mini-video inside asciiVideo window');
                         }
                     }
                 }
             }
 
-            scope.$watch('localVideoObject.videoType', function(newValue, oldValue) {
+            scope.$watch('localVideoObject.videoType', function(newValue) {
                 if (newValue === 'asciiVideo') {
                     startAsciiVideoFromAppropriateWindow();
                 } else {
                     // stop asciiVideo
-                    cancelLocalAsciiVideoTimers();
-                    $log.log('Cancelled local ascii video');
+                    if (thisDirectiveIsGeneratingAsciiVideoForTransmission) {
+                        cancelLocalAsciiVideoTimers();
+                        $log.log('Cancelled local ascii video');
+                    }
                 }
-                $log.log('Local videoType is now: ' + newValue + ' Old value was: ' + oldValue);
             });
 
             $(window).resize(function() {
