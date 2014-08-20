@@ -172,8 +172,10 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
 
                 thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // this should only be true for a single directive at a time
 
-                if (viewportSize.getWidth() > globalVarsService.screenXsMax || sessionService.getSessionStatus() !== 'active') {
-                    // This is not an xs display or we have not started a session. Therefore the ascii video should 
+                // TODO - remove this hack once we have a better way of getting the "session" status.
+                // if (viewportSize.getWidth() > globalVarsService.screenXsMax || sessionService.getSessionStatus() !== 'active') {
+                if (viewportSize.getWidth() > globalVarsService.screenXsMax) {
+                    // This is not an xs display or we have not started a session. Therefore the ascii video should
                     // be generated only if this directive is declared on #id-local-ascii-video-wrapper-div as that 
                     // is the div that is currently visible to the user.
                     if (angular.element(elem).attr('id') === 'id-local-ascii-video-wrapper-div') { //id is without "#"

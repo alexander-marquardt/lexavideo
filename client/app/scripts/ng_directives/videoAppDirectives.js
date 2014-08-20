@@ -221,7 +221,9 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             var setupForCurrentDisplaySize = function() {
 
-                if (sessionStatus === 'active') {
+                // TODO - temporary hack until we sort out a better way to determine the "session" status. We cannot
+                // depend on the peer connection values, since our session encompases ascii transmission as well..
+                if (true || sessionStatus === 'active') {
                     if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
                         showMiniVideoElems();
                         // we are dealing with a small viewport, and should therefore hide the local video as it is
