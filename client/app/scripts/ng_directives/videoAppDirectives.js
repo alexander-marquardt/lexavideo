@@ -17,7 +17,7 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
 
             scope.$watch(userNotificationService.getStatus, function (statusHtml) {
 
-                var el = angular.element('<navbar class="navbar-text"/>');
+                var el = angular.element('<p class="navbar-text"/>');
                 el.append(statusHtml);
                 var compileFn = $compile(el);
                 compileFn(scope);
@@ -166,13 +166,13 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };
 
             var reattachMediaStreamToMiniVideoElems = function() {
-                if (remoteVideoObject.videoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
+                if (remoteVideoObject.receivingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
                 }
-                else if (remoteVideoObject.videoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
+                else if (remoteVideoObject.receivingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
                 } else {
-                    $log.log('Error: unknown videoType: ' + remoteVideoObject.videoType);
+                    $log.log('Error: unknown receivingVideoType: ' + remoteVideoObject.receivingVideoType);
                 }
             };
 
@@ -234,11 +234,11 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             });
 
-            scope.$watch('remoteVideoObject.videoType', function(newValue, oldValue) {
+            scope.$watch('remoteVideoObject.receivingVideoType', function(newValue, oldValue) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // Therefore, we need to make sure that the mini-video window inside the currently displayed remote
                 // video window is the only one that is active.
-                $log.log('Remote videoType is now: ' + newValue + ' Old value was: ' + oldValue);
+                $log.log('Remote receivingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
                 if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
                     removeMiniVideoElemsSrc();
                     reattachMediaStreamToMiniVideoElems();

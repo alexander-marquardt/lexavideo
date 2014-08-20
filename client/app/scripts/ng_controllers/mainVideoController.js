@@ -7,12 +7,15 @@
 /* global $ */
 
 angular.module('videoApp')
-    .controller('mainVideoCtrl', function ($scope, $log, messageService) {
+    .controller('mainVideoCtrl', function ($scope, negotiateVideoType) {
 
         $scope.remoteVideoObject = {
             remoteVideoElem : $('#id-remote-video-element')[0],
             remoteVideoWrapper : $('#id-remote-video-wrapper-div')[0],
-            videoType : 'hdVideo'
+            requestedVideoType : 'asciiVideo', // Will be updated when the other user has requested to modify the current video type
+            receivingVideoType : 'asciiVideo'  // Will be updated once the local user has agreed to modify the current video type and once
+                                               // the video exchange for the new format is correctly setup and running.
+
         };
 
         $scope.localVideoObject = {
@@ -22,25 +25,14 @@ angular.module('videoApp')
             miniVideoElemInsideRemoteAscii: undefined, // 'To be set in miniVideoTemplateDirective',
             isVideoMuted : false,
             isAudioMuted : false,
-            videoType : 'hdVideo'
+            selectedVideoType : 'asciiVideo', // this is determined by the video selection button that is currently selected
+            sendingVideoType : 'asciiVideo'   // will be updated once the remote user has agreed to modify the current video type and once
+                                              // the video exchange for the new format is correctly setup and running.
         };
 
-
-
-
-        $scope.setLocalVideoType = function(videoType) {
+        $scope.setLocalVideoType = function(selectedVideoType) {
             // videoType should be 'hdVideo' or 'asciiVideo'
-            $scope.localVideoObject.videoType = videoType;
-
-            if (videoType === 'asciiVideo') {
-                messageService.sendMessage('videoStatus', {statusType: 'asciiVideoStatus', streamStatus: 'transmitting'});
-                messageService.sendMessage('videoStatus', {statusType: 'hdVideoStatus', streamStatus: 'stopped'});
-            }
-            else if (videoType === 'hdVideo'){
-                messageService.sendMessage('videoStatus', {statusType: 'hdVideoStatus', streamStatus: 'transmitting'});
-                messageService.sendMessage('videoStatus', {statusType: 'asciiVideoStatus', streamStatus: 'stopped'});
-            } else {
-                $log.log('Error: unknown video type received: ' + videoType);
-            }
+            $scope.localVideoObject.selectedVideoType = selectedVideoType;
+            negotiateVideoType.sendRequestForVideoType(selectedVideoType);
         };
 });

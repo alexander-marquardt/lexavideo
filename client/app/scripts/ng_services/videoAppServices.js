@@ -139,25 +139,14 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                     });
                 }
                 else {
-                    $log.log('Error: unknown video type received: ' + messageObject.messagePayload.type);
+                    $log.log('Error: unknown video type received: ' + messageObject.messagePayload.streamType);
                 }
             }
-            else if (messageObject.messageType === 'videoStatus') {
-                if (messageObject.messagePayload.statusType === 'asciiVideoStatus') {
-                    if (messageObject.messagePayload.streamStatus === 'transmitting') {
-                        $rootScope.$apply(function() {
-                            remoteVideoObject.videoType = 'asciiVideo';
-                        });
-                    }
-                }
-                else if (messageObject.messagePayload.statusType === 'hdVideoStatus') {
-                    if (messageObject.messagePayload.streamStatus === 'transmitting') {
-                        $rootScope.$apply(function() {
-                            remoteVideoObject.videoType = 'hdVideo';
-                        });
-                    }
+           else if (messageObject.messageType === 'videoSettings') {
+                if (messageObject.messagePayload.requestToSetVideoToType) {
+                    remoteVideoObject.requestedVideoType = messageObject.messagePayload.requestToSetVideoToType;
                 } else {
-                    $log.log('Error: Unkonwn messagePayload.statusType received: ' + messageObject.messagePayload.statusType);
+                    $log.log('Error: Unknown messagePayload received: ' + JSON.stringify(messageObject));
                 }
             }
             else {
@@ -202,6 +191,18 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
         }
     };
 });
+
+
+videoAppServices.factory('negotiateVideoType', function($log, messageService) {
+    /* Requests and sets up the type of video that will be transmitted between the two users */
+
+    return {
+        sendRequestForVideoType : function (videoType) {
+            messageService.sendMessage('videoSettings', {requestToSetVideoToType: videoType});
+        }
+    };
+});
+
 
 videoAppServices.service('turnServiceSupport', function () {
     // This function tracks some variables that are needed by multiple services, where one of the services has

@@ -283,3 +283,8 @@ video {
   display: none;
   width: $screen-xs-max;
 }
+
+.cl-navbar-absolute-bottom {
+  position: absolute;
+  bottom: 0;
+}
