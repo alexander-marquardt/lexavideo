@@ -57,7 +57,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
 
             if (newVideoType === 'hdVideo') {
                 // Other user has requested hdVideo, and this user has agreed to send it.
-                scope.videoSignalingObject.selectedVideoType = newVideoType;
+                scope.videoSignalingObject.localSelectedVideoType = newVideoType;
                 callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
             }
         });
@@ -71,7 +71,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
     return {
         restrict: 'A',
         link : function(scope, elem) {
-            scope.$watch('videoSignalingObject.requestedVideoType', function(newVideoType) {
+            scope.$watch('videoSignalingObject.remoteHasRequestedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {
                     showRequestForHdVideo(scope, elem);
                 }
@@ -81,11 +81,11 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
                     // both directions.
                 }
                 else {
-                    $log.log('Error: unknown videoSignalingObject.requestedVideoType: ' + newVideoType);
+                    $log.log('Error: unknown videoSignalingObject.remoteHasRequestedVideoType: ' + newVideoType);
                 }
             });
 
-            scope.$watch('videoSignalingObject.selectedVideoType', function(newVideoType) {
+            scope.$watch('videoSignalingObject.localSelectedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {
                     //showWaitingForAcceptHdVideo();
                 }
@@ -234,13 +234,13 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };
 
             var reattachMediaStreamToMiniVideoElems = function() {
-                if (videoSignalingObject.remoteSendingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
+                if (videoSignalingObject.remotelocalSendingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
                 }
-                else if (videoSignalingObject.remoteSendingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
+                else if (videoSignalingObject.remotelocalSendingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
                 } else {
-                    $log.log('Error: unknown remoteSendingVideoType: ' + videoSignalingObject.remoteSendingVideoType);
+                    $log.log('Error: unknown remotelocalSendingVideoType: ' + videoSignalingObject.remotelocalSendingVideoType);
                 }
             };
 
@@ -305,11 +305,11 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             });
 
-            scope.$watch('videoSignalingObject.remoteSendingVideoType', function(newValue, oldValue) {
+            scope.$watch('videoSignalingObject.remotelocalSendingVideoType', function(newValue, oldValue) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // Therefore, we need to make sure that the mini-video window inside the currently displayed remote
                 // video window is the only one that is active.
-                $log.log('Remote remoteSendingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
+                $log.log('Remote remotelocalSendingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
                 if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
                     removeMiniVideoElemsSrc();
                     reattachMediaStreamToMiniVideoElems();

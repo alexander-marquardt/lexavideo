@@ -3,13 +3,13 @@
 <script type="text/ng-template" id="mini-video-template.html">
     <div class="cl-mini-video-div">
 
-        <div class="cl-local-hd-mini-video-wrapper-div" ng-show="(videoSignalingObject.sendingVideoType == 'hdVideo')">
+        <div class="cl-local-hd-mini-video-wrapper-div" ng-show="(videoSignalingObject.localSendingVideoType == 'hdVideo')">
             <div  style="display:inline-block" class="cl-mini-well">
                 <video class="cl-mini-video-element" autoplay="autoplay" muted="true"/>
             </div>
         </div>
 
-        <div lx-generate-ascii-video-directive class="cl-local-ascii-mini-video-wrapper-div" ng-show="(videoSignalingObject.sendingVideoType == 'asciiVideo')" >
+        <div lx-generate-ascii-video-directive class="cl-local-ascii-mini-video-wrapper-div" ng-show="(videoSignalingObject.localSendingVideoType == 'asciiVideo')" >
             <div  style="display:inline-block" class="cl-mini-well">
                 <pre class="cl-ascii-container cl-mini-ascii-container-sizing"><span class="cl-ascii-drawing-text cl-ascii-mini-span">Local ascii drawing goes here</span></pre>
             </div>
@@ -32,14 +32,14 @@
 
                 <div class="col-sm-6" id="id-local-video-wrapper-div">
                     <div class="text-center">
-                        <div id="id-local-hd-video-wrapper-div" ng-show="(videoSignalingObject.sendingVideoType == 'hdVideo')" >
+                        <div id="id-local-hd-video-wrapper-div" ng-show="(videoSignalingObject.localSendingVideoType == 'hdVideo')" >
                             <h4>Transmitting HD Video</h4>
                             <div style="display:inline-block" class="cl-my-well" >
                                 <video class="cl-video-sizing" id="id-local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
                             </div>
                         </div>
 
-                        <div lx-generate-ascii-video-directive id="id-local-ascii-video-wrapper-div" ng-show="(videoSignalingObject.sendingVideoType == 'asciiVideo')" >
+                        <div lx-generate-ascii-video-directive id="id-local-ascii-video-wrapper-div" ng-show="(videoSignalingObject.localSendingVideoType == 'asciiVideo')" >
                             <h4>Transmitting ASCII Video</h4>
                             <div class="cl-my-well" style="display:inline-block" >
                                 <div style="position: relative">
@@ -54,10 +54,10 @@
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm"
-                                    ng-class="(videoSignalingObject.selectedVideoType == 'hdVideo') ? 'btn-primary disabled' : 'btn-default'"
+                                    ng-class="(videoSignalingObject.localSelectedVideoType == 'hdVideo') ? 'btn-primary disabled' : 'btn-default'"
                                     ng-click="setLocalVideoType('hdVideo')">HD Video</button>
                             <button type="button" class="btn btn-sm"
-                                    ng-class="(videoSignalingObject.selectedVideoType == 'asciiVideo') ? 'btn-primary disabled' : 'btn-default'"
+                                    ng-class="(videoSignalingObject.localSelectedVideoType == 'asciiVideo') ? 'btn-primary disabled' : 'btn-default'"
                                     ng-click="setLocalVideoType('asciiVideo')">ASCII Video</button>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
 
                 <div class="col-sm-6" id="id-remote-video-wrapper-div">
                     <div class="text-center" >
-                        <div id="id-remote-hd-video-wrapper-div" ng-show="(videoSignalingObject.remoteSendingVideoType == 'hdVideo')">
+                        <div id="id-remote-hd-video-wrapper-div" ng-show="(videoSignalingObject.remotelocalSendingVideoType == 'hdVideo')">
                             <h4>Receiving HD Video</h4>
 
                             <div  class="cl-my-well" style="display:inline-block">
@@ -80,7 +80,7 @@
                             </div>
                         </div>
 
-                        <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"  ng-show="(videoSignalingObject.remoteSendingVideoType == 'asciiVideo')">
+                        <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"  ng-show="(videoSignalingObject.remotelocalSendingVideoType == 'asciiVideo')">
                             <h4>Receiving ASCII Video</h4>
                             <div style="display:inline-block" class="cl-my-well">
                                 <div style="position: relative">
@@ -96,10 +96,10 @@
                         <div class = "cl-hide-on-larger-than-xs">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm"
-                                        ng-class="(videoSignalingObject.selectedVideoType == 'hdVideo') ? 'btn-primary disabled' : 'btn-default'"
+                                        ng-class="(videoSignalingObject.localSelectedVideoType == 'hdVideo') ? 'btn-primary disabled' : 'btn-default'"
                                         ng-click="setLocalVideoType('hdVideo')">HD Video</button>
                                 <button type="button" class="btn btn-sm"
-                                        ng-class="(videoSignalingObject.selectedVideoType == 'asciiVideo') ? 'btn-primary disabled' : 'btn-default'"
+                                        ng-class="(videoSignalingObject.localSelectedVideoType == 'asciiVideo') ? 'btn-primary disabled' : 'btn-default'"
                                         ng-click="setLocalVideoType('asciiVideo')">ASCII Video</button>
                             </div>
                         </div>
