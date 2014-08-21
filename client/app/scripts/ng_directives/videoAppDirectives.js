@@ -57,8 +57,8 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
 
             if (newVideoType === 'hdVideo') {
                 // Other user has requested hdVideo, and this user has agreed to send it.
-                scope.localVideoObject.selectedVideoType = newVideoType;
-                callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject);
+                scope.videoSignalingObject.selectedVideoType = newVideoType;
+                callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
             }
         });
 
@@ -71,7 +71,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
     return {
         restrict: 'A',
         link : function(scope, elem) {
-            scope.$watch('remoteVideoObject.requestedVideoType', function(newVideoType) {
+            scope.$watch('videoSignalingObject.requestedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {
                     showRequestForHdVideo(scope, elem);
                 }
@@ -81,11 +81,11 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
                     // both directions.
                 }
                 else {
-                    $log.log('Error: unknown remoteVideoObject.requestedVideoType: ' + newVideoType);
+                    $log.log('Error: unknown videoSignalingObject.requestedVideoType: ' + newVideoType);
                 }
             });
 
-            scope.$watch('localVideoObject.selectedVideoType', function(newVideoType) {
+            scope.$watch('videoSignalingObject.selectedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {
                     //showWaitingForAcceptHdVideo();
                 }
@@ -151,6 +151,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             var remoteVideoObject = scope.remoteVideoObject;
             var localVideoObject = scope.localVideoObject;
+            var videoSignalingObject = scope.videoSignalingObject;
             var localVideoElem = localVideoObject.localVideoElem;
 
 
@@ -177,7 +178,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 userNotificationService.resetStatus();
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
-                channelService.openChannel(localVideoObject, remoteVideoObject);
+                channelService.openChannel(localVideoObject, remoteVideoObject, videoSignalingObject);
                 turnService.maybeRequestTurn();
 
                 // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
@@ -233,13 +234,13 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };
 
             var reattachMediaStreamToMiniVideoElems = function() {
-                if (remoteVideoObject.receivingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
+                if (videoSignalingObject.receivingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
                 }
-                else if (remoteVideoObject.receivingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
+                else if (videoSignalingObject.receivingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
                 } else {
-                    $log.log('Error: unknown receivingVideoType: ' + remoteVideoObject.receivingVideoType);
+                    $log.log('Error: unknown receivingVideoType: ' + videoSignalingObject.receivingVideoType);
                 }
             };
 
@@ -304,7 +305,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             });
 
-            scope.$watch('remoteVideoObject.receivingVideoType', function(newValue, oldValue) {
+            scope.$watch('videoSignalingObject.receivingVideoType', function(newValue, oldValue) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // Therefore, we need to make sure that the mini-video window inside the currently displayed remote
                 // video window is the only one that is active.

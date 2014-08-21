@@ -132,7 +132,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
 
             var getImageFromVideo = function() {
                 try {
-                    if (scope.localVideoObject.sendingVideoType === 'asciiVideo') {
+                    if (scope.videoSignalingObject.sendingVideoType === 'asciiVideo') {
                         localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
                         onFrame(localCanvas, $asciiDrawingTextElement);
                     }
@@ -187,14 +187,14 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
                     // This is an xs display, and therefore we need to look at which remote video type is 
                     // currently being displayed (ascii or hd), and then select the correct mini-video window
                     // (remember that the mini-video window is shown inside the currently displayed remote video window).
-                    if (scope.remoteVideoObject.receivingVideoType === 'hdVideo') {
+                    if (scope.videoSignalingObject.receivingVideoType === 'hdVideo') {
                         if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div').length === 1) {
                             getAsciiVideoFromLocalStream();
                             thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
                             $log.log('Getting local ascii video from mini-video inside hdVideo window');
                         }
                     }
-                    if (scope.remoteVideoObject.receivingVideoType === 'asciiVideo') {
+                    if (scope.videoSignalingObject.receivingVideoType === 'asciiVideo') {
                         if (angular.element(elem).parents('#id-remote-ascii-video-wrapper-div').length === 1) {
                             getAsciiVideoFromLocalStream();
                             thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
@@ -204,7 +204,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
                 }
             }
 
-            scope.$watch('localVideoObject.sendingVideoType', function(newValue) {
+            scope.$watch('videoSignalingObject.sendingVideoType', function(newValue) {
                 if (newValue === 'asciiVideo') {
                     startAsciiVideoFromAppropriateWindow();
                 } else {
@@ -220,7 +220,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
                 startAsciiVideoFromAppropriateWindow();
             });
 
-            scope.$watch('remoteVideoObject.receivingVideoType', function() {
+            scope.$watch('videoSignalingObject.receivingVideoType', function() {
                 // if the remote receivingVideoType has changed, then we need to activate the mini-window that is located
                 // inside the currently active remote video window.
                 startAsciiVideoFromAppropriateWindow();
