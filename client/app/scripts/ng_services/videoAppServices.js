@@ -130,7 +130,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                         // We may have been waiting for singalingReady to be true to begin the peer-to-peer video call.
                         // If this is the case, then we can now start the peer-to-peer transmission.
                         if (localVideoObject.selectedVideoType === 'hdVideo') {
-                            // We only transmit video if the local user has authorized it.
+                            // We only transmit video if the local user has authorized it as indicated by this if statement.
                             callService.maybeStart(localVideoObject, remoteVideoObject);
                         }
                     } else {
@@ -152,13 +152,18 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                 }
             }
            else if (messageObject.messageType === 'videoSettings') {
+                // message received that indicates a modification to the current video transmission configuration
                 if (messageObject.messagePayload.settingsType === 'requestVideoType') {
+                    // remote user has requested a change to the current video transmission type
                     remoteVideoObject.requestedVideoType = messageObject.messagePayload.requestVideoType;
                 }
                 else if (messageObject.messagePayload.settingsType === 'acceptVideoType') {
+                    // remote user has accepted local user's request to change the current video transmission type
+
+                    // ensure that the videoType that the remote user has accepted matches the value that has been
+                    // selected by the local user.
                     if (localVideoObject.selectedVideoType === messageObject.messagePayload.acceptVideoType &&
                         messageObject.messagePayload.acceptVideoType === 'hdVideo') {
-                        // The remote user has agreed to exchange hdVideo as proposed by the local user
                         // Setup the hdVideo to be transmitted via peer-to-peer transmission.
                         callService.maybeStart(localVideoObject, remoteVideoObject);
                     }

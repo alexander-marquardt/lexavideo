@@ -50,6 +50,9 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
                     elem.append(el, buttonGroup);
 
                     yesButton.on('click', function() {
+
+                        // send a message to the remote user to indicate that the local user has accepted their offer to
+                        // change the current video settings (ie. from asciiVideo to hdVideo).
                         messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', acceptVideoType: newValue});
                         $animate.addClass(elem, 'ng-hide');
 
