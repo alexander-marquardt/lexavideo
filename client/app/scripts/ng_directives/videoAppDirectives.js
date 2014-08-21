@@ -55,6 +55,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
 
                         if (newValue === 'hdVideo') {
                             // Other user has requested hdVideo, and this user has agreed to send it.
+                            scope.selectedVideoType = newValue;
                             callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject);
                         }
                     });
@@ -167,7 +168,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 if (serverConstantsService.mediaConstraints.audio === false &&
                     serverConstantsService.mediaConstraints.video === false) {
                     callService.hasAudioOrVideoMediaConstraints = false;
-                    callService.maybeStart();
+                    //callService.maybeStart(localVideoObject, remoteVideoObject);
                 } else {
                     callService.hasAudioOrVideoMediaConstraints = true;
                     mediaService.doGetUserMedia(localVideoElem);

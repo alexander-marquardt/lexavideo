@@ -118,6 +118,10 @@ def handle_message(room, user, message):
       logging.info('Room ' + room_key + ' has state ' + str(room))
       
     if other_user and room.has_user(other_user):
+      if message_type == 'sdp' and message_payload['type'] == 'offer':
+        # This is just for debugging
+        logging.info('sdp offer. Payload: %s' % repr(message_payload))
+      
       if message_type == 'sdp' and message_payload['type'] == 'offer' and other_user == user:
         # Special case the loopback scenario.
         #message = make_loopback_answer(message)

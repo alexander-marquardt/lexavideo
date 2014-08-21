@@ -123,7 +123,13 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                         // On the other hand, caller is the person who calls the callee, and is currently the second
                         // person to join the chatroom.
                         sessionService.signalingReady = true;
-                        //callService.maybeStart(localVideoObject, remoteVideoObject);
+
+                        // We may have been waiting for singalingReady to be true to begin the peer-to-peer video call.
+                        // If this is the case, then we can now start the peer-to-peer transmission.
+                        if (localVideoObject.selectedVideoType === 'hdVideo') {
+                            // We only transmit video if the local user has authorized it.
+                            callService.maybeStart(localVideoObject, remoteVideoObject);
+                        }
                     } else {
                         channelMessageService.push(sdpObject);
                     }
