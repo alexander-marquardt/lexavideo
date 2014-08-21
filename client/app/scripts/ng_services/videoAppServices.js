@@ -235,7 +235,7 @@ videoAppServices.factory('negotiateVideoType', function($log, messageService) {
         sendDenyOfVideoType : function(videoType) {
             // send a message to the remote user to indicate that local user has denied their offer to change the
             // current video settings.
-            messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', denyVideoType: newVideoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', denyVideoType: videoType});
         }
     };
 });

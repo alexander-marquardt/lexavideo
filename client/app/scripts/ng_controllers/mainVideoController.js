@@ -12,10 +12,11 @@ angular.module('videoApp')
         $scope.remoteVideoObject = {
             remoteVideoElem : $('#id-remote-video-element')[0],
             remoteVideoWrapper : $('#id-remote-video-wrapper-div')[0],
-            requestedVideoType : 'asciiVideo', // Will be updated when the other user has requested to modify the current video type
-            receivingVideoType : 'asciiVideo'  // Will be updated after the local user has agreed to modify the current video type and once
-                                               // the video exchange for the newly selected video format is correctly setup and running.
-
+            requestedVideoType : 'asciiVideo', // Will be changed when the remote user has requested to modify the current video type.
+            receivingVideoType : 'asciiVideo'  // The type of video that is being received from the remote User. This
+                                               // will be updated after the local user has agreed to accept the new video type and once
+                                               // the local user starts to receive a video stream from the remote user (ie. when
+                                               // peerService.onRemoteStreamAdded is called)
         };
 
         $scope.localVideoObject = {
@@ -25,9 +26,9 @@ angular.module('videoApp')
             miniVideoElemInsideRemoteAscii: undefined, // 'To be set in miniVideoTemplateDirective',
             isVideoMuted : false,
             isAudioMuted : false,
-            selectedVideoType : 'asciiVideo', // this is determined by the video selection button that is currently selected
-            sendingVideoType : 'asciiVideo'   // will be updated after the remote user has agreed to modify the current video type and once
-                                              // the video exchange for the newly selected video format is correctly setup and running.
+            selectedVideoType : 'asciiVideo', // this reflects the value of the video selection button that is currently selected
+            sendingVideoType : 'asciiVideo'   // will be updated after the remote user has agreed to exchange the new video type and once
+                                              // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
         };
 
         $scope.setLocalVideoType = function(selectedVideoType) {

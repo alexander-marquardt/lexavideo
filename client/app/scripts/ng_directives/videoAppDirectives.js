@@ -90,7 +90,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
                     //showWaitingForAcceptHdVideo();
                 }
 
-            })
+            });
         }
     };
 });
