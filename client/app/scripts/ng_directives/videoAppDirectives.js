@@ -170,7 +170,6 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 if (serverConstantsService.mediaConstraints.audio === false &&
                     serverConstantsService.mediaConstraints.video === false) {
                     callService.hasAudioOrVideoMediaConstraints = false;
-                    //callService.maybeStart(localVideoObject, remoteVideoObject);
                 } else {
                     callService.hasAudioOrVideoMediaConstraints = true;
                     mediaService.doGetUserMedia(localVideoElem);

@@ -103,7 +103,6 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
         return function () {
             $log.log('Channel opened.');
             channelServiceSupport.channelReady = true;
-            //callService.maybeStart(localVideoObject, remoteVideoObject);
         };
     };
 
@@ -127,8 +126,9 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                         // person to join the chatroom.
                         sessionService.signalingReady = true;
 
-                        // We may have been waiting for singalingReady to be true to begin the peer-to-peer video call.
-                        // If this is the case, then we can now start the peer-to-peer transmission.
+                        // We may have been waiting for singalingReady to be true to begin the peer-to-peer video
+                        // call (as is the case if this user is not the rtcInitiator).
+                        // If this is the case, then we can now try to start the peer-to-peer transmission.
                         if (localVideoObject.selectedVideoType === 'hdVideo') {
                             // We only transmit video if the local user has authorized it as indicated by this if statement.
                             callService.maybeStart(localVideoObject, remoteVideoObject);
@@ -269,7 +269,6 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
         return function () {
             // Even if TURN request failed, continue the call with default STUN.
             turnServiceSupport.turnDone = true;
-            //callService.maybeStart(localVideoObject, remoteVideoObject);
         };
     };
 
@@ -659,8 +658,6 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
             adapterService.attachMediaStream(localVideoDiv, stream);
             localVideoDiv.style.opacity = 1;
             streamService.localStream = stream;
-            // Caller creates PeerConnection.
-            //callService.maybeStart(localVideoObject, remoteVideoObject);
         };
     };
 
@@ -672,7 +669,6 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
                 error.code + '. Continuing without sending a stream.');
 
             callService.hasAudioOrVideoMediaConstraints = false;
-            //callService.maybeStart(localVideoObject, remoteVideoObject);
         };
     };
 
