@@ -155,7 +155,9 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                 // message received that indicates a modification to the current video transmission configuration
                 if (messageObject.messagePayload.settingsType === 'requestVideoType') {
                     // remote user has requested a change to the current video transmission type
-                    remoteVideoObject.requestedVideoType = messageObject.messagePayload.requestVideoType;
+                    $timeout(function() {
+                        remoteVideoObject.requestedVideoType = messageObject.messagePayload.requestVideoType;
+                    });
                 }
                 else if (messageObject.messagePayload.settingsType === 'acceptVideoType') {
                     // remote user has accepted local user's request to change the current video transmission type
