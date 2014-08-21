@@ -16,7 +16,7 @@ var asciiVideoDirectives = angular.module('asciiVideo.directives', ['videoApp.se
 
 asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeout, $interval, $log, streamService,
                                                                          messageService, serverConstantsService,
-                                                                         globalVarsService, sessionService) {
+                                                                         globalVarsService) {
 
     var fps;
     if (serverConstantsService.debugBuildEnabled) {

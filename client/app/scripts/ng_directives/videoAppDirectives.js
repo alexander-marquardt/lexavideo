@@ -29,7 +29,7 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
 });
 
 
-videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log, messageService) {
+videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log, messageService, callService) {
 
     return {
         restrict: 'A',
@@ -52,6 +52,11 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
                     yesButton.on('click', function() {
                         messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', acceptVideoType: newValue});
                         $animate.addClass(elem, 'ng-hide');
+
+                        if (newValue === 'hdVideo') {
+                            // Other user has requested hdVideo, and this user has agreed to send it.
+                            callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject);
+                        }
                     });
 
                     noButton.on('click', function() {
@@ -117,7 +122,8 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                                               sessionService, userNotificationService,
                                               adapterService, channelService, turnService,
                                               callService, mediaService, messageService) {
-    var sessionStatus;
+
+    var sessionStatus; // value set in a $watch function that monitors sessionService.getSessionStatus
 
     return {
         restrict : 'A',
@@ -152,7 +158,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
                 channelService.openChannel(localVideoObject, remoteVideoObject);
-                turnService.maybeRequestTurn(localVideoObject, remoteVideoObject);
+                turnService.maybeRequestTurn();
 
                 // Caller is always ready to create peerConnection.
                 // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
@@ -164,7 +170,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                     callService.maybeStart();
                 } else {
                     callService.hasAudioOrVideoMediaConstraints = true;
-                    mediaService.doGetUserMedia(localVideoElem, localVideoObject, remoteVideoObject);
+                    mediaService.doGetUserMedia(localVideoElem);
                 }
             })(); // self calling function
 
@@ -223,6 +229,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
                 // TODO - temporary hack until we sort out a better way to determine the "session" status. We cannot
                 // depend on the peer connection values, since our session encompases ascii transmission as well..
+                // remote the if (true) from the following line once this is fixed.
                 if (true || sessionStatus === 'active') {
                     if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
                         showMiniVideoElems();
