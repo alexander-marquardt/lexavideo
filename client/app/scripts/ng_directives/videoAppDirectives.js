@@ -6,7 +6,7 @@ var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.servic
 /* global $ */
 /* global viewportSize */
 
-videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationService, $compile, $sce, callService) {
+videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationService, $compile, callService) {
     return {
         restrict: 'A',
         link: function(scope, elem) {
@@ -68,6 +68,14 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
         });
     };
 
+    var  showRemoteResponseMessage = function(scope, elem, message) {
+        $animate.removeClass(elem, 'ng-hide');
+        elem.html('');
+        var el = angular.element('<p class="navbar-text"/>');
+        el.html(message);
+        elem.append(el);
+    };
+
     return {
         restrict: 'A',
         link : function(scope, elem) {
@@ -87,9 +95,23 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
 
             scope.$watch('videoSignalingObject.localSelectedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {
-                    //showWaitingForAcceptHdVideo();
+                    var message = 'We are waiting for remote user to accept your request to exchange HD Video ';
+                    showRemoteResponseMessage(scope, elem, message);
                 }
+            });
 
+            scope.$watch('videoSignalingObject.remoteResponseToLocalRequest', function(remoteResponse) {
+                var message;
+                if (remoteResponse === 'denyVideoType') {
+                    message = 'Remote user has denied your request';
+                    showRemoteResponseMessage(scope, elem, message);
+                    scope.videoSignalingObject.remoteResponseToLocalRequest = 'noResponse'; // reset to default state
+                }
+                else if (remoteResponse === 'acceptVideoType') {
+                    message = 'Remote user has accepted your request. Please wait a moment for the new video format to begin transmission.';
+                    showRemoteResponseMessage(scope, elem, message);
+                    scope.videoSignalingObject.remoteResponseToLocalRequest = 'noResponse'; // reset to default state
+                }
             });
         }
     };

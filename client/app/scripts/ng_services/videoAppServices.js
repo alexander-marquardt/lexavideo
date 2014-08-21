@@ -161,14 +161,18 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                 }
                 else if (messageObject.messagePayload.settingsType === 'acceptVideoType') {
                     // remote user has accepted local user's request to change the current video transmission type
-
+                    videoSignalingObject.remoteResponseToLocalRequest = 'acceptVideoType';
                     // ensure that the videoType that the remote user has accepted matches the value that has been
                     // selected by the local user.
-                    if (videoSignalingObject.localSelectedVideoType === messageObject.messagePayload.acceptVideoType &&
+                    if (videoSignalingObject.localSelectedVideoType === 'hdVideo' &&
                         messageObject.messagePayload.acceptVideoType === 'hdVideo') {
                         // Setup the hdVideo to be transmitted via peer-to-peer transmission.
                         callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
                     }
+                }
+                else if (messageObject.messagePayload.settingsType === 'denyVideoType') {
+                    // remote user has denied the local user's request to change the current video transmission type
+                    videoSignalingObject.remoteResponseToLocalRequest = 'denyVideoType';
                 }
                 else {
                     $log.log('Error: Unknown messagePayload received: ' + JSON.stringify(messageObject));

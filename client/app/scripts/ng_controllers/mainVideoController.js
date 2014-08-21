@@ -25,6 +25,11 @@ angular.module('videoApp')
         };
 
         $scope.videoSignalingObject = {
+            /*
+            We currently only modify the video stream transmission to hdVideo if both the local and remote users
+            agree to exchange hdVideo. Therefore, it is necessary to do some handshaking before enabling hdVideo.
+            The variables in this object keep track of the handshaking and current video transmission status.
+             */
 
             // localSelectedVideoType this reflects the value of the video selection button that is currently selected
             localSelectedVideoType : 'asciiVideo',
@@ -33,9 +38,12 @@ angular.module('videoApp')
             // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
             localSendingVideoType : 'asciiVideo',
 
+            // if the local user requests the remote user to change the video type, we track the remote response
+            // so that we can give the local user feedback.
+            remoteResponseToLocalRequest: 'noResponse', //  'noResponse', 'denyVideoType' or 'acceptVideoType'
+
             // remoteHasRequestedVideoType will be changed when the remote user has requested to modify the current video type.
             remoteHasRequestedVideoType : 'asciiVideo',
-
             /*
              remotelocalSendingVideoType: The type of video that is being received from the remote User. This
              will be updated  once the local user starts to receive a video stream from the remote user (ie. when

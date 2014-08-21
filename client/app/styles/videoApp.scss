@@ -289,3 +289,17 @@ video {
   bottom: 0;
   opacity: 0.7;
 }
+
+.cl-show-hide-fade {
+  -webkit-transition:all linear 0.5s;
+  -moz-transition: linear all 0.5s;
+  transition:all linear 0.5s;
+}
+
+.cl-show-hide-fade.ng-hide {
+  opacity:0;
+}
+
+.cl-show-hide-fade.ng-hide-add, .cl-show-hide-fade.ng-hide-remove {
+  display: block!important;
+}
