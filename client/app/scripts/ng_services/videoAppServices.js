@@ -28,7 +28,10 @@ videoAppServices.factory('globalVarsService', function (serverConstantsService) 
     var screenXsMax = $('#id-dummy-xs-div').width();
     return {
 
-        initiator : serverConstantsService.initiator,
+        // The second person to join a chatroom will be the rtcInitiator. It is done in this manner because
+        // the first to join will be ready and waiting before the second person, and therefore it makes sense
+        // to have the second person initiate the call to to first person.
+        rtcInitiator : serverConstantsService.rtcInitiator,
         pcConfig : serverConstantsService.pcConfig,
 
         // Set up audio and video regardless of what devices are present.
@@ -113,7 +116,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                 // Since the turn response is async and also GAE might disorder the
                 // Message delivery due to possible datastore query at server side,
                 // So callee needs to cache messages before peerConnection is created.
-                if (!globalVarsService.initiator && !sessionService.started) {
+                if (!globalVarsService.rtcInitiator && !sessionService.started) {
                     if (sdpObject.type === 'offer') {
                         // Add offer to the beginning of msgQueue, since we can't handle
                         // Early candidates before offer at present.
@@ -470,7 +473,7 @@ videoAppServices.factory('sessionService', function($log, $window, $rootScope, $
 
     var onRemoteHangup = function(self, localVideoObject) {
         $log.log('Session terminated.');
-        globalVarsService.initiator = 0;
+        globalVarsService.rtcInitiator = 0;
         transitionSessionStatus('waiting');
         self.stop(self, localVideoObject);
     };
@@ -744,7 +747,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 }
                 sessionService.started = true;
 
-                if (globalVarsService.initiator) {
+                if (globalVarsService.rtcInitiator) {
                     doCall();
                 }
                 else {
@@ -839,7 +842,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, inf
             infoDivService.updateErrorsInfoDiv();
         },
         resetStatus : function() {
-          if (!globalVarsService.initiator) {
+          if (!globalVarsService.rtcInitiator) {
               this.setStatus('Waiting for someone to join:  <a lass="navbar-link" href=' + serverConstantsService.roomLink + '>' + serverConstantsService.roomLink + '</a>');
           } else {
               this.setStatus('Initializing...');

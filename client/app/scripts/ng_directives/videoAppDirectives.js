@@ -55,7 +55,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
 
                         if (newValue === 'hdVideo') {
                             // Other user has requested hdVideo, and this user has agreed to send it.
-                            scope.selectedVideoType = newValue;
+                            scope.localVideoObject.selectedVideoType = newValue;
                             callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject);
                         }
                     });
@@ -161,9 +161,8 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 channelService.openChannel(localVideoObject, remoteVideoObject);
                 turnService.maybeRequestTurn();
 
-                // Caller is always ready to create peerConnection.
-                // ARM Note: Caller is the 2nd person to join the chatroom, not the creator
-                sessionService.signalingReady = globalVarsService.initiator;
+                // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
+                sessionService.signalingReady = globalVarsService.rtcInitiator;
 
                 if (serverConstantsService.mediaConstraints.audio === false &&
                     serverConstantsService.mediaConstraints.video === false) {
