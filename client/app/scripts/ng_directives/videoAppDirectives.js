@@ -29,52 +29,68 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
 });
 
 
-videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log, messageService, callService) {
+videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log,
+                                                                             negotiateVideoType, callService) {
+
+
+    var showRequestForHdVideo = function(scope, elem) {
+        // if the other user has requested an hdVideo session, the local user must accept before we will
+        // send and receive HD video.
+
+        var newVideoType = 'hdVideo';
+
+        $animate.removeClass(elem, 'ng-hide');
+        elem.html('');
+        var el = angular.element('<p class="navbar-text"/>');
+        el.html('Stranger has requested to exchange HD video. Do you accept: ');
+        var buttonGroup = angular.element('<div class="btn-group"></div>');
+        var yesButton = angular.element('<button type="button" class="btn btn-default btn-sm navbar-btn">Yes</button>');
+        var noButton = angular.element('<button type="button" class="btn btn-default btn-sm navbar-btn">No</button>');
+        buttonGroup.append(yesButton, noButton );
+        elem.append(el, buttonGroup);
+
+        yesButton.on('click', function() {
+
+
+            negotiateVideoType.sendAcceptanceOfVideoType(newVideoType);
+            $animate.addClass(elem, 'ng-hide');
+
+            if (newVideoType === 'hdVideo') {
+                // Other user has requested hdVideo, and this user has agreed to send it.
+                scope.localVideoObject.selectedVideoType = newVideoType;
+                callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject);
+            }
+        });
+
+        noButton.on('click', function() {
+            negotiateVideoType.sendDenyOfVideoType(newVideoType);
+            $animate.addClass(elem, 'ng-hide');
+        });
+    };
 
     return {
         restrict: 'A',
         link : function(scope, elem) {
-            scope.$watch('remoteVideoObject.requestedVideoType', function(newValue) {
-                if (newValue === 'hdVideo') {
-                    // if the other user has requested an hdVideo session, the local user must accept before we will
-                    // send and receive HD video.
-
-                    $animate.removeClass(elem, 'ng-hide');
-                    elem.html('');
-                    var el = angular.element('<p class="navbar-text"/>');
-                    el.html('Stranger has requested to exchange HD video. Do you accept: ');
-                    var buttonGroup = angular.element('<div class="btn-group"></div>');
-                    var yesButton = angular.element('<button type="button" class="btn btn-default btn-sm navbar-btn">Yes</button>');
-                    var noButton = angular.element('<button type="button" class="btn btn-default btn-sm navbar-btn">No</button>');
-                    buttonGroup.append(yesButton, noButton );
-                    elem.append(el, buttonGroup);
-
-                    yesButton.on('click', function() {
-
-                        // send a message to the remote user to indicate that the local user has accepted their offer to
-                        // change the current video settings (ie. from asciiVideo to hdVideo).
-                        messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', acceptVideoType: newValue});
-                        $animate.addClass(elem, 'ng-hide');
-
-                        if (newValue === 'hdVideo') {
-                            // Other user has requested hdVideo, and this user has agreed to send it.
-                            scope.localVideoObject.selectedVideoType = newValue;
-                            callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject);
-                        }
-                    });
-
-                    noButton.on('click', function() {
-                        messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', denyVideoType: newValue});
-                        $animate.addClass(elem, 'ng-hide');
-                    });
-                } else if (newValue === 'asciiVideo') {
+            scope.$watch('remoteVideoObject.requestedVideoType', function(newVideoType) {
+                if (newVideoType === 'hdVideo') {
+                    showRequestForHdVideo(scope, elem);
+                }
+                else if (newVideoType === 'asciiVideo') {
                     // by default, we do not ask for permission to switch to ascii video mode. If one of the users requests
                     // a switch to asciiVideo, then we will tear down the peer connection, and will transmit ascii video in
                     // both directions.
-                } else {
-                    $log.log('Error: unknown remoteVideoObject.requestedVideoType: ' + newValue);
+                }
+                else {
+                    $log.log('Error: unknown remoteVideoObject.requestedVideoType: ' + newVideoType);
                 }
             });
+
+            scope.$watch('localVideoObject.selectedVideoType', function(newVideoType) {
+                if (newVideoType === 'hdVideo') {
+                    //showWaitingForAcceptHdVideo();
+                }
+
+            })
         }
     };
 });

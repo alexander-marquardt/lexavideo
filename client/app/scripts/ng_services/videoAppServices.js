@@ -224,6 +224,18 @@ videoAppServices.factory('negotiateVideoType', function($log, messageService) {
     return {
         sendRequestForVideoType : function (videoType) {
             messageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', requestVideoType: videoType});
+        },
+
+        sendAcceptanceOfVideoType : function(videoType) {
+            // send a message to the remote user to indicate that the local user has accepted their offer to
+            // change the current video settings (ie. from asciiVideo to hdVideo).
+            messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', acceptVideoType: videoType});
+        },
+
+        sendDenyOfVideoType : function(videoType) {
+            // send a message to the remote user to indicate that local user has denied their offer to change the
+            // current video settings.
+            messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', denyVideoType: newVideoType});
         }
     };
 });
