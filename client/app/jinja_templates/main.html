@@ -67,7 +67,7 @@
 
                 <div class="col-sm-6" id="id-remote-video-wrapper-div">
                     <div class="text-center" >
-                        <div id="id-remote-hd-video-wrapper-div" ng-show="(videoSignalingObject.receivingVideoType == 'hdVideo')">
+                        <div id="id-remote-hd-video-wrapper-div" ng-show="(videoSignalingObject.remoteSendingVideoType == 'hdVideo')">
                             <h4>Receiving HD Video</h4>
 
                             <div  class="cl-my-well" style="display:inline-block">
@@ -80,7 +80,7 @@
                             </div>
                         </div>
 
-                        <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"  ng-show="(videoSignalingObject.receivingVideoType == 'asciiVideo')">
+                        <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"  ng-show="(videoSignalingObject.remoteSendingVideoType == 'asciiVideo')">
                             <h4>Receiving ASCII Video</h4>
                             <div style="display:inline-block" class="cl-my-well">
                                 <div style="position: relative">

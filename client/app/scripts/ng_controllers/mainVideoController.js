@@ -30,7 +30,7 @@ angular.module('videoApp')
             sendingVideoType : 'asciiVideo',   // will be updated after the remote user has agreed to exchange the new video type and once
                                               // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
             requestedVideoType : 'asciiVideo', // Will be changed when the remote user has requested to modify the current video type.
-            receivingVideoType : 'asciiVideo'  // The type of video that is being received from the remote User. This
+            remoteSendingVideoType : 'asciiVideo'  // The type of video that is being received from the remote User. This
                                                // will be updated after the local user has agreed to accept the new video type and once
                                                // the local user starts to receive a video stream from the remote user (ie. when
                                                // peerService.onRemoteStreamAdded is called)

@@ -234,13 +234,13 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };
 
             var reattachMediaStreamToMiniVideoElems = function() {
-                if (videoSignalingObject.receivingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
+                if (videoSignalingObject.remoteSendingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
                 }
-                else if (videoSignalingObject.receivingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
+                else if (videoSignalingObject.remoteSendingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
                 } else {
-                    $log.log('Error: unknown receivingVideoType: ' + videoSignalingObject.receivingVideoType);
+                    $log.log('Error: unknown remoteSendingVideoType: ' + videoSignalingObject.remoteSendingVideoType);
                 }
             };
 
@@ -305,11 +305,11 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             });
 
-            scope.$watch('videoSignalingObject.receivingVideoType', function(newValue, oldValue) {
+            scope.$watch('videoSignalingObject.remoteSendingVideoType', function(newValue, oldValue) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // Therefore, we need to make sure that the mini-video window inside the currently displayed remote
                 // video window is the only one that is active.
-                $log.log('Remote receivingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
+                $log.log('Remote remoteSendingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
                 if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
                     removeMiniVideoElemsSrc();
                     reattachMediaStreamToMiniVideoElems();

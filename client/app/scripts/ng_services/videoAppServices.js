@@ -592,7 +592,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
             $log.log('Remote stream added.');
             adapterService.attachMediaStream(remoteVideoObject.remoteVideoElem, mediaStreamEvent.stream);
             self.remoteStream = mediaStreamEvent.stream;
-            videoSignalingObject.receivingVideoType = 'hdVideo';
+            videoSignalingObject.remoteSendingVideoType = 'hdVideo';
         };
     };
 
