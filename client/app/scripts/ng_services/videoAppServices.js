@@ -153,26 +153,26 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
             }
            else if (messageObject.messageType === 'videoSettings') {
                 // message received that indicates a modification to the current video transmission configuration
-                if (messageObject.messagePayload.settingsType === 'requestVideoType') {
+                if (messageObject.messagePayload.settingsType === 'requestChangeVideoType') {
                     // remote user has requested a change to the current video transmission type
                     $timeout(function() {
-                        videoSignalingObject.remoteHasRequestedVideoType = messageObject.messagePayload.requestVideoType;
+                        videoSignalingObject.remoteHasRequestedVideoType = messageObject.messagePayload.requestChangeVideoType;
                     });
                 }
-                else if (messageObject.messagePayload.settingsType === 'acceptVideoType') {
+                else if (messageObject.messagePayload.settingsType === 'acceptChangeVideoType') {
                     // remote user has accepted local user's request to change the current video transmission type
-                    videoSignalingObject.remoteResponseToLocalRequest = 'acceptVideoType';
+                    videoSignalingObject.remoteResponseToLocalRequest = 'acceptChangeVideoType';
                     // ensure that the videoType that the remote user has accepted matches the value that has been
                     // selected by the local user.
                     if (videoSignalingObject.localHasSelectedVideoType === 'hdVideo' &&
-                        messageObject.messagePayload.acceptVideoType === 'hdVideo') {
+                        messageObject.messagePayload.acceptChangeVideoType === 'hdVideo') {
                         // Setup the hdVideo to be transmitted via peer-to-peer transmission.
                         callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
                     }
                 }
-                else if (messageObject.messagePayload.settingsType === 'denyVideoType') {
+                else if (messageObject.messagePayload.settingsType === 'denyChangeVideoType') {
                     // remote user has denied the local user's request to change the current video transmission type
-                    videoSignalingObject.remoteResponseToLocalRequest = 'denyVideoType';
+                    videoSignalingObject.remoteResponseToLocalRequest = 'denyChangeVideoType';
                 }
                 else {
                     $log.log('Error: Unknown messagePayload received: ' + JSON.stringify(messageObject));
@@ -227,19 +227,19 @@ videoAppServices.factory('negotiateVideoType', function($log, messageService) {
 
     return {
         sendRequestForVideoType : function (videoType) {
-            messageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', requestVideoType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'requestChangeVideoType', requestChangeVideoType: videoType});
         },
 
         sendAcceptanceOfVideoType : function(videoType) {
             // send a message to the remote user to indicate that the local user has accepted their offer to
             // change the current video settings (ie. from asciiVideo to hdVideo).
-            messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', acceptVideoType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'acceptChangeVideoType', acceptChangeVideoType: videoType});
         },
 
         sendDenyOfVideoType : function(videoType) {
             // send a message to the remote user to indicate that local user has denied their offer to change the
             // current video settings.
-            messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', denyVideoType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'denyChangeVideoType', denyChangeVideoType: videoType});
         }
     };
 });
@@ -669,17 +669,18 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
                           callService, streamService) {
 
 
-    var onUserMediaSuccess = function(localVideoDiv) {
+    var onUserMediaSuccess = function(localVideoDiv, videoSignalingObject) {
         return function(stream) {
             $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
             adapterService.attachMediaStream(localVideoDiv, stream);
             localVideoDiv.style.opacity = 1;
             streamService.localStream = stream;
+            videoSignalingObject.localUserHasTurnedOnCamera = true;
         };
     };
 
-    var onUserMediaError = function() {
+    var onUserMediaError = function(videoSignalingObject) {
         return function(error) {
             userNotificationService.messageError('Failed to get access to local media. Error code was ' +
                 error.code + '. Continuing without sending a stream.');
@@ -687,23 +688,26 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
                 error.code + '. Continuing without sending a stream.');
 
             callService.hasAudioOrVideoMediaConstraints = false;
+            videoSignalingObject.localUserHasTurnedOnCamera = false;
+
         };
     };
 
     return {
 
 
-        doGetUserMedia  : function(localVideoDiv) {
+        doGetUserMedia  : function(localVideoDiv, videoSignalingObject) {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
                 adapterService.getUserMedia(serverConstantsService.mediaConstraints,
-                    onUserMediaSuccess(localVideoDiv),
-                    onUserMediaError());
+                    onUserMediaSuccess(localVideoDiv, videoSignalingObject),
+                    onUserMediaError(videoSignalingObject));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(serverConstantsService.mediaConstraints) + '\'');
             } catch (e) {
                 alert('getUserMedia() failed. Is this a WebRTC capable browser?');
                 userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
+                videoSignalingObject.localUserHasTurnedOnCamera = false;
             }
         }
     };

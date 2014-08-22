@@ -68,7 +68,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
         });
     };
 
-    var  showRemoteResponseMessage = function(scope, elem, message) {
+    var  showMessageInVideoWindow = function(scope, elem, message) {
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
         var el = angular.element('<p class="navbar-text"/>');
@@ -96,7 +96,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {
                     var message = 'We are waiting for remote user to accept your request to exchange HD Video ';
-                    showRemoteResponseMessage(scope, elem, message);
+                    showMessageInVideoWindow(scope, elem, message);
                 }
             });
 
@@ -104,12 +104,12 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
                 var message;
                 if (remoteResponse === 'denyVideoType') {
                     message = 'Remote user has denied your request';
-                    showRemoteResponseMessage(scope, elem, message);
+                    showMessageInVideoWindow(scope, elem, message);
                     scope.videoSignalingObject.remoteResponseToLocalRequest = 'noResponse'; // reset to default state
                 }
                 else if (remoteResponse === 'acceptVideoType') {
                     message = 'Remote user has accepted your request. Please wait a moment for the new video format to begin transmission.';
-                    showRemoteResponseMessage(scope, elem, message);
+                    showMessageInVideoWindow(scope, elem, message);
                     scope.videoSignalingObject.remoteResponseToLocalRequest = 'noResponse'; // reset to default state
                 }
             });
@@ -211,7 +211,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                     callService.hasAudioOrVideoMediaConstraints = false;
                 } else {
                     callService.hasAudioOrVideoMediaConstraints = true;
-                    mediaService.doGetUserMedia(localVideoElem);
+                    mediaService.doGetUserMedia(localVideoElem, videoSignalingObject);
                 }
             })(); // self calling function
 
