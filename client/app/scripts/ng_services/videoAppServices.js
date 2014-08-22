@@ -129,7 +129,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                         // We may have been waiting for singalingReady to be true to begin the peer-to-peer video
                         // call (as is the case if this user is not the rtcInitiator).
                         // If this is the case, then we can now try to start the peer-to-peer transmission.
-                        if (videoSignalingObject.localSelectedVideoType === 'hdVideo') {
+                        if (videoSignalingObject.localHasSelectedVideoType === 'hdVideo') {
                             // We only transmit video if the local user has authorized it as indicated by this if statement.
                             callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
                         }
@@ -164,7 +164,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                     videoSignalingObject.remoteResponseToLocalRequest = 'acceptVideoType';
                     // ensure that the videoType that the remote user has accepted matches the value that has been
                     // selected by the local user.
-                    if (videoSignalingObject.localSelectedVideoType === 'hdVideo' &&
+                    if (videoSignalingObject.localHasSelectedVideoType === 'hdVideo' &&
                         messageObject.messagePayload.acceptVideoType === 'hdVideo') {
                         // Setup the hdVideo to be transmitted via peer-to-peer transmission.
                         callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
@@ -596,7 +596,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
             $log.log('Remote stream added.');
             adapterService.attachMediaStream(remoteVideoObject.remoteVideoElem, mediaStreamEvent.stream);
             self.remoteStream = mediaStreamEvent.stream;
-            videoSignalingObject.remotelocalSendingVideoType = 'hdVideo';
+            videoSignalingObject.remoteIsSendingVideoType = 'hdVideo';
         };
     };
 
@@ -649,7 +649,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
         },
         addLocalVideoStream : function(localStream, localVideoObject, videoSignalingObject) {
             if (this.pc) {
-                videoSignalingObject.localSendingVideoType = 'hdVideo';
+                videoSignalingObject.localIsSendingVideoType = 'hdVideo';
                 this.pc.addStream(localStream);
             } else {
                 $log.log('** Error: no peer connection has been established, and therefore we cannot add the stream to it.');

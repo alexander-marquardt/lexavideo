@@ -57,7 +57,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
 
             if (newVideoType === 'hdVideo') {
                 // Other user has requested hdVideo, and this user has agreed to send it.
-                scope.videoSignalingObject.localSelectedVideoType = newVideoType;
+                scope.videoSignalingObject.localHasSelectedVideoType = newVideoType;
                 callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
             }
         });
@@ -93,7 +93,7 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
                 }
             });
 
-            scope.$watch('videoSignalingObject.localSelectedVideoType', function(newVideoType) {
+            scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {
                     var message = 'We are waiting for remote user to accept your request to exchange HD Video ';
                     showRemoteResponseMessage(scope, elem, message);
@@ -256,13 +256,13 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };
 
             var reattachMediaStreamToMiniVideoElems = function() {
-                if (videoSignalingObject.remotelocalSendingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
+                if (videoSignalingObject.remoteIsSendingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
                 }
-                else if (videoSignalingObject.remotelocalSendingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
+                else if (videoSignalingObject.remoteIsSendingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
                     adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
                 } else {
-                    $log.log('Error: unknown remotelocalSendingVideoType: ' + videoSignalingObject.remotelocalSendingVideoType);
+                    $log.log('Error: unknown remoteIsSendingVideoType: ' + videoSignalingObject.remoteIsSendingVideoType);
                 }
             };
 
@@ -327,11 +327,11 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             });
 
-            scope.$watch('videoSignalingObject.remotelocalSendingVideoType', function(newValue, oldValue) {
+            scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(newValue, oldValue) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // Therefore, we need to make sure that the mini-video window inside the currently displayed remote
                 // video window is the only one that is active.
-                $log.log('Remote remotelocalSendingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
+                $log.log('Remote remoteIsSendingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
                 if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
                     removeMiniVideoElemsSrc();
                     reattachMediaStreamToMiniVideoElems();

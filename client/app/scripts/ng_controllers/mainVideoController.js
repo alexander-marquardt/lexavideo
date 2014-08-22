@@ -31,12 +31,12 @@ angular.module('videoApp')
             The variables in this object keep track of the handshaking and current video transmission status.
              */
 
-            // localSelectedVideoType this reflects the value of the video selection button that is currently selected
-            localSelectedVideoType : 'asciiVideo',
+            // localHasSelectedVideoType this reflects the value of the video selection button that is currently selected
+            localHasSelectedVideoType : 'asciiVideo',
 
-            // localSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
+            // localIsSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
             // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
-            localSendingVideoType : 'asciiVideo',
+            localIsSendingVideoType : 'asciiVideo',
 
             // if the local user requests the remote user to change the video type, we track the remote response
             // so that we can give the local user feedback.
@@ -45,16 +45,16 @@ angular.module('videoApp')
             // remoteHasRequestedVideoType will be changed when the remote user has requested to modify the current video type.
             remoteHasRequestedVideoType : 'asciiVideo',
             /*
-             remotelocalSendingVideoType: The type of video that is being received from the remote User. This
+             remoteIsSendingVideoType: The type of video that is being received from the remote User. This
              will be updated  once the local user starts to receive a video stream from the remote user (ie. when
              peerService.onRemoteStreamAdded is called)
              */
-            remotelocalSendingVideoType : 'asciiVideo'
+            remoteIsSendingVideoType : 'asciiVideo'
         };
 
-        $scope.setLocalVideoType = function(localSelectedVideoType) {
+        $scope.setLocalVideoType = function(localHasSelectedVideoType) {
             // videoType should be 'hdVideo' or 'asciiVideo'
-            $scope.videoSignalingObject.localSelectedVideoType = localSelectedVideoType;
-            negotiateVideoType.sendRequestForVideoType(localSelectedVideoType);
+            $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
+            negotiateVideoType.sendRequestForVideoType(localHasSelectedVideoType);
         };
 });
