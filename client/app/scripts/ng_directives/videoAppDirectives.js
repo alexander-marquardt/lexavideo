@@ -40,7 +40,7 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($i
             var localVideoElem = scope.localVideoObject.localVideoElem;
             var flashingArrowInterval;
             var arrowElement = angular.element(elem).find('.cl-arrow');
-            var addRemoveClassName = "dim";
+            var addRemoveClassName = 'cl-show-arrow';
 
             if (serverConstantsService.mediaConstraints.audio === false &&
                 serverConstantsService.mediaConstraints.video === false) {
@@ -52,16 +52,18 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($i
 
             if (!videoSignalingObject.localUserHasTurnedOnCamera) {
                 flashingArrowInterval = $interval(function() {
-                    arrowElement.hasClass(addRemoveClassName) ?
-                      $animate.removeClass(arrowElement, addRemoveClassName) :
-                      $animate.addClass(arrowElement, addRemoveClassName);
-                }, 2000);
+                    if (arrowElement.hasClass(addRemoveClassName)) {
+                        arrowElement.removeClass(addRemoveClassName);
+                    } else {
+                        $animate.addClass(arrowElement, addRemoveClassName);
+                    }
+                }, 4000);
             }
 
             scope.$watch('videoSignalingObject.localUserHasTurnedOnCamera', function() {
 
                 if (videoSignalingObject.localUserHasTurnedOnCamera) {
-                    showHideElement.addClass('ng-hide');
+                    arrowElement.addClass('ng-hide');
                     $interval.cancel(flashingArrowInterval);
                 }
             });

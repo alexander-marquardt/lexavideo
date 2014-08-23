@@ -304,33 +304,34 @@ video {
   display: block!important;
 }
 
-$arrow-triangle-width : 90px;
-$arrow-triangle-height : 90px;
-$arrow-stem-width : 30px;
-$arrow-stem-height : 90px;
+$arrow-color: #E75045;
+$arrow-triangle-width : 70px;
+$arrow-triangle-height : 70px;
+$arrow-stem-width : 20px;
+$arrow-stem-height : 50px;
 
 .cl-arrow-wrapper-osx-chrome {
   position: fixed;
   top: 3px;
-  right : 30px;
+  right : 15px;
   z-index: 50;
+}
 
-  -ms-transform: rotate(45deg); /* ie 9 */
-  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-  transform: rotate(45deg);
+.cl-arrow-transition {
+  -webkit-transition:all linear 3s;
+  -moz-transition: linear all 3s;
+  transition:all linear 3s;
 }
 
 .cl-arrow {
+  @extend .cl-arrow-transition;
   position: relative;
   width: $arrow-triangle-width;
-
-  -webkit-transition:all linear 0.5s;
-  -moz-transition: linear all 0.5s;
-  transition:all linear 0.5s;
+  opacity: 0
 }
 
-.cl-arrow.dim {
-  opacity: 0.5;
+.cl-arrow.cl-show-arrow {
+  opacity: 1;
 }
 
 .cl-arrow i {
@@ -340,15 +341,21 @@ $arrow-stem-height : 90px;
   height: 0;
   border-left: $arrow-triangle-width / 2 solid transparent;
   border-right: $arrow-triangle-width / 2 solid transparent;
-  border-bottom: $arrow-triangle-height solid red;
+  border-bottom: $arrow-triangle-height solid $arrow-color;
 }
 .cl-arrow i+i {
+  @extend .cl-arrow-transition;
   // draw the arrow stem
   position: absolute;
   top: $arrow-triangle-height - 1px;
   left: $arrow-triangle-width / 2 - $arrow-stem-width / 2;
   width: $arrow-stem-width;
-  height: $arrow-stem-height;
-  background: red;
+  height: $arrow-stem-height * 8;
+  background: $arrow-color;
   border: 0px;
+}
+
+.cl-arrow.cl-show-arrow i+i {
+  // at the end of the animation, the arrow stem is shorter than at the beginning.
+  height : $arrow-stem-height;
 }
