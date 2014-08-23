@@ -28,14 +28,18 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
     };
 });
 
-videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function(serverConstantsService, callService, mediaService ) {
+videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($interval, $animate,
+                                                                              serverConstantsService, callService, mediaService ) {
 
     return {
         restrict: 'A',
-        link: function(scope) {
+        template: '<div class="cl-arrow-wrapper-osx-chrome"><div class="cl-arrow"><i></i><i></i></div></div>',
+        link: function(scope, elem) {
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoElem = scope.localVideoObject.localVideoElem;
-
+            var flashingArrowInterval;
+            var showHideElement = angular.element(elem).find('.cl-show-hide-fade');
+            var arrowColor = 'red';
 
             if (serverConstantsService.mediaConstraints.audio === false &&
                 serverConstantsService.mediaConstraints.video === false) {
@@ -45,9 +49,26 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function(se
                 mediaService.doGetUserMedia(localVideoElem, videoSignalingObject);
             }
 
+            if (!videoSignalingObject.localUserHasTurnedOnCamera) {
+/*                flashingArrowInterval = $interval(function() {
+                    if (arrowColor === 'red') {
+                        $animate.removeClass(showHideElement, 'cl-red-arrow');
+                        $animate.addClass(showHideElement, 'cl-blue-arrow');
+                        arrowColor = 'blue';
+                    } else {
+                        $animate.removeClass(showHideElement, 'cl-blue-arrow');
+                        $animate.addClass(showHideElement, 'cl-red-arrow');
+                        arrowColor = 'red';
+                    }
+                }, 1000);*/
+            }
 
             scope.$watch('videoSignalingObject.localUserHasTurnedOnCamera', function() {
 
+                if (videoSignalingObject.localUserHasTurnedOnCamera) {
+                    showHideElement.addClass('ng-hide');
+                    $interval.cancel(flashingArrowInterval);
+                }
             });
         }
     };
