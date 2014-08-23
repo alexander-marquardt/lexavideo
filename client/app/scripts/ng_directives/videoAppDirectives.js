@@ -39,6 +39,7 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoElem = scope.localVideoObject.localVideoElem;
             var timerId;
+            var wrapperElement = angular.element(elem).find('.cl-arrow-wrapper-osx-chrome');
             var arrowElement = angular.element(elem).find('.cl-arrow');
 
             if (serverConstantsService.mediaConstraints.audio === false &&
@@ -55,11 +56,13 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
                     timerId = $timeout(function() {
                         if (arrowElement.hasClass('cl-show-arrow')) {
                             arrowElement.removeClass('cl-show-arrow');
-                            timeoutInMilliseconds = 0;
+                            wrapperElement.removeClass('cl-show-arrow');
+                            timeoutInMilliseconds = 2000;
                         } else {
                             // the arrow is now shown, leave it there for a while
                             $animate.addClass(arrowElement, 'cl-show-arrow');
-                            timeoutInMilliseconds = 20000;
+                            $animate.addClass(wrapperElement, 'cl-show-arrow');
+                            timeoutInMilliseconds = 10000;
                         }
                         timeoutFn();
                     }, timeoutInMilliseconds);

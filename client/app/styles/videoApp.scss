@@ -310,17 +310,22 @@ $arrow-triangle-height : 70px;
 $arrow-stem-width : 20px;
 $arrow-stem-height : 50px;
 
-.cl-arrow-wrapper-osx-chrome {
-  position: fixed;
-  top: 3px;
-  right : 15px;
-  z-index: 50;
-}
-
 .cl-arrow-transition {
   -webkit-transition:all linear 3s;
   -moz-transition: linear all 3s;
   transition:all linear 3s;
+}
+
+.cl-arrow-wrapper-osx-chrome {
+  position: fixed;
+  top: 100px;
+  right : 15px;
+  z-index: 50;
+}
+
+.cl-arrow-wrapper-osx-chrome.cl-show-arrow {
+  @extend .cl-arrow-transition;
+  top: 3px;
 }
 
 .cl-arrow {
