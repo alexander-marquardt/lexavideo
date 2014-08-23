@@ -29,7 +29,7 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
     };
 });
 
-videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($interval, $animate,
+videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($timeout, $animate,
                                                                               serverConstantsService, callService, mediaService ) {
 
     return {
@@ -38,9 +38,8 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($i
         link: function(scope, elem) {
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoElem = scope.localVideoObject.localVideoElem;
-            var flashingArrowInterval;
+            var timerId;
             var arrowElement = angular.element(elem).find('.cl-arrow');
-            var addRemoveClassName = 'cl-show-arrow';
 
             if (serverConstantsService.mediaConstraints.audio === false &&
                 serverConstantsService.mediaConstraints.video === false) {
@@ -51,20 +50,28 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($i
             }
 
             if (!videoSignalingObject.localUserHasTurnedOnCamera) {
-                flashingArrowInterval = $interval(function() {
-                    if (arrowElement.hasClass(addRemoveClassName)) {
-                        arrowElement.removeClass(addRemoveClassName);
-                    } else {
-                        $animate.addClass(arrowElement, addRemoveClassName);
-                    }
-                }, 4000);
+                var timeoutInMilliseconds = 0;
+                var timeoutFn = function() {
+                    timerId = $timeout(function() {
+                        if (arrowElement.hasClass('cl-show-arrow')) {
+                            arrowElement.removeClass('cl-show-arrow');
+                            timeoutInMilliseconds = 0;
+                        } else {
+                            // the arrow is now shown, leave it there for a while
+                            $animate.addClass(arrowElement, 'cl-show-arrow');
+                            timeoutInMilliseconds = 20000;
+                        }
+                        timeoutFn();
+                    }, timeoutInMilliseconds);
+                };
+                timeoutFn();
             }
 
             scope.$watch('videoSignalingObject.localUserHasTurnedOnCamera', function() {
 
                 if (videoSignalingObject.localUserHasTurnedOnCamera) {
                     arrowElement.addClass('ng-hide');
-                    $interval.cancel(flashingArrowInterval);
+                    $timeout.cancel(timerId);
                 }
             });
         }

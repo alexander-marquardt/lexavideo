@@ -324,10 +324,13 @@ $arrow-stem-height : 50px;
 }
 
 .cl-arrow {
-  @extend .cl-arrow-transition;
   position: relative;
   width: $arrow-triangle-width;
   opacity: 0
+}
+
+.cl-arrow.cl-show-arrow {
+  @extend .cl-arrow-transition;
 }
 
 .cl-arrow.cl-show-arrow {
@@ -344,7 +347,6 @@ $arrow-stem-height : 50px;
   border-bottom: $arrow-triangle-height solid $arrow-color;
 }
 .cl-arrow i+i {
-  @extend .cl-arrow-transition;
   // draw the arrow stem
   position: absolute;
   top: $arrow-triangle-height - 1px;
@@ -353,6 +355,11 @@ $arrow-stem-height : 50px;
   height: $arrow-stem-height * 8;
   background: $arrow-color;
   border: 0px;
+}
+
+.cl-arrow.cl-show-arrow i+i {
+  // only show the animation when we are adding the .cl-show-arrow class, not when it is removed
+  @extend .cl-arrow-transition;
 }
 
 .cl-arrow.cl-show-arrow i+i {
