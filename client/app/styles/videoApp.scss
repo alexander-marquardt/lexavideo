@@ -323,7 +323,16 @@ $arrow-stem-height : 90px;
 .cl-arrow {
   position: relative;
   width: $arrow-triangle-width;
+
+  -webkit-transition:all linear 0.5s;
+  -moz-transition: linear all 0.5s;
+  transition:all linear 0.5s;
 }
+
+.cl-arrow.dim {
+  opacity: 0.5;
+}
+
 .cl-arrow i {
   // draw the triangle part of the arrow
   position: absolute;
@@ -343,4 +352,3 @@ $arrow-stem-height : 90px;
   background: red;
   border: 0px;
 }
-

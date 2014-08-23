@@ -6,6 +6,7 @@ var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.servic
 /* global $ */
 /* global viewportSize */
 
+
 videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationService, $compile, callService) {
     return {
         restrict: 'A',
@@ -33,13 +34,13 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($i
 
     return {
         restrict: 'A',
-        template: '<div class="cl-arrow-wrapper-osx-chrome"><div class="cl-arrow"><i></i><i></i></div></div>',
+        template: '<div class="cl-arrow-wrapper-osx-chrome"><div class="cl-arrow""><i></i><i></i></div></div>',
         link: function(scope, elem) {
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoElem = scope.localVideoObject.localVideoElem;
             var flashingArrowInterval;
-            var showHideElement = angular.element(elem).find('.cl-show-hide-fade');
-            var arrowColor = 'red';
+            var arrowElement = angular.element(elem).find('.cl-arrow');
+            var addRemoveClassName = "dim";
 
             if (serverConstantsService.mediaConstraints.audio === false &&
                 serverConstantsService.mediaConstraints.video === false) {
@@ -50,17 +51,11 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($i
             }
 
             if (!videoSignalingObject.localUserHasTurnedOnCamera) {
-/*                flashingArrowInterval = $interval(function() {
-                    if (arrowColor === 'red') {
-                        $animate.removeClass(showHideElement, 'cl-red-arrow');
-                        $animate.addClass(showHideElement, 'cl-blue-arrow');
-                        arrowColor = 'blue';
-                    } else {
-                        $animate.removeClass(showHideElement, 'cl-blue-arrow');
-                        $animate.addClass(showHideElement, 'cl-red-arrow');
-                        arrowColor = 'red';
-                    }
-                }, 1000);*/
+                flashingArrowInterval = $interval(function() {
+                    arrowElement.hasClass(addRemoveClassName) ?
+                      $animate.removeClass(arrowElement, addRemoveClassName) :
+                      $animate.addClass(arrowElement, addRemoveClassName);
+                }, 2000);
             }
 
             scope.$watch('videoSignalingObject.localUserHasTurnedOnCamera', function() {
