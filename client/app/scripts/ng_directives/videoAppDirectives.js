@@ -28,6 +28,30 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
     };
 });
 
+videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function(serverConstantsService, callService, mediaService ) {
+
+    return {
+        restrict: 'A',
+        link: function(scope) {
+            var videoSignalingObject = scope.videoSignalingObject;
+            var localVideoElem = scope.localVideoObject.localVideoElem;
+
+
+            if (serverConstantsService.mediaConstraints.audio === false &&
+                serverConstantsService.mediaConstraints.video === false) {
+                callService.hasAudioOrVideoMediaConstraints = false;
+            } else {
+                callService.hasAudioOrVideoMediaConstraints = true;
+                mediaService.doGetUserMedia(localVideoElem, videoSignalingObject);
+            }
+
+
+            scope.$watch('videoSignalingObject.localUserHasTurnedOnCamera', function() {
+
+            });
+        }
+    };
+});
 
 videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log,
                                                                              negotiateVideoType, callService) {
@@ -174,7 +198,6 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             var remoteVideoObject = scope.remoteVideoObject;
             var localVideoObject = scope.localVideoObject;
             var videoSignalingObject = scope.videoSignalingObject;
-            var localVideoElem = localVideoObject.localVideoElem;
 
 
             (function() {
@@ -206,13 +229,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
                 sessionService.signalingReady = globalVarsService.rtcInitiator;
 
-                if (serverConstantsService.mediaConstraints.audio === false &&
-                    serverConstantsService.mediaConstraints.video === false) {
-                    callService.hasAudioOrVideoMediaConstraints = false;
-                } else {
-                    callService.hasAudioOrVideoMediaConstraints = true;
-                    mediaService.doGetUserMedia(localVideoElem, videoSignalingObject);
-                }
+
             })(); // self calling function
 
 

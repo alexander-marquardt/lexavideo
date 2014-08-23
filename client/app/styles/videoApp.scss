@@ -303,3 +303,44 @@ video {
 .cl-show-hide-fade.ng-hide-add, .cl-show-hide-fade.ng-hide-remove {
   display: block!important;
 }
+
+$arrow-triangle-width : 90px;
+$arrow-triangle-height : 90px;
+$arrow-stem-width : 30px;
+$arrow-stem-height : 90px;
+
+.cl-arrow-wrapper-osx-chrome {
+  position: fixed;
+  top: 3px;
+  right : 30px;
+  z-index: 50;
+
+  -ms-transform: rotate(45deg); /* ie 9 */
+  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+  transform: rotate(45deg);
+}
+
+.cl-arrow {
+  position: relative;
+  width: $arrow-triangle-width;
+}
+.cl-arrow i {
+  // draw the triangle part of the arrow
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: $arrow-triangle-width / 2 solid transparent;
+  border-right: $arrow-triangle-width / 2 solid transparent;
+  border-bottom: $arrow-triangle-height solid red;
+}
+.cl-arrow i+i {
+  // draw the arrow stem
+  position: absolute;
+  top: $arrow-triangle-height - 1px;
+  left: $arrow-triangle-width / 2 - $arrow-stem-width / 2;
+  width: $arrow-stem-width;
+  height: $arrow-stem-height;
+  background: red;
+  border: 0px;
+}
+
