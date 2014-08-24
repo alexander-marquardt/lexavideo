@@ -21,11 +21,46 @@ $arrow-stem-height : 50px;
 }
 
 .cl-arrow-wrapper-mac-chrome.cl-show-arrow {
-  /* when the cl-show-arrow class is added to an element, then if this browswer supports css animations, the element
-     will move from its current position, to a location 3px from the top of the screen */
+  /* when the cl-show-arrow class is added to an element, then if this browser supports css animations, the element
+     will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;
   top: 3px;
 }
+
+.cl-arrow-wrapper-desktop-default-chrome {
+  /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
+     the class .cl-show-arrow is added to an element */
+  position: fixed;
+  top: 100px;
+  left : 3px;
+  z-index: 50;
+}
+
+.cl-arrow-wrapper-desktop-default-chrome.cl-show-arrow {
+  /* when the cl-show-arrow class is added to an element, then if this browser supports css animations, the element
+     will move from its current position, to a location "top"px pixels from the top of the screen */
+  @extend .cl-arrow-transition;
+  top: 3px;
+}
+
+
+.cl-arrow-wrapper-mozilla {
+  /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
+     the class .cl-show-arrow is added to an element */
+  position: fixed;
+  top: 400px;
+  left : 15px;
+  z-index: 50;
+}
+
+.cl-arrow-wrapper-mozilla.cl-show-arrow {
+  /* when the cl-show-arrow class is added to an element, then if this browser supports css animations, the element
+     will move from its current position, to a location "top"px pixels from the top of the screen */
+  @extend .cl-arrow-transition;
+  top: 3px;
+}
+
+
 
 .cl-arrow {
   /* This is a wrapper that contains the arrow head and the arrow stem. In order to declare an arrow, you must

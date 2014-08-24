@@ -46,11 +46,24 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
 
     var showArrowPointingToAcceptButton = function(elem, videoSignalingObject) {
         var arrowWrapperClass = '';
+        var timeoutInMilliseconds = 0;
 
-        if ($.browser.platform === 'mac') {
-            if ($.browser.name === 'chrome') {
+        if ($.browser.name === 'chrome') {
+            if ($.browser.platform === 'mac') {
                 arrowWrapperClass = 'cl-arrow-wrapper-mac-chrome';
             }
+            else if ($.browser.desktop) {
+                arrowWrapperClass = 'cl-arrow-wrapper-desktop-default-chrome';
+            }
+        }
+        if ($.browser.name === 'mozilla') {
+            // treat mozilla the same across all platforms
+            arrowWrapperClass = 'cl-arrow-wrapper-mozilla';
+
+            // Since mozilla/firefox has a popup as opposed to a banner, we wait longer before showing the arrow.
+            // If the user has accidentally clicked somewhere on the screen, then they need to be directed to the
+            // camera icon to the left of where the URL is displayed.
+            timeoutInMilliseconds = 15000;
         }
 
         if (arrowWrapperClass !== '') {
@@ -64,13 +77,12 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
 
 
             if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'noResponse') {
-                var timeoutInMilliseconds = 0;
                 var timeoutFn = function() {
                     timerId = $timeout(function() {
                         if (arrowElement.hasClass('cl-show-arrow')) {
                             arrowElement.removeClass('cl-show-arrow');
                             wrapperElement.removeClass('cl-show-arrow');
-                            timeoutInMilliseconds = 2000;
+                            timeoutInMilliseconds = 4000;
                         } else {
                             // the arrow is now shown, leave it there for a while
                             $animate.addClass(arrowElement, 'cl-show-arrow');
