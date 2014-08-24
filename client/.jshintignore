@@ -1,3 +1,2 @@
 app/scripts/adapter.js
-app/scripts/lz_string/*
-app/scripts/viewport_size/*
+app/scripts/vendor/*

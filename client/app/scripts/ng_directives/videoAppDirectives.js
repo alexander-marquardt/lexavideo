@@ -46,7 +46,7 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
                 }
             }
 
-            elem.append('<div class="'+ wrapperClass + '"><div class="cl-arrow""><i></i><i></i></div></div>')
+            elem.append('<div class="'+ wrapperClass + '"><div class="cl-arrow""><i></i><i></i></div></div>');
 
             var wrapperElement = angular.element(elem).find('.' + wrapperClass);
             var arrowElement = angular.element(elem).find('.cl-arrow');
