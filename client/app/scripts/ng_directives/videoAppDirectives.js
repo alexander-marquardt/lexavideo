@@ -34,11 +34,16 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
 
     return {
         restrict: 'A',
-        template: '<div class="cl-arrow-wrapper-osx-chrome"><div class="cl-arrow""><i></i><i></i></div></div>',
         link: function(scope, elem) {
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoElem = scope.localVideoObject.localVideoElem;
             var timerId;
+
+
+
+
+            elem.append('<div class="cl-arrow-wrapper-osx-chrome"><div class="cl-arrow""><i></i><i></i></div></div>')
+
             var wrapperElement = angular.element(elem).find('.cl-arrow-wrapper-osx-chrome');
             var arrowElement = angular.element(elem).find('.cl-arrow');
 
