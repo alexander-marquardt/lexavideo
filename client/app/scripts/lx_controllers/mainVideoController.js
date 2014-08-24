@@ -7,7 +7,7 @@
 /* global $ */
 
 angular.module('videoApp')
-    .controller('mainVideoCtrl', function ($scope, negotiateVideoType) {
+    .controller('lxMainVideoCtrl', function ($scope, negotiateVideoType) {
 
         $scope.remoteVideoObject = {
             remoteVideoElem : $('#id-remote-video-element')[0],
