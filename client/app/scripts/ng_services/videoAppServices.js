@@ -676,7 +676,7 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
             adapterService.attachMediaStream(localVideoDiv, stream);
             localVideoDiv.style.opacity = 1;
             streamService.localStream = stream;
-            videoSignalingObject.localUserHasTurnedOnCamera = true;
+            videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
         };
     };
 
@@ -688,7 +688,7 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
                 error.code + '. Continuing without sending a stream.');
 
             callService.hasAudioOrVideoMediaConstraints = false;
-            videoSignalingObject.localUserHasTurnedOnCamera = false;
+            videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
 
         };
     };
@@ -707,7 +707,7 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
             } catch (e) {
                 alert('getUserMedia() failed. Is this a WebRTC capable browser?');
                 userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
-                videoSignalingObject.localUserHasTurnedOnCamera = false;
+                videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'unknownError';
             }
         }
     };

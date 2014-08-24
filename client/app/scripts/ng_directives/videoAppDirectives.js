@@ -63,7 +63,7 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
             var arrowElement = angular.element(elem).find('.cl-arrow');
 
 
-            if (!videoSignalingObject.localUserHasTurnedOnCamera) {
+            if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'noResponse') {
                 var timeoutInMilliseconds = 0;
                 var timeoutFn = function() {
                     timerId = $timeout(function() {
@@ -96,9 +96,9 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
             askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
             showArrowPointingToAcceptButton(elem, videoSignalingObject);
 
-            scope.$watch('videoSignalingObject.localUserHasTurnedOnCamera', function() {
+            scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function() {
 
-                if (videoSignalingObject.localUserHasTurnedOnCamera) {
+                if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
                     arrowElement.addClass('ng-hide');
                     $timeout.cancel(timerId);
                 }

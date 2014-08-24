@@ -38,7 +38,7 @@ angular.module('videoApp')
             // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
             localIsSendingVideoType : 'asciiVideo',
 
-            localUserHasTurnedOnCamera : false,
+            localUserAccessCameraAndMicrophoneStatus : 'noResponse', // 'noResponse', 'allowAccess', 'denyAccess'
             remoteUserHasTurnedOnCamera : false,
             remoteUserHasJoinedRoom : false,
 
