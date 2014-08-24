@@ -32,32 +32,36 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
 videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($timeout, $animate,
                                                                               serverConstantsService, callService, mediaService ) {
 
-    return {
-        restrict: 'A',
-        link: function(scope, elem) {
-            var videoSignalingObject = scope.videoSignalingObject;
-            var localVideoElem = scope.localVideoObject.localVideoElem;
-            var timerId;
-            var wrapperClass = '';
+    var timerId;
 
-            if ($.browser.platform === 'mac') {
-                if ($.browser.name === 'chrome') {
-                    wrapperClass = 'cl-arrow-wrapper-mac-chrome';
-                }
+    var askForPermissionToCameraAndMicrophone = function(localVideoElem, videoSignalingObject) {
+        if (serverConstantsService.mediaConstraints.audio === false &&
+            serverConstantsService.mediaConstraints.video === false) {
+            callService.hasAudioOrVideoMediaConstraints = false;
+        } else {
+            callService.hasAudioOrVideoMediaConstraints = true;
+            mediaService.doGetUserMedia(localVideoElem, videoSignalingObject);
+        }
+    };
+
+    var showArrowPointingToAcceptButton = function(elem, videoSignalingObject) {
+        var arrowWrapperClass = '';
+
+        if ($.browser.platform === 'mac') {
+            if ($.browser.name === 'chrome') {
+                arrowWrapperClass = 'cl-arrow-wrapper-mac-chrome';
             }
+        }
 
-            elem.append('<div class="'+ wrapperClass + '"><div class="cl-arrow""><i></i><i></i></div></div>');
+        if (arrowWrapperClass !== '') {
+            // only show the arrow if the arrowWrapperClass has been defined -- if it has not been defined, then
+            // we have not defined where the arrow should be shown in the current OS/browser, and therefore no
+            // arrow should be shown.
+            elem.append('<div class="'+ arrowWrapperClass + '"><div class="cl-arrow"><i></i><i></i></div></div>');
 
-            var wrapperElement = angular.element(elem).find('.' + wrapperClass);
+            var wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
             var arrowElement = angular.element(elem).find('.cl-arrow');
 
-            if (serverConstantsService.mediaConstraints.audio === false &&
-                serverConstantsService.mediaConstraints.video === false) {
-                callService.hasAudioOrVideoMediaConstraints = false;
-            } else {
-                callService.hasAudioOrVideoMediaConstraints = true;
-                mediaService.doGetUserMedia(localVideoElem, videoSignalingObject);
-            }
 
             if (!videoSignalingObject.localUserHasTurnedOnCamera) {
                 var timeoutInMilliseconds = 0;
@@ -78,6 +82,19 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
                 };
                 timeoutFn();
             }
+        }
+    };
+
+    return {
+        restrict: 'A',
+        link: function(scope, elem) {
+            var videoSignalingObject = scope.videoSignalingObject;
+            var localVideoElem = scope.localVideoObject.localVideoElem;
+            var arrowElement = angular.element(elem).find('.cl-arrow');
+
+
+            askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
+            showArrowPointingToAcceptButton(elem, videoSignalingObject);
 
             scope.$watch('videoSignalingObject.localUserHasTurnedOnCamera', function() {
 
