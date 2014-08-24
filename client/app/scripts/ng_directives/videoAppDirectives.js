@@ -38,13 +38,17 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoElem = scope.localVideoObject.localVideoElem;
             var timerId;
+            var wrapperClass = '';
 
+            if ($.browser.platform === 'mac') {
+                if ($.browser.name === 'chrome') {
+                    wrapperClass = 'cl-arrow-wrapper-mac-chrome';
+                }
+            }
 
+            elem.append('<div class="'+ wrapperClass + '"><div class="cl-arrow""><i></i><i></i></div></div>')
 
-
-            elem.append('<div class="cl-arrow-wrapper-osx-chrome"><div class="cl-arrow""><i></i><i></i></div></div>')
-
-            var wrapperElement = angular.element(elem).find('.cl-arrow-wrapper-osx-chrome');
+            var wrapperElement = angular.element(elem).find('.' + wrapperClass);
             var arrowElement = angular.element(elem).find('.cl-arrow');
 
             if (serverConstantsService.mediaConstraints.audio === false &&

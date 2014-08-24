@@ -13,7 +13,7 @@
  * Date: 2013-07-29T17:23:27-07:00
  */
 
-(function( jQuery, window, undefined ) {
+(function( jQuery, userAgent ) {
   "use strict";
 
   var matched, browser;
@@ -48,7 +48,7 @@
   	};
   };
 
-  matched = jQuery.uaMatch( window.navigator.userAgent );
+  matched = jQuery.uaMatch(userAgent );
   browser = {};
 
   if ( matched.browser ) {
@@ -109,4 +109,4 @@
 
 
   jQuery.browser = browser;
-})( jQuery, window );
+})( jQuery, window.navigator.userAgent );
