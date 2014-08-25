@@ -34,6 +34,11 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
 
     var timerId;
 
+    var checkBrowserVersionToSeeIfGetUserMediaSupported = function() {
+        // TODO - implement this function!!!!
+
+    }
+
     var askForPermissionToCameraAndMicrophone = function(localVideoElem, videoSignalingObject) {
         if (serverConstantsService.mediaConstraints.audio === false &&
             serverConstantsService.mediaConstraints.video === false) {
@@ -104,7 +109,7 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
             var localVideoElem = scope.localVideoObject.localVideoElem;
             var arrowElement = angular.element(elem).find('.cl-arrow');
 
-
+            checkBrowserVersionToSeeIfGetUserMediaSupported();
             askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
             showArrowPointingToAcceptButton(elem, videoSignalingObject);
 
