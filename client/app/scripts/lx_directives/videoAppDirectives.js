@@ -37,6 +37,20 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
     var checkBrowserVersionToSeeIfGetUserMediaSupported = function() {
         // TODO - implement this function!!!!
 
+        /* Supported browsers and OSes
+         ***********************************
+         * Information from general internet search:
+         * Firefox: windows, mac, linux, android : Since version 24. Current version is 31 (all platforms).
+         * Chrome: desktop: 23, android: 28. Current version: 36 (all platforms)
+         * Opera: Android 20
+         ***********************************
+         * Information from caniuse.com
+         * Firefox: 30
+         * Chrome desktop: 27
+         * Chrome Android: 36
+         * Opera (not mini): 23
+         */
+
     }
 
     var askForPermissionToCameraAndMicrophone = function(localVideoElem, videoSignalingObject) {
@@ -62,8 +76,12 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
             }
         }
         if ($.browser.name === 'mozilla') {
-            // treat mozilla the same across all platforms
-            arrowWrapperClass = 'cl-arrow-wrapper-mozilla';
+
+            if ($.broswer.desktop) {
+                // only show the arrow on desktops, since it appears that on mobile devices there is no
+                // camera symbol in the URL to point the user to.
+                arrowWrapperClass = 'cl-arrow-wrapper-mozilla';
+            }
 
             // Since mozilla/firefox has a popup as opposed to a banner, we wait longer before showing the arrow.
             // If the user has accidentally clicked somewhere on the screen, then they need to be directed to the
