@@ -29,13 +29,26 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
     };
 });
 
-videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($timeout, $animate,
-                                                                              serverConstantsService, callService, mediaService ) {
 
-    var timerId;
+videoAppDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCache, $modal, $log){
 
-    var checkBrowserVersionToSeeIfGetUserMediaSupported = function() {
-        // TODO - implement this function!!!!
+
+    var createCameraAndMicrophoneModalTemplate = function() {
+        $templateCache.put('lxTemplateCache/cameraAndMicrophoneModal.html',
+            '<div class="modal-header">' +
+            '   <h3 class="modal-title">I\'m a modal!</h3>' +
+            '</div>' +
+            '<div class="modal-body"> Body goes here' +
+            '</div>' +
+            '<div class="modal-footer">' +
+            '   <button class="btn btn-primary" ng-click="ok()">OK</button>' +
+            '   <button class="btn btn-warning" ng-click="cancel()">Cancel</button>' +
+            '</div>' +
+            '');
+    };
+
+
+    var checkBrowserVersionToSeeIfGetUserMediaSupported = function(elem) {
 
         /* Supported browsers and OSes
          ***********************************
@@ -44,14 +57,55 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
          * Chrome: desktop: 23, android: 28. Current version: 36 (all platforms)
          * Opera: Android 20
          ***********************************
-         * Information from caniuse.com
+         * Information from caniuse.com -- this seems to be too conservative.
          * Firefox: 30
          * Chrome desktop: 27
          * Chrome Android: 36
-         * Opera (not mini): 23
+         * Opera (not mini): 23 - is incorrect - have installed 22 on android and it has webRTC (23 not available on android yet)
+         ************************************
+         * We use the information from the general internet search as a minimum version number, but if possible we select the
+         * current version minus a few revisions so that users are not forced to upgrade just to use webRtc
          */
 
-    }
+        var mozillaRequiredVersion = 28; // firefox
+        var chromeRequiredVersion = 30;
+        var operaRequiredVersion = 20;
+
+        if (true || !($.browser.mozilla || $.browser.chrome || $.browser.opera)) {
+            createCameraAndMicrophoneModalTemplate();
+            var modalInstance = $modal.open({
+                 templateUrl: 'lxTemplateCache/cameraAndMicrophoneModal.html',
+                 //controller: ModalInstanceCtrl,
+               });
+
+            modalInstance.result.then(function (selectedItem) {
+              $log.log('Modal result received');
+            }, function () {
+              $log.info('Modal dismissed at: ' + new Date());
+            });
+        }
+
+        if ($.browser.mozilla && $.browser ) {
+
+        }
+    };
+
+    return {
+        restrict: 'A',
+        link: function(scope, elem) {
+            checkBrowserVersionToSeeIfGetUserMediaSupported(elem);
+        }
+    };
+});
+
+videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($timeout, $animate,
+                                                                              serverConstantsService, callService, mediaService ) {
+
+    var timerId;
+
+
+
+
 
     var askForPermissionToCameraAndMicrophone = function(localVideoElem, videoSignalingObject) {
         if (serverConstantsService.mediaConstraints.audio === false &&
@@ -127,7 +181,6 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
             var localVideoElem = scope.localVideoObject.localVideoElem;
             var arrowElement = angular.element(elem).find('.cl-arrow');
 
-            checkBrowserVersionToSeeIfGetUserMediaSupported();
             askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
             showArrowPointingToAcceptButton(elem, videoSignalingObject);
 
@@ -173,11 +226,13 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
                 scope.videoSignalingObject.localHasSelectedVideoType = newVideoType;
                 callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
             }
+            scope.$apply();
         });
 
         noButton.on('click', function() {
             negotiateVideoType.sendDenyOfVideoType(newVideoType);
             $animate.addClass(elem, 'ng-hide');
+            scope.$apply();
         });
     };
 
