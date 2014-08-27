@@ -5,10 +5,7 @@
 'use strict';
 
 // define externally defined variables so that jshint doesn't give warnings
-/* global $ */
 
-var UNSUPPORTED_DEVICES = $.browser.ipad || $.browser.iphone;
-var SUPPORTED_BROWSERS = $.browser.mozilla || $.browser.chrome || $.browser.opera;
 
 var checkCompatibilityDirectives = angular.module('checkCompatibility.directives', []);
 
@@ -29,7 +26,7 @@ function showModalWindow($modal, $log, templateUrl) {
     });
 }
 
-checkCompatibilityDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCache, $modal, $log){
+checkCompatibilityDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCache, $modal, $log, lxConstantsService){
 
 
     var checkBrowserVersionToSeeIfGetUserMediaSupported = function() {
@@ -56,10 +53,10 @@ checkCompatibilityDirectives.directive('lxCheckIfBrowserIsSupported', function($
         //var operaRequiredVersion = 20;
 
 
-        if (true || UNSUPPORTED_DEVICES) {
+        if (true || lxConstantsService.UNSUPPORTED_DEVICES) {
             showModalWindow($modal, $log, 'lx-template-cache/ios-is-not-supported-modal.html');
         }
-        else if (true || !(SUPPORTED_BROWSERS)) {
+        else if (true || !(lxConstantsService.SUPPORTED_BROWSERS)) {
             showModalWindow($modal, $log, 'lx-template-cache/browser-is-not-supported-modal.html');
         }
     };
