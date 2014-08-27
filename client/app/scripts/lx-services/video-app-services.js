@@ -1,6 +1,6 @@
 'use strict';
 
-var videoAppServices = angular.module('videoApp.services', ['videoApp.serverConstants']);
+var videoAppServices = angular.module('videoApp.services', []);
 
 
 // define externally defined variables so that jshint doesn't give warnings

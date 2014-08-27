@@ -9,24 +9,8 @@
 
 var checkCompatibilityDirectives = angular.module('checkCompatibility.directives', []);
 
-var ModalInstanceCtrl = function($scope, $log, $modalInstance) {
-    $scope.ok = function () {
-        $modalInstance.close();
-    };
-};
 
-function showModalWindow($modal, $log, templateUrl) {
-    var modalInstance = $modal.open({
-        templateUrl: templateUrl,
-        controller: ModalInstanceCtrl
-    });
-
-    modalInstance.result.finally(function () {
-        $log.log('Closed browser-is-not-supported modal box');
-    });
-}
-
-checkCompatibilityDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCache, $modal, $log, lxConstantsService){
+checkCompatibilityDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCache, $modal, $log, lxConstantsService, lxModalSupportService){
 
 
     var checkBrowserVersionToSeeIfGetUserMediaSupported = function() {
@@ -54,10 +38,10 @@ checkCompatibilityDirectives.directive('lxCheckIfBrowserIsSupported', function($
 
 
         if (true || lxConstantsService.UNSUPPORTED_DEVICES) {
-            showModalWindow($modal, $log, 'lx-template-cache/ios-is-not-supported-modal.html');
+            lxModalSupportService.showModalWindow('lx-template-cache/ios-is-not-supported-modal.html');
         }
         else if (true || !(lxConstantsService.SUPPORTED_BROWSERS)) {
-            showModalWindow($modal, $log, 'lx-template-cache/browser-is-not-supported-modal.html');
+            lxModalSupportService.showModalWindow('lx-template-cache/browser-is-not-supported-modal.html');
         }
     };
 

@@ -1,6 +1,7 @@
 'use strict';
 var videoApp = angular.module('videoApp', [
-    'videoApp.serverConstants', 'lxConstants.services',
+    'lxServerConstants.services', 'lxLocalConstants.services',
+    'lxModalSupport.services',
     'videoApp.directives', 'checkCompatibility.directives',
     'videoApp.services', 'asciiVideo.directives',
 

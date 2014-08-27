@@ -5,7 +5,7 @@
 'use strict';
 /* global $ */
 
-var lxConstantsServices = angular.module('lxConstants.services', []);
+var lxConstantsServices = angular.module('lxLocalConstants.services', []);
 
 lxConstantsServices.factory('lxConstantsService', function () {
     /* Provides constant values that are used in various parts of the javascript code.

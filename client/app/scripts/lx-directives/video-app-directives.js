@@ -1,6 +1,6 @@
 'use strict';
 
-var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.services']);
+var videoAppDirectives = angular.module('videoApp.directives', []);
 
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
