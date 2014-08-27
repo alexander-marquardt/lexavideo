@@ -1,0 +1,30 @@
+
+
+<script type="text/ng-template" id="lx-template-cache/camera-and-microphone-modal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">I'm a modal!</h3>
+    </div>
+    <div class="modal-body"> Body goes here
+    </div>
+    <div class="modal-footer">
+       <button class="btn btn-primary" ng-click="ok()">OK</button>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="lx-template-cache/mini-video-template.html">
+    <div class="cl-mini-video-div">
+
+        <div class="cl-local-hd-mini-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'hdVideo')">
+            <div  style="display:inline-block" class="cl-mini-well">
+                <video class="cl-mini-video-element" autoplay="autoplay" muted="true"/>
+            </div>
+        </div>
+
+        <div lx-generate-ascii-video-directive class="cl-local-ascii-mini-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'asciiVideo')" >
+            <div  style="display:inline-block" class="cl-mini-well">
+                <pre class="cl-ascii-container cl-mini-ascii-container-sizing"><span class="cl-ascii-drawing-text cl-ascii-mini-span">Local ascii drawing goes here</span></pre>
+            </div>
+        </div>
+    </div>
+</script>

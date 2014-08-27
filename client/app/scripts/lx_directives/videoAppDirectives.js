@@ -39,20 +39,8 @@ videoAppDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCa
         };
     };
 
-    var createCameraAndMicrophoneModalTemplate = function() {
-        $templateCache.put('lxTemplateCache/cameraAndMicrophoneModal.html',
-            '<div class="modal-header">' +
-            '   <h3 class="modal-title">I\'m a modal!</h3>' +
-            '</div>' +
-            '<div class="modal-body"> Body goes here' +
-            '</div>' +
-            '<div class="modal-footer">' +
-            '   <button class="btn btn-primary" ng-click="ok()">OK</button>' +
-            '</div>' +
-            '');
-    };
 
-    var checkBrowserVersionToSeeIfGetUserMediaSupported = function(scope) {
+    var checkBrowserVersionToSeeIfGetUserMediaSupported = function() {
 
         /* Supported browsers and OSes
          ***********************************
@@ -76,9 +64,8 @@ videoAppDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCa
         //var operaRequiredVersion = 20;
 
         if (true || !($.browser.mozilla || $.browser.chrome || $.browser.opera)) {
-            createCameraAndMicrophoneModalTemplate();
             var modalInstanceX = $modal.open({
-                 templateUrl: 'lxTemplateCache/cameraAndMicrophoneModal.html',
+                 templateUrl: 'lx-template-cache/camera-and-microphone-modal.html',
                  controller: ModalInstanceCtrl
                });
 
@@ -518,7 +505,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 videoAppDirectives.directive('lxMiniVideoTemplateDirective', function($log) {
     return {
         restrict : 'A',
-        templateUrl: 'mini-video-template.html', // this is defined in angular's "template cache"
+        templateUrl: 'lx-template-cache/mini-video-template.html',
         link: function(scope, elem) {
             if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div').length === 1) {
                 scope.localVideoObject.miniVideoElemInsideRemoteHd = angular.element(elem).find('.cl-mini-video-element')[0];
