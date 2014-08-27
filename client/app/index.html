@@ -15,18 +15,18 @@
 
     <!-- the following line is used by grunt-usemin to detect which css it should combine this block into -->    
     <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/videoApp.css" />
+    <link rel="stylesheet" href="styles/video-app.css" />
     <!-- endbuild -->
 
 
     <link rel="canonical" href="{{ room_link }}"/>
 
-    {% include "jinja_templates/favicons.html" %}
+    {% include "lx-jinja-templates/favicons.html" %}
 
   </head>
   <body ng-app="videoApp">
 
-    {% include "jinja_templates/main.html" %}
+    {% include "lx-jinja-templates/main.html" %}
 
     <script type="text/javascript" src="/_ah/channel/jsapi"></script>
 
@@ -66,7 +66,7 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    {% include "jinja_templates/video-app-main-constants.html" %}
+    {% include "lx-jinja-templates/video-app-main-constants.html" %}
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
