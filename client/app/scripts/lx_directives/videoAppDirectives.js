@@ -29,9 +29,15 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
     };
 });
 
-
 videoAppDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCache, $modal, $log){
 
+
+    var ModalInstanceCtrl = function($scope, $log, $modalInstance) {
+        $scope.ok = function () {
+            $log.log('foobar!!!');
+            $modalInstance.close();
+        };
+    };
 
     var createCameraAndMicrophoneModalTemplate = function() {
         $templateCache.put('lxTemplateCache/cameraAndMicrophoneModal.html',
@@ -42,13 +48,11 @@ videoAppDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCa
             '</div>' +
             '<div class="modal-footer">' +
             '   <button class="btn btn-primary" ng-click="ok()">OK</button>' +
-            '   <button class="btn btn-warning" ng-click="cancel()">Cancel</button>' +
             '</div>' +
             '');
     };
 
-
-    var checkBrowserVersionToSeeIfGetUserMediaSupported = function(elem) {
+    var checkBrowserVersionToSeeIfGetUserMediaSupported = function(scope) {
 
         /* Supported browsers and OSes
          ***********************************
@@ -67,22 +71,24 @@ videoAppDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCa
          * current version minus a few revisions so that users are not forced to upgrade just to use webRtc
          */
 
-        var mozillaRequiredVersion = 28; // firefox
-        var chromeRequiredVersion = 30;
-        var operaRequiredVersion = 20;
+        //var mozillaRequiredVersion = 28; // firefox
+        //var chromeRequiredVersion = 30;
+        //var operaRequiredVersion = 20;
 
         if (true || !($.browser.mozilla || $.browser.chrome || $.browser.opera)) {
             createCameraAndMicrophoneModalTemplate();
-            var modalInstance = $modal.open({
+            var modalInstanceX = $modal.open({
                  templateUrl: 'lxTemplateCache/cameraAndMicrophoneModal.html',
-                 //controller: ModalInstanceCtrl,
+                 controller: ModalInstanceCtrl
                });
 
-            modalInstance.result.then(function (selectedItem) {
+            modalInstanceX.result.then(function () {
               $log.log('Modal result received');
             }, function () {
               $log.info('Modal dismissed at: ' + new Date());
             });
+
+
         }
 
         if ($.browser.mozilla && $.browser ) {
@@ -92,8 +98,9 @@ videoAppDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCa
 
     return {
         restrict: 'A',
-        link: function(scope, elem) {
-            checkBrowserVersionToSeeIfGetUserMediaSupported(elem);
+        scope: {}, // restrict scope so that we don't pollute other scopes
+        link: function(scope) {
+            checkBrowserVersionToSeeIfGetUserMediaSupported(scope);
         }
     };
 });
