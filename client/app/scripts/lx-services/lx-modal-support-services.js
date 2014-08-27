@@ -16,7 +16,7 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log) 
         };
         $scope.cancel = function () {
             $modalInstance.close();
-        }
+        };
     };
 
     return {
