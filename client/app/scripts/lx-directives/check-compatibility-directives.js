@@ -2,6 +2,8 @@
  * Created by alexandermarquardt on 2014-08-27.
  */
 
+'use strict';
+
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
 
