@@ -7,6 +7,7 @@ var videoAppDirectives = angular.module('videoApp.directives', ['videoApp.servic
 /* global viewportSize */
 
 
+
 videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationService, $compile, callService) {
     return {
         restrict: 'A',
@@ -29,77 +30,11 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
     };
 });
 
-videoAppDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCache, $modal, $log){
-
-
-    var ModalInstanceCtrl = function($scope, $log, $modalInstance) {
-        $scope.ok = function () {
-            $log.log('foobar!!!');
-            $modalInstance.close();
-        };
-    };
-
-
-    var checkBrowserVersionToSeeIfGetUserMediaSupported = function() {
-
-        /* Supported browsers and OSes
-         ***********************************
-         * Information from general internet search:
-         * Firefox: windows, mac, linux, android : Since version 24. Current version is 31 (all platforms).
-         * Chrome: desktop: 23, android: 28. Current version: 36 (all platforms)
-         * Opera: Android 20
-         ***********************************
-         * Information from caniuse.com -- this seems to be too conservative.
-         * Firefox: 30
-         * Chrome desktop: 27
-         * Chrome Android: 36
-         * Opera (not mini): 23 - is incorrect - have installed 22 on android and it has webRTC (23 not available on android yet)
-         ************************************
-         * We use the information from the general internet search as a minimum version number, but if possible we select the
-         * current version minus a few revisions so that users are not forced to upgrade just to use webRtc
-         */
-
-        //var mozillaRequiredVersion = 28; // firefox
-        //var chromeRequiredVersion = 30;
-        //var operaRequiredVersion = 20;
-
-        if (true || !($.browser.mozilla || $.browser.chrome || $.browser.opera)) {
-            var modalInstanceX = $modal.open({
-                 templateUrl: 'lx-template-cache/camera-and-microphone-modal.html',
-                 controller: ModalInstanceCtrl
-               });
-
-            modalInstanceX.result.then(function () {
-              $log.log('Modal result received');
-            }, function () {
-              $log.info('Modal dismissed at: ' + new Date());
-            });
-
-
-        }
-
-        if ($.browser.mozilla && $.browser ) {
-
-        }
-    };
-
-    return {
-        restrict: 'A',
-        scope: {}, // restrict scope so that we don't pollute other scopes
-        link: function(scope) {
-            checkBrowserVersionToSeeIfGetUserMediaSupported(scope);
-        }
-    };
-});
 
 videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($timeout, $animate,
                                                                               serverConstantsService, callService, mediaService ) {
 
     var timerId;
-
-
-
-
 
     var askForPermissionToCameraAndMicrophone = function(localVideoElem, videoSignalingObject) {
         if (serverConstantsService.mediaConstraints.audio === false &&
