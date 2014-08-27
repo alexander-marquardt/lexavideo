@@ -60,7 +60,7 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
         }
         if ($.browser.name === 'mozilla') {
 
-            if ($.broswer.desktop) {
+            if ($.browser.desktop) {
                 // only show the arrow on desktops, since it appears that on mobile devices there is no
                 // camera symbol in the URL to point the user to.
                 arrowWrapperClass = 'cl-arrow-wrapper-mozilla';
@@ -106,9 +106,9 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
     return {
         restrict: 'A',
         link: function(scope, elem) {
+            var arrowElement;
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoElem = scope.localVideoObject.localVideoElem;
-            var arrowElement = angular.element(elem).find('.cl-arrow');
 
             askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
             showArrowPointingToAcceptButton(elem, videoSignalingObject);
@@ -116,6 +116,7 @@ videoAppDirectives.directive('lxAccessCameraAndMicrophoneDirective', function($t
             scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function() {
 
                 if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
+                    arrowElement = angular.element(elem).find('.cl-arrow');
                     arrowElement.addClass('ng-hide');
                     $timeout.cancel(timerId);
                 }
