@@ -108,6 +108,8 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
     var showModalInstructionsForCameraAndMicrophone = function(scope) {
 
+        var currentlyDisplayedModalInstance;
+
         if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
             // If the users's device and browser support webRTC, then show them instructions on how to access their
             // camera and microphone. Otherwise, they should already have been shown instructions from
@@ -115,13 +117,16 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
             watchLocalUserAccessCameraAndMicrophoneStatus3 =
                 scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function(newStatus) {
+                    if (currentlyDisplayedModalInstance) {
+                        currentlyDisplayedModalInstance.close();
+                    }
                     if ($.browser.name === 'chrome') {
                         if ($.browser.platform === 'mac') {
                             if (newStatus === 'noResponse') {
-                                lxModalSupportService.showModalWindow('lx-template-cache/chrome-mac-access-camera-modal.html');
+                                currentlyDisplayedModalInstance = lxModalSupportService.showModalWindow('lx-template-cache/chrome-mac-access-camera-modal.html');
                             }
                             else if (newStatus === 'denyAccess') {
-                                lxModalSupportService.showModalWindow('lx-template-cache/chrome-mac-access-camera-previously-denied-modal.html');
+                                currentlyDisplayedModalInstance = lxModalSupportService.showModalWindow('lx-template-cache/chrome-mac-access-camera-previously-denied-modal.html');
                             }
                         }
                         else if ($.browser.desktop) {

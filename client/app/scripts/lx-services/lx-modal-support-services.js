@@ -30,6 +30,9 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log) 
             modalInstance.result.finally(function () {
                 $log.log('Closed browser-is-not-supported modal box');
             });
+
+            // returns an instance of the modal in case we need to manipulate it later
+            return modalInstance;
         }
     };
 });
