@@ -117,8 +117,10 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
             watchLocalUserAccessCameraAndMicrophoneStatus3 =
                 scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function(newStatus) {
-                    if (currentlyDisplayedModalInstance) {
+                    try {
                         currentlyDisplayedModalInstance.close();
+                    } catch (error) {
+                        // do nothing
                     }
                     if ($.browser.name === 'chrome') {
                         if ($.browser.platform === 'mac') {
