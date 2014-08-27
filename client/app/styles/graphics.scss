@@ -2,7 +2,7 @@
 
 @import "./constants.scss";
 
-$arrow-color: $brand-danger;
+$arrow-color: $brand-primary;
 $arrow-triangle-width : 70px;
 $arrow-triangle-height : 70px;
 $arrow-stem-width : 20px;
@@ -21,7 +21,7 @@ $arrow-stem-height : 50px;
   position: fixed;
   top: 100px;
   right : 15px;
-  z-index: 50;
+  z-index: 1050; // this should place it above the modal window and it's background
 }
 
 .cl-arrow-wrapper-mac-chrome.cl-show-arrow {
