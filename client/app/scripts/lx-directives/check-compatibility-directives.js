@@ -19,7 +19,7 @@ checkCompatibilityDirectives.directive('lxCheckIfBrowserIsSupported', function($
         if (lxCheckCompatibilityService.isIosDevice) {
             lxModalSupportService.showModalWindow('lx-template-cache/ios-is-not-supported-modal.html');
         }
-        else if (!lxCheckCompatibilityService.supportedBrowser) {
+        else if (!lxCheckCompatibilityService.isSupportedBrowser) {
             lxModalSupportService.showModalWindow('lx-template-cache/browser-is-not-supported-modal.html');
         }
         else if (!lxCheckCompatibilityService.browserVersionIsSupported) {

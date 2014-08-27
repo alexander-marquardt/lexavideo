@@ -682,11 +682,8 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
 
     var onUserMediaError = function(videoSignalingObject) {
         return function(error) {
-            userNotificationService.messageError('Failed to get access to local media. Error code was ' +
+           $log.error('Failed to get access to local media. Error code was ' +
                 error.code + '. Continuing without sending a stream.');
-            alert('Failed to get access to local media. Error code was ' +
-                error.code + '. Continuing without sending a stream.');
-
             callService.hasAudioOrVideoMediaConstraints = false;
             videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
 
@@ -705,9 +702,9 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(serverConstantsService.mediaConstraints) + '\'');
             } catch (e) {
-                alert('getUserMedia() failed. Is this a WebRTC capable browser?');
-                userNotificationService.messageError('getUserMedia failed with exception: ' + e.message);
+                $log.error('getUserMedia failed with exception: ' + e.message);
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'unknownError';
+                videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
             }
         }
     };

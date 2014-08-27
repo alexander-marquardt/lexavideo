@@ -45,9 +45,15 @@ function checkIfBrowserVersionIsSupported () {
 lxCheckCompatibility.factory('lxCheckCompatibilityService', function () {
     // Provides flags that are used for checking if the current device/browser is supported.
 
+    var isIosDevice = $.browser.ipad || $.browser.iphone;
+    var isSupportedBrowser = $.browser.mozilla || $.browser.chrome || $.browser.opera;
+    var browserVersionIsSupported = checkIfBrowserVersionIsSupported();
+    var userDeviceBrowserAndVersionSupported = !isIosDevice && isSupportedBrowser && browserVersionIsSupported;
+
     return {
-        isIosDevice : $.browser.ipad || $.browser.iphone,
-        supportedBrowser : $.browser.mozilla || $.browser.chrome || $.browser.opera,
-        browserVersionIsSupported : checkIfBrowserVersionIsSupported()
+        isIosDevice : isIosDevice,
+        isSupportedBrowser : isSupportedBrowser,
+        browserVersionIsSupported : browserVersionIsSupported,
+        userDeviceBrowserAndVersionSupported: userDeviceBrowserAndVersionSupported
     };
 });
