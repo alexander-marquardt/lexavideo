@@ -38,13 +38,13 @@ angular.module('videoApp')
             // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
             localIsSendingVideoType : 'asciiVideo',
 
-            localUserAccessCameraAndMicrophoneStatus : 'noResponse', // 'noResponse', 'allowAccess', 'denyAccess'
+            localUserAccessCameraAndMicrophoneStatus : 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
             remoteUserHasTurnedOnCamera : false,
             remoteUserHasJoinedRoom : false,
 
             // if the local user requests the remote user to change the video type, we track the remote response
             // so that we can give the local user feedback.
-            remoteResponseToLocalRequest: 'noResponse', //  'noResponse', 'denyVideoType' or 'acceptVideoType'
+            remoteResponseToLocalRequest: 'requestNotMade', //  'requestNotMade', 'waitingForResponse', 'denyVideoType' or 'acceptVideoType'
 
             // remoteHasRequestedVideoType will be changed when the remote user has requested to modify the current video type.
             remoteHasRequestedVideoType : 'asciiVideo',

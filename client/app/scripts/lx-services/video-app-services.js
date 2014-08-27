@@ -665,7 +665,7 @@ videoAppServices.service('streamService', function() {
 
 });
 
-videoAppServices.factory('mediaService', function($log, serverConstantsService, adapterService, userNotificationService,
+videoAppServices.factory('mediaService', function($log,$timeout, serverConstantsService, adapterService, userNotificationService,
                           callService, streamService) {
 
 
@@ -676,7 +676,9 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
             adapterService.attachMediaStream(localVideoDiv, stream);
             localVideoDiv.style.opacity = 1;
             streamService.localStream = stream;
-            videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
+            $timeout(function() {
+                videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
+            });
         };
     };
 
@@ -684,9 +686,11 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
         return function(error) {
            $log.error('Failed to get access to local media. Error code was ' +
                 error.code + '. Continuing without sending a stream.');
-            callService.hasAudioOrVideoMediaConstraints = false;
-            videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
 
+            $timeout(function() {
+                callService.hasAudioOrVideoMediaConstraints = false;
+                videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
+            })
         };
     };
 
@@ -701,9 +705,10 @@ videoAppServices.factory('mediaService', function($log, serverConstantsService, 
                     onUserMediaError(videoSignalingObject));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(serverConstantsService.mediaConstraints) + '\'');
+                videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'waitingForResponse';
+
             } catch (e) {
                 $log.error('getUserMedia failed with exception: ' + e.message);
-                videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'unknownError';
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
             }
         }

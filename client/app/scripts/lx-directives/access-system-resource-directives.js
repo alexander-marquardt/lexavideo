@@ -83,7 +83,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             var arrowElement = angular.element(elem).find('.cl-arrow');
 
 
-            if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'noResponse') {
+            if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'waitingForResponse') {
                 var timeoutFn = function() {
                     timerId = $timeout(function() {
                         if (arrowElement.hasClass('cl-show-arrow')) {
@@ -124,7 +124,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     }
                     if ($.browser.name === 'chrome') {
                         if ($.browser.platform === 'mac') {
-                            if (newStatus === 'noResponse') {
+                            if (newStatus === 'waitingForResponse') {
                                 currentlyDisplayedModalInstance = lxModalSupportService.showModalWindow('lx-template-cache/chrome-mac-access-camera-modal.html');
                             }
                             else if (newStatus === 'denyAccess') {

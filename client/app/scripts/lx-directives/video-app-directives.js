@@ -109,12 +109,12 @@ videoAppDirectives.directive('lxVideoSettingsNegotiationDirective', function($an
                 if (remoteResponse === 'denyVideoType') {
                     message = 'Remote user has denied your request';
                     showMessageInVideoWindow(scope, elem, message);
-                    scope.videoSignalingObject.remoteResponseToLocalRequest = 'noResponse'; // reset to default state
+                    scope.videoSignalingObject.remoteResponseToLocalRequest = 'waitingForResponse'; // reset to default state
                 }
                 else if (remoteResponse === 'acceptVideoType') {
                     message = 'Remote user has accepted your request. Please wait a moment for the new video format to begin transmission.';
                     showMessageInVideoWindow(scope, elem, message);
-                    scope.videoSignalingObject.remoteResponseToLocalRequest = 'noResponse'; // reset to default state
+                    scope.videoSignalingObject.remoteResponseToLocalRequest = 'waitingForResponse'; // reset to default state
                 }
             });
         }
