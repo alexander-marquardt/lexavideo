@@ -9,12 +9,15 @@ var lxAccessSystemResources = angular.module('lxAccessSystemResources.directives
 lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', function($timeout, $animate,
                                                                               serverConstantsService, callService,
                                                                               mediaService, lxCheckCompatibilityService,
-                                                                              lxModalSupportService, globalVarsService) {
+                                                                              lxModalSupportService) {
 
     var timerId;
-    var watchLocalUserAccessCameraAndMicrophoneStatus1,
-        watchLocalUserAccessCameraAndMicrophoneStatus2,
-        watchLocalUserAccessCameraAndMicrophoneStatus3;
+
+    // initially define the watchers as dummy functions, so that they can be "de-registered" even if they were not
+    // initially called.
+    var watchLocalUserAccessCameraAndMicrophoneStatus1 = function() {},
+        watchLocalUserAccessCameraAndMicrophoneStatus2 = function() {},
+        watchLocalUserAccessCameraAndMicrophoneStatus3 = function() {};
 
     var askForPermissionToCameraAndMicrophone = function(localVideoElem, videoSignalingObject) {
         if (serverConstantsService.mediaConstraints.audio === false &&
@@ -58,29 +61,15 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             // accidentaly hidden as may happen in firefox.
         }
 
-        watchLocalUserAccessCameraAndMicrophoneStatus1 =
-            scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function() {
-                if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
-                    if ($.browser.name === 'chrome') {
-                        if ($.browser.platform === 'mac') {
-                            wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
-                            // we move the arrow farther from the right border, so that it now points to the camera icon,
-                            // which the user must click on to re-enable access.
-                            wrapperElement.css({'right' : '50px'});
-                        }
-                    }
-                }
-            });
+
 
 
         if (arrowWrapperClass !== '') {
             // only show the arrow if the arrowWrapperClass has been defined -- if it has not been defined, then
-            // we have not defined where the arrow should be shown in the current OS/browser, and therefore no
-            // arrow should be shown.
-            elem.append('<div class="'+ arrowWrapperClass + '"><span style="color:' + globalVarsService.brandDangerColor + ';font-size: 8em" class="glyphicon glyphicon-arrow-up"></span></div>');
+            // no arrow should be shown.
+            elem.append('<div class="'+ arrowWrapperClass + '"><span class="glyphicon glyphicon-arrow-up"></span></div>');
 
             wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
-
 
             if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'waitingForResponse') {
                 var timeoutFn = function() {
@@ -98,6 +87,20 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                 };
                 timeoutFn();
             }
+
+            watchLocalUserAccessCameraAndMicrophoneStatus1 =
+                scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function() {
+                    if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
+                        // monitor to see if user denies access to the camera, and if this happens then
+                        // move the arrow over to point to the camera icon instead of to the allow button.
+                        if ($.browser.name === 'chrome') {
+                            if ($.browser.platform === 'mac') {
+                                wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
+                                wrapperElement.addClass('camera-access-was-denied');
+                            }
+                        }
+                    }
+                });
 
 
         }

@@ -22,7 +22,9 @@ $arrow-stem-height : 50px;
   position: fixed;
   z-index: 1050; // this should place it above the modal window and it's background
   opacity: 0; // start out transparent
+  color: $brand-danger;
   text-shadow: 0 0 20px black;
+  font-size: 8em;
 }
 
 .cl-arrow-wrapper-mac-chrome {
@@ -37,15 +39,21 @@ $arrow-stem-height : 50px;
   /* when the cl-show-arrow class is added to an element, then if this browser supports css animations, the element
      will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;
-  top: 3px;
+  top: 0px;
   opacity: 1; // end up being opaque
+}
+
+.cl-arrow-wrapper-mac-chrome.camera-access-was-denied {
+  /* if the user has denied access to their camera, then we move the arrow to point to the camera icon instead
+     of pointing to the allow button. */
+  right: 50px;
 }
 
 .cl-arrow-wrapper-desktop-default-chrome {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
   @extend .cl-arrow-common;
-  top: 100px;
+  top: 200px;
   left : 15px;
 }
 
@@ -53,7 +61,7 @@ $arrow-stem-height : 50px;
   /* when the cl-show-arrow class is added to an element, then if this browser supports css animations, the element
      will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;
-  top: 3px;
+  top: 0px;
   opacity: 1; // end up being opaque
 
 }
@@ -62,7 +70,7 @@ $arrow-stem-height : 50px;
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
   @extend .cl-arrow-common;
-  top: 400px;
+  top: 300px;
   left : 15px;
 }
 
@@ -70,7 +78,7 @@ $arrow-stem-height : 50px;
   /* when the cl-show-arrow class is added to an element, then if this browser supports css animations, the element
      will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;
-  top: 3px;
+  top: 0px;
   opacity: 1; // end up being opaque
 
 }

@@ -26,7 +26,6 @@ videoAppServices.factory('globalVarsService', function (serverConstantsService) 
                modified directly from anywhere in the code.
              */
     var screenXsMax = $('#id-dummy-xs-div').width();
-    var brandDangerColor = $('#id-dummy-brand-danger-color-div').css('color');
     return {
 
         // The second person to join a chatroom will be the rtcInitiator. It is done in this manner because
@@ -44,8 +43,7 @@ videoAppServices.factory('globalVarsService', function (serverConstantsService) 
         // the following value should match the value defined in bootstrap for $screen-xs-max. This will be
         // used for enabling and disabling the remote/local video windows on small devices for which only one
         // or the other will be shown.
-        screenXsMax : screenXsMax,
-        brandDangerColor : brandDangerColor
+        screenXsMax : screenXsMax
     };
 });
 
