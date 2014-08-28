@@ -15,6 +15,9 @@ handlers:
 - url: /scripts
   static_dir: BASE_STATIC_DIR/scripts
 
+- url: /styles/fonts
+  static_dir: BASE_STATIC_DIR/styles/icomoon/fonts
+  
 - url: /styles
   static_dir: STYLES_STATIC_DIR
   

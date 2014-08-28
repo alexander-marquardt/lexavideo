@@ -67,7 +67,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         if (arrowWrapperClass !== '') {
             // only show the arrow if the arrowWrapperClass has been defined -- if it has not been defined, then
             // no arrow should be shown.
-            elem.append('<div class="'+ arrowWrapperClass + '"><span class="glyphicon glyphicon-arrow-up"></span></div>');
+            elem.append('<div class="'+ arrowWrapperClass + '"><span class="icon-arrow-up"></span></div>');
 
             wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
 

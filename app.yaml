@@ -21,6 +21,9 @@ handlers:
 - url: /scripts
   static_dir: client/app/scripts
 
+- url: /styles/fonts
+  static_dir: client/app/styles/icomoon/fonts
+  
 - url: /styles
   static_dir: client/.tmp/styles
   

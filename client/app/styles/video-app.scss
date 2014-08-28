@@ -7,7 +7,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 @import "./graphics.scss";
-
+@import "./icomoon/style.scss";
 
 #card-elem {
   -webkit-transition-duration: 2s;
