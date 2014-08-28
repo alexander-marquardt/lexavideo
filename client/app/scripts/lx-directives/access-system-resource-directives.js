@@ -67,7 +67,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         if (arrowWrapperClass !== '') {
             // only show the arrow if the arrowWrapperClass has been defined -- if it has not been defined, then
             // no arrow should be shown.
-            elem.append('<div class="'+ arrowWrapperClass + '"><span class="icon-arrow-up"></span></div>');
+            elem.append('<div class="'+ arrowWrapperClass + '"><span class="icon-lx-arrow-up"></span></div>');
 
             wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
 
@@ -153,10 +153,24 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
     };
 
+    var removeArrowAndAssociatedWatchers = function(elem, videoSignalingObject) {
+        if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
+            var arrowElement = angular.element(elem).find('.cl-arrow');
+            arrowElement.addClass('ng-hide');
+
+            // cancel timer that is no longer required
+            $timeout.cancel(timerId);
+
+            // de-register the watchers that are no longer required
+            watchLocalUserAccessCameraAndMicrophoneStatus1();
+            watchLocalUserAccessCameraAndMicrophoneStatus2();
+            watchLocalUserAccessCameraAndMicrophoneStatus3();
+        }
+    };
+
     return {
         restrict: 'A',
         link: function(scope, elem) {
-            var arrowElement;
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoElem = scope.localVideoObject.localVideoElem;
 
@@ -166,19 +180,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
             watchLocalUserAccessCameraAndMicrophoneStatus2 =
                 scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function() {
-
-                    if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
-                        arrowElement = angular.element(elem).find('.cl-arrow');
-                        arrowElement.addClass('ng-hide');
-
-                        // cancel timer that is no longer required
-                        $timeout.cancel(timerId);
-
-                        // de-register the watchers that are no longer required
-                        watchLocalUserAccessCameraAndMicrophoneStatus1();
-                        watchLocalUserAccessCameraAndMicrophoneStatus2();
-                        watchLocalUserAccessCameraAndMicrophoneStatus3();
-                    }
+                    removeArrowAndAssociatedWatchers(elem, videoSignalingObject);
                 });
         }
     };

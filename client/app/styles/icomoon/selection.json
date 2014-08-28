@@ -18,13 +18,13 @@
 			],
 			"properties": {
 				"id": 271,
-				"order": 22,
+				"order": 5,
 				"prevSize": 32,
 				"code": 61744,
-				"name": "microphone",
+				"name": "lx-microphone",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"iconIdx": 271
 		},
 		{
@@ -44,13 +44,13 @@
 			],
 			"properties": {
 				"id": 272,
-				"order": 23,
+				"order": 6,
 				"prevSize": 32,
 				"code": 61745,
-				"name": "microphone-off",
+				"name": "lx-microphone-off",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"iconIdx": 272
 		},
 		{
@@ -69,13 +69,13 @@
 			},
 			"properties": {
 				"id": 253,
-				"order": 6,
+				"order": 3,
 				"prevSize": 32,
 				"code": 58882,
-				"name": "close",
+				"name": "lx-close",
 				"ligatures": ""
 			},
-			"setIdx": 1,
+			"setIdx": 2,
 			"iconIdx": 253
 		},
 		{
@@ -94,13 +94,13 @@
 			},
 			"properties": {
 				"id": 254,
-				"order": 7,
+				"order": 4,
 				"prevSize": 32,
 				"code": 58883,
-				"name": "checkmark",
+				"name": "lx-checkmark",
 				"ligatures": ""
 			},
-			"setIdx": 1,
+			"setIdx": 2,
 			"iconIdx": 254
 		},
 		{
@@ -117,13 +117,13 @@
 			},
 			"properties": {
 				"id": 288,
-				"order": 3,
+				"order": 2,
 				"prevSize": 32,
 				"code": 58884,
-				"name": "arrow-up",
+				"name": "lx-arrow-up",
 				"ligatures": ""
 			},
-			"setIdx": 1,
+			"setIdx": 2,
 			"iconIdx": 288
 		},
 		{
@@ -143,34 +143,11 @@
 				"order": 1,
 				"prevSize": 32,
 				"code": 58880,
-				"name": "video",
+				"name": "lx-video",
 				"ligatures": ""
 			},
-			"setIdx": 2,
+			"setIdx": 3,
 			"iconIdx": 5
-		},
-		{
-			"icon": {
-				"paths": [
-					"M768 255.13h-165.274l0.051 758.63h-181.914v-758.63h-164.864l256-244.89z"
-				],
-				"tags": [
-					"arrow-up",
-					"up",
-					"top"
-				],
-				"grid": 20
-			},
-			"properties": {
-				"id": 219,
-				"order": 25,
-				"prevSize": 20,
-				"code": 58881,
-				"name": "arrow-up-long",
-				"ligatures": ""
-			},
-			"setIdx": 4,
-			"iconIdx": 219
 		}
 	],
 	"height": 1024,
