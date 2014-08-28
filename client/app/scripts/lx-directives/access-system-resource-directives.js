@@ -9,7 +9,7 @@ var lxAccessSystemResources = angular.module('lxAccessSystemResources.directives
 lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', function($timeout, $animate,
                                                                               serverConstantsService, callService,
                                                                               mediaService, lxCheckCompatibilityService,
-                                                                              lxModalSupportService) {
+                                                                              lxModalSupportService, globalVarsService) {
 
     var timerId;
     var watchLocalUserAccessCameraAndMicrophoneStatus1,
@@ -66,7 +66,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                             wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
                             // we move the arrow farther from the right border, so that it now points to the camera icon,
                             // which the user must click on to re-enable access.
-                            wrapperElement.css({'right' : '70px'});
+                            wrapperElement.css({'right' : '50px'});
                         }
                     }
                 }
@@ -77,22 +77,19 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             // only show the arrow if the arrowWrapperClass has been defined -- if it has not been defined, then
             // we have not defined where the arrow should be shown in the current OS/browser, and therefore no
             // arrow should be shown.
-            elem.append('<div class="'+ arrowWrapperClass + '"><div class="cl-arrow"><i></i><i></i></div></div>');
+            elem.append('<div class="'+ arrowWrapperClass + '"><span style="color:' + globalVarsService.brandDangerColor + ';font-size: 8em" class="glyphicon glyphicon-arrow-up"></span></div>');
 
             wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
-            var arrowElement = angular.element(elem).find('.cl-arrow');
 
 
             if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'waitingForResponse') {
                 var timeoutFn = function() {
                     timerId = $timeout(function() {
-                        if (arrowElement.hasClass('cl-show-arrow')) {
-                            arrowElement.removeClass('cl-show-arrow');
+                        if (wrapperElement.hasClass('cl-show-arrow')) {
                             wrapperElement.removeClass('cl-show-arrow');
                             timeoutInMilliseconds = 4000;
                         } else {
                             // the arrow is now shown, leave it there for a while
-                            $animate.addClass(arrowElement, 'cl-show-arrow');
                             $animate.addClass(wrapperElement, 'cl-show-arrow');
                             timeoutInMilliseconds = 10000;
                         }

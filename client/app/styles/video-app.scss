@@ -263,11 +263,7 @@ video {
   }
 }
 
-#id-dummy-xs-div {
-  // This is used by the javascript to determined the max width for xs screens.
-  display: none;
-  width: $screen-xs-max;
-}
+
 
 .cl-navbar-absolute-bottom {
   position: absolute;
@@ -289,3 +285,15 @@ video {
   display: block!important;
 }
 
+
+#id-dummy-xs-div {
+  // This is used by the javascript to determined the max width for xs screens. We set the width property to
+  // the $screen-xs-max value, and then read this value from javascript.
+  display: none;
+  width: $screen-xs-max;
+}
+
+#id-dummy-brand-danger-color-div {
+  display: none;
+  color: $brand-danger;
+}

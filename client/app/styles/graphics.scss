@@ -15,13 +15,22 @@ $arrow-stem-height : 50px;
   transition:all linear 3s;
 }
 
+
+.cl-arrow-common {
+  /* The cl-arrow class is initially hidden with an opacity of 0, until cl-show-arrow class is added to the element
+   * at which point the arrow becomes visible */
+  position: fixed;
+  z-index: 1050; // this should place it above the modal window and it's background
+  opacity: 0; // start out transparent
+  text-shadow: 0 0 20px black;
+}
+
 .cl-arrow-wrapper-mac-chrome {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
-  position: fixed;
+  @extend .cl-arrow-common;
   top: 100px;
-  right : 25px;
-  z-index: 1050; // this should place it above the modal window and it's background
+  right : 15px;
 }
 
 .cl-arrow-wrapper-mac-chrome.cl-show-arrow {
@@ -29,15 +38,15 @@ $arrow-stem-height : 50px;
      will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;
   top: 3px;
+  opacity: 1; // end up being opaque
 }
 
 .cl-arrow-wrapper-desktop-default-chrome {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
-  position: fixed;
+  @extend .cl-arrow-common;
   top: 100px;
   left : 15px;
-  z-index: 50;
 }
 
 .cl-arrow-wrapper-desktop-default-chrome.cl-show-arrow {
@@ -45,16 +54,16 @@ $arrow-stem-height : 50px;
      will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;
   top: 3px;
-}
+  opacity: 1; // end up being opaque
 
+}
 
 .cl-arrow-wrapper-mozilla {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
-  position: fixed;
+  @extend .cl-arrow-common;
   top: 400px;
   left : 15px;
-  z-index: 50;
 }
 
 .cl-arrow-wrapper-mozilla.cl-show-arrow {
@@ -62,57 +71,6 @@ $arrow-stem-height : 50px;
      will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;
   top: 3px;
+  opacity: 1; // end up being opaque
+
 }
-
-
-
-.cl-arrow {
-  /* This is a wrapper that contains the arrow head and the arrow stem. In order to declare an arrow, you must
-   * define a '.cl-arrow' element that then contains an <i> tag followed by another <i> tag.
-   * For example, the following will declare an arrow "<div class="cl-arrow""><i></i><i></i></div>".
-   * It is done in this way because the triangle and the stem are unique shapes, each drawn with a separate
-   * css declaration that are triggered by the <i> tags (perhaps there is a better way to do this?) */
-
-  /* The cl-arrow class is initially hidden with an opacity of 0, until cl-show-arrow class is added to the element
-   * at which point the arrow becomes visible */
-  position: relative;
-  width: $arrow-triangle-width;
-  opacity: 0
-}
-
-.cl-arrow.cl-show-arrow {
-  @extend .cl-arrow-transition;
-}
-
-.cl-arrow.cl-show-arrow {
-  opacity: 1;
-}
-
-.cl-arrow i {
-  // draw the triangle part of the arrow
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: $arrow-triangle-width / 2 solid transparent;
-  border-right: $arrow-triangle-width / 2 solid transparent;
-  border-bottom: $arrow-triangle-height solid $arrow-color;
-}
-.cl-arrow i+i {
-  // draw the arrow stem
-  position: absolute;
-  top: $arrow-triangle-height - 1px;
-  left: $arrow-triangle-width / 2 - $arrow-stem-width / 2;
-  width: $arrow-stem-width;
-  height: $arrow-stem-height * 8;
-  background: $arrow-color;
-  border: 0px;
-}
-
-.cl-arrow.cl-show-arrow i+i {
-  // only show the animation when we are adding the .cl-show-arrow class, not when it is removed
-  @extend .cl-arrow-transition;
-
-  // at the end of the animation, the arrow stem is shorter than at the beginning.
-  height : $arrow-stem-height;
-}
-
