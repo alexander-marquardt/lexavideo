@@ -27,7 +27,7 @@ $arrow-stem-height : 50px;
   font-size: 8em;
 }
 
-.cl-arrow-wrapper-mac-chrome {
+.cl-arrow-mac-chrome {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
   @extend .cl-arrow-common;
@@ -35,7 +35,7 @@ $arrow-stem-height : 50px;
   right : 15px;
 }
 
-.cl-arrow-wrapper-mac-chrome.cl-show-arrow {
+.cl-arrow-mac-chrome.cl-show-arrow {
   /* when the cl-show-arrow class is added to an element, then if this browser supports css animations, the element
      will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;
@@ -43,13 +43,13 @@ $arrow-stem-height : 50px;
   opacity: 1; // end up being opaque
 }
 
-.cl-arrow-wrapper-mac-chrome.camera-access-was-denied {
+.cl-arrow-mac-chrome.camera-access-was-denied {
   /* if the user has denied access to their camera, then we move the arrow to point to the camera icon instead
      of pointing to the allow button. */
   right: 50px;
 }
 
-.cl-arrow-wrapper-desktop-default-chrome {
+.cl-arrow-desktop-default-chrome {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
   @extend .cl-arrow-common;
@@ -57,7 +57,7 @@ $arrow-stem-height : 50px;
   left : 15px;
 }
 
-.cl-arrow-wrapper-desktop-default-chrome.cl-show-arrow {
+.cl-arrow-desktop-default-chrome.cl-show-arrow {
   /* when the cl-show-arrow class is added to an element, then if this browser supports css animations, the element
      will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;
@@ -65,13 +65,13 @@ $arrow-stem-height : 50px;
   opacity: 1; // end up being opaque
 }
 
-.cl-arrow-wrapper-desktop-default-chrome.camera-access-was-denied {
+.cl-arrow-desktop-default-chrome.camera-access-was-denied {
   right: 15px;
   left: auto;
 
 }
 
-.cl-arrow-wrapper-mozilla {
+.cl-arrow-mozilla {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
   @extend .cl-arrow-common;
@@ -80,7 +80,7 @@ $arrow-stem-height : 50px;
   left : 25px;
 }
 
-.cl-arrow-wrapper-mozilla.cl-show-arrow {
+.cl-arrow-mozilla.cl-show-arrow {
   /* when the cl-show-arrow class is added to an element, then if this browser supports css animations, the element
      will move from its current position, to a location "top"px pixels from the top of the screen */
   @extend .cl-arrow-transition;

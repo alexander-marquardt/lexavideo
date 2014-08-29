@@ -30,16 +30,16 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
     };
 
     var showArrowPointingToAcceptButton = function(scope, elem, videoSignalingObject) {
-        var arrowWrapperClass = '';
+        var arrowClass = '';
         var timeoutInMilliseconds = 0;
         var arrowElement;
 
         if ($.browser.name === 'chrome') {
             if ($.browser.platform === 'mac') {
-                arrowWrapperClass = 'cl-arrow-wrapper-mac-chrome';
+                arrowClass = 'cl-arrow-mac-chrome';
             }
             else if ($.browser.desktop) {
-                arrowWrapperClass = 'cl-arrow-wrapper-desktop-default-chrome';
+                arrowClass = 'cl-arrow-desktop-default-chrome';
             }
         }
         if ($.browser.name === 'mozilla') {
@@ -50,11 +50,11 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                 if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'waitingForResponse') {
                     // Only show the arrow if we are waiting for a response. If the camera was previously denied
                     // then firefox does not show the camera icon and therefore there is nothing to point to.
-                    arrowWrapperClass = 'cl-arrow-wrapper-mozilla';
+                    arrowClass = 'cl-arrow-mozilla';
                 }
 
                 else {
-                    arrowWrapperClass = ''; // redundant, but leave here for informational purposes.
+                    arrowClass = ''; // redundant, but leave here for informational purposes.
                 }
 
             }
@@ -65,12 +65,12 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             // accidentaly hidden as may happen in firefox.
         }
 
-        if (arrowWrapperClass !== '') {
-            // only show the arrow if the arrowWrapperClass has been defined -- if it has not been defined, then
+        if (arrowClass !== '') {
+            // only show the arrow if the arrowClass has been defined -- if it has not been defined, then
             // no arrow should be shown.
             arrowElement = angular.element(elem).find('.cl-arrow');
             arrowElement.removeClass('ng-hide');
-            arrowElement.addClass(arrowWrapperClass);
+            arrowElement.addClass(arrowClass);
 
 
             if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
@@ -79,7 +79,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
             if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'allowAccess') {
 
-                $log.log('starting arrow timer')
+                $log.log('starting arrow timer');
                 var timeoutFn = function() {
                     timerId = $timeout(function() {
                         if (arrowElement.hasClass('cl-show-arrow')) {
@@ -210,7 +210,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         return function () {
             var status = scope.videoSignalingObject.localUserAccessCameraAndMicrophoneStatus;
             return status;
-        }
+        };
     };
 
     return {
