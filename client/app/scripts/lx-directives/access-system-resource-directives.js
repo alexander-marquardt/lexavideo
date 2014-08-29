@@ -116,7 +116,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
     };
 
-    var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate, currentlyDisplayedModalInstance, modalSize, windowClass) {
+    var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate, currentlyDisplayedModalInstance, windowClass) {
 
 
         if (currentlyDisplayedModalInstance) {
@@ -124,7 +124,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             currentlyDisplayedModalInstance.close();
         }
 
-        currentlyDisplayedModalInstance =  lxModalSupportService.showModalWindow(scope, htmlTemplate, modalSize, windowClass);
+        currentlyDisplayedModalInstance =  lxModalSupportService.showCameraAndMicrophoneModalWindow(scope, htmlTemplate, windowClass);
         return currentlyDisplayedModalInstance;
     };
 

@@ -17,13 +17,13 @@ checkCompatibilityDirectives.directive('lxCheckIfBrowserIsSupported', function($
 
 
         if (lxCheckCompatibilityService.isIosDevice) {
-            lxModalSupportService.showModalWindow('lx-template-cache/ios-is-not-supported-modal.html');
+            lxModalSupportService.showStandardModalWindow('lx-template-cache/ios-is-not-supported-modal.html');
         }
         else if (!lxCheckCompatibilityService.isSupportedBrowser) {
-            lxModalSupportService.showModalWindow('lx-template-cache/browser-is-not-supported-modal.html');
+            lxModalSupportService.showStandardModalWindow('lx-template-cache/browser-is-not-supported-modal.html');
         }
         else if (!lxCheckCompatibilityService.browserVersionIsSupported) {
-            lxModalSupportService.showModalWindow('lx-template-cache/browser-version-is-not-supported-modal.html');
+            lxModalSupportService.showStandardModalWindow('lx-template-cache/browser-version-is-not-supported-modal.html');
         }
     };
 

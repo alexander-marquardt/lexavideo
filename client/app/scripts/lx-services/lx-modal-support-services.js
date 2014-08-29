@@ -21,7 +21,7 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log) 
 
     return {
 
-        showModalWindow : function(scope, htmlTemplate, windowClass) {
+        showCameraAndMicrophoneModalWindow : function(scope, htmlTemplate, windowClass) {
             var modalInstance = $modal.open({
                 templateUrl: htmlTemplate,
                 controller: ModalInstanceCtrl,
@@ -43,6 +43,24 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log) 
                 });
             // returns an instance of the modal in case we need to manipulate it later
             return modalInstance;
+        },
+
+        showStandardModalWindow : function(htmlTemplate) {
+            var modalInstance = $modal.open({
+                templateUrl: htmlTemplate,
+                controller: ModalInstanceCtrl
+            });
+
+            modalInstance.result.then(
+                function() {
+                    $log.log('modal closed ' + htmlTemplate);
+                },
+                function() {
+                    $log.log('modal dismissed ' + htmlTemplate);
+                }).
+                finally(function () {
+                    $log.log('Closed the modal box for '+ htmlTemplate);
+                });
         }
     };
 });
