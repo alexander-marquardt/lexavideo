@@ -67,26 +67,35 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             // only show the arrow if the arrowWrapperClass has been defined -- if it has not been defined, then
             // no arrow should be shown.
             elem.append('<div class="cl-arrow '+ arrowWrapperClass + '"><span class="icon-lx-arrow-up"></span></div>');
-
-
             wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
 
-            if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'waitingForResponse') {
-                var timeoutFn = function() {
-                    timerId = $timeout(function() {
-                        if (wrapperElement.hasClass('cl-show-arrow')) {
-                            wrapperElement.removeClass('cl-show-arrow');
-                            timeoutInMilliseconds = 3000;
-                        } else {
-                            // the arrow is now shown, leave it there for a while
-                            $animate.addClass(wrapperElement, 'cl-show-arrow');
-                            timeoutInMilliseconds = 15000;
-                        }
-                        timeoutFn();
-                    }, timeoutInMilliseconds);
-                };
-                timeoutFn();
-            }
+            $timeout(function() {
+                // wait a second before starting to show the arrow. This gives time for the initial status to correctly propagate.
+                // This is delay allows us to detect 'denyAccess' status if the user has previously denied camera access
+                // and to therefore start the pointer at the correct horizontal position. 
+
+                if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
+                    wrapperElement.addClass('camera-access-was-denied');
+                }
+
+                if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'allowAccess') {
+                    var timeoutFn = function() {
+                        timerId = $timeout(function() {
+                            if (wrapperElement.hasClass('cl-show-arrow')) {
+                                wrapperElement.removeClass('cl-show-arrow');
+                                timeoutInMilliseconds = 3000;
+                            } else {
+                                // the arrow is now shown, leave it there for a while
+                                $animate.addClass(wrapperElement, 'cl-show-arrow');
+                                timeoutInMilliseconds = 15000;
+                            }
+                            timeoutFn();
+                        }, timeoutInMilliseconds);
+                    };
+                    timeoutFn();
+                }
+            }, 1000);
+
 
             watchLocalUserAccessCameraAndMicrophoneStatus1 =
                 scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function() {
