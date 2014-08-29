@@ -232,8 +232,9 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                 // camera and microphone. Otherwise, they should already have been shown instructions from
                 // lx-check-compatibility-directives, which would have told them what they need to do to access the site.
 
-                var arrowElem = elem.append('<div class="cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
-
+                var arrowElem = angular.element('<div class="cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
+                elem.append(arrowElem);
+                
                 askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
 
                 watchWhichModalIsOpen =

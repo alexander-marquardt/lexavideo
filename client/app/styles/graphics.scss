@@ -16,7 +16,7 @@ $arrow-stem-height : 50px;
 }
 
 
-.cl-arrow-common {
+.cl-arrow {
   /* The cl-arrow class is initially hidden with an opacity of 0, until cl-show-arrow class is added to the element
    * at which point the arrow becomes visible */
   position: fixed;
@@ -30,7 +30,6 @@ $arrow-stem-height : 50px;
 .cl-arrow-mac-chrome {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
-  @extend .cl-arrow-common;
   top: 100px;
   right : 15px;
 }
@@ -52,7 +51,6 @@ $arrow-stem-height : 50px;
 .cl-arrow-desktop-default-chrome {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
-  @extend .cl-arrow-common;
   top: 200px;
   left : 15px;
 }
@@ -74,7 +72,6 @@ $arrow-stem-height : 50px;
 .cl-arrow-mozilla {
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
-  @extend .cl-arrow-common;
   font-size: 5em; // make it smaller so that it can hide behind the mozilla permissions popup.
   top: 100px;
   left : 25px;
