@@ -9,6 +9,13 @@
 angular.module('videoApp')
     .controller('lxMainVideoCtrl', function ($scope, negotiateVideoType) {
 
+        $scope.accessCameraAndMicrophoneObject = {
+            // modalIsShown will contain a boolean for each modal template, that will indicate if the modal is
+            // currently being displayed or has been removed. For example,
+            // accessCameraAndMicrophoneObject.modalIsShown['promptUserToClickOnAllow.html'] = [true | false]
+            modalIsShown : {}
+        };
+
         $scope.remoteVideoObject = {
             remoteVideoElem : $('#id-remote-video-element')[0],
             remoteVideoWrapper : $('#id-remote-video-wrapper-div')[0]

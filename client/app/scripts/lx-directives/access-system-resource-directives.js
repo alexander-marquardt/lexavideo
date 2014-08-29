@@ -17,7 +17,9 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
     // initially called.
     var watchLocalUserAccessCameraAndMicrophoneStatus1 = function() {},
         watchLocalUserAccessCameraAndMicrophoneStatus2 = function() {},
-        watchLocalUserAccessCameraAndMicrophoneStatus3 = function() {};
+        watchLocalUserAccessCameraAndMicrophoneStatus3 = function() {},
+        watchForModalClosed = function() {};
+
 
     var askForPermissionToCameraAndMicrophone = function(localVideoElem, videoSignalingObject) {
         if (serverConstantsService.mediaConstraints.audio === false &&
@@ -61,13 +63,11 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             // accidentaly hidden as may happen in firefox.
         }
 
-
-
-
         if (arrowWrapperClass !== '') {
             // only show the arrow if the arrowWrapperClass has been defined -- if it has not been defined, then
             // no arrow should be shown.
-            elem.append('<div class="'+ arrowWrapperClass + '"><span class="icon-lx-arrow-up"></span></div>');
+            elem.append('<div class="cl-arrow '+ arrowWrapperClass + '"><span class="icon-lx-arrow-up"></span></div>');
+
 
             wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
 
@@ -76,11 +76,11 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     timerId = $timeout(function() {
                         if (wrapperElement.hasClass('cl-show-arrow')) {
                             wrapperElement.removeClass('cl-show-arrow');
-                            timeoutInMilliseconds = 4000;
+                            timeoutInMilliseconds = 3000;
                         } else {
                             // the arrow is now shown, leave it there for a while
                             $animate.addClass(wrapperElement, 'cl-show-arrow');
-                            timeoutInMilliseconds = 10000;
+                            timeoutInMilliseconds = 15000;
                         }
                         timeoutFn();
                     }, timeoutInMilliseconds);
@@ -106,9 +106,23 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
     };
 
-    var showModalInstructionsForCameraAndMicrophone = function(scope) {
+    var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate, currentlyDisplayedModalInstance) {
+
+
+        if (currentlyDisplayedModalInstance) {
+            // if there is already a modal open, close it so that we don't have them stacking on top of each other.
+            currentlyDisplayedModalInstance.close();
+        }
+
+        currentlyDisplayedModalInstance =  lxModalSupportService.showModalWindow(scope, htmlTemplate);
+        return currentlyDisplayedModalInstance;
+    };
+
+
+    var showModalInstructionsForCameraAndMicrophone = function(scope, elem) {
 
         var currentlyDisplayedModalInstance;
+
 
         if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
             // If the users's device and browser support webRTC, then show them instructions on how to access their
@@ -117,18 +131,21 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
             watchLocalUserAccessCameraAndMicrophoneStatus3 =
                 scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function(newStatus) {
-                    try {
+
+                    if (newStatus === 'allowAccess') {
                         currentlyDisplayedModalInstance.close();
-                    } catch (error) {
-                        // do nothing
                     }
+
+
                     if ($.browser.name === 'chrome') {
                         if ($.browser.platform === 'mac') {
                             if (newStatus === 'waitingForResponse') {
-                                currentlyDisplayedModalInstance = lxModalSupportService.showModalWindow('lx-template-cache/chrome-mac-access-camera-modal.html');
+                                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                                    'lx-template-cache/chrome-mac-access-camera-modal.html', currentlyDisplayedModalInstance);
                             }
                             else if (newStatus === 'denyAccess') {
-                                currentlyDisplayedModalInstance = lxModalSupportService.showModalWindow('lx-template-cache/chrome-mac-access-camera-previously-denied-modal.html');
+                                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                                    'lx-template-cache/chrome-mac-access-camera-previously-denied-modal.html', currentlyDisplayedModalInstance);
                             }
                         }
                         else if ($.browser.desktop) {
@@ -153,19 +170,32 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
     };
 
-    var removeArrowAndAssociatedWatchers = function(elem, videoSignalingObject) {
-        if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
-            var arrowElement = angular.element(elem).find('.cl-arrow');
-            arrowElement.addClass('ng-hide');
+    var removeArrowAndAssociatedWatchers = function(elem) {
+        var arrowElement = angular.element(elem).find('.cl-arrow');
+        arrowElement.addClass('ng-hide');
 
-            // cancel timer that is no longer required
-            $timeout.cancel(timerId);
+        // cancel timer that is no longer required
+        $timeout.cancel(timerId);
 
-            // de-register the watchers that are no longer required
-            watchLocalUserAccessCameraAndMicrophoneStatus1();
-            watchLocalUserAccessCameraAndMicrophoneStatus2();
-            watchLocalUserAccessCameraAndMicrophoneStatus3();
-        }
+        // de-register the watchers that are no longer required
+        watchLocalUserAccessCameraAndMicrophoneStatus1();
+        watchLocalUserAccessCameraAndMicrophoneStatus2();
+        watchLocalUserAccessCameraAndMicrophoneStatus3();
+        watchForModalClosed();
+    };
+
+    var checkIfAModalIsShown = function(scope) {
+        return function() {
+            for (var key in scope.accessCameraAndMicrophoneObject.modalIsShown) {
+                if (scope.accessCameraAndMicrophoneObject.modalIsShown.hasOwnProperty(key)){
+                    var value = scope.accessCameraAndMicrophoneObject.modalIsShown[key];
+                    if (value) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
     };
 
     return {
@@ -175,12 +205,22 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             var localVideoElem = scope.localVideoObject.localVideoElem;
 
             askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
-            showArrowPointingToAcceptButton(scope, elem, videoSignalingObject);
-            showModalInstructionsForCameraAndMicrophone(scope);
+            showModalInstructionsForCameraAndMicrophone(scope, elem);
+
+            watchForModalClosed =
+                scope.$watch(checkIfAModalIsShown(scope), function(aModalIsOpen) {
+                    if (aModalIsOpen) {
+                        showArrowPointingToAcceptButton(scope, elem, videoSignalingObject);
+                    } else {
+                        removeArrowAndAssociatedWatchers(elem, videoSignalingObject);
+                    }
+                });
 
             watchLocalUserAccessCameraAndMicrophoneStatus2 =
                 scope.$watch('videoSignalingObject.localUserAccessCameraAndMicrophoneStatus', function() {
-                    removeArrowAndAssociatedWatchers(elem, videoSignalingObject);
+                    if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
+                        removeArrowAndAssociatedWatchers(elem);
+                    }
                 });
         }
     };
