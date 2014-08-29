@@ -264,7 +264,9 @@ video {
   }
 }
 
-
+.cl-firefox-camera-access-modal-override > .modal-dialog {
+  top: 200px;
+}
 
 .cl-navbar-absolute-bottom {
   position: absolute;

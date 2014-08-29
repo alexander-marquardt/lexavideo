@@ -75,8 +75,9 @@ $arrow-stem-height : 50px;
   /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
      the class .cl-show-arrow is added to an element */
   @extend .cl-arrow-common;
-  top: 300px;
-  left : 15px;
+  font-size: 5em; // make it smaller so that it can hide behind the mozilla permissions popup.
+  top: 100px;
+  left : 25px;
 }
 
 .cl-arrow-wrapper-mozilla.cl-show-arrow {

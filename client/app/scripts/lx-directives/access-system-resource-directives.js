@@ -116,7 +116,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
     };
 
-    var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate, currentlyDisplayedModalInstance) {
+    var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate, currentlyDisplayedModalInstance, modalSize, windowClass) {
 
 
         if (currentlyDisplayedModalInstance) {
@@ -124,7 +124,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             currentlyDisplayedModalInstance.close();
         }
 
-        currentlyDisplayedModalInstance =  lxModalSupportService.showModalWindow(scope, htmlTemplate);
+        currentlyDisplayedModalInstance =  lxModalSupportService.showModalWindow(scope, htmlTemplate, modalSize, windowClass);
         return currentlyDisplayedModalInstance;
     };
 
@@ -132,7 +132,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
     var showModalInstructionsForCameraAndMicrophone = function(scope, elem) {
 
         var currentlyDisplayedModalInstance;
-
+        var windowClass = '';
 
         if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
             // If the users's device and browser support webRTC, then show them instructions on how to access their
@@ -151,7 +151,8 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                         if (newStatus === 'denyAccess') {
                             if ($.browser.desktop) {
                                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                                    'lx-template-cache/chrome-desktop-access-camera-previously-denied-modal.html', currentlyDisplayedModalInstance);
+                                    'lx-template-cache/chrome-desktop-access-camera-previously-denied-modal.html',
+                                    currentlyDisplayedModalInstance, windowClass);
                             }
                             else {
                                 // mobile device
@@ -160,12 +161,14 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                         else  if (newStatus === 'waitingForResponse') {
                             if ($.browser.platform === 'mac') {
                                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                                    'lx-template-cache/chrome-mac-access-camera-modal.html', currentlyDisplayedModalInstance);
+                                    'lx-template-cache/chrome-mac-access-camera-modal.html',
+                                    currentlyDisplayedModalInstance, windowClass);
                             }
                             else if ($.browser.desktop) {
                                 // windows/linux desktop devices. Chrome appears to have the same layout in both.
                                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                                    'lx-template-cache/chrome-desktop-access-camera-modal.html', currentlyDisplayedModalInstance);
+                                    'lx-template-cache/chrome-desktop-access-camera-modal.html',
+                                    currentlyDisplayedModalInstance, windowClass);
                             }
                             else {
                                 // should be mobile
@@ -175,7 +178,10 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     if ($.browser.name === 'mozilla') {
 
                         if ($.browser.desktop) {
-
+                            windowClass = 'cl-firefox-camera-access-modal-override';
+                            currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                                'lx-template-cache/mozilla-desktop-access-camera-modal.html',
+                                currentlyDisplayedModalInstance, windowClass);
                         }
                     }
 

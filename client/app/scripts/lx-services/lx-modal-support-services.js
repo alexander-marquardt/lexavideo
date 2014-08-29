@@ -21,10 +21,11 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log) 
 
     return {
 
-        showModalWindow : function(scope, htmlTemplate) {
+        showModalWindow : function(scope, htmlTemplate, windowClass) {
             var modalInstance = $modal.open({
                 templateUrl: htmlTemplate,
-                controller: ModalInstanceCtrl
+                controller: ModalInstanceCtrl,
+                windowClass : windowClass
             });
 
             scope.accessCameraAndMicrophoneObject.modalIsShown[htmlTemplate] = true;
