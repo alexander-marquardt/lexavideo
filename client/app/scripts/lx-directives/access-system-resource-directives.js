@@ -29,7 +29,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
     };
 
-    var showArrowPointingToAcceptButton = function(scope, arrowElem, videoSignalingObject) {
+    var showArrowPointingToWhereUserShouldLook = function(scope, arrowElem, videoSignalingObject) {
         var arrowClass = '';
         var timeoutInMilliseconds = 0;
 
@@ -61,7 +61,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
         if ($.browser.name === 'opera') {
             // no arrow required, since opera has a popup window that is quite obvious and that does not get
-            // accidentaly hidden as may happen in firefox.
+            // accidentally hidden as may happen in firefox.
         }
 
         if (arrowClass !== '') {
@@ -78,9 +78,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                 $log.log('starting arrow timer');
                 if (timerId) {
                     // a previous timer was running, so we remove it.
-                    $timeout.cancel(timerId);
-                    timeoutInMilliseconds = 0;
-                    arrowElem.removeClass('cl-show-arrow');
+                    removeArrowAndAssociatedWatchers(arrowElem);
                 }
 
                 var timeoutFn = function() {
@@ -98,7 +96,11 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                 };
                 timeoutFn();
             }
+        } else {
+            // remove the arrow since none should be shown for the current device/browser.
+            removeArrowAndAssociatedWatchers(arrowElem);
         }
+
     };
 
     var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate, currentlyDisplayedModalInstance, windowClass) {
@@ -197,6 +199,10 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
     var getWhichModalIsShown = function(scope) {
         return function() {
+            // returns the modal that was most recently opened. The last element of the array
+            // will always be the most recent, even if we asynchronously close
+            // an existing modal, and open a new modal at the same time (since the previously existing modal
+            // would appear earlier in the array than the new modal).
             var arr = scope.accessCameraAndMicrophoneObject.modalsCurrentlyShown;
             var len = arr.length;
             if (len > 0) {
@@ -210,8 +216,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
     var watchCameraStatus = function(scope) {
         return function () {
-            var status = scope.videoSignalingObject.localUserAccessCameraAndMicrophoneStatus;
-            return status;
+            return scope.videoSignalingObject.localUserAccessCameraAndMicrophoneStatus;
         };
     };
 
@@ -237,11 +242,11 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                         // modify the notification arrow to point to the correct location, or to be removed if
                         // it is no longer needed.
 
-
                         if (whichModalIsOpen !== null) {
                             $log.log('showing arrow pointing to accept button. whichModalIsOpen is: ' + whichModalIsOpen);
-                            showArrowPointingToAcceptButton(scope, arrowElem, videoSignalingObject);
+                            showArrowPointingToWhereUserShouldLook(scope, arrowElem, videoSignalingObject);
                         } else {
+                            // no dialog is shown, so no arrow needs to be shown either.
                             removeArrowAndAssociatedWatchers(arrowElem);
                         }
                     });
