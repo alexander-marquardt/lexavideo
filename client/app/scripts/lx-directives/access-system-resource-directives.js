@@ -29,10 +29,9 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
     };
 
-    var showArrowPointingToAcceptButton = function(scope, elem, videoSignalingObject) {
+    var showArrowPointingToAcceptButton = function(scope, arrowElem, videoSignalingObject) {
         var arrowClass = '';
         var timeoutInMilliseconds = 0;
-        var arrowElement;
 
         if ($.browser.name === 'chrome') {
             if ($.browser.platform === 'mac') {
@@ -68,26 +67,30 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         if (arrowClass !== '') {
             // only show the arrow if the arrowClass has been defined -- if it has not been defined, then
             // no arrow should be shown.
-            arrowElement = angular.element(elem).find('.cl-arrow');
-            arrowElement.removeClass('ng-hide');
-            arrowElement.addClass(arrowClass);
-
+            arrowElem.addClass(arrowClass);
 
             if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
-                arrowElement.addClass('camera-access-was-denied');
+                arrowElem.addClass('camera-access-was-denied');
             }
 
             if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'allowAccess') {
 
                 $log.log('starting arrow timer');
+                if (timerId) {
+                    // a previous timer was running, so we remove it.
+                    $timeout.cancel(timerId);
+                    timeoutInMilliseconds = 0;
+                    arrowElem.removeClass('cl-show-arrow');
+                }
+
                 var timeoutFn = function() {
                     timerId = $timeout(function() {
-                        if (arrowElement.hasClass('cl-show-arrow')) {
-                            arrowElement.removeClass('cl-show-arrow');
+                        if (arrowElem.hasClass('cl-show-arrow')) {
+                            arrowElem.removeClass('cl-show-arrow');
                             timeoutInMilliseconds = 3000;
                         } else {
-                            // the arrow is now shown, leave it there for a while
-                            $animate.addClass(arrowElement, 'cl-show-arrow');
+                            // the arrow is now shown, display it for a while
+                            arrowElem.addClass('cl-show-arrow');
                             timeoutInMilliseconds = 15000;
                         }
                         timeoutFn();
@@ -179,9 +182,8 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
     };
 
 
-    var removeArrowAndAssociatedWatchers = function(elem) {
-        var arrowElement = angular.element(elem).find('.cl-arrow');
-        arrowElement.addClass('ng-hide');
+    var removeArrowAndAssociatedWatchers = function(arrowElem) {
+        arrowElem.removeClass('cl-show-arrow');
         // cancel timer that is no longer required
         $log.log('removing arrow and watchers');
         $timeout.cancel(timerId);
@@ -224,17 +226,23 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                 // If the users's device and browser support webRTC, then show them instructions on how to access their
                 // camera and microphone. Otherwise, they should already have been shown instructions from
                 // lx-check-compatibility-directives, which would have told them what they need to do to access the site.
-                askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
 
-                elem.append('<div class="ng-hide cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
+                var arrowElem = elem.append('<div class="cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
+
+                askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
 
                 watchWhichModalIsOpen =
                     scope.$watch(getWhichModalIsShown(scope), function(whichModalIsOpen) {
-                        removeArrowAndAssociatedWatchers(elem);
+                        // keep an eye on which modal is currently open, and if it changes then we will
+                        // modify the notification arrow to point to the correct location, or to be removed if
+                        // it is no longer needed.
+
 
                         if (whichModalIsOpen !== null) {
                             $log.log('showing arrow pointing to accept button. whichModalIsOpen is: ' + whichModalIsOpen);
-                            showArrowPointingToAcceptButton(scope, elem, videoSignalingObject);
+                            showArrowPointingToAcceptButton(scope, arrowElem, videoSignalingObject);
+                        } else {
+                            removeArrowAndAssociatedWatchers(arrowElem);
                         }
                     });
 
@@ -242,17 +250,22 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     scope.$watch(watchCameraStatus(scope), function() {
                         if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
                             // access has been given, no need to show arrows pointing to camera icons and allow buttons
-                            removeArrowAndAssociatedWatchers(elem);
+                            removeArrowAndAssociatedWatchers(arrowElem);
                             removeModalWatcher();
+                            arrowElem.remove(); // take the arrow out of the dom completely
+                            if (currentlyDisplayedModalInstance) {
+                                currentlyDisplayedModalInstance.close();
+                            }
                         }
                         else {
                             // we are still waiting for access. Since the status has changed, the modal
-                            // content will have changed as well, which means that we need to who a new modal.
+                            // content will have changed as well, which means that we need to show a new modal.
                             currentlyDisplayedModalInstance = showModalInstructionsForCameraAndMicrophone(scope, elem,
                                 videoSignalingObject, currentlyDisplayedModalInstance);
                         }
                     });
 
+                // the following code is necessary to kick-off the modal windows.
                 currentlyDisplayedModalInstance = showModalInstructionsForCameraAndMicrophone(scope, elem,
                     videoSignalingObject, currentlyDisplayedModalInstance);
 
