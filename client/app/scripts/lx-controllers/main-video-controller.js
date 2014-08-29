@@ -10,10 +10,13 @@ angular.module('videoApp')
     .controller('lxMainVideoCtrl', function ($scope, negotiateVideoType) {
 
         $scope.accessCameraAndMicrophoneObject = {
-            // modalIsShown will contain a boolean for each modal template, that will indicate if the modal is
-            // currently being displayed or has been removed. For example,
-            // accessCameraAndMicrophoneObject.modalIsShown['promptUserToClickOnAllow.html'] = [true | false]
-            modalIsShown : {}
+            // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
+            // a single modal should be shown at once, due to the asynchronous callback nature of the .close() function,
+            // we cannot guarantee that the current modal is closed before a new one is opened.
+            // This variable should be used as follows:
+            // accessCameraAndMicrophoneObject.modalsCurrentlyShown[modal-index#] = templateUrl (where template Url is unique
+            // for each modal).
+            modalsCurrentlyShown : []
         };
 
         $scope.remoteVideoObject = {
