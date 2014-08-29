@@ -63,6 +63,11 @@ $arrow-stem-height : 50px;
   @extend .cl-arrow-transition;
   top: 0px;
   opacity: 1; // end up being opaque
+}
+
+.cl-arrow-wrapper-desktop-default-chrome.camera-access-was-denied {
+  right: 15px;
+  left: auto;
 
 }
 

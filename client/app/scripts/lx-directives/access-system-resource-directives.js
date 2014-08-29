@@ -55,7 +55,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             // Since mozilla/firefox has a popup as opposed to a banner, we wait longer before showing the arrow.
             // If the user has accidentally clicked somewhere on the screen, then they need to be directed to the
             // camera icon to the left of where the URL is displayed.
-            timeoutInMilliseconds = 15000;
+            timeoutInMilliseconds = 0;
         }
 
         if ($.browser.name === 'opera') {
@@ -72,7 +72,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             $timeout(function() {
                 // wait a second before starting to show the arrow. This gives time for the initial status to correctly propagate.
                 // This is delay allows us to detect 'denyAccess' status if the user has previously denied camera access
-                // and to therefore start the pointer at the correct horizontal position. 
+                // and to therefore start the pointer at the correct horizontal position.
 
                 if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
                     wrapperElement.addClass('camera-access-was-denied');
@@ -103,7 +103,8 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                         // monitor to see if user denies access to the camera, and if this happens then
                         // move the arrow over to point to the camera icon instead of to the allow button.
                         if ($.browser.name === 'chrome') {
-                            if ($.browser.platform === 'mac') {
+                            // across all desktop platforms, the camera icon appears to be in the same location
+                            if ($.browser.desktop) {
                                 wrapperElement = angular.element(elem).find('.' + arrowWrapperClass);
                                 wrapperElement.addClass('camera-access-was-denied');
                             }
@@ -147,22 +148,28 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
 
                     if ($.browser.name === 'chrome') {
-                        if ($.browser.platform === 'mac') {
-                            if (newStatus === 'waitingForResponse') {
+                        if (newStatus === 'denyAccess') {
+                            if ($.browser.desktop) {
+                                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                                    'lx-template-cache/chrome-desktop-access-camera-previously-denied-modal.html', currentlyDisplayedModalInstance);
+                            }
+                            else {
+                                // mobile device
+                            }
+                        }
+                        else  if (newStatus === 'waitingForResponse') {
+                            if ($.browser.platform === 'mac') {
                                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
                                     'lx-template-cache/chrome-mac-access-camera-modal.html', currentlyDisplayedModalInstance);
                             }
-                            else if (newStatus === 'denyAccess') {
+                            else if ($.browser.desktop) {
+                                // windows/linux desktop devices. Chrome appears to have the same layout in both.
                                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                                    'lx-template-cache/chrome-mac-access-camera-previously-denied-modal.html', currentlyDisplayedModalInstance);
+                                    'lx-template-cache/chrome-desktop-access-camera-modal.html', currentlyDisplayedModalInstance);
                             }
-                        }
-                        else if ($.browser.desktop) {
-
-                        }
-                        else {
-                            // should be mobile
-
+                            else {
+                                // should be mobile
+                            }
                         }
                     }
                     if ($.browser.name === 'mozilla') {
