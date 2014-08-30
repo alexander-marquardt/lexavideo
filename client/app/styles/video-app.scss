@@ -6,8 +6,8 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 // bower:scss
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
-@import "./graphics.scss";
-@import "./icomoon/style.scss";
+@import "./lx-access-camera-prompts";
+@import "./icomoon/style";
 
 
 #card-elem {
@@ -262,14 +262,6 @@ video {
   @media (min-width: $screen-sm-min) {
     display: none;
   }
-}
-
-.cl-firefox-camera-access-modal-override > .modal-dialog {
-  top: 200px;
-}
-
-.cl-opera-camera-access-modal-override > .modal-dialog {
-  top: 200px;
 }
 
 .cl-navbar-absolute-bottom {

@@ -76,3 +76,11 @@ $arrow-stem-height : 50px;
   top: 0px;
   opacity: 1; // end up being opaque
 }
+
+.cl-firefox-camera-access-modal-override > .modal-dialog {
+  top: 200px;
+}
+
+.cl-opera-camera-access-modal-override > .modal-dialog {
+  top: 200px;
+}
