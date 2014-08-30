@@ -6,25 +6,30 @@
 
 var lxModalSupportServices = angular.module('lxModalSupport.services', []);
 
+
+lxModalSupportServices.controller('modalInstanceCtrl', ['$scope', '$log', '$modalInstance', function($scope, $log, $modalInstance) {
+    /* This 'controller' is used only by lxModalSupportService, and therefore is contained in this service module as opposed
+       to appearing in a controller module.
+     */
+    $scope.ok = function () {
+        $modalInstance.close();
+    };
+    $scope.cancel = function () {
+        $modalInstance.close();
+    };
+}]);
+
+
 lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log, $timeout) {
     /* Provides constant values that are used in various parts of the javascript code.
      */
-
-    var ModalInstanceCtrl = function($scope, $log, $modalInstance) {
-        $scope.ok = function () {
-            $modalInstance.close();
-        };
-        $scope.cancel = function () {
-            $modalInstance.close();
-        };
-    };
 
     return {
 
         showCameraAndMicrophoneModalWindow : function(scope, htmlTemplate, windowClass, modalSize) {
             var modalInstance = $modal.open({
                 templateUrl: htmlTemplate,
-                controller: ModalInstanceCtrl,
+                controller: 'modalInstanceCtrl',
                 windowClass : windowClass,
                 size: modalSize
             });
@@ -61,7 +66,7 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log, 
         showStandardModalWindow : function(htmlTemplate) {
             var modalInstance = $modal.open({
                 templateUrl: htmlTemplate,
-                controller: ModalInstanceCtrl
+                controller: 'modalInstanceCtrl'
             });
 
             modalInstance.result.then(
