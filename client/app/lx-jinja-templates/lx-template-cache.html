@@ -48,7 +48,7 @@
        <h3 class="modal-title">Please allow access to your camera</h3>
     </div>
     <div class="modal-body">
-        Please click on the Allow button at the top right corner of your navigator window.
+        Please click on the "Allow" button at the top right corner of your navigator window.
     </div>
 </script>
 
@@ -57,7 +57,7 @@
        <h3 class="modal-title">Please allow access to your camera</h3>
     </div>
     <div class="modal-body">
-        Please click on the Allow button at the top of your navigator window.
+        Please click on the "Allow" button at the top of your navigator window.
     </div>
 </script>
 
@@ -110,6 +110,31 @@
             Then click on "Permissions" in the window that is shown, and
             modify the "Use the Camera" and "Use the Microphone" settings at the bottom
             of the Permissions window (you may have to scroll down to see them).
+    </div>
+</script>
+
+        
+<script type="text/ng-template" id="lx-template-cache/opera-desktop-access-camera-modal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Please allow access to your camera</h3>
+    </div>
+    <div class="modal-body">
+        Please click on the "Allow" button in the "Camera and Microphone Requested" dialog box at the
+        top of your navigator window.
+    </div>
+</script>
+
+<script type="text/ng-template" id="lx-template-cache/opera-desktop-access-camera-previously-denied-modal.html">
+    <div class="modal-header">
+       <h3 class="modal-title">Please allow access to your camera</h3>
+    </div>
+    <div class="modal-body">
+        It appears that you have denied access to your camera. This website will not function correctly if your camera
+        is not enabled. Try clicking on the camera symbol (
+            <span style="display:inline-block;position:relative; height: 1em; width: 1.5em">
+                <span style="color:#888888; position: absolute; font-size: 1.5em; " class="icon-lx-video-full"></span>
+            </span>
+        ) at the top of your navigator window to allow access to your camera.
     </div>
 </script>
 

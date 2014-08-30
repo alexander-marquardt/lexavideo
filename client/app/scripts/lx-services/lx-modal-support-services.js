@@ -30,6 +30,7 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log, 
 
             modalInstance.opened.then(
                 function() {
+                    $log.log('Added modal box to modalsCurrentlyShown: '+ htmlTemplate);
                     scope.accessCameraAndMicrophoneObject.modalsCurrentlyShown.push(htmlTemplate);
                 }
             );
@@ -49,7 +50,7 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log, 
                         // remove the modal that we just closed from the modalsCurrentlyShown array
                         var arr = scope.accessCameraAndMicrophoneObject.modalsCurrentlyShown;
                         arr.splice(arr.indexOf(htmlTemplate), 1);
-                        $log.log('Closed the modal box for '+ htmlTemplate);
+                        $log.log('Removed modal box from modalsCurrentlyShown: '+ htmlTemplate);
                     });
                 });
             // returns an instance of the modal in case we need to manipulate it later

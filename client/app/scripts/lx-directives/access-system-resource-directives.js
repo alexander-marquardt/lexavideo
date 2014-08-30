@@ -52,16 +52,16 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     arrowClass = 'cl-arrow-mozilla';
                 }
 
-                else {
-                    arrowClass = ''; // redundant, but leave here for informational purposes.
-                }
-
             }
         }
 
         if ($.browser.name === 'opera') {
-            // no arrow required, since opera has a popup window that is quite obvious and that does not get
-            // accidentally hidden as may happen in firefox.
+            if ($.browser.desktop) {
+                if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
+                    // point the arrow to the camera symbol.
+                    arrowClass = 'cl-arrow-opera';
+                }
+            }
         }
 
         if (arrowClass !== '') {
@@ -158,12 +158,17 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         if ($.browser.name === 'mozilla') {
             $log.log('mozilla cameraAccessStatus is ' + cameraAccessStatus);
             if (cameraAccessStatus === 'denyAccess') {
-                // If access has been denied, then the user will not be shown the firefox Camera popup prompt.
-                // In this case they must right-click on the desktop and modify the permissions manually.
-                windowClass = '';
-                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                    'lx-template-cache/mozilla-desktop-access-camera-previously-denied-modal.html',
-                    currentlyDisplayedModalInstance, windowClass);
+                if ($.browser.desktop) {
+                    // If access has been denied, then the user will not be shown the firefox Camera popup prompt.
+                    // In this case they must right-click on the desktop and modify the permissions manually.
+                    windowClass = '';
+                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                        'lx-template-cache/mozilla-desktop-access-camera-previously-denied-modal.html',
+                        currentlyDisplayedModalInstance, windowClass);
+                }
+                else {
+                    // mobile device
+                }
             }
 
             else  if (cameraAccessStatus === 'waitingForResponse') {
@@ -172,12 +177,37 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
                         'lx-template-cache/mozilla-desktop-access-camera-modal.html',
                         currentlyDisplayedModalInstance, windowClass);
+                } else {
+                    // mobile device
+
                 }
+
             }
         }
 
         if ($.browser.name === 'opera') {
-
+            if (cameraAccessStatus === 'denyAccess') {
+                if ($.browser.desktop) {
+                    $log.info('Opera camera access denied');
+                    windowClass = '';
+                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                        'lx-template-cache/opera-desktop-access-camera-previously-denied-modal.html',
+                        currentlyDisplayedModalInstance, windowClass);
+                }
+                else {
+                    // mobile device
+                }
+            }
+            else  if (cameraAccessStatus === 'waitingForResponse') {
+                if ($.browser.desktop) {
+                    windowClass = 'cl-opera-camera-access-modal-override';
+                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                        'lx-template-cache/opera-desktop-access-camera-modal.html',
+                        currentlyDisplayedModalInstance, windowClass);
+                } else {
+                    // mobile device
+                }
+            }
         }
 
         return currentlyDisplayedModalInstance;
@@ -206,6 +236,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             var arr = scope.accessCameraAndMicrophoneObject.modalsCurrentlyShown;
             var len = arr.length;
             if (len > 0) {
+                $log.log('getWhichModalIsShown is: ' + arr[len-1]);
                 return arr[len-1];
             } else {
                 return null;
@@ -253,7 +284,8 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     });
 
                 watchLocalUserAccessCameraAndMicrophoneStatus =
-                    scope.$watch(watchCameraStatus(scope), function() {
+                    scope.$watch(watchCameraStatus(scope), function(cameraStatus, previousCameraStatus) {
+                        $log.info('cameraStatus is: ' + cameraStatus + ' previousCameraStatus: ' + previousCameraStatus);
                         if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
                             // access has been given, no need to show arrows pointing to camera icons and allow buttons
                             removeArrowAndAssociatedWatchers(arrowElem);
@@ -264,17 +296,11 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                             }
                         }
                         else {
-                            // we are still waiting for access. Since the status has changed, the modal
-                            // content will have changed as well, which means that we need to show a new modal.
+                            // We are waiting for camera access. Since the cameraStatus has changed, we need to show a new modal.
                             currentlyDisplayedModalInstance = showModalInstructionsForCameraAndMicrophone(scope, elem,
                                 videoSignalingObject, currentlyDisplayedModalInstance);
                         }
                     });
-
-                // the following code is necessary to kick-off the modal windows.
-                currentlyDisplayedModalInstance = showModalInstructionsForCameraAndMicrophone(scope, elem,
-                    videoSignalingObject, currentlyDisplayedModalInstance);
-
             }
         }
     };
