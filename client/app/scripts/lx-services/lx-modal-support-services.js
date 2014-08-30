@@ -28,7 +28,11 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log, 
                 windowClass : windowClass
             });
 
-            scope.accessCameraAndMicrophoneObject.modalsCurrentlyShown.push(htmlTemplate);
+            modalInstance.opened.then(
+                function() {
+                    scope.accessCameraAndMicrophoneObject.modalsCurrentlyShown.push(htmlTemplate);
+                }
+            );
 
             modalInstance.result.then(
                 function() {

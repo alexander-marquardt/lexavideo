@@ -234,7 +234,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
                 var arrowElem = angular.element('<div class="cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
                 elem.append(arrowElem);
-                
+
                 askForPermissionToCameraAndMicrophone(localVideoElem, videoSignalingObject);
 
                 watchWhichModalIsOpen =
