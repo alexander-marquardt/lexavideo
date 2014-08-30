@@ -103,7 +103,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
     };
 
-    var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate, currentlyDisplayedModalInstance, windowClass) {
+    var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate, currentlyDisplayedModalInstance, windowClass, modalSize) {
 
 
         if (currentlyDisplayedModalInstance) {
@@ -112,102 +112,124 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
 
         $log.log('showing modal for '+ htmlTemplate);
-        currentlyDisplayedModalInstance =  lxModalSupportService.showCameraAndMicrophoneModalWindow(scope, htmlTemplate, windowClass);
+        currentlyDisplayedModalInstance =  lxModalSupportService.showCameraAndMicrophoneModalWindow(scope, htmlTemplate, windowClass, modalSize);
+        return currentlyDisplayedModalInstance;
+    };
+
+
+    var showChromeModalPromptForCameraAndMicrophone = function(scope, elem, cameraAccessStatus, currentlyDisplayedModalInstance) {
+
+        var windowClass = '';
+        var modalSize = '';
+
+        if (cameraAccessStatus === 'denyAccess') {
+            if ($.browser.desktop) {
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/chrome-desktop-access-camera-previously-denied-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
+            }
+            else {
+                // mobile device
+            }
+        }
+        else  if (cameraAccessStatus === 'waitingForResponse') {
+            if ($.browser.platform === 'mac') {
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/chrome-mac-access-camera-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
+            }
+            else if ($.browser.desktop) {
+                // windows/linux desktop devices. Chrome appears to have the same layout in both.
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/chrome-desktop-access-camera-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
+            }
+            else {
+                // should be mobile
+            }
+        }
+        return currentlyDisplayedModalInstance;
+    };
+
+    var showMozillaModalPromptForCameraAndMicrophone = function(scope, elem, cameraAccessStatus, currentlyDisplayedModalInstance) {
+
+        var windowClass = '';
+        var modalSize = '';
+
+        $log.log('mozilla cameraAccessStatus is ' + cameraAccessStatus);
+        if (cameraAccessStatus === 'denyAccess') {
+            if ($.browser.desktop) {
+                // If access has been denied, then the user will not be shown the firefox Camera popup prompt.
+                // In this case they must right-click on the desktop and modify the permissions manually.
+                windowClass = '';
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/mozilla-desktop-access-camera-previously-denied-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
+            }
+            else {
+                // mobile device
+            }
+        }
+
+        else  if (cameraAccessStatus === 'waitingForResponse') {
+            if ($.browser.desktop) {
+                windowClass = 'cl-firefox-camera-access-modal-override';
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/mozilla-desktop-access-camera-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
+            } else {
+                // mobile device
+
+            }
+
+        }
+        return currentlyDisplayedModalInstance;
+
+    };
+
+    var showOperaModalPromptForCameraAndMicrophone = function(scope, elem, cameraAccessStatus, currentlyDisplayedModalInstance) {
+        var windowClass = '';
+        var modalSize = 'sm';
+
+        if (cameraAccessStatus === 'denyAccess') {
+            if ($.browser.desktop) {
+                $log.info('Opera camera access denied');
+                windowClass = '';
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/opera-desktop-access-camera-previously-denied-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
+            }
+            else {
+                // mobile device
+            }
+        }
+        else  if (cameraAccessStatus === 'waitingForResponse') {
+            if ($.browser.desktop) {
+                windowClass = 'cl-opera-camera-access-modal-override';
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/opera-desktop-access-camera-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
+            } else {
+                // mobile device
+            }
+        }
         return currentlyDisplayedModalInstance;
     };
 
 
     var showModalInstructionsForCameraAndMicrophone = function(scope, elem, videoSignalingObject, currentlyDisplayedModalInstance) {
 
-        var windowClass = '';
         var  cameraAccessStatus = videoSignalingObject.localUserAccessCameraAndMicrophoneStatus;
-
-        if (cameraAccessStatus === 'allowAccess') {
-            currentlyDisplayedModalInstance.close();
-        }
 
 
         if ($.browser.name === 'chrome') {
-            if (cameraAccessStatus === 'denyAccess') {
-                if ($.browser.desktop) {
-                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                        'lx-template-cache/chrome-desktop-access-camera-previously-denied-modal.html',
-                        currentlyDisplayedModalInstance, windowClass);
-                }
-                else {
-                    // mobile device
-                }
-            }
-            else  if (cameraAccessStatus === 'waitingForResponse') {
-                if ($.browser.platform === 'mac') {
-                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                        'lx-template-cache/chrome-mac-access-camera-modal.html',
-                        currentlyDisplayedModalInstance, windowClass);
-                }
-                else if ($.browser.desktop) {
-                    // windows/linux desktop devices. Chrome appears to have the same layout in both.
-                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                        'lx-template-cache/chrome-desktop-access-camera-modal.html',
-                        currentlyDisplayedModalInstance, windowClass);
-                }
-                else {
-                    // should be mobile
-                }
-            }
+            currentlyDisplayedModalInstance = showChromeModalPromptForCameraAndMicrophone (scope, elem, cameraAccessStatus, currentlyDisplayedModalInstance);
         }
         if ($.browser.name === 'mozilla') {
-            $log.log('mozilla cameraAccessStatus is ' + cameraAccessStatus);
-            if (cameraAccessStatus === 'denyAccess') {
-                if ($.browser.desktop) {
-                    // If access has been denied, then the user will not be shown the firefox Camera popup prompt.
-                    // In this case they must right-click on the desktop and modify the permissions manually.
-                    windowClass = '';
-                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                        'lx-template-cache/mozilla-desktop-access-camera-previously-denied-modal.html',
-                        currentlyDisplayedModalInstance, windowClass);
-                }
-                else {
-                    // mobile device
-                }
-            }
-
-            else  if (cameraAccessStatus === 'waitingForResponse') {
-                if ($.browser.desktop) {
-                    windowClass = 'cl-firefox-camera-access-modal-override';
-                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                        'lx-template-cache/mozilla-desktop-access-camera-modal.html',
-                        currentlyDisplayedModalInstance, windowClass);
-                } else {
-                    // mobile device
-
-                }
-
-            }
+            currentlyDisplayedModalInstance = showMozillaModalPromptForCameraAndMicrophone (scope, elem, cameraAccessStatus, currentlyDisplayedModalInstance);
         }
-
         if ($.browser.name === 'opera') {
-            if (cameraAccessStatus === 'denyAccess') {
-                if ($.browser.desktop) {
-                    $log.info('Opera camera access denied');
-                    windowClass = '';
-                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                        'lx-template-cache/opera-desktop-access-camera-previously-denied-modal.html',
-                        currentlyDisplayedModalInstance, windowClass);
-                }
-                else {
-                    // mobile device
-                }
-            }
-            else  if (cameraAccessStatus === 'waitingForResponse') {
-                if ($.browser.desktop) {
-                    windowClass = 'cl-opera-camera-access-modal-override';
-                    currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                        'lx-template-cache/opera-desktop-access-camera-modal.html',
-                        currentlyDisplayedModalInstance, windowClass);
-                } else {
-                    // mobile device
-                }
-            }
+            currentlyDisplayedModalInstance = showOperaModalPromptForCameraAndMicrophone (scope, elem, cameraAccessStatus, currentlyDisplayedModalInstance);
         }
 
         return currentlyDisplayedModalInstance;

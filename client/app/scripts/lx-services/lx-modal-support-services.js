@@ -21,11 +21,12 @@ lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log, 
 
     return {
 
-        showCameraAndMicrophoneModalWindow : function(scope, htmlTemplate, windowClass) {
+        showCameraAndMicrophoneModalWindow : function(scope, htmlTemplate, windowClass, modalSize) {
             var modalInstance = $modal.open({
                 templateUrl: htmlTemplate,
                 controller: ModalInstanceCtrl,
-                windowClass : windowClass
+                windowClass : windowClass,
+                size: modalSize
             });
 
             modalInstance.opened.then(
