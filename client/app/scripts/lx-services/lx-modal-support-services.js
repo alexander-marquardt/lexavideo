@@ -7,7 +7,7 @@
 var lxModalSupportServices = angular.module('lxModalSupport.services', []);
 
 
-lxModalSupportServices.controller('modalInstanceCtrl', ['$scope', '$log', '$modalInstance', function($scope, $log, $modalInstance) {
+lxModalSupportServices.controller('modalInstanceCtrl', function($scope, $log, $modalInstance) {
     /* This 'controller' is used only by lxModalSupportService, and therefore is contained in this service module as opposed
        to appearing in a controller module.
      */
@@ -17,7 +17,7 @@ lxModalSupportServices.controller('modalInstanceCtrl', ['$scope', '$log', '$moda
     $scope.cancel = function () {
         $modalInstance.close();
     };
-}]);
+});
 
 
 lxModalSupportServices.factory('lxModalSupportService', function ($modal, $log, $timeout) {
