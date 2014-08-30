@@ -4,6 +4,39 @@
 		{
 			"icon": {
 				"paths": [
+					"M360.96 0h302.080v261.12h-302.080v-261.12z",
+					"M360.96 762.88h302.080v261.12h-302.080v-261.12z",
+					"M360.96 381.44h302.080v261.12h-302.080v-261.12z"
+				],
+				"attrs": [
+					{},
+					{},
+					{}
+				],
+				"grid": 0,
+				"tags": [
+					"horizontal-dots"
+				]
+			},
+			"attrs": [
+				{},
+				{},
+				{}
+			],
+			"properties": {
+				"order": 10,
+				"id": 4,
+				"prevSize": 32,
+				"code": 58881,
+				"name": "lx-horizontal-dots",
+				"ligatures": ""
+			},
+			"setIdx": 0,
+			"iconIdx": 0
+		},
+		{
+			"icon": {
+				"paths": [
 					"M1024 201.143v621.714q0 24-22.286 33.714-7.429 2.857-14.286 2.857-15.429 0-25.714-10.857l-230.286-230.286v94.857q0 68-48.286 116.286t-116.286 48.286h-402.286q-68 0-116.286-48.286t-48.286-116.286v-402.286q0-68 48.286-116.286t116.286-48.286h402.286q68 0 116.286 48.286t48.286 116.286v94.286l230.286-229.714q10.286-10.857 25.714-10.857 6.857 0 14.286 2.857 22.286 9.714 22.286 33.714z"
 				],
 				"attrs": [
@@ -17,13 +50,13 @@
 			],
 			"properties": {
 				"id": 58,
-				"order": 14,
+				"order": 7,
 				"prevSize": 32,
 				"code": 61501,
 				"name": "lx-video-full",
 				"ligatures": ""
 			},
-			"setIdx": 1,
+			"setIdx": 2,
 			"iconIdx": 58
 		},
 		{
@@ -49,7 +82,7 @@
 				"name": "lx-microphone",
 				"ligatures": ""
 			},
-			"setIdx": 1,
+			"setIdx": 2,
 			"iconIdx": 271
 		},
 		{
@@ -75,7 +108,7 @@
 				"name": "lx-microphone-off",
 				"ligatures": ""
 			},
-			"setIdx": 1,
+			"setIdx": 2,
 			"iconIdx": 272
 		},
 		{
@@ -100,7 +133,7 @@
 				"name": "lx-close",
 				"ligatures": ""
 			},
-			"setIdx": 2,
+			"setIdx": 3,
 			"iconIdx": 253
 		},
 		{
@@ -125,7 +158,7 @@
 				"name": "lx-checkmark",
 				"ligatures": ""
 			},
-			"setIdx": 2,
+			"setIdx": 3,
 			"iconIdx": 254
 		},
 		{
@@ -148,7 +181,7 @@
 				"name": "lx-arrow-up",
 				"ligatures": ""
 			},
-			"setIdx": 2,
+			"setIdx": 3,
 			"iconIdx": 288
 		},
 		{
@@ -171,7 +204,7 @@
 				"name": "lx-video-line",
 				"ligatures": ""
 			},
-			"setIdx": 3,
+			"setIdx": 4,
 			"iconIdx": 5
 		}
 	],

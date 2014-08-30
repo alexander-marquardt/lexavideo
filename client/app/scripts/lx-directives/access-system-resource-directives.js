@@ -51,7 +51,6 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     // then firefox does not show the camera icon and therefore there is nothing to point to.
                     arrowClass = 'cl-arrow-mozilla';
                 }
-
             }
         }
 
@@ -129,7 +128,10 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     currentlyDisplayedModalInstance, windowClass, modalSize);
             }
             else {
-                // mobile device
+                // it is a mobile device
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/chrome-mobile-access-camera-previously-denied-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
             }
         }
         else  if (cameraAccessStatus === 'waitingForResponse') {
@@ -145,7 +147,10 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     currentlyDisplayedModalInstance, windowClass, modalSize);
             }
             else {
-                // should be mobile
+                // it is a mobile device
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/chrome-mobile-access-camera-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
             }
         }
         return currentlyDisplayedModalInstance;
@@ -159,7 +164,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         $log.log('mozilla cameraAccessStatus is ' + cameraAccessStatus);
         if (cameraAccessStatus === 'denyAccess') {
             if ($.browser.desktop) {
-                // If access has been denied, then the user will not be shown the firefox Camera popup prompt.
+                // If access has been denied, then the user will not be shown the firefox builtin Camera popup prompt.
                 // In this case they must right-click on the desktop and modify the permissions manually.
                 windowClass = '';
                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
