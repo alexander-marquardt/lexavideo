@@ -210,10 +210,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
         else  if (cameraAccessStatus === 'waitingForResponse') {
             if ($.browser.desktop) {
-                windowClass = 'cl-opera-camera-access-modal-override';
-                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                    'lx-template-cache/opera-desktop-access-camera-modal.html',
-                    currentlyDisplayedModalInstance, windowClass, modalSize);
+                // don't show a popup since the opera popup is obvious on its own.
             } else {
                 // mobile device
             }

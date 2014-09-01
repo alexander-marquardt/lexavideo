@@ -28,7 +28,7 @@
 				"id": 5,
 				"prevSize": 32,
 				"code": 58881,
-				"name": "lx-vertical-dots",
+				"name": "lx-3-vert-dots",
 				"ligatures": ""
 			},
 			"setIdx": 0,
@@ -53,7 +53,7 @@
 				"order": 7,
 				"prevSize": 32,
 				"code": 61501,
-				"name": "lx-video-full",
+				"name": "lx-video-filled",
 				"ligatures": ""
 			},
 			"setIdx": 2,
