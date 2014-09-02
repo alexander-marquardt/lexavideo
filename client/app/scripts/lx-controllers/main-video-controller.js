@@ -42,11 +42,11 @@ angular.module('videoApp')
              */
 
             // localHasSelectedVideoType this reflects the value of the video selection button that is currently selected
-            localHasSelectedVideoType : 'asciiVideo',
+            localHasSelectedVideoType : 'unsetVideo',  // 'unsetVideo', 'asciiVideo', 'hdVideo'
 
             // localIsSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
             // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
-            localIsSendingVideoType : 'asciiVideo',
+            localIsSendingVideoType : 'unsetVideo',  // 'unsetVideo', 'asciiVideo', 'hdVideo'
 
             localUserAccessCameraAndMicrophoneStatus : 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
             remoteUserHasTurnedOnCamera : false,
@@ -57,13 +57,13 @@ angular.module('videoApp')
             remoteResponseToLocalRequest: 'requestNotMade', //  'requestNotMade', 'waitingForResponse', 'denyVideoType' or 'acceptVideoType'
 
             // remoteHasRequestedVideoType will be changed when the remote user has requested to modify the current video type.
-            remoteHasRequestedVideoType : 'asciiVideo',
+            remoteHasRequestedVideoType : 'unsetVideo',  // 'unsetVideo', 'asciiVideo', 'hdVideo'
             /*
              remoteIsSendingVideoType: The type of video that is being received from the remote User. This
              will be updated  once the local user starts to receive a video stream from the remote user (ie. when
              peerService.onRemoteStreamAdded is called)
              */
-            remoteIsSendingVideoType : 'asciiVideo'
+            remoteIsSendingVideoType : 'unsetVideo'
         };
 
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {
