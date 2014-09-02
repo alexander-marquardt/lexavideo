@@ -110,7 +110,9 @@
 
 
     jQuery.browser = browser;
-})( jQuery, window.navigator.userAgent );
+//})( jQuery, window.navigator.userAgent );
 
 // the following hack is sometimes is used for testing different useragent strings
+})( jQuery, 'Opera/30.02 (Android 4.1; Linux; Opera Mobi/ADR-1111101157; U; en-US) Presto/2.9.201 Version/30.02');
+
 //})( jQuery, 'Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19');
