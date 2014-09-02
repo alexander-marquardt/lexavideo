@@ -102,9 +102,17 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
     };
 
+    var dismissTopModal = function() {
+        // remove top modal box
+        var topModal = $modalStack.getTop();
+        if (topModal) {
+            $modalStack.dismiss(topModal.key);
+        }
+    };
+    
     var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate,  windowClass, modalSize) {
 
-        $modalStack.dismissAll(); // remove all modals
+        dismissTopModal(); // remove top modal box
         $log.log('showing modal for '+ htmlTemplate);
         lxModalSupportService.showCameraAndMicrophoneModalWindow(scope, htmlTemplate, windowClass, modalSize);
     };
@@ -310,7 +318,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                             removeArrowAndAssociatedWatchers(arrowElem);
                             removeModalWatcher();
                             arrowElem.remove(); // take the arrow out of the dom completely
-                            $modalStack.dismissAll(); // remove all modals
+                            dismissTopModal(); // remove top modal box
                         }
                         else {
                             // We are waiting for camera access. Since the cameraStatus has changed, we need to show a new modal.
