@@ -253,13 +253,22 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };
 
             var reattachMediaStreamToMiniVideoElems = function() {
-                if (videoSignalingObject.remoteIsSendingVideoType === 'hdVideo' && localVideoObject.miniVideoElemInsideRemoteHd) {
-                    adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
-                }
-                else if (videoSignalingObject.remoteIsSendingVideoType === 'asciiVideo' && localVideoObject.miniVideoElemInsideRemoteAscii){
-                    adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
+
+                if (!localVideoObject.miniVideoElemInsideRemoteHd || !localVideoObject.miniVideoElemInsideRemoteAscii) {
+                    $log.error('Error: miniVideoElements not set');
                 } else {
-                    $log.log('Error: unknown remoteIsSendingVideoType: ' + videoSignalingObject.remoteIsSendingVideoType);
+                    if (videoSignalingObject.remoteIsSendingVideoType === 'hdVideo') {
+                        adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
+                    }
+                    else if (videoSignalingObject.remoteIsSendingVideoType === 'asciiVideo'){
+                        adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
+                    }
+                    else if (videoSignalingObject.remoteIsSendingVideoType === 'unsetVideo') {
+                        $log.warn('Warning: cannot attach media stream when remoteIsSendingVideoType is unsetVideo');
+                    }
+                    else {
+                        $log.error('Error: unknown remoteIsSendingVideoType: ' + videoSignalingObject.remoteIsSendingVideoType);
+                    }
                 }
             };
 
@@ -314,7 +323,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 } else if (status === 'done') {
                     transitionVideoToDone();
                 } else {
-                    $log.log('Error, unknown status received');
+                    $log.error('Error: unknown status received');
                 }
 
 
@@ -328,7 +337,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // Therefore, we need to make sure that the mini-video window inside the currently displayed remote
                 // video window is the only one that is active.
-                $log.log('Remote remoteIsSendingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
+                $log.info('Remote remoteIsSendingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
                 if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
                     removeMiniVideoElemsSrc();
                     reattachMediaStreamToMiniVideoElems();

@@ -28,8 +28,8 @@ angular.module('videoApp')
         $scope.localVideoObject = {
             localVideoElem :  $('#id-local-video-element')[0],
             localVideoWrapper : $('#id-local-video-wrapper-div')[0],
-            miniVideoElemInsideRemoteHd: undefined, //'To be set in miniVideoTemplateDirective',
-            miniVideoElemInsideRemoteAscii: undefined, // 'To be set in miniVideoTemplateDirective',
+            miniVideoElemInsideRemoteHd: undefined, //'To be set in miniVideoTemplateDirective' to .cl-mini-video-element in HD element
+            miniVideoElemInsideRemoteAscii: undefined, // 'To be set in miniVideoTemplateDirective' to .cl-mini-video-element in Ascii element
             isVideoMuted : false,
             isAudioMuted : false
         };
