@@ -166,14 +166,15 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             if ($.browser.desktop) {
                 // If access has been denied, then the user will not be shown the firefox builtin Camera popup prompt.
                 // In this case they must right-click on the desktop and modify the permissions manually.
-                windowClass = '';
                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
                     'lx-template-cache/mozilla-desktop-access-camera-previously-denied-modal.html',
                     currentlyDisplayedModalInstance, windowClass, modalSize);
             }
             else {
-                // mobile device
-            }
+                // it is a mobile device. Firefox mobile just needs to be reloaded to show the camera prompt
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/mozilla-mobile-access-camera-previously-denied-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);            }
         }
 
         else  if (cameraAccessStatus === 'waitingForResponse') {
@@ -184,7 +185,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                     currentlyDisplayedModalInstance, windowClass, modalSize);
             } else {
                 // mobile device
-
+                // Don't show any modal in this case, since the Firefox popup is very obvious and impossible to miss.
             }
 
         }
@@ -198,21 +199,22 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
         if (cameraAccessStatus === 'denyAccess') {
             if ($.browser.desktop) {
-                $log.info('Opera camera access denied');
-                windowClass = '';
                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
                     'lx-template-cache/opera-desktop-access-camera-previously-denied-modal.html',
                     currentlyDisplayedModalInstance, windowClass, modalSize);
             }
             else {
                 // mobile device
+                currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
+                    'lx-template-cache/opera-mobile-access-camera-previously-denied-modal.html',
+                    currentlyDisplayedModalInstance, windowClass, modalSize);
             }
         }
         else  if (cameraAccessStatus === 'waitingForResponse') {
             if ($.browser.desktop) {
-                // don't show a popup since the opera popup is obvious on its own.
+                // don't show a modal since the opera popup is obvious on its own.
             } else {
-                // mobile device
+                // mobile device - no modal needs to be shown since the opera popup is obvious.
             }
         }
         return currentlyDisplayedModalInstance;
