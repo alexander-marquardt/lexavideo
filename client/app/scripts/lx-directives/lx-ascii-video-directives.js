@@ -9,7 +9,7 @@
 /* global LZString */
 /* global viewportSize */
 
-var asciiVideoDirectives = angular.module('asciiVideo.directives', []);
+var asciiVideoDirectives = angular.module('lxAsciiVideo.directives', []);
 
 
 
