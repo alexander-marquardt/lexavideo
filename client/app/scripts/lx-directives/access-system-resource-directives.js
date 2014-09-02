@@ -123,8 +123,9 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
         if (cameraAccessStatus === 'denyAccess') {
             if ($.browser.desktop) {
+                windowClass = 'cl-modal-override-position-lower';
                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
-                    'lx-template-cache/chrome-desktop-access-camera-previously-denied-modal.html',
+                    'lx-template-cache/chrome-desktop-and-mac-access-camera-previously-denied-modal.html',
                     currentlyDisplayedModalInstance, windowClass, modalSize);
             }
             else {
@@ -136,12 +137,14 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         }
         else  if (cameraAccessStatus === 'waitingForResponse') {
             if ($.browser.platform === 'mac') {
+                windowClass = 'cl-modal-override-position-lower';
                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
                     'lx-template-cache/chrome-mac-access-camera-modal.html',
                     currentlyDisplayedModalInstance, windowClass, modalSize);
             }
             else if ($.browser.desktop) {
                 // windows/linux desktop devices. Chrome appears to have the same layout in both.
+                windowClass = 'cl-modal-override-position-lower';
                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
                     'lx-template-cache/chrome-desktop-access-camera-modal.html',
                     currentlyDisplayedModalInstance, windowClass, modalSize);
@@ -179,7 +182,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
         else  if (cameraAccessStatus === 'waitingForResponse') {
             if ($.browser.desktop) {
-                windowClass = 'cl-firefox-camera-access-modal-override';
+                windowClass = 'cl-modal-override-position-lower';
                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
                     'lx-template-cache/mozilla-desktop-access-camera-modal.html',
                     currentlyDisplayedModalInstance, windowClass, modalSize);
@@ -195,9 +198,10 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
     var showOperaModalPromptForCameraAndMicrophone = function(scope, elem, cameraAccessStatus, currentlyDisplayedModalInstance) {
         var windowClass = '';
-        var modalSize = 'sm';
+        var modalSize = '';
 
         if (cameraAccessStatus === 'denyAccess') {
+            windowClass = 'cl-modal-override-position-lower';
             if ($.browser.desktop) {
                 currentlyDisplayedModalInstance = showNewModalAndCloseOldModal(scope, elem,
                     'lx-template-cache/opera-desktop-access-camera-previously-denied-modal.html',

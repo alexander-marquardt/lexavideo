@@ -10,7 +10,7 @@ VERSION_ID = "2014-09-02-1550"
 # mask any changes that are made to jss/css between server restarts -- therefore this value 
 # should be set to True for developing/debugging js/css on the local development server (the original
 # js/css files will therefore be accessed instead of the combined/minimized js/css files).
-DEBUG_BUILD = False
+DEBUG_BUILD = True
 
 if  DEBUG_BUILD:
     BASE_STATIC_DIR = "client/app"
