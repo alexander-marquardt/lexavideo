@@ -25,7 +25,7 @@
 
                 <div class="col-sm-6" id="id-local-video-wrapper-div">
                     <div class="text-center">
-                        <div id="id-local-hd-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'hdVideo' ||  videoSignalingObject.localIsSendingVideoType == 'unsetVideo')" >
+                        <div id="id-local-hd-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'hdVideo' ||  !videoSignalingObject.localIsSendingVideoType)" >
                             <h4>Local HD Video</h4>
                             <div style="display:inline-block" class="cl-my-well" >
                                 <video class="cl-video-sizing" id="id-local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
@@ -61,7 +61,7 @@
 
                 <div class="col-sm-6" id="id-remote-video-wrapper-div">
                     <div class="text-center" >
-                        <div id="id-remote-hd-video-wrapper-div" ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'hdVideo' ||  videoSignalingObject.remoteIsSendingVideoType == 'unsetVideo')">
+                        <div id="id-remote-hd-video-wrapper-div" ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'hdVideo' ||  !videoSignalingObject.remoteIsSendingVideoType)">
                             <h4>Remote HD Video</h4>
 
                             <div  class="cl-my-well" style="display:inline-block">

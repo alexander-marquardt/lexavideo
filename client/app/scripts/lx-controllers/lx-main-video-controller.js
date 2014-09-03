@@ -42,13 +42,13 @@ angular.module('videoApp')
              */
 
             // localHasSelectedVideoType this reflects the value of the video selection button that is currently selected
-            localHasSelectedVideoType : 'unsetVideo',  // 'unsetVideo', 'asciiVideo', 'hdVideo'
+            localHasSelectedVideoType : null,  // 'null, 'asciiVideo', 'hdVideo'
 
             // localIsSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
             // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
             // However, in the special case that the user has set 'localHasSelectedVideoType' to ascii, then we immediately
             // set the value of localIsSendingVideoType to 'asciiVideo'.
-            localIsSendingVideoType : 'unsetVideo',  // 'unsetVideo', 'asciiVideo', 'hdVideo'
+            localIsSendingVideoType : null,  // null, 'asciiVideo', 'hdVideo'
 
             localUserAccessCameraAndMicrophoneStatus : 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
             remoteUserHasTurnedOnCamera : false,
@@ -59,8 +59,8 @@ angular.module('videoApp')
 
 
             remoteVideoSignalingStatus : {
-                settingsType: 'noRequestedVideoType', // will be set to 'noRequestedVideoType', 'requestNewVideoType', 'acceptNewVideoType', or 'denyNewVideoType'
-                videoType: 'unsetVideo'               // 'unsetVideo', 'asciiVideo', 'hdVideo'
+                settingsType: null,  // will be set to null, 'requestVideoType', 'acceptVideoType', or 'denyVideoType'
+                videoType: null      // null, 'asciiVideo', 'hdVideo'
             },
 
              /* remoteIsSendingVideoType: The type of video that is being received from the remote User.
@@ -68,7 +68,7 @@ angular.module('videoApp')
              (ie. when peerService.onRemoteStreamAdded is called). In the case of asciiVideo, this will be updated once
              we have received confirmation from the remote user.
              */
-            remoteIsSendingVideoType : 'unsetVideo'
+            remoteIsSendingVideoType : null
         };
 
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {

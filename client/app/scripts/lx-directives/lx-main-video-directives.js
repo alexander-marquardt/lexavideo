@@ -174,8 +174,8 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                     else if (videoSignalingObject.remoteIsSendingVideoType === 'asciiVideo'){
                         adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
                     }
-                    else if (videoSignalingObject.remoteIsSendingVideoType === 'unsetVideo') {
-                        $log.warn('Warning: cannot attach media stream when remoteIsSendingVideoType is unsetVideo');
+                    else if (videoSignalingObject.remoteIsSendingVideoType === null) {
+                        $log.warn('Warning: cannot attach media stream when remoteIsSendingVideoType is null');
                     }
                     else {
                         $log.error('Error: unknown remoteIsSendingVideoType: ' + videoSignalingObject.remoteIsSendingVideoType);
