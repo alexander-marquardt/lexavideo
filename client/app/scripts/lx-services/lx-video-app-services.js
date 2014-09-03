@@ -153,30 +153,11 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
             }
            else if (messageObject.messageType === 'videoSettings') {
                 // message received that indicates a modification to the current video transmission configuration
-                if (messageObject.messagePayload.settingsType === 'requestNewVideoType') {
-                    // remote user has requested a change to the current video transmission type
-                    $timeout(function() {
-                        videoSignalingObject.remoteHasRequestedVideoType = messageObject.messagePayload.requestNewVideoType;
-                    });
-                }
-                else if (messageObject.messagePayload.settingsType === 'acceptNewVideoType') {
-                    // remote user has accepted local user's request to change the current video transmission type
-                    videoSignalingObject.remoteResponseToLocalRequest = 'acceptNewVideoType';
-                    // ensure that the videoType that the remote user has accepted matches the value that has been
-                    // selected by the local user.
-                    if (videoSignalingObject.localHasSelectedVideoType === 'hdVideo' &&
-                        messageObject.messagePayload.acceptNewVideoType === 'hdVideo') {
-                        // Setup the hdVideo to be transmitted via peer-to-peer transmission.
-                        callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
-                    }
-                }
-                else if (messageObject.messagePayload.settingsType === 'denyNewVideoType') {
-                    // remote user has denied the local user's request to change the current video transmission type
-                    videoSignalingObject.remoteResponseToLocalRequest = 'denyNewVideoType';
-                }
-                else {
-                    $log.log('Error: Unknown messagePayload received: ' + JSON.stringify(messageObject));
-                }
+
+                $timeout(function() {
+                    videoSignalingObject.remoteVideoSignalingStatus.settingsType = messageObject.messagePayload.settingsType;
+                    videoSignalingObject.remoteVideoSignalingStatus.videoType = messageObject.messagePayload.videoType;
+                });
             }
             else {
                 $log.log('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
@@ -227,19 +208,19 @@ videoAppServices.factory('negotiateVideoType', function($log, messageService) {
 
     return {
         sendRequestForVideoType : function (videoType) {
-            messageService.sendMessage('videoSettings', {settingsType: 'requestNewVideoType', requestNewVideoType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', videoType: videoType});
         },
 
         sendAcceptanceOfVideoType : function(videoType) {
             // send a message to the remote user to indicate that the local user has accepted their offer to
             // change the current video settings (ie. from asciiVideo to hdVideo).
-            messageService.sendMessage('videoSettings', {settingsType: 'acceptNewVideoType', acceptNewVideoType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', videoType: videoType});
         },
 
         sendDenyOfVideoType : function(videoType) {
             // send a message to the remote user to indicate that local user has denied their offer to change the
             // current video settings.
-            messageService.sendMessage('videoSettings', {settingsType: 'denyNewVideoType', denyNewVideoType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', videoType: videoType});
         }
     };
 });
@@ -329,7 +310,7 @@ videoAppServices.factory('messageService', function($http, $log, serverConstants
     return {
         sendMessage : function(messageType, messagePayload) {
             /*
-            messageType: string indicating if this is a signalling message or some other kind of message
+            messageType: string indicating if this is a Signaling message or some other kind of message
                          that is being sent over the Appengine Channel API.
                          Allowed values:
                          'sdp' - setting up peer to peer connection
@@ -529,7 +510,9 @@ videoAppServices.factory('webRtcSessionService', function($log, $window, $rootSc
         stop : function(self) {
             self.started = false;
             self.signalingReady = false;
-            peerService.pc.close();
+            if (peerService.pc) {
+                peerService.pc.close();
+            }
             peerService.pc = null;
             peerService.remoteStream = null;
             channelMessageService.clearQueue();

@@ -56,14 +56,17 @@ angular.module('videoApp')
 
             // if the local user requests the remote user to change the video type, we track the remote response
             // so that we can give the local user feedback.
-            remoteResponseToLocalRequest: 'requestNotMade', //  'requestNotMade', 'waitingForResponse', 'denyVideoType' or 'acceptVideoType'
 
-            // remoteHasRequestedVideoType will be changed when the remote user has requested to modify the current video type.
-            remoteHasRequestedVideoType : 'unsetVideo',  // 'unsetVideo', 'asciiVideo', 'hdVideo'
-            /*
-             remoteIsSendingVideoType: The type of video that is being received from the remote User. This
-             will be updated  once the local user starts to receive a video stream from the remote user (ie. when
-             peerService.onRemoteStreamAdded is called)
+
+            remoteVideoSignalingStatus : {
+                settingsType: 'noRequestedVideoType', // will be set to 'noRequestedVideoType', 'requestNewVideoType', 'acceptNewVideoType', or 'denyNewVideoType'
+                videoType: 'unsetVideo'               // 'unsetVideo', 'asciiVideo', 'hdVideo'
+            },
+
+             /* remoteIsSendingVideoType: The type of video that is being received from the remote User.
+             In the case of hdVideo, this will be updated  once the local user starts to receive a video stream from the remote user
+             (ie. when peerService.onRemoteStreamAdded is called). In the case of asciiVideo, this will be updated once
+             we have received confirmation from the remote user.
              */
             remoteIsSendingVideoType : 'unsetVideo'
         };

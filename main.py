@@ -117,6 +117,9 @@ def handle_message(room, user, message):
       logging.info('User ' + user + ' quit from room ' + room_key)
       logging.info('Room ' + room_key + ' has state ' + str(room))
       
+    if message_type == 'videoSettings':
+      logging.info(repr(message_payload))
+      
     if other_user and room.has_user(other_user):
       if message_type == 'sdp' and message_payload['type'] == 'offer':
         # This is just for debugging
@@ -157,7 +160,7 @@ def on_message(room, user, message):
   client_id = make_client_id(room, user)
   if room.is_connected(user):
     channel.send_message(client_id, message)
-    #logging.info('Delivered message to user ' + user)
+    logging.info('Delivered message to user ' + user)
   else:
     new_message = Message(client_id = client_id, msg = message)
     new_message.put()

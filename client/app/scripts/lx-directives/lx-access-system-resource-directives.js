@@ -259,7 +259,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             var arr = scope.accessCameraAndMicrophoneObject.modalsCurrentlyShown;
             var len = arr.length;
             if (len > 0) {
-                $log.log('getWhichModalIsShown is: ' + arr[len-1]);
+                //$log.info('getWhichModalIsShown is: ' + arr[len-1]);
                 return arr[len-1];
             } else {
                 return null;
