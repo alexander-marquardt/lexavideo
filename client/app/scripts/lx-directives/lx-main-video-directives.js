@@ -146,10 +146,10 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
                 }
                 switch (event.keyCode) {
                     case 68:
-                        callService.toggleAudioMute(scope.localVideoObject);
+                        callService.setAudioMute(scope.localVideoObject, !scope.localVideoObject.isAudioMuted);
                         return false;
                     case 69:
-                        callService.toggleVideoMute(scope.localVideoObject);
+                        callService.setVideoMute(scope.localVideoObject, !scope.localVideoObject.isVideoMuted);
                         return false;
                     case 73:
                         infoDivService.toggleInfoDiv();

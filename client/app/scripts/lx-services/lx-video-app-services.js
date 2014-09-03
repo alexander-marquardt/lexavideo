@@ -526,11 +526,9 @@ videoAppServices.factory('webRtcSessionService', function($log, $window, $rootSc
             userNotificationService.messageError('Failed to create session description: ' + error.toString());
         },
 
-        stop : function(self, localVideoObject) {
+        stop : function(self) {
             self.started = false;
             self.signalingReady = false;
-            localVideoObject.isAudioMuted = false;
-            localVideoObject.isVideoMuted = false;
             peerService.pc.close();
             peerService.pc = null;
             peerService.remoteStream = null;
@@ -785,7 +783,8 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 $log.log('Hanging up.');
                 webRtcSessionService.transitionSessionStatus('done');
                 streamService.localStream.stop();
-                webRtcSessionService.stop(webRtcSessionService, localVideoObject);
+                webRtcSessionService.stop(webRtcSessionService);
+                this.unMuteAudioAndVideo(localVideoObject);
                 // will trigger BYE from server
                 channelServiceSupport.socket.close();
             };
@@ -794,17 +793,19 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
 
 
-        toggleVideoMute : function(localVideoObject) {
+        setVideoMute : function(localVideoObject, newIsMutedValue) {
             // Call the getVideoTracks method via adapter.js.
             var i;
             var videoTracks = streamService.localStream.getVideoTracks();
+
+            localVideoObject.isVideoMuted = newIsMutedValue;
 
             if (videoTracks.length === 0) {
                 $log.log('No local video available.');
                 return;
             }
 
-            if (localVideoObject.isVideoMuted) {
+            if (!localVideoObject.isVideoMuted) {
                 for (i = 0; i < videoTracks.length; i++) {
                     videoTracks[i].enabled = true;
                 }
@@ -815,21 +816,21 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 }
                 $log.log('Video muted.');
             }
-
-            localVideoObject.isVideoMuted = !localVideoObject.isVideoMuted;
         },
 
-        toggleAudioMute : function(localVideoObject) {
+        setAudioMute : function(localVideoObject, newIsMutedValue) {
             var i;
             // Call the getAudioTracks method via adapter.js.
             var audioTracks = streamService.localStream.getAudioTracks();
+
+            localVideoObject.isAudioMuted = newIsMutedValue;
 
             if (audioTracks.length === 0) {
                 $log.log('No local audio available.');
                 return;
             }
 
-            if (localVideoObject.isAudioMuted) {
+            if (!localVideoObject.isAudioMuted) {
                 for (i = 0; i < audioTracks.length; i++) {
                     audioTracks[i].enabled = true;
                 }
@@ -840,8 +841,11 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 }
                 $log.log('Audio muted.');
             }
+        },
 
-            localVideoObject.isAudioMuted = !localVideoObject.isAudioMuted;
+        unMuteAudioAndVideo : function (localVideoObject) {
+            this.setVideoMute(localVideoObject, false);
+            this.setAudioMute(localVideoObject, false);
         }
     };
 });

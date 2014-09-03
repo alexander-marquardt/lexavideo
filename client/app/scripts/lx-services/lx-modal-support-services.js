@@ -88,7 +88,7 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
                     // If the modal.close() method is ever re-written to correctly handle multiple closings of the
                     // same dialog, then this can be removed.
                 } else {
-                    $log.error(e)
+                    $log.error(e);
                 }
             }
         }
