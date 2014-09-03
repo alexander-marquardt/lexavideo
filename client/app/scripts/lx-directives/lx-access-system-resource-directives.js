@@ -314,6 +314,8 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                             removeModalWatcher();
                             arrowElem.remove(); // take the arrow out of the dom completely
                             lxModalSupportService.closeModal(currentModalInstance); // remove most recent modal box
+
+                            videoSignalingObject.localHasSelectedVideoType = 'hdVideo'; // default to 'hdVideo' -- can change this later based on cookies etc.
                         }
                         else {
                             // We are waiting for camera access. Since the cameraStatus has changed, we need to show a new modal.
