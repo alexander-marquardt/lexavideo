@@ -102,30 +102,13 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
     };
 
-    var dismissTopModal = function() {
-        // remove top modal box
 
-        /* this is a bit hackey since really we should track and remove just the modal boxes that have been opened
-           by this code. However, for several reasons we cannot easily close the most recently opened modal.
-           Reasons are the manner in which the modal can be closed asynchronously by a user
-           clicking anywhere outside of the modal, and due to the fact that the "modalInstance" is not cleared
-           when this happens, and due to (what appears to be) a bug in the modalInstance.close() function that does
-           not check to see if the modal instance is already closed and throws an exception if we try to close an
-           already closed modal.
-           
-           Re-visit this code in the future once angular ui has been updated. This was written Sept 2 2014.
-         */
-        var topModal = $modalStack.getTop();
-        if (topModal) {
-            $modalStack.dismiss(topModal.key);
-        }
-    };
     
     var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate,  windowClass, modalSize) {
 
-        dismissTopModal(); // remove top modal box
+        lxModalSupportService.closeCurrentModalInstance(); // remove most recent modal box
         $log.log('showing modal for '+ htmlTemplate);
-        lxModalSupportService.showCameraAndMicrophoneModalWindow(scope, htmlTemplate, windowClass, modalSize);
+        lxModalSupportService.showCameraAndMicrophoneModal(scope, htmlTemplate, windowClass, modalSize);
     };
 
 
@@ -329,7 +312,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                             removeArrowAndAssociatedWatchers(arrowElem);
                             removeModalWatcher();
                             arrowElem.remove(); // take the arrow out of the dom completely
-                            dismissTopModal(); // remove top modal box
+                            lxModalSupportService.closeCurrentModalInstance(); // remove most recent modal box
                         }
                         else {
                             // We are waiting for camera access. Since the cameraStatus has changed, we need to show a new modal.
