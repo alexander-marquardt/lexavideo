@@ -153,26 +153,26 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
             }
            else if (messageObject.messageType === 'videoSettings') {
                 // message received that indicates a modification to the current video transmission configuration
-                if (messageObject.messagePayload.settingsType === 'requestChangeVideoType') {
+                if (messageObject.messagePayload.settingsType === 'requestNewVideoType') {
                     // remote user has requested a change to the current video transmission type
                     $timeout(function() {
-                        videoSignalingObject.remoteHasRequestedVideoType = messageObject.messagePayload.requestChangeVideoType;
+                        videoSignalingObject.remoteHasRequestedVideoType = messageObject.messagePayload.requestNewVideoType;
                     });
                 }
-                else if (messageObject.messagePayload.settingsType === 'acceptChangeVideoType') {
+                else if (messageObject.messagePayload.settingsType === 'acceptNewVideoType') {
                     // remote user has accepted local user's request to change the current video transmission type
-                    videoSignalingObject.remoteResponseToLocalRequest = 'acceptChangeVideoType';
+                    videoSignalingObject.remoteResponseToLocalRequest = 'acceptNewVideoType';
                     // ensure that the videoType that the remote user has accepted matches the value that has been
                     // selected by the local user.
                     if (videoSignalingObject.localHasSelectedVideoType === 'hdVideo' &&
-                        messageObject.messagePayload.acceptChangeVideoType === 'hdVideo') {
+                        messageObject.messagePayload.acceptNewVideoType === 'hdVideo') {
                         // Setup the hdVideo to be transmitted via peer-to-peer transmission.
                         callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
                     }
                 }
-                else if (messageObject.messagePayload.settingsType === 'denyChangeVideoType') {
+                else if (messageObject.messagePayload.settingsType === 'denyNewVideoType') {
                     // remote user has denied the local user's request to change the current video transmission type
-                    videoSignalingObject.remoteResponseToLocalRequest = 'denyChangeVideoType';
+                    videoSignalingObject.remoteResponseToLocalRequest = 'denyNewVideoType';
                 }
                 else {
                     $log.log('Error: Unknown messagePayload received: ' + JSON.stringify(messageObject));
@@ -227,19 +227,19 @@ videoAppServices.factory('negotiateVideoType', function($log, messageService) {
 
     return {
         sendRequestForVideoType : function (videoType) {
-            messageService.sendMessage('videoSettings', {settingsType: 'requestChangeVideoType', requestChangeVideoType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'requestNewVideoType', requestNewVideoType: videoType});
         },
 
         sendAcceptanceOfVideoType : function(videoType) {
             // send a message to the remote user to indicate that the local user has accepted their offer to
             // change the current video settings (ie. from asciiVideo to hdVideo).
-            messageService.sendMessage('videoSettings', {settingsType: 'acceptChangeVideoType', acceptChangeVideoType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'acceptNewVideoType', acceptNewVideoType: videoType});
         },
 
         sendDenyOfVideoType : function(videoType) {
             // send a message to the remote user to indicate that local user has denied their offer to change the
             // current video settings.
-            messageService.sendMessage('videoSettings', {settingsType: 'denyChangeVideoType', denyChangeVideoType: videoType});
+            messageService.sendMessage('videoSettings', {settingsType: 'denyNewVideoType', denyNewVideoType: videoType});
         }
     };
 });
@@ -761,7 +761,6 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
 
-                // TODO - this must be re-enabled for HD video functionality to work correctly.
                 peerService.createPeerConnection(localVideoObject, remoteVideoObject, videoSignalingObject);
 
                 if (this.hasAudioOrVideoMediaConstraints) {
