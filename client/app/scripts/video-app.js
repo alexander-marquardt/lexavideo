@@ -8,7 +8,7 @@ var videoApp = angular.module('videoApp', [
     // proprietary directives
     'lxAccessSystemResources.directives',
     'lxMainVideo.directives', 'lxCheckCompatibility.directives',
-    'lxAsciiVideo.directives',
+    'lxAsciiVideo.directives', 'lxVideoTypeNegotiation.directives',
 
     // angular services
     'ngAnimate', 'ui.bootstrap']);

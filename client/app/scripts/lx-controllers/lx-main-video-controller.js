@@ -72,5 +72,7 @@ angular.module('videoApp')
             // videoType should be 'hdVideo' or 'asciiVideo'
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
             negotiateVideoType.sendRequestForVideoType(localHasSelectedVideoType);
+
+
         };
 });
