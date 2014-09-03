@@ -25,10 +25,10 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
      */
 
 
-    // currentModalInstance keeps track of the current and only showCameraAndMicrophoneModal dialog
+    // currentCameraAndMicrophoneModalInstance keeps track of the current and only showCameraAndMicrophoneModal dialog
     // currently open from lxModalSupportService. If this is not null, then a dialog is currently open
-    // and currentModalInstance contains a reference to the modalInstance object.
-    var currentModalInstance = null ;
+    // and currentCameraAndMicrophoneModalInstance contains a reference to the modalInstance object.
+    var currentCameraAndMicrophoneModalInstance = null ;
 
 
     this.showCameraAndMicrophoneModal = function(scope, htmlTemplate, windowClass, modalSize) {
@@ -47,23 +47,23 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
             //  a promise that is resolved when a modal gets opened after downloading content's template and resolving all variables
             function() {
                 // success function
-                if (currentModalInstance) {
+                if (currentCameraAndMicrophoneModalInstance) {
                     // Only a single modal should be opened by this method at a time. Previous modals
                     // must be closed before opening a new one, or else we will end up stacking them
                     // on top of each other.
                     //
                     // Note: the following check is placed inside the opened() callback because we want to ensure that
-                    // it checks currentModalInstance after any previously executed close() callbacks have been executed.
+                    // it checks currentCameraAndMicrophoneModalInstance after any previously executed close() callbacks have been executed.
                     // If the close() callback is placed in the event loop queue before the opened() callback, then this
                     // check will always be ran after the close() has completed, as long as close() was called before
                     // open. This should avoid any race conditions that might otherwise occur.
-                    throw 'Error: currentModalInstance must be null before attempting to open a new modal. ' +
-                        'Did you forget to call closeCurrentModalInstance() before opening this modal?';
+                    throw 'Error: currentCameraAndMicrophoneModalInstance must be null before attempting to open a new modal. ' +
+                        'Did you forget to call closeCameraAndMicrophoneModal() before opening this modal?';
                 }
 
                 $log.log('Added modal box to modalsCurrentlyShown: '+ htmlTemplate);
                 scope.accessCameraAndMicrophoneObject.modalsCurrentlyShown.push(htmlTemplate);
-                currentModalInstance = modalInstance;
+                currentCameraAndMicrophoneModalInstance = modalInstance;
             }, function() {
                 // failure function
             }
@@ -80,7 +80,7 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
             finally(function () {
                 // this is called when the modal is either "closed" or "dismissed"
                 $timeout(function() {
-                    // since this is a callback, it is outside of angular scope. We therefore wrap
+                    // since this is inside a promise, it is outside of angular scope. We therefore wrap
                     // this in a $timeout so that angular will be notified of the update to the scope.
 
                     // remove the modal that we just closed from the modalsCurrentlyShown array
@@ -90,18 +90,25 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
                 });
 
                 // the modal has been closed and we are now in the callback of the close or dismiss function.
-                // However, the currentModalInstance has not been set to 'null'. By construction, the
-                // modal that is closed in this callback should be pointed to by currentModalInstance.
-                // Set this value to null so that when we call closeCurrentModalInstance,
+                // However, the currentCameraAndMicrophoneModalInstance has not been set to 'null'. By construction, the
+                // modal that is closed in this callback should be pointed to by currentCameraAndMicrophoneModalInstance.
+                // Set this value to null so that when we call closeCameraAndMicrophoneModal,
                 // we will know that the modal has been closed. This is essentially a workaround that
                 // is required because the modal service doesn't check to see if a modal has already been
                 // closed before trying to close it again, and therefore generates an exception if close() is called.
                 // Do not place this inside the $timeout so that it occurs immediately.
-                currentModalInstance = null;
+                currentCameraAndMicrophoneModalInstance = null;
 
             });
     };
-
+    
+    this.closeCameraAndMicrophoneModal = function() {
+        if (currentCameraAndMicrophoneModalInstance) {
+            $log.info('closing most recent modal');
+            currentCameraAndMicrophoneModalInstance.close();
+        }
+    };
+    
     this.showStandardModalWindow = function(htmlTemplate) {
         var modalInstance = $modal.open({
             templateUrl: htmlTemplate,
@@ -120,10 +127,5 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
             });
     };
 
-    this.closeCurrentModalInstance = function() {
-        if (currentModalInstance) {
-            $log.info('closing most recent modal');
-            currentModalInstance.close();
-        }
-    };
+
 });
