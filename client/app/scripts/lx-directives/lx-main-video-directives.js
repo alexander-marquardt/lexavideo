@@ -165,11 +165,11 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
 
 videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log,
                                               globalVarsService, serverConstantsService,
-                                              sessionService, userNotificationService,
+                                              webRtcSessionService, userNotificationService,
                                               adapterService, channelService, turnService,
                                               callService, mediaService, messageService) {
 
-    var sessionStatus; // value set in a $watch function that monitors sessionService.getSessionStatus
+    var sessionStatus; // value set in a $watch function that monitors webRtcSessionService.getSessionStatus
 
     return {
         restrict : 'A',
@@ -207,7 +207,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 turnService.maybeRequestTurn();
 
                 // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
-                sessionService.signalingReady = globalVarsService.rtcInitiator;
+                webRtcSessionService.signalingReady = globalVarsService.rtcInitiator;
 
 
             })(); // self calling function
@@ -310,7 +310,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };*/
 
 
-            scope.$watch(sessionService.getSessionStatus, function(status) {
+            scope.$watch(webRtcSessionService.getSessionStatus, function(status) {
 
                 // get a local copy of the current session status, and take appropriate action.
                 sessionStatus = status;

@@ -46,6 +46,8 @@ angular.module('videoApp')
 
             // localIsSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
             // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
+            // However, in the special case that the user has set 'localHasSelectedVideoType' to ascii, then we immediately
+            // set the value of localIsSendingVideoType to 'asciiVideo'.
             localIsSendingVideoType : 'unsetVideo',  // 'unsetVideo', 'asciiVideo', 'hdVideo'
 
             localUserAccessCameraAndMicrophoneStatus : 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'

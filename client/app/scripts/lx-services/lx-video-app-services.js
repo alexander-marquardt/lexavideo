@@ -92,7 +92,7 @@ videoAppServices.service('channelServiceSupport', function() {
 });
 
 videoAppServices.factory('channelService', function($log, $timeout, $rootScope, serverConstantsService,
-                                                    callService, sessionService, userNotificationService,
+                                                    callService, webRtcSessionService, userNotificationService,
                                                     channelServiceSupport, globalVarsService, channelMessageService) {
 
     /*
@@ -115,7 +115,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                 // Since the turn response is async and also GAE might disorder the
                 // Message delivery due to possible datastore query at server side,
                 // So callee needs to cache messages before peerConnection is created.
-                if (!globalVarsService.rtcInitiator && !sessionService.started) {
+                if (!globalVarsService.rtcInitiator && !webRtcSessionService.started) {
                     if (sdpObject.type === 'offer') {
                         // Add offer to the beginning of msgQueue, since we can't handle
                         // Early candidates before offer at present.
@@ -124,7 +124,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                         // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
                         // On the other hand, caller is the person who calls the callee, and is currently the second
                         // person to join the chatroom.
-                        sessionService.signalingReady = true;
+                        webRtcSessionService.signalingReady = true;
 
                         // We may have been waiting for singalingReady to be true to begin the peer-to-peer video
                         // call (as is the case if this user is not the rtcInitiator).
@@ -137,7 +137,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                         channelMessageService.push(sdpObject);
                     }
                 } else {
-                    sessionService.processSignalingMessage(sessionService, sdpObject, localVideoObject, remoteVideoObject);
+                    webRtcSessionService.processSignalingMessage(webRtcSessionService, sdpObject, localVideoObject, remoteVideoObject);
                 }
             }
             else if (messageObject.messageType === 'videoStream') {
@@ -429,7 +429,7 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
 });
 
 
-videoAppServices.factory('sessionService', function($log, $window, $rootScope, $timeout,
+videoAppServices.factory('webRtcSessionService', function($log, $window, $rootScope, $timeout,
                                             messageService, userNotificationService,
                                             codecsService, infoDivService, globalVarsService,
                                             serverConstantsService, iceService, peerService,
@@ -715,7 +715,7 @@ videoAppServices.factory('mediaService', function($log,$timeout, serverConstants
     };
 });
 
-videoAppServices.factory('callService', function($log, turnServiceSupport, peerService, sessionService, channelServiceSupport,
+videoAppServices.factory('callService', function($log, turnServiceSupport, peerService, webRtcSessionService, channelServiceSupport,
                                          userNotificationService, serverConstantsService, globalVarsService, channelMessageService,
                                          streamService) {
 
@@ -734,14 +734,14 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         var constraints = mergeConstraints(serverConstantsService.offerConstraints, globalVarsService.sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
-        peerService.pc.createOffer(sessionService.setLocalAndSendMessage,
-            sessionService.onCreateSessionDescriptionError, constraints);
+        peerService.pc.createOffer(webRtcSessionService.setLocalAndSendMessage,
+            webRtcSessionService.onCreateSessionDescriptionError, constraints);
     };
 
     var calleeStart = function(localVideoObject, remoteVideoObject) {
         // Callee starts to process cached offer and other messages.
         while (channelMessageService.getQueueLength() > 0) {
-            sessionService.processSignalingMessage(sessionService, channelMessageService.shift(), localVideoObject, remoteVideoObject);
+            webRtcSessionService.processSignalingMessage(webRtcSessionService, channelMessageService.shift(), localVideoObject, remoteVideoObject);
         }
     };
 
@@ -755,7 +755,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         maybeStart : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
 
 
-            if (!sessionService.started && sessionService.signalingReady && channelServiceSupport.channelReady &&
+            if (!webRtcSessionService.started && webRtcSessionService.signalingReady && channelServiceSupport.channelReady &&
                 turnServiceSupport.turnDone && (streamService.localStream || !this.hasAudioOrVideoMediaConstraints)) {
 
                 userNotificationService.setStatus('Connecting...');
@@ -769,7 +769,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 } else {
                     $log.log('Not sending any stream.');
                 }
-                sessionService.started = true;
+                webRtcSessionService.started = true;
 
                 if (globalVarsService.rtcInitiator) {
                     doCall();
@@ -783,9 +783,9 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         doHangup : function(localVideoObject) {
             return function() {
                 $log.log('Hanging up.');
-                sessionService.transitionSessionStatus('done');
+                webRtcSessionService.transitionSessionStatus('done');
                 streamService.localStream.stop();
-                sessionService.stop(sessionService, localVideoObject);
+                webRtcSessionService.stop(webRtcSessionService, localVideoObject);
                 // will trigger BYE from server
                 channelServiceSupport.socket.close();
             };
