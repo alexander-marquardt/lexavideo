@@ -12,6 +12,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                                                                               lxModalSupportService) {
 
     var timerId;
+    var currentModalInstance = null;
 
     // initially define the watchers as dummy functions, so that they can be "de-registered" even if they were not
     // initially called.
@@ -106,9 +107,9 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
     
     var showNewModalAndCloseOldModal = function(scope, elem, htmlTemplate,  windowClass, modalSize) {
 
-        lxModalSupportService.closeCameraAndMicrophoneModal(); // remove most recent modal box
+        lxModalSupportService.closeModal(currentModalInstance); // remove most recent modal box
         $log.log('showing modal for '+ htmlTemplate);
-        lxModalSupportService.showCameraAndMicrophoneModal(scope, htmlTemplate, windowClass, modalSize);
+        currentModalInstance = lxModalSupportService.showCameraAndMicrophoneModal(scope, htmlTemplate, windowClass, modalSize);
     };
 
 
@@ -312,7 +313,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                             removeArrowAndAssociatedWatchers(arrowElem);
                             removeModalWatcher();
                             arrowElem.remove(); // take the arrow out of the dom completely
-                            lxModalSupportService.closeCameraAndMicrophoneModal(); // remove most recent modal box
+                            lxModalSupportService.closeModal(currentModalInstance); // remove most recent modal box
                         }
                         else {
                             // We are waiting for camera access. Since the cameraStatus has changed, we need to show a new modal.
