@@ -68,6 +68,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
         // if the local or remote user sets video to ascii, then we immediately switch to this video type, and stop
         // the HD video stream.
         scope.videoSignalingObject.localIsSendingVideoType = 'asciiVideo';
+
         // kill the webRtc session. Ascii video should start to be transmitted in both
         // directions.
         webRtcSessionService.stop(webRtcSessionService);
@@ -82,7 +83,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
             return returnVal;
         };
     };
-    
+
     return {
         restrict: 'A',
         link : function(scope, elem) {
@@ -130,6 +131,9 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                             // both directions.
                             negotiateVideoType.sendAcceptanceOfVideoType(remoteSignalingStatus.videoType);
                             setVideoModeToAscii(scope);
+
+                            // By design remote immediately begins sending asciiVideo once they have requested it.
+                            scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
                         }
                         else {
                             $log.log('Error: unknown remoteSignalingStatus.videoType: ' + remoteSignalingStatus.videoType);
@@ -163,7 +167,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                             // remote agreed to send asciiVideo, and by design will have started to send it immediately at
                             // the same time that it has send the 'acceptVideoType' response. Therefore, we can
                             // set the value on remoteIsSendingVideoType to 'asciiVideo' now.
-                            setVideoModeToAscii(scope);
+                            
                             scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
 
                         }

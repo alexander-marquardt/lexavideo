@@ -166,12 +166,13 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
     };
 
     var onChannelError = function() {
+        $log.error('*** Channel error. ***')
         userNotificationService.messageError('Channel error.');
         channelServiceSupport.channelReady = false;
     };
 
     var onChannelClosed = function() {
-      $log.log('Channel closed.');
+      $log.warn('*** Channel closed. ***');
       channelServiceSupport.channelReady = false;
     };
 
@@ -186,7 +187,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
 
     return {
         openChannel: function(localVideoObject, remoteVideoObject, videoSignalingObject) {
-            $log.log('Opening channel.');
+            $log.info('*** Opening channel. ***');
             var channel = new goog.appengine.Channel(serverConstantsService.channelToken);
             channelServiceSupport.socket = channel.open(handler(this, localVideoObject, remoteVideoObject, videoSignalingObject));
         },
@@ -763,7 +764,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
         doHangup : function(localVideoObject) {
             return function() {
-                $log.log('Hanging up.');
+                $log.log('*** Hanging up. ***');
                 webRtcSessionService.transitionSessionStatus('done');
                 streamService.localStream.stop();
                 webRtcSessionService.stop(webRtcSessionService);
