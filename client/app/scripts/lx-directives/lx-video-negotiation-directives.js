@@ -137,9 +137,9 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                             // a switch to asciiVideo, then we will tear down the peer connection, and will transmit ascii video in
                             // both directions.
                             scope.videoSignalingObject.localHasSelectedVideoType = 'asciiVideo';
-
                             // By design remote immediately begins sending asciiVideo once they have requested it.
                             scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
+                            removeMessageInVideoWindow(scope, elem);
                         }
                         else {
                             $log.log('Error: unknown remoteSignalingStatus.videoType: ' + remoteSignalingStatus.videoType);
