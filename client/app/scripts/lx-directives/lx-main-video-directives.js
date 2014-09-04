@@ -130,8 +130,8 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };
 
             var removeMiniVideoElemsSrc = function() {
-                if (localVideoObject.miniVideoElemInsideRemoteHd) {localVideoObject.miniVideoElemInsideRemoteHd.src = '';}
-                if (localVideoObject.miniVideoElemInsideRemoteAscii) {localVideoObject.miniVideoElemInsideRemoteAscii.src = '';}
+                if (localVideoObject.miniVideoElemInsideRemoteHd) {adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd.src , '');}
+                if (localVideoObject.miniVideoElemInsideRemoteAscii) {adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii.src, '');}
             };
 
             var transitionVideoToWaiting = function() {
