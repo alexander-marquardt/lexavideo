@@ -344,7 +344,7 @@ videoAppServices.factory('messageService', function($http, $log, serverConstants
     };
 });
 
-videoAppServices.service('iceService', function($log, messageService, userNotificationService, infoDivService) {
+videoAppServices.service('iceService', function($log, messageService, userNotificationService) {
     /*
     ICE = Interactive Connectivity Establishment.
     This service provides ICE methods that are used when setting up a peer connection.
@@ -357,15 +357,15 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
     var self = this;
 
 
-    var updateInfoDiv = function() {
-        var contents = 'Gathered ICE Candidates\n';
-        for (var endpoint in gatheredIceCandidateTypes) {
-            contents += endpoint + ':\n';
-            for (var type in gatheredIceCandidateTypes[endpoint]) {
-                contents += '  ' + type + '\n';
-            }
-        }
-        infoDivService.updateIceInfoDiv(contents);
+    var updateLog = function() {
+//        var contents = 'Gathered ICE Candidates\n';
+//        for (var endpoint in gatheredIceCandidateTypes) {
+//            contents += endpoint + ':\n';
+//            for (var type in gatheredIceCandidateTypes[endpoint]) {
+//                contents += '  ' + type + '\n';
+//            }
+//        }
+//        $log.info(contents);
     };
 
     this.iceCandidateType = function(candidateSDP) {
@@ -386,7 +386,7 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
             return;
         }
         gatheredIceCandidateTypes[location][type] = 1;
-        updateInfoDiv();
+        updateLog();
     };
     this.onIceCandidate = function(event) {
         if (event.candidate) {
@@ -414,7 +414,7 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
 
 videoAppServices.factory('webRtcSessionService', function($log, $window, $rootScope, $timeout,
                                             messageService, userNotificationService,
-                                            codecsService, infoDivService, globalVarsService,
+                                            codecsService, globalVarsService,
                                             serverConstantsService, iceService, peerService,
                                             channelMessageService, adapterService) {
 
@@ -558,7 +558,7 @@ videoAppServices.factory('webRtcSessionService', function($log, $window, $rootSc
     };
 });
 
-videoAppServices.factory('peerService', function($log, userNotificationService, infoDivService,
+videoAppServices.factory('peerService', function($log, userNotificationService,
                                          iceService, globalVarsService, serverConstantsService,
                                          adapterService) {
 
@@ -590,13 +590,13 @@ videoAppServices.factory('peerService', function($log, userNotificationService, 
 
     var onSignalingStateChanged = function(self){
         return function() {
-            infoDivService.updatePcInfoDiv(pcStatus(self));
+            $log.info(pcStatus(self));
         };
     };
 
     var onIceConnectionStateChanged = function(self) {
         return function() {
-            infoDivService.updatePcInfoDiv(pcStatus(self));
+            $log.info(pcStatus(self));
         };
     };
 
@@ -852,7 +852,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 });
 
 
-videoAppServices.factory('userNotificationService', function($log, $timeout, infoDivService, serverConstantsService, globalVarsService) {
+videoAppServices.factory('userNotificationService', function($log, $timeout, serverConstantsService, globalVarsService) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
@@ -866,9 +866,8 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, inf
             return currentState;
         },
         messageError : function(msg) {
-            $log.log(msg);
-            infoDivService.pushInfoDivErrors(msg);
-            infoDivService.updateErrorsInfoDiv();
+            $log.error(msg);
+
         },
         resetStatus : function() {
           if (!globalVarsService.rtcInitiator) {
@@ -1170,66 +1169,6 @@ videoAppServices.factory('codecsService', function($log, serverConstantsService,
         }
     };
 
-});
-
-
-videoAppServices.service('infoDivService', function ($log) {
-
-
-    var infoDivErrors = [];
-    var div;
-
-    var getInfoDiv = function() {
-        return $('#id-info-div')[0];
-    };
-
-    var hideInfoDiv = function() {
-        div.style.display = 'none';
-        $log.log('Hiding id-info-div');
-    };
-
-    var showInfoDiv = function() {
-         div.style.display = 'block';
-        $log.log('Showing id-info-div');
-     };
-
-    div = getInfoDiv();
-
-    return {
-
-        pushInfoDivErrors : function(msg) {
-            infoDivErrors.push(msg);
-        },
-
-        toggleInfoDiv : function() {
-            if (div.style.display === 'block') {
-                hideInfoDiv();
-            } else {
-                showInfoDiv();
-            }
-        },
-
-        updateIceInfoDiv : function(contents) {
-            $('#iceInfoDiv').html(contents);
-        },
-
-        updatePcInfoDiv : function (contents) {
-            $('#pcInfoDiv').html(contents);
-        },
-
-        updateErrorsInfoDiv : function () {
-            var contents = '';
-            for (var msg in infoDivErrors) {
-                contents += '<p style="background-color: red; color: yellow;">' +
-                    infoDivErrors[msg] + '</p>';
-            }
-            $('#errorsInfoDiv').html(contents);
-
-            if (infoDivErrors.length) {
-                showInfoDiv();
-            }
-        }
-    };
 });
 
 

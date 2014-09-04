@@ -33,7 +33,7 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
 
 
 
-videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($document, $log, infoDivService, callService) {
+videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($document, $log, callService) {
 
 
     return {
@@ -61,9 +61,6 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
                         return false;
                     case 69:
                         callService.setVideoMute(scope.localVideoObject, !scope.localVideoObject.isVideoMuted);
-                        return false;
-                    case 73:
-                        infoDivService.toggleInfoDiv();
                         return false;
                     default:
                         return;
