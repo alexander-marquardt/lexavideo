@@ -79,7 +79,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
         return function() {
             var returnVal = scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType + ' ' +
                 scope.videoSignalingObject.remoteVideoSignalingStatus.videoType;
-            $log.info('returnVal is "' + returnVal +'"');
+            //$log.debug('returnVal is "' + returnVal +'"');
             return returnVal;
         };
     };
