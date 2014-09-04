@@ -95,9 +95,15 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                     callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                 }
                 else if (newVideoType === 'asciiVideo') {
-                    message = 'We are waiting for remote user to accept your request to exchange Ascii Video ';
-                    showMessageInVideoWindow(scope, elem, message);
-                    negotiateVideoType.sendRequestForVideoType(newVideoType);
+
+                    if (scope.videoSignalingObject.remoteIsSendingVideoType !== 'asciiVideo') {
+                        message = 'We are waiting for remote user to accept your request to exchange Ascii Video ';
+                        showMessageInVideoWindow(scope, elem, message);
+                        negotiateVideoType.sendRequestForVideoType(newVideoType);
+                    } else {
+                        // since the remote user is already sending asciiVideo, we just accept it.
+                        negotiateVideoType.sendAcceptanceOfVideoType('asciiVideo');
+                    }
                     setVideoModeToAscii(scope);
                 }
                 else if (newVideoType === null) {
@@ -120,6 +126,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                         // the remote user has requested the videoType that the local user has already selected.
                         // No user prompting is required to set the videoType.
                         negotiateVideoType.sendAcceptanceOfVideoType(localHasSelectedVideoType);
+                        removeMessageInVideoWindow(scope, elem);
                     }
                     else {
                         if (remoteSignalingStatus.videoType === 'hdVideo') {
@@ -129,8 +136,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                             // by default, we do not ask for permission to switch to ascii video mode. If a remote user requests
                             // a switch to asciiVideo, then we will tear down the peer connection, and will transmit ascii video in
                             // both directions.
-                            negotiateVideoType.sendAcceptanceOfVideoType(remoteSignalingStatus.videoType);
-                            setVideoModeToAscii(scope);
+                            scope.videoSignalingObject.localHasSelectedVideoType = 'asciiVideo';
 
                             // By design remote immediately begins sending asciiVideo once they have requested it.
                             scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
@@ -169,7 +175,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                             // set the value on remoteIsSendingVideoType to 'asciiVideo' now.
 
                             scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
-
+                            removeMessageInVideoWindow(scope, elem);
                         }
 
                     } else {
@@ -180,14 +186,6 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                         showMessageInVideoWindow(scope, elem, message);
 
                     }
-                }
-            });
-
-            scope.$watch('remoteIsSendingVideoType', function(newVideoType) {
-                if (newVideoType === scope.localHasSelectedVideoType === scope.localIsSendingVideoType) {
-                    // if the sending and receiving videoType are the same and are what was requested,
-                    // then no more feedback is required.
-                    removeMessageInVideoWindow(scope, elem);
                 }
             });
         }
