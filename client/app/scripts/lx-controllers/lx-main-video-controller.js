@@ -7,7 +7,7 @@
 /* global $ */
 
 angular.module('videoApp')
-    .controller('lxMainVideoCtrl', function ($scope, negotiateVideoType) {
+    .controller('lxMainVideoCtrl', function ($scope, negotiateVideoType, serverConstantsService) {
 
         $scope.accessCameraAndMicrophoneObject = {
             // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
@@ -75,7 +75,8 @@ angular.module('videoApp')
             // videoType should be 'hdVideo' or 'asciiVideo'
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
             negotiateVideoType.sendRequestForVideoType(localHasSelectedVideoType);
-
-
         };
+
+        $scope.myUsername = serverConstantsService.myUsername;
+        $scope.debugBuildEnabled = serverConstantsService.debugBuildEnabled;
 });

@@ -167,7 +167,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                             // remote agreed to send asciiVideo, and by design will have started to send it immediately at
                             // the same time that it has send the 'acceptVideoType' response. Therefore, we can
                             // set the value on remoteIsSendingVideoType to 'asciiVideo' now.
-                            
+
                             scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
 
                         }

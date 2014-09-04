@@ -108,7 +108,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
 
     var onChannelMessage = function(self, localVideoObject, remoteVideoObject, videoSignalingObject) {
         return function(message) {
-            // $log.log('S->C: ' + message.data);
+            //$log.log('S->C: ' + message.data);
             var messageObject = JSON.parse(message.data);
             if (messageObject.messageType === 'sdp') {
                 var sdpObject = messageObject.messagePayload;
@@ -125,6 +125,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                         // On the other hand, caller is the person who calls the callee, and is currently the second
                         // person to join the chatroom.
                         webRtcSessionService.signalingReady = true;
+                        $log.debug('webRtcSessionService.signalingReady = true');
 
                         // We may have been waiting for singalingReady to be true to begin the peer-to-peer video
                         // call (as is the case if this user is not the rtcInitiator).
@@ -166,7 +167,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
     };
 
     var onChannelError = function() {
-        $log.error('*** Channel error. ***')
+        $log.error('*** Channel error. ***');
         userNotificationService.messageError('Channel error.');
         channelServiceSupport.channelReady = false;
     };
@@ -733,7 +734,6 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         hasAudioOrVideoMediaConstraints : false,
 
 
-
         maybeStart : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
 
 
@@ -758,6 +758,23 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 }
                 else {
                     calleeStart(localVideoObject, remoteVideoObject);
+                }
+            } else {
+                $log.debug('Not ready to start webRtc services.');
+                if (webRtcSessionService.started) {
+                    $log.debug('Because webRtcSessionService.started is true');
+                }
+                if (!webRtcSessionService.signalingReady) {
+                    $log.debug('Because webRtcSessionService.signalingReady is false');
+                }
+                if (!channelServiceSupport.channelReady) {
+                    $log.debug('Because channelServiceSupport.channelReady is false');
+                }
+                if (!turnServiceSupport.turnDone) {
+                    $log.debug('Because turnServiceSupport.turnDone is false');
+                }
+                if (!streamService.localStream) {
+                    $log.debug('Because streamService.localStream is false');
                 }
             }
         },

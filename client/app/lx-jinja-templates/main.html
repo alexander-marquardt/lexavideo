@@ -18,6 +18,10 @@
 
     <div ng-controller="lxMainVideoCtrl">
 
+        <div ng-if="debugBuildEnabled">
+            User Name: {{ myUsername }}
+        </div>
+
         <div lx-access-camera-and-microphone-directive></div>
 
         <div class="row">
