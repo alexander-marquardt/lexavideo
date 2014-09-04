@@ -511,7 +511,7 @@ videoAppServices.factory('webRtcSessionService', function($log, $window, $rootSc
 
         stop : function(self) {
             self.started = false;
-            self.signalingReady = false;
+            self.signalingReady = globalVarsService.rtcInitiator;
             if (peerService.pc) {
                 peerService.pc.close();
             }

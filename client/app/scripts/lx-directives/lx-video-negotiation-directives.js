@@ -29,23 +29,27 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
         elem.append(el, buttonGroup);
 
         yesButton.on('click', function() {
+            var message;
 
+            scope.$apply(function() {
+                negotiateVideoType.sendAcceptanceOfVideoType(newVideoType);
+                $animate.addClass(elem, 'ng-hide'); // this class is added so that when we show the element, it will fade in.
 
-            negotiateVideoType.sendAcceptanceOfVideoType(newVideoType);
-            $animate.addClass(elem, 'ng-hide');
-
-            if (newVideoType === 'hdVideo') {
-                // Other user has requested hdVideo, and this user has agreed to send it.
-                scope.videoSignalingObject.localHasSelectedVideoType = 'hdVideo';
-                callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
-            }
-            scope.$apply();
+                if (newVideoType === 'hdVideo') {
+                    // Other user has requested hdVideo, and this user has agreed to send it.
+                    message = 'We are now setting up the communications for transmitting HD video';
+                    showMessageInVideoWindow(scope, elem, message);
+                    scope.videoSignalingObject.localHasSelectedVideoType = 'hdVideo';
+                    callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
+                }
+            });
         });
 
         noButton.on('click', function() {
-            negotiateVideoType.sendDenyOfVideoType(newVideoType);
-            $animate.addClass(elem, 'ng-hide');
-            scope.$apply();
+            scope.$apply(function() {
+                negotiateVideoType.sendDenyOfVideoType(newVideoType);
+                $animate.addClass(elem, 'ng-hide');
+            });
         });
     };
 
@@ -93,6 +97,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                     message = 'We are waiting for remote user to accept your request to exchange HD Video ';
                     showMessageInVideoWindow(scope, elem, message);
                     callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
+                    negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
                 }
                 else if (newVideoType === 'asciiVideo') {
 

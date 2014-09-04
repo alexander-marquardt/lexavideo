@@ -74,7 +74,6 @@ angular.module('videoApp')
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {
             // videoType should be 'hdVideo' or 'asciiVideo'
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
-            negotiateVideoType.sendRequestForVideoType(localHasSelectedVideoType);
         };
 
         $scope.myUsername = serverConstantsService.myUsername;
