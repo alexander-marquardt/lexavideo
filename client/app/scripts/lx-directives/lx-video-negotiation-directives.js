@@ -72,10 +72,11 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
         restrict: 'A',
         link : function(scope, elem) {
             var message;
-            var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
-            var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
 
             scope.$watch('videoSignalingStatusForUserFeedback', function(newValue) {
+                
+                var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
+                var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
 
                 switch(newValue) {
                     case 'showRequestForHdVideo':
