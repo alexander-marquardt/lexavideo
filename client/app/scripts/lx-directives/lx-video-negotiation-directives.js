@@ -67,13 +67,20 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
         });
     };
 
+    var getVideoSignalingStatusForUserFeedback = function(scope) {
+        return function(){
+            $log.debug('videoSignalingStatusForUserFeedback is: ' + scope.videoSignalingStatusForUserFeedback);
+            return scope.videoSignalingStatusForUserFeedback
+        }
+    };
+
 
     return {
         restrict: 'A',
         link : function(scope, elem) {
             var message;
 
-            scope.$watch('videoSignalingStatusForUserFeedback', function(newValue) {
+            scope.$watch(getVideoSignalingStatusForUserFeedback(scope), function(newValue) {
 
                 var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
                 var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
@@ -83,7 +90,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                         showRequestForHdVideo(scope, elem);
                         break;
 
-                    case 'waitingForRemoteToAcceptVideoType':
+                    case 'waitingForRemoteToAcceptVideoType: ' + localHasSelectedVideoType:
                         message = 'We are waiting for remote user to accept your request to exchange ' + localHasSelectedVideoType;
                         showMessageInVideoWindow(scope, elem, message);
                         break;

@@ -52,14 +52,14 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
             scope.videoSignalingStatusForUserFeedback = null;
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {
-                    scope.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType';
+                    scope.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
                     callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                     negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
                 }
                 else if (newVideoType === 'asciiVideo') {
 
                     if (scope.videoSignalingObject.remoteIsSendingVideoType !== 'asciiVideo') {
-                        scope.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType';
+                        scope.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
                         negotiateVideoType.sendRequestForVideoType(newVideoType);
                     } else {
                         // since the remote user is already sending asciiVideo, we just accept it.
