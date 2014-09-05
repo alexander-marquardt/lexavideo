@@ -8,7 +8,7 @@ var lxVideoTypeNegotiationDirectives = angular.module('lxVideoTypeNegotiation.di
 
 
 lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log, callService,
-                                                                                           negotiateVideoType) {
+                                                                                           lxVideoSettingsNegotiationService) {
 
 
     var  showMessageInVideoWindow = function(scope, elem, message) {
@@ -46,7 +46,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
             var message;
 
             scope.$apply(function() {
-                negotiateVideoType.sendAcceptanceOfVideoType(newVideoType);
+                lxVideoSettingsNegotiationService.negotiateVideoType.sendAcceptanceOfVideoType(newVideoType);
                 $animate.addClass(elem, 'ng-hide'); // this class is added so that when we show the element, it will fade in.
 
                 if (newVideoType === 'HD Video') {
@@ -65,7 +65,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
 
         noButton.on('click', function() {
             scope.$apply(function() {
-                negotiateVideoType.sendDenyOfVideoType(newVideoType);
+                lxVideoSettingsNegotiationService.negotiateVideoType.sendDenyOfVideoType(newVideoType);
                 $animate.addClass(elem, 'ng-hide');
 
                 // the following line is necessary in order trigger the getVideoSignalingStatusForUserFeedback watcher

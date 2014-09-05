@@ -14,25 +14,6 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                                                                              webRtcSessionService) {
 
 
-    var negotiateVideoType =  {
-        /* Requests and sets up the type of video that will be transmitted between the two users */
-
-        sendRequestForVideoType : function (videoType) {
-            messageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', videoType: videoType});
-        },
-
-        sendAcceptanceOfVideoType : function(videoType) {
-            // send a message to the remote user to indicate that the local user has accepted their offer to
-            // change the current video settings (ie. from asciiVideo to hdVideo).
-            messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', videoType: videoType});
-        },
-
-        sendDenyOfVideoType : function(videoType) {
-            // send a message to the remote user to indicate that local user has denied their offer to change the
-            // current video settings.
-            messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', videoType: videoType});
-        }
-    };
 
     var setVideoModeToAscii = function(scope) {
         // if the local or remote user sets video to ascii, then we immediately switch to this video type, and stop
@@ -55,6 +36,27 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
     };
 
     return {
+
+        negotiateVideoType :  {
+            /* Requests and sets up the type of video that will be transmitted between the two users */
+
+            sendRequestForVideoType : function (videoType) {
+                messageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', videoType: videoType});
+            },
+
+            sendAcceptanceOfVideoType : function(videoType) {
+                // send a message to the remote user to indicate that the local user has accepted their offer to
+                // change the current video settings (ie. from asciiVideo to hdVideo).
+                messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', videoType: videoType});
+            },
+
+            sendDenyOfVideoType : function(videoType) {
+                // send a message to the remote user to indicate that local user has denied their offer to change the
+                // current video settings.
+                messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', videoType: videoType});
+            }
+        },
+
         watchForVideoSettingsChanges : function(scope) {
             /*
             This function will monitor the type of video that the local user and that the remote user have
@@ -66,6 +68,8 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
             will have to agree to send HD video before transmission will begin.
             The messages that will be shown to the users can be seen in lx-video-negotiation-directives.
              */
+
+            var self  = this;
 
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
                 var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
@@ -81,16 +85,16 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
 
                     if (newVideoType === 'HD Video') {
                         scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
-                        negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
+                        self.negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
                     }
                     else if (newVideoType === 'ASCII Video') {
 
                         if (scope.videoSignalingObject.remoteIsSendingVideoType !== 'ASCII Video') {
                             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
-                            negotiateVideoType.sendRequestForVideoType(newVideoType);
+                            self.negotiateVideoType.sendRequestForVideoType(newVideoType);
                         } else {
                             // since the remote user is already sending asciiVideo, we just accept it.
-                            negotiateVideoType.sendAcceptanceOfVideoType('ASCII Video');
+                            self.negotiateVideoType.sendAcceptanceOfVideoType('ASCII Video');
                         }
                         setVideoModeToAscii(scope);
                     }
@@ -109,6 +113,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                 // respond directly, or modify a variable that will trigger another watcher that will request user
                 // feedback on how to respond. More details in the comments below.
 
+
                 var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
                 var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
                 scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
@@ -120,9 +125,8 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                         // the remote user has requested the videoType that the local user has already selected.
                         // No user prompting is required to set the videoType.
 
-                        negotiateVideoType.sendAcceptanceOfVideoType(remoteSignalingStatus.videoType);
+                        self.negotiateVideoType.sendAcceptanceOfVideoType(remoteSignalingStatus.videoType);
                         scope.videoSignalingObject.localHasAgreedToRemoteRequestForVideoType == remoteSignalingStatus.videoType;
-                        scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
                         $log.debug('Automatically settings video type to ' + remoteSignalingStatus.videoType + 'since it was already selected. ')
                     }
                     else {
@@ -140,7 +144,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                             // by default, we do not ask for permission to switch to ascii video mode. If a remote user requests
                             // a switch to asciiVideo, then we will tear down the peer connection, and will transmit ascii video in
                             // both directions.
-                            negotiateVideoType.sendAcceptanceOfVideoType('ASCII Video');
+                            self.negotiateVideoType.sendAcceptanceOfVideoType('ASCII Video');
                             scope.videoSignalingObject.localHasAgreedToRemoteRequestForVideoType = 'ASCII Video';
                             scope.videoSignalingObject.localHasSelectedVideoType = 'ASCII Video';
                             scope.videoSignalingObject.remoteIsSendingVideoType = 'ASCII Video';
