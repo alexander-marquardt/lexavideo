@@ -30,7 +30,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
         // if the other user has requested an hdVideo session, the local user must accept before we will
         // send and receive HD video.
 
-        var newVideoType = 'hdVideo';
+        var newVideoType = 'HD Video';
 
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
@@ -49,11 +49,11 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                 negotiateVideoType.sendAcceptanceOfVideoType(newVideoType);
                 $animate.addClass(elem, 'ng-hide'); // this class is added so that when we show the element, it will fade in.
 
-                if (newVideoType === 'hdVideo') {
+                if (newVideoType === 'HD Video') {
                     // Other user has requested hdVideo, and this user has agreed to send it.
                     message = 'We are now setting up the communications for transmitting HD video';
                     showMessageInVideoWindow(scope, elem, message);
-                    scope.videoSignalingObject.localHasSelectedVideoType = 'hdVideo';
+                    scope.videoSignalingObject.localHasSelectedVideoType = 'HD Video';
                     callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                 }
             });
@@ -86,7 +86,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                 var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
 
                 switch(newValue) {
-                    case 'remoteHasRequestedVideoType: ' + 'hdVideo':
+                    case 'remoteHasRequestedVideoType: ' + 'HD Video':
                         showRequestForHdVideo(scope, elem);
                         break;
 

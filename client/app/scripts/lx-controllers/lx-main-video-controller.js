@@ -42,13 +42,13 @@ angular.module('videoApp')
              */
 
             // localHasSelectedVideoType this reflects the value of the video selection button that is currently selected
-            localHasSelectedVideoType : null,  // 'null, 'asciiVideo', 'hdVideo'
+            localHasSelectedVideoType : null,  // 'null, 'ASCII Video', 'HD Video'
 
             // localIsSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
             // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
             // However, in the special case that the user has set 'localHasSelectedVideoType' to ascii, then we immediately
-            // set the value of localIsSendingVideoType to 'asciiVideo'.
-            localIsSendingVideoType : null,  // null, 'asciiVideo', 'hdVideo'
+            // set the value of localIsSendingVideoType to 'ASCII Video'.
+            localIsSendingVideoType : null,  // null, 'ASCII Video', 'HD Video'
 
             localUserAccessCameraAndMicrophoneStatus : 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
             remoteUserHasTurnedOnCamera : false,
@@ -60,7 +60,7 @@ angular.module('videoApp')
 
             remoteVideoSignalingStatus : {
                 settingsType: null,  // will be set to null, 'requestVideoType', 'acceptVideoType', or 'denyVideoType'
-                videoType: null      // null, 'asciiVideo', 'hdVideo'
+                videoType: null      // null, 'ASCII Video', 'HD Video'
             },
 
              /* remoteIsSendingVideoType: The type of video that is being received from the remote User.
@@ -78,7 +78,7 @@ angular.module('videoApp')
         };
 
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {
-            // videoType should be 'hdVideo' or 'asciiVideo'
+            // videoType should be 'HD Video' or 'ASCII Video'
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
         };
 

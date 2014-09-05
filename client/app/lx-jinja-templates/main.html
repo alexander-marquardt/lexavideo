@@ -29,14 +29,14 @@
 
                 <div class="col-sm-6" id="id-local-video-wrapper-div">
                     <div class="text-center">
-                        <div id="id-local-hd-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'hdVideo' ||  !videoSignalingObject.localIsSendingVideoType)" >
+                        <div id="id-local-hd-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.localIsSendingVideoType)" >
                             <h4>Local HD Video</h4>
                             <div style="display:inline-block" class="cl-my-well" >
                                 <video class="cl-video-sizing" id="id-local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
                             </div>
                         </div>
 
-                        <div lx-generate-ascii-video-directive id="id-local-ascii-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'asciiVideo')" >
+                        <div lx-generate-ascii-video-directive id="id-local-ascii-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'ASCII Video')" >
                             <h4>Local ASCII Video</h4>
                             <div class="cl-my-well" style="display:inline-block" >
                                 <div style="position: relative">
@@ -49,11 +49,11 @@
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm"
-                                    ng-class="(videoSignalingObject.localHasSelectedVideoType == 'hdVideo') ? 'btn-primary disabled' : 'btn-default'"
-                                    ng-click="setLocalVideoType('hdVideo')">HD Video</button>
+                                    ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
+                                    ng-click="setLocalVideoType('HD Video')">HD Video</button>
                             <button type="button" class="btn btn-sm"
-                                    ng-class="(videoSignalingObject.localHasSelectedVideoType == 'asciiVideo') ? 'btn-primary disabled' : 'btn-default'"
-                                    ng-click="setLocalVideoType('asciiVideo')">ASCII Video</button>
+                                    ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
+                                    ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                 <div class="col-sm-6" id="id-remote-video-wrapper-div">
                     <div class="text-center" >
                         <div ng-controller="lxVideoNegotiationCtrl">
-                            <div id="id-remote-hd-video-wrapper-div" ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'hdVideo' ||  !videoSignalingObject.remoteIsSendingVideoType)">
+                            <div id="id-remote-hd-video-wrapper-div" ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.remoteIsSendingVideoType)">
                                 <h4>Remote HD Video</h4>
 
                                 <div  class="cl-my-well" style="display:inline-block">
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
 
-                            <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"  ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'asciiVideo')">
+                            <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"  ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'ASCII Video')">
                                 <h4>Remote ASCII Video</h4>
                                 <div style="display:inline-block" class="cl-my-well">
                                     <div style="position: relative">
@@ -98,11 +98,11 @@
                         <div class = "cl-hide-on-larger-than-xs">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm"
-                                        ng-class="(videoSignalingObject.localHasSelectedVideoType == 'hdVideo') ? 'btn-primary disabled' : 'btn-default'"
-                                        ng-click="setLocalVideoType('hdVideo')">HD Video</button>
+                                        ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
+                                        ng-click="setLocalVideoType('HD Video')">HD Video</button>
                                 <button type="button" class="btn btn-sm"
-                                        ng-class="(videoSignalingObject.localHasSelectedVideoType == 'asciiVideo') ? 'btn-primary disabled' : 'btn-default'"
-                                        ng-click="setLocalVideoType('asciiVideo')">ASCII Video</button>
+                                        ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
+                                        ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
                             </div>
                         </div>
 

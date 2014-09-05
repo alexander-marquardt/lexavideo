@@ -169,10 +169,10 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 if (!localVideoObject.miniVideoElemInsideRemoteHd || !localVideoObject.miniVideoElemInsideRemoteAscii) {
                     $log.error('Error: miniVideoElements not set');
                 } else {
-                    if (videoSignalingObject.remoteIsSendingVideoType === 'hdVideo') {
+                    if (videoSignalingObject.remoteIsSendingVideoType === 'HD Video') {
                         adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
                     }
-                    else if (videoSignalingObject.remoteIsSendingVideoType === 'asciiVideo'){
+                    else if (videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video'){
                         adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
                     }
                     else if (videoSignalingObject.remoteIsSendingVideoType === null) {

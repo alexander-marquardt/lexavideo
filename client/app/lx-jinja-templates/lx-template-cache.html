@@ -247,13 +247,13 @@
 <script type="text/ng-template" id="lx-template-cache/mini-video-template.html">
     <div class="cl-mini-video-div">
 
-        <div class="cl-local-hd-mini-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'hdVideo')">
+        <div class="cl-local-hd-mini-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'HD Video')">
             <div  style="display:inline-block" class="cl-mini-well">
                 <video class="cl-mini-video-element" autoplay="autoplay" muted="true"/>
             </div>
         </div>
 
-        <div lx-generate-ascii-video-directive class="cl-local-ascii-mini-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'asciiVideo')" >
+        <div lx-generate-ascii-video-directive class="cl-local-ascii-mini-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'ASCII Video')" >
             <div  style="display:inline-block" class="cl-mini-well">
                 <pre class="cl-ascii-container cl-mini-ascii-container-sizing"><span class="cl-ascii-drawing-text cl-ascii-mini-span">Local ascii drawing goes here</span></pre>
             </div>
