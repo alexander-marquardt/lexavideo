@@ -86,7 +86,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                 var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
 
                 switch(newValue) {
-                    case 'showRequestForHdVideo':
+                    case 'remoteHasRequestedVideoType: ' + 'hdVideo':
                         showRequestForHdVideo(scope, elem);
                         break;
 

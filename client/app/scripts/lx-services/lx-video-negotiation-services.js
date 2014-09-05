@@ -90,7 +90,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                     }
                     else {
                         if (remoteSignalingStatus.videoType === 'hdVideo') {
-                            scope.videoSignalingStatusForUserFeedback = 'showRequestForHdVideo';
+                            scope.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
                         }
                         else if (remoteSignalingStatus.videoType === 'asciiVideo') {
                             // by default, we do not ask for permission to switch to ascii video mode. If a remote user requests
