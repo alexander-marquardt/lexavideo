@@ -107,7 +107,10 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
 
                 else if (remoteSignalingStatus.settingsType === 'denyVideoType') {
                     scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedRequestToExchangeFormat';
-                    scope.videoSignalingObject.remoteResponseToLocalRequest = 'waitingForResponse'; // reset to default state
+
+                    // since the request to transmit a new format was denied, change the localHasSelectedVideoType back
+                    // to the type that is currently being sent.
+                    scope.videoSignalingObject.localHasSelectedVideoType = scope.videoSignalingObject.localIsSendingVideoType
                 }
 
                 else if (remoteSignalingStatus.settingsType === 'acceptVideoType') {
