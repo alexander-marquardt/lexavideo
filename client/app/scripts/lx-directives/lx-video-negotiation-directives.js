@@ -54,6 +54,9 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                     message = 'We are now setting up the communications for transmitting HD video';
                     showMessageInVideoWindow(scope, elem, message);
                     scope.videoSignalingObject.localHasSelectedVideoType = 'HD Video';
+
+                    // once callService has made a successful connection (onRemoteStreamAdded callback is executed),
+                    // then localIsSendingVideoType will be updated
                     callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                 }
             });

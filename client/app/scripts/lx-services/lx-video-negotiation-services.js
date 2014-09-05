@@ -50,6 +50,9 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
              */
 
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
+                var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
+
+
                 if (newVideoType === 'HD Video') {
                     scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
                     negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
@@ -80,14 +83,24 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                 scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
 
                 if (remoteSignalingStatus.settingsType === 'requestVideoType') {
+
                     if (remoteSignalingStatus.videoType === localHasSelectedVideoType) {
+
                         // the remote user has requested the videoType that the local user has already selected.
                         // No user prompting is required to set the videoType.
+
                         negotiateVideoType.sendAcceptanceOfVideoType(localHasSelectedVideoType);
                         scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
                     }
                     else {
+
+                        // remote user has requested that the local user send a video type that is different from
+                        // what they are currently sending.
+
                         if (remoteSignalingStatus.videoType === 'HD Video') {
+                            // if the remote user has requested HD Video, then we will prompt the local user to see if
+                            // they agree to transmit HD video. This prompting is triggered by the change in
+                            // videoSignalingStatusForUserFeedback and is handled in the directive code.
                             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
                         }
                         else if (remoteSignalingStatus.videoType === 'ASCII Video') {
