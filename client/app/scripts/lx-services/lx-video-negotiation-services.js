@@ -38,6 +38,17 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
 
     return {
         watchForVideoSettingsChanges : function(scope) {
+            /*
+            This function will monitor the type of video that the local user and that the remote user have
+            selected for sending between them. This requires some message exchanges before the video type will
+            be finalized.
+            We are more strict about sending hd video than ascii video. If ascii video is selected by one of the
+            parties in a video call, then both sides will automatically switch over to ascii video. If they wish
+            to switch to HD video, then a request will be sent from one user to the other, and the other user
+            will have to agree to send HD video before transmission will begin.
+            The messages that will be shown to the users can be seen in lx-video-negotiation-directives.
+             */
+
             scope.videoSignalingStatusForUserFeedback = null;
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {

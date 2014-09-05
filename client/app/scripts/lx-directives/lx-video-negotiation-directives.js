@@ -74,7 +74,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
             var message;
 
             scope.$watch('videoSignalingStatusForUserFeedback', function(newValue) {
-                
+
                 var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
                 var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
 
