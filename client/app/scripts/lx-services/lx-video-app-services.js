@@ -581,13 +581,14 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
             self.remoteStream = mediaStreamEvent.stream;
 
             videoSignalingObject.videoSignalingStatusForUserFeedback = null; // clear feedback messages
+            videoSignalingObject.localIsSendingVideoType = 'HD Video';
             videoSignalingObject.remoteIsSendingVideoType = 'HD Video';
         };
     };
 
 
     var onRemoteStreamRemoved = function() {
-        $log.log('Remote stream removed.');
+        $log.info('Remote stream removed.');
     };
 
     var onSignalingStateChanged = function(self){
@@ -635,7 +636,6 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
         addLocalVideoStream : function(localStream, localVideoObject, videoSignalingObject) {
 
             if (this.pc) {
-                videoSignalingObject.localIsSendingVideoType = 'HD Video';
                 this.pc.addStream(localStream);
             } else {
                 $log.log('** Error: no peer connection has been established, and therefore we cannot add the stream to it.');
