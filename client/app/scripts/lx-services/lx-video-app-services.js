@@ -580,6 +580,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
             adapterService.attachMediaStream(remoteVideoObject.remoteVideoElem, mediaStreamEvent.stream);
             self.remoteStream = mediaStreamEvent.stream;
 
+            videoSignalingObject.videoSignalingStatusForUserFeedback = null; // clear feedback messages
             videoSignalingObject.remoteIsSendingVideoType = 'hdVideo';
         };
     };

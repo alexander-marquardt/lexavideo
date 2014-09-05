@@ -68,7 +68,13 @@ angular.module('videoApp')
              (ie. when peerService.onRemoteStreamAdded is called). In the case of asciiVideo, this will be updated once
              we have received confirmation from the remote user.
              */
-            remoteIsSendingVideoType : null
+            remoteIsSendingVideoType : null,
+
+
+            // videoSignalingStatusForUserFeedback indicates what message/status the user should be shown about
+            // the current video type requested/allowed/waiting for/etc.
+            videoSignalingStatusForUserFeedback : null
+
         };
 
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {

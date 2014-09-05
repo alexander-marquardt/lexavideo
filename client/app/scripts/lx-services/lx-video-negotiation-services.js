@@ -49,17 +49,16 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
             The messages that will be shown to the users can be seen in lx-video-negotiation-directives.
              */
 
-            scope.videoSignalingStatusForUserFeedback = null;
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
                 if (newVideoType === 'hdVideo') {
-                    scope.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
+                    scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
                     callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                     negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
                 }
                 else if (newVideoType === 'asciiVideo') {
 
                     if (scope.videoSignalingObject.remoteIsSendingVideoType !== 'asciiVideo') {
-                        scope.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
+                        scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
                         negotiateVideoType.sendRequestForVideoType(newVideoType);
                     } else {
                         // since the remote user is already sending asciiVideo, we just accept it.
@@ -79,18 +78,18 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
 
                 var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
                 var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
-                scope.videoSignalingStatusForUserFeedback = null;
+                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
 
                 if (remoteSignalingStatus.settingsType === 'requestVideoType') {
                     if (remoteSignalingStatus.videoType === localHasSelectedVideoType) {
                         // the remote user has requested the videoType that the local user has already selected.
                         // No user prompting is required to set the videoType.
                         negotiateVideoType.sendAcceptanceOfVideoType(localHasSelectedVideoType);
-                        scope.videoSignalingStatusForUserFeedback = null;
+                        scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
                     }
                     else {
                         if (remoteSignalingStatus.videoType === 'hdVideo') {
-                            scope.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
                         }
                         else if (remoteSignalingStatus.videoType === 'asciiVideo') {
                             // by default, we do not ask for permission to switch to ascii video mode. If a remote user requests
@@ -99,7 +98,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                             scope.videoSignalingObject.localHasSelectedVideoType = 'asciiVideo';
                             // By design remote immediately begins sending asciiVideo once they have requested it.
                             scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
-                            scope.videoSignalingStatusForUserFeedback = null;
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
                         }
                         else {
                             $log.log('Error: unknown remoteSignalingStatus.videoType: ' + remoteSignalingStatus.videoType);
@@ -108,7 +107,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                 }
 
                 else if (remoteSignalingStatus.settingsType === 'denyVideoType') {
-                    scope.videoSignalingStatusForUserFeedback = 'remoteHasDeniedRequestToExchangeFormat';
+                    scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedRequestToExchangeFormat';
                     scope.videoSignalingObject.remoteResponseToLocalRequest = 'waitingForResponse'; // reset to default state
                 }
 
@@ -120,7 +119,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                     if (remoteSignalingStatus.videoType === localHasSelectedVideoType) {
 
                         if (localHasSelectedVideoType === 'hdVideo') {
-                            scope.videoSignalingStatusForUserFeedback = 'remoteUserHasAcceptedYourRequestToTransmit';
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteUserHasAcceptedYourRequestToTransmit';
                             // Setup the hdVideo to be transmitted via peer-to-peer transmission.
                             callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                         }
@@ -131,11 +130,11 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                             // set the value on remoteIsSendingVideoType to 'asciiVideo' now.
 
                             scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
-                            scope.videoSignalingStatusForUserFeedback = null;
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
                         }
 
                     } else {
-                        scope.videoSignalingStatusForUserFeedback = 'conflictingVideoTypes';
+                        scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'conflictingVideoTypes';
                         $log.error('videoType mismatch.');
                     }
                 }
