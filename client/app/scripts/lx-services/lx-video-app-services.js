@@ -169,7 +169,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
     var onChannelError = function() {
         $log.error('*** Channel error. ***');
         userNotificationService.messageError('Channel error.');
-        channelServiceSupport.channelReady = false;
+        // channelServiceSupport.channelReady = false;
     };
 
     var onChannelClosed = function() {
