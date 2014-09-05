@@ -3,7 +3,7 @@
 import os, datetime, re, codecs, subprocess, logging
 
 
-VERSION_ID = "2014-09-02-1550"
+VERSION_ID = "2014-09-05-1121"
 
 # The following must be set to False before uploading - this will combine and minimize javascript 
 # and css files. This combining/minimizing is only done on upload or on  development server initialization, so this will

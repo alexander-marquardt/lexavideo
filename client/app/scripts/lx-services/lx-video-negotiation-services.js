@@ -52,7 +52,6 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
                 if (newVideoType === 'HD Video') {
                     scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
-                    callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                     negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
                 }
                 else if (newVideoType === 'ASCII Video') {

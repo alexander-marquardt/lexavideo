@@ -18,16 +18,20 @@ def generate_app_yaml():
         # if we are accessing the dist build (not debug), then do not upload un-necessary files
         SKIP_DOT_DIRS =  "- ^(.*/)?\..*$"
         SKIP_APP_DIRS = "- ^client/app/.*"
+        SKIP_DIST_DIRS = ''
+        
     else:
         # we are uploading a debug build, keep all of the app and .tmp files
         SKIP_DOT_DIRS = ''
         SKIP_APP_DIRS = ''
+        SKIP_DIST_DIRS = '"- ^client/dist/.*"'
     
     replacement_patterns_array = [(re.compile(r'(.*)(VERSION_ID)(.*)'),  vidsetup.VERSION_ID),
                                   (re.compile(r'(.*)(BASE_STATIC_DIR)(.*)'), vidsetup.BASE_STATIC_DIR),
                                   (re.compile(r'(.*)(STYLES_STATIC_DIR)(.*)'), vidsetup.STYLES_STATIC_DIR),
                                   (re.compile(r'(.*)(SKIP_DOT_DIRS)(.*)'), SKIP_DOT_DIRS),
                                   (re.compile(r'(.*)(SKIP_APP_DIRS)(.*)'), SKIP_APP_DIRS),
+                                  (re.compile(r'(.*)(SKIP_DIST_DIRS)(.*)'), SKIP_DIST_DIRS),
                                   ]
     
     input_yaml_handle = codecs.open(input_yaml_name, encoding='utf_8')    

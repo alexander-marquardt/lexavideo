@@ -5,7 +5,7 @@
 # then this will happen automatically
 
 application: virtualvideoapp
-version: 2014-09-02-1550
+version: 2014-09-05-1121
 runtime: python27
 threadsafe: true
 api_version: 1
