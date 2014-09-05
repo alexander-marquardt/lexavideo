@@ -205,29 +205,6 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
 });
 
 
-videoAppServices.factory('negotiateVideoType', function($log, messageService) {
-    /* Requests and sets up the type of video that will be transmitted between the two users */
-
-    return {
-        sendRequestForVideoType : function (videoType) {
-            messageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', videoType: videoType});
-        },
-
-        sendAcceptanceOfVideoType : function(videoType) {
-            // send a message to the remote user to indicate that the local user has accepted their offer to
-            // change the current video settings (ie. from asciiVideo to hdVideo).
-            messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', videoType: videoType});
-        },
-
-        sendDenyOfVideoType : function(videoType) {
-            // send a message to the remote user to indicate that local user has denied their offer to change the
-            // current video settings.
-            messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', videoType: videoType});
-        }
-    };
-});
-
-
 videoAppServices.service('turnServiceSupport', function () {
     // This function tracks some variables that are needed by multiple services, where one of the services has
     // a dependency on the other one.

@@ -7,7 +7,7 @@
 /* global $ */
 
 angular.module('videoApp')
-    .controller('lxMainVideoCtrl', function ($scope, negotiateVideoType, serverConstantsService) {
+    .controller('lxMainVideoCtrl', function ($scope, serverConstantsService) {
 
         $scope.accessCameraAndMicrophoneObject = {
             // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only

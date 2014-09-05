@@ -10,11 +10,29 @@ var lxVideoTypeNegotiationServices = angular.module('lxVideoSettingsNegotiation.
 
 
 lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', function($animate, $log,
-                                                                             negotiateVideoType, callService,
+                                                                             callService, messageService,
                                                                              webRtcSessionService) {
 
 
+    var negotiateVideoType =  {
+        /* Requests and sets up the type of video that will be transmitted between the two users */
 
+        sendRequestForVideoType : function (videoType) {
+            messageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', videoType: videoType});
+        },
+
+        sendAcceptanceOfVideoType : function(videoType) {
+            // send a message to the remote user to indicate that the local user has accepted their offer to
+            // change the current video settings (ie. from asciiVideo to hdVideo).
+            messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', videoType: videoType});
+        },
+
+        sendDenyOfVideoType : function(videoType) {
+            // send a message to the remote user to indicate that local user has denied their offer to change the
+            // current video settings.
+            messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', videoType: videoType});
+        }
+    };
 
     var setVideoModeToAscii = function(scope) {
         // if the local or remote user sets video to ascii, then we immediately switch to this video type, and stop
