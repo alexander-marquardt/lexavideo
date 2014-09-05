@@ -7,9 +7,23 @@
 var lxVideoTypeNegotiationDirectives = angular.module('lxVideoTypeNegotiation.directives', []);
 
 
-lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log,
-                                                                             negotiateVideoType, callService,
-                                                                             webRtcSessionService) {
+lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log, callService,
+                                                                                           negotiateVideoType) {
+
+
+    var  showMessageInVideoWindow = function(scope, elem, message) {
+        elem.find('.navbar-text').remove(); // just in case there is already text there, remove the previous element
+        $animate.removeClass(elem, 'ng-hide');
+        elem.html('');
+        var el = angular.element('<p class="navbar-text"/>');
+        el.html(message);
+        elem.append(el);
+    };
+
+    var removeMessageInVideoWindow = function(scope, elem) {
+        $animate.addClass(elem, 'ng-hide');
+        elem.find('.navbar-text').remove();
+    };
 
 
     var showRequestForHdVideo = function(scope, elem) {
@@ -53,144 +67,50 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
         });
     };
 
-    var  showMessageInVideoWindow = function(scope, elem, message) {
-        elem.find('.navbar-text').remove(); // just in case there is already text there, remove the previous element
-        $animate.removeClass(elem, 'ng-hide');
-        elem.html('');
-        var el = angular.element('<p class="navbar-text"/>');
-        el.html(message);
-        elem.append(el);
-    };
-
-    var removeMessageInVideoWindow = function(scope, elem) {
-        $animate.addClass(elem, 'ng-hide');
-        elem.find('.navbar-text').remove();
-    };
-
-
-    var setVideoModeToAscii = function(scope) {
-        // if the local or remote user sets video to ascii, then we immediately switch to this video type, and stop
-        // the HD video stream.
-        scope.videoSignalingObject.localIsSendingVideoType = 'asciiVideo';
-
-        // kill the webRtc session. Ascii video should start to be transmitted in both
-        // directions.
-        webRtcSessionService.stop(webRtcSessionService);
-    };
-
-
-    var watchRemoteVideoSignalingStatus = function(scope) {
-        return function() {
-            var returnVal = scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType + ' ' +
-                scope.videoSignalingObject.remoteVideoSignalingStatus.videoType;
-            //$log.debug('returnVal is "' + returnVal +'"');
-            return returnVal;
-        };
-    };
 
     return {
         restrict: 'A',
         link : function(scope, elem) {
             var message;
-            scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
-                if (newVideoType === 'hdVideo') {
-                    message = 'We are waiting for remote user to accept your request to exchange HD Video ';
-                    showMessageInVideoWindow(scope, elem, message);
-                    callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
-                    negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
-                }
-                else if (newVideoType === 'asciiVideo') {
+            var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
+            var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
 
-                    if (scope.videoSignalingObject.remoteIsSendingVideoType !== 'asciiVideo') {
-                        message = 'We are waiting for remote user to accept your request to exchange Ascii Video ';
+            scope.$watch('videoSignalingStatusForUserFeedback', function(newValue) {
+
+                switch(newValue) {
+                    case 'showRequestForHdVideo':
+                        showRequestForHdVideo(scope, elem);
+                        break;
+
+                    case 'waitingForRemoteToAcceptVideoType':
+                        message = 'We are waiting for remote user to accept your request to exchange ' + localHasSelectedVideoType;
                         showMessageInVideoWindow(scope, elem, message);
-                        negotiateVideoType.sendRequestForVideoType(newVideoType);
-                    } else {
-                        // since the remote user is already sending asciiVideo, we just accept it.
-                        negotiateVideoType.sendAcceptanceOfVideoType('asciiVideo');
-                    }
-                    setVideoModeToAscii(scope);
-                }
-                else if (newVideoType === null) {
-                    // do nothing
-                }
-                else {
-                    $log.error('Unknown videoType: ' + newVideoType);
-                }
-            });
+                        break;
 
+                    case 'remoteHasDeniedRequestToExchangeFormat':
+                        message = 'Remote user has denied your request to exchange ' + remoteSignalingStatus.videoType;
+                        showMessageInVideoWindow(scope, elem, message);
+                        break;
 
-            scope.$watch(watchRemoteVideoSignalingStatus(scope), function() {
-                
-                var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
-                var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
-                var message;
-                
-                if (remoteSignalingStatus.settingsType === 'requestVideoType') {
-                    if (remoteSignalingStatus.videoType === localHasSelectedVideoType) {
-                        // the remote user has requested the videoType that the local user has already selected.
-                        // No user prompting is required to set the videoType.
-                        negotiateVideoType.sendAcceptanceOfVideoType(localHasSelectedVideoType);
-                        removeMessageInVideoWindow(scope, elem);
-                    }
-                    else {
-                        if (remoteSignalingStatus.videoType === 'hdVideo') {
-                            showRequestForHdVideo(scope, elem);
-                        }
-                        else if (remoteSignalingStatus.videoType === 'asciiVideo') {
-                            // by default, we do not ask for permission to switch to ascii video mode. If a remote user requests
-                            // a switch to asciiVideo, then we will tear down the peer connection, and will transmit ascii video in
-                            // both directions.
-                            scope.videoSignalingObject.localHasSelectedVideoType = 'asciiVideo';
-                            // By design remote immediately begins sending asciiVideo once they have requested it.
-                            scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
-                            removeMessageInVideoWindow(scope, elem);
-                        }
-                        else {
-                            $log.log('Error: unknown remoteSignalingStatus.videoType: ' + remoteSignalingStatus.videoType);
-                        }
-                    }
-                }
-                    
-                else if (remoteSignalingStatus.settingsType === 'denyVideoType') {
-                    message = 'Remote user has denied your request to exchange ' + remoteSignalingStatus.videoType;
-                    showMessageInVideoWindow(scope, elem, message);
-                    scope.videoSignalingObject.remoteResponseToLocalRequest = 'waitingForResponse'; // reset to default state
-                }
-                
-                else if (remoteSignalingStatus.settingsType === 'acceptVideoType') {
-                    // remote user has sent an acceptance of the requested videoType
-
-                    // ensure that the videoType that the remote user has accepted matches the value that has been
-                    // selected by the local user.
-                    if (remoteSignalingStatus.videoType === localHasSelectedVideoType) {
-
-
-                        if (localHasSelectedVideoType === 'hdVideo') {
-                            message = 'Remote user has accepted your request to transmit ' + remoteSignalingStatus.videoType +
+                    case 'remoteUserHasAcceptedYourRequestToTransmit':
+                        message = 'Remote user has accepted your request to transmit ' + remoteSignalingStatus.videoType +
                                 ' . Please wait a moment for the new video format to begin transmission.';
-                            // Setup the hdVideo to be transmitted via peer-to-peer transmission.
-                            callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
-                            showMessageInVideoWindow(scope, elem, message);
-                        }
-
-                        else if (localHasSelectedVideoType === 'asciiVideo') {
-                            // remote agreed to send asciiVideo, and by design will have started to send it immediately at
-                            // the same time that it has send the 'acceptVideoType' response. Therefore, we can
-                            // set the value on remoteIsSendingVideoType to 'asciiVideo' now.
-
-                            scope.videoSignalingObject.remoteIsSendingVideoType = 'asciiVideo';
-                            removeMessageInVideoWindow(scope, elem);
-                        }
-
-                    } else {
-                        message = 'It appears that you have requested to use ' + localHasSelectedVideoType +
-                            ' but the remote user has accepted ' + remoteSignalingStatus.videoType +
-                            '. We were unable to change the video format. Please try again.';
-                        $log.error('videoType mismatch.');
                         showMessageInVideoWindow(scope, elem, message);
+                        break;
 
-                    }
+                    case 'conflictingVideoTypes':
+                        message = 'It appears that you have requested to use ' + localHasSelectedVideoType +
+                                                    ' but the remote user has accepted ' + remoteSignalingStatus.videoType +
+                                                    '. We were unable to change the video format. Please try again.';
+                        showMessageInVideoWindow(scope, elem, message);
+                        break;
+
+                    case null:
+                        removeMessageInVideoWindow(scope, elem);
+                        break;
+
+                    default:
+                        $log.error('Unknown videoWindowSignalingMessage value: ' + newValue);
                 }
             });
         }

@@ -3,7 +3,7 @@ var videoApp = angular.module('videoApp', [
 
     // proprietary services
     'lxServerConstants.services', 'lxCheckCompatibility.services',
-    'lxModalSupport.services', 'lxVideoApp.services',
+    'lxModalSupport.services', 'lxVideoApp.services', 'lxVideoSettingsNegotiation.services',
 
     // proprietary directives
     'lxAccessSystemResources.directives',

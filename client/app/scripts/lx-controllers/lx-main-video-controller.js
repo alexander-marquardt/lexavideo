@@ -78,4 +78,10 @@ angular.module('videoApp')
 
         $scope.myUsername = serverConstantsService.myUsername;
         $scope.debugBuildEnabled = serverConstantsService.debugBuildEnabled;
-});
+    })
+    .controller('lxVideoNegotiationCtrl', function ($scope, lxVideoSettingsNegotiationService) {
+        // This controller is used for wrapping around the lxVideoSettingsNegotiationDirective which may appear
+        // in several locations. By wrapping these invocations, we allow common code that is used by multiple
+        // copies of the directive to be easily invoked only a single time.
+        lxVideoSettingsNegotiationService.watchForVideoSettingsChanges ($scope);
+    });
