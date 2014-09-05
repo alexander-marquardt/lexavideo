@@ -118,7 +118,7 @@ def handle_message(room, user, message):
       logging.info('Room ' + room_key + ' has state ' + str(room))
       
     if message_type == 'videoSettings':
-      logging.info(repr(message_payload))
+      logging.info('***** videoSettings message received: ' + repr(message_payload))
       
        
     if other_user and room.has_user(other_user):

@@ -44,6 +44,11 @@ angular.module('videoApp')
             // localHasSelectedVideoType this reflects the value of the video selection button that is currently selected
             localHasSelectedVideoType : null,  // 'null, 'ASCII Video', 'HD Video'
 
+            // This variable is used for determining if the local user has set the localHasSelectedVideoType in response
+            // to their own request, or if they set it in response to a remote request.
+            localHasAgreedToRemoteRequestForVideoType : null,  // 'null, 'ASCII Video', 'HD Video'
+
+
             // localIsSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
             // the video transmission has started (ie. when peerService.addLocalVideoStream is executed)
             // However, in the special case that the user has set 'localHasSelectedVideoType' to ascii, then we immediately
