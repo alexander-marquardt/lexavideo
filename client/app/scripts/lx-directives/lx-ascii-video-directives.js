@@ -14,7 +14,7 @@ var asciiVideoDirectives = angular.module('lxAsciiVideo.directives', []);
 
 
 
-asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeout, $interval, $log, streamService,
+asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interval, $log, streamService,
                                                                          messageService, serverConstantsService,
                                                                          globalVarsService) {
 
@@ -104,11 +104,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
                 $asciiDrawingTextElement.html(asciiString);
                 var compressedString = LZString.compressToUTF16(asciiString);
                 // send the compressed string to the remote user (through the server)
-
-                // use $timeout to ensure that $apply is called after the current digest cycle.
-                $timeout(function() {
-                    messageService.sendMessage('videoStream', {streamType: 'asciiVideo', compressedVideoString: compressedString});
-                });
+                messageService.sendMessage('videoStream', {streamType: 'asciiVideo', compressedVideoString: compressedString});
             }
         });
     };
@@ -145,19 +141,19 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($timeou
 
                 if (streamService.localStream) {
                     getImageFromVideo(); // get the image without waiting for the first interval's delay
-                    frameInterval = $interval(function() {
+                    frameInterval = setInterval(function() {
                         getImageFromVideo();
                     }, Math.round(1000 / canvasOptions.fps));
                 } else {
-                    getStreamTimeout = $timeout(getAsciiVideoFromLocalStream, 200);
+                    getStreamTimeout = setTimeout(getAsciiVideoFromLocalStream, 200);
                 }
             }
 
 
             
             function cancelLocalAsciiVideoTimers() {
-                $interval.cancel(frameInterval);
-                $timeout.cancel(getStreamTimeout);
+                clearInterval(frameInterval);
+                clearTimeout(getStreamTimeout);
             }
             
             function sendAsciiVideoFromAppropriateWindow() {
