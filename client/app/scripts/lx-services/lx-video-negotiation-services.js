@@ -73,6 +73,14 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
 
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
 
+                // Monitor localHasSelectedVideoType for changes, and if it changes then initiate an exchange with the remote
+                // peer to star to exchange the newly selected video type.
+                // Note: since we may set the localHasSelectedVideoType value upon accepting a remote request to change the
+                // video type, this watch may also be executed for clients that did not explicitly press the button to change
+                // the current video type. This may require some attention in the case that a client that has received a request
+                // and sent an acceptance of a particular video type, may also then send a duplicate request for that same
+                // video type. This duplicate request is harmless and should be ignored by the recipient.
+
                 if (newVideoType === 'HD Video') {
                     scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
                     self.negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
@@ -138,10 +146,14 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                             // clear the user feedback messages since we are now sending and receiving ascii video.
                             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
 
+                            // show the user a message indicating what is happening, while the system is transitioning over to ascii video
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
+
                         }
                         else {
                             $log.log('Error: unknown remoteSignalingStatus.videoType: ' + remoteSignalingStatus.videoType);
                         }
+
                     }
                 }
 
