@@ -132,7 +132,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                             // if the remote user has requested HD Video, then we will prompt the local user to see if
                             // they agree to transmit HD video. This prompting is triggered by the change in
                             // videoSignalingStatusForUserFeedback and is handled in the directive code.
-                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + 'HD Video';
                         }
                         else if (remoteSignalingStatus.videoType === 'ASCII Video') {
                             // by default, we do not ask for permission to switch to ascii video mode. If a remote user requests
@@ -145,10 +145,6 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
 
                             // clear the user feedback messages since we are now sending and receiving ascii video.
                             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
-
-                            // show the user a message indicating what is happening, while the system is transitioning over to ascii video
-                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
-
                         }
                         else {
                             $log.log('Error: unknown remoteSignalingStatus.videoType: ' + remoteSignalingStatus.videoType);

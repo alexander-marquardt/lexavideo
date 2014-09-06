@@ -99,11 +99,6 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                         showRequestForHdVideo(scope, elem);
                         break;
 
-                    case 'remoteHasRequestedVideoType: ' + 'ASCII Video':
-                        message = 'Remote user has requested ' + 'ASCII Video' + '. Please wait a moment.';
-                        showMessageInVideoWindow(scope, elem, message);
-                        break;
-
                     case 'waitingForRemoteToAcceptVideoType: ' + 'HD Video':
                         message = 'We are waiting for remote user to accept your request to exchange ' + 'HD Video';
                         showMessageInVideoWindow(scope, elem, message);
