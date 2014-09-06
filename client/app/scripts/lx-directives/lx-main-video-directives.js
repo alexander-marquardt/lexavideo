@@ -75,9 +75,9 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                                               globalVarsService, serverConstantsService,
                                               webRtcSessionService, userNotificationService,
                                               adapterService, channelService, turnService,
-                                              callService, mediaService, messageService) {
+                                              callService, mediaService, messageService, sessionDescriptionService) {
 
-    var sessionStatus; // value set in a $watch function that monitors webRtcSessionService.getSessionStatus
+    var sessionStatus; // value set in a $watch function that monitors sessionDescriptionService.getSessionStatus
 
     return {
         restrict : 'A',
@@ -222,7 +222,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };*/
 
 
-            scope.$watch(webRtcSessionService.getSessionStatus, function(status) {
+            scope.$watch(sessionDescriptionService.getSessionStatus, function(status) {
 
                 // get a local copy of the current session status, and take appropriate action.
                 sessionStatus = status;
