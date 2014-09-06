@@ -610,7 +610,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
                 //this.pc.removeStream(localStream);
             }
         },
-        addLocalVideoStream : function(localStream, localVideoObject, videoSignalingObject) {
+        addLocalVideoStream : function(localStream) {
 
             if (this.pc) {
                 this.pc.addStream(localStream);
@@ -727,7 +727,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
                 if (this.hasAudioOrVideoMediaConstraints) {
                     $log.log('Adding local stream.');
-                    peerService.addLocalVideoStream(streamService.localStream, localVideoObject, videoSignalingObject);
+                    peerService.addLocalVideoStream(streamService.localStream);
                 } else {
                     $log.log('Not sending any stream.');
                 }
