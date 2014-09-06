@@ -388,7 +388,7 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
 
 videoAppServices.service('sessionDescriptionService', function(globalVarsService, codecsService,
                                                                messageService, serverConstantsService,
-                                                               adapterService, $log, $timeout) {
+                                                               adapterService, userNotificationService, $log, $timeout) {
 
     var self = this;
     var sessionStatus = 'initializing'; // "initializing", "waiting", "active", or "done"
@@ -422,7 +422,7 @@ videoAppServices.service('sessionDescriptionService', function(globalVarsService
             pc.setLocalDescription(sessionDescription,
                 onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
             messageService.sendMessage('sdp', sessionDescription);
-        }
+        };
     };
 
     var waitForRemoteVideo = function(peerService, localVideoObject, remoteVideoObject) {
@@ -632,7 +632,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
             } else {
                 $log.log('** Error: no peer connection has been established, and therefore we cannot add the stream to it.');
             }
-        },
+        }
     };
 });
 
