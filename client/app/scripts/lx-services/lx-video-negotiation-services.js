@@ -156,7 +156,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                 else if (remoteSignalingStatus.settingsType === 'denyVideoType') {
 
                     $log.debug('Remote user has denied ' + remoteSignalingStatus.videoType);
-                    scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedRequestToExchangeFormat';
+                    scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedRequestToExchangeFormat: ' + remoteSignalingStatus.videoType;
 
                     // since the request to transmit a new format was denied, change the localHasSelectedVideoType back
                     // to the type that is currently/previously being sent.
@@ -177,7 +177,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                     if (remoteSignalingStatus.videoType === localHasSelectedVideoType) {
 
                         if (remoteSignalingStatus.videoType === 'HD Video') {
-                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteUserHasAcceptedYourRequestToTransmit';
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteUserHasAcceptedYourRequestToTransmit: ' + 'HD Video';
                             // Setup the hdVideo to be transmitted via peer-to-peer transmission.
                             callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                         }

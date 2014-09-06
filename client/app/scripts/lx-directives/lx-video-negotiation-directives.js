@@ -109,12 +109,13 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                         showMessageInVideoWindow(scope, elem, message);
                         break;
 
-                    case 'remoteHasDeniedRequestToExchangeFormat':
+                    case 'remoteHasDeniedRequestToExchangeFormat: ' + 'ASCII Video':
+                    case 'remoteHasDeniedRequestToExchangeFormat: ' + 'HD Video':
                         message = 'Remote user has denied your request to exchange ' + remoteSignalingStatus.videoType;
                         showMessageInVideoWindow(scope, elem, message);
                         break;
 
-                    case 'remoteUserHasAcceptedYourRequestToTransmit':
+                    case 'remoteUserHasAcceptedYourRequestToTransmit: ' + 'HD Video':
                         message = 'Remote user has accepted your request to transmit ' + remoteSignalingStatus.videoType +
                                 ' . Please wait a moment for the new video format to begin transmission.';
                         showMessageInVideoWindow(scope, elem, message);
