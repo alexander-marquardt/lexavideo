@@ -388,7 +388,9 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
 
 videoAppServices.service('sessionDescriptionService', function(globalVarsService, codecsService,
                                                                messageService, serverConstantsService,
-                                                               adapterService, userNotificationService, $log, $timeout) {
+                                                               adapterService, userNotificationService,
+                                                               peerService,
+                                                               $log, $timeout) {
 
     var self = this;
     var sessionStatus = 'initializing'; // "initializing", "waiting", "active", or "done"
@@ -425,7 +427,7 @@ videoAppServices.service('sessionDescriptionService', function(globalVarsService
         };
     };
 
-    var waitForRemoteVideo = function(peerService, localVideoObject, remoteVideoObject) {
+    var waitForRemoteVideo = function(localVideoObject, remoteVideoObject) {
         var innerWaitForRemoteVideo = function() {
 
             var videoTracks = peerService.remoteStream.getVideoTracks();
@@ -448,27 +450,27 @@ videoAppServices.service('sessionDescriptionService', function(globalVarsService
         });
     };
 
-    this.doAnswer = function(pc) {
+    this.doAnswer = function() {
         $log.log('Sending answer to peer.');
-        pc.createAnswer(setLocalAndSendMessage(pc),
+        peerService.pc.createAnswer(setLocalAndSendMessage(peerService.pc),
             onCreateSessionDescriptionError, globalVarsService.sdpConstraints);
     };
 
-    this.doCall = function(pc) {
+    this.doCall = function() {
         var constraints = mergeConstraints(serverConstantsService.offerConstraints, globalVarsService.sdpConstraints);
         $log.log('Sending offer to peer, with constraints: \n' +
             '  \'' + JSON.stringify(constraints) + '\'.');
-        pc.createOffer(setLocalAndSendMessage(pc),
+        peerService.pc.createOffer(setLocalAndSendMessage(peerService.pc),
             onCreateSessionDescriptionError, constraints);
     };
 
-    this.setRemote = function(peerService, message, localVideoObject, remoteVideoObject) {
+    this.setRemote = function(message, localVideoObject, remoteVideoObject) {
         var onSetRemoteDescriptionSuccess = function(){
             $log.log('Set remote session description success.');
             // By now all addstream events for the setRemoteDescription have fired.
             // So we can know if the peer is sending any stream or is only receiving.
             if (peerService.remoteStream) {
-                waitForRemoteVideo(peerService, localVideoObject, remoteVideoObject);
+                waitForRemoteVideo(localVideoObject, remoteVideoObject);
             } else {
                 $log.log('Not receiving any stream.');
                 self.transitionSessionStatus('active');
@@ -531,11 +533,11 @@ videoAppServices.factory('webRtcSessionService', function($log, $window, $rootSc
             }
 
             if (message.type === 'offer') {
-                sessionDescriptionService.setRemote(peerService, message, localVideoObject, remoteVideoObject);
-                sessionDescriptionService.doAnswer(peerService.pc);
+                sessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject);
+                sessionDescriptionService.doAnswer();
 
             } else if (message.type === 'answer') {
-                sessionDescriptionService.setRemote(peerService, message, localVideoObject, remoteVideoObject);
+                sessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject);
             } else if (message.type === 'candidate') {
                 var candidate = new adapterService.RTCIceCandidate({sdpMLineIndex: message.label,
                     candidate: message.candidate});
@@ -550,7 +552,7 @@ videoAppServices.factory('webRtcSessionService', function($log, $window, $rootSc
 });
 
 videoAppServices.factory('peerService', function($log, userNotificationService,
-                                         iceService, globalVarsService, serverConstantsService, sessionDescriptionService,
+                                         iceService, globalVarsService, serverConstantsService,
                                          adapterService) {
 
 
@@ -732,7 +734,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 webRtcSessionService.started = true;
 
                 if (globalVarsService.rtcInitiator) {
-                    sessionDescriptionService.doCall(peerService.pc);
+                    sessionDescriptionService.doCall();
                 }
                 else {
                     calleeStart(localVideoObject, remoteVideoObject);
