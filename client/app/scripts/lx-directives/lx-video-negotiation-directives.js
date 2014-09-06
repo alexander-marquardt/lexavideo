@@ -54,7 +54,6 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                     message = 'We are now setting up the communications for transmitting HD video';
                     showMessageInVideoWindow(scope, elem, message);
                     scope.videoSignalingObject.localHasSelectedVideoType = 'HD Video';
-                    scope.videoSignalingObject.localHasAgreedToRemoteRequestForVideoType = 'HD Video';
 
                     // once callService has made a successful connection (onRemoteStreamAdded callback is executed),
                     // then localIsSendingVideoType will be updated
@@ -68,17 +67,11 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                 lxVideoSettingsNegotiationService.negotiateVideoType.sendDenyOfVideoType(newVideoType);
                 $animate.addClass(elem, 'ng-hide');
 
-                // the following line is necessary in order trigger the getVideoSignalingStatusForUserFeedback watcher
-                // if the user denies the remote request, and then receives the same request again in the future.
-                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
-
                 // Set the remoteSignalingStatus properties to null, in case the remote user tries to make the same request again.
                 // Note: if we do not reset these values , then future requests that are the same as the most recent request
                 // will not trigger execution in the watch function.
                 scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType = null;
                 scope.videoSignalingObject.remoteVideoSignalingStatus.videoType = null;
-
-                scope.videoSignalingObject.localHasAgreedToRemoteRequestForVideoType = null;
             });
         });
     };
