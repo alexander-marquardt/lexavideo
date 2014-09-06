@@ -427,7 +427,7 @@ videoAppServices.service('sessionDescriptionService', function(globalVarsService
 
     var waitForRemoteVideo = function(peerService, localVideoObject, remoteVideoObject) {
         var innerWaitForRemoteVideo = function() {
-            // Call the getVideoTracks method via adapter.js.
+
             var videoTracks = peerService.remoteStream.getVideoTracks();
             if (videoTracks.length === 0 || remoteVideoObject.remoteVideoElem.currentTime > 0) {
                 self.transitionSessionStatus('active');
@@ -773,7 +773,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
 
         setVideoMute : function(localVideoObject, newIsMutedValue) {
-            // Call the getVideoTracks method via adapter.js.
+
             var i;
             var videoTracks = streamService.localStream.getVideoTracks();
 
