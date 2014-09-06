@@ -158,7 +158,6 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                     // Note: if we do not reset these values , then future requests that are the same as the most recent request
                     // will not trigger execution in the watch function.
                     remoteSignalingStatus.settingsType = null;
-                    remoteSignalingStatus.videoType = null;
                 }
 
                 else if (remoteSignalingStatus.settingsType === 'acceptVideoType') {
@@ -176,8 +175,8 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                         }
 
                         else if (remoteSignalingStatus.videoType === 'ASCII Video') {
-                            // remote agreed to send asciiVideo, and by design will have started to send it immediately at
-                            // the same time that it has sent the 'acceptVideoType' response. Therefore, we can
+                            // remote agreed to send asciiVideo, and by design remote browser will have started to send
+                            // it immediately at the same time that it has sent the 'acceptVideoType' response. Therefore, we can
                             // set the value on remoteIsSendingVideoType to 'ASCII Video' now.
                             scope.videoSignalingObject.remoteIsSendingVideoType = 'ASCII Video';
                             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
