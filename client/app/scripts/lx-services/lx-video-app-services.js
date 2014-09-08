@@ -112,54 +112,59 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
             $rootScope.$apply(function() {
                                 //$log.log('S->C: ' + message.data);
                 var messageObject = JSON.parse(message.data);
-                if (messageObject.messageType === 'sdp') {
-                    var sdpObject = messageObject.messagePayload;
-                    // Since the turn response is async and also GAE might disorder the
-                    // Message delivery due to possible datastore query at server side,
-                    // So callee needs to cache messages before peerConnection is created.
-                    if (!globalVarsService.rtcInitiator && !webRtcSessionService.started) {
-                        if (sdpObject.type === 'offer') {
-                            // Add offer to the beginning of msgQueue, since we can't handle
-                            // Early candidates before offer at present.
-                            channelMessageService.unshift(sdpObject);
-                            // Callee creates PeerConnection
-                            // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
-                            // On the other hand, caller is the person who calls the callee, and is currently the second
-                            // person to join the chatroom.
-                            webRtcSessionService.signalingReady = true;
-                            $log.debug('webRtcSessionService.signalingReady = true');
 
-                            // We may have been waiting for singalingReady to be true to begin the peer-to-peer video
-                            // call (as is the case if this user is not the rtcInitiator).
-                            // If this is the case, then we can now try to start the peer-to-peer transmission.
-                            if (videoSignalingObject.localHasSelectedVideoType === 'HD Video') {
-                                // We only transmit video if the local user has authorized it as indicated by this if statement.
-                                callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                switch (messageObject.messageType) {
+                    case 'sdp':
+                        var sdpObject = messageObject.messagePayload;
+                        // Since the turn response is async and also GAE might disorder the
+                        // Message delivery due to possible datastore query at server side,
+                        // So callee needs to cache messages before peerConnection is created.
+                        if (!globalVarsService.rtcInitiator && !webRtcSessionService.started) {
+                            if (sdpObject.type === 'offer') {
+                                // Add offer to the beginning of msgQueue, since we can't handle
+                                // Early candidates before offer at present.
+                                channelMessageService.unshift(sdpObject);
+                                // Callee creates PeerConnection
+                                // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
+                                // On the other hand, caller is the person who calls the callee, and is currently the second
+                                // person to join the chatroom.
+                                webRtcSessionService.signalingReady = true;
+                                $log.debug('webRtcSessionService.signalingReady = true');
+
+                                // We may have been waiting for singalingReady to be true to begin the peer-to-peer video
+                                // call (as is the case if this user is not the rtcInitiator).
+                                // If this is the case, then we can now try to start the peer-to-peer transmission.
+                                if (videoSignalingObject.localHasSelectedVideoType === 'HD Video') {
+                                    // We only transmit video if the local user has authorized it as indicated by this if statement.
+                                    callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                                }
+                            } else {
+                                channelMessageService.push(sdpObject);
                             }
                         } else {
-                            channelMessageService.push(sdpObject);
+                            webRtcSessionService.processSignalingMessage(sdpObject, localVideoObject, remoteVideoObject);
                         }
-                    } else {
-                        webRtcSessionService.processSignalingMessage(sdpObject, localVideoObject, remoteVideoObject);
-                    }
-                }
-                else if (messageObject.messageType === 'videoStream') {
-                    if (messageObject.messagePayload.streamType === 'ASCII Video') {
-                        self.asciiVideoObject.videoFrameUpdated = true;
-                        self.asciiVideoObject.compressedVideoFrame = messageObject.messagePayload.compressedVideoString;
-                    }
-                    else {
-                        $log.log('Error: unknown video type received: ' + messageObject.messagePayload.streamType);
-                    }
-                }
-                else if (messageObject.messageType === 'videoSettings') {
-                    // message received that indicates a modification to the current video transmission configuration
+                        break;
+                    
+                    case 'videoStream':
+                        if (messageObject.messagePayload.streamType === 'ASCII Video') {
+                            self.asciiVideoObject.videoFrameUpdated = true;
+                            self.asciiVideoObject.compressedVideoFrame = messageObject.messagePayload.compressedVideoString;
+                        }
+                        else {
+                            $log.log('Error: unknown video type received: ' + messageObject.messagePayload.streamType);
+                        }
+                        break;
 
-                    videoSignalingObject.remoteVideoSignalingStatus.settingsType = messageObject.messagePayload.settingsType;
-                    videoSignalingObject.remoteVideoSignalingStatus.videoType = messageObject.messagePayload.videoType;
-                }
-                else {
-                    $log.log('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
+                    case 'videoSettings':
+                        // message received that indicates a modification to the current video transmission configuration
+
+                        videoSignalingObject.remoteVideoSignalingStatus.settingsType = messageObject.messagePayload.settingsType;
+                        videoSignalingObject.remoteVideoSignalingStatus.videoType = messageObject.messagePayload.videoType;
+                        break;
+
+                    default:
+                        $log.log('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
                 }
             });
 
