@@ -25,7 +25,7 @@ class Room(db.Model):
         return self.key().id_or_name() + '/' + user        
         
     def delete_saved_messages(self, client_id):
-        messages = models.get_saved_messages(client_id)
+        messages = models.Message.get_saved_messages(client_id)
         for message in messages:
             message.delete()
             logging.info('Deleted the saved message for ' + client_id)        

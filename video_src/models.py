@@ -11,6 +11,6 @@ class Message(db.Model):
     client_id = db.StringProperty()
     msg = db.TextProperty()
 
-
-def get_saved_messages(client_id):
-    return Message.gql("WHERE client_id = :id", id=client_id)
+    @classmethod
+    def get_saved_messages(cls, client_id):
+        return cls.gql("WHERE client_id = :id", id=client_id)

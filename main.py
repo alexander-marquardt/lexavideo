@@ -147,7 +147,7 @@ def handle_message(room, user, message):
 
 
 def send_saved_messages(client_id):
-    messages = models.get_saved_messages(client_id)
+    messages = models.Message.get_saved_messages(client_id)
     for message in messages:
         channel.send_message(client_id, message.msg)
         logging.info('Delivered saved message to ' + client_id)
