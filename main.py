@@ -20,7 +20,7 @@ import threading
 from google.appengine.api import channel
 from google.appengine.ext import db
 
-from video_src import models, http_helpers, status_reporting
+from video_src import models, room_module, http_helpers, status_reporting
 
 
 # We "hack" the directory that jinja looks for the template files so that it is always pointing to
@@ -85,7 +85,7 @@ def make_pc_config(stun_server, turn_server, ts_pwd, ice_transports):
     return config
 
 def create_channel(room, user, duration_minutes):
-    client_id = make_client_id(room, user)
+    client_id = room.make_client_id(user)
     return channel.create_channel(client_id, duration_minutes)
 
 def make_loopback_answer(message):
@@ -112,7 +112,7 @@ def handle_message(room, user, message):
         if message_type == 'sdp' and message_payload['type'] == 'bye':
             # This would remove the other_user in loopback test too.
             # So check its availability before forwarding Bye message.
-            remove_user(room, user)
+            room.remove_user(user)
             logging.info('User ' + user + ' quit from room ' + room_key)
             logging.info('Room ' + room_key + ' has state ' + str(room))
 
@@ -142,42 +142,12 @@ def handle_message(room, user, message):
         status_reporting.log_call_stack_and_traceback(logging.error)
         
     
-def make_client_id(room, user):
-    return room.key().id_or_name() + '/' + user        
-    
-def delete_saved_messages(room, client_id):
-    messages = get_saved_messages(client_id)
-    for message in messages:
-        message.delete()
-        logging.info('Deleted the saved message for ' + client_id)        
-        
-        
-def remove_user(room, user):
-    delete_saved_messages(room, make_client_id(room, user))
-    if user == room.user2:
-        room.user2 = None
-        room.user2_connected = False
-    if user == room.user1:
-        if room.user2:
-            room.user1 = room.user2
-            room.user1_connected = room.user2_connected
-            room.user2 = None
-            room.user2_connected = False
-        else:
-            room.user1 = None
-            room.user1_connected = False
-    if room.get_occupancy() > 0:
-        room.put()
-    else:
-        room.delete()
 
 
-def get_saved_messages(client_id):
-    return models.Message.gql("WHERE client_id = :id", id=client_id)
 
 
 def send_saved_messages(client_id):
-    messages = get_saved_messages(client_id)
+    messages = models.get_saved_messages(client_id)
     for message in messages:
         channel.send_message(client_id, message.msg)
         logging.info('Delivered saved message to ' + client_id)
@@ -185,7 +155,7 @@ def send_saved_messages(client_id):
         
 
 def on_message(room, user, message):
-    client_id = make_client_id(room, user)
+    client_id = room.make_client_id(user)
     if room.is_connected(user):
         channel.send_message(client_id, message)
         logging.info('Delivered message to user ' + user)
@@ -276,7 +246,7 @@ def write_response(response, response_type, target_page, params):
 
 @db.transactional
 def connect_user_to_room(room_key, active_user):
-    room = models.Room.get_by_key_name(room_key)
+    room = room_module.Room.get_by_key_name(room_key)
     # Check if room has active_user in case that disconnect message comes before
     # connect message with unknown reason, observed with local AppEngine SDK.
     if room and room.has_user(active_user):
@@ -287,16 +257,19 @@ def connect_user_to_room(room_key, active_user):
         # send a message to the other_user that the active_user has joined or is already in the room
         other_user = room.get_other_user(active_user);
         if (other_user):
+            # If there is another user in the room, then 
             active_user_message_obj = {'messageType' : 'roomStatus', 
                            'messagePayload': {
-                               'statusMessage' : 'You have joined the room %s with %s' % (room.key(), other_user)
+                               'roomName' : room.key().id_or_name(),
+                               'roomCreator' : u'You have joined the room %s with %s' % (room.key().id_or_name(), other_user)
+                               
                            }    
                            }
             on_message(room, active_user, json.dumps(active_user_message_obj))
             
             other_user_message_obj = {'messageType' : 'roomStatus', 
                            'messagePayload': {
-                               'statusMessage' : 'User %s has joined you in room %s.' % (active_user, room.key())
+                               'statusMessage' : u'User %s has joined you in room %s.' % (active_user, room.key().id_or_name())
                            }    
                            }
             on_message(room, other_user, json.dumps(other_user_message_obj))
@@ -305,7 +278,7 @@ def connect_user_to_room(room_key, active_user):
         else:
             message_obj = {'messageType' : 'roomStatus', 
              'messagePayload': {
-                 'statusMessage' : 'You are currently the only participant in this room %s' % room.key()
+                 'statusMessage' : u'You are currently the only participant in this room %s' % room.key().id_or_name(),
              }    
              }        
             on_message(room, active_user, json.dumps(message_obj))        
@@ -325,7 +298,7 @@ class ConnectPage(webapp2.RequestHandler):
         with LOCK:
             room = connect_user_to_room(room_key, user)
             if room and room.has_user(user):
-                send_saved_messages(make_client_id(room, user))
+                send_saved_messages(room.make_client_id(user))
 
 class DisconnectPage(webapp2.RequestHandler):
     def post(self):
@@ -339,7 +312,7 @@ class DisconnectPage(webapp2.RequestHandler):
             #room = Room.get_by_key_name(room_key)
             #if room and room.has_user(user):
                 #other_user = room.get_other_user(user)
-                #remove_user(room, user)
+                #room.remove_user(user)
                 #logging.info('User ' + user + ' removed from room ' + room_key)
                 #logging.info('Room ' + room_key + ' has state ' + str(room))
                 #if other_user and other_user != user:
@@ -360,7 +333,7 @@ class MessagePage(webapp2.RequestHandler):
         room_key = self.request.get('r')
         user = self.request.get('u')
         with LOCK:
-            room = models.Room.get_by_key_name(room_key)
+            room = room_module.Room.get_by_key_name(room_key)
             if room:
                 handle_message(room, user, message)
             else:
@@ -514,11 +487,11 @@ class MainPage(webapp2.RequestHandler):
         user = None
         initiator = 0
         with LOCK:
-            room = models.Room.get_by_key_name(room_key)
+            room = room_module.Room.get_by_key_name(room_key)
             if not room and debug != "full":
                 # New room.
                 user = generate_random(8)
-                room = models.Room(key_name = room_key)
+                room = room_module.Room(key_name = room_key)
                 room.add_user(user)
                 if debug != 'loopback':
                     initiator = 0

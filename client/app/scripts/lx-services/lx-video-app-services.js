@@ -110,11 +110,12 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
         return function(message) {
 
             $rootScope.$apply(function() {
-                                //$log.log('S->C: ' + message.data);
                 var messageObject = JSON.parse(message.data);
 
                 switch (messageObject.messageType) {
                     case 'sdp':
+                        //$log.log('S->C: ' + message.data);
+
                         var sdpObject = messageObject.messagePayload;
                         // Since the turn response is async and also GAE might disorder the
                         // Message delivery due to possible datastore query at server side,
@@ -145,7 +146,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                             webRtcSessionService.processSignalingMessage(sdpObject, localVideoObject, remoteVideoObject);
                         }
                         break;
-                    
+
                     case 'videoStream':
                         if (messageObject.messagePayload.streamType === 'ASCII Video') {
                             self.asciiVideoObject.videoFrameUpdated = true;
@@ -161,6 +162,11 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
 
                         videoSignalingObject.remoteVideoSignalingStatus.settingsType = messageObject.messagePayload.settingsType;
                         videoSignalingObject.remoteVideoSignalingStatus.videoType = messageObject.messagePayload.videoType;
+                        break;
+
+                    case 'roomStatus':
+                        // status of who is currently in the room.
+                        $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
                         break;
 
                     default:

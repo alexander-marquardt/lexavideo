@@ -56,8 +56,6 @@ angular.module('videoApp')
 
             // if the local user requests the remote user to change the video type, we track the remote response
             // so that we can give the local user feedback.
-
-
             remoteVideoSignalingStatus : {
                 settingsType: null,  // will be set to null, 'requestVideoType', 'acceptVideoType', or 'denyVideoType'
                 videoType: null      // null, 'ASCII Video', 'HD Video'
@@ -74,7 +72,12 @@ angular.module('videoApp')
             // videoSignalingStatusForUserFeedback indicates what message/status the user should be shown about
             // the current video type requested/allowed/waiting for/etc.
             videoSignalingStatusForUserFeedback : null
+        };
 
+        $scope.roomOccupancyObject = {
+            roomCreator : null,
+            roomJoiner : null,
+            roomName : null
         };
 
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {

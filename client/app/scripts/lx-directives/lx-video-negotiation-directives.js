@@ -78,7 +78,7 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
 
     var getVideoSignalingStatusForUserFeedback = function(scope) {
         return function(){
-            $log.debug('videoSignalingStatusForUserFeedback is: ' + scope.videoSignalingObject.videoSignalingStatusForUserFeedback);
+            //$log.debug('videoSignalingStatusForUserFeedback is: ' + scope.videoSignalingObject.videoSignalingStatusForUserFeedback);
             return scope.videoSignalingObject.videoSignalingStatusForUserFeedback;
         };
     };
