@@ -1,14 +1,14 @@
 
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 from video_src import models
 
 # Room will contain data about which users are currently communicating with each other.
-class Room(db.Model):
+class Room(ndb.Model):
     """All the data we store for a room"""
-    user1 = db.StringProperty()
-    user2 = db.StringProperty()
-    user1_connected = db.BooleanProperty(default=False)
-    user2_connected = db.BooleanProperty(default=False)
+    user1 = ndb.StringProperty()
+    user2 = ndb.StringProperty()
+    user1_connected = ndb.BooleanProperty(default=False)
+    user2_connected = ndb.BooleanProperty(default=False)
 
     def __str__(self):
         result = '['
@@ -22,12 +22,12 @@ class Room(db.Model):
 
 
     def make_client_id(self, user):
-        return self.key().id_or_name() + '/' + user        
+        return self.key.id() + '/' + user        
         
     def delete_saved_messages(self, client_id):
         messages = models.Message.get_saved_messages(client_id)
         for message in messages:
-            message.delete()
+            message.key.delete()
             logging.info('Deleted the saved message for ' + client_id)        
             
             
@@ -48,7 +48,7 @@ class Room(db.Model):
         if self.get_occupancy() > 0:
             self.put()
         else:
-            self.delete()
+            self.key.delete()
 
 
     def get_occupancy(self):
