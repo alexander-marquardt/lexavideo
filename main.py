@@ -461,67 +461,78 @@ class MainPage(webapp2.RequestHandler):
                                                max_value = 1440,
                                                default = 30)
 
-        unittest = self.request.get('unittest')
-        if unittest:
-            # Always create a new room for the unit tests.
-            room_key = generate_random(8)
+        #unittest = self.request.get('unittest')
+        #if unittest:
+            ## Always create a new room for the unit tests.
+            #room_key = generate_random(8)
 
-        if not room_key:
-            room_key = generate_random(8)
-            redirect = '/?r=' + room_key
-            redirect = append_url_arguments(self.request, redirect)
-            self.redirect(redirect)
-            logging.info('Redirecting visitor to base URL to ' + redirect)
-            return
+        #if not room_key:
+            #room_key = generate_random(8)
+            #redirect = '/?r=' + room_key
+            #redirect = append_url_arguments(self.request, redirect)
+            #self.redirect(redirect)
+            #logging.info('Redirecting visitor to base URL to ' + redirect)
+            #return
 
         logging.info('Preparing to add user to room ' + room_key)
         user = None
         initiator = 0
-        with LOCK:
-            room = room_module.Room.get_by_id(room_key)
-            if not room and debug != "full":
-                # New room.
-                user = generate_random(8)
-                room = room_module.Room(id = room_key)
-                room.add_user(user)
-                if debug != 'loopback':
-                    initiator = 0
-                else:
+        
+        if room_key:
+            with LOCK:
+                room = room_module.Room.get_by_id(room_key)
+                if not room and debug != "full":
+                    # New room.
+                    user = generate_random(8)
+                    room = room_module.Room(id = room_key)
+                    room.add_user(user)
+                    if debug != 'loopback':
+                        initiator = 0
+                    else:
+                        room.add_user(user)
+                        initiator = 1
+                elif room and room.get_occupancy() == 1 and debug != 'full':
+                    # 1 occupant.
+                    user = generate_random(8)
                     room.add_user(user)
                     initiator = 1
-            elif room and room.get_occupancy() == 1 and debug != 'full':
-                # 1 occupant.
-                user = generate_random(8)
-                room.add_user(user)
-                initiator = 1
+                else:
+                    # 2 occupants (full).
+                    params = {
+                        'error': 'full',
+                        'error_messages': ['The room is full.'],
+                        'room_key': room_key
+                    }
+                    write_response(self.response, response_type, 'full.html', params)
+                    logging.info('Room ' + room_key + ' is full')
+                    return
+    
+            logging.info('User ' + user + ' added to room ' + room_key)
+            logging.info('Room ' + room_key + ' has state ' + str(room))
+
+            if turn_server == 'false':
+                turn_server = None
+                turn_url = ''
             else:
-                # 2 occupants (full).
-                params = {
-                    'error': 'full',
-                    'error_messages': ['The room is full.'],
-                    'room_key': room_key
-                }
-                write_response(self.response, response_type, 'full.html', params)
-                logging.info('Room ' + room_key + ' is full')
-                return
+                turn_url = 'https://computeengineondemand.appspot.com/'
+                turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
 
-        logging.info('User ' + user + ' added to room ' + room_key)
-        logging.info('Room ' + room_key + ' has state ' + str(room))
-
-        if turn_server == 'false':
-            turn_server = None
+                
+            room_link = base_url + '?r=' + room_key
+            room_link = append_url_arguments(self.request, room_link)
+            token = create_channel(room, user, token_timeout)
+            pc_config = make_pc_config(stun_server, turn_server, ts_pwd, ice_transports)
+            pc_constraints = make_pc_constraints(dtls, dscp, ipv6, opusfec)
+            offer_constraints = make_offer_constraints()
+            media_constraints = make_media_stream_constraints(audio, video)
+        else :
+            token = ''
             turn_url = ''
-        else:
-            turn_url = 'https://computeengineondemand.appspot.com/'
-            turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
-
-        room_link = base_url + '?r=' + room_key
-        room_link = append_url_arguments(self.request, room_link)
-        token = create_channel(room, user, token_timeout)
-        pc_config = make_pc_config(stun_server, turn_server, ts_pwd, ice_transports)
-        pc_constraints = make_pc_constraints(dtls, dscp, ipv6, opusfec)
-        offer_constraints = make_offer_constraints()
-        media_constraints = make_media_stream_constraints(audio, video)
+            room_link = ''
+            pc_config = ''
+            pc_constraints = ''
+            offer_constraints = ''  
+            media_constraints = ''
 
         params = {
             'error_messages': error_messages,
@@ -551,10 +562,10 @@ class MainPage(webapp2.RequestHandler):
 
         }
 
-        if unittest:
-            target_page = 'test/test_' + unittest + '.html'
-        else:
-            target_page = 'index.html'
+        #if unittest:
+            #target_page = 'test/test_' + unittest + '.html'
+        #else:
+        target_page = 'index.html'
         write_response(self.response, response_type, target_page, params)
 
 
