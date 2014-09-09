@@ -571,19 +571,19 @@ class MainPage(webapp2.RequestHandler):
 
 class GetView(webapp2.RequestHandler):
     """ Render whatever template the client has requested """
-    def get(self):   
+    def get(self, current_view):   
         response_type = 'jinja'
         params = {}
-        target_page = '/lx-ng-views/lx-video-chat-view/lx-video-chat-main.html'
+        target_page = '/lx-ng-views/' + current_view
         write_response(self.response, response_type, target_page, params)
 
 
 app = webapp2.WSGIApplication([
-    ('/lx-ng-views/lx-video-chat-view/lx-video-chat-main.html', GetView),
-    ('/', MainPage),
-    ('/message', MessagePage),
-    ('/_ah/channel/connected/', ConnectPage),
-    ('/_ah/channel/disconnected/', DisconnectPage)
+    webapp2.Route(r'/lx-ng-views/<current_view:.+>', GetView),
+    (r'/', MainPage),
+    (r'/message', MessagePage),
+    (r'/_ah/channel/connected/', ConnectPage),
+    (r'/_ah/channel/disconnected/', DisconnectPage)
     ], debug=True)
 
 
