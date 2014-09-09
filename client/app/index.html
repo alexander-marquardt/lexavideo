@@ -24,9 +24,18 @@
     {% include "lx-jinja-templates/lx-favicons.html" %}
 
   </head>
+
+
   <body ng-app="videoApp">
 
-    {% include "lx-jinja-templates/lx-video-chat-view/lx-video-chat-main.html" %}
+    <div ng-controller="lxRoutesCtrl">
+
+
+        <!-- ng-view will call in the appropriate template for the current URL location -->
+        <div ng-view></div>
+
+   </div>
+
 
     <script type="text/javascript" src="/_ah/channel/jsapi"></script>
 

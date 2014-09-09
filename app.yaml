@@ -26,6 +26,7 @@ handlers:
   
 - url: /bower_components
   static_dir: client/app/bower_components
+  
 
 ##############################
 # Start of Favicons
