@@ -21,7 +21,7 @@
 
     <link rel="canonical" href="{{ room_link }}"/>
 
-    {% include "lx-jinja-templates/lx-favicons.html" %}
+    {% include "lx-templates/lx-jinja-templates/lx-favicons.html" %}
 
   </head>
 
@@ -76,7 +76,7 @@
     <!-- endbuild -->
 
     <!-- Note: the following file must be included after angular is included since it contains an angular module. -->
-    {% include "lx-jinja-templates/lx-video-app-server-constants.html" %}
+    {% include "lx-templates/lx-jinja-templates/lx-video-app-server-constants.html" %}
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <!-- Load the polyfill to switch-hit between Chrome and Firefox -->

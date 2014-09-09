@@ -574,12 +574,12 @@ class GetView(webapp2.RequestHandler):
     def get(self, current_view):   
         response_type = 'jinja'
         params = {}
-        target_page = '/lx-ng-views/' + current_view
+        target_page = current_view
         write_response(self.response, response_type, target_page, params)
 
 
 app = webapp2.WSGIApplication([
-    webapp2.Route(r'/lx-ng-views/<current_view:.+>', GetView),
+    webapp2.Route(r'<current_view:/lx-templates/.+>', GetView),
     (r'/', MainPage),
     (r'/message', MessagePage),
     (r'/_ah/channel/connected/', ConnectPage),

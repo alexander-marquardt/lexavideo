@@ -10,15 +10,15 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
 
         $routeProvider.when("/:roomName", {
-            templateUrl: "/lx-ng-views/lx-video-chat-view/lx-video-chat-main.html"
+            templateUrl: "/lx-templates/lx-video-chat-main.html"
         });
 
         $routeProvider.when("/", {
-            templateUrl: "/lx-ng-views/lx-video-chat-view/lx-video-chat-main.html"
+            templateUrl: "/lx-templates/lx-video-chat-main.html"
         });
 
         $routeProvider.otherwise({
-            templateUrl: "/lx-ng-views/lx-video-chat-view/lx-video-chat-main.html"
+            templateUrl: "/lx-templates/lx-welcome.html"
         });
     });
 

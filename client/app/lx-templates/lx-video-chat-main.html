@@ -1,5 +1,5 @@
 
-{% include "lx-jinja-templates/lx-video-chat-template-cache.html" %}
+{% include "lx-templates/lx-jinja-templates/lx-video-chat-template-cache.html" %}
 
 {% raw %}
 
@@ -18,6 +18,7 @@
     <div ng-controller="lxMainVideoCtrl">
 
         <div ng-if="debugBuildEnabled">
+            Room Name: {{ roomName }}
             User Name: {{ myUsername }}
         </div>
 
