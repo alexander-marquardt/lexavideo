@@ -21,12 +21,12 @@
 
     <link rel="canonical" href="{{ room_link }}"/>
 
-    {% include "lx-jinja-templates/favicons.html" %}
+    {% include "lx-jinja-templates/lx-favicons.html" %}
 
   </head>
   <body ng-app="videoApp">
 
-    {% include "lx-jinja-templates/main.html" %}
+    {% include "lx-jinja-templates/lx-video-chat-view/lx-video-chat-main.html" %}
 
     <script type="text/javascript" src="/_ah/channel/jsapi"></script>
 
@@ -66,7 +66,8 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    {% include "lx-jinja-templates/video-app-server-constants.html" %}
+    <!-- Note: the following file must be included after angular is included since it contains an angular module. -->
+    {% include "lx-jinja-templates/lx-video-app-server-constants.html" %}
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
@@ -76,7 +77,7 @@
     <script src="scripts/vendor/adapter.js"></script>
 
     <script src="scripts/lx-main.js"></script>
-    
+
     <script src="scripts/lx-routes/lx-routes.js"></script>
 
     <script src="scripts/lx-services/lx-check-compatibility-services.js"></script>
