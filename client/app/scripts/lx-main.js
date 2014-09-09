@@ -11,7 +11,7 @@ var videoApp = angular.module('videoApp', [
     'lxAsciiVideo.directives', 'lxVideoTypeNegotiation.directives',
 
     // angular services
-    'ngAnimate', 'ui.bootstrap']);
+    'ngAnimate', 'ui.bootstrap', 'ngRoute']);
 
 videoApp.run(function() {
 
