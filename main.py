@@ -254,39 +254,30 @@ def connect_user_to_room(room_key, active_user):
         logging.info('User ' + active_user + ' connected to room ' + room_key)
         logging.info('Room ' + room_key + ' has state ' + str(room))
         
-        # send a message to the other_user that the active_user has joined or is already in the room
         other_user = room.get_other_user(active_user);
-        if (other_user):
-            # If there is another user in the room, then 
-            active_user_message_obj = {'messageType' : 'roomStatus', 
-                           'messagePayload': {
-                               'roomName' : room.key.id(),
-                               'roomCreator' : u'You have joined the room %s with %s' % (room.key.id(), other_user)
-                               
-                           }    
-                           }
-            on_message(room, active_user, json.dumps(active_user_message_obj))
-            
-            other_user_message_obj = {'messageType' : 'roomStatus', 
-                           'messagePayload': {
-                               'statusMessage' : u'User %s has joined you in room %s.' % (active_user, room.key.id())
-                           }    
-                           }
-            on_message(room, other_user, json.dumps(other_user_message_obj))
-            
+        
+        message_obj = {'messageType' : 'roomStatus', 
+                       'messagePayload': {
+                           'roomName' : room.key.id(),
+                           'roomCreator' : room.room_creator,
+                           'roomJoiner'  : room.room_joiner,
+                       }    
+                       }
     
-        else:
-            message_obj = {'messageType' : 'roomStatus', 
-             'messagePayload': {
-                 'statusMessage' : u'You are currently the only participant in this room %s' % room.key.id(),
-             }    
-             }        
-            on_message(room, active_user, json.dumps(message_obj))        
-        
-        
+        if (other_user):
+            # If there is another user already in the room, then the other user should be the creator of the room. 
+            # By design, if the creator of a room leaves the room, it should be vacated.
+            assert(room.user_is_room_creator(other_user))
+            # send a message to the other user (the room creator) that someone has just joined the room
+            logging.debug('Sending message to other_user: %s' % repr(message_obj))
+            on_message(room, other_user, json.dumps(message_obj))  
+            
+        # Send a message to the active_user, indicating the "roomStatus"
+        logging.debug('Sending message to active_user: %s' % repr(message_obj))
+        on_message(room, active_user, json.dumps(message_obj))        
         
     else:
-        logging.warning('Unexpected Connect Message to room ' + room_key +'by user ' + active_user)
+        logging.warning('Unexpected Connect Message to room ' + room_key + 'by user ' + active_user)
 
         
     return room
