@@ -276,3 +276,14 @@ videoAppDirectives.directive('lxMiniVideoTemplateDirective', function($log) {
     };
 });
 
+videoAppDirectives.directive('lxCheckForErrorsAndRedirectIfNecessary', function($location) {
+    return {
+        restrict : 'A',
+        link: function(scope) {
+            if (scope.errorMessage) {
+                // errorMessage is set by welcomeViewErrCtrl
+                $location.path('/err/'+ scope.errorMessage);
+            }
+        }
+    }
+});

@@ -480,8 +480,8 @@ class GetVideoParams(webapp2.RequestHandler):
                     logging.warning('Room ' + room_name + ' is full')
                     
                     params = {
-                        'error_message': 'roomIsFull',
-                        'room_name': room_name
+                        'errorMessage': 'room-is-full',
+                        'roomName': room_name
                     }
                     response_type = 'json'
                     target_page = None                    

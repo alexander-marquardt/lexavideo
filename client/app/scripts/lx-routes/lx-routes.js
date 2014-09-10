@@ -3,17 +3,23 @@
 
 var lxMainRoutes = angular.module('lxMain.routes', ['ngRoute']);
 
-var getServerConstantsCtrl = lxMainRoutes.controller('getServerConstantsCtrl', function($scope, serverConstants,
+var roomViewCtrl = lxMainRoutes.controller('roomViewCtrl', function($scope, serverConstants,
                         serverConstantsService, updateGlobalVarsWithServerConstantsService) {
     // this controller gets called after the serverConstants promise is resolved. serverConstants are then
-    // injected into this controller and contain the data returned from the $http call in getServerConstantsCtrl.resolve
-    angular.extend(serverConstantsService, serverConstants);
-    serverConstantsService.constantsAreLoaded.resolve();
-    updateGlobalVarsWithServerConstantsService.doUpdate();
-
+    // injected into this controller and contain the data returned from the $http call in roomViewCtrl.resolve
+    if (serverConstants.errorMessage) {
+        // if there is an error, then it should trigger a redirect back to the welcome page.
+        // This will be checked in lxCheckForErrorsAndRedirectIfNecessary.
+        $scope.errorMessage = serverConstants.errorMessage;
+    }
+    else {
+        angular.extend(serverConstantsService, serverConstants);
+        serverConstantsService.constantsAreLoaded.resolve();
+        updateGlobalVarsWithServerConstantsService.doUpdate();
+    }
 });
 
-getServerConstantsCtrl.resolve = {
+roomViewCtrl.resolve = {
 
     // the following
     serverConstants: function($q, $http, $route, $log) {
@@ -37,6 +43,11 @@ getServerConstantsCtrl.resolve = {
     }
 };
 
+lxMainRoutes.controller('welcomeViewErrCtrl', function($scope, $routeParams) {
+   $scope.errorMessage = $routeParams.errorMessage;
+});
+
+
 lxMainRoutes.config(function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 
@@ -44,13 +55,17 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
         templateUrl: '/_jx/lx-templates/lx-welcome.html'
     });
+    
+    $routeProvider.when('/err/:errorMessage', {
+        templateUrl: '/_jx/lx-templates/lx-welcome.html',
+        controller: 'welcomeViewErrCtrl'
+    });
 
     $routeProvider.when('/:roomName', {
         templateUrl: '/_jx/lx-templates/lx-video-chat-main.html',
-        controller: 'getServerConstantsCtrl',
-        resolve: getServerConstantsCtrl.resolve
+        controller: 'roomViewCtrl',
+        resolve: roomViewCtrl.resolve
     });
-
 
 
     $routeProvider.otherwise({
