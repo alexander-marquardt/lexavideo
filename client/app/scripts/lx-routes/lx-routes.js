@@ -17,9 +17,7 @@ waitForConstantsCtrl.resolve = {
                 deferred.resolve(data)
             })
             .error(function(data){
-                //actually you'd want deffered.reject(data) here
-                //but to show what would happen on success..
-                deferred.resolve("error value");
+                deferred.reject('Unable to load data from /json/get_video_params');
             });
 
         return deferred.promise;
@@ -41,5 +39,13 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.otherwise({
         templateUrl: '/lx-templates/lx-welcome.html'
+    });
+});
+
+
+lxMainRoutes.controller('appCtrl', function($rootScope, $log) {
+    // handle case when the promise is not resolved
+    $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
+        $log.error('Error: $routeChangeError failure in lxMain.routes. ' + rejection)
     });
 });

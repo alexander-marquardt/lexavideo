@@ -1,19 +1,19 @@
 <!doctype html>
 <html class="no-js">
-  <head>
+<head>
     <meta charset="utf-8">
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add user-scalable=no to disallow zooming -->
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css styles/vendor.css -->
-    
+
     <!-- The following line is used by wiredep (Wire dependencies) -->
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- the following line is used by grunt-usemin to detect which css it should combine this block into -->    
+    <!-- the following line is used by grunt-usemin to detect which css it should combine this block into -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/lx-main.css" />
     <!-- endbuild -->
@@ -23,84 +23,87 @@
 
     {% include "lx-templates/lx-jinja-templates/lx-favicons.html" %}
 
-  </head>
+</head>
 
 
-  <body ng-app="videoApp">
+<body ng-app="videoApp">
 
+<div ng-controller="appCtrl">
     <!-- ng-view will call in the appropriate template for the current URL location -->
     <div ng-view></div>
+</div>
 
 
-    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+
+<script type="text/javascript" src="/_ah/channel/jsapi"></script>
 
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
+</script>
 
-    <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.min.js"></script>
-    <![endif]-->
+<!--[if lt IE 9]>
+<script src="bower_components/es5-shim/es5-shim.js"></script>
+<script src="bower_components/json3/lib/json3.min.js"></script>
+<![endif]-->
 
-    <!-- build:js scripts/vendor.js -->
-
-
-    <!-- TODO - remove any of the following javascript files that are not explicity required for functionality that
-         is being used by the app. In particular, many of these are duplicated by angular-bootstrap.js
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/json3/lib/json3.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
+<!-- build:js scripts/vendor.js -->
 
 
-    <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
-    <script src="scripts/vendor/lz-string-1.3.3.js"></script>
-    <script src="scripts/vendor/viewport-size.js"></script>
-    <script src="scripts/vendor/jquery.browser.js"></script>
-    <script src="scripts/vendor/adapter.js"></script>
+<!-- TODO - remove any of the following javascript files that are not explicity required for functionality that
+     is being used by the app. In particular, many of these are duplicated by angular-bootstrap.js
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/json3/lib/json3.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
 
-    <script src="scripts/lx-main.js"></script>
 
-    <script src="scripts/lx-routes/lx-routes.js"></script>
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<!-- Load the polyfill to switch-hit between Chrome and Firefox -->
+<script src="scripts/vendor/lz-string-1.3.3.js"></script>
+<script src="scripts/vendor/viewport-size.js"></script>
+<script src="scripts/vendor/jquery.browser.js"></script>
+<script src="scripts/vendor/adapter.js"></script>
 
-    <script src="scripts/lx-services/lx-server-constants-services.js"></script>
-    <script src="scripts/lx-services/lx-check-compatibility-services.js"></script>
-    <script src="scripts/lx-services/lx-modal-support-services.js"></script>
-    <script src="scripts/lx-services/lx-video-app-services.js"></script>
-    <script src="scripts/lx-services/lx-video-negotiation-services.js"></script>
+<script src="scripts/lx-main.js"></script>
 
-    <script src="scripts/lx-directives/lx-access-system-resource-directives.js"></script>
-    <script src="scripts/lx-directives/lx-check-compatibility-directives.js"></script>
-    <script src="scripts/lx-directives/lx-main-video-directives.js"></script>
-    <script src="scripts/lx-directives/lx-ascii-video-directives.js"></script>
-    <script src="scripts/lx-directives/lx-video-negotiation-directives.js"></script>
+<script src="scripts/lx-routes/lx-routes.js"></script>
 
-    <script src="scripts/lx-controllers/lx-main-video-controller.js"></script>
+<script src="scripts/lx-services/lx-server-constants-services.js"></script>
+<script src="scripts/lx-services/lx-check-compatibility-services.js"></script>
+<script src="scripts/lx-services/lx-modal-support-services.js"></script>
+<script src="scripts/lx-services/lx-video-app-services.js"></script>
+<script src="scripts/lx-services/lx-video-negotiation-services.js"></script>
 
-    <!-- endbuild -->
+<script src="scripts/lx-directives/lx-access-system-resource-directives.js"></script>
+<script src="scripts/lx-directives/lx-check-compatibility-directives.js"></script>
+<script src="scripts/lx-directives/lx-main-video-directives.js"></script>
+<script src="scripts/lx-directives/lx-ascii-video-directives.js"></script>
+<script src="scripts/lx-directives/lx-video-negotiation-directives.js"></script>
 
-    {% if ENABLE_LIVE_RELOAD %}
-    <script src="//localhost:35729/livereload.js"></script>
-    {% endif %}
+<script src="scripts/lx-controllers/lx-main-video-controller.js"></script>
+
+<!-- endbuild -->
+
+{% if ENABLE_LIVE_RELOAD %}
+<script src="//localhost:35729/livereload.js"></script>
+{% endif %}
 
 </body>
 </html>
