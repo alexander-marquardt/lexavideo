@@ -4,7 +4,6 @@ var videoAppServices = angular.module('lxVideoApp.services', []);
 
 
 // define externally defined variables so that jshint doesn't give warnings
-/* global $ */
 /* global alert */
 /* global goog */
 
@@ -177,7 +176,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
             if (channel.token_) {
                 channelServiceSupport.socket = channel.open(handler(this, localVideoObject, remoteVideoObject, videoSignalingObject));
             } else {
-                $log.error('Channel requires a channelToken for it to open correctly.')
+                $log.error('Channel requires a channelToken for it to open correctly.');
             }
         },
         asciiVideoObject : {

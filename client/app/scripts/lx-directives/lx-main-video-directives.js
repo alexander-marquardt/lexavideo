@@ -90,8 +90,6 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             (function() {
 
-                var i;
-
                 // Send BYE on refreshing(or leaving) a demo page
                 // to ensure the room is cleaned for next session.
                 $window.onbeforeunload = function() {
