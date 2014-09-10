@@ -333,7 +333,7 @@ class MessagePage(webapp2.RequestHandler):
 
 class GetVideoParams(webapp2.RequestHandler):
     """The main UI page, renders the 'index.html' template."""
-    def get(self):
+    def get(self, room_name):
         """Renders the main page. When this page is shown, we create a new
         channel to push asynchronous updates to the client."""
 
@@ -343,7 +343,6 @@ class GetVideoParams(webapp2.RequestHandler):
         # Get the base url without arguments.
         base_url = self.request.path_url
         user_agent = self.request.headers['User-Agent']
-        room_key = sanitize(self.request.get('r'))
         response_type = self.request.get('t')
         stun_server = self.request.get('ss')
         if not stun_server:
@@ -467,13 +466,8 @@ class GetVideoParams(webapp2.RequestHandler):
             ## Always create a new room for the unit tests.
             #room_key = generate_random(8)
 
-        #if not room_key:
-            #room_key = generate_random(8)
-            #redirect = '/?r=' + room_key
-            #redirect = append_url_arguments(self.request, redirect)
-            #self.redirect(redirect)
-            #logging.info('Redirecting visitor to base URL to ' + redirect)
-            #return
+        room_key = room_name
+
 
         logging.info('Preparing to add user to room ' + room_key)
         user = None
@@ -587,7 +581,7 @@ class MainPage(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     webapp2.Route(r'/_jx<current_view:/lx-templates/.+>', GetView),
-    (r'/json/get_video_params', GetVideoParams),
+    webapp2.Route(r'/json/get_video_params/<room_name:.+>', GetVideoParams),
     (r'/message', MessagePage),
     (r'/_ah/channel/connected/', ConnectPage),
     (r'/_ah/channel/disconnected/', DisconnectPage),
