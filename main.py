@@ -104,7 +104,7 @@ def handle_message(room, user, message):
         message_obj = json.loads(message)
         message = message.decode("utf-8")
         other_user = room.get_other_user(user)
-        room_key = room.key.id()
+        room_name = room.key.id()
 
         message_type = message_obj['messageType']
         message_payload = message_obj['messagePayload']
@@ -113,8 +113,8 @@ def handle_message(room, user, message):
             # This would remove the other_user in loopback test too.
             # So check its availability before forwarding Bye message.
             room.remove_user(user)
-            logging.info('User ' + user + ' quit from room ' + room_key)
-            logging.info('Room ' + room_key + ' has state ' + str(room))
+            logging.info('User ' + user + ' quit from room ' + room_name)
+            logging.info('Room ' + room_name + ' has state ' + str(room))
 
         if message_type == 'videoSettings':
             logging.info('***** videoSettings message received: ' + repr(message_payload))
@@ -133,7 +133,7 @@ def handle_message(room, user, message):
             on_message(room, other_user, message)
 
         else:
-            logging.warning('Cannot deliver message from user: %s to other_user: %s since they are not in the room: %s' % (user, other_user, room_key))
+            logging.warning('Cannot deliver message from user: %s to other_user: %s since they are not in the room: %s' % (user, other_user, room_name))
             # For unittest
             #on_message(room, user, message)
             pass
@@ -245,14 +245,14 @@ def write_response(response, response_type, target_page, params):
 
 
 @db.transactional
-def connect_user_to_room(room_key, active_user):
-    room = room_module.Room.get_by_id(room_key)
+def connect_user_to_room(room_name, active_user):
+    room = room_module.Room.get_by_id(room_name)
     # Check if room has active_user in case that disconnect message comes before
     # connect message with unknown reason, observed with local AppEngine SDK.
     if room and room.has_user(active_user):
         room.set_connected(active_user)
-        logging.info('User ' + active_user + ' connected to room ' + room_key)
-        logging.info('Room ' + room_key + ' has state ' + str(room))
+        logging.info('User ' + active_user + ' connected to room ' + room_name)
+        logging.info('Room ' + room_name + ' has state ' + str(room))
         
         other_user = room.get_other_user(active_user);
         
@@ -277,7 +277,7 @@ def connect_user_to_room(room_key, active_user):
         on_message(room, active_user, json.dumps(message_obj))        
         
     else:
-        logging.warning('Unexpected Connect Message to room ' + room_key + 'by user ' + active_user)
+        logging.warning('Unexpected Connect Message to room ' + room_name + 'by user ' + active_user)
 
         
     return room
@@ -285,9 +285,9 @@ def connect_user_to_room(room_key, active_user):
 class ConnectPage(webapp2.RequestHandler):
     def post(self):
         key = self.request.get('from')
-        room_key, user = key.split('/')
+        room_name, user = key.split('/')
         with LOCK:
-            room = connect_user_to_room(room_key, user)
+            room = connect_user_to_room(room_name, user)
             if room and room.has_user(user):
                 send_saved_messages(room.make_client_id(user))
 
@@ -298,14 +298,14 @@ class DisconnectPage(webapp2.RequestHandler):
         pass    
 
         #key = self.request.get('from')
-        #room_key, user = key.split('/')
+        #room_name, user = key.split('/')
         #with LOCK:
-            #room = Room.get_by_id(room_key)
+            #room = Room.get_by_id(room_name)
             #if room and room.has_user(user):
                 #other_user = room.get_other_user(user)
                 #room.remove_user(user)
-                #logging.info('User ' + user + ' removed from room ' + room_key)
-                #logging.info('Room ' + room_key + ' has state ' + str(room))
+                #logging.info('User ' + user + ' removed from room ' + room_name)
+                #logging.info('Room ' + room_name + ' has state ' + str(room))
                 #if other_user and other_user != user:
 
                     #message_object = {"messageType": "sdp",
@@ -315,20 +315,20 @@ class DisconnectPage(webapp2.RequestHandler):
                     #channel.send_message(make_client_id(room, other_user),
                                                                 #json.dumps(message_object))
                     #logging.info('Sent BYE to ' + other_user)
-        #logging.warning('User ' + user + ' disconnected from room ' + room_key)
+        #logging.warning('User ' + user + ' disconnected from room ' + room_name)
 
 
 class MessagePage(webapp2.RequestHandler):
     def post(self):
         message = self.request.body
-        room_key = self.request.get('r')
+        room_name = self.request.get('r')
         user = self.request.get('u')
         with LOCK:
-            room = room_module.Room.get_by_id(room_key)
+            room = room_module.Room.get_by_id(room_name)
             if room:
                 handle_message(room, user, message)
             else:
-                logging.warning('Unknown room ' + room_key)
+                logging.warning('Unknown room ' + room_name)
 
 
 class GetVideoParams(webapp2.RequestHandler):
@@ -446,24 +446,24 @@ class GetVideoParams(webapp2.RequestHandler):
         #unittest = self.request.get('unittest')
         #if unittest:
             ## Always create a new room for the unit tests.
-            #room_key = generate_random(8)
+            #room_name = generate_random(8)
 
-        room_key = room_name
+        room_name = room_name
 
 
-        logging.info('Preparing to add user to room ' + room_key)
+        logging.info('Preparing to add user to room ' + room_name)
         user = None
         initiator = 0
         
-        if room_key:
+        if room_name:
             with LOCK:
-                room = room_module.Room.get_by_id(room_key)
+                room = room_module.Room.get_by_id(room_name)
                 if not room and debug != "full":
                     # New room.
                     user = generate_random(8)
-                    room = room_module.Room(id = room_key)
+                    room = room_module.Room(id = room_name)
                     room.add_user(user)
-                    logging.info('First user ' + user + ' added to room ' + room_key)
+                    logging.info('First user ' + user + ' added to room ' + room_name)
                     if debug != 'loopback':
                         initiator = 0
                     else:
@@ -473,15 +473,15 @@ class GetVideoParams(webapp2.RequestHandler):
                     # 1 occupant.
                     user = generate_random(8)
                     room.add_user(user)
-                    logging.info('Second user ' + user + ' added to room ' + room_key)                    
+                    logging.info('Second user ' + user + ' added to room ' + room_name)                    
                     initiator = 1
                 else:
                     # 2 occupants (full).
-                    logging.warning('Room ' + room_key + ' is full')
+                    logging.warning('Room ' + room_name + ' is full')
                     
                     params = {
                         'error_message': 'roomIsFull',
-                        'room_key': room_key
+                        'room_name': room_name
                     }
                     response_type = 'json'
                     target_page = None                    
@@ -489,7 +489,7 @@ class GetVideoParams(webapp2.RequestHandler):
                     return
     
             
-            logging.info('Room ' + room_key + ' has state ' + str(room))
+            logging.info('Room ' + room_name + ' has state ' + str(room))
 
             if turn_server == 'false':
                 turn_server = None
@@ -499,7 +499,7 @@ class GetVideoParams(webapp2.RequestHandler):
                 turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
 
                 
-            room_link = base_url + '?r=' + room_key
+            room_link = base_url + '?r=' + room_name
             room_link = append_url_arguments(self.request, room_link)
             token = create_channel(room, user, token_timeout)
 
@@ -518,7 +518,7 @@ class GetVideoParams(webapp2.RequestHandler):
             'errorMessage': error_message,
             'channelToken': token,
             'myUsername': user,
-            'roomKey': room_key,
+            'roomName': room_name,
             'roomLink': room_link,
             'rtcInitiator': initiator,
             'pcConfig': pc_config,

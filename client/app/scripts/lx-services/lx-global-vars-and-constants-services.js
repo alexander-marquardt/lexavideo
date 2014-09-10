@@ -43,7 +43,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             errorMessage : null,
             channelToken : null,
             myUsername : null,
-            roomKey : null,
+            roomName : null,
             roomLink : null,
             rtcInitiator : null,
             pcConfig : null,

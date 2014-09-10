@@ -77,7 +77,7 @@ angular.module('videoApp')
         $scope.roomOccupancyObject = {
             roomCreator : null,
             roomJoiner : null,
-            roomName : null
+            roomName : serverConstantsService.roomName
         };
 
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {

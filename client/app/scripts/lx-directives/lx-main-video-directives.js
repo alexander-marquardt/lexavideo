@@ -91,12 +91,6 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             (function() {
 
                 var i;
-                if (serverConstantsService.errorMessages.length > 0) {
-                    for (i = 0; i < serverConstantsService.errorMessages.length; ++i) {
-                        $window.alert(serverConstantsService.errorMessages[i]);
-                    }
-                    return;
-                }
 
                 // Send BYE on refreshing(or leaving) a demo page
                 // to ensure the room is cleaned for next session.
@@ -106,7 +100,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
 
 
-                $log.log('Initializing; room=' + serverConstantsService.roomKey + '.');
+                $log.log('Initializing; room=' + serverConstantsService.roomName + '.');
 
                 userNotificationService.resetStatus();
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
