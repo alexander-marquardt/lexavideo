@@ -31,18 +31,18 @@ getServerConstantsCtrl.resolve = {
 lxMainRoutes.config(function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 
-    $routeProvider.when('/:roomName', {
-        templateUrl: '/lx-templates/lx-video-chat-main.html'
+    $routeProvider.when('/', {
+        templateUrl: '/_jx/lx-templates/lx-welcome.html'
     });
 
-    $routeProvider.when('/', {
-        templateUrl: '/lx-templates/lx-video-chat-main.html',
+    $routeProvider.when('/:roomName', {
+        templateUrl: '/_jx/lx-templates/lx-video-chat-main.html',
         controller: 'getServerConstantsCtrl',
         resolve: getServerConstantsCtrl.resolve
     });
 
     $routeProvider.otherwise({
-        templateUrl: '/lx-templates/lx-welcome.html'
+        templateUrl: '/_jx/lx-templates/lx-welcome.html'
     });
 });
 

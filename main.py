@@ -586,11 +586,12 @@ class MainPage(webapp2.RequestHandler):
         
 
 app = webapp2.WSGIApplication([
-    webapp2.Route(r'<current_view:/lx-templates/.+>', GetView),
+    webapp2.Route(r'/_jx<current_view:/lx-templates/.+>', GetView),
     (r'/json/get_video_params', GetVideoParams),
     (r'/message', MessagePage),
     (r'/_ah/channel/connected/', ConnectPage),
     (r'/_ah/channel/disconnected/', DisconnectPage),
+    (r'/.*', MainPage),
     (r'/', MainPage),
     ], debug=True)
 
