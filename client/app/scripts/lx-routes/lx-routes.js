@@ -4,20 +4,21 @@
 
 var lxMainRoutes = angular.module('lxMain.routes', ['ngRoute']);
 
-var waitForConstantsCtrl = lxMainRoutes.controller('waitForConstantsCtrl', function($scope, parameters) {
+var getServerConstantsCtrl = lxMainRoutes.controller('getServerConstantsCtrl', function($scope, parameters) {
     $scope.parameters = parameters;
 });
 
-waitForConstantsCtrl.resolve = {
+getServerConstantsCtrl.resolve = {
 
     parameters: function($q, $http) {
         var deferred = $q.defer();
-        $http({method: 'GET', url: '/json/get_video_params'})
+        var url = '/json/get_video_params';
+        $http({method: 'GET', url: url})
             .success(function(data) {
                 deferred.resolve(data)
             })
             .error(function(data){
-                deferred.reject('Unable to load data from /json/get_video_params');
+                deferred.reject('Unable to load data from ' + url);
             });
 
         return deferred.promise;
@@ -33,8 +34,8 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/', {
         templateUrl: '/lx-templates/lx-video-chat-main.html',
-        controller: 'waitForConstantsCtrl',
-        resolve: waitForConstantsCtrl.resolve
+        controller: 'getServerConstantsCtrl',
+        resolve: getServerConstantsCtrl.resolve
     });
 
     $routeProvider.otherwise({
