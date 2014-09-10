@@ -20,33 +20,6 @@ var videoAppServices = angular.module('lxVideoApp.services', []);
 
 
 
-videoAppServices.factory('globalVarsService', function (serverConstantsService) {
-            /* This services provides access to variables that are used by multiple services, and that don't
-               fit easily into any of the currently defined services. These variables may be accessed and
-               modified directly from anywhere in the code.
-             */
-    var screenXsMax = $('#id-dummy-xs-div').width();
-    return {
-
-        // The second person to join a chatroom will be the rtcInitiator. It is done in this manner because
-        // the first to join will be ready and waiting before the second person, and therefore it makes sense
-        // to have the second person initiate the call to to first person.
-        rtcInitiator : serverConstantsService.rtcInitiator,
-        pcConfig : serverConstantsService.pcConfig,
-
-        // Set up audio and video regardless of what devices are present.
-        sdpConstraints : {'mandatory': {
-            'OfferToReceiveAudio': true,
-            'OfferToReceiveVideo': true }
-        },
-
-        // the following value should match the value defined in bootstrap for $screen-xs-max. This will be
-        // used for enabling and disabling the remote/local video windows on small devices for which only one
-        // or the other will be shown.
-        screenXsMax : screenXsMax
-    };
-});
-
 
 videoAppServices.service('adapterService', function () {
     /* simple wrapper for global functions contained in adapter.js. This will make it

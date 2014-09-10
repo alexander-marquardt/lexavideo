@@ -4,10 +4,13 @@
 
 var lxMainRoutes = angular.module('lxMain.routes', ['ngRoute']);
 
-var getServerConstantsCtrl = lxMainRoutes.controller('getServerConstantsCtrl', function($scope, serverConstants, serverConstantsService) {
+var getServerConstantsCtrl = lxMainRoutes.controller('getServerConstantsCtrl', function($scope, serverConstants,
+                        serverConstantsService, updateGlobalVarsWithServerConstantsService) {
     // this controller gets called after the serverConstants promise is resolved. serverConstants are then
     // injected into this controller and contain the data returned from the $http call in getServerConstantsCtrl.resolve
     angular.extend(serverConstantsService, serverConstants);
+    updateGlobalVarsWithServerConstantsService.doUpdate();
+
 });
 
 getServerConstantsCtrl.resolve = {
