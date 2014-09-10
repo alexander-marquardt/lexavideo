@@ -1,6 +1,5 @@
 
 'use strict';
-/* global $ */
 
 var lxMainRoutes = angular.module('lxMain.routes', ['ngRoute']);
 
@@ -9,6 +8,7 @@ var getServerConstantsCtrl = lxMainRoutes.controller('getServerConstantsCtrl', f
     // this controller gets called after the serverConstants promise is resolved. serverConstants are then
     // injected into this controller and contain the data returned from the $http call in getServerConstantsCtrl.resolve
     angular.extend(serverConstantsService, serverConstants);
+    serverConstantsService.constantsAreLoaded.resolve();
     updateGlobalVarsWithServerConstantsService.doUpdate();
 
 });
@@ -16,9 +16,9 @@ var getServerConstantsCtrl = lxMainRoutes.controller('getServerConstantsCtrl', f
 getServerConstantsCtrl.resolve = {
 
     // the following
-    serverConstants: function($q, $http, $route) {
+    serverConstants: function($q, $http, $route, $log) {
         var deferred = $q.defer();
-        var roomName = $route.current.params['roomName'];
+        var roomName = $route.current.params.roomName;
         var url = '/json/get_video_params';
         if (roomName) {
             url = url + '/' + roomName;
@@ -27,9 +27,9 @@ getServerConstantsCtrl.resolve = {
         }
         $http({method: 'GET', url: url})
             .success(function(data) {
-                deferred.resolve(data)
+                deferred.resolve(data);
             })
-            .error(function(data){
+            .error(function(){
                 deferred.reject('Unable to load data from ' + url);
             });
 
@@ -62,6 +62,6 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 lxMainRoutes.controller('appCtrl', function($rootScope, $log) {
     // handle case when the promise is not resolved
     $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
-        $log.error('Error: $routeChangeError failure in lxMain.routes. ' + rejection)
+        $log.error('Error: $routeChangeError failure in lxMain.routes. ' + rejection);
     });
 });

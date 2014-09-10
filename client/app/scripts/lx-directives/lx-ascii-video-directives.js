@@ -18,20 +18,22 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                                                                          messageService, serverConstantsService,
                                                                          globalVarsService) {
 
-    var fps;
-    if (serverConstantsService.debugBuildEnabled) {
-        // when using the development server, sending too much information over the channel API seems to saturate
-        // the server -- slow down the fps for develpment
-        fps = 0.5;
-    } else {
-        fps = 2;
-    }
-
     var canvasOptions = {
         width : 160,
         height : 120,
-        fps: fps
+        fps: 3
     };
+
+    serverConstantsService.constantsAreLoaded.promise.then(function() {
+        // the above promise makes sure that serverConstantsService.debugBuildEnabled is only evaluated after
+        // it has been loaded -- until then, continue to use the default value.
+        if (serverConstantsService.debugBuildEnabled) {
+            // when using the development server, sending too much information over the channel API seems to saturate
+            // the server -- slow down the fps for develpment
+            canvasOptions.fps = 0.5;
+        }
+    });
+
 
     function asciiFromCanvas(canvas, options) {
         // Original code by Jacob Seidelin (http://www.nihilogic.dk/labs/jsascii/)

@@ -337,9 +337,10 @@ class GetVideoParams(webapp2.RequestHandler):
         """Renders the main page. When this page is shown, we create a new
         channel to push asynchronous updates to the client."""
 
+
         # Append strings to this list to have them thrown up in message boxes. This
         # will also cause the app to fail.
-        error_messages = []
+        error_message = None;
         # Get the base url without arguments.
         base_url = self.request.path_url
         user_agent = self.request.headers['User-Agent']
@@ -381,30 +382,11 @@ class GetVideoParams(webapp2.RequestHandler):
         audio = self.request.get('audio')
         video = self.request.get('video')
 
-        # The hd parameter is a shorthand to determine whether to open the
-        # camera at 720p. If no value is provided, use a platform-specific default.
-        # When defaulting to HD, use optional constraints, in case the camera
-        # doesn't actually support HD modes.
-        hd = self.request.get('hd').lower()
-        if hd and video:
-            message = 'The "hd" parameter has overridden video=' + video
-            logging.error(message)
-            error_messages.append(message)
-        if hd == 'true':
-            video = 'mandatory:minWidth=1280,mandatory:minHeight=720'
-        elif not hd and not video and get_hd_default(user_agent) == 'true':
-            video = 'optional:minWidth=1280,optional:minHeight=720'
-
         # ARM - hack - set video to '' because using the above settings seems to cause firefox to
         # set the local video to a strange aspect ratio that is too tall. This happens only
         # after the non-firefox user leaves a call, and then rejoins it.
         video = ''
 
-        if self.request.get('minre') or self.request.get('maxre'):
-            message = ('The "minre" and "maxre" parameters are no longer supported. '
-                       'Use "video" instead.')
-            logging.error(message)
-            error_messages.append(message)
 
         audio_send_codec = self.request.get('asc', default_value = '')
         if not audio_send_codec:
@@ -498,7 +480,7 @@ class GetVideoParams(webapp2.RequestHandler):
                     logging.warning('Room ' + room_key + ' is full')
                     
                     params = {
-                        'error_messages': ['Room %s is full.' % room_key],
+                        'error_message': 'roomIsFull',
                         'room_key': room_key
                     }
                     response_type = 'json'
@@ -533,7 +515,7 @@ class GetVideoParams(webapp2.RequestHandler):
         media_constraints = make_media_stream_constraints(audio, video)            
 
         params = {
-            'errorMessages': error_messages,
+            'errorMessage': error_message,
             'channelToken': token,
             'myUsername': user,
             'roomKey': room_key,
@@ -556,7 +538,6 @@ class GetVideoParams(webapp2.RequestHandler):
             'includeVrJs': include_vr_js,
             'metaViewport': meta_viewport,
             'debugBuildEnabled' : vidsetup.DEBUG_BUILD,
-            
         }
         
         response_type = 'json'

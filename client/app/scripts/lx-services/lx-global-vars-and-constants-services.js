@@ -33,12 +33,14 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         };
     })
 
-    .factory('serverConstantsService', function() {
+    .factory('serverConstantsService', function($q) {
         /* Provides constant values that are sent from the server to the client when the page is loaded.
          Once these values are set, they should not need to be changed.
          */
+        var deferred = $q.defer();
+
         return {
-            errorMessages : [],
+            errorMessage : null,
             channelToken : null,
             myUsername : null,
             roomKey : null,
@@ -58,7 +60,8 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             stereoscopic : null,
             audioSendCodec : null,
             audioReceiveCodec : null,
-            debugBuildEnabled : null
+            debugBuildEnabled : null,
+            constantsAreLoaded : deferred
         };
     })
 
@@ -69,6 +72,6 @@ angular.module('lxGlobalVarsAndConstants.services', [])
                 globalVarsService.rtcInitiator = serverConstantsService.rtcInitiator;
                 globalVarsService.pcConfig = serverConstantsService.pcConfig;
             }
-        }
-    })
+        };
+    });
 
