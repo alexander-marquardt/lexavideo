@@ -330,7 +330,8 @@ class MessagePage(webapp2.RequestHandler):
             else:
                 logging.warning('Unknown room ' + room_key)
 
-class MainPage(webapp2.RequestHandler):
+
+class GetVideoParams(webapp2.RequestHandler):
     """The main UI page, renders the 'index.html' template."""
     def get(self):
         """Renders the main page. When this page is shown, we create a new
@@ -521,69 +522,76 @@ class MainPage(webapp2.RequestHandler):
             room_link = base_url + '?r=' + room_key
             room_link = append_url_arguments(self.request, room_link)
             token = create_channel(room, user, token_timeout)
-            pc_config = make_pc_config(stun_server, turn_server, ts_pwd, ice_transports)
-            pc_constraints = make_pc_constraints(dtls, dscp, ipv6, opusfec)
-            offer_constraints = make_offer_constraints()
-            media_constraints = make_media_stream_constraints(audio, video)
+
         else :
             token = ''
             turn_url = ''
             room_link = ''
-            pc_config = ''
-            pc_constraints = ''
-            offer_constraints = ''  
-            media_constraints = ''
+
+        
+        pc_config = make_pc_config(stun_server, turn_server, ts_pwd, ice_transports)
+        pc_constraints = make_pc_constraints(dtls, dscp, ipv6, opusfec)
+        offer_constraints = make_offer_constraints()
+        media_constraints = make_media_stream_constraints(audio, video)            
 
         params = {
-            'error_messages': error_messages,
-            'token': token,
-            'me': user,
-            'room_key': room_key,
-            'room_link': room_link,
-            'initiator': initiator,
-            'pc_config': json.dumps(pc_config),
-            'pc_constraints': json.dumps(pc_constraints),
-            'offer_constraints': json.dumps(offer_constraints),
-            'media_constraints': json.dumps(media_constraints),
-            'turn_url': turn_url,
+            'errorMessages': error_messages,
+            'channelToken': token,
+            'myUsername': user,
+            'roomKey': room_key,
+            'roomLink': room_link,
+            'rtcInitiator': initiator,
+            'pcConfig': json.dumps(pc_config),
+            'pcConstraints': json.dumps(pc_constraints),
+            'offerConstraints': json.dumps(offer_constraints),
+            'mediaConstraints': json.dumps(media_constraints),
+            'turnUrl': turn_url,
             'stereo': stereo,
-            'arbr': arbr,
-            'asbr': asbr,
-            'vrbr': vrbr,
-            'vsbr': vsbr,
-            'vsibr': vsibr,
-            'audio_send_codec': audio_send_codec,
-            'audio_receive_codec': audio_receive_codec,
-            'ssr': ssr,
-            'include_vr_js': include_vr_js,
-            'meta_viewport': meta_viewport,
-            'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
-            'DEBUG_BUILD' : vidsetup.DEBUG_BUILD,
-
+            'audioRecvBitrate': arbr,
+            'audioSendBitrate': asbr,
+            'videoRecvBitrate': vrbr,
+            'videoSendBitrate': vsbr,
+            'videoSendInitialBitrate': vsibr,
+            'audioSendCodec': audio_send_codec,
+            'audioReceiveCodec': audio_receive_codec,
+            'stereoscopic': ssr,
+            'includeVrJs': include_vr_js,
+            'metaViewport': meta_viewport,
         }
-
-        #if unittest:
-            #target_page = 'test/test_' + unittest + '.html'
-        #else:
-        target_page = 'index.html'
-        write_response(self.response, response_type, target_page, params)
+        
+        response_type = 'json'
+        target_page = None
+        write_response(self.response, response_type, target_page, params)        
 
 
 class GetView(webapp2.RequestHandler):
     """ Render whatever template the client has requested """
     def get(self, current_view):   
         response_type = 'jinja'
-        params = {}
+        params = {
+            'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
+            'DEBUG_BUILD' : vidsetup.DEBUG_BUILD,
+            }
         target_page = current_view
         write_response(self.response, response_type, target_page, params)
 
 
+class MainPage(webapp2.RequestHandler):
+    """The main UI page, renders the 'index.html' template."""
+    def get(self):
+        target_page = 'index.html'
+        response_type = 'jinja';
+        params = {}
+        write_response(self.response, response_type, target_page, params)        
+        
+
 app = webapp2.WSGIApplication([
     webapp2.Route(r'<current_view:/lx-templates/.+>', GetView),
-    (r'/', MainPage),
+    (r'/json/get_video_params', GetVideoParams),
     (r'/message', MessagePage),
     (r'/_ah/channel/connected/', ConnectPage),
-    (r'/_ah/channel/disconnected/', DisconnectPage)
+    (r'/_ah/channel/disconnected/', DisconnectPage),
+    (r'/', MainPage),
     ], debug=True)
 
 

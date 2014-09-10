@@ -28,13 +28,8 @@
 
   <body ng-app="videoApp">
 
-    <div ng-controller="lxRoutesCtrl">
-
-
-        <!-- ng-view will call in the appropriate template for the current URL location -->
-        <div ng-view></div>
-
-   </div>
+    <!-- ng-view will call in the appropriate template for the current URL location -->
+    <div ng-view></div>
 
 
     <script type="text/javascript" src="/_ah/channel/jsapi"></script>
@@ -75,8 +70,6 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- Note: the following file must be included after angular is included since it contains an angular module. -->
-    {% include "lx-templates/lx-jinja-templates/lx-video-app-server-constants.html" %}
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
@@ -89,6 +82,7 @@
 
     <script src="scripts/lx-routes/lx-routes.js"></script>
 
+    <script src="scripts/lx-services/lx-server-constants-services.js"></script>
     <script src="scripts/lx-services/lx-check-compatibility-services.js"></script>
     <script src="scripts/lx-services/lx-modal-support-services.js"></script>
     <script src="scripts/lx-services/lx-video-app-services.js"></script>

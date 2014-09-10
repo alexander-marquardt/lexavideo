@@ -2,8 +2,6 @@
 var videoApp = angular.module('videoApp', [
 
 
-
-
     // proprietary services
     'lxServerConstants.services', 'lxCheckCompatibility.services',
     'lxModalSupport.services', 'lxVideoApp.services', 'lxVideoSettingsNegotiation.services',
@@ -19,7 +17,7 @@ var videoApp = angular.module('videoApp', [
     'lxMain.routes',
 
     // angular services
-    'ngAnimate', 'ui.bootstrap', 'ngRoute'
+    'ngAnimate', 'ui.bootstrap'
 ]);
 
 videoApp.run(function() {
