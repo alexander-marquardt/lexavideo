@@ -481,6 +481,7 @@ class GetVideoParams(webapp2.RequestHandler):
                     user = generate_random(8)
                     room = room_module.Room(id = room_key)
                     room.add_user(user)
+                    logging.info('First user ' + user + ' added to room ' + room_key)
                     if debug != 'loopback':
                         initiator = 0
                     else:
@@ -490,19 +491,22 @@ class GetVideoParams(webapp2.RequestHandler):
                     # 1 occupant.
                     user = generate_random(8)
                     room.add_user(user)
+                    logging.info('Second user ' + user + ' added to room ' + room_key)                    
                     initiator = 1
                 else:
                     # 2 occupants (full).
+                    logging.warning('Room ' + room_key + ' is full')
+                    
                     params = {
-                        'error': 'full',
-                        'error_messages': ['The room is full.'],
+                        'error_messages': ['Room %s is full.' % room_key],
                         'room_key': room_key
                     }
-                    write_response(self.response, response_type, 'full.html', params)
-                    logging.info('Room ' + room_key + ' is full')
+                    response_type = 'json'
+                    target_page = None                    
+                    write_response(self.response, response_type, target_page, params)
                     return
     
-            logging.info('User ' + user + ' added to room ' + room_key)
+            
             logging.info('Room ' + room_key + ' has state ' + str(room))
 
             if turn_server == 'false':
