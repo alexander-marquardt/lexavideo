@@ -4,13 +4,16 @@
 
 var lxMainRoutes = angular.module('lxMain.routes', ['ngRoute']);
 
-var getServerConstantsCtrl = lxMainRoutes.controller('getServerConstantsCtrl', function($scope, parameters) {
-    $scope.parameters = parameters;
+var getServerConstantsCtrl = lxMainRoutes.controller('getServerConstantsCtrl', function($scope, serverConstants, serverConstantsService) {
+    // this controller gets called after the serverConstants promise is resolved. serverConstants are then
+    // injected into this controller and contain the data returned from the $http call in getServerConstantsCtrl.resolve
+    angular.extend(serverConstantsService, serverConstants);
 });
 
 getServerConstantsCtrl.resolve = {
 
-    parameters: function($q, $http) {
+    // the following
+    serverConstants: function($q, $http) {
         var deferred = $q.defer();
         var url = '/json/get_video_params';
         $http({method: 'GET', url: url})
