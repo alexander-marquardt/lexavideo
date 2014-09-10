@@ -551,6 +551,8 @@ class GetVideoParams(webapp2.RequestHandler):
             'stereoscopic': ssr,
             'includeVrJs': include_vr_js,
             'metaViewport': meta_viewport,
+            'debugBuildEnabled' : vidsetup.DEBUG_BUILD,
+            
         }
         
         response_type = 'json'
@@ -563,8 +565,6 @@ class GetView(webapp2.RequestHandler):
     def get(self, current_view):   
         response_type = 'jinja'
         params = {
-            'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
-            'DEBUG_BUILD' : vidsetup.DEBUG_BUILD,
             }
         target_page = current_view
         write_response(self.response, response_type, target_page, params)
@@ -575,7 +575,9 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         target_page = 'index.html'
         response_type = 'jinja';
-        params = {}
+        params = {
+            'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
+        }
         write_response(self.response, response_type, target_page, params)        
         
 
