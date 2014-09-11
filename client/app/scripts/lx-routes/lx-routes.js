@@ -8,8 +8,6 @@ var lxMainRoutes = angular.module('lxMain.routes', ['ngRoute']);
 lxMainRoutes.controller('roomViewCtrl', function($scope,
                         serverConstantsService, updateGlobalVarsWithServerConstantsService) {
 
-    // In case this function gets called multiple times, clear any old data from server constants.
-
     if (videoConstantsEmbeddedInHtml.errorMessage) {
         // if there is an error, then it should trigger a redirect back to the welcome page.
         // This will be checked in lxCheckForErrorsAndRedirectIfNecessary.

@@ -3,13 +3,18 @@
     var videoConstantsEmbeddedInHtml = {{ serverVideoParamsJson }}
 </script>
 
-{% include "lx-templates/lx-jinja-templates/lx-video-chat-template-cache.html" %}
+<div ng-if="!errorMessage">
+    {% include "lx-templates/lx-jinja-templates/lx-video-chat-template-cache.html" %}
+</div>
 
 {% raw %}
 
-<div lx-check-for-errors-and-redirect-if-necessary></div>
+<div ng-if="errorMessage">
+    <div lx-check-for-errors-and-redirect-if-necessary></div>
+</div>
 
-<div class="container">
+
+<div ng-if="!errorMessage" class="container">
 
     <div class="row" id="id-videochat-logo">
         <div class="col-xs-5">

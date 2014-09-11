@@ -21,18 +21,9 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
     var canvasOptions = {
         width : 160,
         height : 120,
-        fps: 3
+        fps: 3  // this value is over-written for debugging in the link function below.
     };
 
-    serverConstantsService.constantsAreLoaded.promise.then(function() {
-        // the above promise makes sure that serverConstantsService.debugBuildEnabled is only evaluated after
-        // it has been loaded -- until then, continue to use the default value.
-        if (serverConstantsService.debugBuildEnabled) {
-            // when using the development server, sending too much information over the channel API seems to saturate
-            // the server -- slow down the fps for develpment
-            canvasOptions.fps = 0.5;
-        }
-    });
 
 
     function asciiFromCanvas(canvas, options) {
@@ -127,6 +118,13 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
             localCanvas.height = canvasOptions.height;
 
             var localCanvasContext = localCanvas.getContext('2d');
+
+            if (serverConstantsService.debugBuildEnabled) {
+                // when using the development server, sending too much information over the channel API seems to saturate
+                // the server -- slow down the fps for development
+                canvasOptions.fps = 0.5;
+            };
+
 
             var getImageFromVideo = function() {
                 try {
