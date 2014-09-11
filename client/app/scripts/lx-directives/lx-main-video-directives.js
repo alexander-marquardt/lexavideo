@@ -285,5 +285,5 @@ videoAppDirectives.directive('lxCheckForErrorsAndRedirectIfNecessary', function(
                 $location.path('/err/'+ scope.errorMessage);
             }
         }
-    }
+    };
 });

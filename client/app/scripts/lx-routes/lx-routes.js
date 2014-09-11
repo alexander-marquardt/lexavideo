@@ -1,10 +1,14 @@
 
 'use strict';
 
+/* global videoConstantsEmbeddedInHtml */
+
 var lxMainRoutes = angular.module('lxMain.routes', ['ngRoute']);
 
-var roomViewCtrl = lxMainRoutes.controller('roomViewCtrl', function($scope,
+lxMainRoutes.controller('roomViewCtrl', function($scope,
                         serverConstantsService, updateGlobalVarsWithServerConstantsService) {
+
+    // In case this function gets called multiple times, clear any old data from server constants.
 
     if (videoConstantsEmbeddedInHtml.errorMessage) {
         // if there is an error, then it should trigger a redirect back to the welcome page.
@@ -12,8 +16,10 @@ var roomViewCtrl = lxMainRoutes.controller('roomViewCtrl', function($scope,
         $scope.errorMessage = videoConstantsEmbeddedInHtml.errorMessage;
     }
     else {
+        // copy all of the values that were embedded in the html into the serverConstantsService
         angular.extend(serverConstantsService, videoConstantsEmbeddedInHtml);
-        serverConstantsService.constantsAreLoaded.resolve();
+
+        // update the global vars that depend on serverConstantsService
         updateGlobalVarsWithServerConstantsService.doUpdate();
     }
 });
@@ -39,7 +45,7 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/:roomName', {
         templateUrl: function(params) {
-            return '/_jx/lx-templates/lx-video-chat-main.html/' + params.roomName
+            return '/_jx/lx-templates/lx-video-chat-main.html/' + params.roomName;
         },
         controller : 'roomViewCtrl'
     });
