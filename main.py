@@ -44,12 +44,10 @@ def generate_random(length):
 def sanitize(key):
     return re.sub('[^a-zA-Z0-9\-]', '-', key)
 
-
-
 def is_chrome_for_android(user_agent):
     return 'Android' in user_agent and 'Chrome' in user_agent
 
-def get_default_stun_server(user_agent):
+def get_default_stun_server():
     # others you can try: stun.services.mozilla.com, stunserver.org
     return 'stun.l.google.com:19302'
 
@@ -331,228 +329,219 @@ class MessagePage(webapp2.RequestHandler):
                 logging.warning('Unknown room ' + room_name)
 
 
-class GetVideoParams(webapp2.RequestHandler):
-    """The main UI page, renders the 'index.html' template."""
-    def get(self, room_name):
-        """Renders the main page. When this page is shown, we create a new
-        channel to push asynchronous updates to the client."""
-
-
-        # Append strings to this list to have them thrown up in message boxes. This
-        # will also cause the app to fail.
-        error_message = None;
-        # Get the base url without arguments.
-        base_url = self.request.path_url
-        user_agent = self.request.headers['User-Agent']
-        response_type = self.request.get('t')
-        stun_server = self.request.get('ss')
-        if not stun_server:
-            stun_server = get_default_stun_server(user_agent)
-        turn_server = self.request.get('ts')
-        ts_pwd = self.request.get('tp')
-        ice_transports = self.request.get('it')
-
-        # Use "audio" and "video" to set the media stream constraints. Defined here:
-        # http://goo.gl/V7cZg
-        #
-        # "true" and "false" are recognized and interpreted as bools, for example:
-        #   "?audio=true&video=false" (Start an audio-only call.)
-        #   "?audio=false" (Start a video-only call.)
-        # If unspecified, the stream constraint defaults to True.
-        #
-        # To specify media track constraints, pass in a comma-separated list of
-        # key/value pairs, separated by a "=". Examples:
-        #   "?audio=googEchoCancellation=false,googAutoGainControl=true"
-        #   (Disable echo cancellation and enable gain control.)
-        #
-        #   "?video=minWidth=1280,minHeight=720,googNoiseReduction=true"
-        #   (Set the minimum resolution to 1280x720 and enable noise reduction.)
-        #
-        # Keys starting with "goog" will be added to the "optional" key; all others
-        # will be added to the "mandatory" key.
-        # To override this default behavior, add a "mandatory" or "optional" prefix
-        # to each key, e.g.
-        #   "?video=optional:minWidth=1280,optional:minHeight=720,
-        #           mandatory:googNoiseReduction=true"
-        #   (Try to do 1280x720, but be willing to live with less; enable
-        #    noise reduction or die trying.)
-        #
-        # The audio keys are defined here: talk/app/webrtc/localaudiosource.cc
-        # The video keys are defined here: talk/app/webrtc/videosource.cc
-        audio = self.request.get('audio')
-        video = self.request.get('video')
-
-        # ARM - hack - set video to '' because using the above settings seems to cause firefox to
-        # set the local video to a strange aspect ratio that is too tall. This happens only
-        # after the non-firefox user leaves a call, and then rejoins it.
-        video = ''
-
-
-        audio_send_codec = self.request.get('asc', default_value = '')
-        if not audio_send_codec:
-            audio_send_codec = get_preferred_audio_send_codec(user_agent)
-
-        audio_receive_codec = self.request.get('arc', default_value = '')
-        if not audio_receive_codec:
-            audio_receive_codec = get_preferred_audio_receive_codec()
-
-        # Set stereo to false by default.
-        stereo = self.request.get('stereo', default_value = 'false')
-
-        # Read url params audio send bitrate (asbr) & audio receive bitrate (arbr)
-        asbr = self.request.get('asbr', default_value = '')
-        arbr = self.request.get('arbr', default_value = '')
-
-        # Read url params video send bitrate (vsbr) & video receive bitrate (vrbr)
-        vsbr = self.request.get('vsbr', default_value = '')
-        vrbr = self.request.get('vrbr', default_value = '')
-
-        # Read url params for the initial video send bitrate (vsibr)
-        vsibr = self.request.get('vsibr', default_value = '')
-
-        # Options for making pcConstraints
-        dtls = self.request.get('dtls')
-        dscp = self.request.get('dscp')
-        ipv6 = self.request.get('ipv6')
-        opusfec = self.request.get('opusfec')
-
-        # Stereoscopic rendering.  Expects remote video to be a side-by-side view of
-        # two cameras' captures, which will each be fed to one eye.
-        ssr = self.request.get('ssr')
-        # Avoid pulling down vr.js (>25KB, minified) if not needed.
-        include_vr_js = ''
-        if ssr == 'true':
-            include_vr_js = ('<script src="/js/vr.js"></script>\n' +
-                             '<script src="/js/stereoscopic.js"></script>')
-
-        # Disable pinch-zoom scaling since we manage video real-estate explicitly
-        # (via full-screen) and don't want devicePixelRatios changing dynamically.
-        meta_viewport = ''
-        if is_chrome_for_android(user_agent):
-            meta_viewport = ('<meta name="viewport" content="width=device-width, ' +
-                             'user-scalable=no, initial-scale=1, maximum-scale=1">')
-
-        debug = self.request.get('debug')
-        if debug == 'loopback':
-            # Set dtls to false as DTLS does not work for loopback.
-            dtls = 'false'
-
-        # token_timeout for channel creation, default 30min, max 1 days, min 3min.
-        token_timeout = self.request.get_range('tt',
-                                               min_value = 3,
-                                               max_value = 1440,
-                                               default = 30)
-
-        #unittest = self.request.get('unittest')
-        #if unittest:
-            ## Always create a new room for the unit tests.
-            #room_name = generate_random(8)
-
-        room_name = room_name
-
-
-        logging.info('Preparing to add user to room ' + room_name)
-        user = None
-        initiator = 0
-        
-        if room_name:
-            with LOCK:
-                room = room_module.Room.get_by_id(room_name)
-                if not room and debug != "full":
-                    # New room.
-                    user = generate_random(8)
-                    room = room_module.Room(id = room_name)
-                    room.add_user(user)
-                    logging.info('First user ' + user + ' added to room ' + room_name)
-                    if debug != 'loopback':
-                        initiator = 0
-                    else:
-                        room.add_user(user)
-                        initiator = 1
-                elif room and room.get_occupancy() == 1 and debug != 'full':
-                    # 1 occupant.
-                    user = generate_random(8)
-                    room.add_user(user)
-                    logging.info('Second user ' + user + ' added to room ' + room_name)                    
-                    initiator = 1
-                else:
-                    # 2 occupants (full).
-                    logging.warning('Room ' + room_name + ' is full')
-                    
-                    params = {
-                        'errorMessage': 'room-is-full',
-                        'roomName': room_name
-                    }
-                    response_type = 'json'
-                    target_page = None                    
-                    write_response(self.response, response_type, target_page, params)
-                    return
+def get_video_params(room_name, user_agent):
+    """ Returns a json object that contains the video parameters that will be used for setting up the webRtc communications and display"""
     
-            
-            logging.info('Room ' + room_name + ' has state ' + str(room))
+    
+    # Append strings to this list to have them thrown up in message boxes. This
+    # will also cause the app to fail.
+    error_message = None;
+    # Get the base url without arguments.
+    stun_server = get_default_stun_server()
 
-            if turn_server == 'false':
-                turn_server = None
-                turn_url = ''
+    
+    # Use "audio" and "video" to set the media stream constraints. Defined here:
+    # http://goo.gl/V7cZg
+    #
+    # "true" and "false" are recognized and interpreted as bools, for example:
+    #   "?audio=true&video=false" (Start an audio-only call.)
+    #   "?audio=false" (Start a video-only call.)
+    # If unspecified, the stream constraint defaults to True.
+    #
+    # To specify media track constraints, pass in a comma-separated list of
+    # key/value pairs, separated by a "=". Examples:
+    #   "?audio=googEchoCancellation=false,googAutoGainControl=true"
+    #   (Disable echo cancellation and enable gain control.)
+    #
+    #   "?video=minWidth=1280,minHeight=720,googNoiseReduction=true"
+    #   (Set the minimum resolution to 1280x720 and enable noise reduction.)
+    #
+    # Keys starting with "goog" will be added to the "optional" key; all others
+    # will be added to the "mandatory" key.
+    # To override this default behavior, add a "mandatory" or "optional" prefix
+    # to each key, e.g.
+    #   "?video=optional:minWidth=1280,optional:minHeight=720,
+    #           mandatory:googNoiseReduction=true"
+    #   (Try to do 1280x720, but be willing to live with less; enable
+    #    noise reduction or die trying.)
+    #
+    # The audio keys are defined here: talk/app/webrtc/localaudiosource.cc
+    # The video keys are defined here: talk/app/webrtc/videosource.cc
+
+    
+    # ARM - hack - set video to '' because using the above settings seems to cause firefox to
+    # set the local video to a strange aspect ratio that is too tall. This happens only
+    # after the non-firefox user leaves a call, and then rejoins it.
+    video = ''
+    
+    
+
+    audio_send_codec = get_preferred_audio_send_codec(user_agent)    
+    audio_receive_codec = get_preferred_audio_receive_codec()
+    
+    # Set stereo to false by default.
+    stereo = 'false'
+    
+    # Read url params audio send bitrate (asbr) & audio receive bitrate (arbr)
+    asbr = ''
+    arbr = ''
+    
+    # Read url params video send bitrate (vsbr) & video receive bitrate (vrbr)
+    vsbr = ''
+    vrbr = ''
+    
+    # Read url params for the initial video send bitrate (vsibr)
+    vsibr = ''
+    
+    # Options for making pcConstraints
+    dtls = ''
+    dscp = ''
+    ipv6 = ''
+    opusfec = ''
+    
+    # Stereoscopic rendering.  Expects remote video to be a side-by-side view of
+    # two cameras' captures, which will each be fed to one eye.
+    ssr = ''
+    
+    # Avoid pulling down vr.js (>25KB, minified) if not needed.
+    include_vr_js = ''
+    if ssr == 'true':
+        include_vr_js = ('<script src="/js/vr.js"></script>\n' +
+                         '<script src="/js/stereoscopic.js"></script>')
+    
+    # Disable pinch-zoom scaling since we manage video real-estate explicitly
+    # (via full-screen) and don't want devicePixelRatios changing dynamically.
+    meta_viewport = ''
+    if is_chrome_for_android(user_agent):
+        meta_viewport = ('<meta name="viewport" content="width=device-width, ' +
+                         'user-scalable=no, initial-scale=1, maximum-scale=1">')
+    
+    debug = vidsetup.DEBUG_BUILD
+    if debug == 'loopback':
+        # Set dtls to false as DTLS does not work for loopback.
+        dtls = 'false'
+    
+    # token_timeout for channel creation, default 30min, max 1 days, min 3min.
+    token_timeout =  1440 #1440 minutes is 1 day. 
+    
+    #unittest = self.request.get('unittest')
+    #if unittest:
+        ## Always create a new room for the unit tests.
+        #room_name = generate_random(8)
+    
+    room_name = room_name
+    
+    
+    logging.info('Preparing to add user to room ' + room_name)
+    user = None
+    initiator = 0
+    
+    if room_name:
+        with LOCK:
+            room = room_module.Room.get_by_id(room_name)
+            if not room and debug != "full":
+                # New room.
+                user = generate_random(8)
+                room = room_module.Room(id = room_name)
+                room.add_user(user)
+                logging.info('First user ' + user + ' added to room ' + room_name)
+                if debug != 'loopback':
+                    initiator = 0
+                else:
+                    room.add_user(user)
+                    initiator = 1
+            elif room and room.get_occupancy() == 1 and debug != 'full':
+                # 1 occupant.
+                user = generate_random(8)
+                room.add_user(user)
+                logging.info('Second user ' + user + ' added to room ' + room_name)                    
+                initiator = 1
             else:
-                turn_url = 'https://computeengineondemand.appspot.com/'
-                turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
-
+                # 2 occupants (full).
+                logging.warning('Room ' + room_name + ' is full')
                 
-            room_link = base_url + '?r=' + room_name
-            room_link = append_url_arguments(self.request, room_link)
-            token = create_channel(room, user, token_timeout)
-
-        else :
-            token = ''
-            turn_url = ''
-            room_link = ''
-
+                params = {
+                    'errorMessage': 'room-is-full',
+                    'roomName': room_name
+                }                
+                return json.dumps(params)
+    
         
-        pc_config = make_pc_config(stun_server, turn_server, ts_pwd, ice_transports)
-        pc_constraints = make_pc_constraints(dtls, dscp, ipv6, opusfec)
-        offer_constraints = make_offer_constraints()
-        media_constraints = make_media_stream_constraints(audio, video)            
+        logging.info('Room ' + room_name + ' has state ' + str(room))
+    
 
-        params = {
-            'errorMessage': error_message,
-            'channelToken': token,
-            'myUsername': user,
-            'roomName': room_name,
-            'roomLink': room_link,
-            'rtcInitiator': initiator,
-            'pcConfig': pc_config,
-            'pcConstraints': pc_constraints,
-            'offerConstraints': offer_constraints,
-            'mediaConstraints': media_constraints,
-            'turnUrl': turn_url,
-            'stereo': stereo,
-            'audioRecvBitrate': arbr,
-            'audioSendBitrate': asbr,
-            'videoRecvBitrate': vrbr,
-            'videoSendBitrate': vsbr,
-            'videoSendInitialBitrate': vsibr,
-            'audioSendCodec': audio_send_codec,
-            'audioReceiveCodec': audio_receive_codec,
-            'stereoscopic': ssr,
-            'includeVrJs': include_vr_js,
-            'metaViewport': meta_viewport,
-            'debugBuildEnabled' : vidsetup.DEBUG_BUILD,
-        }
-        
-        response_type = 'json'
-        target_page = None
-        write_response(self.response, response_type, target_page, params)        
+        turn_url = 'https://computeengineondemand.appspot.com/'
+        turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
+    
+        room_link = "/" + room_name
+        token = create_channel(room, user, token_timeout)
+    
+    else :
+        token = ''
+        turn_url = ''
+        room_link = ''
+    
+    # TODO - look at the original apprtc code to see if these values should be set.
+    audio = None
+    video = None
+    turn_server = None
+    ts_pwd = None
+    ice_transports = None
+    pc_config = make_pc_config(stun_server, turn_server, ts_pwd, ice_transports)
+    pc_constraints = make_pc_constraints(dtls, dscp, ipv6, opusfec)
+    offer_constraints = make_offer_constraints()
+    media_constraints = make_media_stream_constraints(audio, video)            
+    
+    params = {
+        'errorMessage': error_message,
+        'channelToken': token,
+        'myUsername': user,
+        'roomName': room_name,
+        'roomLink': room_link,
+        'rtcInitiator': initiator,
+        'pcConfig': pc_config,
+        'pcConstraints': pc_constraints,
+        'offerConstraints': offer_constraints,
+        'mediaConstraints': media_constraints,
+        'turnUrl': turn_url,
+        'stereo': stereo,
+        'audioRecvBitrate': arbr,
+        'audioSendBitrate': asbr,
+        'videoRecvBitrate': vrbr,
+        'videoSendBitrate': vsbr,
+        'videoSendInitialBitrate': vsibr,
+        'audioSendCodec': audio_send_codec,
+        'audioReceiveCodec': audio_receive_codec,
+        'stereoscopic': ssr,
+        'includeVrJs': include_vr_js,
+        'metaViewport': meta_viewport,
+        'debugBuildEnabled' : vidsetup.DEBUG_BUILD,
+    }
+    
+    return json.dumps(params)
 
 
 class GetView(webapp2.RequestHandler):
     """ Render whatever template the client has requested """
-    def get(self, current_view):   
+    def get(self, current_template):   
         response_type = 'jinja'
-        params = {
-            }
-        target_page = current_view
+        params = {}
+        target_page = current_template
         write_response(self.response, response_type, target_page, params)
+
+
+class GetVideoChatMain(webapp2.RequestHandler):
+    def get(self, current_template, room_name):   
+        user_agent = self.request.headers['User-Agent']
+        
+        # copy the json parameters into a jinja variable
+        server_video_params_json = get_video_params(room_name, user_agent)
+        params = {'serverVideoParamsJson' : server_video_params_json}    
+        
+        # update the self.response with the current view
+        template = jinja_environment.get_template(current_template)
+        content = template.render(params)
+        self.response.out.write(content)
 
 
 class MainPage(webapp2.RequestHandler):
@@ -563,12 +552,14 @@ class MainPage(webapp2.RequestHandler):
         params = {
             'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
         }
+
         write_response(self.response, response_type, target_page, params)        
         
 
+
 app = webapp2.WSGIApplication([
-    webapp2.Route(r'/_jx<current_view:/lx-templates/.+>', GetView),
-    webapp2.Route(r'/json/get_video_params/<room_name:.+>', GetVideoParams),
+    webapp2.Route(r'/_jx<current_template:/lx-templates/lx-video-chat-main.html>/<room_name:.+>', GetVideoChatMain),
+    webapp2.Route(r'/_jx<current_template:/lx-templates/.+>', GetView),
     (r'/message', MessagePage),
     (r'/_ah/channel/connected/', ConnectPage),
     (r'/_ah/channel/disconnected/', DisconnectPage),
