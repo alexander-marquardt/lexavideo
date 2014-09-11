@@ -18,7 +18,7 @@ import jinja2
 import webapp2
 import threading
 from google.appengine.api import channel
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 
 from video_src import models, room_module, http_helpers, status_reporting
 
@@ -242,7 +242,7 @@ def write_response(response, response_type, target_page, params):
 
 
 
-@db.transactional
+@ndb.transactional
 def connect_user_to_room(room_name, active_user):
     room = room_module.Room.get_by_id(room_name)
     # Check if room has active_user in case that disconnect message comes before
@@ -276,57 +276,9 @@ def connect_user_to_room(room_name, active_user):
         
     else:
         logging.warning('Unexpected Connect Message to room ' + room_name + 'by user ' + active_user)
-
         
     return room
 
-class ConnectPage(webapp2.RequestHandler):
-    def post(self):
-        key = self.request.get('from')
-        room_name, user = key.split('/')
-        with LOCK:
-            room = connect_user_to_room(room_name, user)
-            if room and room.has_user(user):
-                send_saved_messages(room.make_client_id(user))
-
-class DisconnectPage(webapp2.RequestHandler):
-    def post(self):
-        # temporarily disable disconnect -- this will be replaced with a custom disconnect call from the javascript as opposed to monitoring 
-        # the channel stauts.
-        pass    
-
-        #key = self.request.get('from')
-        #room_name, user = key.split('/')
-        #with LOCK:
-            #room = Room.get_by_id(room_name)
-            #if room and room.has_user(user):
-                #other_user = room.get_other_user(user)
-                #room.remove_user(user)
-                #logging.info('User ' + user + ' removed from room ' + room_name)
-                #logging.info('Room ' + room_name + ' has state ' + str(room))
-                #if other_user and other_user != user:
-
-                    #message_object = {"messageType": "sdp",
-                                                        #"messagePayload" : {
-                                                            #"type" : "bye"
-                                                        #}}
-                    #channel.send_message(make_client_id(room, other_user),
-                                                                #json.dumps(message_object))
-                    #logging.info('Sent BYE to ' + other_user)
-        #logging.warning('User ' + user + ' disconnected from room ' + room_name)
-
-
-class MessagePage(webapp2.RequestHandler):
-    def post(self):
-        message = self.request.body
-        room_name = self.request.get('r')
-        user = self.request.get('u')
-        with LOCK:
-            room = room_module.Room.get_by_id(room_name)
-            if room:
-                handle_message(room, user, message)
-            else:
-                logging.warning('Unknown room ' + room_name)
 
 
 def get_video_params(room_name, user_agent):
@@ -519,6 +471,57 @@ def get_video_params(room_name, user_agent):
     }
     
     return json.dumps(params)
+
+
+class ConnectPage(webapp2.RequestHandler):
+    def post(self):
+        key = self.request.get('from')
+        room_name, user = key.split('/')
+        with LOCK:
+            room = connect_user_to_room(room_name, user)
+            if room and room.has_user(user):
+                send_saved_messages(room.make_client_id(user))
+
+class DisconnectPage(webapp2.RequestHandler):
+    def post(self):
+        # temporarily disable disconnect -- this will be replaced with a custom disconnect call from the javascript as opposed to monitoring 
+        # the channel stauts.
+        pass    
+
+        #key = self.request.get('from')
+        #room_name, user = key.split('/')
+        #with LOCK:
+            #room = Room.get_by_id(room_name)
+            #if room and room.has_user(user):
+                #other_user = room.get_other_user(user)
+                #room.remove_user(user)
+                #logging.info('User ' + user + ' removed from room ' + room_name)
+                #logging.info('Room ' + room_name + ' has state ' + str(room))
+                #if other_user and other_user != user:
+
+                    #message_object = {"messageType": "sdp",
+                                                        #"messagePayload" : {
+                                                            #"type" : "bye"
+                                                        #}}
+                    #channel.send_message(make_client_id(room, other_user),
+                                                                #json.dumps(message_object))
+                    #logging.info('Sent BYE to ' + other_user)
+        #logging.warning('User ' + user + ' disconnected from room ' + room_name)
+
+
+class MessagePage(webapp2.RequestHandler):
+    def post(self):
+        message = self.request.body
+        room_name = self.request.get('r')
+        user = self.request.get('u')
+        with LOCK:
+            room = room_module.Room.get_by_id(room_name)
+            if room:
+                handle_message(room, user, message)
+            else:
+                logging.warning('Unknown room ' + room_name)
+
+
 
 
 class GetView(webapp2.RequestHandler):
