@@ -640,12 +640,12 @@ videoAppServices.factory('mediaService', function($log,$timeout, serverConstants
                           callService, streamService) {
 
 
-    var onUserMediaSuccess = function(localVideoDiv, videoSignalingObject) {
+    var onUserMediaSuccess = function(localVideoObject, videoSignalingObject) {
         return function(stream) {
             $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
-            adapterService.attachMediaStream(localVideoDiv, stream);
-            localVideoDiv.style.opacity = 1;
+            adapterService.attachMediaStream(localVideoObject.localVideoElem, stream);
+            localVideoObject.localVideoElem.style.opacity = 1;
             streamService.localStream = stream;
             $timeout(function() {
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
@@ -668,11 +668,11 @@ videoAppServices.factory('mediaService', function($log,$timeout, serverConstants
     return {
 
 
-        doGetUserMedia  : function(localVideoDiv, videoSignalingObject) {
+        doGetUserMedia  : function(localVideoObject, videoSignalingObject) {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
                 adapterService.getUserMedia(serverConstantsService.mediaConstraints,
-                    onUserMediaSuccess(localVideoDiv, videoSignalingObject),
+                    onUserMediaSuccess(localVideoObject, videoSignalingObject),
                     onUserMediaError(videoSignalingObject));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(serverConstantsService.mediaConstraints) + '\'');

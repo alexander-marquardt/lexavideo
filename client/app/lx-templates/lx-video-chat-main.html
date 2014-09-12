@@ -39,10 +39,10 @@
 
                 <div class="col-sm-6" id="id-local-video-wrapper-div">
                     <div class="text-center">
-                        <div id="id-local-hd-video-wrapper-div" ng-show="(videoSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.localIsSendingVideoType)" >
+                        <div lx-video-wrapper-directive video-window = 'local' ng-show="(videoSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.localIsSendingVideoType)" >
                             <h4>Local HD Video</h4>
                             <div style="display:inline-block" class="cl-my-well" >
-                                <video class="cl-video-sizing" id="id-local-video-element" autoplay="autoplay" muted="true">You must update to a newer version of Chrome or Firefox to use video</video>
+                                <div lx-video-element-directive video-window = 'local'></div>
                             </div>
                         </div>
 
@@ -73,14 +73,12 @@
                 <div class="col-sm-6" id="id-remote-video-wrapper-div">
                     <div class="text-center" >
                         <div ng-controller="lxVideoNegotiationCtrl">
-                            <div id="id-remote-hd-video-wrapper-div" ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.remoteIsSendingVideoType)">
+                            <divlx-video-wrapper-directive video-window = 'remote' ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.remoteIsSendingVideoType)">
                                 <h4>Remote HD Video</h4>
 
                                 <div  class="cl-my-well" style="display:inline-block">
                                     <div style="position: relative">
-                                        <video class="cl-video-sizing" id="id-remote-video-element" autoplay="autoplay">
-                                            You must update to a newer version of Chrome or Firefox to use video
-                                        </video>
+                                        <div lx-video-element-directive video-window = 'remote'></div>
                                         <div lx-mini-video-template-directive></div>
                                         <nav ng-hide="true" lx-video-settings-negotiation-directive
                                              class="navbar navbar-inverse navbar-fixed-bottom cl-navbar-absolute-bottom cl-show-hide-fade" >

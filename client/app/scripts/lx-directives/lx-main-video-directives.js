@@ -178,31 +178,37 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             var setupForCurrentDisplaySize = function() {
 
-                // TODO - temporary hack until we sort out a better way to determine the "session" status. We cannot
-                // depend on the peer connection values, since our session encompases ascii transmission as well..
-                // remote the if (true) from the following line once this is fixed.
-                if (true || sessionStatus === 'active') {
-                    if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
-                        showMiniVideoElems();
-                        // we are dealing with a small viewport, and should therefore hide the local video as it is
-                        // now embedded in a small window inside the remote video.
-                        localVideoObject.localVideoWrapper.style.display = 'none';
-                        remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
-                    } else {
-                        enablePrincipalVideoWindows();
-                        hideMiniVideoElems();
+                if (localVideoObject.localVideoWrapper && remoteVideoObject.remoteVideoWrapper) {
+                    // the localVideoWrapper and remoteVideoWrapper are set by a directive that
+                    // sits directly on the wrapper element. This if makes sure that they are initialized
+                    // before attempting to modify the styles on these elements.
+
+                    // TODO - temporary hack until we sort out a better way to determine the "session" status. We cannot
+                    // depend on the peer connection values, since our session encompases ascii transmission as well..
+                    // remote the if (true) from the following line once this is fixed.
+                    if (true || sessionStatus === 'active') {
+                        if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
+                            showMiniVideoElems();
+                            // we are dealing with a small viewport, and should therefore hide the local video as it is
+                            // now embedded in a small window inside the remote video.
+                            localVideoObject.localVideoWrapper.style.display = 'none';
+                            remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
+                        } else {
+                            enablePrincipalVideoWindows();
+                            hideMiniVideoElems();
+                        }
                     }
-                }
-                else {
-                    if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
-                        // we are dealing with a small viewport with only a single video window.
-                        // Therefore we should show the local video and hide the remote video
-                        localVideoObject.localVideoWrapper.style.display = 'inline';
-                        remoteVideoObject.remoteVideoWrapper.style.display = 'none';
-                        hideMiniVideoElems();
-                    } else {
-                        enablePrincipalVideoWindows();
-                        hideMiniVideoElems();
+                    else {
+                        if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
+                            // we are dealing with a small viewport with only a single video window.
+                            // Therefore we should show the local video and hide the remote video
+                            localVideoObject.localVideoWrapper.style.display = 'inline';
+                            remoteVideoObject.remoteVideoWrapper.style.display = 'none';
+                            hideMiniVideoElems();
+                        } else {
+                            enablePrincipalVideoWindows();
+                            hideMiniVideoElems();
+                        }
                     }
                 }
 
@@ -253,6 +259,44 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 // more efficient.
                 setupForCurrentDisplaySize();
             });
+        }
+    };
+});
+
+videoAppDirectives.directive('lxVideoElementDirective', function($compile, $log) {
+    return {
+        restrict : 'A',
+        link: function(scope, elem, attrs) {
+            var html = '<video class="cl-video-sizing" autoplay="autoplay" muted="true"></video>';
+            var e = angular.element($compile(html)(scope));
+            elem.append(e);
+
+            if (attrs.videoWindow === 'local' ) {
+                scope.localVideoObject.localVideoElem = e[0];
+            }
+            else if (attrs.videoWindow === 'remote' ) {
+                scope.remoteVideoObject.remoteVideoElem = e[0];
+            }
+            else {
+                $log.error('Attribute must be "local" or "remote"');
+            }
+        }
+    };
+});
+
+videoAppDirectives.directive('lxHdVideoWrapperDirective', function($log) {
+    return {
+        restrict : 'A',
+        link: function(scope, elem, attrs) {
+            if (attrs.videoWindow === 'local' ) {
+                scope.localVideoObject.localVideoWrapper = elem[0];
+            }
+            else if (attrs.videoWindow === 'remote' ) {
+                scope.remoteVideoObject.remoteVideoWrapper = elem[0];
+            }
+            else {
+                $log.error('Attribute must be "local" or "remote"');
+            }
         }
     };
 });

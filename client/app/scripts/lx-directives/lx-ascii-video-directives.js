@@ -123,7 +123,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                 // when using the development server, sending too much information over the channel API seems to saturate
                 // the server -- slow down the fps for development
                 canvasOptions.fps = 0.5;
-            };
+            }
 
 
             var getImageFromVideo = function() {

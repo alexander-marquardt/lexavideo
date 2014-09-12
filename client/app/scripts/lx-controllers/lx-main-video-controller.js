@@ -4,7 +4,6 @@
 'use strict';
 
 // define externally defined variables so that jshint doesn't give warnings
-/* global $ */
 
 angular.module('videoApp')
     .controller('lxMainVideoCtrl', function ($scope, serverConstantsService) {
@@ -20,14 +19,14 @@ angular.module('videoApp')
         };
 
         $scope.remoteVideoObject = {
-            remoteVideoElem : $('#id-remote-video-element')[0],
-            remoteVideoWrapper : $('#id-remote-video-wrapper-div')[0]
+            remoteVideoElem : undefined, // set in lxVideoElementDirective
+            remoteVideoWrapper : undefined // set in lxHdVideoWrapperDirective
 
         };
 
         $scope.localVideoObject = {
-            localVideoElem :  $('#id-local-video-element')[0],
-            localVideoWrapper : $('#id-local-video-wrapper-div')[0],
+            localVideoElem :  undefined,  // set in lxVideoElementDirective
+            localVideoWrapper : undefined, // set in lxHdVideoWrapperDirective
             miniVideoElemInsideRemoteHd: undefined, //'To be set in miniVideoTemplateDirective' to .cl-mini-video-element in HD element
             miniVideoElemInsideRemoteAscii: undefined, // 'To be set in miniVideoTemplateDirective' to .cl-mini-video-element in Ascii element
             isVideoMuted : false,
