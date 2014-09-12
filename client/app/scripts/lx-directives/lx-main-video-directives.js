@@ -267,18 +267,20 @@ videoAppDirectives.directive('lxVideoElementDirective', function($compile, $log)
     return {
         restrict : 'A',
         link: function(scope, elem, attrs) {
-            var e = angular.element('<video class="cl-video-sizing" autoplay="autoplay" muted="true"></video>');
-            elem.append(e);
+            var e;
 
             if (attrs.videoWindow === 'local' ) {
+                e = angular.element('<video class="cl-video-sizing" autoplay="autoplay" muted="true"></video>');
                 scope.localVideoObject.localVideoElem = e[0];
             }
             else if (attrs.videoWindow === 'remote' ) {
+                e = angular.element('<video class="cl-video-sizing" autoplay="autoplay"></video>');
                 scope.remoteVideoObject.remoteVideoElem = e[0];
             }
             else {
                 $log.error('Attribute must be "local" or "remote"');
             }
+            elem.append(e);
         }
     };
 });
