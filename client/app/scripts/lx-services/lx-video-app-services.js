@@ -294,7 +294,7 @@ videoAppServices.factory('messageService', function($http, $log, serverConstants
             // $log.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
-            var path = '/message?r=' + serverConstantsService.roomName + '&u=' + serverConstantsService.myUsername;
+            var path = '/_jx/message?r=' + serverConstantsService.roomName + '&u=' + serverConstantsService.myUsername;
 
             $http.post(path, messageObject).then(
                 function(/*response*/) {
