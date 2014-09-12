@@ -308,7 +308,7 @@ module.exports = function (grunt) {
                         '.htaccess',
                         '*.html',
                         'views/{,*/}*.html',
-                        'lx-jinja-templates/{,*/}*.html',
+                        'lx-templates/{,*/}*.html',
                         'images/{,*/}*.{webp}',
                         'fonts/*'
                     ]
