@@ -1,7 +1,55 @@
 {% raw %}
 
-WELCOME - PLEASE REGISTER!!
 
 <div>{{ errorMessage }}</div>
+
+
+<div class="row">
+
+
+
+    <div >
+        <div class="col-xs-12">
+            <div class="well">
+                <h3>A) Create a new chat room </h3>
+                <form role="form">
+                    <div class="form-group">
+                        <div class="input-group">
+                           <input class="form-control" placeholder="room name" ng-model="xxxxxxxxx" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary">Create</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+                <small class="text-muted">* Use this option to create a new chat room. Once you have created the room,
+                    you can invite someone to join you by sharing the room name.</small>
+
+            </div>
+        </div>
+        <h2 class="text-center">Or</h2>
+        <div class="col-xs-12">
+            <div class="well">
+                <h3>B) Enter in an existing chat room</h3>
+                <form role="form">
+                    <div class="form-group">
+                        <div class="input-group">
+                           <input class="form-control" placeholder="room name" ng-model="xxxxxxxxx" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary">Enter</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+                <small class="text-muted">* Use this option if someone has invited you to chat with them in a room that they have created</small>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
 
 {% endraw %}
