@@ -2,7 +2,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 
 
 // the following call will override conflicting variable declarations in the bootstrap definitions.
-@import "./lx-scss-constants.scss";
+@import "./lx-override-bootstrap.scss";
 
 // bower:scss
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
@@ -285,4 +285,8 @@ video {
 #id-dummy-brand-danger-color-div {
   display: none;
   color: $brand-danger;
+}
+
+.cl-enter-room-name {
+  position: relative;
 }
