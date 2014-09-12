@@ -110,7 +110,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
             var getStreamTimeout;
             var thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // mostly just used for debugging
 
-            var videoElement = $('#id-local-video-element')[0];
+            var videoElement = scope.localVideoObject.localVideoElem;
             var $asciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
 
             var localCanvas = document.createElement('canvas');
@@ -133,7 +133,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                         onFrame(localCanvas, $asciiDrawingTextElement);
                     }
                 } catch (e) {
-                    $log.log('Error drawing image in canvas' + e);
+                    $log.error('Error drawing image in canvas' + e);
                 }
             };
 
