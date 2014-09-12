@@ -267,8 +267,7 @@ videoAppDirectives.directive('lxVideoElementDirective', function($compile, $log)
     return {
         restrict : 'A',
         link: function(scope, elem, attrs) {
-            var html = '<video class="cl-video-sizing" autoplay="autoplay" muted="true"></video>';
-            var e = angular.element($compile(html)(scope));
+            var e = angular.element('<video class="cl-video-sizing" autoplay="autoplay" muted="true"></video>');
             elem.append(e);
 
             if (attrs.videoWindow === 'local' ) {
