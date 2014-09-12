@@ -3,7 +3,7 @@
 import re, codecs
 import vidsetup
 
-def generate_app_yaml():
+def generate_app_yaml(version_id = None):
     # Goes through the "template" app.yaml file, and generates the "real" app.yaml by replacing certain build-specific
     # values 
     input_yaml_name = "app_template.yaml"
@@ -25,8 +25,11 @@ def generate_app_yaml():
         SKIP_DOT_DIRS = ''
         SKIP_APP_DIRS = ''
         SKIP_DIST_DIRS = '"- ^client/dist/.*"'
+        
+    if not version_id:
+        version_id = vidsetup.VERSION_ID
     
-    replacement_patterns_array = [(re.compile(r'(.*)(VERSION_ID)(.*)'),  vidsetup.VERSION_ID),
+    replacement_patterns_array = [(re.compile(r'(.*)(VERSION_ID)(.*)'),  version_id),
                                   (re.compile(r'(.*)(BASE_STATIC_DIR)(.*)'), vidsetup.BASE_STATIC_DIR),
                                   (re.compile(r'(.*)(STYLES_STATIC_DIR)(.*)'), vidsetup.STYLES_STATIC_DIR),
                                   (re.compile(r'(.*)(SKIP_DOT_DIRS)(.*)'), SKIP_DOT_DIRS),

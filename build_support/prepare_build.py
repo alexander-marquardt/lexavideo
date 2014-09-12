@@ -1,7 +1,7 @@
 
-import vidsetup, gen_yaml
+import vidsetup
 import os, datetime, subprocess
-
+from build_support import gen_yaml
 
 def run_grunt(grunt_arg, subprocess_function):
 
@@ -24,15 +24,15 @@ def run_grunt_jobs():
             run_grunt('build', subprocess.call)
 
         
-def customize_files():
+def customize_files(version_id):
     
     print "**********************************************************************"
-    print "Generating custom files: %s " % vidsetup.VERSION_ID
+    print "Generating custom files: %s " % version_id
     print "Current path): %s" % os.getcwd()   
     print "%s" % datetime.datetime.now()
     print "**********************************************************************"
     
-    gen_yaml.generate_app_yaml()
+    gen_yaml.generate_app_yaml(version_id)
     run_grunt_jobs()
 
         
