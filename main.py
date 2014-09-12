@@ -561,9 +561,9 @@ class MainPage(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    webapp2.Route(r'/_jx<current_template:/lx-templates/lx-video-chat-main.html>/<room_name:.+>', GetVideoChatMain),
-    webapp2.Route(r'/_jx<current_template:/lx-templates/.+>', GetView),
-    (r'/_jx/message', MessagePage),
+    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-video-chat-main.html>/<room_name:.+>', GetVideoChatMain),
+    webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', GetView),
+    (r'/_lx/message', MessagePage),
     (r'/_ah/channel/connected/', ConnectPage),
     (r'/_ah/channel/disconnected/', DisconnectPage),
     (r'/.*', MainPage),

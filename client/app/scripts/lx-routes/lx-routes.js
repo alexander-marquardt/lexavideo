@@ -33,24 +33,24 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
 
     $routeProvider.when('/', {
-        templateUrl: '/_jx/lx-templates/lx-welcome.html'
+        templateUrl: '/_lx/lx-templates/lx-welcome.html'
     });
     
     $routeProvider.when('/err/:errorMessage', {
-        templateUrl: '/_jx/lx-templates/lx-welcome.html',
+        templateUrl: '/_lx/lx-templates/lx-welcome.html',
         controller: 'welcomeViewErrCtrl'
     });
 
     $routeProvider.when('/:roomName', {
         templateUrl: function(params) {
-            return '/_jx/lx-templates/lx-video-chat-main.html/' + params.roomName;
+            return '/_lx/lx-templates/lx-video-chat-main.html/' + params.roomName;
         },
         controller : 'roomViewCtrl'
     });
 
 
     $routeProvider.otherwise({
-        templateUrl: '/_jx/lx-templates/lx-welcome.html'
+        templateUrl: '/_lx/lx-templates/lx-welcome.html'
     });
 });
 
