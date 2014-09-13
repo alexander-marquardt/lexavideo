@@ -10,7 +10,7 @@
 var checkCompatibilityDirectives = angular.module('lxCheckCompatibility.directives', []);
 
 
-checkCompatibilityDirectives.directive('lxCheckIfBrowserIsSupported', function($templateCache, $modal, $log, lxCheckCompatibilityService, lxModalSupportService){
+checkCompatibilityDirectives.directive('lxCheckIfSystemSupportsWebRtc', function($templateCache, $modal, $log, lxCheckCompatibilityService, lxModalSupportService){
 
 
     var checkBrowserVersionToSeeIfGetUserMediaSupported = function() {

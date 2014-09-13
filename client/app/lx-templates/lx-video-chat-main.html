@@ -3,10 +3,6 @@
     var videoConstantsEmbeddedInHtml = {{ serverVideoParamsJson }}
 </script>
 
-<div ng-if="!errorMessage">
-    {% include "lx-templates/lx-jinja-templates/lx-video-chat-template-cache.html" %}
-</div>
-
 {% raw %}
 
 <div ng-if="errorMessage">
@@ -16,7 +12,10 @@
 
 <div ng-if="!errorMessage">
 
-    <div lx-check-if-browser-is-supported></div>
+    {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
+    <div lx-check-if-system-supports-web-rtc></div>
+
+
 
     <div ng-controller="lxMainVideoCtrl">
 
@@ -25,7 +24,9 @@
             User Name: {{ myUsername }}
         </div>
 
-
+        {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-access-camera.html" %}{% raw %}
+        <div lx-access-camera-and-microphone-directive></div>
+        
         <div class="row">
             <div lx-video-container-directive>
 
@@ -110,7 +111,6 @@
                     </div>
                 </div>
             </div>
-            <div lx-access-camera-and-microphone-directive></div>
 
             <div lx-monitor-control-keys-directive ></div>
 
