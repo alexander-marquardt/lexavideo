@@ -21,6 +21,7 @@ from google.appengine.api import channel
 from google.appengine.ext import ndb
 
 from video_src import models, room_module, http_helpers, status_reporting
+from video_src.error_handling import handle_function_exceptions, handle_request_handler_function_exceptions
 
 
 # We "hack" the directory that jinja looks for the template files so that it is always pointing to
@@ -82,68 +83,63 @@ def make_pc_config(stun_server, turn_server, ts_pwd, ice_transports):
         config['iceTransports'] = ice_transports
     return config
 
+
 def create_channel(room, user, duration_minutes):
     client_id = room.make_client_id(user)
     return channel.create_channel(client_id, duration_minutes)
 
+
+@handle_function_exceptions
 def make_loopback_answer(message):
     message = message.replace("\"offer\"", "\"answer\"")
     message = message.replace("a=ice-options:google-ice\\r\\n", "")
     return message
 
 
-
+@handle_function_exceptions
 def handle_message(room, user, message):
     # This function passes a message from one user in a given "room" to the other user in the same room.
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
     # as for passing video and other information from one user to the other. 
 
-    try:
-        message_obj = json.loads(message)
-        message = message.decode("utf-8")
-        other_user = room.get_other_user(user)
-        room_name = room.key.id()
+    message_obj = json.loads(message)
+    message = message.decode("utf-8")
+    other_user = room.get_other_user(user)
+    room_name = room.key.id()
 
-        message_type = message_obj['messageType']
-        message_payload = message_obj['messagePayload']
+    message_type = message_obj['messageType']
+    message_payload = message_obj['messagePayload']
 
-        if message_type == 'sdp' and message_payload['type'] == 'bye':
-            # This would remove the other_user in loopback test too.
-            # So check its availability before forwarding Bye message.
-            room.remove_user(user)
-            logging.info('User ' + user + ' quit from room ' + room_name)
-            logging.info('Room ' + room_name + ' has state ' + str(room))
+    if message_type == 'sdp' and message_payload['type'] == 'bye':
+        # This would remove the other_user in loopback test too.
+        # So check its availability before forwarding Bye message.
+        room.remove_user(user)
+        logging.info('User ' + user + ' quit from room ' + room_name)
+        logging.info('Room ' + room_name + ' has state ' + str(room))
 
-        if message_type == 'videoSettings':
-            logging.info('***** videoSettings message received: ' + repr(message_payload))
+    if message_type == 'videoSettings':
+        logging.info('***** videoSettings message received: ' + repr(message_payload))
 
 
-        if other_user and room.has_user(other_user):
-            if message_type == 'sdp' and message_payload['type'] == 'offer':
-                # This is just for debugging
-                logging.info('sdp offer. Payload: %s' % repr(message_payload))
+    if other_user and room.has_user(other_user):
+        if message_type == 'sdp' and message_payload['type'] == 'offer':
+            # This is just for debugging
+            logging.info('sdp offer. Payload: %s' % repr(message_payload))
 
-            if message_type == 'sdp' and message_payload['type'] == 'offer' and other_user == user:
-                # Special case the loopback scenario.
-                #message = make_loopback_answer(message)
-                pass
-
-            on_message(room, other_user, message)
-
-        else:
-            logging.warning('Cannot deliver message from user: %s to other_user: %s since they are not in the room: %s' % (user, other_user, room_name))
-            # For unittest
-            #on_message(room, user, message)
+        if message_type == 'sdp' and message_payload['type'] == 'offer' and other_user == user:
+            # Special case the loopback scenario.
+            #message = make_loopback_answer(message)
             pass
 
-    except:
-        status_reporting.log_call_stack_and_traceback(logging.error)
-        
-    
+        on_message(room, other_user, message)
+
+    else:
+        logging.warning('Cannot deliver message from user: %s to other_user: %s since they are not in the room: %s' % (user, other_user, room_name))
+        # For unittest
+        #on_message(room, user, message)
 
 
-
-
+@handle_function_exceptions
 def send_saved_messages(client_id):
     messages = models.Message.get_saved_messages(client_id)
     for message in messages:
@@ -151,7 +147,7 @@ def send_saved_messages(client_id):
         logging.info('Delivered saved message to ' + client_id)
         message.delete()
         
-
+@handle_function_exceptions
 def on_message(room, user, message):
     client_id = room.make_client_id(user)
     if room.is_connected(user):
@@ -162,6 +158,7 @@ def on_message(room, user, message):
         new_message.put()
         #logging.info('Saved message for user ' + user)
 
+@handle_function_exceptions
 def add_media_track_constraint(track_constraints, constraint_string):
     tokens = constraint_string.split(':')
     mandatory = True
@@ -243,6 +240,7 @@ def write_response(response, response_type, target_page, params):
 
 
 @ndb.transactional
+@handle_function_exceptions
 def connect_user_to_room(room_name, active_user):
     room = room_module.Room.get_by_id(room_name)
     # Check if room has active_user in case that disconnect message comes before
@@ -280,7 +278,7 @@ def connect_user_to_room(room_name, active_user):
     return room
 
 
-
+@handle_function_exceptions
 def get_video_params(room_name, user_agent):
     """ Returns a json object that contains the video parameters that will be used for setting up the webRtc communications and display"""
     
@@ -469,11 +467,12 @@ def get_video_params(room_name, user_agent):
         'metaViewport': meta_viewport,
         'debugBuildEnabled' : vidsetup.DEBUG_BUILD,
     }
-    
     return json.dumps(params)
 
 
 class ConnectPage(webapp2.RequestHandler):
+    
+    @handle_request_handler_function_exceptions
     def post(self):
         key = self.request.get('from')
         room_name, user = key.split('/')
@@ -483,6 +482,8 @@ class ConnectPage(webapp2.RequestHandler):
                 send_saved_messages(room.make_client_id(user))
 
 class DisconnectPage(webapp2.RequestHandler):
+    
+    @handle_request_handler_function_exceptions
     def post(self):
         # temporarily disable disconnect -- this will be replaced with a custom disconnect call from the javascript as opposed to monitoring 
         # the channel stauts.
@@ -510,6 +511,8 @@ class DisconnectPage(webapp2.RequestHandler):
 
 
 class MessagePage(webapp2.RequestHandler):
+    
+    @handle_request_handler_function_exceptions
     def post(self):
         message = self.request.body
         room_name = self.request.get('r')
@@ -526,6 +529,8 @@ class MessagePage(webapp2.RequestHandler):
 
 class GetView(webapp2.RequestHandler):
     """ Render whatever template the client has requested """
+    
+    @handle_request_handler_function_exceptions
     def get(self, current_template):   
         response_type = 'jinja'
         params = {}
@@ -534,6 +539,8 @@ class GetView(webapp2.RequestHandler):
 
 
 class GetVideoChatMain(webapp2.RequestHandler):
+    
+    @handle_request_handler_function_exceptions
     def get(self, current_template, room_name):   
         user_agent = self.request.headers['User-Agent']
         
@@ -549,6 +556,8 @@ class GetVideoChatMain(webapp2.RequestHandler):
 
 class MainPage(webapp2.RequestHandler):
     """The main UI page, renders the 'index.html' template."""
+    
+    @handle_request_handler_function_exceptions
     def get(self):
         target_page = 'index.html'
         response_type = 'jinja';

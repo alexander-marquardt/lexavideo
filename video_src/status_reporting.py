@@ -1,31 +1,6 @@
 
 # -*- coding: utf-8 -*- 
 
-################################################################################
-# LexaLink Copyright information - do not remove this copyright notice
-# Copyright (C) 2012 
-#
-# Lexalink - a free social network and dating website platform for the Google App Engine. 
-#
-# Original author: Alexander Marquardt
-# Documentation and additional information: http://www.LexaLink.com
-# Git source code repository: https://github.com/alexander-marquardt/lexalink 
-#
-# Please consider contributing your enhancements and modifications to the LexaLink community, 
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-################################################################################
-
 
 from os import environ
 
@@ -80,8 +55,6 @@ def log_call_stack_and_traceback(logging_function, *args, **kwds):
     if 'extra_info' in kwds:
         extra_info += STARS_BREAK + "Message: %s" % kwds['extra_info'] + '\n'
 
-        
-    
     msg = '\n' + reason_for_logging + extra_info + traceback_info +call_stack_info + repr_request
     
     logging_function(msg)
