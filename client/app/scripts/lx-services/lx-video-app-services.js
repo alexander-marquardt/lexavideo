@@ -20,17 +20,22 @@ var videoAppServices = angular.module('lxVideoApp.services', []);
 
 
 
-videoAppServices.service('adapterService', function () {
+videoAppServices.service('adapterService', function ($log) {
     /* simple wrapper for global functions contained in adapter.js. This will make it
        easier to do unit testing in the future.
      */
-    this.createIceServers = createIceServers;
-    this.RTCPeerConnection = RTCPeerConnection;
-    this.RTCSessionDescription = RTCSessionDescription;
-    this.getUserMedia = getUserMedia;
-    this.attachMediaStream = attachMediaStream;
-    this.reattachMediaStream = reattachMediaStream;
-    this.RTCIceCandidate = RTCIceCandidate;
+    try {
+        this.createIceServers = createIceServers;
+        this.RTCPeerConnection = RTCPeerConnection;
+        this.RTCSessionDescription = RTCSessionDescription;
+        this.getUserMedia = getUserMedia;
+        this.attachMediaStream = attachMediaStream;
+        this.reattachMediaStream = reattachMediaStream;
+        this.RTCIceCandidate = RTCIceCandidate;
+    }
+    catch(e) {
+        $log.error('Error: ' + e.message);
+    }
 });
 
 videoAppServices.service('channelMessageService', function() {
@@ -211,15 +216,19 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
 
     var onTurnResult = function(response) {
 
-        var turnServer = response.data;
-        // Create turnUris using the polyfill (adapter.js).
-        var iceServers = adapterService.createIceServers(turnServer.uris,
-            turnServer.username,
-            turnServer.password);
-        if (iceServers !== null) {
-            globalVarsService.pcConfig.iceServers = globalVarsService.pcConfig.iceServers.concat(iceServers);
+        try {
+            var turnServer = response.data;
+            // Create turnUris using the polyfill (adapter.js).
+            var iceServers = adapterService.createIceServers(turnServer.uris,
+                turnServer.username,
+                turnServer.password);
+            if (iceServers !== null) {
+                globalVarsService.pcConfig.iceServers = globalVarsService.pcConfig.iceServers.concat(iceServers);
+            }
+            $log.log('Got pcConfig.iceServers:' + globalVarsService.pcConfig.iceServers + '\n');
+        } catch(e) {
+            $log.error("Error: " + e.message);
         }
-        $log.log('Got pcConfig.iceServers:' + globalVarsService.pcConfig.iceServers + '\n');
     };
 
     var onTurnError = function() {
