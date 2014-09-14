@@ -26,8 +26,12 @@ from video_src.error_handling import handle_exceptions
 
 # We "hack" the directory that jinja looks for the template files so that it is always pointing to
 # the correct location, irregardless of if we are in the debug or production build. 
+# StrictUndefined means that jinja will raise an error if a template variable is used but has 
+# not been defined - this is important for us because we may accidentaly attempt to use an angular template
+# variable inside of jinja code, and this will notify us of the error.
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/" + vidsetup.BASE_STATIC_DIR))
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/" + vidsetup.BASE_STATIC_DIR),
+    undefined=jinja2.StrictUndefined)
 
 
 
