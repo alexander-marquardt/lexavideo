@@ -321,14 +321,9 @@ videoAppDirectives.directive('lxMiniVideoTemplateDirective', function($log) {
     };
 });
 
-videoAppDirectives.directive('lxCheckForErrorsAndRedirectIfNecessary', function($location) {
+videoAppDirectives.directive('lxShowRoomIsFullError', function() {
     return {
         restrict : 'A',
-        link: function(scope) {
-            if (scope.errorStatus) {
-                // errorStatus will be set on the new view's scope by welcomeViewErrCtrl
-                $location.path('/error/'+ scope.errorStatus);
-            }
-        }
+        templateUrl: 'lx-template-cache/room-is-full-error.html'
     };
 });

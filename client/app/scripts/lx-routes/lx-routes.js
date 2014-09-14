@@ -18,12 +18,13 @@ lxMainRoutes.controller('appCtrl', function($rootScope, $log) {
 });
 
 lxMainRoutes.controller('roomViewCtrl', function($scope,
-                        serverConstantsService, updateGlobalVarsWithServerConstantsService) {
+                                                 serverConstantsService, updateGlobalVarsWithServerConstantsService) {
+
+    $scope.roomViewCtrl = {};
 
     if (videoConstantsEmbeddedInHtml.errorStatus) {
-        // if there is an error, then it should trigger a redirect back to the welcome page.
-        // This will be checked in lxCheckForErrorsAndRedirectIfNecessary.
-        $scope.errorStatus = videoConstantsEmbeddedInHtml.errorStatus;
+        $scope.roomViewCtrl.errorStatus = videoConstantsEmbeddedInHtml.errorStatus;
+        $scope.roomViewCtrl.roomName = videoConstantsEmbeddedInHtml.roomName;
     }
     else {
         // copy all of the values that were embedded in the html into the serverConstantsService
@@ -35,10 +36,6 @@ lxMainRoutes.controller('roomViewCtrl', function($scope,
 });
 
 
-lxMainRoutes.controller('welcomeViewErrCtrl', function($scope, $routeParams) {
-   $scope.errorStatus = $routeParams.errorStatus;
-});
-
 
 lxMainRoutes.config(function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
@@ -46,11 +43,6 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/', {
         templateUrl: '/_lx/lx-templates/lx-welcome.html'
-    });
-    
-    $routeProvider.when('/error/:errorStatus', {
-        templateUrl: '/_lx/lx-templates/lx-welcome.html',
-        controller: 'welcomeViewErrCtrl'
     });
 
     $routeProvider.when('/:roomName', {

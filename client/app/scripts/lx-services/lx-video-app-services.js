@@ -227,7 +227,7 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
             }
             $log.log('Got pcConfig.iceServers:' + globalVarsService.pcConfig.iceServers + '\n');
         } catch(e) {
-            $log.error("Error: " + e.message);
+            $log.error('Error: ' + e.message);
         }
     };
 

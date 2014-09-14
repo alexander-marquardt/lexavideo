@@ -73,12 +73,6 @@ angular.module('videoApp')
             videoSignalingStatusForUserFeedback : null
         };
 
-        $scope.roomOccupancyObject = {
-            roomCreator : null,
-            roomJoiner : null,
-            roomName : serverConstantsService.roomName
-        };
-
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {
             // videoType should be 'HD Video' or 'ASCII Video'
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;

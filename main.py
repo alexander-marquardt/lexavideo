@@ -280,7 +280,7 @@ def get_video_params(room_name, user_agent):
     try:
         # Append strings to this list to have them thrown up in message boxes. This
         # will also cause the app to fail.
-        error_message = None;
+        error_status = None;
         # Get the base url without arguments.
         stun_server = get_default_stun_server()
     
@@ -382,6 +382,7 @@ def get_video_params(room_name, user_agent):
         initiator = 0
         
         if room_name:
+            room_link = "/" + room_name 
             with LOCK:
                 room = room_module.Room.get_by_id(room_name)
                 if not room and debug != "full":
@@ -406,8 +407,9 @@ def get_video_params(room_name, user_agent):
                     logging.warning('Room ' + room_name + ' is full')
                     
                     params = {
-                        'errorMessage': 'roomIsFull',
-                        'roomName': room_name
+                        'errorStatus': 'roomIsFull',
+                        'roomName': room_name,
+                        'roomLink': room_link,
                     }                
                     return json.dumps(params)
         
@@ -418,7 +420,7 @@ def get_video_params(room_name, user_agent):
             turn_url = 'https://computeengineondemand.appspot.com/'
             turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
         
-            room_link = "/" + room_name
+
             token = create_channel(room, user, token_timeout)
         
         else :
@@ -438,7 +440,7 @@ def get_video_params(room_name, user_agent):
         media_constraints = make_media_stream_constraints(audio, video)            
         
         params = {
-            'errorMessage': error_message,
+            'errorStatus': error_status,
             'channelToken': token,
             'myUsername': user,
             'roomName': room_name,
@@ -464,9 +466,9 @@ def get_video_params(room_name, user_agent):
         }        
         return json.dumps(params)
     except:
-        message = 'serverError'
-        status_reporting.log_call_stack_and_traceback(logging.error, extra_info = message) 
-        return json.dumps({'errorMessage': message}) 
+        error_status = 'serverError'
+        status_reporting.log_call_stack_and_traceback(logging.error, extra_info = error_status) 
+        return json.dumps({'errorStatus': error_status}) 
 
 class ConnectPage(webapp2.RequestHandler):
     
