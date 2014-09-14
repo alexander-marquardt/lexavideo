@@ -177,11 +177,11 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
     return {
         openChannel: function(localVideoObject, remoteVideoObject, videoSignalingObject) {
             $log.info('*** Opening channel. ***');
-            var channel = new goog.appengine.Channel(serverConstantsService.channelToken);
-            if (channel.token_) {
+            try {
+                var channel = new goog.appengine.Channel(serverConstantsService.channelToken);
                 channelServiceSupport.socket = channel.open(handler(this, localVideoObject, remoteVideoObject, videoSignalingObject));
-            } else {
-                $log.error('Channel requires a channelToken for it to open correctly.');
+            } catch(e) {
+                $log.error('Error opening channel: ' + e.message);
             }
         },
         asciiVideoObject : {
