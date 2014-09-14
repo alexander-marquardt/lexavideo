@@ -1,0 +1,24 @@
+
+
+#id-remote-video-wrapper-div {
+  //position: absolute;
+  //-webkit-transform: rotateY(180deg);
+  //-webkit-backface-visibility: hidden;
+  @media (max-width: $screen-xs-max) {
+    // initially is hidden on xs devices until we receive a remote stream, at which point the local-wrapper-div will
+    // be hidden and this div displayed.
+    display: none;
+  }
+}
+
+
+/* Place "dummy" css declarations below this comment -- these are css declarations that are only used
+ for transmitting sass variables into javascript, by creating a dummy element with the given property
+ set to the corresponding sass variable. */
+
+#id-dummy-xs-div {
+  // This is used by the javascript to determined the max width for xs screens. We set the width property to
+  // the $screen-xs-max value, and then read this value from javascript.
+  display: none;
+  width: $screen-xs-max;
+}

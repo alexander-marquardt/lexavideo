@@ -15,7 +15,12 @@
 
     <!-- the following line is used by grunt-usemin to detect which css it should combine this block into -->
     <!-- build:css(.tmp) styles/main.css -->
+    <!-- Note that the build scripts will generate "css" files from the "scss" files. For this reason,
+         these files are referenced with .css extensions as opposed to .scss extensions which appear in
+         the file system. During debugging, these are accessed from the .tmp directory, and for
+         release, they are accessed from the dist directory -->
     <link rel="stylesheet" href="/styles/lx-main.css" />
+
     <!-- endbuild -->
 
 
@@ -68,16 +73,17 @@
     <!-- TODO - remove any of the following javascript files that are not explicity required for functionality that
          is being used by the app. In particular, many of these are duplicated by angular-bootstrap.js
     <!-- bower:js -->
-    <script src="/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/bower_components/angular/angular.js"></script>
-    <script src="/bower_components/json3/lib/json3.js"></script>
-    <script src="/bower_components/angular-resource/angular-resource.js"></script>
-    <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="/bower_components/angular-animate/angular-animate.js"></script>
-    <script src="/bower_components/angular-touch/angular-touch.js"></script>
-    <script src="/bower_components/angular-route/angular-route.js"></script>
-    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
