@@ -250,14 +250,21 @@ video {
 }
 
 .cl-room-name-input {
-  max-width: 400px;
+  max-width: $screen-xs-max / 2;
 }
 
 .cl-xs-max-width {
-  width: $screen-xs-max;
+  max-width: $screen-xs-max;
 }
 
 .cl-md-max-width {
   max-width: $screen-md-max;
 }
 
+.cl-lg-max-width {
+  max-width: $screen-lg-max;
+}
+
+.cl-logo-min-width {
+  min-width: $screen-xs-max/3;
+}
