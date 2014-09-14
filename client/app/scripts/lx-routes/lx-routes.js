@@ -48,9 +48,8 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
         controller : 'roomViewCtrl'
     });
 
-
     $routeProvider.otherwise({
-        templateUrl: '/_lx/lx-templates/lx-welcome.html'
+        redirectTo: '/'
     });
 });
 
