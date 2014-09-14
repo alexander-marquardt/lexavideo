@@ -40,7 +40,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         return {
             /* This object will be loaded with a bunch of variables from server once the "video window view" is loaded
             eg will contain:
-            errorMessage : ...,
+            errorStatus : ...,
             channelToken : ...,
             myUsername : ..,
             ...

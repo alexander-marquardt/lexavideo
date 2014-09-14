@@ -15,24 +15,14 @@ import threading
 from google.appengine.api import channel
 from google.appengine.ext import ndb
 
-from python_src import status_reporting, http_helpers, models
+from video_src import status_reporting, http_helpers, models
+from video_src.error_handling import handle_exceptions
 
 # We "hack" the directory that jinja looks for the template files so that it is always pointing to
 # the correct location, irregardless of if we are in the debug or production build. 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/" + vidsetup.BASE_STATIC_DIR))
 
-def handle_exceptions(func):
-    # wrap a method inside a try/except block
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except:
-            self = args[0]
-            http_helpers.set_response_and_write_log(self.response, 500, "Internal Error", logging.error) 
-            
-    return wrapper
-            
 
 def set_response_to_json(response, dict_to_jsonify):
     # simple helper function to set response output to a json version of the dict_to_jsonify that is passed in.
@@ -109,28 +99,27 @@ class HandleProducts(webapp2.RequestHandler):
         logging.info("Called wilth PUT")
         
 class StorePurchaseOrder(webapp2.RequestHandler):
+    
+    @handle_exceptions
     def post(self):
         
         # Note: AngularJS posts json objects by default, so the standard self.request.get will not work.
         
-        try:
+        
+        json_object = json.loads(self.request.body)
+        products_list = json_object['products']
+        del json_object['products'] 
+        purchase_order = models.OrderReceived(**json_object)
+        purchase_order.put()
+        order_id = purchase_order.key.id()
+
+        for product in products_list:
+            new_product = models.ItemPurchased(**product)
+            new_product.order_object_reference = purchase_order.key
+            new_product.put()
             
-            json_object = json.loads(self.request.body)
-            products_list = json_object['products']
-            del json_object['products'] 
-            purchase_order = models.OrderReceived(**json_object)
-            purchase_order.put()
-            order_id = purchase_order.key.id()
-
-            for product in products_list:
-                new_product = models.ItemPurchased(**product)
-                new_product.order_object_reference = purchase_order.key
-                new_product.put()
-                
-            set_response_to_json(self.response, {'id': order_id})
-
-        except:
-            http_helpers.set_response_and_write_log(self.response, 404, "PurchaseOrders.post - Internal Error" , logging.warning)             
+        set_response_to_json(self.response, {'id': order_id})
+       
         
         
 class ShowOrders(webapp2.RequestHandler):
@@ -155,17 +144,12 @@ class ShowOrders(webapp2.RequestHandler):
             
 class VerifyLogin(webapp2.RequestHandler):
     
+    @handle_exceptions
     def post(self):
-        try:
-            json_object = json.loads(self.request.body)   
-            logging.info("Received post containing:" + repr(json_object))
-            
-        except:
-            http_helpers.set_response_and_write_log(self.response, 404, "VerifyLogin.post - Internal Error" % logging.warning)
-            
-            
-            
-            
+        json_object = json.loads(self.request.body)   
+        logging.info("Received post containing:" + repr(json_object))
+
+
 app = webapp2.WSGIApplication([
     (r'/', MainPage),
     (r'/index.html', MainPage),

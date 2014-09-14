@@ -89,14 +89,12 @@ def create_channel(room, user, duration_minutes):
     return channel.create_channel(client_id, duration_minutes)
 
 
-@handle_exceptions
 def make_loopback_answer(message):
     message = message.replace("\"offer\"", "\"answer\"")
     message = message.replace("a=ice-options:google-ice\\r\\n", "")
     return message
 
 
-@handle_exceptions
 def handle_message(room, user, message):
     # This function passes a message from one user in a given "room" to the other user in the same room.
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
@@ -139,7 +137,6 @@ def handle_message(room, user, message):
         #on_message(room, user, message)
 
 
-@handle_exceptions
 def send_saved_messages(client_id):
     messages = models.Message.get_saved_messages(client_id)
     for message in messages:
@@ -147,7 +144,6 @@ def send_saved_messages(client_id):
         logging.info('Delivered saved message to ' + client_id)
         message.delete()
         
-@handle_exceptions
 def on_message(room, user, message):
     client_id = room.make_client_id(user)
     if room.is_connected(user):
@@ -158,7 +154,6 @@ def on_message(room, user, message):
         new_message.put()
         #logging.info('Saved message for user ' + user)
 
-@handle_exceptions
 def add_media_track_constraint(track_constraints, constraint_string):
     tokens = constraint_string.split(':')
     mandatory = True
@@ -240,7 +235,6 @@ def write_response(response, response_type, target_page, params):
 
 
 @ndb.transactional
-@handle_exceptions
 def connect_user_to_room(room_name, active_user):
     room = room_module.Room.get_by_id(room_name)
     # Check if room has active_user in case that disconnect message comes before
