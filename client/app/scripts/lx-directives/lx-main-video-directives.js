@@ -326,8 +326,8 @@ videoAppDirectives.directive('lxCheckForErrorsAndRedirectIfNecessary', function(
         restrict : 'A',
         link: function(scope) {
             if (scope.errorMessage) {
-                // errorMessage is set by welcomeViewErrCtrl
-                $location.path('/err/'+ scope.errorMessage);
+                // errorMessage will be set on the new view's scope by welcomeViewErrCtrl
+                $location.path('/error/'+ scope.errorMessage);
             }
         }
     };
