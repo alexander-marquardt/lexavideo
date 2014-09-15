@@ -612,8 +612,8 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
                     '  constraints: \'' + JSON.stringify(serverConstantsService.pcConstraints) + '\'.');
             } catch (e) {
                 userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
-                alert('Cannot create RTCPeerConnection object; ' +
-                    'WebRTC is not supported by this browser.');
+                $log.error('Cannot create RTCPeerConnection object; ' +
+                            'WebRTC is not supported by this browser.');
                 return;
             }
             this.pc.onaddstream = onRemoteStreamAdded(this, localVideoObject, remoteVideoObject, videoSignalingObject);
