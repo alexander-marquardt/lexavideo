@@ -1,3 +1,5 @@
-/**
- * Created by alexandermarquardt on 2014-09-15.
- */
+
+
+var lxErrorHandling = angular.module('lxErrorHandling.services', []);
+
+

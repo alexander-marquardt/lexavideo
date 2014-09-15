@@ -6,7 +6,7 @@
 
 'use strict';
 
-var lxVideoTypeNegotiationServices = angular.module('lxVideoSettingsNegotiation.services', []);
+var lxVideoTypeNegotiationServices = angular.module('lxVideoNegotiation.services', []);
 
 
 lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', function($animate, $log,

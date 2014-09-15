@@ -4,7 +4,7 @@
 
 'use strict';
 
-var lxVideoTypeNegotiationDirectives = angular.module('lxVideoTypeNegotiation.directives', []);
+var lxVideoTypeNegotiationDirectives = angular.module('lxVideoNegotiation.directives', []);
 
 
 lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log, callService,
