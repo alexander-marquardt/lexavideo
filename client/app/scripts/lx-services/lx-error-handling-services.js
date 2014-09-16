@@ -20,9 +20,11 @@ lxErrorHandlingServices.factory('errorLogService', function($window) {
     }
 
     return {
-        logErrorToServer : function(errorObject, extraInfo) {
+        logErrorToServer : function(errorObjectOrMessage, extraInfo) {
 
-            // Read from configuration
+            // if this is called in response to an exception, then the first parameter is an object,
+            // otherwise it is just an error message.
+
             var data;
             var serviceUrl = "/_lx/log_error";
 
@@ -30,13 +32,21 @@ lxErrorHandlingServices.factory('errorLogService', function($window) {
                 var browserInfo = $.browser;
 
                 // This is the custom error content you send to server side
-                data = angular.toJson({
-                    errorMessage: errorObject.message,
-                    errorUrl: $window.location.href,
-                    stackTrace: errorObject.stack,
-                    extraInfo: extraInfo,
-                    browserInfo: browserInfo
-                });
+                if (errorObjectOrMessage.message) {
+                    data = angular.toJson({
+                        errorMessage: errorObjectOrMessage.message,
+                        errorUrl: $window.location.href,
+                        stackTrace: errorObjectOrMessage.stack,
+                        extraInfo: extraInfo,
+                        browserInfo: browserInfo
+                    });
+                } else {
+                    data = angular.toJson({
+                        errorMessage: errorObjectOrMessage,
+                        errorUrl: $window.location.href,
+                        browserInfo: browserInfo
+                    });
+                }
 
                 ajaxPost(serviceUrl, data);
 
