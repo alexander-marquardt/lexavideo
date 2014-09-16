@@ -14,4 +14,4 @@ proj.file-type = 'shared'
 proj.launch-config = {loc('run_app.py'): ('project',
         (u'.',
          ''))}
-proj.main-file = loc('run_app.py')
+proj.main-file = loc('../../../../usr/local/google_appengine/dev_appserver.py')
