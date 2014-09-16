@@ -20,6 +20,7 @@ import threading
 from google.appengine.api import channel
 from google.appengine.ext import ndb
 
+from video_src import error_reporting_from_client
 from video_src import models, room_module, http_helpers, status_reporting
 from video_src.error_handling import handle_exceptions
 
@@ -546,7 +547,6 @@ class GetVideoChatMain(webapp2.RequestHandler):
     
     @handle_exceptions
     def get(self, current_template, room_name):   
-        
         user_agent = self.request.headers['User-Agent']
         
         # copy the json parameters into a jinja variable
@@ -578,6 +578,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-video-chat-main.html>/<room_name:.+>', GetVideoChatMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', GetView),
     (r'/_lx/message', MessagePage),
+    (r'/_lx/log_error', error_reporting_from_client.LogClientError),
     (r'/_ah/channel/connected/', ConnectPage),
     (r'/_ah/channel/disconnected/', DisconnectPage),
     (r'/.*', MainPage),

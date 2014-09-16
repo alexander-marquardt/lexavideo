@@ -15,7 +15,6 @@ checkCompatibilityDirectives.directive('lxCheckIfSystemSupportsWebRtc', function
 
     var checkBrowserVersionToSeeIfGetUserMediaSupported = function() {
 
-
         if (lxCheckCompatibilityService.isIosDevice) {
             lxModalSupportService.showStandardModalWindow('lx-template-cache/ios-is-not-supported-modal.html');
         }
