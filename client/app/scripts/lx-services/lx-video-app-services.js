@@ -34,7 +34,8 @@ videoAppServices.service('adapterService', function ($log) {
         this.RTCIceCandidate = RTCIceCandidate;
     }
     catch(e) {
-        $log.error('Error: ' + e.message);
+        e.message = '\n\tError in adapterService\n\t' + e.message;
+        $log.error(e);
     }
 });
 
@@ -147,7 +148,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                         break;
 
                     default:
-                        $log.log('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
+                        $log.error('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
                 }
             });
 
@@ -181,7 +182,8 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                 var channel = new goog.appengine.Channel(serverConstantsService.channelToken);
                 channelServiceSupport.socket = channel.open(handler(this, localVideoObject, remoteVideoObject, videoSignalingObject));
             } catch(e) {
-                $log.error('Error opening channel: ' + e.message);
+                e.message = '\n\tError in openChannel\n\t' + e.message;
+                $log.error(e);
             }
         },
         asciiVideoObject : {
@@ -227,7 +229,8 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
             }
             $log.log('Got pcConfig.iceServers:' + globalVarsService.pcConfig.iceServers + '\n');
         } catch(e) {
-            $log.error('Error: ' + e.message);
+            e.message = '\n\tError in onTurnResult\n\t' + e.message;
+            $log.error(e);
         }
     };
 
@@ -611,9 +614,8 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
                     '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
                     '  constraints: \'' + JSON.stringify(serverConstantsService.pcConstraints) + '\'.');
             } catch (e) {
-                userNotificationService.messageError('Failed to create PeerConnection, exception: ' + e.message);
-                $log.error('Cannot create RTCPeerConnection object; ' +
-                            'WebRTC is not supported by this browser.');
+                e.message = '\n\tFailed to create PeerConnection\n\t' + e.message;
+                $log.error(e);
                 return;
             }
             this.pc.onaddstream = onRemoteStreamAdded(this, localVideoObject, remoteVideoObject, videoSignalingObject);
@@ -623,7 +625,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
         },
         removeLocalVideoStream : function(/*localStream*/) {
             if (this.pc) {
-                $log.log('This functionality is not supported by Firefox as of Aug 18 2014, and therefore should not be used.');
+                $log.error('This functionality is not supported by Firefox as of Aug 18 2014, and therefore should not be used.');
                 //this.pc.removeStream(localStream);
             }
         },
@@ -632,7 +634,7 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
             if (this.pc) {
                 this.pc.addStream(localStream);
             } else {
-                $log.log('** Error: no peer connection has been established, and therefore we cannot add the stream to it.');
+                $log.error('Error: no peer connection has been established, and therefore we cannot add the stream to it.');
             }
         }
     };
@@ -688,7 +690,8 @@ videoAppServices.factory('mediaService', function($log,$timeout, serverConstants
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'waitingForResponse';
 
             } catch (e) {
-                $log.error('getUserMedia failed with exception: ' + e.message);
+                e.message = '\n\tError in doGetUserMedia\n\t' + e.message;
+                $log.error(e);
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
             }
         }

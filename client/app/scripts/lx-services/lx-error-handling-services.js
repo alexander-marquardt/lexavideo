@@ -51,7 +51,7 @@ lxErrorHandlingServices.factory('errorLogService', function($window) {
                 ajaxPost(serviceUrl, data);
 
             } catch (e) {
-                console.log('Error in logErrorToServer: ' + e);
+                console.log('Error in logErrorToServer: ' + e.message);
                 try {
                     data = angular.toJson({errorMessage: 'Serious error!!! logErrorToServer has an internal error.'});
                     ajaxPost(serviceUrl, data);
