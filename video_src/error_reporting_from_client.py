@@ -16,7 +16,9 @@ class LogClientError(webapp2.RequestHandler):
         str_list.append('*** Javascript Browser Error ***')
         for key, value in content.iteritems():
             string = key + ': ' + repr(value)
-            str_list.extend(string.split('\\n'))
+            string = string.replace('\\t', '\t')
+            string = string.replace('\\n', '\n')
+            str_list.extend(string.split('\n'))
                 
         if 'errorMessage' in content:
             # Show the main error message at the very top so that it appears in the log summary on the server.
