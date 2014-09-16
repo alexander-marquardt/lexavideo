@@ -44,7 +44,7 @@ def log_call_stack_and_traceback(logging_function, *args, **kwds):
 
         
     # Check if request information is passed in
-    if 'request' in kwds:
+    if 'request' in kwds and kwds['request'] != None:
         try:
             repr_request = STARS_BREAK + "Request: " + repr(kwds['request']) + '\n'
         except:
