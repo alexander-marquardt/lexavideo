@@ -9,9 +9,9 @@ import logging, json
 
 STARS_BREAK = '******************************************\n'
 def log_call_stack_and_traceback(logging_function, *args, **kwds):
-    """Signal handler to log an exception or error condition for which we want further details 
+    '''Signal handler to log an exception or error condition for which we want further details 
     in the log files. 
-    logging_function should be one of the logging.* (ie. logging.error) functions"""
+    logging_function should be one of the logging.* (ie. logging.error) functions'''
     
     # get the exception -- however, we also use this function for general error logging
     # and therefore exc_info might return (None, None, None). 
@@ -31,10 +31,10 @@ def log_call_stack_and_traceback(logging_function, *args, **kwds):
         traceback_info =     STARS_BREAK + 'Traceback: ' + ''.join(traceback.format_exception(*excinfo)) + '\n'
                
     else: 
-        reason_for_logging = 'Status: No exception has occured\n'
+        reason_for_logging = 'No exception has occured\n'
         traceback_info = ''
        
-    # we don't need to include the current "log_call_stack_and_traceback" function in the stack trace. 
+    # we don't need to include the current 'log_call_stack_and_traceback' function in the stack trace. 
     start_frame = sys._getframe(1)
     
     call_stack_info_file = StringIO.StringIO()
@@ -46,16 +46,25 @@ def log_call_stack_and_traceback(logging_function, *args, **kwds):
     # Check if request information is passed in
     if 'request' in kwds and kwds['request'] != None:
         try:
-            repr_request = STARS_BREAK + "Request: " + repr(kwds['request']) + '\n'
+            request = kwds['request']
+            repr_request = STARS_BREAK + \
+                'Request that triggered traceback and call stack display:\n' +\
+                '\tPath: ' + request.path + '\n' + \
+                '\tURL: ' + request.url + '\n' + \
+                '\tRemote address: ' + request.remote_addr + '\n' + \
+                '\tQuery string: ' + request.query_string + '\n' + \
+                '\tHeaders: ' + repr(request.headers) + '\n' + \
+                '\tBody: ' + request.body + '\n'
         except:
-            repr_request = STARS_BREAK + 'log_call_stack_and_traceback error: Request repr() not available.\n'
+            repr_request = STARS_BREAK + 'log_call_stack_and_traceback error: "request" not available.\n'
     else:
         repr_request = ''
         
     if 'extra_info' in kwds:
-        extra_info += STARS_BREAK + "Message: %s" % kwds['extra_info'] + '\n'
+        extra_info += STARS_BREAK + '%s' % kwds['extra_info'] + '\n'
 
-    msg = '\n' + reason_for_logging + extra_info + traceback_info +call_stack_info + repr_request
+    end_of_error = STARS_BREAK + 'End of error feedback\n'
+    msg = '\n' + reason_for_logging + extra_info + traceback_info +call_stack_info + repr_request + end_of_error + STARS_BREAK
     
     logging_function(msg)
         

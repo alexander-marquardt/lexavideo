@@ -21,6 +21,11 @@ class LogClientError(webapp2.RequestHandler):
         if 'errorMessage' in content:
             # Show the main error message at the very top so that it appears in the log summary on the server.
             str_list.insert(0, content['errorMessage'])
+        elif 'errorUrl' in content:
+            str_list.insert(0, content['errorUrl'])
+        else:
+            str_list.insert(0, '\n')
+            
             
         str_list.append(STAR_SEPERATOR)        
         return '\n'.join(str_list)
