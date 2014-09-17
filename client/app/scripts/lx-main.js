@@ -4,6 +4,10 @@ var videoApp = angular.module('videoApp', [
     // proprietary routes
     'lxMain.routes',
 
+    // proprietary controllers
+    'lxMainVideo.controllers',
+    'lxLoginRegistration.controllers',
+
     // proprietary directives
     'lxAccessSystemResources.directives',
     'lxAsciiVideo.directives',

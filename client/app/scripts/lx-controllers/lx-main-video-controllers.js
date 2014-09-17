@@ -5,7 +5,7 @@
 
 // define externally defined variables so that jshint doesn't give warnings
 
-angular.module('videoApp')
+angular.module('lxMainVideo.controllers', [])
     .controller('lxMainVideoCtrl', function ($scope, serverConstantsService) {
 
         $scope.accessCameraAndMicrophoneObject = {

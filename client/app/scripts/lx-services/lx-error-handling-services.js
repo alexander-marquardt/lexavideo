@@ -1,4 +1,6 @@
 
+'use strict';
+
 /* global $ */
 
 var lxErrorHandlingServices = angular.module('lxErrorHandling.services', []);
@@ -12,9 +14,9 @@ lxErrorHandlingServices.factory('errorLogService', function($window) {
         // Log information to the server. Do not use angular to POST since angular
         // could itself be hosed.
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: serviceUrl,
-            contentType: "application/json",
+            contentType: 'application/json',
             data: data
         });
     }
@@ -26,7 +28,7 @@ lxErrorHandlingServices.factory('errorLogService', function($window) {
             // otherwise it is just an error message.
 
             var data;
-            var serviceUrl = "/_lx/log_error";
+            var serviceUrl = '/_lx/log_error';
 
             try {
                 var browserInfo = $.browser;
@@ -56,9 +58,9 @@ lxErrorHandlingServices.factory('errorLogService', function($window) {
                     data = angular.toJson({errorMessage: 'Serious error!!! logErrorToServer has an internal error.'});
                     ajaxPost(serviceUrl, data);
                 } catch (e) {
-                    console.log("Error in the error handler!!!");
+                    console.log('Error in the error handler!!!');
                 }
             }
         }
-    }
+    };
 });

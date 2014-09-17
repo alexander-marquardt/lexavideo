@@ -1,4 +1,7 @@
 
+
+'use strict';
+
 angular.module('videoApp')
 
     .config(function($provide){

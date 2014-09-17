@@ -4,7 +4,6 @@ var videoAppServices = angular.module('lxVideoApp.services', []);
 
 
 // define externally defined variables so that jshint doesn't give warnings
-/* global alert */
 /* global goog */
 
 /* The following globally defined functions come from adapter.js, which is a "shim" to make sure that
