@@ -269,3 +269,30 @@ video {
 .cl-logo-min-width {
   min-width: $screen-xs-max/3;
 }
+
+.cl-invalid-input-glow {
+  border-color: rgba($brand-danger, 0.4);
+  outline: 0;
+
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($brand-danger, .3);
+  -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($brand-danger, .3);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($brand-danger, .3);
+}
+
+.cl-invalid-input-glow:focus {
+    border-color: rgba($brand-danger, 0.8);
+    outline: 0;
+
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($brand-danger, .6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($brand-danger, .6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($brand-danger, .6);
+}
+
+.cl-valid-input-glow:focus {
+    border-color: rgba($brand-success, 0.8);
+    outline: 0;
+
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($brand-success, .6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($brand-success, .6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($brand-success, .6);
+}

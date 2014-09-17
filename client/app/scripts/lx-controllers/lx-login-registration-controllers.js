@@ -6,15 +6,52 @@
 // define externally defined variables so that jshint doesn't give warnings
 
 angular.module('lxLoginRegistration.controllers', ['ngResource'])
-    .controller('lxLoginRegistrationCtrl', function ($scope, $resource) {
+    .controller('lxLoginRegistrationCtrl', function ($log, $scope, $resource) {
 
         var handleRoomUrl = '/_lx/handle_room/';
         var RoomResource = $resource(handleRoomUrl + ':roomName', {roomName: '@roomName'});
+
+        $scope.minInputLength = 3;
+        $scope.maxInputLength = 25;
+
         $scope.createRoom = function(roomObj) {
             new RoomResource(roomObj).$save().then(function(){
 
             }, function() {
-
+                $log.warn('Failed to create room ' + roomObj.roomName);
             });
+        };
+
+        $scope.showFormScope = function() {
+            $log.debug($scope);
+        };
+
+
+        $scope.highlightInput = function(inputElement) {
+
+            var cssClass;
+            if (inputElement.$invalid  && inputElement.$dirty ) {
+                cssClass = 'cl-invalid-input-glow';
+            }
+            else if (inputElement.$valid && inputElement.$dirty) {
+                cssClass = 'cl-valid-input-glow';
+            }
+            else {
+                cssClass = '';
+            }
+            return cssClass;
+        };
+
+        $scope.getValidRoomNamePattern = function() {
+            /* Make sure that unicode characters don't cause crashes.
+               Try testing the javascript and the server with the following string: Iñtërnâtiônàlizætiøn☃💩
+               The following characters are reserved and should not be allowed in room names.
+                        $&+,/:;=?@<>#%{}|\^~[]
+               We also forbid the following characters because they may confuse the server
+                        '/' (forward slash), \s (blank space),
+
+               (note that in the regexp below, that '\', '[', and ']' need to be escaped.
+             */
+            return /^[^$&+,/:;=?@<>#%{}|\\^~\[\]\/\s]+$/;
         };
     });

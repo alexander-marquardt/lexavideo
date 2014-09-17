@@ -6,50 +6,43 @@
 {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
 <div lx-check-if-system-supports-web-rtc></div>
 
-
 <div ng-controller='lxLoginRegistrationCtrl'>
     <div class="row">
         <div >
             <div class="col-xs-12">
                 <div class="well cl-xs-max-width">
-                    <h3>Option 1: Create a new chat room </h3>
-                    <form role="form">
-                        <div class="form-group">
-                            <div class="input-group cl-room-name-input">
-                               <input class=" form-control" placeholder="room name" ng-model="roomObj.roomName" />
-                                <span class="input-group-btn">
-                                    <button ng-click="createRoom(roomObj)" class="btn btn-primary">Create</button>
+                    <h3>Enter into a chat room</h3>
+                    <div class="clearfix">
+                        <form name="createRoomForm" role="form" novalidate>
+                            <div class="form-group">
+                                <div class="cl-room-name-input input-group">
+                                   <input class=" form-control"
+                                          placeholder="room name"
+                                          name="enterRoomName"
+                                          ng-model="createRoom.roomName"
+                                          ng-minlength="{{ minInputLength }}"
+                                          ng-maxlength="{{ maxInputLength }}"
+                                          required
+                                          ng-class="highlightInput(createRoomForm.enterRoomName)"
+                                          ng-pattern="getValidRoomNamePattern()"
+                                           />
+                                    <span class="input-group-btn">
+                                        <button ng-click="createRoom(createRoom)" class="btn btn-primary">Enter chat room</button>
+                                    </span>
+                                </div>
+
+                                <span class="text-danger" ng-show="createRoomForm.enterRoomName.$error.required &&
+                                        createRoomForm.enterRoomName.$dirty">
+                                    Please enter a valid room name (cannot contain /+
                                 </span>
                             </div>
-                        </div>
-                    </form>
-                    <small class="text-muted">* Use this option to create a new chat room. Once you have created the room,
-                        you can invite someone to join you by sharing the room name.</small>
-
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div class="col-xs-12">
-                <div class="well cl-xs-max-width">
-                    <h3>Option 2: Enter in an existing chat room</h3>
-                    <form role="form">
-                        <div class="form-group">
-                            <div class="input-group cl-room-name-input">
-                               <input class="form-control" placeholder="room name" ng-model="roomObj" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary">Enter</button>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                    <small class="text-muted">* Use this option if someone has invited you to chat with them in a room that they have created</small>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
-
-
 
 
 {% endraw %}
