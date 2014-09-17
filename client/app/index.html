@@ -6,20 +6,19 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add user-scalable=no to disallow zooming -->
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css styles/vendor.css -->
 
-    <!-- The following line is used by wiredep (Wire dependencies) -->
-    <!-- bower:css -->
-    <!-- endbower -->
+
+    <!-- build:css styles/vendor.css -->
     <!-- endbuild -->
 
     <!-- the following line is used by grunt-usemin to detect which css it should combine this block into -->
     <!-- build:css(.tmp) styles/main.css -->
-    <!-- Note that the build scripts will generate "css" files from the "scss" files. For this reason,
-         these files are referenced with .css extensions as opposed to .scss extensions which appear in
-         the file system. During debugging, these are accessed from the .tmp directory, and for
-         release, they are accessed from the dist directory -->
-    <link rel="stylesheet" href="/styles/lx-main.css" />
+
+        <!-- Note that the build scripts will generate "css" files from the "scss" files. For this reason,
+             these files are referenced with .css extensions as opposed to .scss extensions which appear in
+             the file system. During debugging, these are accessed from the .tmp directory, and for
+             release, they are accessed from the dist directory -->
+        <link rel="stylesheet" href="/styles/lx-main.css" />
 
     <!-- endbuild -->
 
@@ -65,56 +64,49 @@
     <![endif]-->
 
     <!-- build:js scripts/vendor.js -->
-
-
-    <!-- TODO - remove any of the following javascript files that are not explicity required for functionality that
-         is being used by the app. In particular, many of these are duplicated by angular-bootstrap.js
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/json3/lib/json3.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <!-- endbower -->
+        <script src="/bower_components/jquery/dist/jquery.js"></script>
+        <script src="/bower_components/es5-shim/es5-shim.js"></script>
+        <script src="/bower_components/angular/angular.js"></script>
+        <script src="/bower_components/json3/lib/json3.js"></script>
+        <script src="/bower_components/angular-resource/angular-resource.js"></script>
+        <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
+        <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="/bower_components/angular-animate/angular-animate.js"></script>
+        <script src="/bower_components/angular-touch/angular-touch.js"></script>
+        <script src="/bower_components/angular-route/angular-route.js"></script>
+        <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <!-- endbuild -->
 
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
-    <script src="/scripts/vendor/lz-string-1.3.3.js"></script>
-    <script src="/scripts/vendor/viewport-size.js"></script>
-    <script src="/scripts/vendor/jquery.browser.js"></script>
-    <script src="/scripts/vendor/adapter.js"></script>
+        <!-- Load the polyfill to switch-hit between Chrome and Firefox -->
+        <script src="/scripts/vendor/lz-string-1.3.3.js"></script>
+        <script src="/scripts/vendor/viewport-size.js"></script>
+        <script src="/scripts/vendor/jquery.browser.js"></script>
+        <script src="/scripts/vendor/adapter.js"></script>
 
-    <script src="/scripts/lx-main.js"></script>
+        <script src="/scripts/lx-main.js"></script>
 
-    <script src="/scripts/lx-providers/lx-decorators.js"></script>
+        <script src="/scripts/lx-providers/lx-decorators.js"></script>
 
-    <script src="/scripts/lx-controllers/lx-main-video-controllers.js"></script>
-    <script src="/scripts/lx-controllers/lx-login-registration-controllers.js"></script>
+        <script src="/scripts/lx-controllers/lx-main-video-controllers.js"></script>
+        <script src="/scripts/lx-controllers/lx-login-registration-controllers.js"></script>
 
-    <script src="/scripts/lx-routes/lx-routes.js"></script>
+        <script src="/scripts/lx-routes/lx-routes.js"></script>
 
-    <script src="/scripts/lx-services/lx-error-handling-services.js"></script>
-    <script src="/scripts/lx-services/lx-video-app-services.js"></script>
-    <script src="/scripts/lx-services/lx-global-vars-and-constants-services.js"></script>
-    <script src="/scripts/lx-services/lx-check-compatibility-services.js"></script>
-    <script src="/scripts/lx-services/lx-modal-support-services.js"></script>
-    <script src="/scripts/lx-services/lx-video-negotiation-services.js"></script>
+        <script src="/scripts/lx-services/lx-error-handling-services.js"></script>
+        <script src="/scripts/lx-services/lx-video-app-services.js"></script>
+        <script src="/scripts/lx-services/lx-global-vars-and-constants-services.js"></script>
+        <script src="/scripts/lx-services/lx-check-compatibility-services.js"></script>
+        <script src="/scripts/lx-services/lx-modal-support-services.js"></script>
+        <script src="/scripts/lx-services/lx-video-negotiation-services.js"></script>
 
-    <script src="/scripts/lx-directives/lx-access-system-resource-directives.js"></script>
-    <script src="/scripts/lx-directives/lx-check-compatibility-directives.js"></script>
-    <script src="/scripts/lx-directives/lx-main-video-directives.js"></script>
-    <script src="/scripts/lx-directives/lx-ascii-video-directives.js"></script>
-    <script src="/scripts/lx-directives/lx-video-negotiation-directives.js"></script>
-
-
+        <script src="/scripts/lx-directives/lx-access-system-resource-directives.js"></script>
+        <script src="/scripts/lx-directives/lx-check-compatibility-directives.js"></script>
+        <script src="/scripts/lx-directives/lx-main-video-directives.js"></script>
+        <script src="/scripts/lx-directives/lx-ascii-video-directives.js"></script>
+        <script src="/scripts/lx-directives/lx-video-negotiation-directives.js"></script>
+    
     <!-- endbuild -->
 
     {% if ENABLE_LIVE_RELOAD %}
