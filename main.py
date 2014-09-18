@@ -20,7 +20,7 @@ import threading
 from google.appengine.api import channel
 from google.appengine.ext import ndb
 
-from video_src import error_reporting_from_client
+from video_src import error_reporting_from_client, constants
 from video_src import models, room_module, http_helpers, status_reporting, rest_functionality
 from video_src.error_handling import handle_exceptions
 
@@ -559,6 +559,21 @@ class GetVideoChatMain(webapp2.RequestHandler):
         self.response.out.write(content)
 
 
+class GetVideoChatWelcome(webapp2.RequestHandler):
+    """ Render whatever template the client has requested """
+    
+    @handle_exceptions
+    def get(self, current_template):   
+        response_type = 'jinja'
+        params = {'serverLoginParamsJson' : json.dumps(
+            {'minRoomChars' : constants.MIN_ROOM_CHARS,
+             'maxRoomChars' : constants.MAX_ROOM_CHARS,
+             })}
+
+        target_page = current_template
+        write_response(self.response, response_type, target_page, params)
+
+
 class MainPage(webapp2.RequestHandler):
     """The main UI page, renders the 'index.html' template."""
     
@@ -576,6 +591,7 @@ class MainPage(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-video-chat-main.html>/<roomName:.+>', GetVideoChatMain),
+    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-welcome.html>', GetVideoChatWelcome),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', GetView),
     webapp2.Route(r'/_lx/handle_room/<roomName:.+>', rest_functionality.HandleRooms),
     (r'/_lx/message', MessagePage),

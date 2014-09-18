@@ -20,14 +20,16 @@ angular.module('lxUserInputFeedback.directives', [])
                         // after previously entering in an invalid room name.
                         return inputElement.value
                     },
-                    function(newVal) {
+                    function(newRoomName) {
                         var roomObj = null;
 
                         ctrl.$setValidity('validRoom', true);
-                        ctrl.roomIsWaitingForJoiners = false;
+                        ctrl.roomNotFullMessage = '';
+                        ctrl.roomIsEmptyMessage = '';
+
                         if (ctrl.$valid) {
-                            if (newVal) {
-                                roomObj = lxHandleRoomService.getRoom(newVal);
+                            if (newRoomName) {
+                                roomObj = lxHandleRoomService.getRoom(newRoomName);
                             }
 
                             roomObj && roomObj.$promise.then(function(data) {
@@ -36,8 +38,18 @@ angular.module('lxUserInputFeedback.directives', [])
                                 } else {
                                     ctrl.$setValidity('validRoom', true);
                                 }
-                                ctrl.roomIsWaitingForJoiners = (data.numInRoom > 0 && data.numInRoom < maxOccupancy);
-                                ctrl.numInRoom = data.numInRoom;
+
+                                if (data.numInRoom === 0) {
+                                   ctrl.roomIsEmptyMessage = 'Room is available!'
+                                }
+                                else if (data.numInRoom > 0 && data.numInRoom < maxOccupancy) {
+                                    var msg = newRoomName + ' has ' + data.numInRoom + ' occupant';
+                                    var plural = newRoomName + 's';
+                                    ctrl.roomNotFullMessage =  data.numInRoom === 1 ? msg : plural;
+                                }
+
+
+
                             }, function() {
                                 throw new Error('Unknown server error');
                             })

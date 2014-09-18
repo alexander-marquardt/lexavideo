@@ -1,7 +1,10 @@
+
+
+<script type='text/javascript'>
+    var loginConstantsEmbeddedInHtml = {{ serverLoginParamsJson }}
+</script>
+
 {% raw %}
-
-
-<div>{{ errorStatus }}</div>
 
 {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
 <div lx-check-if-system-supports-web-rtc></div>
@@ -22,6 +25,7 @@
                                                ng-model="roomObj.roomName"
                                                ng-minlength="{{ minInputLength }}"
                                                ng-maxlength="{{ maxInputLength }}"
+                                               maxlength = "{{ maxInputLength }}"
                                                ng-class="highlightInput(createRoomForm.roomNameInputElem)"
                                                ng-pattern="getValidRoomNamePattern()"
                                                ng-trim="false"
@@ -41,8 +45,13 @@
                                             <strong> {{ invalidCharacterFeedback }} </strong></small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.validRoom">Room is full</small>
                                     </div>
-                                    <div class="text-success" ng-show="createRoomForm.roomNameInputElem.roomIsWaitingForJoiners">
-                                        This room has {{ createRoomForm.roomNameInputElem.numInRoom }} occupant who is currently waiting for someone to join</div>
+                                    <div class="text-success">
+                                        <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
+                                           {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
+                                        <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
+                                            {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
+                                    </div>
+
 
                                 </div>
                             </form>

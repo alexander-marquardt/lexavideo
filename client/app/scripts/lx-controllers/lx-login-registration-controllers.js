@@ -9,8 +9,8 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
     .controller('lxLoginRegistrationCtrl', function ($log, $scope, lxHandleRoomService) {
 
 
-        $scope.minInputLength = 3;
-        $scope.maxInputLength = 25;
+        $scope.minInputLength = loginConstantsEmbeddedInHtml.minRoomChars;
+        $scope.maxInputLength = loginConstantsEmbeddedInHtml.maxRoomChars;
         $scope.invalidCharacter = ''; // used for displaying which invalid characters have been entered.
 
         $scope.createRoom = lxHandleRoomService.createRoom;
