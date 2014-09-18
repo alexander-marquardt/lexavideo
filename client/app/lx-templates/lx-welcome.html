@@ -22,11 +22,10 @@
                                                ng-model="roomObj.roomName"
                                                ng-minlength="{{ minInputLength }}"
                                                ng-maxlength="{{ maxInputLength }}"
-                                               required
                                                ng-class="highlightInput(createRoomForm.roomNameInputElem)"
                                                ng-pattern="getValidRoomNamePattern()"
                                                ng-trim="false"
-                                               lx-push-input-values-to-scope
+                                               required
                                                 />
                                         <span class="input-group-btn">
                                             <button ng-click="createRoom(roomObj)" class="btn btn-primary">Enter chat room</button>

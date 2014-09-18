@@ -23,6 +23,26 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
             });
         };
 
+        $scope.getRoom = function(roomName) {
+
+            if (roomName) {
+                RoomResource.get({roomName:roomName}).$promise.then(function(data) {
+
+                    $log.debug(data);
+
+                }, function() {
+                    throw new Error('Failed to get response from server');
+                });
+            }
+
+        };
+
+        $scope.$watch('createRoomForm.roomNameInputElem.$modelValue', function(newVal) {
+            if ($scope.roomObj) {
+                $scope.getRoom($scope.roomObj.roomName);
+            }
+        });
+
         $scope.showFormScope = function() {
             $log.debug($scope);
         };

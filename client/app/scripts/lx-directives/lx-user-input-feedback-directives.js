@@ -3,15 +3,11 @@
 
 angular.module('lxUserInputFeedback.directives', [])
 
+    .directive('ensureUnique', function($http) {
+        return {
+            require: 'ngModel',
+            link: function() {
 
-.directive('lxNotUsed-TBD', function($log) {
-
-
-    return {
-        restrict: 'A',
-        link : function(scope, elem) {
-
+            }
         }
-    }
-});
-
+    });
