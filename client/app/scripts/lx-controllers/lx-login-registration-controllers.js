@@ -6,37 +6,17 @@
 // define externally defined variables so that jshint doesn't give warnings
 
 angular.module('lxLoginRegistration.controllers', ['ngResource'])
-    .controller('lxLoginRegistrationCtrl', function ($log, $scope, $resource) {
+    .controller('lxLoginRegistrationCtrl', function ($log, $scope, lxHandleRoomService) {
 
-        var handleRoomUrl = '/_lx/handle_room/';
-        var RoomResource = $resource(handleRoomUrl + ':roomName', {roomName: '@roomName'});
 
         $scope.minInputLength = 3;
         $scope.maxInputLength = 25;
         $scope.invalidCharacter = ''; // used for displaying which invalid characters have been entered.
 
-        $scope.createRoom = function(roomObj) {
-            new RoomResource(roomObj).$save().then(function(){
+        $scope.createRoom = lxHandleRoomService.createRoom;
+        $scope.getRoom = lxHandleRoomService.getRoom;
 
-            }, function() {
-                $log.warn('Failed to create room ' + roomObj.roomName);
-            });
-        };
-
-        $scope.getRoom = function(roomName) {
-
-            if (roomName) {
-                RoomResource.get({roomName:roomName}).$promise.then(function(data) {
-
-                    $log.debug(data);
-
-                }, function() {
-                    throw new Error('Failed to get response from server');
-                });
-            }
-
-        };
-
+        
         $scope.$watch('createRoomForm.roomNameInputElem.$modelValue', function(newVal) {
             if ($scope.roomObj) {
                 $scope.getRoom($scope.roomObj.roomName);

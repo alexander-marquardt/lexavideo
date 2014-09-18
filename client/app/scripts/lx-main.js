@@ -20,6 +20,7 @@ var videoApp = angular.module('videoApp', [
     'lxCheckCompatibility.services',
     'lxErrorHandling.services',
     'lxGlobalVarsAndConstants.services',
+    'lxHttp.services',
     'lxModalSupport.services',
     'lxVideoApp.services',
     'lxVideoNegotiation.services',
