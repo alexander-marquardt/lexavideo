@@ -26,7 +26,7 @@ angular.module('lxHttp.services', [])
 
             getRoom : function(roomName) {
 
-                var roomObj = {};
+                var roomObj = null;
                 if (roomName) {
                     roomObj = RoomResource.get({roomName:roomName});
                     roomObj.$promise.then(function(data) {

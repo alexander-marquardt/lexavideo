@@ -7,19 +7,21 @@ class Room(ndb.Model):
     """All the data we store for a room"""
     
     # track the users that have joined into a room (ie. opened the URL to join a room)
-    room_creator = ndb.StringProperty(default = None)
-    room_joiner = ndb.StringProperty(default = None)
+    roomCreator = ndb.StringProperty(default = None)
+    roomJoiner = ndb.StringProperty(default = None)
     
     # track if the users in the room have a channel open (channel api)
-    room_creator_connected = ndb.BooleanProperty(default=False)
-    room_joiner_connected = ndb.BooleanProperty(default=False)
+    roomCreatorConnected = ndb.BooleanProperty(default=False)
+    roomJoinerConnected = ndb.BooleanProperty(default=False)
+    
+    roomOccupancy = ndb.IntegerProperty(default=0)
 
     def __str__(self):
         result = '['
-        if self.room_creator:
-            result += "%s-%r" % (self.room_creator, self.room_creator_connected)
-        if self.room_joiner:
-            result += ", %s-%r" % (self.room_joiner, self.room_joiner_connected)
+        if self.roomCreator:
+            result += "%s-%r" % (self.roomCreator, self.roomCreatorConnected)
+        if self.roomJoiner:
+            result += ", %s-%r" % (self.roomJoiner, self.roomJoinerConnected)
         result += ']'
         return result
 
@@ -37,18 +39,18 @@ class Room(ndb.Model):
             
     def remove_user(self, user):
         self.delete_saved_messages(self.make_client_id(user))
-        if user == self.room_joiner:
-            self.room_joiner = None
-            self.room_joiner_connected = False
-        if user == self.room_creator:
-            if self.room_joiner:
-                self.room_creator = self.room_joiner
-                self.room_creator_connected = self.room_joiner_connected
-                self.room_joiner = None
-                self.room_joiner_connected = False
+        if user == self.roomJoiner:
+            self.roomJoiner = None
+            self.roomJoinerConnected = False
+        if user == self.roomCreator:
+            if self.roomJoiner:
+                self.roomCreator = self.roomJoiner
+                self.roomCreatorConnected = self.roomJoinerConnected
+                self.roomJoiner = None
+                self.roomJoinerConnected = False
             else:
-                self.room_creator = None
-                self.room_creator_connected = False
+                self.roomCreator = None
+                self.roomCreatorConnected = False
         if self.get_occupancy() > 0:
             self.put()
         else:
@@ -57,47 +59,51 @@ class Room(ndb.Model):
 
     def get_occupancy(self):
         occupancy = 0
-        if self.room_creator:
+        if self.roomCreator:
             occupancy += 1
-        if self.room_joiner:
+        if self.roomJoiner:
             occupancy += 1
         return occupancy
 
     def get_other_user(self, user):
-        if user == self.room_creator:
-            return self.room_joiner
-        elif user == self.room_joiner:
-            return self.room_creator
+        if user == self.roomCreator:
+            return self.roomJoiner
+        elif user == self.roomJoiner:
+            return self.roomCreator
         else:
             return None
 
     def has_user(self, user):
-        return (user and (user == self.room_creator or user == self.room_joiner))
+        return (user and (user == self.roomCreator or user == self.roomJoiner))
 
     def add_user(self, user):
-        if not self.room_creator:
-            self.room_creator = user
-        elif not self.room_joiner:
-            self.room_joiner = user
+        if not self.roomCreator:
+            self.roomCreator = user
+        elif not self.roomJoiner:
+            self.roomJoiner = user
         else:
             raise RuntimeError('room is full')
+        
+        self.roomOccupancy = self.get_occupancy()
         self.put()
 
     def set_connected(self, user):
-        if user == self.room_creator:
-            self.room_creator_connected = True
-        if user == self.room_joiner:
-            self.room_joiner_connected = True
+        if user == self.roomCreator:
+            self.roomCreatorConnected = True
+        if user == self.roomJoiner:
+            self.roomJoinerConnected = True
+
         self.put()
 
-    def is_connected(self, user):
-        if user == self.room_creator:
-            return self.room_creator_connected
-        if user == self.room_joiner:
-            return self.room_joiner_connected
-        
-    def user_is_room_creator(self, user):
-        return True if user == self.room_creator else False
 
-    def user_is_room_joiner(self, user):
-        return True if user == self.room_joiner else False
+    def is_connected(self, user):
+        if user == self.roomCreator:
+            return self.roomCreatorConnected
+        if user == self.roomJoiner:
+            return self.roomJoinerConnected
+        
+    def user_is_roomCreator(self, user):
+        return True if user == self.roomCreator else False
+
+    def user_is_roomJoiner(self, user):
+        return True if user == self.roomJoiner else False

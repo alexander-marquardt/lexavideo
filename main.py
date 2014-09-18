@@ -21,7 +21,7 @@ from google.appengine.api import channel
 from google.appengine.ext import ndb
 
 from video_src import error_reporting_from_client
-from video_src import models, room_module, http_helpers, status_reporting
+from video_src import models, room_module, http_helpers, status_reporting, rest_functionality
 from video_src.error_handling import handle_exceptions
 
 
@@ -108,7 +108,7 @@ def handle_message(room, user, message):
     message_obj = json.loads(message)
     message = message.decode("utf-8")
     other_user = room.get_other_user(user)
-    room_name = room.key.id()
+    roomName = room.key.id()
 
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
@@ -117,8 +117,8 @@ def handle_message(room, user, message):
         # This would remove the other_user in loopback test too.
         # So check its availability before forwarding Bye message.
         room.remove_user(user)
-        logging.info('User ' + user + ' quit from room ' + room_name)
-        logging.info('Room ' + room_name + ' has state ' + str(room))
+        logging.info('User ' + user + ' quit from room ' + roomName)
+        logging.info('Room ' + roomName + ' has state ' + str(room))
 
     if message_type == 'videoSettings':
         logging.info('***** videoSettings message received: ' + repr(message_payload))
@@ -137,7 +137,7 @@ def handle_message(room, user, message):
         on_message(room, other_user, message)
 
     else:
-        logging.warning('Cannot deliver message from user: %s to other_user: %s since they are not in the room: %s' % (user, other_user, room_name))
+        logging.warning('Cannot deliver message from user: %s to other_user: %s since they are not in the room: %s' % (user, other_user, roomName))
         # For unittest
         #on_message(room, user, message)
 
@@ -240,14 +240,14 @@ def write_response(response, response_type, target_page, params):
 
 
 @ndb.transactional
-def connect_user_to_room(room_name, active_user):
-    room = room_module.Room.get_by_id(room_name)
+def connect_user_to_room(roomName, active_user):
+    room = room_module.Room.get_by_id(roomName)
     # Check if room has active_user in case that disconnect message comes before
     # connect message with unknown reason, observed with local AppEngine SDK.
     if room and room.has_user(active_user):
         room.set_connected(active_user)
-        logging.info('User ' + active_user + ' connected to room ' + room_name)
-        logging.info('Room ' + room_name + ' has state ' + str(room))
+        logging.info('User ' + active_user + ' connected to room ' + roomName)
+        logging.info('Room ' + roomName + ' has state ' + str(room))
         
         other_user = room.get_other_user(active_user);
         
@@ -272,13 +272,13 @@ def connect_user_to_room(room_name, active_user):
         on_message(room, active_user, json.dumps(message_obj))        
         
     else:
-        logging.warning('Unexpected Connect Message to room ' + room_name + 'by user ' + active_user)
+        logging.warning('Unexpected Connect Message to room ' + roomName + 'by user ' + active_user)
         
     return room
 
 
 
-def get_video_params(room_name, user_agent):
+def get_video_params(roomName, user_agent):
     """ Returns a json object that contains the video parameters that will be used for setting up the webRtc communications and display"""
     
     
@@ -377,25 +377,25 @@ def get_video_params(room_name, user_agent):
         #unittest = self.request.get('unittest')
         #if unittest:
             ## Always create a new room for the unit tests.
-            #room_name = generate_random(8)
+            #roomName = generate_random(8)
         
-        room_name = room_name
+        roomName = roomName
         
         
-        logging.info('Preparing to add user to room ' + room_name)
+        logging.info('Preparing to add user to room ' + roomName)
         user = None
         initiator = 0
         
-        if room_name:
-            room_link = "/" + room_name 
+        if roomName:
+            room_link = "/" + roomName 
             with LOCK:
-                room = room_module.Room.get_by_id(room_name)
+                room = room_module.Room.get_by_id(roomName)
                 if not room and debug != "full":
                     # New room.
                     user = generate_random(8)
-                    room = room_module.Room(id = room_name)
+                    room = room_module.Room(id = roomName)
                     room.add_user(user)
-                    logging.info('First user ' + user + ' added to room ' + room_name)
+                    logging.info('First user ' + user + ' added to room ' + roomName)
                     if debug != 'loopback':
                         initiator = 0
                     else:
@@ -405,21 +405,21 @@ def get_video_params(room_name, user_agent):
                     # 1 occupant.
                     user = generate_random(8)
                     room.add_user(user)
-                    logging.info('Second user ' + user + ' added to room ' + room_name)                    
+                    logging.info('Second user ' + user + ' added to room ' + roomName)                    
                     initiator = 1
                 else:
                     # 2 occupants (full).
-                    logging.warning('Room ' + room_name + ' is full')
+                    logging.warning('Room ' + roomName + ' is full')
                     
                     params = {
                         'errorStatus': 'roomIsFull',
-                        'roomName': room_name,
+                        'roomName': roomName,
                         'roomLink': room_link,
                     }                
                     return json.dumps(params)
         
             
-            logging.info('Room ' + room_name + ' has state ' + str(room))
+            logging.info('Room ' + roomName + ' has state ' + str(room))
         
     
             turn_url = 'https://computeengineondemand.appspot.com/'
@@ -448,7 +448,7 @@ def get_video_params(room_name, user_agent):
             'errorStatus': error_status,
             'channelToken': token,
             'myUsername': user,
-            'roomName': room_name,
+            'roomName': roomName,
             'roomLink': room_link,
             'rtcInitiator': initiator,
             'pcConfig': pc_config,
@@ -480,9 +480,9 @@ class ConnectPage(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         key = self.request.get('from')
-        room_name, user = key.split('/')
+        roomName, user = key.split('/')
         with LOCK:
-            room = connect_user_to_room(room_name, user)
+            room = connect_user_to_room(roomName, user)
             if room and room.has_user(user):
                 send_saved_messages(room.make_client_id(user))
 
@@ -495,14 +495,14 @@ class DisconnectPage(webapp2.RequestHandler):
         pass    
 
         #key = self.request.get('from')
-        #room_name, user = key.split('/')
+        #roomName, user = key.split('/')
         #with LOCK:
-            #room = Room.get_by_id(room_name)
+            #room = Room.get_by_id(roomName)
             #if room and room.has_user(user):
                 #other_user = room.get_other_user(user)
                 #room.remove_user(user)
-                #logging.info('User ' + user + ' removed from room ' + room_name)
-                #logging.info('Room ' + room_name + ' has state ' + str(room))
+                #logging.info('User ' + user + ' removed from room ' + roomName)
+                #logging.info('Room ' + roomName + ' has state ' + str(room))
                 #if other_user and other_user != user:
 
                     #message_object = {"messageType": "sdp",
@@ -512,7 +512,7 @@ class DisconnectPage(webapp2.RequestHandler):
                     #channel.send_message(make_client_id(room, other_user),
                                                                 #json.dumps(message_object))
                     #logging.info('Sent BYE to ' + other_user)
-        #logging.warning('User ' + user + ' disconnected from room ' + room_name)
+        #logging.warning('User ' + user + ' disconnected from room ' + roomName)
 
 
 class MessagePage(webapp2.RequestHandler):
@@ -520,14 +520,14 @@ class MessagePage(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         message = self.request.body
-        room_name = self.request.get('r')
+        roomName = self.request.get('r')
         user = self.request.get('u')
         with LOCK:
-            room = room_module.Room.get_by_id(room_name)
+            room = room_module.Room.get_by_id(roomName)
             if room:
                 handle_message(room, user, message)
             else:
-                logging.warning('Unknown room ' + room_name)
+                logging.warning('Unknown room ' + roomName)
 
 
 
@@ -546,11 +546,11 @@ class GetView(webapp2.RequestHandler):
 class GetVideoChatMain(webapp2.RequestHandler):
     
     @handle_exceptions
-    def get(self, current_template, room_name):   
+    def get(self, current_template, roomName):   
         user_agent = self.request.headers['User-Agent']
         
         # copy the json parameters into a jinja variable
-        server_video_params_json = get_video_params(room_name, user_agent)
+        server_video_params_json = get_video_params(roomName, user_agent)
         params = {'serverVideoParamsJson' : server_video_params_json}    
         
         # update the self.response with the current view
@@ -575,8 +575,9 @@ class MainPage(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-video-chat-main.html>/<room_name:.+>', GetVideoChatMain),
+    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-video-chat-main.html>/<roomName:.+>', GetVideoChatMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', GetView),
+    webapp2.Route(r'/_lx/handle_room/<roomName:.+>', rest_functionality.HandleRooms),
     (r'/_lx/message', MessagePage),
     (r'/_lx/log_error', error_reporting_from_client.LogClientError),
     (r'/_ah/channel/connected/', ConnectPage),

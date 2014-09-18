@@ -14,14 +14,8 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
         $scope.invalidCharacter = ''; // used for displaying which invalid characters have been entered.
 
         $scope.createRoom = lxHandleRoomService.createRoom;
-        $scope.getRoom = lxHandleRoomService.getRoom;
 
-        
-        $scope.$watch('createRoomForm.roomNameInputElem.$modelValue', function(newVal) {
-            if ($scope.roomObj) {
-                $scope.getRoom($scope.roomObj.roomName);
-            }
-        });
+
 
         $scope.showFormScope = function() {
             $log.debug($scope);

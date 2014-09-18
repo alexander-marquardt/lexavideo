@@ -25,6 +25,7 @@
                                                ng-class="highlightInput(createRoomForm.roomNameInputElem)"
                                                ng-pattern="getValidRoomNamePattern()"
                                                ng-trim="false"
+                                               ensure-unique="roomName"
                                                required
                                                 />
                                         <span class="input-group-btn">
@@ -38,7 +39,9 @@
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">You have entered an invalid character:
                                             <strong> {{ invalidCharacter }}</strong></small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.validRoom">Room is full</small>
                                     </div>
+
                                 </div>
                             </form>
                     </div>
