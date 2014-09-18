@@ -19,7 +19,7 @@
                                         <input class=" form-control"
                                                placeholder="room name"
                                                name="roomNameInputElem"
-                                               ng-model="createRoom.roomName"
+                                               ng-model="roomObj.roomName"
                                                ng-minlength="{{ minInputLength }}"
                                                ng-maxlength="{{ maxInputLength }}"
                                                required
@@ -29,7 +29,7 @@
                                                lx-push-input-values-to-scope
                                                 />
                                         <span class="input-group-btn">
-                                            <button ng-click="createRoom(createRoom.roomName)" class="btn btn-primary">Enter chat room</button>
+                                            <button ng-click="createRoom(roomObj)" class="btn btn-primary">Enter chat room</button>
                                         </span>
                                     </div>
 
@@ -37,7 +37,7 @@
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a room name</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern">You have entered an invalid character: "{{ invalidCharacter }}"</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern">You have entered an invalid character: (<strong>{{ invalidCharacter }}</strong>)</small>
                                     </div>
                                 </div>
                             </form>
