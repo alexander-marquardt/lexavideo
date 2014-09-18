@@ -13,6 +13,7 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
 
         $scope.minInputLength = 3;
         $scope.maxInputLength = 25;
+        $scope.invalidCharacter = ''; // used for displaying which invalid characters have been entered.
 
         $scope.createRoom = function(roomObj) {
             new RoomResource(roomObj).$save().then(function(){
@@ -44,8 +45,11 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
 
 
         $scope.$watch('createRoomForm.roomNameInputElem.$error.pattern', function(newVal) {
-            $log.debug('Pattern: ' + $scope.createRoom.roomName);
-            $scope.patternError = $scope.createRoom.roomName;
+            if ($scope.createRoomForm.roomNameInputElem.$error.pattern) {
+                // Get the last character that was entered when $error.pattern changed to true.
+                // The will set invalidCharacter to the first invalid character in the sequence.
+                $scope.invalidCharacter = $scope.createRoomForm.roomNameInputElem.$viewValue.slice(-1)
+            }
         });
 
 

@@ -13,7 +13,6 @@
                 <div class="well cl-xs-max-width">
                     <h3>Enter into a chat room</h3>
                     <div class="clearfix">
-                        <div lx-push-input-values-to-scope>
                             <form name="createRoomForm" role="form" novalidate>
                                 <div class="form-group">
                                     <div class="cl-room-name-input input-group">
@@ -27,24 +26,21 @@
                                                ng-class="highlightInput(createRoomForm.roomNameInputElem)"
                                                ng-pattern="getValidRoomNamePattern()"
                                                ng-trim="false"
+                                               lx-push-input-values-to-scope
                                                 />
                                         <span class="input-group-btn">
                                             <button ng-click="createRoom(createRoom.roomName)" class="btn btn-primary">Enter chat room</button>
                                         </span>
                                     </div>
 
-                                    <div ng-bind="createRoom.roomName"></div>
                                     <div class="text-danger" ng-show="createRoomForm.roomNameInputElem.$dirty">
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a username</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a room name</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern">You have entered an invalid character {{ patternError }}</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.unique">That room is taken, please try another</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern">You have entered an invalid character: "{{ invalidCharacter }}"</small>
                                     </div>
                                 </div>
                             </form>
-                        </div>
-
                     </div>
                 </div>
             </div>
