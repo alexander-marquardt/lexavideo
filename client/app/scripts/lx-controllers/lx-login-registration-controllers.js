@@ -43,6 +43,12 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
         };
 
 
+        $scope.$watch('createRoomForm.roomNameInputElem.$error.pattern', function(newVal) {
+            $log.debug('Pattern: ' + $scope.createRoom.roomName);
+            $scope.patternError = $scope.createRoom.roomName;
+        });
+
+
         $scope.getValidRoomNamePattern = function() {
             /* Make sure that unicode characters don't cause crashes.
                Try testing the javascript and the server with the following string: Iñtërnâtiônàlizætiøn☃💩

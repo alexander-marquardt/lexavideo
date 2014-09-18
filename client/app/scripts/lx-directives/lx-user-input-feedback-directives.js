@@ -4,22 +4,13 @@
 angular.module('lxUserInputFeedback.directives', [])
 
 
-.directive('lxMonitorFormInputsForErrors', function($log) {
+.directive('lxPushInputValuesToScope', function($log) {
 
-    var highlightInput = function(inputElement) {
-
-        var cssClass;
-        if (inputElement.$invalid  && inputElement.$dirty ) {
-            cssClass = 'cl-invalid-input-glow';
+        var watchChildElemValue = function(childElem) {
+            return function() {
+                return childElem.value;
+            }
         }
-        else if (inputElement.$valid && inputElement.$dirty) {
-            cssClass = 'cl-valid-input-glow';
-        }
-        else {
-            cssClass = '';
-        }
-        return cssClass;
-    };
 
     return {
         restrict: 'A',
@@ -28,11 +19,11 @@ angular.module('lxUserInputFeedback.directives', [])
             var inputElems = angular.element(elem).find('input');
 
             angular.forEach(inputElems, function(childElem) {
-                var cssClass = highlightInput(childElem);
-                $log.debug('input name: ' + childElem.name + 'class: ' + cssClass)
+
+                $log.debug('input name: ' + childElem.name )
 
                 var ngModelName = childElem.attributes['ng-model'].value;
-                scope.$watch(childElem.value, function(newVal) {
+                scope.$watch(watchChildElemValue(childElem), function(newVal) {
                     var child = childElem;
                     $log.debug('New value: ' + newVal);
                 })
