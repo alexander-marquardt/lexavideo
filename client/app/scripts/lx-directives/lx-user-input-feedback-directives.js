@@ -21,6 +21,13 @@ angular.module('lxUserInputFeedback.directives', [])
                         return inputElement.value
                     },
                     function(newRoomName) {
+                        /* When the user changes the text input, we provide feedback about the validity of the name that
+                           they have selected.
+
+                           Note: in the code below, the 'roomNotFullMessage' and 'roomIsEmptyMessage' are set in a manner
+                           that minimizes UI flashing that could be caused if we were to reset these values on each
+                           execution of this code.
+                         */
                         var roomObj = null;
 
                         ctrl.$setValidity('roomIsFull', true);
@@ -39,17 +46,19 @@ angular.module('lxUserInputFeedback.directives', [])
 
                                 if (data.numInRoom === 0) {
                                    ctrl.roomIsEmptyMessage = 'Room is available!';
+                                   ctrl.roomNotFullMessage = '';
                                    ctrl.submitButtonText = 'Create!';
                                 }
                                 else if (data.numInRoom > 0 && data.numInRoom < maxOccupancy) {
                                     var msg = newRoomName + ' has ' + data.numInRoom + ' occupant';
                                     var plural = newRoomName + 's';
                                     ctrl.roomNotFullMessage =  data.numInRoom === 1 ? msg : plural;
+                                    ctrl.roomIsEmptyMessage = '';
                                     ctrl.submitButtonText = 'Join!';
+                                } else {
+                                    ctrl.roomNotFullMessage = '';
+                                    ctrl.roomIsEmptyMessage = '';
                                 }
-
-
-
                             }, function() {
                                 throw new Error('Unknown server error');
                             })
