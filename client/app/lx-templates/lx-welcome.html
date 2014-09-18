@@ -13,28 +13,34 @@
                 <div class="well cl-xs-max-width">
                     <h3>Enter into a chat room</h3>
                     <div class="clearfix">
+
                         <form name="createRoomForm" role="form" novalidate>
                             <div class="form-group">
                                 <div class="cl-room-name-input input-group">
-                                   <input class=" form-control"
-                                          placeholder="room name"
-                                          name="enterRoomName"
-                                          ng-model="createRoom.roomName"
-                                          ng-minlength="{{ minInputLength }}"
-                                          ng-maxlength="{{ maxInputLength }}"
-                                          required
-                                          ng-class="highlightInput(createRoomForm.enterRoomName)"
-                                          ng-pattern="getValidRoomNamePattern()"
-                                           />
+                                    <input class=" form-control"
+                                           placeholder="room name"
+                                           name="enterRoomName"
+                                           ng-model="createRoom.roomName"
+                                           ng-minlength="{{ minInputLength }}"
+                                           ng-maxlength="{{ maxInputLength }}"
+                                           required
+                                           ng-class="highlightInput(createRoomForm.enterRoomName)"
+                                           ng-pattern="getValidRoomNamePattern()"
+                                           ng-trim="false"
+                                            />
                                     <span class="input-group-btn">
-                                        <button ng-click="createRoom(createRoom)" class="btn btn-primary">Enter chat room</button>
+                                        <button ng-click="createRoom(createRoom.roomName)" class="btn btn-primary">Enter chat room</button>
                                     </span>
                                 </div>
+                                Calling function: "highlightInput(createRoomForm.enterRoomName)"
 
-                                <span class="text-danger" ng-show="createRoomForm.enterRoomName.$error.required &&
-                                        createRoomForm.enterRoomName.$dirty">
-                                    Please enter a valid room name (cannot contain /+
-                                </span>
+                                <div class="text-danger" ng-show="createRoomForm.enterRoomName.$dirty">
+                                    <small  ng-show="createRoomForm.enterRoomName.$error.required">Please input a username</small>
+                                    <small  ng-show="createRoomForm.enterRoomName.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
+                                    <small  ng-show="createRoomForm.enterRoomName.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
+                                    <small  ng-show="createRoomForm.enterRoomName.$error.pattern">You have entered an invalid character</small>
+                                    <small  ng-show="createRoomForm.enterRoomName.$error.unique">That room is taken, please try another</small>
+                                </div>
                             </div>
                         </form>
                     </div>

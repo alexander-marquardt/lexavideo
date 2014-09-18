@@ -13,6 +13,7 @@ var videoApp = angular.module('videoApp', [
     'lxAsciiVideo.directives',
     'lxCheckCompatibility.directives',
     'lxMainVideo.directives',
+    'lxUserInputFeedback.directives',
     'lxVideoNegotiation.directives',
 
     // proprietary services
