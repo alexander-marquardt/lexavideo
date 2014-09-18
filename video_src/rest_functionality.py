@@ -28,7 +28,7 @@ class HandleRooms(webapp2.RequestHandler):
 
     @handle_exceptions
     def get(self, roomName=None):
-        
+        roomName = roomName.decode('utf8') 
         if roomName:
             logging.info('Query for room name: ' + roomName)
             room_obj = room_module.Room.get_by_id(roomName)
@@ -61,6 +61,11 @@ class HandleRooms(webapp2.RequestHandler):
     @handle_exceptions        
     def post(self, roomName):
         room_dict = json.loads(self.request.body)
+            
+        # Need to get the URL encoded data back to utf8. Note that json encoded data is already in utf8 so nothing needs to be done
+        roomName = roomName.decode('utf8') 
+        logging.info('roomName after decode: %s' % roomName)
+        
         assert(room_dict['roomName'] == roomName)
         del room_dict['roomName']
         room_obj = room_module.Room.get_by_id(roomName)
