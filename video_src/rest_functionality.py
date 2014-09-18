@@ -35,12 +35,12 @@ class HandleRooms(webapp2.RequestHandler):
             
             if room_obj:
                 response_obj = {
-                    'roomOccupancy' : room_obj.roomOccupancy,
+                    'numInRoom' : room_obj.numInRoom,
                 }
                 logging.info('Found room: ' + repr(room_obj))
                 
             else:
-                response_obj = {'roomOccupancy' : 0}
+                response_obj = {'numInRoom' : 0}
                 logging.info('No room: ' + repr(room_obj))
                 
 

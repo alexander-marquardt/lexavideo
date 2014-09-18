@@ -42,7 +42,14 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
             if ($scope.createRoomForm.roomNameInputElem.$error.pattern) {
                 // Get the last character that was entered when $error.pattern changed to true.
                 // The will set invalidCharacter to the first invalid character in the sequence.
-                $scope.invalidCharacter = $scope.createRoomForm.roomNameInputElem.$viewValue.slice(-1)
+                var invalidCharacter = $scope.createRoomForm.roomNameInputElem.$viewValue.slice(-1);
+                var invalidCharacterFeedback;
+                if (invalidCharacter === ' ') {
+                    invalidCharacterFeedback = 'Blank spaces are not allowed in room names';
+                } else {
+                    invalidCharacterFeedback = invalidCharacter + ' character is not allowed in room names'
+                }
+                $scope.invalidCharacterFeedback = invalidCharacterFeedback;
             }
         });
 

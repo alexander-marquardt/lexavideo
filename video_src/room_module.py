@@ -14,7 +14,7 @@ class Room(ndb.Model):
     roomCreatorConnected = ndb.BooleanProperty(default=False)
     roomJoinerConnected = ndb.BooleanProperty(default=False)
     
-    roomOccupancy = ndb.IntegerProperty(default=0)
+    numInRoom = ndb.IntegerProperty(default=0)
 
     def __str__(self):
         result = '['
@@ -84,7 +84,7 @@ class Room(ndb.Model):
         else:
             raise RuntimeError('room is full')
         
-        self.roomOccupancy = self.get_occupancy()
+        self.numInRoom = self.get_occupancy()
         self.put()
 
     def set_connected(self, user):

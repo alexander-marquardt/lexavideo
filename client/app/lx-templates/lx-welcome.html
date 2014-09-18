@@ -37,10 +37,12 @@
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a room name</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">You have entered an invalid character:
-                                            <strong> {{ invalidCharacter }}</strong></small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">
+                                            <strong> {{ invalidCharacterFeedback }} </strong></small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.validRoom">Room is full</small>
                                     </div>
+                                    <div class="text-success" ng-show="createRoomForm.roomNameInputElem.roomIsWaitingForJoiners">
+                                        This room has {{ createRoomForm.roomNameInputElem.numInRoom }} occupant who is currently waiting for someone to join</div>
 
                                 </div>
                             </form>
