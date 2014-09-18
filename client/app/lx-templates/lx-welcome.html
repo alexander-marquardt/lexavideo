@@ -29,11 +29,13 @@
                                                ng-class="highlightInput(createRoomForm.roomNameInputElem)"
                                                ng-pattern="getValidRoomNamePattern()"
                                                ng-trim="false"
-                                               check-for-unique-room-name="roomName"
+                                               check-for-room-occupancy
                                                required
                                                 />
                                         <span class="input-group-btn">
-                                            <button ng-click="createRoom(roomObj)" class="btn btn-primary">Enter chat room</button>
+                                            <button ng-click="createRoom(roomObj)" class="btn btn-primary"
+                                                    ng-disabled="createRoomForm.$invalid">
+                                                {{ createRoomForm.roomNameInputElem.submitButtonText }}</button>
                                         </span>
                                     </div>
 
@@ -43,7 +45,7 @@
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">
                                             <strong> {{ invalidCharacterFeedback }} </strong></small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.validRoom">Room is full</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Room is full</small>
                                     </div>
                                     <div class="text-success">
                                         <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">

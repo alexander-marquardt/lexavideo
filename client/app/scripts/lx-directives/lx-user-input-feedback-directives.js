@@ -3,7 +3,7 @@
 
 angular.module('lxUserInputFeedback.directives', [])
 
-    .directive('checkForUniqueRoomName', function($parse, lxHandleRoomService) {
+    .directive('checkForRoomOccupancy', function($parse, lxHandleRoomService) {
 
         var maxOccupancy = 2;
 
@@ -15,7 +15,7 @@ angular.module('lxUserInputFeedback.directives', [])
 
                 scope.$watch(function() {
                         // We watch the input element directly because the ngModel is only set when all validity
-                        // conditions are met -- but this would not allow us to reset the validRoom variable
+                        // conditions are met -- but this would not allow us to reset the roomIsFull variable
                         // if the user hits the backspace key resulting in a room name that is too short
                         // after previously entering in an invalid room name.
                         return inputElement.value
@@ -23,9 +23,7 @@ angular.module('lxUserInputFeedback.directives', [])
                     function(newRoomName) {
                         var roomObj = null;
 
-                        ctrl.$setValidity('validRoom', true);
-                        ctrl.roomNotFullMessage = '';
-                        ctrl.roomIsEmptyMessage = '';
+                        ctrl.$setValidity('roomIsFull', true);
 
                         if (ctrl.$valid) {
                             if (newRoomName) {
@@ -34,18 +32,20 @@ angular.module('lxUserInputFeedback.directives', [])
 
                             roomObj && roomObj.$promise.then(function(data) {
                                 if (data.numInRoom >= maxOccupancy) {
-                                    ctrl.$setValidity('validRoom', false);
+                                    ctrl.$setValidity('roomIsFull', false);
                                 } else {
-                                    ctrl.$setValidity('validRoom', true);
+                                    ctrl.$setValidity('roomIsFull', true);
                                 }
 
                                 if (data.numInRoom === 0) {
-                                   ctrl.roomIsEmptyMessage = 'Room is available!'
+                                   ctrl.roomIsEmptyMessage = 'Room is available!';
+                                   ctrl.submitButtonText = 'Create!';
                                 }
                                 else if (data.numInRoom > 0 && data.numInRoom < maxOccupancy) {
                                     var msg = newRoomName + ' has ' + data.numInRoom + ' occupant';
                                     var plural = newRoomName + 's';
                                     ctrl.roomNotFullMessage =  data.numInRoom === 1 ? msg : plural;
+                                    ctrl.submitButtonText = 'Join!';
                                 }
 
 
@@ -53,6 +53,10 @@ angular.module('lxUserInputFeedback.directives', [])
                             }, function() {
                                 throw new Error('Unknown server error');
                             })
+                        } else {
+                            ctrl.roomNotFullMessage = '';
+                            ctrl.roomIsEmptyMessage = '';
+                            ctrl.submitButtonText = 'Enter!';
                         }
                     }
                 );
