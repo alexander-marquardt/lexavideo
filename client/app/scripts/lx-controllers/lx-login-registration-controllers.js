@@ -42,16 +42,21 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
             return cssClass;
         };
 
+
         $scope.getValidRoomNamePattern = function() {
             /* Make sure that unicode characters don't cause crashes.
                Try testing the javascript and the server with the following string: Iñtërnâtiônàlizætiøn☃💩
                The following characters are reserved and should not be allowed in room names.
-                        $&+,/:;=?@<>#%{}|\^~[]
+                        $&+,/:;=?@"<>#%{}|\^~[]
+
                We also forbid the following characters because they may confuse the server
                         '/' (forward slash), \s (blank space),
 
-               (note that in the regexp below, that '\', '[', and ']' need to be escaped.
+               We also forbid the following characters, just in case we want to use them for internal purposes in the future
+                        '*', '''
+
+               (note that in the regexp below, that '\', '[', ']', and '/' are escaped with '\'.
              */
-            return /^[^$&+,/:;=?@<>#%{}|\\^~\[\]\/\s]+$/;
+            return /^[^$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s*'+]+$/;
         };
     });
