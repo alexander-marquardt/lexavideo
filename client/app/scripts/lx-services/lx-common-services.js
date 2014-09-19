@@ -7,12 +7,12 @@ angular.module('lxCommon.services', [])
             getDelayFn : function() {
                 // Returns a function that wraps a callback inside a timeout
                 var timer = null;
-                return function(callback, delay_ms){
+                return function(callback, delayMs){
                     clearTimeout (timer);
-                    timer = setTimeout(callback, delay_ms);
+                    timer = setTimeout(callback, delayMs);
                 };
             }
-        }
+        };
     });
 
 

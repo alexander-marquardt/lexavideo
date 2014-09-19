@@ -4,6 +4,7 @@
 'use strict';
 
 // define externally defined variables so that jshint doesn't give warnings
+/* global loginConstantsEmbeddedInHtml */
 
 angular.module('lxLoginRegistration.controllers', ['ngResource'])
     .controller('lxLoginRegistrationCtrl', function ($log, $scope, lxHandleRoomService) {
@@ -57,7 +58,7 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
         $scope.validRoomNamesPattern = /^[^$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s*'+]+$/;
 
 
-        $scope.$watch('createRoomForm.roomNameInputElem.$viewValue', function(newVal) {
+        $scope.$watch('createRoomForm.roomNameInputElem.$viewValue', function(inputValue) {
             if ($scope.createRoomForm.roomNameInputElem.$error.pattern) {
                 // Get the last character that was entered when $error.pattern changed to true.
                 // The will set invalidCharacter to the first invalid character in the sequence.
@@ -65,7 +66,7 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
                 var invalidCharacterSet = {}; // used to ensure that we report each character only once
                 var invalidCharacterCount = 0;
 
-                var invalidCharactersArray = $scope.createRoomForm.roomNameInputElem.$viewValue.match(invalidRoomNamesPattern);
+                var invalidCharactersArray = inputValue.match(invalidRoomNamesPattern);
 
                 angular.forEach(invalidCharactersArray, function(invalidCharacter) {
                     if (!(invalidCharacter in invalidCharacterSet)) {
@@ -82,11 +83,11 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
                 });
 
                 if (invalidCharacterCount === 1) {
-                    $scope.invalidCharacterFeedback = invalidCharacterFeedbackArray[0] + " is not allowed in the room name";
+                    $scope.invalidCharacterFeedback = invalidCharacterFeedbackArray[0] + ' is not allowed in the room name';
                 }
                 else  {
                     $scope.invalidCharacterFeedback =  invalidCharacterFeedbackArray.slice(0, invalidCharacterFeedbackArray.length-1).join(',') + ' and ' +
-                        invalidCharacterFeedbackArray.slice(-1) + " are not allowed in the room name";
+                        invalidCharacterFeedbackArray.slice(-1) + ' are not allowed in the room name';
                 }
             }
         });

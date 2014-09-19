@@ -1,6 +1,8 @@
 
 'use strict';
 
+/* global loginConstantsEmbeddedInHtml */
+
 angular.module('lxUserInputFeedback.directives', [])
 
     .directive('checkForRoomOccupancy', function($log, lxHandleRoomService, lxTimerService) {
@@ -21,7 +23,7 @@ angular.module('lxUserInputFeedback.directives', [])
                         // conditions are met -- but this would not allow us to reset the roomIsFull variable
                         // if the user hits the backspace key resulting in a room name that is too short
                         // after previously entering in an invalid room name.
-                        return inputElement.value
+                        return inputElement.value;
                     },
                     function(newRoomName) {
                         /* When the user changes the text input, we provide feedback about the validity of the name that
@@ -81,9 +83,9 @@ angular.module('lxUserInputFeedback.directives', [])
                                     }, function() {
                                         throw new Error('checkForRoomOccupancy - unknown server error');
                                     })
-                                    ['finally'](function(){
+                                    ['finally'](function () {
                                         ctrl.userIsWaitingForRoomStatus = false;
-                                    })
+                                    });  // jshint ignore:line
 
                                 }, timeSinceLastKeypressBeforeHttpCall);
                             }
@@ -96,6 +98,6 @@ angular.module('lxUserInputFeedback.directives', [])
                     }
                 );
             }
-        }
+        };
     });
 

@@ -1,13 +1,8 @@
 'use strict';
 
-/* global $ */
-
 angular.module('lxHttp.services', [])
 
-
-
     .factory('lxHandleRoomService', function ($log, $resource) {
-
 
         var handleRoomUrl = '/_lx/handle_room/';
         var RoomResource = $resource(handleRoomUrl + ':roomName', {roomName: '@roomName'});
