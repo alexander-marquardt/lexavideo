@@ -568,6 +568,7 @@ class GetVideoChatWelcome(webapp2.RequestHandler):
         params = {'serverLoginParamsJson' : json.dumps(
             {'minRoomChars' : constants.MIN_ROOM_CHARS,
              'maxRoomChars' : constants.MAX_ROOM_CHARS,
+             'maxRoomOccupancy' : constants.MAX_ROOM_OCCUPANCY,
              })}
 
         target_page = current_template

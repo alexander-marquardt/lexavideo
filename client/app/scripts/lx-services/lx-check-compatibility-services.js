@@ -1,5 +1,5 @@
 /**
- * Created by alexandermarquardt on 2014-08-27.
+ Checks if the browser and device that is accessing the site is supported.
  */
 
 'use strict';

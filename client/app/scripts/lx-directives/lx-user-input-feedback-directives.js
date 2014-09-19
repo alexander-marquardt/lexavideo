@@ -3,9 +3,12 @@
 
 angular.module('lxUserInputFeedback.directives', [])
 
-    .directive('checkForRoomOccupancy', function($parse, lxHandleRoomService) {
+    .directive('checkForRoomOccupancy', function($log, lxHandleRoomService, lxTimerService) {
 
-        var maxOccupancy = 2;
+        var maxOccupancy = loginConstantsEmbeddedInHtml.maxRoomOccupancy;
+        var timeSinceLastKeypressBeforeHttpCall = 300; // time in milliseconds
+        var delayAction = lxTimerService.getDelayFn();
+
 
         return {
             require: 'ngModel',
@@ -34,34 +37,43 @@ angular.module('lxUserInputFeedback.directives', [])
 
                         if (ctrl.$valid) {
                             if (newRoomName) {
-                                roomObj = lxHandleRoomService.getRoom(newRoomName);
+                                delayAction(function() {
+
+                                    // We don't want to submit all characters as the user is typing. Only do the
+                                    // Http GET if the user has stopped typing or slowed down.
+
+                                    roomObj = lxHandleRoomService.getRoom(newRoomName);
+                                    $log.debug('getRoom called for: ' + newRoomName);
+
+                                    roomObj && roomObj.$promise.then(function(data) {
+                                        if (data.numInRoom >= maxOccupancy) {
+                                            ctrl.$setValidity('roomIsFull', false);
+                                        } else {
+                                            ctrl.$setValidity('roomIsFull', true);
+                                        }
+
+                                        if (data.numInRoom === 0) {
+                                           ctrl.roomIsEmptyMessage = 'Room is available!';
+                                           ctrl.roomNotFullMessage = '';
+                                           ctrl.submitButtonText = 'Create!';
+                                        }
+                                        else if (data.numInRoom > 0 && data.numInRoom < maxOccupancy) {
+                                            var msg = newRoomName + ' has ' + data.numInRoom + ' occupant';
+                                            var plural = newRoomName + 's';
+                                            ctrl.roomNotFullMessage =  data.numInRoom === 1 ? msg : plural;
+                                            ctrl.roomIsEmptyMessage = '';
+                                            ctrl.submitButtonText = 'Join!';
+                                        } else {
+                                            ctrl.roomNotFullMessage = '';
+                                            ctrl.roomIsEmptyMessage = '';
+                                        }
+                                    }, function() {
+                                        throw new Error('Unknown server error');
+                                    })
+
+                                }, timeSinceLastKeypressBeforeHttpCall);
                             }
 
-                            roomObj && roomObj.$promise.then(function(data) {
-                                if (data.numInRoom >= maxOccupancy) {
-                                    ctrl.$setValidity('roomIsFull', false);
-                                } else {
-                                    ctrl.$setValidity('roomIsFull', true);
-                                }
-
-                                if (data.numInRoom === 0) {
-                                   ctrl.roomIsEmptyMessage = 'Room is available!';
-                                   ctrl.roomNotFullMessage = '';
-                                   ctrl.submitButtonText = 'Create!';
-                                }
-                                else if (data.numInRoom > 0 && data.numInRoom < maxOccupancy) {
-                                    var msg = newRoomName + ' has ' + data.numInRoom + ' occupant';
-                                    var plural = newRoomName + 's';
-                                    ctrl.roomNotFullMessage =  data.numInRoom === 1 ? msg : plural;
-                                    ctrl.roomIsEmptyMessage = '';
-                                    ctrl.submitButtonText = 'Join!';
-                                } else {
-                                    ctrl.roomNotFullMessage = '';
-                                    ctrl.roomIsEmptyMessage = '';
-                                }
-                            }, function() {
-                                throw new Error('Unknown server error');
-                            })
                         } else {
                             ctrl.roomNotFullMessage = '';
                             ctrl.roomIsEmptyMessage = '';
