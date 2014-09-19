@@ -33,6 +33,12 @@ angular.module('lxUserInputFeedback.directives', [])
                          */
                         var roomObj = null;
 
+                        // set roomIsFull 'isValid' to true so that the following code will be executed only if none
+                        // of the other validity checks have failed.
+                        // 'roomIsFull' validity value will be set if all other validity checks have passed.
+                        // This prevents the user from receiving two conflicting feedback messages at the same time in the
+                        // case that they have entered in a string that is invalid, but that might be an available room.
+
                         ctrl.$setValidity('roomIsFull', true);
 
                         if (ctrl.$valid) {
