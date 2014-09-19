@@ -7,7 +7,7 @@
 /* global loginConstantsEmbeddedInHtml */
 
 angular.module('lxLoginRegistration.controllers', ['ngResource'])
-    .controller('lxLoginRegistrationCtrl', function ($log, $scope, lxHandleRoomService) {
+    .controller('lxLoginRegistrationCtrl', function ($log, $scope, lxHttpHandleRoomService) {
 
         /* The following regular expressions are used for detecting if a user has entered a dis-allowed character into th
          * input box. These values are passed from the server so that the server and client are guaranteed to always be
@@ -22,7 +22,7 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
 
 
 
-        $scope.createRoom = lxHandleRoomService.createRoom;
+        $scope.createRoom = lxHttpHandleRoomService.createRoom;
 
         $scope.showFormScope = function() {
             $log.debug($scope);

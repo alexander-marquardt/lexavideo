@@ -2,7 +2,7 @@
 
 angular.module('lxHttp.services', [])
 
-    .factory('lxHandleRoomService', function ($log, $resource) {
+    .factory('lxHttpHandleRoomService', function ($log, $resource) {
 
         var handleRoomUrl = '/_lx/handle_room/';
         var RoomResource = $resource(handleRoomUrl + ':roomName', {roomName: '@roomName'});
@@ -11,7 +11,8 @@ angular.module('lxHttp.services', [])
             createRoom : function(roomObj) {
                 var roomResource = new RoomResource(roomObj).$save();
 
-                roomResource.then(function(){
+                roomResource.then(function(data){
+
                 }, function() {
                     $log.warn('Failed to create room ' + roomObj.roomName);
                 });
@@ -28,7 +29,7 @@ angular.module('lxHttp.services', [])
                         $log.debug('Got object: ' + data);
 
                     }, function() {
-                        throw new Error('lxHandleRoomService.getRoom - failed to get response from server');
+                        throw new Error('lxHandleRoomService.getRoom - server error');
                     });
                 }
                 return roomObj;

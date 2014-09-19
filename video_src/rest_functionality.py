@@ -14,15 +14,11 @@ import webapp2
 import threading
 from google.appengine.api import channel
 from google.appengine.ext import ndb
+from google.appengine.api import datastore_errors
 
 from video_src import status_reporting, http_helpers, room_module
 from video_src.error_handling import handle_exceptions
 
-def set_response_to_json(response, dict_to_jsonify):
-    # simple helper function to set response output to a json version of the dict_to_jsonify that is passed in.
-    response.headers['Content-Type'] = 'application/json'  
-    response.out.write(json.dumps(dict_to_jsonify))   
-    
         
 class HandleRooms(webapp2.RequestHandler):
 
@@ -34,17 +30,17 @@ class HandleRooms(webapp2.RequestHandler):
             room_obj = room_module.Room.get_by_id(roomName)
             
             if room_obj:
-                response_obj = {
+                response_dict = {
                     'numInRoom' : room_obj.numInRoom,
                 }
                 logging.info('Found room: ' + repr(room_obj))
                 
             else:
-                response_obj = {'numInRoom' : 0}
+                response_dict = {'numInRoom' : 0}
                 logging.info('No room: ' + repr(room_obj))
                 
 
-            set_response_to_json(self.response, response_obj)
+            http_helpers.set_http_ok_json_response(self.response, response_dict)
         
         else: 
             room_query = models.Room.query()
@@ -55,7 +51,7 @@ class HandleRooms(webapp2.RequestHandler):
                 room_dict['roomName'] = room_obj.key.id()
                 rooms_list.append(room_dict)
 
-            set_response_to_json(self.response, rooms_list)
+            http_helpers.set_http_ok_json_response(self.response, rooms_list )
 
 
     @handle_exceptions        
@@ -64,35 +60,37 @@ class HandleRooms(webapp2.RequestHandler):
             
         # Need to get the URL encoded data back to utf8. Note that json encoded data is already in utf8 so nothing needs to be done
         roomName = roomName.decode('utf8') 
-        logging.info('roomName after decode: %s' % roomName)
-        
         assert(room_dict['roomName'] == roomName)
         del room_dict['roomName']
-        room_obj = room_module.Room.get_by_id(roomName)
         
-        if room_obj:
-            # update an existing item:
-            room_obj.populate(**room_dict)
-        else:
-            room_obj = room_module.Room(id=roomName, **room_dict)
+        
+        
+        def create_room_transaction(roomName, roomDict):
+            # Run the room creation in a transaction so that the first person that creates a room is the 'owner'
+            # and so that each room is only created once. 
             
-        room_obj.put()   
-        set_response_to_json(self.response, room_obj.to_dict())
+            room_obj = room_module.Room.get_by_id(roomName)
+            
+            if not room_obj:
+                room_obj = room_module.Room(id=roomName, **room_dict)
+                room_obj.put()   
+                http_helpers.set_http_ok_json_response(self.response, {'status' : 'roomCreated'})
+            else:
+                http_helpers.set_http_ok_json_response(self.response, {'status' : 'roomExistsAlreadyNotCreated'})
+            
+            
+        try:
+            ndb.transaction(lambda:create_room_transaction(roomName, room_dict))   
+        except datastore_errors.TransactionFailedError:
+            # Provide feedback to the user to indicate that the room was not created
+            http_helpers.set_http_ok_json_response(self.response, {'status' : 'datastoreErrorUnableToCreateRoom'})
 
             
     @handle_exceptions
     def delete(self, product_id):
-        
-        product_id = int(product_id)
-        if product_id:
-            product_for_sale = models.ProductForSale.get_by_id(product_id)
-            if product_for_sale:
-                product_for_sale.key.delete()
-                set_response_to_json(self.response, {'status' : "OK", 'message' : "deleted id %d" % product_id})
-            else:
-                set_response_to_json(self.response, {'status' : "Warning", 'message' : "not found id %d" % product_id})
+        logging.info('Called with DELETE')
                 
     @handle_exceptions
     def put(self):  
-        logging.info("Called wilth PUT")
+        logging.info('Called wilth PUT')
         

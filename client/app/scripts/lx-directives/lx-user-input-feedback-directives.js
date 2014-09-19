@@ -5,7 +5,7 @@
 
 angular.module('lxUserInputFeedback.directives', [])
 
-    .directive('checkForRoomOccupancy', function($log, lxHandleRoomService, lxTimerService) {
+    .directive('checkForRoomOccupancy', function($log, lxHttpHandleRoomService, lxTimerService) {
 
         var maxOccupancy = loginConstantsEmbeddedInHtml.maxRoomOccupancy;
         var timeSinceLastKeypressBeforeHttpCall = 300; // time in milliseconds
@@ -55,7 +55,7 @@ angular.module('lxUserInputFeedback.directives', [])
 
                                     // We don't want to submit all characters as the user is typing. Only do the
                                     // Http GET if the user has stopped typing or slowed down.
-                                    roomObj = lxHandleRoomService.getRoom(newRoomName);
+                                    roomObj = lxHttpHandleRoomService.getRoom(newRoomName);
                                     $log.debug('getRoom called for: ' + newRoomName);
 
                                     roomObj && roomObj.$promise.then(function(data) {

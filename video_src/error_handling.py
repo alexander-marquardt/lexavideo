@@ -14,7 +14,7 @@ def handle_exceptions(func):
         try:
             return func(*args, **kwargs)
         except:
-            error_status = "serverError"
+            status_string = "serverError"
             request = None
             
             # Check if this is a method on a RequestHandler object, and if so we also write
@@ -35,10 +35,10 @@ def handle_exceptions(func):
                         if hasattr(self, 'response'):
                             # If self has a 'response' attribute, then write out the error_status to self.response.
                             request = self.request
-                            http_helpers.set_http_response(self.response, 500, error_status)  
+                            http_helpers.set_http_error_json_response(self.response, status_string, 500)  
 
             # Log the error to the server, along with stack trace and debugging information
-            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = error_status, request = request) 
+            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string, request = request) 
             
 
     return wrapper
