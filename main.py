@@ -565,11 +565,14 @@ class GetVideoChatWelcome(webapp2.RequestHandler):
     @handle_exceptions
     def get(self, current_template):   
         response_type = 'jinja'
-        params = {'serverLoginParamsJson' : json.dumps(
-            {'minRoomChars' : constants.MIN_ROOM_CHARS,
-             'maxRoomChars' : constants.MAX_ROOM_CHARS,
-             'maxRoomOccupancy' : constants.MAX_ROOM_OCCUPANCY,
-             })}
+        params = {
+            'serverLoginParamsJson' : json.dumps(
+                {'minRoomChars' : constants.ROOM_MIN_CHARS,
+                 'maxRoomChars' : constants.ROOM_MAX_CHARS,
+                 'maxRoomOccupancy' : constants.ROOM_MAX_OCCUPANCY,
+                 'roomNameInvalidCharsForRegex' : constants.ROOM_NAME_INVALID_CHARS_FOR_REGEX,
+                 })
+            }
 
         target_page = current_template
         write_response(self.response, response_type, target_page, params)

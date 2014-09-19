@@ -9,19 +9,24 @@
 angular.module('lxLoginRegistration.controllers', ['ngResource'])
     .controller('lxLoginRegistrationCtrl', function ($log, $scope, lxHandleRoomService) {
 
+        /* The following regular expressions are used for detecting if a user has entered a dis-allowed character into th
+         * input box. These values are passed from the server so that the server and client are guaranteed to always be
+         * evaluating the same regex for validity.
+         */
+        var invalidRoomNamesPattern = new RegExp('[' + loginConstantsEmbeddedInHtml.roomNameInvalidCharsForRegex + ']', 'g');
+        $scope.validRoomNamesPattern  = new RegExp('^[^' + loginConstantsEmbeddedInHtml.roomNameInvalidCharsForRegex + ']+$');
 
+        // The following values are passed from the server and are validated both on the client and on the server.
         $scope.minInputLength = loginConstantsEmbeddedInHtml.minRoomChars;
         $scope.maxInputLength = loginConstantsEmbeddedInHtml.maxRoomChars;
-        $scope.invalidCharacter = ''; // used for displaying which invalid characters have been entered.
+
+
 
         $scope.createRoom = lxHandleRoomService.createRoom;
-
-
 
         $scope.showFormScope = function() {
             $log.debug($scope);
         };
-
 
         $scope.highlightInput = function(inputElement) {
 
@@ -37,26 +42,6 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
             }
             return cssClass;
         };
-
-
-        /*
-        Make sure that unicode characters don't cause crashes.
-        Try testing the javascript and the server with the following string: Iñtërnâtiônàlizætiøn☃💩
-
-        The following characters are reserved and should not be allowed in room names.
-                 $&+,/:;=?@"<>#%{}|\^~[]
-
-        We also forbid the following characters because they may confuse the server
-                 '/' (forward slash), \s (blank space),
-
-        We also forbid the following characters, just in case we want to use them for internal purposes in the future
-                 '*', '''
-
-        (note that in the regexp below, that '\', '[', ']', and '/' are escaped with '\'.
-        */
-        var invalidRoomNamesPattern =    /[$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s*'+]/g;
-        $scope.validRoomNamesPattern = /^[^$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s*'+]+$/;
-
 
         $scope.$watch('createRoomForm.roomNameInputElem.$viewValue', function(inputValue) {
             if ($scope.createRoomForm.roomNameInputElem.$error.pattern) {
