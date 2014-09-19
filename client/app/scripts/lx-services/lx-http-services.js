@@ -33,7 +33,7 @@ angular.module('lxHttp.services', [])
                         $log.debug('Got object: ' + data);
 
                     }, function() {
-                        throw new Error('Failed to get response from server');
+                        throw new Error('lxHandleRoomService.getRoom - failed to get response from server');
                     });
                 }
                 return roomObj;

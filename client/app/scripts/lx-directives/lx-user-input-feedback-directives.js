@@ -79,7 +79,7 @@ angular.module('lxUserInputFeedback.directives', [])
                                             ctrl.roomIsEmptyMessage = '';
                                         }
                                     }, function() {
-                                        throw new Error('Unknown server error');
+                                        throw new Error('checkForRoomOccupancy - unknown server error');
                                     })
                                     ['finally'](function(){
                                         ctrl.userIsWaitingForRoomStatus = false;
