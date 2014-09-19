@@ -55,8 +55,8 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
             },
             function(/* reason */) {
                 //$log.log('modal dismissed ' + htmlTemplate);
-            }).
-            finally(function () {
+            })
+            ['finally'](function () {
                 // this is called when the modal is either "closed" or "dismissed"
                 $timeout(function() {
                     // since this is inside a promise, it is outside of angular scope. We therefore wrap
@@ -107,8 +107,8 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
             },
             function() {
                 $log.log('modal dismissed ' + htmlTemplate);
-            }).
-            finally(function () {
+            })
+            ['finally'](function () {
                 $log.log('Closed the modal box for '+ htmlTemplate);
             });
     };

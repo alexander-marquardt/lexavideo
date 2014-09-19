@@ -33,21 +33,26 @@ angular.module('lxUserInputFeedback.directives', [])
                          */
                         var roomObj = null;
 
+
+
                         // set roomIsFull 'isValid' to true so that the following code will be executed only if none
                         // of the other validity checks have failed.
                         // 'roomIsFull' validity value will be set if all other validity checks have passed.
                         // This prevents the user from receiving two conflicting feedback messages at the same time in the
                         // case that they have entered in a string that is invalid, but that might be an available room.
-
                         ctrl.$setValidity('roomIsFull', true);
+
+                        // Keep track of if the user is still typing or not, and while they are typing we disable the
+                        // submit button for creating/joining a room
+                        ctrl.userIsWaitingForRoomStatus = true;
 
                         if (ctrl.$valid) {
                             if (newRoomName) {
                                 delayAction(function() {
 
+
                                     // We don't want to submit all characters as the user is typing. Only do the
                                     // Http GET if the user has stopped typing or slowed down.
-
                                     roomObj = lxHandleRoomService.getRoom(newRoomName);
                                     $log.debug('getRoom called for: ' + newRoomName);
 
@@ -75,6 +80,9 @@ angular.module('lxUserInputFeedback.directives', [])
                                         }
                                     }, function() {
                                         throw new Error('Unknown server error');
+                                    })
+                                    ['finally'](function(){
+                                        ctrl.userIsWaitingForRoomStatus = false;
                                     })
 
                                 }, timeSinceLastKeypressBeforeHttpCall);

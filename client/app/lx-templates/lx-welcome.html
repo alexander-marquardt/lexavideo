@@ -34,7 +34,7 @@
                                                 />
                                         <span class="input-group-btn">
                                             <button ng-click="createRoom(roomObj)" class="btn btn-primary"
-                                                    ng-disabled="createRoomForm.$invalid">
+                                                    ng-disabled="createRoomForm.$invalid || createRoomForm.roomNameInputElem.userIsWaitingForRoomStatus">
                                                 {{ createRoomForm.roomNameInputElem.submitButtonText }}</button>
                                         </span>
                                     </div>
