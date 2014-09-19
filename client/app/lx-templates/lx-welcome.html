@@ -27,7 +27,7 @@
                                                ng-maxlength="{{ maxInputLength }}"
                                                maxlength = "{{ maxInputLength }}"
                                                ng-class="highlightInput(createRoomForm.roomNameInputElem)"
-                                               ng-pattern="getValidRoomNamePattern()"
+                                               ng-pattern="validRoomNamesPattern"
                                                ng-trim="false"
                                                check-for-room-occupancy
                                                required
@@ -44,7 +44,7 @@
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">
-                                            <strong> {{ invalidCharacterFeedback }} </strong></small>
+                                            {{ invalidCharacterFeedback }}</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Room is full</small>
                                     </div>
                                     <div class="text-success">

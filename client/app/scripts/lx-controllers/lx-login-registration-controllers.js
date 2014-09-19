@@ -38,36 +38,56 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
         };
 
 
-        $scope.$watch('createRoomForm.roomNameInputElem.$error.pattern', function(newVal) {
+        /*
+        Make sure that unicode characters don't cause crashes.
+        Try testing the javascript and the server with the following string: Iñtërnâtiônàlizætiøn☃💩
+
+        The following characters are reserved and should not be allowed in room names.
+                 $&+,/:;=?@"<>#%{}|\^~[]
+
+        We also forbid the following characters because they may confuse the server
+                 '/' (forward slash), \s (blank space),
+
+        We also forbid the following characters, just in case we want to use them for internal purposes in the future
+                 '*', '''
+
+        (note that in the regexp below, that '\', '[', ']', and '/' are escaped with '\'.
+        */
+        var invalidRoomNamesPattern =    /[$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s*'+]/g;
+        $scope.validRoomNamesPattern = /^[^$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s*'+]+$/;
+
+
+        $scope.$watch('createRoomForm.roomNameInputElem.$viewValue', function(newVal) {
             if ($scope.createRoomForm.roomNameInputElem.$error.pattern) {
                 // Get the last character that was entered when $error.pattern changed to true.
                 // The will set invalidCharacter to the first invalid character in the sequence.
-                var invalidCharacter = $scope.createRoomForm.roomNameInputElem.$viewValue.slice(-1);
-                var invalidCharacterFeedback;
-                if (invalidCharacter === ' ') {
-                    invalidCharacterFeedback = 'Blank spaces are not allowed in room names';
-                } else {
-                    invalidCharacterFeedback = invalidCharacter + ' character is not allowed in room names'
+                var invalidCharacterFeedbackArray = [];
+                var invalidCharacterSet = {}; // used to ensure that we report each character only once
+                var invalidCharacterCount = 0;
+
+                var invalidCharactersArray = $scope.createRoomForm.roomNameInputElem.$viewValue.match(invalidRoomNamesPattern);
+
+                angular.forEach(invalidCharactersArray, function(invalidCharacter) {
+                    if (!(invalidCharacter in invalidCharacterSet)) {
+                        invalidCharacterSet[invalidCharacter] = 'In';
+                        invalidCharacterCount ++;
+
+                        if (invalidCharacter.match(/\s/)) {
+                            var blankStr = 'blank space';
+                            invalidCharacterFeedbackArray.push(blankStr);
+                        } else {
+                            invalidCharacterFeedbackArray.push(invalidCharacter);
+                        }
+                    }
+                });
+
+                if (invalidCharacterCount === 1) {
+                    $scope.invalidCharacterFeedback = invalidCharacterFeedbackArray[0] + " is not allowed in the room name";
                 }
-                $scope.invalidCharacterFeedback = invalidCharacterFeedback;
+                else  {
+                    $scope.invalidCharacterFeedback =  invalidCharacterFeedbackArray.slice(0, invalidCharacterFeedbackArray.length-1).join(',') + ' and ' +
+                        invalidCharacterFeedbackArray.slice(-1) + " are not allowed in the room name";
+                }
             }
         });
-
-
-        $scope.getValidRoomNamePattern = function() {
-            /* Make sure that unicode characters don't cause crashes.
-               Try testing the javascript and the server with the following string: Iñtërnâtiônàlizætiøn☃💩
-               The following characters are reserved and should not be allowed in room names.
-                        $&+,/:;=?@"<>#%{}|\^~[]
-
-               We also forbid the following characters because they may confuse the server
-                        '/' (forward slash), \s (blank space),
-
-               We also forbid the following characters, just in case we want to use them for internal purposes in the future
-                        '*', '''
-
-               (note that in the regexp below, that '\', '[', ']', and '/' are escaped with '\'.
-             */
-            return /^[^$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s*'+]+$/;
-        };
     });
