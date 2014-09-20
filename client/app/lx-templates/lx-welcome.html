@@ -47,10 +47,10 @@
                                             {{ invalidCharacterFeedback }}</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Room is full</small>
                                     </div>
-                                    <div class="text-success" ng-show="createRoomForm.$valid">
-                                        <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
+                                    <div  ng-show="createRoomForm.$valid">
+                                        <small class="text-warning" ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
                                            {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
-                                        <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
+                                        <small class="text-success" ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
                                             {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
                                     </div>
 

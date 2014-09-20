@@ -35,7 +35,12 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
                 cssClass = 'cl-invalid-input-glow';
             }
             else if (inputElement.$valid && inputElement.$dirty) {
-                cssClass = 'cl-valid-input-glow';
+                if (inputElement.roomIsEmptyMessage) {
+                    cssClass = 'cl-valid-input-glow';
+                }
+                if (inputElement.roomNotFullMessage) {
+                    cssClass = 'cl-warning-input-glow';
+                }
             }
             else {
                 cssClass = '';
