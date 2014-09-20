@@ -90,8 +90,8 @@ def make_pc_config(stun_server, turn_server, ts_pwd, ice_transports):
 
 
 def create_channel(room, user, duration_minutes):
-    client_id = room.make_client_id(user)
-    return channel.create_channel(client_id, duration_minutes)
+    clientId = room.make_client_id(user)
+    return channel.create_channel(clientId, duration_minutes)
 
 
 def make_loopback_answer(message):
@@ -142,20 +142,20 @@ def handle_message(room, user, message):
         #on_message(room, user, message)
 
 
-def send_saved_messages(client_id):
-    messages = models.Message.get_saved_messages(client_id)
+def send_saved_messages(clientId):
+    messages = models.Message.get_saved_messages(clientId)
     for message in messages:
-        channel.send_message(client_id, message.msg)
-        logging.info('Delivered saved message to ' + client_id)
+        channel.send_message(clientId, message.msg)
+        logging.info('Delivered saved message to ' + clientId)
         message.delete()
         
 def on_message(room, user, message):
-    client_id = room.make_client_id(user)
+    clientId = room.make_client_id(user)
     if room.is_connected(user):
-        channel.send_message(client_id, message)
+        channel.send_message(clientId, message)
         logging.info('Delivered message to user ' + user)
     else:
-        new_message = models.Message(client_id = client_id, msg = message)
+        new_message = models.Message(clientId = clientId, msg = message)
         new_message.put()
         #logging.info('Saved message for user ' + user)
 

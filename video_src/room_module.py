@@ -30,11 +30,11 @@ class Room(ndb.Model):
     def make_client_id(self, user):
         return self.key.id() + '/' + user        
         
-    def delete_saved_messages(self, client_id):
-        messages = models.Message.get_saved_messages(client_id)
+    def delete_saved_messages(self, clientId):
+        messages = models.Message.get_saved_messages(clientId)
         for message in messages:
             message.key.delete()
-            logging.info('Deleted the saved message for ' + client_id)        
+            logging.info('Deleted the saved message for ' + clientId)        
             
             
     def remove_user(self, user):

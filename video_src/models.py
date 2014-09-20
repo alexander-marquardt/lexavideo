@@ -8,9 +8,15 @@ from google.appengine.ext import ndb
 # Use TextProperty instead of StringProperty for msg because
 # the session description can be more than 500 characters.
 class Message(ndb.Model):
-    client_id = ndb.StringProperty()
+    clientId = ndb.StringProperty()
     msg = ndb.TextProperty()
 
     @classmethod
-    def get_saved_messages(cls, client_id):
-        return cls.gql("WHERE client_id = :id", id=client_id)
+    def get_saved_messages(cls, clientId):
+        return cls.gql("WHERE clientId = :id", id=clientId)
+    
+    
+class UserModel(ndb.Model):
+    
+    userName = ndb.StringProperty(default=None)
+    creationDate = ndb.DateTimeProperty(auto_now_add=True) 
