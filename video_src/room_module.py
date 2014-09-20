@@ -102,8 +102,8 @@ class Room(ndb.Model):
         if user == self.roomJoiner:
             return self.roomJoinerConnected
         
-    def user_is_roomCreator(self, user):
+    def user_is_room_creator(self, user):
         return True if user == self.roomCreator else False
 
-    def user_is_roomJoiner(self, user):
+    def user_is_room_joiner(self, user):
         return True if user == self.roomJoiner else False
