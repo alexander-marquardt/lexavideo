@@ -61,7 +61,7 @@ class HandleRooms(webapp2.RequestHandler):
     def post(self, roomName):
         room_dict = json.loads(self.request.body)
             
-        # Need to get the URL encoded data back to utf8. Note that json encoded data is already in utf8 so nothing needs to be done
+        # Need to get the URL encoded data from utf8. Note that json encoded data appers to already be decoded. 
         roomName = roomName.decode('utf8') 
         assert(room_dict['roomName'] == roomName)
         del room_dict['roomName']
