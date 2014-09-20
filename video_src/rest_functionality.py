@@ -1,22 +1,25 @@
 #!/usr/bin/python2.4
-#
+
+
+import json
+import logging
+import re
+import threading
+import webapp2
+
+
+from google.appengine.api import channel
+from google.appengine.api import datastore_errors
+from google.appengine.ext import ndb
+
 
 import vidsetup
 
-import cgi
-import logging
-import os
-import random
-import re
-import json
-import jinja2
-import webapp2
-import threading
-from google.appengine.api import channel
-from google.appengine.ext import ndb
-from google.appengine.api import datastore_errors
+from video_src import constants
+from video_src import http_helpers
+from video_src import room_module
+from video_src import status_reporting
 
-from video_src import status_reporting, http_helpers, room_module
 from video_src.error_handling import handle_exceptions
 
         
@@ -64,6 +67,13 @@ class HandleRooms(webapp2.RequestHandler):
         del room_dict['roomName']
         
         
+        # Make sure that the room name is valid before continuing. These errors should be extremely rare since these values are 
+        # already formatted to be within bounds and characters checked by the client-side javascript. 
+        if not constants.valid_room_name_regex_compiled.match(roomName):
+            raise Exception('Room name regexp did not match')
+        if len(roomName) > constants.room_max_chars or len(roomName) < constants.room_min_chars:
+            raise Exception('Room name length of %s is out of range' % len(roomName))
+            
         
         def create_room_transaction(roomName, roomDict):
             # Run the room creation in a transaction so that the first person that creates a room is the 'owner'

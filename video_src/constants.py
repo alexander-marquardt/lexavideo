@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*- 
 
-ROOM_MIN_CHARS = 3
-ROOM_MAX_CHARS = 80
-ROOM_MAX_OCCUPANCY = 2
+import re
+
+room_min_chars = 3
+room_max_chars = 80
+room_max_occupancy = 2
 
 """"
 Make sure that unicode characters don't cause crashes.
@@ -19,4 +21,6 @@ We also forbid the following characters, just in case we want to use them for in
 
 (note that in the regexp below, that '\', '[', ']', '/', '*', and ''' are escaped with '\')
 """     
-ROOM_NAME_INVALID_CHARS_FOR_REGEX = r'$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s\*\''
+room_name_invalid_chars_regex = r'$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s\*\''
+valid_room_name_regex = r'^[^' + room_name_invalid_chars_regex + r']+$'
+valid_room_name_regex_compiled = re.compile(valid_room_name_regex)

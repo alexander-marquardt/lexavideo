@@ -67,10 +67,10 @@ class GetVideoChatWelcome(webapp2.RequestHandler):
         response_type = 'jinja'
         params = {
             'serverLoginParamsJson' : json.dumps(
-                {'minRoomChars' : constants.ROOM_MIN_CHARS,
-                 'maxRoomChars' : constants.ROOM_MAX_CHARS,
-                 'maxRoomOccupancy' : constants.ROOM_MAX_OCCUPANCY,
-                 'roomNameInvalidCharsForRegex' : constants.ROOM_NAME_INVALID_CHARS_FOR_REGEX,
+                {'minRoomChars' : constants.room_min_chars,
+                 'maxRoomChars' : constants.room_max_chars,
+                 'maxRoomOccupancy' : constants.room_max_occupancy,
+                 'roomNameInvalidCharsForRegex' : constants.room_name_invalid_chars_regex,
                  })
             }
 
