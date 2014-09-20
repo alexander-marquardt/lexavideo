@@ -2,7 +2,7 @@
 
 angular.module('lxHttp.services', [])
 
-    .factory('lxHttpHandleRoomService', function ($log, $resource) {
+    .factory('lxHttpHandleRoomService', function ($log, $resource, $location) {
 
         var handleRoomUrl = '/_lx/handle_room/';
         var RoomResource = $resource(handleRoomUrl + ':roomName', {roomName: '@roomName'});
@@ -12,9 +12,10 @@ angular.module('lxHttp.services', [])
                 var roomResource = new RoomResource(roomObj).$save();
 
                 roomResource.then(function(data){
-
+                    // Redirect the user to the room that they have just created/entered into.
+                    $location.path('/' + roomObj.roomName)
                 }, function() {
-                    $log.warn('Failed to create room ' + roomObj.roomName);
+                    $log.error('Failed to create room ' + roomObj.roomName);
                 });
 
                 return roomResource;
