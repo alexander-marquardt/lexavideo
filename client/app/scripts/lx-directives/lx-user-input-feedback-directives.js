@@ -37,8 +37,12 @@ angular.module('lxUserInputFeedback.directives', [])
 
 
 
-                        // set roomIsFull 'isValid' to true so that the following code will be executed only if none
+                        // Set roomIsFull 'isValid' to true so that the following code will be executed only if none
                         // of the other validity checks have failed.
+                        // Note: there is a confusing naming scheme used for the validity values, and in the html the $error.roomIsFull
+                        // that is accessed is the negation of the 'isValid' value that is set here (ie. if roomIsFull is
+                        // set to false, then the $error value will be true, and the user will be shown the message).
+                        //
                         // 'roomIsFull' validity value will be set if all other validity checks have passed.
                         // This prevents the user from receiving two conflicting feedback messages at the same time in the
                         // case that they have entered in a string that is invalid, but that might be an available room.
