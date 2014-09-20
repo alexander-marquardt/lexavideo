@@ -48,9 +48,9 @@
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Room is full</small>
                                     </div>
                                     <div  ng-show="createRoomForm.$valid">
-                                        <small class="text-warning" ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
+                                        <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
                                            {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
-                                        <small class="text-success" ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
+                                        <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
                                             {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
                                     </div>
 
