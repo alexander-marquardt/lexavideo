@@ -11,9 +11,9 @@ angular.module('lxHttp.services', [])
             createRoom : function(roomObj) {
                 var roomResource = new RoomResource(roomObj).$save();
 
-                roomResource.then(function(data){
+                roomResource.then(function(){
                     // Redirect the user to the room that they have just created/entered into.
-                    $location.path('/' + roomObj.roomName)
+                    $location.path('/' + roomObj.roomName);
                 }, function() {
                     $log.error('Failed to create room ' + roomObj.roomName);
                 });

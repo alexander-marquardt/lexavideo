@@ -34,12 +34,16 @@ class HandleRooms(webapp2.RequestHandler):
             
             if room_obj:
                 response_dict = {
+                    'roomName' : roomName,
                     'numInRoom' : room_obj.numInRoom,
                 }
                 logging.info('Found room: ' + repr(room_obj))
                 
             else:
-                response_dict = {'numInRoom' : 0}
+                response_dict = { 
+                    'roomName' : roomName,                   
+                    'numInRoom' : 0
+                }
                 logging.info('No room: ' + repr(room_obj))
                 
 
