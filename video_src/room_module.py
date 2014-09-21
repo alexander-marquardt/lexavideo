@@ -22,105 +22,105 @@ class Room(ndb.Model):
     """All the data we store for a room"""
     
     # track the users that have joined into a room (ie. opened the URL to join a room)
-    roomCreator = ndb.StringProperty(default = None)
-    roomJoiner = ndb.StringProperty(default = None)
+    room_creator = ndb.StringProperty(default = None)
+    room_joiner = ndb.StringProperty(default = None)
     
     # track if the users in the room have a channel open (channel api)
-    roomCreatorConnected = ndb.BooleanProperty(default=False)
-    roomJoinerConnected = ndb.BooleanProperty(default=False)
+    room_creator_connected = ndb.BooleanProperty(default=False)
+    room_joiner_connected = ndb.BooleanProperty(default=False)
     
     numInRoom = ndb.IntegerProperty(default=0)
 
     def __str__(self):
         result = '['
-        if self.roomCreator:
-            result += "%s-%r" % (self.roomCreator, self.roomCreatorConnected)
-        if self.roomJoiner:
-            result += ", %s-%r" % (self.roomJoiner, self.roomJoinerConnected)
+        if self.room_creator:
+            result += "%s-%r" % (self.room_creator, self.room_creator_connected)
+        if self.room_joiner:
+            result += ", %s-%r" % (self.room_joiner, self.room_joiner_connected)
         result += ']'
         return result
 
 
-
     def make_client_id(self, user):
-        return self.key.id() + '/' + user        
-    
-            
-            
+        return self.key.id() + '/' + user
+
+
     def remove_user(self, user):
         messaging.delete_saved_messages(self.make_client_id(user))
-        if user == self.roomJoiner:
-            self.roomJoiner = None
-            self.roomJoinerConnected = False
-        if user == self.roomCreator:
-            if self.roomJoiner:
-                self.roomCreator = self.roomJoiner
-                self.roomCreatorConnected = self.roomJoinerConnected
-                self.roomJoiner = None
-                self.roomJoinerConnected = False
+        if user == self.room_joiner:
+            self.room_joiner = None
+            self.room_joiner_connected = False
+        if user == self.room_creator:
+            if self.room_joiner:
+                self.room_creator = self.room_joiner
+                self.room_creator_connected = self.room_joiner_connected
+                self.room_joiner = None
+                self.room_joiner_connected = False
             else:
-                self.roomCreator = None
-                self.roomCreatorConnected = False
+                self.room_creator = None
+                self.room_creator_connected = False
         if self.get_occupancy() > 0:
             self.put()
         else:
             self.key.delete()
         
-        
-
-
 
     def get_occupancy(self):
         occupancy = 0
-        if self.roomCreator:
+        if self.room_creator:
             occupancy += 1
-        if self.roomJoiner:
+        if self.room_joiner:
             occupancy += 1
         return occupancy
 
+
     def get_other_user(self, user):
-        if user == self.roomCreator:
-            return self.roomJoiner
-        elif user == self.roomJoiner:
-            return self.roomCreator
+        if user == self.room_creator:
+            return self.room_joiner
+        elif user == self.room_joiner:
+            return self.room_creator
         else:
             return None
 
+
     def has_user(self, user):
-        return (user and (user == self.roomCreator or user == self.roomJoiner))
+        return (user and (user == self.room_creator or user == self.room_joiner))
+
 
     def add_user(self, user):
-        if not self.roomCreator:
-            self.roomCreator = user
-        elif not self.roomJoiner:
-            self.roomJoiner = user
+        if not self.room_creator:
+            self.room_creator = user
+        elif not self.room_joiner:
+            self.room_joiner = user
         else:
             raise RuntimeError('room is full')
         
         self.numInRoom = self.get_occupancy()
         self.put()
 
+
     def set_connected(self, user):
-        if user == self.roomCreator:
-            self.roomCreatorConnected = True
-        if user == self.roomJoiner:
-            self.roomJoinerConnected = True
+        if user == self.room_creator:
+            self.room_creator_connected = True
+        if user == self.room_joiner:
+            self.room_joiner_connected = True
 
         self.put()
 
 
     def is_connected(self, user):
-        if user == self.roomCreator:
-            return self.roomCreatorConnected
-        if user == self.roomJoiner:
-            return self.roomJoinerConnected
+        if user == self.room_creator:
+            return self.room_creator_connected
+        if user == self.room_joiner:
+            return self.room_joiner_connected
         
     def user_is_room_creator(self, user):
-        return True if user == self.roomCreator else False
+        return True if user == self.room_creator else False
 
     def user_is_room_joiner(self, user):
-        return True if user == self.roomJoiner else False
-    
+        return True if user == self.room_joiner else False
+
+
 @ndb.transactional
 def connect_user_to_room(roomName, active_user):
     room = Room.get_by_id(roomName)
@@ -136,8 +136,8 @@ def connect_user_to_room(roomName, active_user):
         message_obj = {'messageType' : 'roomStatus', 
                        'messagePayload': {
                            'roomName' : room.key.id(),
-                           'roomCreator' : room.roomCreator,
-                           'roomJoiner'  : room.roomJoiner,
+                           'room_creator' : room.room_creator,
+                           'room_joiner'  : room.room_joiner,
                        }    
                        }
     
@@ -158,6 +158,7 @@ def connect_user_to_room(roomName, active_user):
         
     return room
 
+
 class ConnectPage(webapp2.RequestHandler):
     
     @handle_exceptions
@@ -168,6 +169,7 @@ class ConnectPage(webapp2.RequestHandler):
             room = connect_user_to_room(roomName, user)
             if room and room.has_user(user):
                 messaging.send_saved_messages(room.make_client_id(user))
+
 
 class DisconnectPage(webapp2.RequestHandler):
     

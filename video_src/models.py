@@ -13,4 +13,15 @@ from google.appengine.ext import ndb
 class UserModel(ndb.Model):
     
     userName = ndb.StringProperty(default=None)
-    creationDate = ndb.DateTimeProperty(auto_now_add=True) 
+    creationDate = ndb.DateTimeProperty(auto_now_add=True)
+
+
+
+
+class Message(ndb.Model):
+    clientId = ndb.StringProperty()
+    msg = ndb.TextProperty()
+
+    @classmethod
+    def get_saved_messages(cls, clientId):
+        return cls.gql("WHERE clientId = :id", id=clientId)

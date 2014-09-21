@@ -1,22 +1,10 @@
 
 import json
-import webapp2
 import logging
 
-from google.appengine.ext import ndb
 from google.appengine.api import channel
 
-from video_src.error_handling import handle_exceptions
-
-
-
-class Message(ndb.Model):
-    clientId = ndb.StringProperty()
-    msg = ndb.TextProperty()
-
-    @classmethod
-    def get_saved_messages(cls, clientId):
-        return cls.gql("WHERE clientId = :id", id=clientId)
+from video_src import models
 
 def handle_message(room, user, message):
     # This function passes a message from one user in a given "room" to the other user in the same room.
@@ -60,15 +48,15 @@ def handle_message(room, user, message):
         #on_message(room, user, message)
 
     
-def delete_saved_messages(self, clientId):
-    messages = messaging.Message.get_saved_messages(clientId)
+def delete_saved_messages(clientId):
+    messages =models.Message.get_saved_messages(clientId)
     for message in messages:
         message.key.delete()
         logging.info('Deleted the saved message for ' + clientId)    
 
 
 def send_saved_messages(clientId):
-    messages = Message.get_saved_messages(clientId)
+    messages = models.Message.get_saved_messages(clientId)
     for message in messages:
         channel.send_message(clientId, message.msg)
         logging.info('Delivered saved message to ' + clientId)
@@ -80,7 +68,7 @@ def on_message(room, user, message):
         channel.send_message(clientId, message)
         logging.info('Delivered message to user ' + user)
     else:
-        new_message = Message(clientId = clientId, msg = message)
+        new_message = models.Message(clientId = clientId, msg = message)
         new_message.put()
         #logging.info('Saved message for user ' + user)
         

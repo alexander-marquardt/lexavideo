@@ -23,22 +23,22 @@ from video_src.error_handling import handle_exceptions
 
 class HandleRooms(webapp2.RequestHandler):
     @handle_exceptions
-    def get(self, roomName=None):
-        roomName = roomName.decode('utf8')
-        if roomName:
-            logging.info('Query for room name: ' + roomName)
-            room_obj = room_module.Room.get_by_id(roomName)
+    def get(self, room_name=None):
+        room_name = room_name.decode('utf8')
+        if room_name:
+            logging.info('Query for room name: ' + room_name)
+            room_obj = room_module.Room.get_by_id(room_name)
 
             if room_obj:
                 response_dict = {
-                    'roomName': roomName,
+                    'roomName': room_name,
                     'numInRoom': room_obj.numInRoom,
                 }
                 logging.info('Found room: ' + repr(room_obj))
 
             else:
                 response_dict = {
-                    'roomName': roomName,
+                    'roomName': room_name,
                     'numInRoom': 0
                 }
                 logging.info('No room: ' + repr(room_obj))
@@ -58,32 +58,32 @@ class HandleRooms(webapp2.RequestHandler):
 
 
     @handle_exceptions
-    def post(self, roomName):
+    def post(self, room_name):
         room_dict = json.loads(self.request.body)
 
         # Need to get the URL encoded data from utf8. Note that json encoded data appers to already be decoded. 
-        roomName = roomName.decode('utf8')
-        assert (room_dict['roomName'] == roomName)
+        room_name = room_name.decode('utf8')
+        assert (room_dict['roomName'] == room_name)
         del room_dict['roomName']
 
 
         # Make sure that the room name is valid before continuing.
         # These errors should be extremely rare since these values are
         # already formatted to be within bounds and characters checked by the client-side javascript. 
-        if not constants.valid_room_name_regex_compiled.match(roomName):
+        if not constants.valid_room_name_regex_compiled.match(room_name):
             raise Exception('Room name regexp did not match')
-        if len(roomName) > constants.room_max_chars or len(roomName) < constants.room_min_chars:
-            raise Exception('Room name length of %s is out of range' % len(roomName))
+        if len(room_name) > constants.room_max_chars or len(room_name) < constants.room_min_chars:
+            raise Exception('Room name length of %s is out of range' % len(room_name))
 
 
-        def create_room_transaction(roomName, room_dict):
+        def create_room_transaction(room_name, room_dict):
             # Run the room creation in a transaction so that the first person that creates a room is the 'owner'
             # and so that each room is only created once. 
 
-            room_obj = room_module.Room.get_by_id(roomName)
+            room_obj = room_module.Room.get_by_id(room_name)
 
             if not room_obj:
-                room_obj = room_module.Room(id=roomName, **room_dict)
+                room_obj = room_module.Room(id=room_name, **room_dict)
                 room_obj.put()
                 http_helpers.set_http_ok_json_response(self.response, {'status': 'roomCreated'})
             else:
@@ -91,7 +91,7 @@ class HandleRooms(webapp2.RequestHandler):
 
 
         try:
-            ndb.transaction(lambda: create_room_transaction(roomName, room_dict))
+            ndb.transaction(lambda: create_room_transaction(room_name, room_dict))
         except datastore_errors.TransactionFailedError:
             # Provide feedback to the user to indicate that the room was not created
             http_helpers.set_http_ok_json_response(self.response, {'status': 'datastoreErrorUnableToCreateRoom'})
@@ -104,4 +104,4 @@ class HandleRooms(webapp2.RequestHandler):
     @handle_exceptions
     def put(self):
         logging.info('Called wilth PUT')
-        
+
