@@ -4,9 +4,11 @@ from build_support import prepare_build
 import sys
 import vidsetup
 
-# Execute the code for generating css, compressing, minimizing, watching for modifications, etc.   
-# This comes before the dev_appserver call because that call runs infinitely
-prepare_build.customize_files(version_id = vidsetup.VERSION_ID)
+if vidsetup.DEBUG_BUILD:
+    version_id = vidsetup.VERSION_ID
+else:
+    version_id = prepare_build.get_version_identifier()
+prepare_build.customize_files(version_id)
 
 if __name__ == "__main__":
     sys.path.append("/usr/local/google_appengine")    

@@ -3,6 +3,17 @@ import vidsetup
 import os, datetime, subprocess
 from build_support import gen_yaml
 
+
+
+def get_version_identifier():
+    # use datetime as a version identifier/timestamp - but need to remove spaces and colons    
+    datetime_str = str(datetime.datetime.now())
+    datetime_str = datetime_str[:16]
+    datetime_str = datetime_str.replace(' ', '-')
+    datetime_str = datetime_str.replace(':', '')
+    return datetime_str
+
+
 def run_grunt(grunt_arg, subprocess_function):
 
     os.chdir("client")
