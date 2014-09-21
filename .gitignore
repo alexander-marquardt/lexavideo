@@ -17,9 +17,6 @@ app.yaml
 # local storage
 .gaedata
 
-# Jetbrains files (another editor that I use)
-.idea
-
 # flash related files that we don't want to backup
 rs/static/js/ui-blitzer/ui-development-bundle/
 .*.sw*
@@ -39,6 +36,3 @@ Regions
 
 client/build_settings.json
 
-# Webstorm related
-.idea
-.idea/*
