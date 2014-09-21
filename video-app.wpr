@@ -12,6 +12,10 @@ proj.directory-list = [{'dirloc': loc('.'),
                         'watch_for_changes': True}]
 proj.file-type = 'shared'
 proj.launch-config = {loc('run_app.py'): ('project',
+        (u'. --use_old_dev_appserver',
+         '')),
+                      loc('../../../../usr/local/google_appengine/dev_appserver.py'): (''\
+        'project',
         (u'.',
          ''))}
 proj.main-file = loc('run_app.py')
