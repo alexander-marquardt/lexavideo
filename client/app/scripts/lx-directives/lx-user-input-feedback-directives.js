@@ -28,16 +28,13 @@ angular.module('lxUserInputFeedback.directives', [])
                     function(newRoomName) {
                         /* When the user changes the text input, we provide feedback about the validity of the name that
                            they have selected.
-
-                           Note: in the code below, the 'roomNotFullMessage' and 'roomIsEmptyMessage' are set in a manner
-                           that minimizes UI flashing that could be caused if we were to reset these values on each
-                           execution of this code.
                          */
                         var roomObj = null;
 
 
 
-                        // Set roomIsFull 'isValid' to true so that the following code will be executed only if none
+                        // Set roomIsFull 'isValid' to true (which means that the room is not full)
+                        // so that the following code will be executed only if none
                         // of the other validity checks have failed.
                         // Note: there is a confusing naming scheme used for the validity values, and in the html the $error.roomIsFull
                         // that is accessed is the negation of the 'isValid' value that is set here (ie. if roomIsFull is
@@ -51,6 +48,8 @@ angular.module('lxUserInputFeedback.directives', [])
                         // Keep track of if the user is still typing or not, and while they are typing we disable the
                         // submit button for creating/joining a room
                         ctrl.userIsWaitingForRoomStatus = true;
+                        ctrl.roomNotFullMessage = '';
+                        ctrl.roomIsEmptyMessage = '';
 
                         if (ctrl.$valid) {
                             if (newRoomName) {
@@ -71,18 +70,13 @@ angular.module('lxUserInputFeedback.directives', [])
 
                                         if (data.numInRoom === 0) {
                                            ctrl.roomIsEmptyMessage = 'Room is available!';
-                                           ctrl.roomNotFullMessage = '';
                                            ctrl.submitButtonText = 'Create!';
                                         }
                                         else if (data.numInRoom > 0 && data.numInRoom < maxOccupancy) {
                                             var msg = newRoomName + ' has ' + data.numInRoom + ' occupant';
                                             var plural = newRoomName + 's';
                                             ctrl.roomNotFullMessage =  data.numInRoom === 1 ? msg : plural;
-                                            ctrl.roomIsEmptyMessage = '';
                                             ctrl.submitButtonText = 'Join!';
-                                        } else {
-                                            ctrl.roomNotFullMessage = '';
-                                            ctrl.roomIsEmptyMessage = '';
                                         }
                                     }, function() {
                                         throw new Error('checkForRoomOccupancy - unknown server error');
@@ -95,8 +89,7 @@ angular.module('lxUserInputFeedback.directives', [])
                             }
 
                         } else {
-                            ctrl.roomNotFullMessage = '';
-                            ctrl.roomIsEmptyMessage = '';
+                            // This basically just acts as a place holder that will never really be clickable.
                             ctrl.submitButtonText = 'Enter!';
                         }
                     }

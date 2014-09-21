@@ -38,23 +38,24 @@
                                                 {{ createRoomForm.roomNameInputElem.submitButtonText }}</button>
                                         </span>
                                     </div>
-
-                                    <div class="text-danger" ng-show="createRoomForm.roomNameInputElem.$dirty">
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a room name</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">
-                                            {{ invalidCharacterFeedback }}</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Room is full</small>
+                                    <div class="cl-feedback-on-input-validity-div">
+                                        <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
+                                        added and removed from the DOM -->
+                                        <div class="text-danger" ng-show="createRoomForm.roomNameInputElem.$dirty">
+                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a room name</small>
+                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
+                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
+                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">
+                                                {{ invalidCharacterFeedback }}</small>
+                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Room is full</small>
+                                        </div>
+                                        <div  ng-show="createRoomForm.$valid">
+                                            <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
+                                               {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
+                                            <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
+                                                {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
+                                        </div>
                                     </div>
-                                    <div  ng-show="createRoomForm.$valid">
-                                        <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
-                                           {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
-                                        <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
-                                            {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
-                                    </div>
-
-
                                 </div>
                             </form>
                     </div>

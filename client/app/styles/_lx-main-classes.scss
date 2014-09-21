@@ -84,3 +84,6 @@
   @include my-mixin-border-glow($brand-success,  1)
 }
 
+.cl-feedback-on-input-validity-div {
+  min-height: 20px
+}
