@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="ignore test_video_src" pattern="!file:test_video_src//*" />
+</component>

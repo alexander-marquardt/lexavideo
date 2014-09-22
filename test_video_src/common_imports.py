@@ -1,4 +1,2 @@
-
-import unittest
-import sys, os
+import pytest, sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
