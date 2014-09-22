@@ -1,7 +1,4 @@
-
-
 import re
-import unittest
 
 # Solution for converting dictionaries between camelCase and snake_case taken from StackOverflow.
 # See http://stackoverflow.com/questions/17156078/converting-identifier-naming-between-camelcase-and-underscores-during-json-seria
@@ -26,24 +23,3 @@ def convert_dict(input_dict, convert_fn):
         new_d[convert_fn(k)] = convert_dict(v,convert_fn) if isinstance(v, dict) else v
     return new_d
 
-
-class TestCamelCaseAndSnakeCaseConversionFunctions(unittest.TestCase):
-
-    def test_one(self):
-        input_dict = {'first_outer_key' : 'whatever',
-                'second_outer_key' : {
-                    'first_inner_key' : 'whatever'
-                }}
-
-        new_dict = convert_dict(input_dict, underscore_to_camel)
-        self.failIf(not 'firstOuterKey' in new_dict)
-        self.failIf(not 'secondOuterKey' in new_dict)
-        self.failIf(not 'firstInnerKey' in new_dict['secondOuterKey'])
-
-        old_dict = convert_dict(new_dict, camel_to_underscore)
-        self.failIf(not 'first_outer_key' in old_dict)
-        self.failIf(not 'second_outer_key' in old_dict)
-        self.failIf(not 'first_inner_key' in old_dict['second_outer_key'])
-
-if __name__ == "__main__":
-    unittest.main()
