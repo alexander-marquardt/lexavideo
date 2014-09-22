@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectTasksOptions">
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="" />
+      <option name="arguments" value="-f $ProjectFileDir$/test_video_src/test_$FileName$" />
       <option name="checkSyntaxErrors" value="false" />
       <option name="description" value="When files are saved will run associated unit tests" />
-      <option name="exitCodeBehavior" value="ALWAYS" />
+      <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="py" />
       <option name="immediateSync" value="false" />
       <option name="name" value="Python Unit Test Watcher" />
@@ -15,8 +15,8 @@
       </option>
       <option name="outputFromStdout" value="false" />
       <option name="passParentEnvs" value="true" />
-      <option name="program" value="$PROJECT_DIR$/test_video_src/test_$FileName$" />
-      <option name="scopeName" value="ignore test_video_src" />
+      <option name="program" value="$PROJECT_DIR$/run_unittests.py" />
+      <option name="scopeName" value="Only watch files in video_src" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="$PROJECT_DIR$/" />
       <envs />

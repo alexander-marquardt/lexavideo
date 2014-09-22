@@ -24,4 +24,3 @@ We also forbid the following characters, just in case we want to use them for in
 room_name_invalid_chars_regex = r'$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s\*\''
 valid_room_name_regex = r'^[^' + room_name_invalid_chars_regex + r']+$'
 valid_room_name_regex_compiled = re.compile(valid_room_name_regex)
-
