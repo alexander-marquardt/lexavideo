@@ -22,7 +22,7 @@ def handle_exceptions(func):
             # Note: this code is only executed if an error occurs, and therefore we don't worry
             # about the extra "cost" of executing the code below since it should be rarely executed. 
             arg_spec = inspect.getargspec(func)
-            if arg_spec.args[0] == 'self':
+            if arg_spec.args and arg_spec.args[0] == 'self':
                 # if the first parameter is 'self' then it is likely that this is a method on an object
                 self = args[0]
                 if hasattr(self, '__class__'):
@@ -42,3 +42,4 @@ def handle_exceptions(func):
             
 
     return wrapper
+
