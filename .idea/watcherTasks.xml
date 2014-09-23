@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectTasksOptions">
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="$ProjectFileDir$/test_video_src/test_$FileName$" />
+      <option name="arguments" value="-m unittest test_video_src.test_$FileNameWithoutAllExtensions$" />
       <option name="checkSyntaxErrors" value="false" />
       <option name="description" value="When files are saved will run associated unit tests" />
       <option name="exitCodeBehavior" value="ERROR" />
@@ -15,7 +15,7 @@
       </option>
       <option name="outputFromStdout" value="false" />
       <option name="passParentEnvs" value="true" />
-      <option name="program" value="/usr/local/bin/py.test" />
+      <option name="program" value="/usr/bin/python" />
       <option name="scopeName" value="Only watch files in video_src" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="$ProjectFileDir$" />

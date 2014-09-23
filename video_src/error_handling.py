@@ -39,7 +39,5 @@ def handle_exceptions(func):
 
             # Log the error to the server, along with stack trace and debugging information
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string, request = request) 
-            
 
     return wrapper
-
