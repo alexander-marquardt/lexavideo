@@ -13,7 +13,7 @@ class TestUtils(unittest.TestCase):
                 }}
 
         new_dict = utils.convert_dict(input_dict, utils.underscore_to_camel)
-        self.assertIn('firstOutserKey', new_dict)
+        self.assertIn('firstOuterKey', new_dict)
         self.assertIn('secondOuterKey', new_dict)
         self.assertIn('firstInnerKey',new_dict['secondOuterKey'])
 
