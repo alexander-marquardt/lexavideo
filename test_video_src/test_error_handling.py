@@ -57,13 +57,26 @@ class TestErrorHandlingHandleExceptions(unittest.TestCase):
 
         self.assertTrue(mock_logging_debug.called)
         self.assertTrue(mock_logging_error.called)
-        
-        debug_called_with = mock_logging_debug.call_args_list[0][0][0]
-        self.assertRegexpMatches(debug_called_with, 'executing set_http_error_json_response')
-        
-        debug_called_with = mock_logging_debug.call_args_list[1][0][0]
-        self.assertRegexpMatches(debug_called_with, 'executing log_call_stack_and_traceback with extra_info = serverError')
-        self.check_stderr_log(mock_logging_error.call_args[0][0])
+
+        try:
+            debug_called_with = mock_logging_debug.call_args_list[0][0][0]
+            self.assertRegexpMatches(debug_called_with, 'executing set_http_error_json_response')
+        except:
+            self.assertIsNone("Exception while reading call_args_list")
+
+        try:
+            debug_called_with = mock_logging_debug.call_args_list[1][0][0]
+            self.assertRegexpMatches(debug_called_with, 'executing log_call_stack_and_traceback with extra_info = serverError')
+        except:
+            self.assertIsNone("Exception while reading call_args_list")
+
+        try:
+            # Get the argument passed to the most recent (and only) call to logging.error.
+            error_called_with = mock_logging_error.call_args[0][0]
+            self.check_stderr_log(error_called_with)
+        except:
+            self.assertIsNone("Exception while reading call_args")
+
 
 if __name__ == "__main__":
     unittest.main()
