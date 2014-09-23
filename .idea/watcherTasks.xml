@@ -18,7 +18,7 @@
       <option name="program" value="/usr/local/bin/py.test" />
       <option name="scopeName" value="Only watch files in video_src" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$PROJECT_DIR$/" />
+      <option name="workingDir" value="$ProjectFileDir$" />
       <envs />
     </TaskOptions>
   </component>

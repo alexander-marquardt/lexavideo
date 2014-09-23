@@ -3,7 +3,7 @@
 from common_imports import *
 import pytest
 
-# For the moment, this is basically just a dummy test module, so don't take it too seriously.
+# Basically a dummy test module since constants don't need much testing.
 from video_src import constants
 
 def test_one():

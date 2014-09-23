@@ -27,7 +27,7 @@ def log_call_stack_and_traceback(logging_function, *args, **kwds):
     
     if err:
         exception_name = cls.__name__
-        reason_for_logging = 'Exception: %s: %s\n' % (exception_name, err)
+        reason_for_logging = '%s: %s\n' % (exception_name, err)
         traceback_info =     STARS_BREAK + 'Traceback: ' + ''.join(traceback.format_exception(*excinfo)) + '\n'
                
     else: 
