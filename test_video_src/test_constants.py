@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 from common_imports import *
-import pytest
 
 # Basically a dummy test module since constants don't need much testing.
 from video_src import constants
