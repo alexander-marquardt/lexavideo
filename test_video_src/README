@@ -1,0 +1,7 @@
+To manually run these script you can do one of the following:
+
+1) For all tests run:
+    python -m unittest discover [test-directory-name] -v
+2) For a single test run:
+    python -m unittest [test-module-name].test_name
+
