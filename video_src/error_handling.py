@@ -35,9 +35,12 @@ def handle_exceptions(func):
                         if hasattr(self, 'response'):
                             # If self has a 'response' attribute, then write out the error_status to self.response.
                             request = self.request
+                            logging.debug('executing set_http_error_json_response self.response=%s and status_string=%s' %
+                                         (repr(self.response), status_string))
                             http_helpers.set_http_error_json_response(self.response, status_string, 500)  
 
             # Log the error to the server, along with stack trace and debugging information
+            logging.debug('executing log_call_stack_and_traceback with extra_info = %s' % status_string)
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string, request = request) 
 
     return wrapper

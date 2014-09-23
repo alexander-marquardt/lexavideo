@@ -1,6 +1,5 @@
 #!/usr/bin/python
 from common_imports import *
-from StringIO import StringIO
 import webapp2
 
 from mock import patch
@@ -25,53 +24,39 @@ class WebAppHandler(webapp2.RequestHandler):
 
 class TestErrorHandlingHandleExceptions(unittest.TestCase):
 
-
-    def setUp(self):
-        # Note: Once stdout and stderr are switched to StringIO buffers, the logging functions can not not be
-        # switched back to write to stdout and stderr. See the following for an explanation:
-        # http://stackoverflow.com/questions/25989123/python-stringio-is-not-correctly-capturing-data-from-stderr
-        self.saved_stdout = sys.stdout
-        self.saved_stderr = sys.stderr
-        self.stderr_string_io = StringIO()
-        sys.stderr = self.stderr_string_io
-
-    def tearDown(self):
-        # This will not restore the logging functions as their output has now "permanently" been directed to
-        # the StringIO buffer.
-        sys.stdout = self.saved_stdout
-        sys.stderr = self.saved_stderr
-
-    def check_basic_strings(self, err_output):
+    def check_stderr_log(self, err_output):
         # Make sure that the following strings are in the output
-
+        # Note: these are not really "error_handling" messages as they come from the status_reporting module.
+        # Once we have tests written for status_reporting, these can probably be removed.
         self.assertRegexpMatches(err_output, 'Traceback' )
         self.assertRegexpMatches(err_output, 'Exception: %s' % exception_string)
         self.assertRegexpMatches(err_output, 'Call Stack')
 
-
     # This simulates a standard function that is wrapped with the handle_expressions wrapper
-    #@patch(error_handling.logging)
-    def test_one(self):#, mock_logging):
+    @patch('error_handling.logging.debug')
+    @patch('error_handling.logging.error')
+    def test_function_errors(self, mock_logging_error , mock_logging_debug):
 
         handle_exceptions_wrapped_fn_throws_error()
-        #self.assertTrue(mock_logging.error.called)
 
-        err_output =  self.stderr_string_io.getvalue()
-        self.check_basic_strings(err_output)
-        self.stderr_string_io.truncate(0) # clear the stderr_string_io buffer
+        self.assertTrue(mock_logging_debug.called)
+        self.assertTrue(mock_logging_error.called)
+        self.check_stderr_log(mock_logging_error.call_args[0][0])
 
 
-    # This test simulates a method function that is inside a webapp2 RequestHandler object
-    def test_two(self):
-        def check_webapp_handler():
-            app = webapp2.WSGIApplication([('/', WebAppHandler)])
-            response = app.get_response('/')
-            self.assertRegexpMatches(response.status_message, 'Internal Server Error')
-            self.assertRegexpMatches(response.body, 'errorStatusString')
-            check_webapp_handler()
-            err_output =  self.stderr_string_io.getvalue()
-            self.check_basic_strings( err_output)
-            self.stderr_string_io.truncate(0) # clear the stderr_string_io buffer
+    @patch('error_handling.logging.debug')
+    @patch('error_handling.logging.error')
+    def test_webapp_handler_errors(self, mock_logging_error, mock_logging_debug):
+
+        app = webapp2.WSGIApplication([('/', WebAppHandler)])
+        response = app.get_response('/')
+
+        self.assertRegexpMatches(response.status_message, 'Internal Server Error')
+        self.assertRegexpMatches(response.body, 'errorStatusString')
+
+        self.assertTrue(mock_logging_debug.called)
+        self.assertTrue(mock_logging_error.called)
+        self.check_stderr_log(mock_logging_error.call_args[0])
 
 if __name__ == "__main__":
     unittest.main()
