@@ -90,4 +90,3 @@ class MainPage(webapp2.RequestHandler):
         }
 
         write_response(self.response, response_type, target_page, params)        
-
