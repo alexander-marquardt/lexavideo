@@ -1,10 +1,11 @@
 
 import webapp2, logging, json
 
+from video_src import constants
 from video_src.error_handling import handle_exceptions
 
 
-STAR_SEPERATOR = '********************************'
+
 
 class LogClientError(webapp2.RequestHandler):
     
@@ -12,7 +13,7 @@ class LogClientError(webapp2.RequestHandler):
     
     def format_main_response(self):
         content = json.loads(self.request.body)       
-        str_list = [STAR_SEPERATOR]
+        str_list = ['\n\n\n\n\n' + constants.long_star_separator]
         str_list.append('*** Javascript Browser Error ***')
         for key, value in content.iteritems():
             string = key + ': ' + repr(value)
@@ -29,7 +30,7 @@ class LogClientError(webapp2.RequestHandler):
             str_list.insert(0, '\n')
             
             
-        str_list.append(STAR_SEPERATOR)        
+        str_list.append(constants.long_star_separator)
         return '\n'.join(str_list)
 
      
@@ -38,5 +39,4 @@ class LogClientError(webapp2.RequestHandler):
         
         client_error_string = self.format_main_response()
         logging.error(client_error_string)
-        
-        
+

@@ -1,17 +1,17 @@
+# -*- coding: utf-8 -*-
 
-# -*- coding: utf-8 -*- 
+import sys
+import StringIO
+import traceback
 
+from video_src import constants
 
-from os import environ
-
-import traceback, sys, os, StringIO, re
-import logging, json
-
-STARS_BREAK = '******************************************\n'
-def log_call_stack_and_traceback(logging_function, *args, **kwds):
-    '''Signal handler to log an exception or error condition for which we want further details 
+def log_call_stack_and_traceback(logging_function, *args, **kwargs):
+    """
+    Signal handler to log an exception or error condition for which we want further details
     in the log files. 
-    logging_function should be one of the logging.* (ie. logging.error) functions'''
+    logging_function should be one of the logging.* (ie. logging.error) functions
+    """
     
     # get the exception -- however, we also use this function for general error logging
     # and therefore exc_info might return (None, None, None). 
@@ -20,35 +20,43 @@ def log_call_stack_and_traceback(logging_function, *args, **kwds):
     
     extra_info = ''
     
-    if 'stack_limit' in kwds:
-        stack_limit = kwds['stack_limit']
+    if 'stack_limit' in kwargs:
+        stack_limit = kwargs['stack_limit']
     else: 
         stack_limit = 5
-    
+
+
+    # Note that we do not place stars before the initial log output. This is because we want to see the
+    # message in the server logs summary on the appengine online logs.
     if err:
         exception_name = cls.__name__
-        reason_for_logging = '%s: %s\n' % (exception_name, err)
-        traceback_info =     STARS_BREAK + 'Traceback: ' + ''.join(traceback.format_exception(*excinfo)) + '\n'
+        reason_for_logging = '%s: %s\n%s\n' % (exception_name, err, constants.long_star_separator)
+        traceback_info = constants.star_separator + '\nTraceback: ' + \
+                         ''.join(traceback.format_exception(*excinfo)) + '\n'
                
     else: 
-        reason_for_logging = 'No exception has occured\n'
+        reason_for_logging = 'No exception has occured\n' + constants.long_star_separator
         traceback_info = ''
+
+
+    if 'extra_info' in kwargs:
+        extra_info += '\n%s' % kwargs['extra_info'] + '\n'
        
     # we don't need to include the current 'log_call_stack_and_traceback' function in the stack trace. 
     start_frame = sys._getframe(1)
     
     call_stack_info_file = StringIO.StringIO()
     traceback.print_stack(start_frame, limit=stack_limit, file = call_stack_info_file)
-    call_stack_info = STARS_BREAK + 'Call Stack: ' + call_stack_info_file.getvalue() + '\n'
+    call_stack_info = constants.star_separator + '\nCall Stack: ' + call_stack_info_file.getvalue() + '\n'
     call_stack_info_file.close()
 
         
     # Check if request information is passed in
-    if 'request' in kwds and kwds['request'] != None:
+    if 'request' in kwargs and kwargs['request'] != None:
         try:
-            request = kwds['request']
-            repr_request = STARS_BREAK + \
-                'Request that triggered traceback and call stack display:\n' +\
+            request = kwargs['request']
+            repr_request = constants.star_separator + \
+                '\nRequest that triggered traceback and call stack display:\n' +\
                 '\tPath: ' + request.path + '\n' + \
                 '\tURL: ' + request.url + '\n' + \
                 '\tRemote address: ' + request.remote_addr + '\n' + \
@@ -56,17 +64,14 @@ def log_call_stack_and_traceback(logging_function, *args, **kwds):
                 '\tHeaders: ' + repr(request.headers) + '\n' + \
                 '\tBody: ' + request.body + '\n'
         except:
-            repr_request = STARS_BREAK + 'log_call_stack_and_traceback error: "request" not available.\n'
+            repr_request = constants.star_separator + '\nlog_call_stack_and_traceback error: "request" not available.\n'
     else:
         repr_request = ''
-        
-    if 'extra_info' in kwds:
-        extra_info += STARS_BREAK + '%s' % kwds['extra_info'] + '\n'
 
-    end_of_error = STARS_BREAK + 'End of error feedback\n'
-    msg = '\n' + reason_for_logging + extra_info + traceback_info +call_stack_info + repr_request + end_of_error + STARS_BREAK
+
+    end_of_error = constants.star_separator + '\nEnd of error feedback\n' + constants.long_star_separator + '\n\n\n'
+    msg = '\n\n\n\n\n' + reason_for_logging + extra_info + traceback_info +call_stack_info + repr_request + end_of_error
     
     logging_function(msg)
-        
-        
+
 

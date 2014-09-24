@@ -25,3 +25,5 @@ room_name_invalid_chars_regex = r'$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s\*\''
 valid_room_name_regex = r'^[^' + room_name_invalid_chars_regex + r']+$'
 valid_room_name_regex_compiled = re.compile(valid_room_name_regex)
 
+star_separator = '*'*20
+long_star_separator = '*'*80
