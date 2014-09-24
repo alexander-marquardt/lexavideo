@@ -2,6 +2,8 @@
 
 import re
 
+site_name = 'VideoconferenceClub'
+
 room_min_chars = 3
 room_max_chars = 80
 room_max_occupancy = 2

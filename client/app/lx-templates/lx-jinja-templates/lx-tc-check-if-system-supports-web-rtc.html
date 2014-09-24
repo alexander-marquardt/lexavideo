@@ -7,10 +7,12 @@
     <div class="modal-header">
        <h3 class="modal-title">iPad, iPhone, and iPod are not supported :-(</h3>
     </div>
+{% endraw %}
     <div class="modal-body">
         Most of the video functionality of this site will not work correctly on your device.
-        Please try accessing VideochatHub from an Android device or a desktop computer.
+        Please try accessing {{ site_name }} from an Android device or a desktop computer.
     </div>
+{% raw %}
     <div class="modal-footer">
        <button class="btn btn-primary" ng-click="ok()">OK</button>
     </div>
@@ -21,13 +23,15 @@
     <div class="modal-header">
        <h3 class="modal-title">Your browser is not supported!</h3>
     </div>
+{% endraw %}
     <div class="modal-body">
-        Your browser is does not support the video functionality required to use the main features of VideochatHub.
+        Your browser is does not support the video functionality required to use the main features of {{ site_name }}.
         Please try using
         <a href="https://www.google.com/chrome/browser/" target="_blank">Chrome</a>,
         <a href="https://www.mozilla.org/firefox/new"  target="_blank">Firefox</a>, or
         <a href="http://www.opera.com"  target="_blank">Opera</a>.
     </div>
+{% raw %}
     <div class="modal-footer">
        <button class="btn btn-primary" ng-click="ok()">OK</button>
     </div>
@@ -38,9 +42,11 @@
     <div class="modal-header">
        <h3 class="modal-title">Your browser is out of date!</h3>
     </div>
+{$ endraw %}
     <div class="modal-body">
-        Please upgrade your browser to a newer version in order to use the functionality of VideochatHub.
+        Please upgrade your browser to a newer version in order to use the functionality of {{ site_name }}.
     </div>
+{% raw %}
     <div class="modal-footer">
        <button class="btn btn-primary" ng-click="ok()">OK</button>
     </div>
