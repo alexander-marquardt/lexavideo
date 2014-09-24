@@ -8,7 +8,6 @@ angular.module('lxUserInputFeedback.directives', [])
                                                  lxServerLoginPageConstantsService,
                                                  lxTimerService) {
 
-        var maxOccupancy = lxServerLoginPageConstantsService.maxRoomOccupancy;
         var timeSinceLastKeypressBeforeHttpCall = 300; // time in milliseconds
         var delayAction = lxTimerService.getDelayFn();
 
@@ -16,6 +15,10 @@ angular.module('lxUserInputFeedback.directives', [])
         return {
             require: 'ngModel',
             link: function(scope, elem, attrs, ctrl) {
+
+                // don't move maxOccupancy outside of the link function since it is not set until the
+                // program begins execution.
+                var maxOccupancy = lxServerLoginPageConstantsService.maxRoomOccupancy;
 
                 var inputElement = angular.element(elem)[0];
 

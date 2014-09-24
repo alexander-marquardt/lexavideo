@@ -73,4 +73,4 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             (Look at the server code to see which variables will be embedded)
              */
         };
-    })
+    });

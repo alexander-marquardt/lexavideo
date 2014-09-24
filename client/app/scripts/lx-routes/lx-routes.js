@@ -37,20 +37,15 @@ lxMainRoutes.controller('roomViewCtrl', function($scope,
     }
 });
 
-lxMainRoutes.controller('loginViewCtrl', function($scope, lxServerLoginPageConstantsService) {
-
-    // update the serverLoginPageConstantsService with the global vars embedded in the html.
-    angular.extend(lxServerLoginPageConstantsService, loginConstantsEmbeddedInHtml)
-});
-
 
 lxMainRoutes.config(function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 
 
     $routeProvider.when('/', {
-        templateUrl: '/_lx/lx-templates/lx-welcome.html',
-        controller: 'loginViewCtrl'
+        templateUrl: function(){
+            return '/_lx/lx-templates/lx-welcome.html'
+        }
     });
 
     $routeProvider.when('/:roomName', {

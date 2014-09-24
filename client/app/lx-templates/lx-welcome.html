@@ -9,13 +9,14 @@
 {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
 <div lx-check-if-system-supports-web-rtc></div>
 
-<div ng-controller='lxLoginRegistrationCtrl'>
-    <div class="row">
-        <div >
-            <div class="col-xs-12">
-                <div class="well cl-xs-max-width">
-                    <h3>Enter into a chat room</h3>
-                    <div class="clearfix">
+<div ng-controller='lxLoginViewLoadConstantsCtrl'>
+    <div ng-controller='lxLoginRegistrationCtrl'>
+        <div class="row">
+            <div >
+                <div class="col-xs-12">
+                    <div class="well cl-xs-max-width">
+                        <h3>Enter into a chat room</h3>
+                        <div class="clearfix">
                             <form name="createRoomForm" role="form" novalidate>
                                 <div class="form-group">
                                     <div class="cl-room-name-input input-group">
@@ -51,19 +52,21 @@
                                         </div>
                                         <div  ng-show="createRoomForm.$valid">
                                             <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
-                                               {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
+                                                {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
                                             <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
                                                 {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
                                         </div>
                                     </div>
                                 </div>
                             </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 
 {% endraw %}

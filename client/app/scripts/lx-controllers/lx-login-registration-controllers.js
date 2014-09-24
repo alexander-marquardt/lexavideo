@@ -6,6 +6,12 @@
 // define externally defined variables so that jshint doesn't give warnings
 
 angular.module('lxLoginRegistration.controllers', ['ngResource'])
+
+    .controller('lxLoginViewLoadConstantsCtrl', function($scope, lxServerLoginPageConstantsService) {
+        // update the serverLoginPageConstantsService with the global vars embedded in the html.
+        angular.extend(lxServerLoginPageConstantsService, loginConstantsEmbeddedInHtml);
+    })
+
     .controller('lxLoginRegistrationCtrl', function ($log,
                                                      $scope,
                                                      lxHttpHandleRoomService,
