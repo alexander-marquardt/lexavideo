@@ -6,7 +6,7 @@
 // define externally defined variables so that jshint doesn't give warnings
 
 angular.module('lxMainVideo.controllers', [])
-    .controller('lxMainVideoCtrl', function ($scope, serverConstantsService) {
+    .controller('lxMainVideoCtrl', function ($scope, serverChatRoomConstantsService) {
 
         $scope.accessCameraAndMicrophoneObject = {
             // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
@@ -78,8 +78,8 @@ angular.module('lxMainVideo.controllers', [])
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
         };
 
-        $scope.myUsername = serverConstantsService.myUsername;
-        $scope.debugBuildEnabled = serverConstantsService.debugBuildEnabled;
+        $scope.myUsername = serverChatRoomConstantsService.myUsername;
+        $scope.debugBuildEnabled = serverChatRoomConstantsService.debugBuildEnabled;
     })
     .controller('lxVideoNegotiationCtrl', function ($scope, lxVideoSettingsNegotiationService) {
         // This controller is used for wrapping around the lxVideoSettingsNegotiationDirective which may appear

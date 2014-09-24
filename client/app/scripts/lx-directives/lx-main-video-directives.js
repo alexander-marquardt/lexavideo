@@ -72,7 +72,7 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
 
 
 videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log,
-                                              globalVarsService, serverConstantsService,
+                                              globalVarsService, serverChatRoomConstantsService,
                                               webRtcSessionService, userNotificationService,
                                               adapterService, channelService, turnService,
                                               callService, mediaService, messageService, sessionDescriptionService) {
@@ -98,7 +98,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
 
 
-                $log.log('Initializing; room=' + serverConstantsService.roomName + '.');
+                $log.log('Initializing; room=' + serverChatRoomConstantsService.roomName + '.');
 
                 userNotificationService.resetStatus();
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
@@ -135,7 +135,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             var transitionVideoToDone = function() {
                 $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');
-                userNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + serverConstantsService.roomLink + '>Click here</a> to rejoin.');
+                userNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + serverChatRoomConstantsService.roomLink + '>Click here</a> to rejoin.');
             };
 
             var enablePrincipalVideoWindows = function() {

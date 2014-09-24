@@ -18,7 +18,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             // The second person to join a chatroom will be the rtcInitiator. It is done in this manner because
             // the first to join will be ready and waiting before the second person, and therefore it makes sense
             // to have the second person initiate the call to to first person.
-            rtcInitiator : null, // set in updateGlobalVarsWithServerConstantsService
+            rtcInitiator : null, // set in updateGlobalVarsWithserverChatRoomConstantsService
             pcConfig : null,
 
             // Set up audio and video regardless of what devices are present.
@@ -41,7 +41,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         return self;
     })
 
-    .factory('serverConstantsService', function() {
+    .factory('serverChatRoomConstantsService', function() {
         /* Provides constant values that are sent from the server to the client when the page is loaded.
          */
 
@@ -55,7 +55,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             ...
              */
         };
-    });
+    })
 
 
 

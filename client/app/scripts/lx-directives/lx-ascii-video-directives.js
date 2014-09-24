@@ -15,7 +15,7 @@ var asciiVideoDirectives = angular.module('lxAsciiVideo.directives', []);
 
 
 asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interval, $log, streamService,
-                                                                         messageService, serverConstantsService,
+                                                                         messageService, serverChatRoomConstantsService,
                                                                          globalVarsService) {
 
     var canvasOptions = {
@@ -119,7 +119,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
 
             var localCanvasContext = localCanvas.getContext('2d');
 
-            if (serverConstantsService.debugBuildEnabled) {
+            if (serverChatRoomConstantsService.debugBuildEnabled) {
                 // when using the development server, sending too much information over the channel API seems to saturate
                 // the server -- slow down the fps for development
                 canvasOptions.fps = 0.5;
