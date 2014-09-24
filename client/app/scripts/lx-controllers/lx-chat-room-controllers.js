@@ -5,7 +5,7 @@
 
 // define externally defined variables so that jshint doesn't give warnings
 
-angular.module('lxMainVideo.controllers', [])
+angular.module('lxChatRoom.controllers', [])
 
 
     .controller('roomViewCtrl', function($scope,

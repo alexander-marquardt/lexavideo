@@ -2,11 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da75d383-99a2-45e0-91d6-8ecb5d3d0f79" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-login-registration-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-login-registration-controllers.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-video-chat-main.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-chat-room-main.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-welcome.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-login-registration-main.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-main-video-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-chat-room-controllers.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-common-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-utility-services.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-app-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-setup-services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/index.html" afterPath="$PROJECT_DIR$/client/app/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-main.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-main.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-routes/lx-routes.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-routes/lx-routes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-user-input-feedback-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-user-input-feedback-directives.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-welcome.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-welcome.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vidsetup.py" afterPath="$PROJECT_DIR$/vidsetup.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/.idea/workspace.xml" afterPath="$PROJECT_DIR$/client/app/.idea/workspace.xml" />
     </list>
@@ -86,8 +91,8 @@
       <file leaf-file-name="main.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.923077" vertical-offset="0" max-vertical-offset="555">
-              <caret line="17" column="108" selection-start-line="17" selection-start-column="108" selection-end-line="17" selection-end-column="108" />
+            <state vertical-scroll-proportion="-16.153847" vertical-offset="0" max-vertical-offset="555">
+              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -115,11 +120,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/video_src/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.49874055" vertical-offset="174" max-vertical-offset="1320">
-              <caret line="48" column="39" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="45" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="526" max-vertical-offset="1320">
+              <caret line="88" column="56" selection-start-line="88" selection-start-column="56" selection-end-line="88" selection-end-column="56" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vidsetup.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/vidsetup.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.60453403" vertical-offset="0" max-vertical-offset="794">
+              <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -159,16 +174,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_error_handling.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_video_src/test_error_handling.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="1365">
-              <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindManager">
@@ -203,8 +208,9 @@
         <option value="$PROJECT_DIR$/video_src/constants.py" />
         <option value="$PROJECT_DIR$/video_src/error_reporting_from_client.py" />
         <option value="$PROJECT_DIR$/video_src/status_reporting.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/video_src/views.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/vidsetup.py" />
       </list>
     </option>
   </component>
@@ -745,7 +751,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3968254" sideWeight="0.7620818" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32961586" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47923875" sideWeight="0.27199504" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29406852" sideWeight="0.72800493" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29406852" sideWeight="0.72800493" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -810,13 +816,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/video_src/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1290" max-vertical-offset="1485">
-          <caret line="86" column="32" selection-start-line="86" selection-start-column="32" selection-end-line="86" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/app/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="43.5" vertical-offset="1044" max-vertical-offset="2010">
@@ -1179,16 +1178,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.923077" vertical-offset="0" max-vertical-offset="555">
-          <caret line="17" column="108" selection-start-line="17" selection-start-column="108" selection-end-line="17" selection-end-column="108" />
+        <state vertical-scroll-proportion="-16.153847" vertical-offset="0" max-vertical-offset="555">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/video_src/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49874055" vertical-offset="174" max-vertical-offset="1320">
-          <caret line="48" column="39" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="526" max-vertical-offset="1320">
+          <caret line="88" column="56" selection-start-line="88" selection-start-column="56" selection-end-line="88" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vidsetup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.60453403" vertical-offset="0" max-vertical-offset="794">
+          <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
           <folding />
         </state>
       </provider>

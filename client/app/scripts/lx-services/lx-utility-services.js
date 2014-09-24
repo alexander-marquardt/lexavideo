@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('lxCommon.services', [])
+angular.module('lxUtility.services', [])
     .factory('lxTimerService', function() {
 
         return {

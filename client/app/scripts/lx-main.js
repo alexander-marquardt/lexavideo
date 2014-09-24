@@ -5,7 +5,7 @@ var videoApp = angular.module('videoApp', [
     'lxMain.routes',
 
     // proprietary controllers
-    'lxMainVideo.controllers',
+    'lxChatRoom.controllers',
     'lxLoginRegistration.controllers',
 
     // proprietary directives
@@ -18,12 +18,12 @@ var videoApp = angular.module('videoApp', [
 
     // proprietary services
     'lxCheckCompatibility.services',
-    'lxCommon.services',
     'lxErrorHandling.services',
     'lxGlobalVarsAndConstants.services',
     'lxHttp.services',
+    'lxVideoSetup.services',
     'lxModalSupport.services',
-    'lxVideoApp.services',
+    'lxUtility.services',
     'lxVideoNegotiation.services',
 
     // angular services

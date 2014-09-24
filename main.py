@@ -15,8 +15,8 @@ from video_src import views
 
 
 app = webapp2.WSGIApplication([
-    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-video-chat-main.html>/<room_name:.+>', views.GetVideoChatMain),
-    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-welcome.html>', views.GetVideoChatWelcome),
+    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-chat-room-main.html>/<room_name:.+>', views.GetVideoChatMain),
+    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-login-registration-main.html>', views.GetVideoChatWelcome),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
     webapp2.Route(r'/_lx/handle_room/<room_name:.+>', rest_functionality.HandleRooms),
     (r'/_lx/message', room_module.MessagePage),

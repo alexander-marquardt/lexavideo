@@ -1,6 +1,6 @@
 'use strict';
 
-var videoAppServices = angular.module('lxVideoApp.services', []);
+var videoAppServices = angular.module('lxVideoSetup.services', []);
 
 
 // define externally defined variables so that jshint doesn't give warnings
