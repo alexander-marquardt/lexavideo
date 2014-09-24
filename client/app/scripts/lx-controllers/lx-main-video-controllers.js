@@ -6,6 +6,27 @@
 // define externally defined variables so that jshint doesn't give warnings
 
 angular.module('lxMainVideo.controllers', [])
+
+
+    .controller('roomViewCtrl', function($scope,
+                                                     serverChatRoomConstantsService,
+                                                     globalVarsService) {
+
+        $scope.roomViewCtrl = {};
+
+        if (videoConstantsEmbeddedInHtml.errorStatus) {
+            $scope.roomViewCtrl.errorStatus = videoConstantsEmbeddedInHtml.errorStatus;
+            $scope.roomViewCtrl.roomName = videoConstantsEmbeddedInHtml.roomName;
+        }
+        else {
+            // copy all of the values that were embedded in the html into the serverChatRoomConstantsService
+            angular.extend(serverChatRoomConstantsService, videoConstantsEmbeddedInHtml);
+
+            // update the global vars that depend on serverChatRoomConstantsService
+            globalVarsService.doUpdate(serverChatRoomConstantsService.rtcInitiator, serverChatRoomConstantsService.pcConfig);
+        }
+    })
+
     .controller('lxMainVideoCtrl', function ($scope, serverChatRoomConstantsService) {
 
         $scope.accessCameraAndMicrophoneObject = {
