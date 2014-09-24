@@ -8,12 +8,10 @@ from video_src import testing
 
 class TestUtils(unittest.TestCase):
 
-
-    @patch('testing.logging.debug')
-    def test_two(self, mock_logging_debug):
+    @patch('testing.logging.error')
+    def test_two(self, mock_logging_error):
         testing.check_if_logging_can_be_mocked()
-        self.assertTrue(mock_logging_debug.called)
-
+        self.assertTrue(mock_logging_error.called)
 
 if __name__ == "__main__":
     unittest.main()
