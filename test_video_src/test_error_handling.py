@@ -1,5 +1,8 @@
 #!/usr/bin/python
-from common_imports import *
+
+import unittest
+
+import setup_sys_path_for_testing
 import webapp2
 
 from mock import patch

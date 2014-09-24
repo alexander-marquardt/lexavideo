@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-from common_imports import *
+import unittest
+
+import setup_sys_path_for_testing
 
 # Basically a dummy test module since constants don't need much testing.
 from video_src import constants
