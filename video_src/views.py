@@ -46,11 +46,11 @@ class GetView(webapp2.RequestHandler):
 class GetVideoChatMain(webapp2.RequestHandler):
     
     @handle_exceptions
-    def get(self, current_template, roomName):   
+    def get(self, current_template, room_name):
         user_agent = self.request.headers['User-Agent']
         
         # copy the json parameters into a jinja variable
-        server_video_params_json = webrtc_setup.get_video_params(roomName, user_agent)
+        server_video_params_json = webrtc_setup.get_video_params(room_name, user_agent)
         params = {'serverVideoParamsJson' : server_video_params_json}    
         
         # update the self.response with the current view
