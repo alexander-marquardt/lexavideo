@@ -1,13 +1,14 @@
 
 'use strict';
 
-/* global loginConstantsEmbeddedInHtml */
-
 angular.module('lxUserInputFeedback.directives', [])
 
-    .directive('checkForRoomOccupancy', function($log, lxHttpHandleRoomService, lxTimerService) {
+    .directive('checkForRoomOccupancy', function($log,
+                                                 lxHttpHandleRoomService,
+                                                 lxServerLoginPageConstantsService,
+                                                 lxTimerService) {
 
-        var maxOccupancy = loginConstantsEmbeddedInHtml.maxRoomOccupancy;
+        var maxOccupancy = lxServerLoginPageConstantsService.maxRoomOccupancy;
         var timeSinceLastKeypressBeforeHttpCall = 300; // time in milliseconds
         var delayAction = lxTimerService.getDelayFn();
 

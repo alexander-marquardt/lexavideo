@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da75d383-99a2-45e0-91d6-8ecb5d3d0f79" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-access-system-resource-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-access-system-resource-directives.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-ascii-video-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-ascii-video-directives.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-main-video-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-main-video-controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-main-video-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-main-video-directives.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-login-registration-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-login-registration-controllers.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-routes/lx-routes.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-routes/lx-routes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-app-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-app-services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-user-input-feedback-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-user-input-feedback-directives.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/.idea/workspace.xml" afterPath="$PROJECT_DIR$/client/app/.idea/workspace.xml" />
     </list>
     <ignored path="my-video-app.iws" />

@@ -2,6 +2,7 @@
 'use strict';
 
 /* global videoConstantsEmbeddedInHtml */
+/* global loginConstantsEmbeddedInHtml */
 
 var lxMainRoutes = angular.module('lxMain.routes', ['ngRoute']);
 
@@ -36,6 +37,11 @@ lxMainRoutes.controller('roomViewCtrl', function($scope,
     }
 });
 
+lxMainRoutes.controller('loginViewCtrl', function($scope, lxServerLoginPageConstantsService) {
+
+    // update the serverLoginPageConstantsService with the global vars embedded in the html.
+    angular.extend(lxServerLoginPageConstantsService, loginConstantsEmbeddedInHtml)
+});
 
 
 lxMainRoutes.config(function ($routeProvider, $locationProvider) {
@@ -43,7 +49,8 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
 
     $routeProvider.when('/', {
-        templateUrl: '/_lx/lx-templates/lx-welcome.html'
+        templateUrl: '/_lx/lx-templates/lx-welcome.html',
+        controller: 'loginViewCtrl'
     });
 
     $routeProvider.when('/:roomName', {

@@ -4,22 +4,24 @@
 'use strict';
 
 // define externally defined variables so that jshint doesn't give warnings
-/* global loginConstantsEmbeddedInHtml */
 
 angular.module('lxLoginRegistration.controllers', ['ngResource'])
-    .controller('lxLoginRegistrationCtrl', function ($log, $scope, lxHttpHandleRoomService) {
+    .controller('lxLoginRegistrationCtrl', function ($log,
+                                                     $scope,
+                                                     lxHttpHandleRoomService,
+                                                     lxServerLoginPageConstantsService) {
 
         /*
          The following regular expressions are used for detecting if a user has entered a dis-allowed character into th
          input box. These values are passed from the server so that the server and client are guaranteed to always be
          evaluating the same regex for validity.
          */
-        var invalidRoomNamesPattern = new RegExp('[' + loginConstantsEmbeddedInHtml.roomNameInvalidCharsForRegex + ']', 'g');
-        $scope.validRoomNamesPattern  = new RegExp('^[^' + loginConstantsEmbeddedInHtml.roomNameInvalidCharsForRegex + ']+$');
+        var invalidRoomNamesPattern = new RegExp('[' + lxServerLoginPageConstantsService.roomNameInvalidCharsForRegex + ']', 'g');
+        $scope.validRoomNamesPattern  = new RegExp('^[^' + lxServerLoginPageConstantsService.roomNameInvalidCharsForRegex + ']+$');
 
         // The following values are passed from the server and are validated both on the client and on the server.
-        $scope.minInputLength = loginConstantsEmbeddedInHtml.minRoomChars;
-        $scope.maxInputLength = loginConstantsEmbeddedInHtml.maxRoomChars;
+        $scope.minInputLength = lxServerLoginPageConstantsService.minRoomChars;
+        $scope.maxInputLength = lxServerLoginPageConstantsService.maxRoomChars;
 
 
 

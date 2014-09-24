@@ -52,10 +52,25 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             errorStatus : ...,
             channelToken : ...,
             myUsername : ..,
-            ...
+            etc.
+            (Look at the server code to see which variables will be embedded)
              */
         };
     })
 
 
+    .factory('lxServerLoginPageConstantsService', function() {
+        /* Provides constant values that are sent from the server to the client when the page is loaded.
+         */
 
+        return {
+            /* This object will be loaded with a bunch of variables from server once the  is loaded.
+
+            eg will contain:
+            minRoomChars: ...,
+            maxRoomChars: ...,
+            etc.
+            (Look at the server code to see which variables will be embedded)
+             */
+        };
+    })
