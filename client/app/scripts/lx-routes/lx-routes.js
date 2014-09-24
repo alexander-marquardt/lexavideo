@@ -18,7 +18,8 @@ lxMainRoutes.controller('appCtrl', function($rootScope, $log) {
 });
 
 lxMainRoutes.controller('roomViewCtrl', function($scope,
-                                                 serverConstantsService, updateGlobalVarsWithServerConstantsService) {
+                                                 serverConstantsService,
+                                                 globalVarsService) {
 
     $scope.roomViewCtrl = {};
 
@@ -31,7 +32,7 @@ lxMainRoutes.controller('roomViewCtrl', function($scope,
         angular.extend(serverConstantsService, videoConstantsEmbeddedInHtml);
 
         // update the global vars that depend on serverConstantsService
-        updateGlobalVarsWithServerConstantsService.doUpdate();
+        globalVarsService.doUpdate(serverConstantsService.rtcInitiator, serverConstantsService.pcConfig);
     }
 });
 
