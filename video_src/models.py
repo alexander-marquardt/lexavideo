@@ -12,14 +12,14 @@ from google.appengine.ext import ndb
     
 class UserModel(ndb.Model):
     
-    userName = ndb.StringProperty(default=None)
-    creationDate = ndb.DateTimeProperty(auto_now_add=True)
+    user_name = ndb.StringProperty(default=None)
+    creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
 
 
 
 class Message(ndb.Model):
-    clientId = ndb.StringProperty()
+    client_id = ndb.StringProperty()
     msg = ndb.TextProperty()
 
     @classmethod

@@ -15,11 +15,17 @@ from video_src.error_handling import handle_exceptions
 import threading
 LOCK = threading.RLock()
 
-
+class RoomName(ndb.Model):
+    # This is a class that will be keyed by the room name, and that we use for guaranteeing
+    # that each room name is unique. Once a room name has been determined to be unique, then
+    # we will write the Room object (below)
+    pass
 
 # Room will contain data about which users are currently communicating with each other.
 class Room(ndb.Model):
     """All the data we store for a room"""
+
+    room_name = ndb.StringProperty(default = None)
     
     # track the users that have joined into a room (ie. opened the URL to join a room)
     room_creator = ndb.StringProperty(default = None)
