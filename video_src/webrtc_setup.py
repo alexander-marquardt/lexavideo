@@ -256,11 +256,11 @@ def get_video_params(roomName, user_agent):
             room_link = "/" + roomName 
             
             with LOCK:
-                room = room_module.Room.get_by_id(roomName)
+                room = room_module.RoomInfo.get_by_id(roomName)
                 if not room and debug != "full":
                     # New room.
                     user = generate_random(8)
-                    room = room_module.Room(id = roomName)
+                    room = room_module.RoomInfo(id = roomName)
                     room.add_user(user)
                     logging.info('First user ' + user + ' added to room ' + roomName)
                     if debug != 'loopback':

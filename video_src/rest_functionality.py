@@ -17,22 +17,26 @@ from video_src import constants
 from video_src import http_helpers
 from video_src import room_module
 from video_src import status_reporting
+from video_src import utils
+
 
 from video_src.error_handling import handle_exceptions
 
 
 class HandleRooms(webapp2.RequestHandler):
     @handle_exceptions
-    def get(self, room_name=None):
-        room_name = room_name.decode('utf8')
+    def get(self, room_name_from_url=None):
+        room_name_from_url = room_name_from_url.decode('utf8')
+        room_name = room_name_from_url.lower()
+
         if room_name:
             logging.info('Query for room name: ' + room_name)
-            room_obj = room_module.Room.get_by_id(room_name)
+            room_obj = room_module.RoomInfo.get_by_id(room_name)
 
             if room_obj:
                 response_dict = {
                     'roomName': room_name,
-                    'numInRoom': room_obj.numInRoom,
+                    'numInRoom': room_obj.num_in_room,
                 }
                 logging.info('Found room: ' + repr(room_obj))
 
@@ -41,12 +45,12 @@ class HandleRooms(webapp2.RequestHandler):
                     'roomName': room_name,
                     'numInRoom': 0
                 }
-                logging.info('No room: ' + repr(room_obj))
+                logging.info('Room name is available: ' + repr(room_obj))
 
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
         else:
-            room_query = room_module.Room.query()
+            room_query = room_module.RoomInfo.query()
             rooms_list = []
 
             for room_obj in room_query:
@@ -58,13 +62,17 @@ class HandleRooms(webapp2.RequestHandler):
 
 
     @handle_exceptions
-    def post(self, room_name):
+    def post(self, room_name_from_url):
         room_dict = json.loads(self.request.body)
 
-        # Need to get the URL encoded data from utf8. Note that json encoded data appers to already be decoded. 
-        room_name = room_name.decode('utf8')
-        assert (room_dict['roomName'] == room_name)
-        del room_dict['roomName']
+        # Need to get the URL encoded data from utf8. Note that json encoded data appears to already be decoded.
+        room_name_from_url = room_name_from_url.decode('utf8')
+        room_dict = utils.convert_dict(room_dict, utils.camel_to_underscore)
+
+        assert (room_dict['room_name'] == room_name_from_url)
+        room_dict['room_name_as_written'] = room_dict['room_name']
+        room_name = room_name_from_url.lower()
+        room_dict['room_name'] = room_name
 
 
         # Make sure that the room name is valid before continuing.
@@ -76,32 +84,58 @@ class HandleRooms(webapp2.RequestHandler):
             raise Exception('Room name length of %s is out of range' % len(room_name))
 
 
-        def create_room_transaction(room_name, room_dict):
-            # Run the room creation in a transaction so that the first person that creates a room is the 'owner'
-            # and so that each room is only created once. 
+        # creates an object that is keyed by the room_name. This is used for guaranteeing uniqueness
+        # of each room name.
+        @ndb.transactional
+        def create_room_name_transaction(room_name):
 
-            room_obj = room_module.Room.get_by_id(room_name)
-
-            if not room_obj:
-                room_obj = room_module.Room(id=room_name, **room_dict)
-                room_obj.put()
-                http_helpers.set_http_ok_json_response(self.response, {'status': 'roomCreated'})
+            room_name_obj = room_module.RoomName.get_by_id(room_name)
+            if not room_name_obj:
+                # This is a new room name
+                room_name_obj = room_module.RoomName(id=room_name)
+                room_name_obj.put()
+                room_name_added = True
             else:
-                http_helpers.set_http_ok_json_response(self.response, {'status': 'roomExistsAlreadyNotCreated'})
+                room_name_added = False
 
+            return room_name_added
 
         try:
-            ndb.transaction(lambda: create_room_transaction(room_name, room_dict))
-        except datastore_errors.TransactionFailedError:
+            room_name_added = create_room_name_transaction(room_name)
+            if not room_name_added:
+                http_helpers.set_http_ok_json_response(self.response, {'status': 'roomExistsAlreadyNotCreated'})
+                return
+
+        except:
             # Provide feedback to the user to indicate that the room was not created
             http_helpers.set_http_ok_json_response(self.response, {'status': 'datastoreErrorUnableToCreateRoom'})
+            return
+
+
+        # The following get is only used for verifying that the code is functioning correctly.
+        room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get()
+        if room_obj:
+            raise Exception('Room name %s already has a room object created, '
+            'but there was not a value stored in the RoomName structure' % room_name)
+
+        if room_name_added:
+            # The RoomName has been added to the roomName structure. Now create a new Room object
+            # for the new room.
+            @ndb.transactional
+            def create_room_transaction(room_dict):
+                room_obj = room_module.RoomInfo(**room_dict)
+                room_obj.put()
+
+            create_room_transaction(room_dict)
+            http_helpers.set_http_ok_json_response(self.response, {'status': 'roomCreated'})
+
 
 
     @handle_exceptions
-    def delete(self, product_id):
+    def delete(self, room_name_from_url):
         logging.info('Called with DELETE')
 
     @handle_exceptions
-    def put(self):
+    def put(self, room_name_from_url):
         logging.info('Called wilth PUT')
 

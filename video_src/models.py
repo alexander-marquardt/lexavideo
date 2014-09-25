@@ -23,5 +23,5 @@ class Message(ndb.Model):
     msg = ndb.TextProperty()
 
     @classmethod
-    def get_saved_messages(cls, clientId):
-        return cls.gql("WHERE clientId = :id", id=clientId)
+    def get_saved_messages(cls, client_id):
+        return cls.gql("WHERE client_id = :id", id=client_id)

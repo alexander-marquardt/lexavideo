@@ -19,13 +19,19 @@ class RoomName(ndb.Model):
     # This is a class that will be keyed by the room name, and that we use for guaranteeing
     # that each room name is unique. Once a room name has been determined to be unique, then
     # we will write the Room object (below)
+    creation_date = ndb.DateTimeProperty(auto_now_add=True)
     pass
 
-# Room will contain data about which users are currently communicating with each other.
-class Room(ndb.Model):
-    """All the data we store for a room"""
+# RoomInfo will contain data about which users are currently communicating with each other.
+class RoomInfo(ndb.Model):
+    """All the data necessary for keeping track of room names and occupancy etc. """
 
+    # This is the lower case room name - ie. user wrote 'Alex', but it will be stored as 'alex'
     room_name = ndb.StringProperty(default = None)
+
+    # The following is used for showing/remembering the room nam as it was written i.e.
+    # if the user wrote 'aLeX', it will be stored here as 'aLeX'
+    room_name_as_written = ndb.StringProperty(default = None)
     
     # track the users that have joined into a room (ie. opened the URL to join a room)
     room_creator = ndb.StringProperty(default = None)
@@ -35,7 +41,9 @@ class Room(ndb.Model):
     room_creator_connected = ndb.BooleanProperty(default=False)
     room_joiner_connected = ndb.BooleanProperty(default=False)
     
-    numInRoom = ndb.IntegerProperty(default=0)
+    num_in_room = ndb.IntegerProperty(default=0)
+
+    creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
     def __str__(self):
         result = '['
@@ -101,7 +109,7 @@ class Room(ndb.Model):
         else:
             raise RuntimeError('room is full')
         
-        self.numInRoom = self.get_occupancy()
+        self.num_in_room = self.get_occupancy()
         self.put()
 
 
@@ -129,13 +137,13 @@ class Room(ndb.Model):
 
 @ndb.transactional
 def connect_user_to_room(roomName, active_user):
-    room = Room.get_by_id(roomName)
+    room = RoomInfo.get_by_id(roomName)
     # Check if room has active_user in case that disconnect message comes before
     # connect message with unknown reason, observed with local AppEngine SDK.
     if room and room.has_user(active_user):
         room.set_connected(active_user)
         logging.info('User ' + active_user + ' connected to room ' + roomName)
-        logging.info('Room ' + roomName + ' has state ' + str(room))
+        logging.info('RoomInfo ' + roomName + ' has state ' + str(room))
         
         other_user = room.get_other_user(active_user);
         
@@ -188,7 +196,7 @@ class DisconnectPage(webapp2.RequestHandler):
         #key = self.request.get('from')
         #roomName, user = key.split('/')
         #with LOCK:
-            #room = Room.get_by_id(roomName)
+            #room = RoomInfo.get_by_id(roomName)
             #if room and room.has_user(user):
                 #other_user = room.get_other_user(user)
                 #room.remove_user(user)
@@ -214,7 +222,7 @@ class MessagePage(webapp2.RequestHandler):
         roomName = self.request.get('r')
         user = self.request.get('u')
         with LOCK:
-            room = Room.get_by_id(roomName)
+            room = RoomInfo.get_by_id(roomName)
             if room:
                 messaging.handle_message(room, user, message)
             else:
