@@ -665,7 +665,7 @@ videoAppServices.factory('mediaService', function($log,$timeout, serverChatRoomC
 
     var onUserMediaError = function(videoSignalingObject) {
         return function(error) {
-           $log.error('Failed to get access to local media. Error code was ' +
+           $log.warn('Failed to get access to local media. Error code was ' +
                 error.code + '. Continuing without sending a stream.');
 
             $timeout(function() {

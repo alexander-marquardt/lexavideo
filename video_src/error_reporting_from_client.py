@@ -31,7 +31,7 @@ class LogClientError(webapp2.RequestHandler):
             
             
         str_list.append(constants.long_star_separator)
-        return '\n'.join(str_list)
+        return '\n'.join(str_list) + '\n\n\n\n\n'
 
      
     @handle_exceptions
