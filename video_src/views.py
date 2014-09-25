@@ -89,7 +89,7 @@ class MainPage(webapp2.RequestHandler):
     @handle_exceptions
     def get(self):
         target_page = 'index.html'
-        response_type = 'jinja';
+        response_type = 'jinja'
         params = {
             'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
         }
