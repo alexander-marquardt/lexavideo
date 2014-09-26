@@ -1,10 +1,10 @@
 #!/usr/bin/python
+import setup_sys_path_for_testing
 
 import unittest
 
 from mock import patch
 
-import setup_sys_path_for_testing
 
 
 # Basically a dummy test module that we use for learning/demonstrating various techniques that we

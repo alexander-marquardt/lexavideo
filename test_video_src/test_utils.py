@@ -1,8 +1,8 @@
 #!/usr/bin/python
+import setup_sys_path_for_testing
 
 import unittest
 
-import setup_sys_path_for_testing
 
 from video_src import utils
 
