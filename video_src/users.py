@@ -9,7 +9,7 @@ def create_new_user():
 
     # use the key as the username until they decide to create their own username.
     new_user_name = new_user_obj.key.id()
-    new_user_obj.user_name = str(new_user_name)
+    new_user_obj.lx_user_id = str(new_user_name)
     new_user_obj.put()
     return new_user_obj
 

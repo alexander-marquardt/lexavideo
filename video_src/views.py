@@ -2,12 +2,11 @@
 
 import jinja2
 import json
-import logging
-import os
 import vidsetup
 import webapp2
 
 from video_src import constants
+from video_src import users
 from video_src import webrtc_setup
 
 from video_src.error_handling import handle_exceptions
@@ -88,10 +87,16 @@ class MainPage(webapp2.RequestHandler):
     
     @handle_exceptions
     def get(self):
+
+        # When a user first enters into our website, we will assign them a unique user id.
+        user_obj = users.create_new_user()
+
         target_page = 'index.html'
         response_type = 'jinja'
         params = {
+            'lx_user_name' : user_obj.lx_user_id,
             'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
         }
 
         write_response(self.response, response_type, target_page, params)        
+

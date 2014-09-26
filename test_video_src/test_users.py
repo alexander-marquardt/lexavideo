@@ -1,19 +1,16 @@
 #!/usr/bin/python
+import setup_sys_path_for_testing
 
 import unittest
 
 from google.appengine.ext import testbed
 
-import setup_sys_path_for_testing
-
-
-# Test the basic functionality in the users module
-
 from video_src import users
+
 
 class TestUtils(unittest.TestCase):
 
-    new_user_name = None
+    new_lx_user_id = None
 
     def setUp(self):
         # First, create an instance of the Testbed class.
@@ -30,19 +27,19 @@ class TestUtils(unittest.TestCase):
     def step1(self):
         user_obj = users.create_new_user()
         self.assertIsNotNone(user_obj)
-        self.assertEqual(user_obj.user_name, str(user_obj.key.id()))
-        self.new_user_name = user_obj.user_name
+        self.assertEqual(user_obj.lx_user_id, str(user_obj.key.id()))
+        self.new_lx_user_id = user_obj.lx_user_id
 
     def step2(self):
-        user_obj = users.get_user(int(self.new_user_name))
-        self.assertEqual(user_obj.user_name, str(user_obj.key.id()))
+        user_obj = users.get_user(int(self.new_lx_user_id))
+        self.assertEqual(user_obj.lx_user_id, str(user_obj.key.id()))
 
     def step3(self):
-        users.delete_user(int(self.new_user_name))
-        user_obj = users.get_user(self.new_user_name)
+        users.delete_user(int(self.new_lx_user_id))
+        user_obj = users.get_user(self.new_lx_user_id)
         self.assertIsNone(user_obj)
 
-    def test_create_get_and_delete_user(self):
+    def test_one(self):
         self.step1()
         self.step2()
         self.step3()
