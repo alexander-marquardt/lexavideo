@@ -1,4 +1,6 @@
 
+# This is essentially a "dummy" file that is used for trying out unit testing and unit testing features.
+
 import logging
 
 def check_if_logging_can_be_mocked():
