@@ -175,10 +175,10 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
     };
 
     return {
-        openChannel: function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+        openChannel: function(localVideoObject, remoteVideoObject, videoSignalingObject, channelToken) {
             $log.info('*** Opening channel. ***');
             try {
-                var channel = new goog.appengine.Channel(lxUseChatRoomConstantsService.channelToken);
+                var channel = new goog.appengine.Channel(channelToken);
                 channelServiceSupport.socket = channel.open(handler(this, localVideoObject, remoteVideoObject, videoSignalingObject));
             } catch(e) {
                 e.message = '\n\tError in openChannel\n\t' + e.message;

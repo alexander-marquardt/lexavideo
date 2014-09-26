@@ -71,11 +71,52 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
 });
 
 
+videoAppDirectives.directive('lxAddUserToRoomAndSetupChannelDirective',
+    function(
+        $log,
+        $window,
+        channelService,
+        lxHttpServices,
+        lxMainViewConstantsService,
+        messageService,
+        userNotificationService) {
+
+        return {
+            restrict: 'A',
+            link: function (scope) {
+
+                var userId = lxMainViewConstantsService.userId;
+
+                // Send BYE on refreshing(or leaving) a demo page
+                // to ensure the room is cleaned for next session.
+                $window.onbeforeunload = function () {
+                    messageService.sendMessage('sdp', {type: 'bye'});
+                };
+
+
+                $log.log('Initializing; room=' + lxUseChatRoomConstantsService.roomName + '.');
+
+                userNotificationService.resetStatus();
+                // NOTE: AppRTCClient.java searches & parses this line; update there when
+                // changing here.
+                channelService.openChannel(localVideoObject, remoteVideoObject, videoSignalingObject, channelToken);
+                turnService.maybeRequestTurn();
+
+                // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
+                webRtcSessionService.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
+
+
+            }
+        }
+    }
+);
+
+
 videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log,
                                               lxUseChatRoomVarsService, lxUseChatRoomConstantsService,
                                               webRtcSessionService, userNotificationService,
                                               adapterService, channelService, turnService,
-                                              callService, mediaService, messageService, sessionDescriptionService) {
+                                              callService, mediaService, sessionDescriptionService) {
 
     var sessionStatus; // value set in a $watch function that monitors sessionDescriptionService.getSessionStatus
 
@@ -88,29 +129,6 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             var videoSignalingObject = scope.videoSignalingObject;
 
 
-            (function() {
-
-                // Send BYE on refreshing(or leaving) a demo page
-                // to ensure the room is cleaned for next session.
-                $window.onbeforeunload = function() {
-                    messageService.sendMessage('sdp', {type: 'bye'});
-                };
-
-
-
-                $log.log('Initializing; room=' + lxUseChatRoomConstantsService.roomName + '.');
-
-                userNotificationService.resetStatus();
-                // NOTE: AppRTCClient.java searches & parses this line; update there when
-                // changing here.
-                channelService.openChannel(localVideoObject, remoteVideoObject, videoSignalingObject);
-                turnService.maybeRequestTurn();
-
-                // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
-                webRtcSessionService.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
-
-
-            })(); // self calling function
 
 
             var transitionVideoToActive = function() {

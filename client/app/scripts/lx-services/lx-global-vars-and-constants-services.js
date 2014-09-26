@@ -58,7 +58,6 @@ angular.module('lxGlobalVarsAndConstants.services', [])
 
             eg will contain:
             errorStatus : ...,
-            channelToken : ...,
             myUsername : ..,
             etc.
             (Look at the server code to see which variables will be embedded)
