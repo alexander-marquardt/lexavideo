@@ -8,17 +8,15 @@
 
 angular.module('lxCreateChatRoom.controllers', ['ngResource'])
 
-    .controller('lxCreateChatRoomConstantsCtrl',
-    function($scope, lxCreateChatRoomConstantsService) {
-        // update the serverLoginPageConstantsService with the global vars embedded in the html.
-        angular.extend(lxCreateChatRoomConstantsService, lxCreateChatRoomConstantsEmbeddedInHtml);
-    })
-
     .controller('lxCreateChatRoomCtrl',
     function ($log,
               $scope,
               lxHttpHandleRoomService,
               lxCreateChatRoomConstantsService) {
+
+        // update the serverLoginPageConstantsService with the global vars embedded in the html.
+        angular.extend(lxCreateChatRoomConstantsService, lxCreateChatRoomConstantsEmbeddedInHtml);
+
 
         /*
          The following regular expressions are used for detecting if a user has entered a dis-allowed character into th

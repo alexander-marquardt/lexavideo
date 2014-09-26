@@ -9,57 +9,55 @@
 {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
 <div lx-check-if-system-supports-web-rtc></div>
 
-<div ng-controller='lxCreateChatRoomConstantsCtrl'>
-    <div ng-controller='lxCreateChatRoomCtrl'>
-        <div class="row">
-            <div >
-                <div class="col-xs-12">
-                    <div class="well cl-xs-max-width">
-                        <h3>Enter into a chat room</h3>
-                        <div class="clearfix">
-                            <form name="createRoomForm" role="form" novalidate>
-                                <div class="form-group">
-                                    <div class="cl-room-name-input input-group">
-                                        <input class=" form-control"
-                                               placeholder="room name"
-                                               name="roomNameInputElem"
-                                               ng-model="roomObj.roomName"
-                                               ng-minlength="{{ minInputLength }}"
-                                               ng-maxlength="{{ maxInputLength }}"
-                                               maxlength = "{{ maxInputLength }}"
-                                               ng-class="highlightInput(createRoomForm.roomNameInputElem)"
-                                               ng-pattern="validRoomNamesPattern"
-                                               ng-trim="false"
-                                               check-for-room-occupancy-directive
-                                               required
-                                                />
+<div ng-controller='lxCreateChatRoomCtrl'>
+    <div class="row">
+        <div >
+            <div class="col-xs-12">
+                <div class="well cl-xs-max-width">
+                    <h3>Enter into a chat room</h3>
+                    <div class="clearfix">
+                        <form name="createRoomForm" role="form" novalidate>
+                            <div class="form-group">
+                                <div class="cl-room-name-input input-group">
+                                    <input class=" form-control"
+                                           placeholder="room name"
+                                           name="roomNameInputElem"
+                                           ng-model="roomObj.roomName"
+                                           ng-minlength="{{ minInputLength }}"
+                                           ng-maxlength="{{ maxInputLength }}"
+                                           maxlength = "{{ maxInputLength }}"
+                                           ng-class="highlightInput(createRoomForm.roomNameInputElem)"
+                                           ng-pattern="validRoomNamesPattern"
+                                           ng-trim="false"
+                                           check-for-room-occupancy-directive
+                                           required
+                                            />
                                         <span class="input-group-btn">
                                             <button ng-click="createRoom(roomObj, roomStatus)" class="btn btn-primary"
                                                     ng-disabled="createRoomForm.$invalid || createRoomForm.roomNameInputElem.userIsWaitingForRoomStatus">
                                                 {{ createRoomForm.roomNameInputElem.submitButtonText }}</button>
                                         </span>
+                                </div>
+                                <div class="cl-feedback-on-input-validity-div">
+                                    <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
+                                    added and removed from the DOM -->
+                                    <div class="text-danger" ng-show="createRoomForm.roomNameInputElem.$dirty">
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a room name</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">
+                                            {{ invalidCharacterFeedback }}</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Room is full</small>
                                     </div>
-                                    <div class="cl-feedback-on-input-validity-div">
-                                        <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
-                                        added and removed from the DOM -->
-                                        <div class="text-danger" ng-show="createRoomForm.roomNameInputElem.$dirty">
-                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a room name</small>
-                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
-                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
-                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">
-                                                {{ invalidCharacterFeedback }}</small>
-                                            <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Room is full</small>
-                                        </div>
-                                        <div  ng-show="createRoomForm.$valid">
-                                            <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
-                                                {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
-                                            <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
-                                                {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
-                                        </div>
+                                    <div  ng-show="createRoomForm.$valid">
+                                        <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
+                                            {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
+                                        <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
+                                            {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

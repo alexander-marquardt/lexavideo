@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da75d383-99a2-45e0-91d6-8ecb5d3d0f79" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-main-view-controller.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/index.html" afterPath="$PROJECT_DIR$/client/app/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-create-chat-room-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-create-chat-room-controllers.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-create-chat-room-main.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-create-chat-room-main.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/views.py" afterPath="$PROJECT_DIR$/video_src/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/.idea/workspace.xml" afterPath="$PROJECT_DIR$/client/app/.idea/workspace.xml" />
     </list>
     <ignored path="my-video-app.iws" />
@@ -648,7 +643,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="52" y="34" width="1704" height="1315" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32871974" sideWeight="0.4993804" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32871974" sideWeight="0.51053286" order="7" side_tool="false" content_ui="tabs" />
