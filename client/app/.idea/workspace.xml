@@ -33,21 +33,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lx-http-services.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="lx-http-services.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-http-services.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="810">
-              <caret line="20" column="73" selection-start-line="20" selection-start-column="73" selection-end-line="20" selection-end-column="73" />
+            <state vertical-scroll-proportion="0.40214476" vertical-offset="0" max-vertical-offset="1119">
+              <caret line="30" column="42" selection-start-line="30" selection-start-column="42" selection-end-line="30" selection-end-column="42" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lx-user-input-feedback-directives.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="lx-user-input-feedback-directives.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/lx-directives/lx-user-input-feedback-directives.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.28481013" vertical-offset="405" max-vertical-offset="2160">
-              <caret line="48" column="29" selection-start-line="48" selection-start-column="29" selection-end-line="48" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="795" max-vertical-offset="2175">
+              <caret line="101" column="103" selection-start-line="101" selection-start-column="103" selection-end-line="101" selection-end-column="103" />
               <folding />
             </state>
           </provider>
@@ -775,6 +775,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/lx-directives/lx-user-input-feedback-directives.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="795" max-vertical-offset="2175">
+          <caret line="101" column="103" selection-start-line="101" selection-start-column="103" selection-end-line="101" selection-end-column="103" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/scripts/lx-controllers/lx-login-registration-controllers.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="30" max-vertical-offset="1725">
@@ -785,16 +793,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-http-services.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="810">
-          <caret line="20" column="73" selection-start-line="20" selection-start-column="73" selection-end-line="20" selection-end-column="73" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/lx-directives/lx-user-input-feedback-directives.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28481013" vertical-offset="405" max-vertical-offset="2160">
-          <caret line="48" column="29" selection-start-line="48" selection-start-column="29" selection-end-line="48" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.40214476" vertical-offset="0" max-vertical-offset="1119">
+          <caret line="30" column="42" selection-start-line="30" selection-start-column="42" selection-end-line="30" selection-end-column="42" />
           <folding />
         </state>
       </provider>

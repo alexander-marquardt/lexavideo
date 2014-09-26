@@ -13,7 +13,7 @@ angular.module('lxHttp.services', [])
 
                 roomResource.then(function(data){
                     // Redirect the user to the room that they have just created/entered into.
-                    if (data.status === 'roomCreated') {
+                    if (data.status === 'roomCreated' || data.status === 'roomExistsAlreadyNotCreated') {
                         $location.path('/' + roomObj.roomName);
                     } else {
                         // Room was not created - give user an indication that they need to try a different

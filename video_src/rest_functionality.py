@@ -30,11 +30,12 @@ class HandleRooms(webapp2.RequestHandler):
 
         if room_name:
             logging.info('Query for room name: ' + room_name)
-            room_obj = room_module.RoomInfo.get_by_id(room_name)
+            room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get()
 
             if room_obj:
                 response_dict = {
                     'roomName': room_name,
+                    'roomIsRegistered' : True,
                     'numInRoom': room_obj.num_in_room,
                 }
                 logging.info('Found room: ' + repr(room_obj))
@@ -42,6 +43,7 @@ class HandleRooms(webapp2.RequestHandler):
             else:
                 response_dict = {
                     'roomName': room_name,
+                    'roomIsRegistered' : False,
                     'numInRoom': 0
                 }
                 logging.info('Room name is available: ' + repr(room_obj))

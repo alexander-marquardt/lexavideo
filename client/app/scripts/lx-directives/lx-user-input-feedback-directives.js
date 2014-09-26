@@ -95,19 +95,20 @@ angular.module('lxUserInputFeedback.directives', [])
 
                                             if (data.numInRoom >= maxOccupancy) {
                                                 ctrl.$setValidity('roomIsFull', false);
-                                            } else {
+                                            }
+                                            else {
                                                 ctrl.$setValidity('roomIsFull', true);
-                                            }
 
-                                            if (data.numInRoom === 0) {
-                                               ctrl.roomIsEmptyMessage = 'Room name is available!';
-                                               ctrl.submitButtonText = 'Create!';
-                                            }
-                                            else if (data.numInRoom > 0 && data.numInRoom < maxOccupancy) {
-                                                var msg = data.roomName + ' has ' + data.numInRoom + ' occupant';
-                                                var plural = data.roomName + 's';
-                                                ctrl.roomNotFullMessage =  data.numInRoom === 1 ? msg : plural;
-                                                ctrl.submitButtonText = 'Join!';
+                                                if (data.roomIsRegistered === false || data.numInRoom === 0) {
+                                                    ctrl.roomIsEmptyMessage = 'Room name is available!';
+                                                    ctrl.submitButtonText = 'Create!';
+                                                }
+                                                else {
+                                                    var msg = data.roomName + ' has ' + data.numInRoom + ' occupant';
+                                                    var plural = msg + 's';
+                                                    ctrl.roomNotFullMessage = data.numInRoom === 1 ? msg : plural;
+                                                    ctrl.submitButtonText = 'Join!';
+                                                }
                                             }
                                         }
                                         else {
