@@ -6,7 +6,7 @@
 // define externally defined variables so that jshint doesn't give warnings
 /* global videoConstantsEmbeddedInHtml */
 
-angular.module('lxChatRoom.controllers', [])
+angular.module('lxUseChatRoom.controllers', [])
 
 
     .controller('roomViewCtrl', function($scope,

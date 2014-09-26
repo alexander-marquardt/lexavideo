@@ -23,13 +23,13 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/', {
         templateUrl: function(){
-            return '/_lx/lx-templates/lx-login-registration-main.html';
+            return '/_lx/lx-templates/lx-create-chat-room-main.html';
         }
     });
 
     $routeProvider.when('/:roomName', {
         templateUrl: function(params) {
-            return '/_lx/lx-templates/lx-chat-room-main.html/' + params.roomName;
+            return '/_lx/lx-templates/lx-use-chat-room-main.html/' + params.roomName;
         }
     });
 

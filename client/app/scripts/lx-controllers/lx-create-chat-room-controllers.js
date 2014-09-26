@@ -6,7 +6,7 @@
 // define externally defined variables so that jshint doesn't give warnings
 /* global loginConstantsEmbeddedInHtml */
 
-angular.module('lxLoginRegistration.controllers', ['ngResource'])
+angular.module('lxCreateChatRoom.controllers', ['ngResource'])
 
     .controller('lxLoginViewLoadConstantsCtrl',
     function($scope, lxServerLoginPageConstantsService) {
@@ -14,7 +14,7 @@ angular.module('lxLoginRegistration.controllers', ['ngResource'])
         angular.extend(lxServerLoginPageConstantsService, loginConstantsEmbeddedInHtml);
     })
 
-    .controller('lxLoginRegistrationCtrl',
+    .controller('lxCreateChatRoomCtrl',
     function ($log,
               $scope,
               lxHttpHandleRoomService,

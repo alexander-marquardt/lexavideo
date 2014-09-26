@@ -37,6 +37,7 @@
            </div>
        </div>
 
+        {% include "lx-templates/lx-jinja-templates/lx-login-registration.html" %}
 
         <div ng-controller="lxVideoChatAppViewCtrl">
             <!-- ng-view will call in the appropriate template for the current URL location -->
@@ -89,8 +90,8 @@
 
         <script src="/scripts/lx-providers/lx-decorators.js"></script>
 
-        <script src="/scripts/lx-controllers/lx-login-registration-controllers.js"></script>
-        <script src="/scripts/lx-controllers/lx-chat-room-controllers.js"></script>
+        <script src="/scripts/lx-controllers/lx-create-chat-room-controllers.js"></script>
+        <script src="/scripts/lx-controllers/lx-use-chat-room-controllers.js"></script>
 
         <script src="/scripts/lx-routes/lx-routes.js"></script>
 

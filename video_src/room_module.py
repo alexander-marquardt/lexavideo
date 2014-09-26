@@ -136,14 +136,14 @@ class RoomInfo(ndb.Model):
 
 
 @ndb.transactional
-def connect_user_to_room(roomName, active_user):
-    room = RoomInfo.get_by_id(roomName)
+def connect_user_to_room(room_name, active_user):
+    room = RoomInfo.get_by_id(room_name)
     # Check if room has active_user in case that disconnect message comes before
     # connect message with unknown reason, observed with local AppEngine SDK.
     if room and room.has_user(active_user):
         room.set_connected(active_user)
-        logging.info('User ' + active_user + ' connected to room ' + roomName)
-        logging.info('RoomInfo ' + roomName + ' has state ' + str(room))
+        logging.info('User ' + active_user + ' connected to room ' + room_name)
+        logging.info('RoomInfo ' + room_name + ' has state ' + str(room))
         
         other_user = room.get_other_user(active_user);
         
@@ -168,7 +168,7 @@ def connect_user_to_room(roomName, active_user):
         messaging.on_message(room, active_user, json.dumps(message_obj))        
         
     else:
-        logging.warning('Unexpected Connect Message to room ' + roomName + 'by user ' + active_user)
+        logging.warning('Unexpected Connect Message to room ' + room_name + 'by user ' + active_user)
         
     return room
 
@@ -178,9 +178,9 @@ class ConnectPage(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         key = self.request.get('from')
-        roomName, user = key.split('/')
+        room_name, user = key.split('/')
         with LOCK:
-            room = connect_user_to_room(roomName, user)
+            room = connect_user_to_room(room_name, user)
             if room and room.has_user(user):
                 messaging.send_saved_messages(room.make_client_id(user))
 
@@ -219,11 +219,11 @@ class MessagePage(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         message = self.request.body
-        roomName = self.request.get('r')
+        room_name = self.request.get('r')
         user = self.request.get('u')
         with LOCK:
-            room = RoomInfo.get_by_id(roomName)
+            room = RoomInfo.get_by_id(room_name)
             if room:
                 messaging.handle_message(room, user, message)
             else:
-                logging.warning('Unknown room ' + roomName)  
+                logging.warning('Unknown room ' + room_name)
