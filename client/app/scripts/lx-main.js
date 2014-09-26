@@ -5,8 +5,9 @@ var videoApp = angular.module('videoApp', [
     'lxMain.routes',
 
     // proprietary controllers
-    'lxUseChatRoom.controllers',
     'lxCreateChatRoom.controllers',
+    'lxMainView.controllers',
+    'lxUseChatRoom.controllers',
 
     // proprietary directives
     'lxAccessSystemResources.directives',
