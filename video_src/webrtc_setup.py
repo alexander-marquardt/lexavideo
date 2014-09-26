@@ -8,11 +8,6 @@ from video_src import messaging
 from video_src import room_module
 from video_src import status_reporting
 
-
-# TODO - REMOVE THIS LOCK AND REPLACE WITH DB TRANSACTIONS
-import threading
-LOCK = threading.RLock()
-
 def generate_random(length):
     word = ''
     for _ in range(length):
@@ -144,7 +139,7 @@ def append_url_arguments(request, link):
 
 
 
-def get_video_params(roomName, user_agent):
+def get_video_params(room_name, user_agent):
     """ Returns a json object that contains the video parameters that will be used for setting up the webRtc communications and display"""
     
     
@@ -244,49 +239,45 @@ def get_video_params(roomName, user_agent):
         #if unittest:
             ## Always create a new room for the unit tests.
             #roomName = generate_random(8)
-        
-        roomName = roomName
-        
-        
-        logging.info('Preparing to add user to room ' + roomName)
+
+        logging.info('Preparing to add user to room ' + room_name)
         user = None
         initiator = 0
         
-        if roomName:
-            room_link = "/" + roomName 
+        if room_name:
+            room_link = "/" + room_name
             
-            with LOCK:
-                room = room_module.RoomInfo.get_by_id(roomName)
-                if not room and debug != "full":
-                    # New room.
-                    user = generate_random(8)
-                    room = room_module.RoomInfo(id = roomName)
-                    room.add_user(user)
-                    logging.info('First user ' + user + ' added to room ' + roomName)
-                    if debug != 'loopback':
-                        initiator = 0
-                    else:
-                        room.add_user(user)
-                        initiator = 1
-                elif room and room.get_occupancy() == 1 and debug != 'full':
-                    # 1 occupant.
-                    user = generate_random(8)
-                    room.add_user(user)
-                    logging.info('Second user ' + user + ' added to room ' + roomName)                    
-                    initiator = 1
+            room = room_module.RoomInfo.get_by_id(room_name)
+            if not room and debug != "full":
+                # New room.
+                user = generate_random(8)
+                room = room_module.RoomInfo(id = room_name)
+                room.add_user(user)
+                logging.info('First user ' + user + ' added to room ' + room_name)
+                if debug != 'loopback':
+                    initiator = 0
                 else:
-                    # 2 occupants (full).
-                    logging.warning('Room ' + roomName + ' is full')
-                    
-                    params = {
-                        'errorStatus': 'roomIsFull',
-                        'roomName': roomName,
-                        'roomLink': room_link,
-                    }                
-                    return json.dumps(params)
+                    room.add_user(user)
+                    initiator = 1
+            elif room and room.get_occupancy() == 1 and debug != 'full':
+                # 1 occupant.
+                user = generate_random(8)
+                room.add_user(user)
+                logging.info('Second user ' + user + ' added to room ' + room_name)
+                initiator = 1
+            else:
+                # 2 occupants (full).
+                logging.warning('Room ' + room_name + ' is full')
+
+                params = {
+                    'errorStatus': 'roomIsFull',
+                    'roomName': room_name,
+                    'roomLink': room_link,
+                }
+                return json.dumps(params)
         
             
-            logging.info('Room ' + roomName + ' has state ' + str(room))
+            logging.info('Room ' + room_name + ' has state ' + str(room))
         
     
             turn_url = 'https://computeengineondemand.appspot.com/'
@@ -315,7 +306,7 @@ def get_video_params(roomName, user_agent):
             'errorStatus': error_status,
             'channelToken': token,
             'myUsername': user,
-            'roomName': roomName,
+            'roomName': room_name,
             'roomLink': room_link,
             'rtcInitiator': initiator,
             'pcConfig': pc_config,

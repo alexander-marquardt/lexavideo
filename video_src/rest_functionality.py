@@ -16,7 +16,6 @@ import vidsetup
 from video_src import constants
 from video_src import http_helpers
 from video_src import room_module
-from video_src import status_reporting
 from video_src import utils
 
 
@@ -128,14 +127,4 @@ class HandleRooms(webapp2.RequestHandler):
 
             create_room_transaction(room_dict)
             http_helpers.set_http_ok_json_response(self.response, {'status': 'roomCreated'})
-
-
-
-    @handle_exceptions
-    def delete(self, room_name_from_url):
-        logging.info('Called with DELETE')
-
-    @handle_exceptions
-    def put(self, room_name_from_url):
-        logging.info('Called wilth PUT')
 
