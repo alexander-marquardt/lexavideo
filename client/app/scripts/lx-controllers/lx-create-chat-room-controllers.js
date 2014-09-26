@@ -8,7 +8,7 @@
 
 angular.module('lxCreateChatRoom.controllers', ['ngResource'])
 
-    .controller('lxLoginViewLoadConstantsCtrl',
+    .controller('lxCreateChatRoomConstantsCtrl',
     function($scope, lxCreateChatRoomConstantsService) {
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
         angular.extend(lxCreateChatRoomConstantsService, lxCreateChatRoomConstantsEmbeddedInHtml);

@@ -41,6 +41,14 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         return self;
     })
 
+    .factory('lxMainViewConstantsService', function() {
+        // constants that are loaded in the main page, and that will be used by all views.
+        return {
+            /* this object will be loaded with variables from server once lxVideoChatAppViewCtrl is executed
+             */
+        };
+    })
+
     .factory('lxUseChatRoomConstantsService', function() {
         /* Provides constant values that are sent from the server to the client when the page is loaded.
          */
