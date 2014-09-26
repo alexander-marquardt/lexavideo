@@ -94,9 +94,11 @@ class MainPage(webapp2.RequestHandler):
         target_page = 'index.html'
         response_type = 'jinja'
         params = {
-            'lx_user_name' : user_obj.lx_user_id,
+            'userInfoJson' : {
+                'lx_user_id' : user_obj.lx_user_id,
+                },
             'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
-        }
+            }
 
         write_response(self.response, response_type, target_page, params)        
 
