@@ -12,6 +12,8 @@ angular.module('lxMainView.controllers', [])
         $log,
         lxMainViewConstantsService) {
 
+
+        // Copy information embedded in the Html into an angular service.
         angular.extend(lxMainViewConstantsService, userInfoEmbeddedInHtml);
 
         // handle case when a route change promise is not resolved

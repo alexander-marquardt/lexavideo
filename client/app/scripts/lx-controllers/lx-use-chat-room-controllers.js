@@ -10,8 +10,9 @@ angular.module('lxUseChatRoom.controllers', [])
 
 
     .controller('lxUseChatRoomOuterCtrl', function($scope,
-                                                     lxUseChatRoomConstantsService,
-                                                     lxUseChatRoomVarsService) {
+                                                   lxUseChatRoomConstantsService,
+                                                   lxUseChatRoomVarsService,
+                                                   lxMainViewConstantsService) {
 
         $scope.lxUseChatRoomOuterCtrl = {};
 

@@ -6,6 +6,7 @@ import webapp2
 from google.appengine.ext import ndb
 
 from video_src import messaging
+from video_src import models
 
 from video_src.error_handling import handle_exceptions
 
@@ -34,8 +35,8 @@ class RoomInfo(ndb.Model):
     room_name_as_written = ndb.StringProperty(default = None)
     
     # track the users that have joined into a room (ie. opened the URL to join a room)
-    room_creator = ndb.StringProperty(default = None)
-    room_joiner = ndb.StringProperty(default = None)
+    room_creator = ndb.KeyProperty(kind = models.UserModel)
+    room_joiner = ndb.KeyProperty(kind = models.UserModel)
     
     # track if the users in the room have a channel open (channel api)
     room_creator_connected = ndb.BooleanProperty(default=False)

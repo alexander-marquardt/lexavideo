@@ -27,12 +27,12 @@ class TestUtils(unittest.TestCase):
     def step1(self):
         user_obj = users.create_new_user()
         self.assertIsNotNone(user_obj)
-        self.assertEqual(user_obj.lx_user_id, str(user_obj.key.id()))
-        self.new_lx_user_id = user_obj.lx_user_id
+        self.assertEqual(user_obj.user_id, str(user_obj.key.id()))
+        self.new_lx_user_id = user_obj.user_id
 
     def step2(self):
         user_obj = users.get_user(int(self.new_lx_user_id))
-        self.assertEqual(user_obj.lx_user_id, str(user_obj.key.id()))
+        self.assertEqual(user_obj.user_id, str(user_obj.key.id()))
 
     def step3(self):
         users.delete_user(int(self.new_lx_user_id))

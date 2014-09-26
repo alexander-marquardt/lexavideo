@@ -42,7 +42,7 @@ class GetView(webapp2.RequestHandler):
         write_response(self.response, response_type, target_page, params)
 
 
-class GetChatRoomMain(webapp2.RequestHandler):
+class UserChatRoomMain(webapp2.RequestHandler):
     
     @handle_exceptions
     def get(self, current_template, room_name):
@@ -51,6 +51,7 @@ class GetChatRoomMain(webapp2.RequestHandler):
         # copy the json parameters into a jinja variable
         server_video_params_json = webrtc_setup.get_video_params(room_name, user_agent)
         params = {
+            # Note: pass jinja variables using snake_case, and javascript variables using camelCase
             'site_name' : constants.site_name,
             'serverVideoParamsJson' : server_video_params_json}
         
@@ -60,13 +61,14 @@ class GetChatRoomMain(webapp2.RequestHandler):
         self.response.out.write(content)
 
 
-class GetLoginRegistrationMain(webapp2.RequestHandler):
+class CreateChatRoomMain(webapp2.RequestHandler):
     """ Render whatever template the client has requested """
     
     @handle_exceptions
     def get(self, current_template):   
         response_type = 'jinja'
         params = {
+            # Note: pass jinja variables using snake_case, and javascript variables using camelCase
             'site_name' : constants.site_name,
 
             # The following is an object that passes variables to the javascript code.
@@ -96,7 +98,7 @@ class MainPage(webapp2.RequestHandler):
         params = {
             'userInfoJson' : json.dumps(
                 {
-                'lx_user_id' : user_obj.lx_user_id,
+                'userId' : user_obj.user_id,
                 }),
             'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
             }

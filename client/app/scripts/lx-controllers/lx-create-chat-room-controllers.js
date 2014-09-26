@@ -30,8 +30,9 @@ angular.module('lxCreateChatRoom.controllers', ['ngResource'])
         $scope.minInputLength = lxCreateChatRoomConstantsService.minRoomChars;
         $scope.maxInputLength = lxCreateChatRoomConstantsService.maxRoomChars;
 
-
-
+        $scope.roomObj = {}
+        $scope.roomObj.userId = lxCreateChatRoomConstantsService.userId;
+        // createRoom is the function that will be executed when the user clicks the submit button
         $scope.createRoom = lxHttpHandleRoomService.createRoom;
 
         // roomStatus.roomStatus.triggerGetNewRoom is placed on the scope and will be watched for changes by the
