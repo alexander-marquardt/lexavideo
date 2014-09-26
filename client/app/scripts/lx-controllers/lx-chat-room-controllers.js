@@ -4,6 +4,7 @@
 'use strict';
 
 // define externally defined variables so that jshint doesn't give warnings
+/* global videoConstantsEmbeddedInHtml */
 
 angular.module('lxChatRoom.controllers', [])
 

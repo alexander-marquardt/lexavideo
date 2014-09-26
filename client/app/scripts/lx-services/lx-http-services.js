@@ -8,12 +8,19 @@ angular.module('lxHttp.services', [])
         var RoomResource = $resource(handleRoomUrl + ':roomName', {roomName: '@roomName'});
 
         return {
-            createRoom : function(roomObj) {
+            createRoom : function(roomObj, roomStatus) {
                 var roomResource = new RoomResource(roomObj).$save();
 
-                roomResource.then(function(){
+                roomResource.then(function(data){
                     // Redirect the user to the room that they have just created/entered into.
-                    $location.path('/' + roomObj.roomName);
+                    if (data.status === 'roomCreated') {
+                        $location.path('/' + roomObj.roomName);
+                    } else {
+                        // Room was not created - give user an indication that they need to try a different
+                        // room name. By toggling triggerGetNewRoom we will cause a new getRoom to
+                        // execute inside checkForRoomOccupancyDirective.
+                        roomStatus.triggerGetNewRoom = !roomStatus.triggerGetNewRoom;
+                    }
                 }, function() {
                     $log.error('Failed to create room ' + roomObj.roomName);
                 });

@@ -1,9 +1,6 @@
 
 'use strict';
 
-/* global videoConstantsEmbeddedInHtml */
-/* global loginConstantsEmbeddedInHtml */
-
 var lxMainRoutes = angular.module('lxMain.routes', ['ngRoute']);
 
 lxMainRoutes.controller('lxVideoChatAppViewCtrl', function($rootScope, $log) {
@@ -26,7 +23,7 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/', {
         templateUrl: function(){
-            return '/_lx/lx-templates/lx-login-registration-main.html'
+            return '/_lx/lx-templates/lx-login-registration-main.html';
         }
     });
 

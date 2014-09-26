@@ -3,7 +3,7 @@
 
 angular.module('lxUserInputFeedback.directives', [])
 
-    .directive('checkForRoomOccupancy', function($log,
+    .directive('checkForRoomOccupancyDirective', function($log,
                                                  lxHttpHandleRoomService,
                                                  lxServerLoginPageConstantsService,
                                                  lxTimerService) {
@@ -31,21 +31,24 @@ angular.module('lxUserInputFeedback.directives', [])
                  if the user hits the backspace key resulting in an invalid room name that is too short
                  (which therefore  would not update the ngModel value), after previously entering in a
                  valid room name.
+
+                 We also watch triggerGetNewRoom which will be toggled if we need to trigger the function
+                 associated with this watcher.
                  */
                 scope.$watch(function() {
 
-                        return inputElement.value;
+                        return inputElement.value + scope.roomStatus.triggerGetNewRoom.toString();
                     },
 
 
                     /*
                      When the user changes the text input, we provide feedback about the validity of the name that
-                     they have selected.
+                     they have selected by checking if the name is available etc. This requires ajax calls to the
+                     server.
                      */
-                    function(newRoomName) {
+                    function() {
 
                         var roomObj = null;
-
 
                         /*
                          Set roomIsFull 'isValid' to true (which means that the room is not full)
@@ -70,7 +73,7 @@ angular.module('lxUserInputFeedback.directives', [])
                         ctrl.roomIsEmptyMessage = '';
 
                         if (ctrl.$valid) {
-                            if (newRoomName) {
+                            if (inputElement.value) {
 
                                 // We don't want to submit all characters as the user is typing. Only do the
                                 // submit once the user has stopped typing or slowed down. This functionality
@@ -79,8 +82,8 @@ angular.module('lxUserInputFeedback.directives', [])
 
                                     // This is the GET call to the server that will return the status of the room as
                                     // will be indicated by resolution of the promise on the roomObj.
-                                    roomObj = lxHttpHandleRoomService.getRoom(newRoomName);
-                                    $log.debug('getRoom called for: ' + newRoomName);
+                                    roomObj = lxHttpHandleRoomService.getRoom(inputElement.value);
+                                    $log.debug('getRoom called for: ' + inputElement.value);
 
                                     roomObj && roomObj.$promise.then(function(data) {
 

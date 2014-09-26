@@ -30,11 +30,11 @@
                                                ng-class="highlightInput(createRoomForm.roomNameInputElem)"
                                                ng-pattern="validRoomNamesPattern"
                                                ng-trim="false"
-                                               check-for-room-occupancy
+                                               check-for-room-occupancy-directive
                                                required
                                                 />
                                         <span class="input-group-btn">
-                                            <button ng-click="createRoom(roomObj)" class="btn btn-primary"
+                                            <button ng-click="createRoom(roomObj, roomStatus)" class="btn btn-primary"
                                                     ng-disabled="createRoomForm.$invalid || createRoomForm.roomNameInputElem.userIsWaitingForRoomStatus">
                                                 {{ createRoomForm.roomNameInputElem.submitButtonText }}</button>
                                         </span>
