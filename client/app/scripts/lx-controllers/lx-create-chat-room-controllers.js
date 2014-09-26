@@ -11,8 +11,9 @@ angular.module('lxCreateChatRoom.controllers', ['ngResource'])
     .controller('lxCreateChatRoomCtrl',
     function ($log,
               $scope,
+              lxCreateChatRoomConstantsService,
               lxHttpHandleRoomService,
-              lxCreateChatRoomConstantsService) {
+              lxMainViewConstantsService) {
 
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
         angular.extend(lxCreateChatRoomConstantsService, lxCreateChatRoomConstantsEmbeddedInHtml);
@@ -30,8 +31,8 @@ angular.module('lxCreateChatRoom.controllers', ['ngResource'])
         $scope.minInputLength = lxCreateChatRoomConstantsService.minRoomChars;
         $scope.maxInputLength = lxCreateChatRoomConstantsService.maxRoomChars;
 
-        $scope.roomObj = {}
-        $scope.roomObj.userId = lxCreateChatRoomConstantsService.userId;
+        $scope.roomObj = {};
+        $scope.roomObj.userId = lxMainViewConstantsService.userId;
         // createRoom is the function that will be executed when the user clicks the submit button
         $scope.createRoom = lxHttpHandleRoomService.createRoom;
 

@@ -3,26 +3,80 @@
 
 import json
 import logging
-import re
-import threading
+
 import webapp2
 
-from google.appengine.api import channel
-from google.appengine.api import datastore_errors
 from google.appengine.ext import ndb
 
-import vidsetup
 
 from video_src import constants
 from video_src import http_helpers
+from video_src import messaging
+from video_src import models
 from video_src import room_module
 from video_src import utils
 
 
 from video_src.error_handling import handle_exceptions
 
+class AddUserToRoom(webapp2.RequestHandler):
 
-class HandleRooms(webapp2.RequestHandler):
+    @handle_exceptions
+    def post(self, room_name_from_url):
+        room_dict = json.loads(self.request.body)
+        room_name_from_url = room_name_from_url.decode('utf8')
+        room_name = room_name_from_url.lower()
+
+        if room_name:
+
+            room = room_module.RoomInfo.get_by_id(room_name)
+            if not room and debug != "full":
+                # New room.
+                user = generate_random(8)
+                room = room_module.RoomInfo(id = room_name)
+                room.add_user(user)
+                logging.info('First user ' + user + ' added to room ' + room_name)
+                if debug != 'loopback':
+                    initiator = 0
+                else:
+                    room.add_user(user)
+                    initiator = 1
+            elif room and room.get_occupancy() == 1 and debug != 'full':
+                # 1 occupant.
+                user = generate_random(8)
+                room.add_user(user)
+                logging.info('Second user ' + user + ' added to room ' + room_name)
+                initiator = 1
+            else:
+                # 2 occupants (full).
+                logging.warning('Room ' + room_name + ' is full')
+
+                params = {
+                    'errorStatus': 'roomIsFull',
+                    'roomName': room_name,
+                }
+                return json.dumps(params)
+
+            logging.info('Room ' + room_name + ' has state ' + str(room))
+
+            # token_timeout for channel creation, default 30min, max 1 days, min 3min.
+            token_timeout =  1440 #1440 minutes is 1 day.
+            token = messaging.create_channel(room, user, token_timeout)
+            turn_url = 'https://computeengineondemand.appspot.com/'
+            turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
+
+        else :
+            token = ''
+            turn_url = ''
+
+
+        # TODO deal with channelToken - needs to be passed to javascript
+        'channelToken'# : token
+        'turnUrl'# : turn_url,
+
+
+
+class HandleCreateRooms(webapp2.RequestHandler):
     @handle_exceptions
     def get(self, room_name_from_url=None):
         room_name_from_url = room_name_from_url.decode('utf8')
@@ -114,19 +168,24 @@ class HandleRooms(webapp2.RequestHandler):
 
 
         # The following get is only used for verifying that the code is functioning correctly.
-        room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get()
+        room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get(keys_only = True)
         if room_obj:
             raise Exception('Room name %s already has a room object created, '
             'but there was not a value stored in the RoomName structure' % room_name)
 
-        if room_name_added:
-            # The RoomName has been added to the roomName structure. Now create a new Room object
-            # for the new room.
-            @ndb.transactional
-            def create_room_transaction(room_dict):
-                room_obj = room_module.RoomInfo(**room_dict)
-                room_obj.put()
+        # This is a newly created room. Therefore we should set the room creator to the user_id that was passed in.
+        room_creator_id = room_dict['user_id']
+        room_creator_key = models.UserModel.query(models.UserModel.user_id == room_creator_id).get(keys_only = True)
+        room_dict['room_creator_key'] = room_creator_key
+        del room_dict['user_id']
 
-            create_room_transaction(room_dict)
-            http_helpers.set_http_ok_json_response(self.response, {'status': 'roomCreated'})
+        # The RoomName has been added to the roomName structure. Now create a new Room object
+        # for the new room.
+        @ndb.transactional
+        def create_room_transaction(room_dict):
+            room_obj = room_module.RoomInfo(**room_dict)
+            room_obj.put()
+
+        create_room_transaction(room_dict)
+        http_helpers.set_http_ok_json_response(self.response, {'status': 'roomCreated'})
 

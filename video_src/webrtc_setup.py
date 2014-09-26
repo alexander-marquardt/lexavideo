@@ -146,7 +146,7 @@ def get_video_params(room_name, user_agent):
     try:
         # Append strings to this list to have them thrown up in message boxes. This
         # will also cause the app to fail.
-        error_status = None;
+        error_status = None
         # Get the base url without arguments.
         stun_server = get_default_stun_server()
     
@@ -232,8 +232,7 @@ def get_video_params(room_name, user_agent):
             # Set dtls to false as DTLS does not work for loopback.
             dtls = 'false'
         
-        # token_timeout for channel creation, default 30min, max 1 days, min 3min.
-        token_timeout =  1440 #1440 minutes is 1 day. 
+
         
         #unittest = self.request.get('unittest')
         #if unittest:
@@ -243,54 +242,7 @@ def get_video_params(room_name, user_agent):
         logging.info('Preparing to add user to room ' + room_name)
         user = None
         initiator = 0
-        
-        if room_name:
-            room_link = "/" + room_name
-            
-            room = room_module.RoomInfo.get_by_id(room_name)
-            if not room and debug != "full":
-                # New room.
-                user = generate_random(8)
-                room = room_module.RoomInfo(id = room_name)
-                room.add_user(user)
-                logging.info('First user ' + user + ' added to room ' + room_name)
-                if debug != 'loopback':
-                    initiator = 0
-                else:
-                    room.add_user(user)
-                    initiator = 1
-            elif room and room.get_occupancy() == 1 and debug != 'full':
-                # 1 occupant.
-                user = generate_random(8)
-                room.add_user(user)
-                logging.info('Second user ' + user + ' added to room ' + room_name)
-                initiator = 1
-            else:
-                # 2 occupants (full).
-                logging.warning('Room ' + room_name + ' is full')
 
-                params = {
-                    'errorStatus': 'roomIsFull',
-                    'roomName': room_name,
-                    'roomLink': room_link,
-                }
-                return json.dumps(params)
-        
-            
-            logging.info('Room ' + room_name + ' has state ' + str(room))
-        
-    
-            turn_url = 'https://computeengineondemand.appspot.com/'
-            turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
-        
-
-            token = messaging.create_channel(room, user, token_timeout)
-        
-        else :
-            token = ''
-            turn_url = ''
-            room_link = ''
-        
         # TODO - look at the original apprtc code to see if these values should be set.
         audio = None
         video = None
@@ -304,16 +256,13 @@ def get_video_params(room_name, user_agent):
         
         params = {
             'errorStatus': error_status,
-            'channelToken': token,
             'myUsername': user,
             'roomName': room_name,
-            'roomLink': room_link,
             'rtcInitiator': initiator,
             'pcConfig': pc_config,
             'pcConstraints': pc_constraints,
             'offerConstraints': offer_constraints,
             'mediaConstraints': media_constraints,
-            'turnUrl': turn_url,
             'stereo': stereo,
             'audioRecvBitrate': arbr,
             'audioSendBitrate': asbr,

@@ -35,12 +35,12 @@ class RoomInfo(ndb.Model):
     room_name_as_written = ndb.StringProperty(default = None)
     
     # track the users that have joined into a room (ie. opened the URL to join a room)
-    room_creator = ndb.KeyProperty(kind = models.UserModel)
-    room_joiner = ndb.KeyProperty(kind = models.UserModel)
+    room_creator_key = ndb.KeyProperty(kind = models.UserModel)
+    room_joiner_key = ndb.KeyProperty(kind = models.UserModel)
     
     # track if the users in the room have a channel open (channel api)
-    room_creator_connected = ndb.BooleanProperty(default=False)
-    room_joiner_connected = ndb.BooleanProperty(default=False)
+    room_creator_channel_open = ndb.BooleanProperty(default=False)
+    room_joiner_channel_open = ndb.BooleanProperty(default=False)
     
     num_in_room = ndb.IntegerProperty(default=0)
 
@@ -48,10 +48,10 @@ class RoomInfo(ndb.Model):
 
     def __str__(self):
         result = '['
-        if self.room_creator:
-            result += "%s-%r" % (self.room_creator, self.room_creator_connected)
-        if self.room_joiner:
-            result += ", %s-%r" % (self.room_joiner, self.room_joiner_connected)
+        if self.room_creator_key:
+            result += "%s-%r" % (self.room_creator_key, self.room_creator_channel_open)
+        if self.room_joiner_key:
+            result += ", %s-%r" % (self.room_joiner_key, self.room_joiner_channel_open)
         result += ']'
         return result
 
@@ -62,18 +62,18 @@ class RoomInfo(ndb.Model):
 
     def remove_user(self, user):
         messaging.delete_saved_messages(self.make_client_id(user))
-        if user == self.room_joiner:
-            self.room_joiner = None
-            self.room_joiner_connected = False
-        if user == self.room_creator:
-            if self.room_joiner:
-                self.room_creator = self.room_joiner
-                self.room_creator_connected = self.room_joiner_connected
-                self.room_joiner = None
-                self.room_joiner_connected = False
+        if user == self.room_joiner_key:
+            self.room_joiner_key = None
+            self.room_joiner_channel_open = False
+        if user == self.room_creator_key:
+            if self.room_joiner_key:
+                self.room_creator_key = self.room_joiner_key
+                self.room_creator_channel_open = self.room_joiner_channel_open
+                self.room_joiner_key = None
+                self.room_joiner_channel_open = False
             else:
-                self.room_creator = None
-                self.room_creator_connected = False
+                self.room_creator_key = None
+                self.room_creator_channel_open = False
         if self.get_occupancy() > 0:
             self.put()
         else:
@@ -82,31 +82,31 @@ class RoomInfo(ndb.Model):
 
     def get_occupancy(self):
         occupancy = 0
-        if self.room_creator:
+        if self.room_creator_key:
             occupancy += 1
-        if self.room_joiner:
+        if self.room_joiner_key:
             occupancy += 1
         return occupancy
 
 
     def get_other_user(self, user):
-        if user == self.room_creator:
-            return self.room_joiner
-        elif user == self.room_joiner:
-            return self.room_creator
+        if user == self.room_creator_key:
+            return self.room_joiner_key
+        elif user == self.room_joiner_key:
+            return self.room_creator_key
         else:
             return None
 
 
     def has_user(self, user):
-        return (user and (user == self.room_creator or user == self.room_joiner))
+        return (user and (user == self.room_creator_key or user == self.room_joiner_key))
 
 
     def add_user(self, user):
-        if not self.room_creator:
-            self.room_creator = user
-        elif not self.room_joiner:
-            self.room_joiner = user
+        if not self.room_creator_key:
+            self.room_creator_key = user
+        elif not self.room_joiner_key:
+            self.room_joiner_key = user
         else:
             raise RuntimeError('room is full')
         
@@ -115,25 +115,25 @@ class RoomInfo(ndb.Model):
 
 
     def set_connected(self, user):
-        if user == self.room_creator:
-            self.room_creator_connected = True
-        if user == self.room_joiner:
-            self.room_joiner_connected = True
+        if user == self.room_creator_key:
+            self.room_creator_channel_open = True
+        if user == self.room_joiner_key:
+            self.room_joiner_channel_open = True
 
         self.put()
 
 
     def is_connected(self, user):
-        if user == self.room_creator:
-            return self.room_creator_connected
-        if user == self.room_joiner:
-            return self.room_joiner_connected
+        if user == self.room_creator_key:
+            return self.room_creator_channel_open
+        if user == self.room_joiner_key:
+            return self.room_joiner_channel_open
         
     def user_is_room_creator(self, user):
-        return True if user == self.room_creator else False
+        return True if user == self.room_creator_key else False
 
     def user_is_room_joiner(self, user):
-        return True if user == self.room_joiner else False
+        return True if user == self.room_joiner_key else False
 
 
 @ndb.transactional
@@ -151,8 +151,8 @@ def connect_user_to_room(room_name, active_user):
         message_obj = {'messageType' : 'roomStatus', 
                        'messagePayload': {
                            'roomName' : room.key.id(),
-                           'room_creator' : room.room_creator,
-                           'room_joiner'  : room.room_joiner,
+                           'room_creator_key' : room.room_creator_key,
+                           'room_joiner_key'  : room.room_joiner_key,
                        }    
                        }
     
