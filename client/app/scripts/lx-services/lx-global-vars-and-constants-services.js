@@ -8,9 +8,9 @@ angular.module('lxGlobalVarsAndConstants.services', [])
     /*
      This services provides access to variables that are used by multiple services, and that don't
      fit easily into any of the currently defined services. These variables may be accessed and
-     modified directly from anywhere in the code.
+     modified directly from anywhere that is wrapped inside of the lx-use-chatroom-controller.
      */
-    .factory('globalVarsService', function () {
+    .factory('lxUseChatRoomVarsService', function () {
 
         var screenXsMax = $('#id-dummy-xs-div').width();
         var self =  {
@@ -18,7 +18,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             // The second person to join a chatroom will be the rtcInitiator. It is done in this manner because
             // the first to join will be ready and waiting before the second person, and therefore it makes sense
             // to have the second person initiate the call to to first person.
-            rtcInitiator : null, // set in updateGlobalVarsWithserverChatRoomConstantsService
+            rtcInitiator : null, // set in updateGlobalVarsWithlxUseChatRoomConstantsService
             pcConfig : null,
 
             // Set up audio and video regardless of what devices are present.
@@ -41,12 +41,12 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         return self;
     })
 
-    .factory('serverChatRoomConstantsService', function() {
+    .factory('lxUseChatRoomConstantsService', function() {
         /* Provides constant values that are sent from the server to the client when the page is loaded.
          */
 
         return {
-            /* This object will be loaded with a bunch of variables from server once the roomViewCtrl is loaded.
+            /* This object will be loaded with a bunch of variables from server once the lxUseChatRoomOuterCtrl is loaded.
 
             eg will contain:
             errorStatus : ...,
@@ -59,7 +59,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
     })
 
 
-    .factory('lxServerLoginPageConstantsService', function() {
+    .factory('lxCreateChatRoomConstantsService', function() {
         /* Provides constant values that are sent from the server to the client when the page is loaded.
          */
 

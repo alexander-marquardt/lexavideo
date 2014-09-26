@@ -5,20 +5,20 @@
 
 {% raw %}
 
-<div ng-controller="roomViewCtrl">
-    <div ng-if = "roomViewCtrl.errorStatus">
-        <div ng-if="roomViewCtrl.errorStatus == 'roomIsFull' ">
+<div ng-controller="lxUseChatRoomOuterCtrl">
+    <div ng-if = "lxUseChatRoomOuterCtrl.errorStatus">
+        <div ng-if="lxUseChatRoomOuterCtrl.errorStatus == 'roomIsFull' ">
             {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-error-messages.html" %}{% raw %}
             <div lx-show-room-is-full-error></div>
         </div>
 
-        <div ng-if="roomViewCtrl.errorStatus != 'roomIsFull'">
-            <h2>Unknown error: {{ roomViewCtrl.errorStatus }}</h2>
+        <div ng-if="lxUseChatRoomOuterCtrl.errorStatus != 'roomIsFull'">
+            <h2>Unknown error: {{ lxUseChatRoomOuterCtrl.errorStatus }}</h2>
         </div>
     </div>
 
 
-    <div ng-if="!roomViewCtrl.errorStatus">
+    <div ng-if="!lxUseChatRoomOuterCtrl.errorStatus">
 
         {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
         <div lx-check-if-system-supports-web-rtc></div>

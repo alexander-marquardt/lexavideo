@@ -72,7 +72,7 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
 
 
 videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log,
-                                              globalVarsService, serverChatRoomConstantsService,
+                                              lxUseChatRoomVarsService, lxUseChatRoomConstantsService,
                                               webRtcSessionService, userNotificationService,
                                               adapterService, channelService, turnService,
                                               callService, mediaService, messageService, sessionDescriptionService) {
@@ -98,7 +98,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
 
 
-                $log.log('Initializing; room=' + serverChatRoomConstantsService.roomName + '.');
+                $log.log('Initializing; room=' + lxUseChatRoomConstantsService.roomName + '.');
 
                 userNotificationService.resetStatus();
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
@@ -107,7 +107,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 turnService.maybeRequestTurn();
 
                 // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
-                webRtcSessionService.signalingReady = globalVarsService.rtcInitiator;
+                webRtcSessionService.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
 
 
             })(); // self calling function
@@ -135,7 +135,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             var transitionVideoToDone = function() {
                 $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');
-                userNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + serverChatRoomConstantsService.roomLink + '>Click here</a> to rejoin.');
+                userNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>Click here</a> to rejoin.');
             };
 
             var enablePrincipalVideoWindows = function() {
@@ -187,7 +187,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                     // depend on the peer connection values, since our session encompases ascii transmission as well..
                     // remote the if (true) from the following line once this is fixed.
                     if (true || sessionStatus === 'active') {
-                        if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
+                        if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
                             showMiniVideoElems();
                             // we are dealing with a small viewport, and should therefore hide the local video as it is
                             // now embedded in a small window inside the remote video.
@@ -199,7 +199,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                         }
                     }
                     else {
-                        if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
+                        if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
                             // we are dealing with a small viewport with only a single video window.
                             // Therefore we should show the local video and hide the remote video
                             localVideoObject.localVideoWrapper.style.display = 'inline';
@@ -248,7 +248,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 // Therefore, we need to make sure that the mini-video window inside the currently displayed remote
                 // video window is the only one that is active.
                 $log.info('Remote remoteIsSendingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
-                if (viewportSize.getWidth() <= globalVarsService.screenXsMax) {
+                if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
                     removeMiniVideoElemsSrc();
                     reattachMediaStreamToMiniVideoElems();
                 }

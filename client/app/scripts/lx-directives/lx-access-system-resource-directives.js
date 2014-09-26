@@ -7,7 +7,7 @@
 var lxAccessSystemResources = angular.module('lxAccessSystemResources.directives', []);
 
 lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', function($timeout, $animate, $log, $modalStack,
-                                                                              serverChatRoomConstantsService, callService,
+                                                                              lxUseChatRoomConstantsService, callService,
                                                                               mediaService, lxCheckCompatibilityService,
                                                                               lxModalSupportService) {
 
@@ -21,8 +21,8 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
 
     var askForPermissionToCameraAndMicrophone = function(localVideoObject, videoSignalingObject) {
-        if (serverChatRoomConstantsService.mediaConstraints.audio === false &&
-            serverChatRoomConstantsService.mediaConstraints.video === false) {
+        if (lxUseChatRoomConstantsService.mediaConstraints.audio === false &&
+            lxUseChatRoomConstantsService.mediaConstraints.video === false) {
             callService.hasAudioOrVideoMediaConstraints = false;
         } else {
             callService.hasAudioOrVideoMediaConstraints = true;

@@ -9,26 +9,26 @@
 angular.module('lxUseChatRoom.controllers', [])
 
 
-    .controller('roomViewCtrl', function($scope,
-                                                     serverChatRoomConstantsService,
-                                                     globalVarsService) {
+    .controller('lxUseChatRoomOuterCtrl', function($scope,
+                                                     lxUseChatRoomConstantsService,
+                                                     lxUseChatRoomVarsService) {
 
-        $scope.roomViewCtrl = {};
+        $scope.lxUseChatRoomOuterCtrl = {};
 
         if (videoConstantsEmbeddedInHtml.errorStatus) {
-            $scope.roomViewCtrl.errorStatus = videoConstantsEmbeddedInHtml.errorStatus;
-            $scope.roomViewCtrl.roomName = videoConstantsEmbeddedInHtml.roomName;
+            $scope.lxUseChatRoomOuterCtrl.errorStatus = videoConstantsEmbeddedInHtml.errorStatus;
+            $scope.lxUseChatRoomOuterCtrl.roomName = videoConstantsEmbeddedInHtml.roomName;
         }
         else {
-            // copy all of the values that were embedded in the html into the serverChatRoomConstantsService
-            angular.extend(serverChatRoomConstantsService, videoConstantsEmbeddedInHtml);
+            // copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService
+            angular.extend(lxUseChatRoomConstantsService, videoConstantsEmbeddedInHtml);
 
-            // update the global vars that depend on serverChatRoomConstantsService
-            globalVarsService.doUpdate(serverChatRoomConstantsService.rtcInitiator, serverChatRoomConstantsService.pcConfig);
+            // update the global vars that depend on lxUseChatRoomConstantsService
+            lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.rtcInitiator, lxUseChatRoomConstantsService.pcConfig);
         }
     })
 
-    .controller('lxMainVideoCtrl', function ($scope, serverChatRoomConstantsService) {
+    .controller('lxMainVideoCtrl', function ($scope, lxUseChatRoomConstantsService) {
 
         $scope.accessCameraAndMicrophoneObject = {
             // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
@@ -100,8 +100,8 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
         };
 
-        $scope.myUsername = serverChatRoomConstantsService.myUsername;
-        $scope.debugBuildEnabled = serverChatRoomConstantsService.debugBuildEnabled;
+        $scope.myUsername = lxUseChatRoomConstantsService.myUsername;
+        $scope.debugBuildEnabled = lxUseChatRoomConstantsService.debugBuildEnabled;
     })
     .controller('lxVideoNegotiationCtrl', function ($scope, lxVideoSettingsNegotiationService) {
         // This controller is used for wrapping around the lxVideoSettingsNegotiationDirective which may appear

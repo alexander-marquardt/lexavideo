@@ -4,33 +4,33 @@
 'use strict';
 
 // define externally defined variables so that jshint doesn't give warnings
-/* global loginConstantsEmbeddedInHtml */
+/* global lxCreateChatRoomConstantsEmbeddedInHtml */
 
 angular.module('lxCreateChatRoom.controllers', ['ngResource'])
 
     .controller('lxLoginViewLoadConstantsCtrl',
-    function($scope, lxServerLoginPageConstantsService) {
+    function($scope, lxCreateChatRoomConstantsService) {
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
-        angular.extend(lxServerLoginPageConstantsService, loginConstantsEmbeddedInHtml);
+        angular.extend(lxCreateChatRoomConstantsService, lxCreateChatRoomConstantsEmbeddedInHtml);
     })
 
     .controller('lxCreateChatRoomCtrl',
     function ($log,
               $scope,
               lxHttpHandleRoomService,
-              lxServerLoginPageConstantsService) {
+              lxCreateChatRoomConstantsService) {
 
         /*
          The following regular expressions are used for detecting if a user has entered a dis-allowed character into th
          input box. These values are passed from the server so that the server and client are guaranteed to always be
          evaluating the same regex for validity.
          */
-        var invalidRoomNamesPattern = new RegExp('[' + lxServerLoginPageConstantsService.roomNameInvalidCharsForRegex + ']', 'g');
-        $scope.validRoomNamesPattern  = new RegExp('^[^' + lxServerLoginPageConstantsService.roomNameInvalidCharsForRegex + ']+$');
+        var invalidRoomNamesPattern = new RegExp('[' + lxCreateChatRoomConstantsService.roomNameInvalidCharsForRegex + ']', 'g');
+        $scope.validRoomNamesPattern  = new RegExp('^[^' + lxCreateChatRoomConstantsService.roomNameInvalidCharsForRegex + ']+$');
 
         // The following values are passed from the server and are validated both on the client and on the server.
-        $scope.minInputLength = lxServerLoginPageConstantsService.minRoomChars;
-        $scope.maxInputLength = lxServerLoginPageConstantsService.maxRoomChars;
+        $scope.minInputLength = lxCreateChatRoomConstantsService.minRoomChars;
+        $scope.maxInputLength = lxCreateChatRoomConstantsService.maxRoomChars;
 
 
 

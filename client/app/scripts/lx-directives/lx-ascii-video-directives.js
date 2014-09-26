@@ -15,8 +15,8 @@ var asciiVideoDirectives = angular.module('lxAsciiVideo.directives', []);
 
 
 asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interval, $log, streamService,
-                                                                         messageService, serverChatRoomConstantsService,
-                                                                         globalVarsService) {
+                                                                         messageService, lxUseChatRoomConstantsService,
+                                                                         lxUseChatRoomVarsService) {
 
     var canvasOptions = {
         width : 160,
@@ -119,7 +119,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
 
             var localCanvasContext = localCanvas.getContext('2d');
 
-            if (serverChatRoomConstantsService.debugBuildEnabled) {
+            if (lxUseChatRoomConstantsService.debugBuildEnabled) {
                 // when using the development server, sending too much information over the channel API seems to saturate
                 // the server -- slow down the fps for development
                 canvasOptions.fps = 0.5;
@@ -171,8 +171,8 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                     thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // this should only be true for a single directive at a time
 
                     // TODO - remove this hack once we have a better way of getting the "session" status.
-                    // if (viewportSize.getWidth() > globalVarsService.screenXsMax || sessionDescriptionService.getSessionStatus() !== 'active') {
-                    if (viewportSize.getWidth() > globalVarsService.screenXsMax) {
+                    // if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax || sessionDescriptionService.getSessionStatus() !== 'active') {
+                    if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax) {
                         // This is not an xs display or we have not started a session. Therefore the ascii video should
                         // be generated only if this directive is declared on #id-local-ascii-video-wrapper-div as that
                         // is the div that is currently visible to the user.

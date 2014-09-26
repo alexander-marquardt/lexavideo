@@ -68,9 +68,9 @@ videoAppServices.service('channelServiceSupport', function() {
     this.socket = null;
 });
 
-videoAppServices.factory('channelService', function($log, $timeout, $rootScope, serverChatRoomConstantsService,
+videoAppServices.factory('channelService', function($log, $timeout, $rootScope, lxUseChatRoomConstantsService,
                                                     callService, webRtcSessionService, userNotificationService,
-                                                    channelServiceSupport, globalVarsService, channelMessageService) {
+                                                    channelServiceSupport, lxUseChatRoomVarsService, channelMessageService) {
 
     /*
     Provides functionality for opening up and handling callbacks from the Google App-engine "Channel API".
@@ -97,7 +97,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                         // Since the turn response is async and also GAE might disorder the
                         // Message delivery due to possible datastore query at server side,
                         // So callee needs to cache messages before peerConnection is created.
-                        if (!globalVarsService.rtcInitiator && !webRtcSessionService.started) {
+                        if (!lxUseChatRoomVarsService.rtcInitiator && !webRtcSessionService.started) {
                             if (sdpObject.type === 'offer') {
                                 // Add offer to the beginning of msgQueue, since we can't handle
                                 // Early candidates before offer at present.
@@ -178,7 +178,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
         openChannel: function(localVideoObject, remoteVideoObject, videoSignalingObject) {
             $log.info('*** Opening channel. ***');
             try {
-                var channel = new goog.appengine.Channel(serverChatRoomConstantsService.channelToken);
+                var channel = new goog.appengine.Channel(lxUseChatRoomConstantsService.channelToken);
                 channelServiceSupport.socket = channel.open(handler(this, localVideoObject, remoteVideoObject, videoSignalingObject));
             } catch(e) {
                 e.message = '\n\tError in openChannel\n\t' + e.message;
@@ -212,7 +212,7 @@ videoAppServices.service('turnServiceSupport', function () {
 
 
 videoAppServices.factory('turnService', function($log, $http, peerService, callService, turnServiceSupport, userNotificationService,
-                                         serverChatRoomConstantsService, globalVarsService, adapterService) {
+                                         lxUseChatRoomConstantsService, lxUseChatRoomVarsService, adapterService) {
 
 
     var onTurnResult = function(response) {
@@ -224,9 +224,9 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
                 turnServer.username,
                 turnServer.password);
             if (iceServers !== null) {
-                globalVarsService.pcConfig.iceServers = globalVarsService.pcConfig.iceServers.concat(iceServers);
+                lxUseChatRoomVarsService.pcConfig.iceServers = lxUseChatRoomVarsService.pcConfig.iceServers.concat(iceServers);
             }
-            $log.log('Got pcConfig.iceServers:' + globalVarsService.pcConfig.iceServers + '\n');
+            $log.log('Got pcConfig.iceServers:' + lxUseChatRoomVarsService.pcConfig.iceServers + '\n');
         } catch(e) {
             e.message = '\n\tError in onTurnResult\n\t' + e.message;
             $log.error(e);
@@ -252,13 +252,13 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
 
         maybeRequestTurn : function() {
             // Allow to skip turn by passing ts=false to apprtc.
-            if (serverChatRoomConstantsService.turnUrl === '') {
+            if (lxUseChatRoomConstantsService.turnUrl === '') {
                 turnServiceSupport.turnDone = true;
                 return;
             }
 
-            for (var i = 0, len = globalVarsService.pcConfig.iceServers.length; i < len; i++) {
-                if (globalVarsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
+            for (var i = 0, len = lxUseChatRoomVarsService.pcConfig.iceServers.length; i < len; i++) {
+                if (lxUseChatRoomVarsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
                     turnServiceSupport.turnDone = true;
                     return;
                 }
@@ -273,13 +273,13 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
             }
 
             // No TURN server. Get one from computeengineondemand.appspot.com.
-            $http.get(serverChatRoomConstantsService.turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest());
+            $http.get(lxUseChatRoomConstantsService.turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest());
         }
     };
 });
 
 
-videoAppServices.factory('messageService', function($http, $log, serverChatRoomConstantsService) {
+videoAppServices.factory('messageService', function($http, $log, lxUseChatRoomConstantsService) {
 
     /*
     Functionality for posting messages to the server.
@@ -305,7 +305,7 @@ videoAppServices.factory('messageService', function($http, $log, serverChatRoomC
             // $log.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
-            var path = '/_lx/message?r=' + serverChatRoomConstantsService.roomName + '&u=' + serverChatRoomConstantsService.myUsername;
+            var path = '/_lx/message?r=' + lxUseChatRoomConstantsService.roomName + '&u=' + lxUseChatRoomConstantsService.myUsername;
 
             $http.post(path, messageObject).then(
                 function(/*response*/) {
@@ -384,8 +384,8 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
     };
 });
 
-videoAppServices.service('sessionDescriptionService', function(globalVarsService, codecsService,
-                                                               messageService, serverChatRoomConstantsService,
+videoAppServices.service('sessionDescriptionService', function(lxUseChatRoomVarsService, codecsService,
+                                                               messageService, lxUseChatRoomConstantsService,
                                                                adapterService, userNotificationService,
                                                                peerService,
                                                                $log, $timeout) {
@@ -453,11 +453,11 @@ videoAppServices.service('sessionDescriptionService', function(globalVarsService
         doAnswer : function() {
             $log.log('Sending answer to peer.');
             peerService.pc.createAnswer(setLocalAndSendMessage(peerService.pc),
-                onCreateSessionDescriptionError, globalVarsService.sdpConstraints);
+                onCreateSessionDescriptionError, lxUseChatRoomVarsService.sdpConstraints);
         },
 
         doCall : function() {
-            var constraints = mergeConstraints(serverChatRoomConstantsService.offerConstraints, globalVarsService.sdpConstraints);
+            var constraints = mergeConstraints(lxUseChatRoomConstantsService.offerConstraints, lxUseChatRoomVarsService.sdpConstraints);
             $log.log('Sending offer to peer, with constraints: \n' +
                 '  \'' + JSON.stringify(constraints) + '\'.');
             peerService.pc.createOffer(setLocalAndSendMessage(peerService.pc),
@@ -478,7 +478,7 @@ videoAppServices.service('sessionDescriptionService', function(globalVarsService
             };
 
             // Set Opus in Stereo, if stereo enabled.
-            if (serverChatRoomConstantsService.stereo) {
+            if (lxUseChatRoomConstantsService.stereo) {
                 message.sdp = codecsService.addStereo(message.sdp);
             }
             message.sdp = codecsService.maybePreferAudioSendCodec(message.sdp);
@@ -496,15 +496,15 @@ videoAppServices.service('sessionDescriptionService', function(globalVarsService
 
 videoAppServices.service('webRtcSessionService', function($log, $window, $rootScope, $timeout,
                                             messageService, userNotificationService,
-                                            codecsService, globalVarsService, sessionDescriptionService,
-                                            serverChatRoomConstantsService, iceService, peerService,
+                                            codecsService, lxUseChatRoomVarsService, sessionDescriptionService,
+                                            lxUseChatRoomConstantsService, iceService, peerService,
                                             channelMessageService, adapterService) {
 
     var self = this;
 
     var onRemoteHangup = function(self, localVideoObject) {
         $log.log('Session terminated.');
-        globalVarsService.rtcInitiator = 0;
+        lxUseChatRoomVarsService.rtcInitiator = 0;
         sessionDescriptionService.transitionSessionStatus('waiting');
         self.stop(self, localVideoObject);
     };
@@ -517,7 +517,7 @@ videoAppServices.service('webRtcSessionService', function($log, $window, $rootSc
 
         stop : function() {
             self.started = false;
-            self.signalingReady = globalVarsService.rtcInitiator;
+            self.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
             if (peerService.pc) {
                 peerService.pc.close();
             }
@@ -554,7 +554,7 @@ videoAppServices.service('webRtcSessionService', function($log, $window, $rootSc
 });
 
 videoAppServices.factory('peerService', function($log, userNotificationService,
-                                         iceService, globalVarsService, serverChatRoomConstantsService,
+                                         iceService, lxUseChatRoomVarsService, lxUseChatRoomConstantsService,
                                          adapterService) {
 
 
@@ -607,11 +607,11 @@ videoAppServices.factory('peerService', function($log, userNotificationService,
         createPeerConnection : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
             try {
                 // Create an RTCPeerConnection via the polyfill (adapter.js).
-                this.pc = new adapterService.RTCPeerConnection(globalVarsService.pcConfig, serverChatRoomConstantsService.pcConstraints);
+                this.pc = new adapterService.RTCPeerConnection(lxUseChatRoomVarsService.pcConfig, lxUseChatRoomConstantsService.pcConstraints);
                 this.pc.onicecandidate = iceService.onIceCandidate;
                 $log.log('Created RTCPeerConnnection with:\n' +
-                    '  config: \'' + JSON.stringify(globalVarsService.pcConfig) + '\';\n' +
-                    '  constraints: \'' + JSON.stringify(serverChatRoomConstantsService.pcConstraints) + '\'.');
+                    '  config: \'' + JSON.stringify(lxUseChatRoomVarsService.pcConfig) + '\';\n' +
+                    '  constraints: \'' + JSON.stringify(lxUseChatRoomConstantsService.pcConstraints) + '\'.');
             } catch (e) {
                 e.message = '\n\tFailed to create PeerConnection\n\t' + e.message;
                 $log.error(e);
@@ -646,7 +646,7 @@ videoAppServices.service('streamService', function() {
 
 });
 
-videoAppServices.factory('mediaService', function($log,$timeout, serverChatRoomConstantsService, adapterService, userNotificationService,
+videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomConstantsService, adapterService, userNotificationService,
                           callService, streamService) {
 
 
@@ -681,11 +681,11 @@ videoAppServices.factory('mediaService', function($log,$timeout, serverChatRoomC
         doGetUserMedia  : function(localVideoObject, videoSignalingObject) {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
-                adapterService.getUserMedia(serverChatRoomConstantsService.mediaConstraints,
+                adapterService.getUserMedia(lxUseChatRoomConstantsService.mediaConstraints,
                     onUserMediaSuccess(localVideoObject, videoSignalingObject),
                     onUserMediaError(videoSignalingObject));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
-                    '  \'' + JSON.stringify(serverChatRoomConstantsService.mediaConstraints) + '\'');
+                    '  \'' + JSON.stringify(lxUseChatRoomConstantsService.mediaConstraints) + '\'');
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'waitingForResponse';
 
             } catch (e) {
@@ -698,7 +698,7 @@ videoAppServices.factory('mediaService', function($log,$timeout, serverChatRoomC
 });
 
 videoAppServices.factory('callService', function($log, turnServiceSupport, peerService, webRtcSessionService, channelServiceSupport,
-                                         userNotificationService, serverChatRoomConstantsService, globalVarsService, channelMessageService,
+                                         userNotificationService, lxUseChatRoomConstantsService, lxUseChatRoomVarsService, channelMessageService,
                                          streamService, sessionDescriptionService) {
 
 
@@ -735,7 +735,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 }
                 webRtcSessionService.started = true;
 
-                if (globalVarsService.rtcInitiator) {
+                if (lxUseChatRoomVarsService.rtcInitiator) {
                     sessionDescriptionService.doCall();
                 }
                 else {
@@ -834,7 +834,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 });
 
 
-videoAppServices.factory('userNotificationService', function($log, $timeout, serverChatRoomConstantsService, globalVarsService) {
+videoAppServices.factory('userNotificationService', function($log, $timeout, lxUseChatRoomConstantsService, lxUseChatRoomVarsService) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
@@ -852,8 +852,8 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, ser
 
         },
         resetStatus : function() {
-          if (!globalVarsService.rtcInitiator) {
-              this.setStatus('Waiting for someone to join:  <a lass="navbar-link" href=' + serverChatRoomConstantsService.roomLink + '>' + serverChatRoomConstantsService.roomLink + '</a>');
+          if (!lxUseChatRoomVarsService.rtcInitiator) {
+              this.setStatus('Waiting for someone to join:  <a lass="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>' + lxUseChatRoomConstantsService.roomLink + '</a>');
           } else {
               this.setStatus('Initializing...');
           }
@@ -861,7 +861,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, ser
     };
 });
 
-videoAppServices.factory('codecsService', function($log, serverChatRoomConstantsService, userNotificationService){
+videoAppServices.factory('codecsService', function($log, lxUseChatRoomConstantsService, userNotificationService){
 
     // Strip CN from sdp before CN constraints is ready.
     var removeCN = function(sdpLines, mLineIndex) {
@@ -1024,23 +1024,23 @@ videoAppServices.factory('codecsService', function($log, serverChatRoomConstants
 
     return {
 
-        // Adds an a=fmtp: x-google-min-bitrate=kbps line, if serverChatRoomConstantsService.videoSendInitialBitrate
+        // Adds an a=fmtp: x-google-min-bitrate=kbps line, if lxUseChatRoomConstantsService.videoSendInitialBitrate
         // is specified. We'll also add a x-google-min-bitrate value, since the max
         // must be >= the min.
         maybeSetVideoSendInitialBitRate : function(sdp) {
-            if (!serverChatRoomConstantsService.videoSendInitialBitrate) {
+            if (!lxUseChatRoomConstantsService.videoSendInitialBitrate) {
                 return sdp;
             }
 
             // Validate the initial bitrate value.
-            var maxBitrate = serverChatRoomConstantsService.videoSendInitialBitrate;
-            if (serverChatRoomConstantsService.videoSendBitrate) {
-                if (serverChatRoomConstantsService.videoSendInitialBitrate > serverChatRoomConstantsService.videoSendBitrate) {
+            var maxBitrate = lxUseChatRoomConstantsService.videoSendInitialBitrate;
+            if (lxUseChatRoomConstantsService.videoSendBitrate) {
+                if (lxUseChatRoomConstantsService.videoSendInitialBitrate > lxUseChatRoomConstantsService.videoSendBitrate) {
                     userNotificationService.messageError('Clamping initial bitrate to max bitrate of ' +
-                        serverChatRoomConstantsService.videoSendBitrate + ' kbps.');
-                    serverChatRoomConstantsService.videoSendInitialBitrate = serverChatRoomConstantsService.videoSendBitrate;
+                        lxUseChatRoomConstantsService.videoSendBitrate + ' kbps.');
+                    lxUseChatRoomConstantsService.videoSendInitialBitrate = lxUseChatRoomConstantsService.videoSendBitrate;
                 }
-                maxBitrate = serverChatRoomConstantsService.videoSendBitrate;
+                maxBitrate = lxUseChatRoomConstantsService.videoSendBitrate;
             }
 
             var sdpLines = sdp.split('\r\n');
@@ -1055,62 +1055,62 @@ videoAppServices.factory('codecsService', function($log, serverChatRoomConstants
             var vp8RtpmapIndex = findLine(sdpLines, 'a=rtpmap', 'VP8/90000');
             var vp8Payload = getCodecPayloadType(sdpLines[vp8RtpmapIndex]);
             var vp8Fmtp = 'a=fmtp:' + vp8Payload + ' x-google-min-bitrate=' +
-                serverChatRoomConstantsService.videoSendInitialBitrate.toString() + '; x-google-max-bitrate=' +
+                lxUseChatRoomConstantsService.videoSendInitialBitrate.toString() + '; x-google-max-bitrate=' +
                 maxBitrate.toString();
             sdpLines.splice(vp8RtpmapIndex + 1, 0, vp8Fmtp);
             return sdpLines.join('\r\n');
         },
 
         maybeSetAudioSendBitRate : function(sdp) {
-            if (!serverChatRoomConstantsService.audioSendBitrate) {
+            if (!lxUseChatRoomConstantsService.audioSendBitrate) {
                 return sdp;
             }
-            $log.log('Prefer audio send bitrate: ' + serverChatRoomConstantsService.audioSendBitrate);
-            return preferBitRate(sdp, serverChatRoomConstantsService.audioSendBitrate, 'audio');
+            $log.log('Prefer audio send bitrate: ' + lxUseChatRoomConstantsService.audioSendBitrate);
+            return preferBitRate(sdp, lxUseChatRoomConstantsService.audioSendBitrate, 'audio');
         },
 
         maybeSetAudioReceiveBitRate : function (sdp) {
-            if (!serverChatRoomConstantsService.audioRecvBitrate) {
+            if (!lxUseChatRoomConstantsService.audioRecvBitrate) {
                 return sdp;
             }
-            $log.log('Prefer audio receive bitrate: ' + serverChatRoomConstantsService.audioRecvBitrate);
-            return preferBitRate(sdp, serverChatRoomConstantsService.audioRecvBitrate, 'audio');
+            $log.log('Prefer audio receive bitrate: ' + lxUseChatRoomConstantsService.audioRecvBitrate);
+            return preferBitRate(sdp, lxUseChatRoomConstantsService.audioRecvBitrate, 'audio');
         },
 
 
         maybeSetVideoSendBitRate : function (sdp) {
-            if (!serverChatRoomConstantsService.videoSendBitrate) {
+            if (!lxUseChatRoomConstantsService.videoSendBitrate) {
                 return sdp;
             }
-            $log.log('Prefer video send bitrate: ' + serverChatRoomConstantsService.videoSendBitrate);
-            return preferBitRate(sdp, serverChatRoomConstantsService.videoSendBitrate, 'video');
+            $log.log('Prefer video send bitrate: ' + lxUseChatRoomConstantsService.videoSendBitrate);
+            return preferBitRate(sdp, lxUseChatRoomConstantsService.videoSendBitrate, 'video');
         },
 
         maybeSetVideoReceiveBitRate : function(sdp) {
-            if (!serverChatRoomConstantsService.videoRecvBitrate) {
+            if (!lxUseChatRoomConstantsService.videoRecvBitrate) {
                 return sdp;
             }
-            $log.log('Prefer video receive bitrate: ' + serverChatRoomConstantsService.videoRecvBitrate);
-            return preferBitRate(sdp, serverChatRoomConstantsService.videoRecvBitrate, 'video');
+            $log.log('Prefer video receive bitrate: ' + lxUseChatRoomConstantsService.videoRecvBitrate);
+            return preferBitRate(sdp, lxUseChatRoomConstantsService.videoRecvBitrate, 'video');
         },
 
         
         maybePreferAudioSendCodec : function(sdp) {
-            if (serverChatRoomConstantsService.audioSendCodec === '') {
+            if (lxUseChatRoomConstantsService.audioSendCodec === '') {
                 $log.log('No preference on audio send codec.');
                 return sdp;
             }
-            $log.log('Prefer audio send codec: ' + serverChatRoomConstantsService.audioSendCodec);
-            return preferAudioCodec(sdp, serverChatRoomConstantsService.audioSendCodec);
+            $log.log('Prefer audio send codec: ' + lxUseChatRoomConstantsService.audioSendCodec);
+            return preferAudioCodec(sdp, lxUseChatRoomConstantsService.audioSendCodec);
         },
 
         maybePreferAudioReceiveCodec : function(sdp) {
-            if (serverChatRoomConstantsService.audioReceiveCodec === '') {
+            if (lxUseChatRoomConstantsService.audioReceiveCodec === '') {
                 $log.log('No preference on audio receive codec.');
                 return sdp;
             }
-            $log.log('Prefer audio receive codec: ' + serverChatRoomConstantsService.audioReceiveCodec);
-            return preferAudioCodec(sdp, serverChatRoomConstantsService.audioReceiveCodec);
+            $log.log('Prefer audio receive codec: ' + lxUseChatRoomConstantsService.audioReceiveCodec);
+            return preferAudioCodec(sdp, lxUseChatRoomConstantsService.audioReceiveCodec);
         },
 
         // Set Opus in stereo if stereo is enabled.
