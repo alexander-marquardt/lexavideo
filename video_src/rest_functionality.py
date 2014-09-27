@@ -156,7 +156,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
         except:
             # Provide feedback to the user to indicate that the room was not created
             err_status = 'ErrorUnableToCreateRoomNameObject'
-            http_helpers.set_http_ok_json_response(self.response, {'status': err_status})
+            http_helpers.set_http_ok_json_response(self.response, {'statusString': err_status})
             # log this error for further analysis
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
 
@@ -203,5 +203,5 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             create_room_transaction(room_dict)
 
-            http_helpers.set_http_ok_json_response(self.response, {'status': 'roomCreated'})
+            http_helpers.set_http_ok_json_response(self.response, {'statusString': 'roomCreated'})
 

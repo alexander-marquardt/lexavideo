@@ -6,15 +6,15 @@ from google.appengine.api import channel
 
 from video_src import models
 
-def handle_message(room, user, message):
+def handle_message(room_obj, user, message):
     # This function passes a message from one user in a given "room" to the other user in the same room.
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
     # as for passing video and other information from one user to the other. 
 
     message_obj = json.loads(message)
     message = message.decode("utf-8")
-    other_user = room.get_other_user(user)
-    roomName = room.key.id()
+    other_user = room_obj.get_other_user(user)
+    roomName = room_obj.room_name
 
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
@@ -22,15 +22,15 @@ def handle_message(room, user, message):
     if message_type == 'sdp' and message_payload['type'] == 'bye':
         # This would remove the other_user in loopback test too.
         # So check its availability before forwarding Bye message.
-        room.remove_user(user)
+        room_obj.remove_user(user)
         logging.info('User ' + user + ' quit from room ' + roomName)
-        logging.info('Room ' + roomName + ' has state ' + str(room))
+        logging.info('Room ' + roomName + ' has state ' + repr(room_obj))
 
     if message_type == 'videoSettings':
         logging.info('***** videoSettings message received: ' + repr(message_payload))
 
 
-    if other_user and room.has_user(other_user):
+    if other_user and room_obj.has_user(other_user):
         if message_type == 'sdp' and message_payload['type'] == 'offer':
             # This is just for debugging
             logging.info('sdp offer. Payload: %s' % repr(message_payload))
@@ -40,7 +40,7 @@ def handle_message(room, user, message):
             #message = make_loopback_answer(message)
             pass
 
-        on_message(room, other_user, message)
+        on_message(room_obj, other_user, message)
 
     else:
         logging.warning('Cannot deliver message from user: %s to other_user: %s since they are not in the room: %s' % (user, other_user, roomName))
@@ -62,9 +62,9 @@ def send_saved_messages(client_id):
         logging.info('Delivered saved message to ' + client_id)
         message.delete()
         
-def on_message(room, user, message):
-    client_id = room.make_client_id(user)
-    if room.is_connected(user):
+def on_message(room_obj, user, message):
+    client_id = room_obj.make_client_id(user)
+    if room_obj.is_connected(user):
         channel.send_message(client_id, message)
         logging.info('Delivered message to user ' + user)
     else:

@@ -10,11 +10,6 @@ from video_src import models
 
 from video_src.error_handling import handle_exceptions
 
-# Lock for syncing DB operation in concurrent requests handling.
-# TODO(brave): keeping working on improving performance with thread syncing.
-# One possible method for near future is to reduce the message caching.
-import threading
-LOCK = threading.RLock()
 
 class RoomName(ndb.Model):
     # This is a class that will be keyed by the room name, and that we use for guaranteeing
@@ -42,7 +37,6 @@ class RoomInfo(ndb.Model):
     room_creator_channel_open = ndb.BooleanProperty(default=False)
     room_joiner_channel_open = ndb.BooleanProperty(default=False)
     
-    num_in_room = ndb.IntegerProperty(default=0)
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -57,7 +51,7 @@ class RoomInfo(ndb.Model):
 
 
     def make_client_id(self, user):
-        return self.key.id() + '/' + user
+        return str(self.key.id()) + '/' + user
 
 
     def remove_user(self, user):
@@ -110,7 +104,6 @@ class RoomInfo(ndb.Model):
         else:
             raise RuntimeError('room is full')
         
-        self.num_in_room = self.get_occupancy()
         self.put()
 
 
@@ -138,40 +131,42 @@ class RoomInfo(ndb.Model):
 
 @ndb.transactional
 def connect_user_to_room(room_name, active_user):
-    room = RoomInfo.get_by_id(room_name)
+
+    room_obj = RoomInfo.query(RoomInfo.room_name == room_name).get()
+
     # Check if room has active_user in case that disconnect message comes before
     # connect message with unknown reason, observed with local AppEngine SDK.
-    if room and room.has_user(active_user):
-        room.set_connected(active_user)
+    if room_obj and room_obj.has_user(active_user):
+        room_obj.set_connected(active_user)
         logging.info('User ' + active_user + ' connected to room ' + room_name)
-        logging.info('RoomInfo ' + room_name + ' has state ' + str(room))
+        logging.info('RoomInfo ' + room_name + ' has state ' + str(room_obj))
         
-        other_user = room.get_other_user(active_user);
+        other_user = room_obj.get_other_user(active_user);
         
         message_obj = {'messageType' : 'roomStatus', 
                        'messagePayload': {
-                           'roomName' : room.key.id(),
-                           'room_creator_key' : room.room_creator_key,
-                           'room_joiner_key'  : room.room_joiner_key,
+                           'roomName' : room_obj.key.id(),
+                           'room_creator_key' : room_obj.room_creator_key,
+                           'room_joiner_key'  : room_obj.room_joiner_key,
                        }    
                        }
     
         if (other_user):
             # If there is another user already in the room, then the other user should be the creator of the room. 
             # By design, if the creator of a room leaves the room, it should be vacated.
-            assert(room.user_is_room_creator(other_user))
+            assert(room_obj.user_is_room_creator(other_user))
             # send a message to the other user (the room creator) that someone has just joined the room
             logging.debug('Sending message to other_user: %s' % repr(message_obj))
-            messaging.on_message(room, other_user, json.dumps(message_obj))  
+            messaging.on_message(room_obj, other_user, json.dumps(message_obj))
             
         # Send a message to the active_user, indicating the "roomStatus"
         logging.debug('Sending message to active_user: %s' % repr(message_obj))
-        messaging.on_message(room, active_user, json.dumps(message_obj))        
+        messaging.on_message(room_obj, active_user, json.dumps(message_obj))
         
     else:
         logging.warning('Unexpected Connect Message to room ' + room_name + 'by user ' + active_user)
         
-    return room
+    return room_obj
 
 
 class ConnectPage(webapp2.RequestHandler):
@@ -180,10 +175,10 @@ class ConnectPage(webapp2.RequestHandler):
     def post(self):
         key = self.request.get('from')
         room_name, user = key.split('/')
-        with LOCK:
-            room = connect_user_to_room(room_name, user)
-            if room and room.has_user(user):
-                messaging.send_saved_messages(room.make_client_id(user))
+
+        room = connect_user_to_room(room_name, user)
+        if room and room.has_user(user):
+            messaging.send_saved_messages(room.make_client_id(user))
 
 
 class DisconnectPage(webapp2.RequestHandler):
@@ -222,9 +217,8 @@ class MessagePage(webapp2.RequestHandler):
         message = self.request.body
         room_name = self.request.get('r')
         user = self.request.get('u')
-        with LOCK:
-            room = RoomInfo.get_by_id(room_name)
-            if room:
-                messaging.handle_message(room, user, message)
-            else:
-                logging.warning('Unknown room ' + room_name)
+        room_obj = RoomInfo.query(RoomInfo.room_name == room_name).get()
+        if room_obj:
+                messaging.handle_message(room_obj, user, message)
+        else:
+            logging.warning('Unknown room ' + room_name)
