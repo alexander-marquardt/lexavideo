@@ -2,21 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da75d383-99a2-45e0-91d6-8ecb5d3d0f79" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-jinja-templates/lx-tc-error-messages.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/http_helpers.py" afterPath="$PROJECT_DIR$/video_src/http_helpers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-create-chat-room-main.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-create-chat-room-main.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-http-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-http-services.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-main-video-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-main-video-directives.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-routes/lx-routes.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-routes/lx-routes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-use-chat-room-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-use-chat-room-controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-use-chat-room-main.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-use-chat-room-main.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-user-input-feedback-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-user-input-feedback-directives.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/rest_functionality.py" afterPath="$PROJECT_DIR$/video_src/rest_functionality.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/room_module.py" afterPath="$PROJECT_DIR$/video_src/room_module.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/views.py" afterPath="$PROJECT_DIR$/video_src/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/webrtc_setup.py" afterPath="$PROJECT_DIR$/video_src/webrtc_setup.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/.idea/workspace.xml" afterPath="$PROJECT_DIR$/client/app/.idea/workspace.xml" />
     </list>
     <ignored path="my-video-app.iws" />

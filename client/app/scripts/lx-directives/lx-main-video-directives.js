@@ -77,9 +77,10 @@ videoAppDirectives.directive('lxAddUserToRoomAndSetupChannelDirective',
         $location,
         $window,
         channelService,
-        lxHttpServices,
+        lxHttpHandleRoomService,
         lxAppWideConstantsService,
         lxAppWideVarsService,
+        lxUseChatRoomConstantsService,
         messageService,
         userNotificationService
         ) {
@@ -104,7 +105,7 @@ videoAppDirectives.directive('lxAddUserToRoomAndSetupChannelDirective',
                     roomObj.roomName = lxUseChatRoomConstantsService.roomName;
                     roomObj.userId = lxAppWideConstantsService.userId;
 
-                    var promise = lxHttpServices.enterIntoRoom(roomObj);
+                    var promise = lxHttpHandleRoomService.enterIntoRoom(roomObj);
                     promise.then(
                         function(data){
                             if (data.statusString === 'roomCreated' || data.statusString === 'roomJoined') {
