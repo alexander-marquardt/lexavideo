@@ -13,7 +13,7 @@ angular.module('lxCreateChatRoom.controllers', ['ngResource'])
               $scope,
               lxCreateChatRoomConstantsService,
               lxHttpHandleRoomService,
-              lxMainViewConstantsService) {
+              lxAppWideConstantsService) {
 
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
         angular.extend(lxCreateChatRoomConstantsService, lxCreateChatRoomConstantsEmbeddedInHtml);
@@ -32,9 +32,9 @@ angular.module('lxCreateChatRoom.controllers', ['ngResource'])
         $scope.maxInputLength = lxCreateChatRoomConstantsService.maxRoomChars;
 
         $scope.roomObj = {};
-        $scope.roomObj.userId = lxMainViewConstantsService.userId;
-        // createRoom is the function that will be executed when the user clicks the submit button
-        $scope.createRoom = lxHttpHandleRoomService.createRoom;
+        $scope.roomObj.userId = lxAppWideConstantsService.userId;
+        // enterIntoRoom is the function that will be executed when the user clicks the submit button
+        $scope.enterIntoRoomFromLandingPage = lxHttpHandleRoomService.enterIntoRoomFromLandingPage;
 
         // roomStatus.roomStatus.triggerGetNewRoom is placed on the scope and will be watched for changes by the
         // checkForRoomOccupancyDirective for changes. If this value changes, then a new check will be done

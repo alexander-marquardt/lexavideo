@@ -45,7 +45,8 @@ class GetView(webapp2.RequestHandler):
 class UserChatRoomMain(webapp2.RequestHandler):
     
     @handle_exceptions
-    def get(self, current_template, room_name):
+    def get(self, current_template, room_name_from_url):
+        room_name = room_name_from_url.decode('utf8')
         user_agent = self.request.headers['User-Agent']
         
         # copy the json parameters into a jinja variable
@@ -61,7 +62,7 @@ class UserChatRoomMain(webapp2.RequestHandler):
         self.response.out.write(content)
 
 
-class CreateChatRoomMain(webapp2.RequestHandler):
+class LandingPageMain(webapp2.RequestHandler):
     """ Render whatever template the client has requested """
     
     @handle_exceptions

@@ -76,7 +76,7 @@ class AddUserToRoom(webapp2.RequestHandler):
 
 
 
-class HandleCreateRooms(webapp2.RequestHandler):
+class HandleEnterIntoRoom(webapp2.RequestHandler):
     @handle_exceptions
     def get(self, room_name_from_url=None):
         room_name_from_url = room_name_from_url.decode('utf8')
@@ -163,8 +163,8 @@ class HandleCreateRooms(webapp2.RequestHandler):
 
         except:
             # Provide feedback to the user to indicate that the room was not created
-            http_helpers.set_http_ok_json_response(self.response, {'status': 'datastoreErrorUnableToCreateRoom'})
-            return
+            http_helpers.set_http_ok_json_response(self.response, {'status': 'ErrorUnableToCreateRoom'});
+            raise Exception("Unable to create room: " + room_name);
 
 
         # The following get is only used for verifying that the code is functioning correctly.

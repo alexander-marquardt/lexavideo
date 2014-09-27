@@ -2,18 +2,31 @@
 
 angular.module('lxHttp.services', [])
 
-    .factory('lxHttpHandleRoomService', function ($log, $resource, $location) {
+    .factory('lxHttpHandleRoomService',
+    function ($log,
+              $resource,
+              $location,
+              lxAppWideVarsService) {
 
         var handleRoomUrl = '/_lx/handle_room/';
         var RoomResource = $resource(handleRoomUrl + ':roomName', {roomName: '@roomName'});
 
-        return {
-            createRoom : function(roomObj, roomStatus) {
+        var self = {
+            enterIntoRoom : function(roomObj) {
+                // this will either create a room object on the server, or enter into an existing room corresponding
+                // to roomName.
                 var roomResource = new RoomResource(roomObj).$save();
+                return roomResource;
+            },
 
-                roomResource.then(function(data){
+            enterIntoRoomFromLandingPage : function(roomObj, roomStatus) {
+
+                var promise = self.enterIntoRoom(roomObj, roomStatus);
+                promise.then(function(data){
+
                     // Redirect the user to the room that they have just created/entered into.
                     if (data.status === 'roomCreated' || data.status === 'roomExistsAlreadyNotCreated') {
+                        lxAppWideVarsService.userIsAlreadyInARoom = true;
                         $location.path('/' + roomObj.roomName);
                     } else {
                         // Room was not created - give user an indication that they need to try a different
@@ -22,10 +35,9 @@ angular.module('lxHttp.services', [])
                         roomStatus.triggerGetNewRoom = !roomStatus.triggerGetNewRoom;
                     }
                 }, function() {
-                    $log.error('Failed to create room ' + roomObj.roomName);
+                    roomStatus.triggerGetNewRoom = !roomStatus.triggerGetNewRoom;
+                    $log.error('Failed to create or enter into room: ' + roomObj.roomName);
                 });
-
-                return roomResource;
             },
 
             getRoom : function(roomName) {
@@ -43,6 +55,7 @@ angular.module('lxHttp.services', [])
                 return roomObj;
             }
         };
+        return self;
 
     });
 

@@ -77,15 +77,17 @@ videoAppDirectives.directive('lxAddUserToRoomAndSetupChannelDirective',
         $window,
         channelService,
         lxHttpServices,
-        lxMainViewConstantsService,
+        lxAppWideConstantsService,
+        lxAppWideVarsService,
         messageService,
-        userNotificationService) {
+        userNotificationService
+        ) {
 
         return {
             restrict: 'A',
             link: function (scope) {
 
-                var userId = lxMainViewConstantsService.userId;
+                var userId = lxAppWideConstantsService.userId;
 
                 // Send BYE on refreshing(or leaving) a demo page
                 // to ensure the room is cleaned for next session.
@@ -96,9 +98,35 @@ videoAppDirectives.directive('lxAddUserToRoomAndSetupChannelDirective',
 
                 $log.log('Initializing; room=' + lxUseChatRoomConstantsService.roomName + '.');
 
+                if (!lxAppWideVarsService.userIsAlreadyInARoom) {
+                    var roomObj = {};
+                    roomObj.roomName = lxUseChatRoomConstantsService.roomName;
+                    roomObj.userId = lxAppWideConstantsService.userId;
+
+                    var promise = lxHttpServices.enterIntoRoom(roomObj);
+                    promise.then(
+                        function(data){
+                            if (data.status === 'roomCreated' || data.status === 'roomExistsAlreadyNotCreated') {
+                                // everything OK - nothing needs to be done.
+                            }
+                            else {
+                                // something went wrong
+                                // TODO direct user back to main page with a helpful error
+                                // message so they can easily create a different room.
+                            }
+                        },
+                        function(data) {
+                            $log.error('Failed to directly use the URL roomName to create or enter into room: ' + roomObj.roomName);
+                        }
+                    );
+                }
+
                 userNotificationService.resetStatus();
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
+
+                // TODO - This is where we need to add this user to the room and setup the channelToken and turnUrl.
+
                 channelService.openChannel(localVideoObject, remoteVideoObject, videoSignalingObject, channelToken);
                 turnService.maybeRequestTurn();
 

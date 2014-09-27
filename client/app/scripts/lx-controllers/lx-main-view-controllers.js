@@ -10,11 +10,11 @@ angular.module('lxMainView.controllers', [])
     function(
         $rootScope,
         $log,
-        lxMainViewConstantsService) {
+        lxAppWideConstantsService) {
 
 
         // Copy information embedded in the Html into an angular service.
-        angular.extend(lxMainViewConstantsService, userInfoEmbeddedInHtml);
+        angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
         // handle case when a route change promise is not resolved
         $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
