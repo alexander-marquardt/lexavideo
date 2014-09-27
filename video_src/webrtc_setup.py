@@ -230,9 +230,6 @@ def get_video_params_json(room_name, user_agent):
             dtls = 'false'
 
 
-        logging.info('Preparing to add user to room ' + room_name)
-        user = None
-        initiator = 0
 
         # TODO - look at the original apprtc code to see if these values should be set.
         audio = None
@@ -246,9 +243,7 @@ def get_video_params_json(room_name, user_agent):
         media_constraints = make_media_stream_constraints(audio, video)            
         
         server_video_params = {
-            'myUsername': user,
             'roomName': room_name,
-            'rtcInitiator': initiator,
             'pcConfig': pc_config,
             'pcConstraints': pc_constraints,
             'offerConstraints': offer_constraints,

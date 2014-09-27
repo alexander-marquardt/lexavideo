@@ -2,11 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da75d383-99a2-45e0-91d6-8ecb5d3d0f79" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/index.html" afterPath="$PROJECT_DIR$/client/app/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-main.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-use-chat-room-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-use-chat-room-directives.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-http-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-http-services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-landing-page-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-landing-page-controllers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-use-chat-room-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-use-chat-room-controllers.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-use-chat-room-main.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-use-chat-room-main.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-use-chat-room-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-use-chat-room-services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/messaging.py" afterPath="$PROJECT_DIR$/video_src/messaging.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/rest_functionality.py" afterPath="$PROJECT_DIR$/video_src/rest_functionality.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/webrtc_setup.py" afterPath="$PROJECT_DIR$/video_src/webrtc_setup.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/.idea/workspace.xml" afterPath="$PROJECT_DIR$/client/app/.idea/workspace.xml" />
     </list>
     <ignored path="my-video-app.iws" />
@@ -62,11 +67,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="webrtc_setup.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="webrtc_setup.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/video_src/webrtc_setup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.307693" vertical-offset="3479" max-vertical-offset="4110">
-              <caret line="262" column="53" selection-start-line="262" selection-start-column="53" selection-end-line="262" selection-end-column="53" />
+            <state vertical-scroll-proportion="1.2900158" vertical-offset="2861" max-vertical-offset="4035">
+              <caret line="252" column="37" selection-start-line="252" selection-start-column="37" selection-end-line="252" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -86,17 +91,17 @@
         <entry file="file://$PROJECT_DIR$/video_src/messaging.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="543" max-vertical-offset="1200">
-              <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
+              <caret line="76" column="24" selection-start-line="76" selection-start-column="24" selection-end-line="76" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rest_functionality.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="rest_functionality.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/video_src/rest_functionality.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33280507" vertical-offset="1305" max-vertical-offset="3195">
-              <caret line="101" column="24" selection-start-line="101" selection-start-column="21" selection-end-line="101" selection-end-column="24" />
+            <state vertical-scroll-proportion="-58.96154" vertical-offset="612" max-vertical-offset="3195">
+              <caret line="143" column="28" selection-start-line="143" selection-start-column="28" selection-end-line="143" selection-end-column="28" />
               <folding>
                 <element signature="e#23#34#0" expanded="true" />
               </folding>
@@ -129,7 +134,7 @@
       <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/video_src/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="681" max-vertical-offset="1635">
+            <state vertical-scroll-proportion="0.0" vertical-offset="975" max-vertical-offset="1635">
               <caret line="69" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
               <folding />
             </state>
@@ -210,13 +215,13 @@
         <option value="$PROJECT_DIR$/test_video_src/test_users.py" />
         <option value="$PROJECT_DIR$/video_src/users.py" />
         <option value="$PROJECT_DIR$/test_video_src/test_rest_functionality.py" />
-        <option value="$PROJECT_DIR$/video_src/webrtc_setup.py" />
         <option value="$PROJECT_DIR$/video_src/http_helpers.py" />
         <option value="$PROJECT_DIR$/video_src/room_module.py" />
-        <option value="$PROJECT_DIR$/video_src/messaging.py" />
         <option value="$PROJECT_DIR$/video_src/views.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/video_src/messaging.py" />
         <option value="$PROJECT_DIR$/video_src/rest_functionality.py" />
+        <option value="$PROJECT_DIR$/video_src/webrtc_setup.py" />
       </list>
     </option>
   </component>
@@ -757,7 +762,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17425622" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22563177" sideWeight="0.5" order="4" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40950793" sideWeight="0.7620818" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40950793" sideWeight="0.7620818" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32961586" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47923875" sideWeight="0.27199504" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4829024" sideWeight="0.72800493" order="2" side_tool="false" content_ui="tabs" />
@@ -1132,34 +1137,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/messaging.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="543" max-vertical-offset="1200">
-          <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/webrtc_setup.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.307693" vertical-offset="3479" max-vertical-offset="4110">
-          <caret line="262" column="53" selection-start-line="262" selection-start-column="53" selection-end-line="262" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
           <caret line="19" column="95" selection-start-line="19" selection-start-column="95" selection-end-line="19" selection-end-column="95" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="681" max-vertical-offset="1635">
-          <caret line="69" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1182,13 +1163,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/video_src/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="681" max-vertical-offset="1635">
+          <caret line="69" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/video_src/messaging.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="543" max-vertical-offset="1200">
+          <caret line="76" column="24" selection-start-line="76" selection-start-column="24" selection-end-line="76" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/video_src/rest_functionality.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33280507" vertical-offset="1305" max-vertical-offset="3195">
-          <caret line="101" column="24" selection-start-line="101" selection-start-column="21" selection-end-line="101" selection-end-column="24" />
+        <state vertical-scroll-proportion="-58.96154" vertical-offset="612" max-vertical-offset="3195">
+          <caret line="143" column="28" selection-start-line="143" selection-start-column="28" selection-end-line="143" selection-end-column="28" />
           <folding>
             <element signature="e#23#34#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/video_src/webrtc_setup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.2900158" vertical-offset="2861" max-vertical-offset="4035">
+          <caret line="252" column="37" selection-start-line="252" selection-start-column="37" selection-end-line="252" selection-end-column="37" />
+          <folding />
         </state>
       </provider>
     </entry>

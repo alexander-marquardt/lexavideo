@@ -73,7 +73,7 @@ def on_message(room_obj, user, message):
         #logging.info('Saved message for user ' + user)
         
         
-def create_channel(room, user, duration_minutes):
-    client_id = room.make_client_id(user)
+def create_channel(room_obj, user, duration_minutes):
+    client_id = room_obj.make_client_id(user)
     return channel.create_channel(client_id, duration_minutes)        
 

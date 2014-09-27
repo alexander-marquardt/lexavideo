@@ -9,11 +9,13 @@
 angular.module('lxLandingPage.controllers', ['ngResource'])
 
     .controller('lxLandingPageCtrl',
-    function ($log,
-              $scope,
-              lxLandingPageConstantsService,
-              lxHttpHandleRoomService,
-              lxAppWideConstantsService) {
+    function (
+        $location,
+        $log,
+        $scope,
+        lxLandingPageConstantsService,
+        lxHttpHandleRoomService,
+        lxAppWideConstantsService) {
 
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
         angular.extend(lxLandingPageConstantsService, lxLandingPageConstantsEmbeddedInHtml);
@@ -33,8 +35,12 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
 
         $scope.roomObj = {};
         $scope.roomObj.userId = lxAppWideConstantsService.userId;
+
         // enterIntoRoom is the function that will be executed when the user clicks the submit button
-        $scope.enterIntoRoomFromLandingPage = lxHttpHandleRoomService.enterIntoRoomFromLandingPage;
+        $scope.enterIntoRoomFromLandingPage = function() {
+            // Just redirect to the room, where the user will be added when the room page is opened.
+             $location.path('/' +  $scope.roomObj.roomName);
+        };
 
         // roomStatus.roomStatus.triggerGetNewRoom is placed on the scope and will be watched for changes by the
         // checkForRoomOccupancyDirective for changes. If this value changes, then a new check will be done

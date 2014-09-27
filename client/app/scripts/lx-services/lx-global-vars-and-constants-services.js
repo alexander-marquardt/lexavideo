@@ -53,13 +53,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         /* Provides variables that will be used across different views.
          */
         return {
-            // userIsAlreadyInARoom is used to distinguish between users that have entered into the website through
-            // the main "welcome" page, or those that have entered directly into a chat room. If they came in through
-            // the welcome page, then they will have already executed a call to enterIntoRoom, and therefore
-            // it would be redundant to call that function again. However, if a user enters a room directly by
-            // addressing it with a URL, then they must still call enterIntoRoom in order to update the status
-            // of the room.
-            userIsAlreadyInARoom : false
+
         }
     })
 

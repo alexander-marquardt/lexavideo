@@ -60,11 +60,11 @@ class AddUserToRoom(webapp2.RequestHandler):
 
             logging.info('Room ' + room_name + ' has state ' + str(room))
 
-            # token_timeout for channel creation, default 30min, max 1 days, min 3min.
             token_timeout =  1440 #1440 minutes is 1 day.
             token = messaging.create_channel(room, user, token_timeout)
             turn_url = 'https://computeengineondemand.appspot.com/'
             turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
+
 
         else :
             token = ''
