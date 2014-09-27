@@ -15,14 +15,14 @@ def set_http_ok_json_response(response, response_dict, http_status_code = 200):
     
 def set_http_error_json_response(response, status_string, http_status_code):
     response_content = {
-        'errorStatusString' : status_string
+        'statusString' : status_string
     }    
     set_http_json_response(response, response_content, http_status_code)
     
 
 def set_error_json_response_and_write_log(response, status_string, logging_function, http_status_code):
     status_reporting.log_call_stack_and_traceback(logging_function, extra_info = status_string)
-    set_http_error_json_response(response, status_string ,http_status_code)
+    set_http_error_json_response(response, status_string , http_status_code)
 
 
 def handle_404(request, response, exception):

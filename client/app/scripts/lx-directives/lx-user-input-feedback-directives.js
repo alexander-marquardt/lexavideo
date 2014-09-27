@@ -135,5 +135,11 @@ angular.module('lxUserInputFeedback.directives', [])
                 );
             }
         };
-    });
+    })
 
+    .directive('lxShowRoomIsFullError', function() {
+        return {
+            restrict : 'A',
+            templateUrl: 'lx-template-cache/room-is-full-error.html'
+        };
+    });

@@ -25,7 +25,7 @@ angular.module('lxHttp.services', [])
                 promise.then(function(data){
 
                     // Redirect the user to the room that they have just created/entered into.
-                    if (data.status === 'roomCreated' || data.status === 'roomExistsAlreadyNotCreated') {
+                    if (data.statusString === 'roomCreated' || data.statusString === 'roomJoined') {
                         lxAppWideVarsService.userIsAlreadyInARoom = true;
                         $location.path('/' + roomObj.roomName);
                     } else {

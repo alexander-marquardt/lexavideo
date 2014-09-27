@@ -4,6 +4,10 @@
     var lxCreateChatRoomConstantsEmbeddedInHtml = {{ serverCreateChatRoomParamsJson }}
 </script>
 
+{% if redirect_after_error %}
+<h2>Error: room: {{ bad_room_name }} has redirected due to {{ error_string }}. Please try another room name.</h2>
+{% endif %}
+
 {% raw %}
 
 {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}

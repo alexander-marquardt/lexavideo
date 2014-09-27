@@ -14,6 +14,7 @@ from video_src import http_helpers
 from video_src import messaging
 from video_src import models
 from video_src import room_module
+from video_src import status_reporting
 from video_src import utils
 
 
@@ -149,43 +150,58 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 # This is a new room name
                 room_name_obj = room_module.RoomName(id=room_name)
                 room_name_obj.put()
-                room_name_added = True
-            else:
-                room_name_added = False
-
-            return room_name_added
 
         try:
-            room_name_added = create_room_name_transaction(room_name)
-            if not room_name_added:
-                http_helpers.set_http_ok_json_response(self.response, {'status': 'roomExistsAlreadyNotCreated'})
-                return
-
+            create_room_name_transaction(room_name)
         except:
             # Provide feedback to the user to indicate that the room was not created
-            http_helpers.set_http_ok_json_response(self.response, {'status': 'ErrorUnableToCreateRoom'});
-            raise Exception("Unable to create room: " + room_name);
+            err_status = 'ErrorUnableToCreateRoomNameObject'
+            http_helpers.set_http_ok_json_response(self.response, {'status': err_status})
+            # log this error for further analysis
+            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
 
 
-        # The following get is only used for verifying that the code is functioning correctly.
-        room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get(keys_only = True)
+        room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get()
+        current_user_id = room_dict['user_id']
+        current_user_key = models.UserModel.query(models.UserModel.user_id == current_user_id).get(keys_only = True)
+
         if room_obj:
-            raise Exception('Room name %s already has a room object created, '
-            'but there was not a value stored in the RoomName structure' % room_name)
+            # The room has already been created - try to add this user to the room.
+            # Check to make sure that they have not already been added before adding.
 
-        # This is a newly created room. Therefore we should set the room creator to the user_id that was passed in.
-        room_creator_id = room_dict['user_id']
-        room_creator_key = models.UserModel.query(models.UserModel.user_id == room_creator_id).get(keys_only = True)
-        room_dict['room_creator_key'] = room_creator_key
-        del room_dict['user_id']
+            occupancy = room_obj.get_occupancy()
 
-        # The RoomName has been added to the roomName structure. Now create a new Room object
-        # for the new room.
-        @ndb.transactional
-        def create_room_transaction(room_dict):
-            room_obj = room_module.RoomInfo(**room_dict)
-            room_obj.put()
+            if current_user_key == room_obj.room_creator_key or current_user_key == room_obj.room_joiner_key:
+                # do nothing as this user is already in the room - report status as "roomJoined"
+                # so javascript does not have to deal with a special case.
+                response_dict = {'statusString': 'roomJoined'}
 
-        create_room_transaction(room_dict)
-        http_helpers.set_http_ok_json_response(self.response, {'status': 'roomCreated'})
+            elif occupancy == 2:
+                # Room is full - return an error
+                logging.warning('Room ' + room_name + ' is full')
+                response_dict = {'statusString': 'roomIsFull'}
+
+            else:
+                # This is a new user joining the room
+                room_obj.add_user(current_user_key)
+                response_dict = {'statusString': 'roomJoined'}
+
+            http_helpers.set_http_ok_json_response(self.response, response_dict)
+
+        else:
+
+            # This is a newly created room. Therefore we should set the room creator to the user_id that was passed in.
+            room_dict['room_creator_key'] = current_user_key
+            del room_dict['user_id']
+
+            # The RoomName has been added to the roomName structure. Now create a new Room object
+            # for the new room.
+            @ndb.transactional
+            def create_room_transaction(room_dict):
+                room_obj = room_module.RoomInfo(**room_dict)
+                room_obj.put()
+
+            create_room_transaction(room_dict)
+
+            http_helpers.set_http_ok_json_response(self.response, {'status': 'roomCreated'})
 

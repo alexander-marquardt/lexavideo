@@ -74,6 +74,7 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
 videoAppDirectives.directive('lxAddUserToRoomAndSetupChannelDirective',
     function(
         $log,
+        $location,
         $window,
         channelService,
         lxHttpServices,
@@ -106,34 +107,35 @@ videoAppDirectives.directive('lxAddUserToRoomAndSetupChannelDirective',
                     var promise = lxHttpServices.enterIntoRoom(roomObj);
                     promise.then(
                         function(data){
-                            if (data.status === 'roomCreated' || data.status === 'roomExistsAlreadyNotCreated') {
-                                // everything OK - nothing needs to be done.
+                            if (data.statusString === 'roomCreated' || data.statusString === 'roomJoined') {
+                                // everything OK - we can now set up the channel and turn
+
+                                userNotificationService.resetStatus();
+                                // NOTE: AppRTCClient.java searches & parses this line; update there when
+                                // changing here.
+
+                                // TODO - This is where we need to add this user to the room and setup the channelToken and turnUrl.
+
+                                channelService.openChannel(localVideoObject, remoteVideoObject, videoSignalingObject, channelToken);
+                                turnService.maybeRequestTurn();
+
+                                // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
+                                webRtcSessionService.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
+
                             }
                             else {
-                                // something went wrong
-                                // TODO direct user back to main page with a helpful error
-                                // message so they can easily create a different room.
+                                // something went wrong - redirect back to login with an appropriate errorString
+                                $log.warn('User cannot enter the room. Status is: ' + data.statusString);
+                                $location.path('/error/' + roomObj.roomName + '/' + data.statusString);
                             }
                         },
                         function(data) {
-                            $log.error('Failed to directly use the URL roomName to create or enter into room: ' + roomObj.roomName);
+                            $log.error('Failed to directly use the URL roomName to create or enter into room: ' +
+                            roomObj.roomName + ' statusString: ' + data.statusString);
+                            $location.path('/error/' + roomObj.roomName + '/' + data.statusString);
                         }
                     );
                 }
-
-                userNotificationService.resetStatus();
-                // NOTE: AppRTCClient.java searches & parses this line; update there when
-                // changing here.
-
-                // TODO - This is where we need to add this user to the room and setup the channelToken and turnUrl.
-
-                channelService.openChannel(localVideoObject, remoteVideoObject, videoSignalingObject, channelToken);
-                turnService.maybeRequestTurn();
-
-                // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
-                webRtcSessionService.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
-
-
             }
         }
     }
@@ -367,9 +369,3 @@ videoAppDirectives.directive('lxMiniVideoTemplateDirective', function($log) {
     };
 });
 
-videoAppDirectives.directive('lxShowRoomIsFullError', function() {
-    return {
-        restrict : 'A',
-        templateUrl: 'lx-template-cache/room-is-full-error.html'
-    };
-});

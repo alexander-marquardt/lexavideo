@@ -11,22 +11,13 @@ angular.module('lxUseChatRoom.controllers', [])
 
     .controller('lxUseChatRoomOuterCtrl', function($scope,
                                                    lxUseChatRoomConstantsService,
-                                                   lxUseChatRoomVarsService,
-                                                   lxAppWideConstantsService) {
+                                                   lxUseChatRoomVarsService) {
 
-        $scope.lxUseChatRoomOuterCtrl = {};
+        // copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService
+        angular.extend(lxUseChatRoomConstantsService, videoConstantsEmbeddedInHtml);
 
-        if (videoConstantsEmbeddedInHtml.errorStatus) {
-            $scope.lxUseChatRoomOuterCtrl.errorStatus = videoConstantsEmbeddedInHtml.errorStatus;
-            $scope.lxUseChatRoomOuterCtrl.roomName = videoConstantsEmbeddedInHtml.roomName;
-        }
-        else {
-            // copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService
-            angular.extend(lxUseChatRoomConstantsService, videoConstantsEmbeddedInHtml);
-
-            // update the global vars that depend on lxUseChatRoomConstantsService
-            lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.rtcInitiator, lxUseChatRoomConstantsService.pcConfig);
-        }
+        // update the global vars that depend on lxUseChatRoomConstantsService
+        lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.rtcInitiator, lxUseChatRoomConstantsService.pcConfig);
     })
 
     .controller('lxMainVideoCtrl', function ($scope, lxUseChatRoomConstantsService) {

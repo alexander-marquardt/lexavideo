@@ -102,11 +102,11 @@ class RoomInfo(ndb.Model):
         return (user and (user == self.room_creator_key or user == self.room_joiner_key))
 
 
-    def add_user(self, user):
+    def add_user(self, user_key):
         if not self.room_creator_key:
-            self.room_creator_key = user
+            self.room_creator_key = user_key
         elif not self.room_joiner_key:
-            self.room_joiner_key = user
+            self.room_joiner_key = user_key
         else:
             raise RuntimeError('room is full')
         

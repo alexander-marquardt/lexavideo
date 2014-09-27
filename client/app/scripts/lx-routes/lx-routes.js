@@ -20,6 +20,11 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
         }
     });
 
+    $routeProvider.when('/error/:roomName/:errorString', {
+        templateUrl: function(params) {
+            '/_lx/lx-templates/lx-create-chat-room-main.html/' + params.roomNmae + '/' + params.errorString;
+        }
+    });
 
     $routeProvider.otherwise({
         redirectTo: '/'

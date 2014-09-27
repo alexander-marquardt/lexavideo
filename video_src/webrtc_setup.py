@@ -139,18 +139,15 @@ def append_url_arguments(request, link):
 
 
 
-def get_video_params(room_name, user_agent):
+def get_video_params_json(room_name, user_agent):
     """ Returns a json object that contains the video parameters that will be used for setting up the webRtc communications and display"""
     
     
     try:
-        # Append strings to this list to have them thrown up in message boxes. This
-        # will also cause the app to fail.
-        error_status = None
+
         # Get the base url without arguments.
         stun_server = get_default_stun_server()
-    
-        
+
         # Use "audio" and "video" to set the media stream constraints. Defined here:
         # http://goo.gl/V7cZg
         #
@@ -231,13 +228,7 @@ def get_video_params(room_name, user_agent):
         if debug == 'loopback':
             # Set dtls to false as DTLS does not work for loopback.
             dtls = 'false'
-        
 
-        
-        #unittest = self.request.get('unittest')
-        #if unittest:
-            ## Always create a new room for the unit tests.
-            #roomName = generate_random(8)
 
         logging.info('Preparing to add user to room ' + room_name)
         user = None
@@ -254,8 +245,7 @@ def get_video_params(room_name, user_agent):
         offer_constraints = make_offer_constraints()
         media_constraints = make_media_stream_constraints(audio, video)            
         
-        params = {
-            'errorStatus': error_status,
+        server_video_params = {
             'myUsername': user,
             'roomName': room_name,
             'rtcInitiator': initiator,
@@ -276,7 +266,7 @@ def get_video_params(room_name, user_agent):
             'metaViewport': meta_viewport,
             'debugBuildEnabled' : vidsetup.DEBUG_BUILD,
         }        
-        return json.dumps(params)
+        return json.dumps(server_video_params)
     except:
         error_status = 'serverError'
         status_reporting.log_call_stack_and_traceback(logging.error, extra_info = error_status) 
