@@ -15,8 +15,7 @@ angular.module('lxHttp.services', [])
             enterIntoRoom : function(roomObj) {
                 // this will either create a room object on the server, or enter into an existing room corresponding
                 // to roomName.
-                var roomResource = new RoomResource(roomObj).$save();
-                return roomResource;
+                return new RoomResource(roomObj).$save();
             },
 
             enterIntoRoomFromLandingPage : function(roomObj, roomStatus) {
@@ -36,7 +35,8 @@ angular.module('lxHttp.services', [])
                     }
                 }, function() {
                     roomStatus.triggerGetNewRoom = !roomStatus.triggerGetNewRoom;
-                    $log.error('Failed to create or enter into room: ' + roomObj.roomName);
+                    e.message = '\n\tFailed to create or enter into room: ' + roomObj.roomName + '\n\t' + e.message;
+                    $log.error(e);
                 });
             },
 

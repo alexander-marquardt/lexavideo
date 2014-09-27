@@ -14,7 +14,6 @@ var videoApp = angular.module('videoApp', [
     'lxAsciiVideo.directives',
     'lxCheckCompatibility.directives',
     'lxMainVideo.directives',
-    'lxUseChatRoom.directives',
     'lxUserInputFeedback.directives',
     'lxVideoNegotiation.directives',
 
@@ -25,6 +24,7 @@ var videoApp = angular.module('videoApp', [
     'lxHttp.services',
     'lxVideoSetup.services',
     'lxModalSupport.services',
+    'lxUseChatRoom.services',
     'lxUtility.services',
     'lxVideoNegotiation.services',
 

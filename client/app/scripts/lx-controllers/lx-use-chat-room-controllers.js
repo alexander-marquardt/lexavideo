@@ -9,12 +9,20 @@
 angular.module('lxUseChatRoom.controllers', [])
 
 
-    .controller('lxUseChatRoomOuterCtrl', function($scope,
-                                                   lxUseChatRoomConstantsService,
-                                                   lxUseChatRoomVarsService) {
+    .controller('lxUseChatRoomOuterCtrl',
+    function($scope,
+             lxUseChatRoomConstantsService,
+             lxUseChatRoomVarsService,
+             lxInitializeRoomService) {
 
-        // copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService
+        // Copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService.
+        // Do this before everything else, as many other functions require that this structure be setup!!
         angular.extend(lxUseChatRoomConstantsService, videoConstantsEmbeddedInHtml);
+
+
+        $scope.lxUseChatRoomOuterCtrl = {};
+        $scope.lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom = lxInitializeRoomService.addUserToRoomAndSetupChannel();
+
 
         // update the global vars that depend on lxUseChatRoomConstantsService
         lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.rtcInitiator, lxUseChatRoomConstantsService.pcConfig);
