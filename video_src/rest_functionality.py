@@ -91,7 +91,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 response_dict = {
                     'roomName': room_name,
                     'roomIsRegistered' : True,
-                    'numInRoom': room_obj.num_in_room,
+                    'numInRoom': room_obj.get_occupancy(),
                 }
                 logging.info('Found room: ' + repr(room_obj))
 

@@ -80,7 +80,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
     })
 
 
-    .factory('lxCreateChatRoomConstantsService', function() {
+    .factory('lxLandingPageConstantsService', function() {
         /* Provides constant values that are sent from the server to the client when the page is loaded.
          */
 

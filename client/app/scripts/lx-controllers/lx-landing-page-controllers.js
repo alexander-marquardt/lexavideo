@@ -4,19 +4,19 @@
 'use strict';
 
 // define externally defined variables so that jshint doesn't give warnings
-/* global lxCreateChatRoomConstantsEmbeddedInHtml */
+/* global lxLandingPageConstantsEmbeddedInHtml */
 
-angular.module('lxCreateChatRoom.controllers', ['ngResource'])
+angular.module('lxLandingPage.controllers', ['ngResource'])
 
-    .controller('lxCreateChatRoomCtrl',
+    .controller('lxLandingPageCtrl',
     function ($log,
               $scope,
-              lxCreateChatRoomConstantsService,
+              lxLandingPageConstantsService,
               lxHttpHandleRoomService,
               lxAppWideConstantsService) {
 
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
-        angular.extend(lxCreateChatRoomConstantsService, lxCreateChatRoomConstantsEmbeddedInHtml);
+        angular.extend(lxLandingPageConstantsService, lxLandingPageConstantsEmbeddedInHtml);
 
 
         /*
@@ -24,12 +24,12 @@ angular.module('lxCreateChatRoom.controllers', ['ngResource'])
          input box. These values are passed from the server so that the server and client are guaranteed to always be
          evaluating the same regex for validity.
          */
-        var invalidRoomNamesPattern = new RegExp('[' + lxCreateChatRoomConstantsService.roomNameInvalidCharsForRegex + ']', 'g');
-        $scope.validRoomNamesPattern  = new RegExp('^[^' + lxCreateChatRoomConstantsService.roomNameInvalidCharsForRegex + ']+$');
+        var invalidRoomNamesPattern = new RegExp('[' + lxLandingPageConstantsService.roomNameInvalidCharsForRegex + ']', 'g');
+        $scope.validRoomNamesPattern  = new RegExp('^[^' + lxLandingPageConstantsService.roomNameInvalidCharsForRegex + ']+$');
 
         // The following values are passed from the server and are validated both on the client and on the server.
-        $scope.minInputLength = lxCreateChatRoomConstantsService.minRoomChars;
-        $scope.maxInputLength = lxCreateChatRoomConstantsService.maxRoomChars;
+        $scope.minInputLength = lxLandingPageConstantsService.minRoomChars;
+        $scope.maxInputLength = lxLandingPageConstantsService.maxRoomChars;
 
         $scope.roomObj = {};
         $scope.roomObj.userId = lxAppWideConstantsService.userId;

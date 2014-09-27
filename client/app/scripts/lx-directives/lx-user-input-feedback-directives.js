@@ -5,7 +5,7 @@ angular.module('lxUserInputFeedback.directives', [])
 
     .directive('checkForRoomOccupancyDirective', function($log,
                                                  lxHttpHandleRoomService,
-                                                 lxCreateChatRoomConstantsService,
+                                                 lxLandingPageConstantsService,
                                                  lxTimerService) {
 
         var timeSinceLastKeypressBeforeHttpCall = 300; // time in milliseconds
@@ -18,7 +18,7 @@ angular.module('lxUserInputFeedback.directives', [])
 
                 // don't move maxOccupancy outside of the link function since it is not set until the
                 // program begins execution.
-                var maxOccupancy = lxCreateChatRoomConstantsService.maxRoomOccupancy;
+                var maxOccupancy = lxLandingPageConstantsService.maxRoomOccupancy;
 
                 var inputElement = angular.element(elem)[0];
 

@@ -77,7 +77,7 @@ class LandingPageMain(webapp2.RequestHandler):
             'error_string' : error_string,
 
             # The following is an object that passes variables to the javascript code.
-            'serverCreateChatRoomParamsJson' : json.dumps(
+            'serverLandingPageParamsJson' : json.dumps(
                 {'minRoomChars' : constants.room_min_chars,
                  'maxRoomChars' : constants.room_max_chars,
                  'maxRoomOccupancy' : constants.room_max_occupancy,

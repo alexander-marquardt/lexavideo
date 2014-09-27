@@ -10,7 +10,7 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/', {
         templateUrl: function(){
-            return '/_lx/lx-templates/lx-create-chat-room-main.html';
+            return '/_lx/lx-templates/lx-landing-page-main.html';
         }
     });
 
@@ -22,7 +22,7 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/error/:roomName/:errorString', {
         templateUrl: function(params) {
-            return '/_lx/lx-templates/lx-create-chat-room-main.html/error/' + params.roomName + '/' + params.errorString;
+            return '/_lx/lx-templates/lx-landing-page-main.html/error/' + params.roomName + '/' + params.errorString;
         }
     });
 
