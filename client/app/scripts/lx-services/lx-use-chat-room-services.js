@@ -22,24 +22,7 @@ angular.module('lxUseChatRoom.services', [])
 
         var userId = lxAppWideConstantsService.userId;
 
-        function setupChannelAndTurn() {
-            // Setup the channel and turn. If no exceptions are found returns true, otherwise false
-            try {
-                userNotificationService.resetStatus();
 
-                channelService.openChannel(localVideoObject, remoteVideoObject, videoSignalingObject, channelToken);
-                turnService.maybeRequestTurn();
-
-                // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
-                webRtcSessionService.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
-                return true;
-            }
-            catch(e) {
-                e.message = '\n\tError in setupChannelAndTurn\n\t' + e.message;
-                $log.error(e);
-                return false;
-            }
-        }
 
         return {
 
@@ -69,7 +52,7 @@ angular.module('lxUseChatRoom.services', [])
                         function(data){
                             if (data.statusString === 'roomCreated' || data.statusString === 'roomJoined') {
                                 // everything OK - we can now set up the channel and turn
-                                userSuccessfullyEnteredRoom = setupChannelAndTurn();
+                                userSuccessfullyEnteredRoom = true;
                             }
                             else {
                                 // something went wrong - redirect back to login with an appropriate errorString
@@ -86,7 +69,7 @@ angular.module('lxUseChatRoom.services', [])
                 }
                 else {
                     /* The user is already in a chat room, but we still ned to setup the channel and turn etc. */
-                    userSuccessfullyEnteredRoom = setupChannelAndTurn();
+                    userSuccessfullyEnteredRoom = true;
                 }
                 if (!userSuccessfullyEnteredRoom) {
                     $log.warn('User was not able to enter room: ' + lxUseChatRoomConstantsService.roomName)

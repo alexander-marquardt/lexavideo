@@ -7,15 +7,16 @@
 
 <div ng-controller="lxUseChatRoomOuterCtrl">
 
-
     <!-- the following ng-if statement ensures that in the case that we have to redirect the user back to the landing page
          that the modal boxes and camera prompts and other things have not already started to execute -->
-    <div ng-if lxUseChatRoomOuterCtrl.userJoinedRoom>
+    <div ng-if="lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom">
 
         {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
         <div lx-check-if-system-supports-web-rtc></div>
 
         <div ng-controller="lxMainVideoCtrl">
+
+            <div lx-initialize-channel-and-turn-directive></div>
 
             <div ng-if="debugBuildEnabled">
                 Room Name: {{ roomOccupancyObject.roomName }}<br>
@@ -64,7 +65,7 @@
                     <div class="col-sm-6" id="id-remote-video-wrapper-div">
                         <div class="text-center" >
                             <div ng-controller="lxVideoNegotiationCtrl">
-                                <divlx-video-wrapper-directive video-window = 'remote' ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.remoteIsSendingVideoType)">
+                                <div lx-video-wrapper-directive video-window = 'remote' ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.remoteIsSendingVideoType)">
                                     <h4>Remote HD Video</h4>
 
                                     <div  class="cl-my-well" style="display:inline-block">
@@ -76,49 +77,49 @@
                                             </nav>
                                         </div>
                                     </div>
-                            </div>
+                                </div>
 
-                            <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"  ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'ASCII Video')">
-                                <h4>Remote ASCII Video</h4>
-                                <div style="display:inline-block" class="cl-my-well">
-                                    <div style="position: relative">
-                                        <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
+                                <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"  ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'ASCII Video')">
+                                    <h4>Remote ASCII Video</h4>
+                                    <div style="display:inline-block" class="cl-my-well">
+                                        <div style="position: relative">
+                                            <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
                                             <pre class = "cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
                                             </span></pre>
-                                        <div lx-mini-video-template-directive></div>
-                                        <nav ng-hide="true" lx-video-settings-negotiation-directive
-                                             class="navbar navbar-inverse navbar-fixed-bottom cl-navbar-absolute-bottom cl-show-hide-fade" >
-                                        </nav>
+                                            <div lx-mini-video-template-directive></div>
+                                            <nav ng-hide="true" lx-video-settings-negotiation-directive
+                                                 class="navbar navbar-inverse navbar-fixed-bottom cl-navbar-absolute-bottom cl-show-hide-fade" >
+                                            </nav>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class = "cl-hide-on-larger-than-xs">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm"
-                                        ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
-                                        ng-click="setLocalVideoType('HD Video')">HD Video</button>
-                                <button type="button" class="btn btn-sm"
-                                        ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
-                                        ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
+                            <div class = "cl-hide-on-larger-than-xs">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm"
+                                            ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
+                                            ng-click="setLocalVideoType('HD Video')">HD Video</button>
+                                    <button type="button" class="btn btn-sm"
+                                            ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
+                                            ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
+                                </div>
                             </div>
+
+
                         </div>
-
-
                     </div>
                 </div>
+
+                <div lx-monitor-control-keys-directive ></div>
             </div>
 
-            <div lx-monitor-control-keys-directive ></div>
+            <!-- Footer div is at the bottom of the page, but is placed here so that it
+            has access to the main-video-ctrl scope -->
+
+            <nav lx-call-status-directive class="navbar navbar-inverse navbar-fixed-bottom"></nav>
         </div>
-
-        <!-- Footer div is at the bottom of the page, but is placed here so that it
-        has access to the main-video-ctrl scope -->
-
-        <nav lx-call-status-directive class="navbar navbar-inverse navbar-fixed-bottom"></nav>
     </div>
 </div>
-
 
 {% endraw %}
