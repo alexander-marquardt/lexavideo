@@ -15,14 +15,16 @@
         {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
         <div lx-check-if-system-supports-web-rtc></div>
 
+
+        <div ng-if="debugBuildEnabled">
+            Room Name: {{ roomName }}<br>
+            User Id: {{ userId }}
+        </div>
+
+
         <div ng-controller="lxMainVideoCtrl">
 
             <div lx-initialize-channel-and-turn-directive></div>
-
-            <div ng-if="debugBuildEnabled">
-                Room Name: {{ roomOccupancyObject.roomName }}<br>
-                User Name: {{ myUsername }}
-            </div>
 
             {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-access-camera.html" %}{% raw %}
             <div lx-access-camera-and-microphone-directive></div>

@@ -24,6 +24,7 @@
 
     {% include "lx-templates/lx-jinja-templates/lx-favicons.html" %}
 
+
 </head>
 
 
@@ -45,6 +46,11 @@
         </div>
 
     </div>
+
+    <script type='text/javascript'>
+        var userInfoEmbeddedInHtml = {{ userInfoEmbeddedInHtmlJson }}
+    </script>
+
 
     <script type="text/javascript" src="/_ah/channel/jsapi"></script>
 

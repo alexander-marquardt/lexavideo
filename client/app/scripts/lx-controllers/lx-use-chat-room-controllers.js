@@ -11,6 +11,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
     .controller('lxUseChatRoomOuterCtrl',
     function($scope,
+             lxAppWideConstantsService,
              lxUseChatRoomConstantsService,
              lxUseChatRoomVarsService,
              lxInitializeRoomService) {
@@ -18,7 +19,10 @@ angular.module('lxUseChatRoom.controllers', [])
         // Copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService.
         // Do this before everything else, as many other functions require that this structure be setup!!
         angular.extend(lxUseChatRoomConstantsService, videoConstantsEmbeddedInHtml);
+        // update the global vars that depend on lxUseChatRoomConstantsService
+        lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.rtcInitiator, lxUseChatRoomConstantsService.pcConfig);
 
+        $scope.debugBuildEnabled = lxUseChatRoomConstantsService.debugBuildEnabled;
 
         $scope.lxUseChatRoomOuterCtrl = {};
         lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(result) {
@@ -30,8 +34,9 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = reason;
         });
 
-        // update the global vars that depend on lxUseChatRoomConstantsService
-        lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.rtcInitiator, lxUseChatRoomConstantsService.pcConfig);
+        $scope.userId = lxAppWideConstantsService.userId;
+        $scope.roomName = lxUseChatRoomConstantsService.roomName;
+
     })
 
     .controller('lxMainVideoCtrl', function ($scope, lxUseChatRoomConstantsService) {
@@ -107,7 +112,6 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         $scope.myUsername = lxUseChatRoomConstantsService.myUsername;
-        $scope.debugBuildEnabled = lxUseChatRoomConstantsService.debugBuildEnabled;
     })
     .controller('lxVideoNegotiationCtrl', function ($scope, lxVideoSettingsNegotiationService) {
         // This controller is used for wrapping around the lxVideoSettingsNegotiationDirective which may appear

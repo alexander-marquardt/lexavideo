@@ -101,7 +101,7 @@ class MainPage(webapp2.RequestHandler):
         target_page = 'index.html'
         response_type = 'jinja'
         params = {
-            'userInfoJson' : json.dumps(
+            'userInfoEmbeddedInHtmlJson' : json.dumps(
                 {
                 'userId' : user_obj.user_id,
                 }),
