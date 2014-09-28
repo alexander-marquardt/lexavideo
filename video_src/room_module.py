@@ -50,16 +50,16 @@ class RoomInfo(ndb.Model):
         return result
 
 
-    def make_client_id(self, user):
-        return str(self.key.id()) + '/' + user
+    def make_client_id(self, user_key_id):
+        return str(self.key.id()) + '/' + str(user_key_id)
 
 
-    def remove_user(self, user):
-        messaging.delete_saved_messages(self.make_client_id(user))
-        if user == self.room_joiner_key:
+    def remove_user(self, user_key_id):
+        messaging.delete_saved_messages(self.make_client_id(user_key_id))
+        if user_key_id == self.room_joiner_key.id():
             self.room_joiner_key = None
             self.room_joiner_channel_open = False
-        if user == self.room_creator_key:
+        if user_key_id == self.room_creator_key.id():
             if self.room_joiner_key:
                 self.room_creator_key = self.room_joiner_key
                 self.room_creator_channel_open = self.room_joiner_channel_open
@@ -83,17 +83,17 @@ class RoomInfo(ndb.Model):
         return occupancy
 
 
-    def get_other_user(self, user):
-        if user == self.room_creator_key:
-            return self.room_joiner_key
-        elif user == self.room_joiner_key:
-            return self.room_creator_key
+    def get_other_user(self, user_key_id):
+        if user_key_id == self.room_creator_key.id():
+            return self.room_joiner_key.id()
+        elif user_key_id == self.room_joiner_key.id():
+            return self.room_creator_key.id()
         else:
             return None
 
 
-    def has_user(self, user):
-        return (user and (user == self.room_creator_key or user == self.room_joiner_key))
+    def has_user(self, user_key_id):
+        return (user_key_id and (user_key_id == self.room_creator_key.id() or user_key_id == self.room_joiner_key.id()))
 
 
     def add_user(self, user_key):
@@ -107,45 +107,44 @@ class RoomInfo(ndb.Model):
         self.put()
 
 
-    def set_connected(self, user):
-        if user == self.room_creator_key:
+    def set_connected(self, user_key_id):
+        if user_key_id == self.room_creator_key.id():
             self.room_creator_channel_open = True
-        if user == self.room_joiner_key:
+        if user_key_id == self.room_joiner_key.id():
             self.room_joiner_channel_open = True
 
         self.put()
 
 
-    def is_connected(self, user):
-        if user == self.room_creator_key:
+    def is_connected(self, user_key_id):
+        if user_key_id == self.room_creator_key.id():
             return self.room_creator_channel_open
-        if user == self.room_joiner_key:
+        if user_key_id == self.room_joiner_key.id():
             return self.room_joiner_channel_open
         
-    def user_is_room_creator(self, user):
-        return True if user == self.room_creator_key else False
+    def user_is_room_creator(self, user_key_id):
+        return True if user_key_id == self.room_creator_key.id() else False
 
-    def user_is_room_joiner(self, user):
-        return True if user == self.room_joiner_key else False
+    def user_is_room_joiner(self, user_key_id):
+        return True if user_key_id == self.room_joiner_key.id() else False
 
 
-@ndb.transactional
-def connect_user_to_room(room_name, active_user):
+def connect_user_to_room(room_key_id, active_user_key_id):
 
-    room_obj = RoomInfo.query(RoomInfo.room_name == room_name).get()
+    room_obj = RoomInfo.get_by_id(room_key_id)
 
     # Check if room has active_user in case that disconnect message comes before
     # connect message with unknown reason, observed with local AppEngine SDK.
-    if room_obj and room_obj.has_user(active_user):
-        room_obj.set_connected(active_user)
-        logging.info('User ' + active_user + ' connected to room ' + room_name)
-        logging.info('RoomInfo ' + room_name + ' has state ' + str(room_obj))
+    if room_obj and room_obj.has_user(active_user_key_id):
+        room_obj.set_connected(active_user_key_id)
+        logging.info('User ' + active_user_key_id + ' connected to room ' + room_obj.room_name)
+        logging.info('RoomInfo ' + room_obj.room_name + ' has state ' + str(room_obj))
         
-        other_user = room_obj.get_other_user(active_user);
+        other_user = room_obj.get_other_user(active_user_key_id)
         
         message_obj = {'messageType' : 'roomStatus', 
                        'messagePayload': {
-                           'roomName' : room_obj.key.id(),
+                           'roomName' : room_obj.room_name,
                            'room_creator_key' : room_obj.room_creator_key,
                            'room_joiner_key'  : room_obj.room_joiner_key,
                        }    
@@ -161,10 +160,10 @@ def connect_user_to_room(room_name, active_user):
             
         # Send a message to the active_user, indicating the "roomStatus"
         logging.debug('Sending message to active_user: %s' % repr(message_obj))
-        messaging.on_message(room_obj, active_user, json.dumps(message_obj))
+        messaging.on_message(room_obj, active_user_key_id, json.dumps(message_obj))
         
     else:
-        logging.warning('Unexpected Connect Message to room ' + room_name + 'by user ' + active_user)
+        logging.warning('Unexpected Connect Message to room ' + room_key_id + 'by user ' + active_user_key_id)
         
     return room_obj
 
@@ -174,11 +173,11 @@ class ConnectPage(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         key = self.request.get('from')
-        room_name, user = key.split('/')
+        room_key_id, user_key_id = key.split('/')
 
-        room = connect_user_to_room(room_name, user)
-        if room and room.has_user(user):
-            messaging.send_saved_messages(room.make_client_id(user))
+        room = connect_user_to_room(room_key_id, user_key_id)
+        if room and room.has_user(user_key_id):
+            messaging.send_saved_messages(room.make_client_id(user_key_id))
 
 
 class DisconnectPage(webapp2.RequestHandler):

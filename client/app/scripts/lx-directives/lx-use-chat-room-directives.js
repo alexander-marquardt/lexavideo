@@ -1,9 +1,6 @@
 'use strict';
 
 
-// define externally defined variables so that jshint doesn't give warnings
-/* global $ */
-/* global viewportSize */
 
 angular.module('lxUseChatRoom.directives', [])
 
@@ -12,10 +9,12 @@ angular.module('lxUseChatRoom.directives', [])
     function(
         $log,
         channelService,
-        turnService,
         webRtcSessionService,
-        lxUseChatRoomVarsService
+        lxUseChatRoomVarsService,
+        userNotificationService,
+        turnService
         ) {
+
 
 
         return {
@@ -26,7 +25,7 @@ angular.module('lxUseChatRoom.directives', [])
                 try {
                     userNotificationService.resetStatus();
 
-                    channelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, channelToken);
+                    channelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, scope.lxUseChatRoomOuterCtrl.channelToken);
                     turnService.maybeRequestTurn();
 
                     // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
@@ -39,6 +38,6 @@ angular.module('lxUseChatRoom.directives', [])
                     return false;
                 }
             }
-        }
+        };
     });
 

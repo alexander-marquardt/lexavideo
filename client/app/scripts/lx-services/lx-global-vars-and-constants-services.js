@@ -54,7 +54,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
          */
         return {
 
-        }
+        };
     })
 
     .factory('lxUseChatRoomConstantsService', function() {

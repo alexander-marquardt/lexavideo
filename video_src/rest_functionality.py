@@ -60,10 +60,9 @@ class AddUserToRoom(webapp2.RequestHandler):
 
             logging.info('Room ' + room_name + ' has state ' + str(room))
 
-            token_timeout =  1440 #1440 minutes is 1 day.
+            token_timeout =  240 # minutes
             token = messaging.create_channel(room, user, token_timeout)
-            turn_url = 'https://computeengineondemand.appspot.com/'
-            turn_url = turn_url + 'turn?' + 'username=' + user + '&key=4080218913'
+            turn_url = 'https://computeengineondemand.appspot.com/' + 'turn?' + 'username=' + user + '&key=4080218913'
 
 
         else :
@@ -162,8 +161,10 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
 
         room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get()
-        current_user_id = room_dict['user_id']
-        current_user_key = models.UserModel.query(models.UserModel.user_id == current_user_id).get(keys_only = True)
+        current_user_name = room_dict['user_name']
+        current_user_key = models.UserModel.query(models.UserModel.user_name == current_user_name).get(keys_only = True)
+
+        response_dict = {}
 
         if room_obj:
             # The room has already been created - try to add this user to the room.
@@ -179,20 +180,18 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             elif occupancy == 2:
                 # Room is full - return an error
                 logging.warning('Room ' + room_name + ' is full')
-                response_dict = {'statusString': 'roomIsFull'}
+                response_dict['statusString'] = 'roomIsFull'
 
             else:
                 # This is a new user joining the room
                 room_obj.add_user(current_user_key)
-                response_dict = {'statusString': 'roomJoined'}
-
-            http_helpers.set_http_ok_json_response(self.response, response_dict)
+                response_dict['statusString'] = 'roomJoined'
 
         else:
 
-            # This is a newly created room. Therefore we should set the room creator to the user_id that was passed in.
+            # This is a newly created room. Therefore we should set the room creator to the user_name that was passed in.
             room_dict['room_creator_key'] = current_user_key
-            del room_dict['user_id']
+            del room_dict['user_name']
 
             # The RoomName has been added to the roomName structure. Now create a new Room object
             # for the new room.
@@ -200,8 +199,14 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             def create_room_transaction(room_dict):
                 room_obj = room_module.RoomInfo(**room_dict)
                 room_obj.put()
+                return room_obj
 
-            create_room_transaction(room_dict)
+            room_obj = create_room_transaction(room_dict)
+            response_dict['statusString'] = 'roomCreated'
 
-            http_helpers.set_http_ok_json_response(self.response, {'statusString': 'roomCreated'})
+        token_timeout =  240 # minutes
+        channel_token = messaging.create_channel(room_obj, current_user_key.id(), token_timeout)
+        response_dict['channelToken'] = channel_token
+
+        http_helpers.set_http_ok_json_response(self.response, response_dict)
 

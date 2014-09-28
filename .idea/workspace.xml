@@ -2,10 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da75d383-99a2-45e0-91d6-8ecb5d3d0f79" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/index.html" afterPath="$PROJECT_DIR$/client/app/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-jinja-templates/lx-login-registration.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-jinja-templates/lx-login-registration.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-http-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-http-services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-landing-page-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-landing-page-controllers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-main-view-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-main-view-controllers.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-use-chat-room-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-use-chat-room-controllers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-use-chat-room-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-use-chat-room-directives.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-use-chat-room-main.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-use-chat-room-main.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-use-chat-room-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-use-chat-room-services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-setup-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-setup-services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/messaging.py" afterPath="$PROJECT_DIR$/video_src/messaging.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/models.py" afterPath="$PROJECT_DIR$/video_src/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/rest_functionality.py" afterPath="$PROJECT_DIR$/video_src/rest_functionality.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/room_module.py" afterPath="$PROJECT_DIR$/video_src/room_module.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_video_src/test_users.py" afterPath="$PROJECT_DIR$/test_video_src/test_users.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/users.py" afterPath="$PROJECT_DIR$/video_src/users.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/views.py" afterPath="$PROJECT_DIR$/video_src/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/.idea/workspace.xml" afterPath="$PROJECT_DIR$/client/app/.idea/workspace.xml" />
@@ -32,7 +43,7 @@
     <SUITE FILE_PATH="coverage/VideoApp-Server$Unittest_TestUtils_test_two.coverage" NAME="Unittest TestUtils.test_two Coverage Results" MODIFIED="1411501484550" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test_video_src" />
     <SUITE FILE_PATH="coverage/VideoApp-Server$run_unittests.coverage" NAME="run_unittests Coverage Results" MODIFIED="1411425643803" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VideoApp-Server$Unittest_TestErrorHandlingHandleExceptions_test_function_errors.coverage" NAME="Unittest TestErrorHandlingHandleExceptions.test_function_errors Coverage Results" MODIFIED="1411515989434" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test_video_src" />
-    <SUITE FILE_PATH="coverage/VideoApp-Server$run_video_app.coverage" NAME="run-video-app Coverage Results" MODIFIED="1411796526443" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VideoApp-Server$run_video_app.coverage" NAME="run-video-app Coverage Results" MODIFIED="1411881354911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VideoApp-Server$py_test_in_test_utils_py.coverage" NAME="py.test in test_utils.py Coverage Results" MODIFIED="1411444430519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/VideoApp-Server$Unittests_in_test_utils.coverage" NAME="Unittests in test_utils Coverage Results" MODIFIED="1411575407028" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test_video_src" />
     <SUITE FILE_PATH="coverage/my-video-app$my_video_app.coverage" NAME="my-video-app Coverage Results" MODIFIED="1411329233538" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
@@ -63,75 +74,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="webrtc_setup.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/video_src/webrtc_setup.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="5.6153846" vertical-offset="3326" max-vertical-offset="4035">
-              <caret line="219" column="81" selection-start-line="219" selection-start-column="81" selection-end-line="219" selection-end-column="81" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="room_module.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="room_module.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/video_src/room_module.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.076923" vertical-offset="705" max-vertical-offset="3300">
-              <caret line="70" column="29" selection-start-line="70" selection-start-column="16" selection-end-line="70" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="messaging.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/video_src/messaging.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="543" max-vertical-offset="1200">
-              <caret line="76" column="24" selection-start-line="76" selection-start-column="24" selection-end-line="76" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rest_functionality.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/video_src/rest_functionality.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-58.96154" vertical-offset="612" max-vertical-offset="3195">
-              <caret line="143" column="28" selection-start-line="143" selection-start-column="28" selection-end-line="143" selection-end-column="28" />
-              <folding>
-                <element signature="e#23#34#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="status_reporting.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/video_src/status_reporting.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1185">
-              <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="http_helpers.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/video_src/http_helpers.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
-              <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-              <folding>
-                <element signature="e#1#21#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/video_src/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6803653" vertical-offset="978" max-vertical-offset="1635">
-              <caret line="104" column="17" selection-start-line="104" selection-start-column="17" selection-end-line="104" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.80406654" vertical-offset="1905" max-vertical-offset="3285">
+              <caret line="165" column="75" selection-start-line="165" selection-start-column="75" selection-end-line="165" selection-end-column="75" />
               <folding />
             </state>
           </provider>
@@ -140,20 +87,40 @@
       <file leaf-file-name="main.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
-              <caret line="19" column="95" selection-start-line="19" selection-start-column="95" selection-end-line="19" selection-end-column="95" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="14" max-vertical-offset="570">
+              <caret line="25" column="45" selection-start-line="25" selection-start-column="45" selection-end-line="25" selection-end-column="45" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/ndb/model.py">
+      <file leaf-file-name="utils.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/ndb/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="56235" max-vertical-offset="58875">
-              <caret line="3765" column="0" selection-start-line="3765" selection-start-column="0" selection-end-line="3765" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2421" max-vertical-offset="3330">
+              <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="messaging.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/video_src/messaging.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-16.192308" vertical-offset="659" max-vertical-offset="1200">
+              <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rest_functionality.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/video_src/rest_functionality.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.12963" vertical-offset="2288" max-vertical-offset="3270">
+              <caret line="207" column="0" selection-start-line="207" selection-start-column="0" selection-end-line="207" selection-end-column="0" />
               <folding>
-                <marker date="1409942124000" expanded="true" signature="119300:119317" placeholder="SELECT * FRO..missing_value..." />
+                <element signature="e#23#34#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -163,7 +130,47 @@
         <entry file="file://$PROJECT_DIR$/video_src/error_handling.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="750">
-              <caret line="39" column="57" selection-start-line="39" selection-start-column="57" selection-end-line="39" selection-end-column="57" />
+              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="webapp2.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/lib/webapp2-2.3/webapp2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="22161" max-vertical-offset="29280">
+              <caret line="1504" column="0" selection-start-line="1504" selection-start-column="0" selection-end-line="1504" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="wsgi.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/runtime/wsgi.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="4426" max-vertical-offset="4995">
+              <caret line="327" column="0" selection-start-line="327" selection-start-column="0" selection-end-line="327" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="runtime.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/runtime/runtime.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1941" max-vertical-offset="2715">
+              <caret line="150" column="0" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="request_handler.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/devappserver2/python/request_handler.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2091" max-vertical-offset="3735">
+              <caret line="173" column="0" selection-start-line="173" selection-start-column="0" selection-end-line="173" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -207,23 +214,23 @@
         <option value="$PROJECT_DIR$/test_video_src/test_utils.py" />
         <option value="$PROJECT_DIR$/test_video_src/test_views.py" />
         <option value="$PROJECT_DIR$/test_video_src/test_webrtc_setup.py" />
-        <option value="$PROJECT_DIR$/video_src/models.py" />
-        <option value="$PROJECT_DIR$/test_video_src/test_users.py" />
-        <option value="$PROJECT_DIR$/video_src/users.py" />
         <option value="$PROJECT_DIR$/test_video_src/test_rest_functionality.py" />
         <option value="$PROJECT_DIR$/video_src/http_helpers.py" />
-        <option value="$PROJECT_DIR$/video_src/room_module.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/video_src/webrtc_setup.py" />
+        <option value="$PROJECT_DIR$/video_src/models.py" />
+        <option value="$PROJECT_DIR$/video_src/users.py" />
+        <option value="$PROJECT_DIR$/video_src/views.py" />
+        <option value="$PROJECT_DIR$/test_video_src/test_users.py" />
         <option value="$PROJECT_DIR$/video_src/messaging.py" />
         <option value="$PROJECT_DIR$/video_src/rest_functionality.py" />
-        <option value="$PROJECT_DIR$/video_src/webrtc_setup.py" />
-        <option value="$PROJECT_DIR$/video_src/views.py" />
+        <option value="$PROJECT_DIR$/video_src/room_module.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="60" />
-    <option name="y" value="28" />
+    <option name="x" value="37" />
+    <option name="y" value="26" />
     <option name="width" value="1704" />
     <option name="height" value="1315" />
   </component>
@@ -311,20 +318,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test_video_src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="VideoApp-Server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="my-video-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -341,7 +334,7 @@
     <property name="options.splitter.main.proportions" value="0.3025" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/run_unittests.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../video-app-before-angular" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="FullScreen" value="false" />
   </component>
@@ -748,7 +741,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="60" y="28" width="1704" height="1315" extended-state="0" />
+    <frame x="37" y="26" width="1704" height="1315" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32871974" sideWeight="0.4993804" order="7" side_tool="false" content_ui="tabs" />
@@ -758,7 +751,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17425622" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22563177" sideWeight="0.5" order="4" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40950793" sideWeight="0.7620818" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.50292397" sideWeight="0.7620818" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32961586" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47923875" sideWeight="0.27199504" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4829024" sideWeight="0.72800493" order="2" side_tool="false" content_ui="tabs" />
@@ -809,45 +802,22 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="138" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/video_src/rest_functionality.py</url>
+          <line>207</line>
+          <option name="timeStamp" value="150" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/video_src/rest_functionality.py</url>
+          <line>164</line>
+          <option name="timeStamp" value="151" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="152" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pycharm/pytestrunner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="268" max-vertical-offset="945">
-          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/_pytest/unittest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1723" max-vertical-offset="2790">
-          <caret line="133" column="0" selection-start-line="133" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/_pytest/runner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="673" max-vertical-offset="7410">
-          <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/_pytest/core.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5903" max-vertical-offset="6495">
-          <caret line="423" column="0" selection-start-line="423" selection-start-column="0" selection-end-line="424" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/unittest/suite.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="793" max-vertical-offset="4590">
-          <caret line="69" column="38" selection-start-line="69" selection-start-column="38" selection-end-line="69" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/logging/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="17158" max-vertical-offset="25695">
@@ -909,13 +879,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46747968" vertical-offset="0" max-vertical-offset="1605">
           <caret line="23" column="8" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/ndb/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2387" max-vertical-offset="3330">
-          <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1053,29 +1016,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/users.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3079555" vertical-offset="0" max-vertical-offset="1169">
-          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_video_src/test_users.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="810">
-          <caret line="34" column="44" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
-          <caret line="17" column="11" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test_video_src/test_rest_functionality.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.36395147" vertical-offset="0" max-vertical-offset="577">
@@ -1087,14 +1027,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/ndb/context.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="14459" max-vertical-offset="18990">
-          <caret line="998" column="0" selection-start-line="998" selection-start-column="0" selection-end-line="998" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1115,14 +1047,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/error_handling.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="750">
-          <caret line="39" column="57" selection-start-line="39" selection-start-column="57" selection-end-line="39" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/video_src/http_helpers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
@@ -1133,18 +1057,52 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/app.yaml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
-          <caret line="19" column="95" selection-start-line="19" selection-start-column="95" selection-end-line="19" selection-end-column="95" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2355">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/room_module.py">
+    <entry file="file://$PROJECT_DIR$/video_src/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.076923" vertical-offset="705" max-vertical-offset="3300">
-          <caret line="70" column="29" selection-start-line="70" selection-start-column="16" selection-end-line="70" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/video_src/users.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.8333335" vertical-offset="0" max-vertical-offset="450">
+          <caret line="21" column="48" selection-start-line="21" selection-start-column="48" selection-end-line="21" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/video_src/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="8.076923" vertical-offset="330" max-vertical-offset="1770">
+          <caret line="8" column="26" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_video_src/test_users.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.51029545" vertical-offset="0" max-vertical-offset="1117">
+          <caret line="38" column="55" selection-start-line="38" selection-start-column="55" selection-end-line="38" selection-end-column="55" />
+          <folding>
+            <element signature="e#18#51#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/video_src/webrtc_setup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-21.923077" vertical-offset="3285" max-vertical-offset="4035">
+          <caret line="264" column="11" selection-start-line="264" selection-start-column="11" selection-end-line="264" selection-end-column="11" />
           <folding />
         </state>
       </provider>
@@ -1154,41 +1112,97 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="55979" max-vertical-offset="58875">
           <caret line="3765" column="0" selection-start-line="3765" selection-start-column="0" selection-end-line="3765" selection-end-column="0" />
           <folding>
-            <marker date="1409942124000" expanded="true" signature="119300:119317" placeholder="SELECT * FRO..missing_value..." />
+            <marker date="1409942124000" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..missing_value..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/ndb/context.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="14459" max-vertical-offset="18990">
+          <caret line="998" column="0" selection-start-line="998" selection-start-column="0" selection-end-line="998" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/video_src/error_handling.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="750">
+          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/lib/webapp2-2.3/webapp2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="22161" max-vertical-offset="29280">
+          <caret line="1504" column="0" selection-start-line="1504" selection-start-column="0" selection-end-line="1504" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/runtime/wsgi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4426" max-vertical-offset="4995">
+          <caret line="327" column="0" selection-start-line="327" selection-start-column="0" selection-end-line="327" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/runtime/runtime.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1941" max-vertical-offset="2715">
+          <caret line="150" column="0" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/devappserver2/python/request_handler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2091" max-vertical-offset="3735">
+          <caret line="173" column="0" selection-start-line="173" selection-start-column="0" selection-end-line="173" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/ndb/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2421" max-vertical-offset="3330">
+          <caret line="178" column="0" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="14" max-vertical-offset="570">
+          <caret line="25" column="45" selection-start-line="25" selection-start-column="45" selection-end-line="25" selection-end-column="45" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/video_src/messaging.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="543" max-vertical-offset="1200">
-          <caret line="76" column="24" selection-start-line="76" selection-start-column="24" selection-end-line="76" selection-end-column="24" />
+        <state vertical-scroll-proportion="-16.192308" vertical-offset="659" max-vertical-offset="1200">
+          <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/video_src/rest_functionality.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-58.96154" vertical-offset="612" max-vertical-offset="3195">
-          <caret line="143" column="28" selection-start-line="143" selection-start-column="28" selection-end-line="143" selection-end-column="28" />
+        <state vertical-scroll-proportion="-15.12963" vertical-offset="2288" max-vertical-offset="3270">
+          <caret line="207" column="0" selection-start-line="207" selection-start-column="0" selection-end-line="207" selection-end-column="0" />
           <folding>
             <element signature="e#23#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/webrtc_setup.py">
+    <entry file="file://$PROJECT_DIR$/video_src/room_module.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="5.6153846" vertical-offset="3326" max-vertical-offset="4035">
-          <caret line="219" column="81" selection-start-line="219" selection-start-column="81" selection-end-line="219" selection-end-column="81" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6803653" vertical-offset="978" max-vertical-offset="1635">
-          <caret line="104" column="17" selection-start-line="104" selection-start-column="17" selection-end-line="104" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.80406654" vertical-offset="1905" max-vertical-offset="3285">
+          <caret line="165" column="75" selection-start-line="165" selection-start-column="75" selection-end-line="165" selection-end-column="75" />
           <folding />
         </state>
       </provider>

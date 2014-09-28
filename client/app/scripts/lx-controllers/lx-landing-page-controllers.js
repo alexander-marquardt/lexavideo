@@ -34,7 +34,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $scope.maxInputLength = lxLandingPageConstantsService.maxRoomChars;
 
         $scope.roomObj = {};
-        $scope.roomObj.userId = lxAppWideConstantsService.userId;
+        $scope.roomObj.userName = lxAppWideConstantsService.userName;
 
         // enterIntoRoom is the function that will be executed when the user clicks the submit button
         $scope.enterIntoRoomFromLandingPage = function() {

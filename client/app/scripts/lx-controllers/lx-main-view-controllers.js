@@ -26,9 +26,9 @@ angular.module('lxMainView.controllers', [])
             $log.debug('Current route: ' + current);
         });
 
-        $rootScope.$on('$locationChangeSuccess', function(event) {
+        $rootScope.$on('$locationChangeSuccess', function() {
             $log.debug('$locationChangeSuccess called');
-        })
+        });
     });
 
 

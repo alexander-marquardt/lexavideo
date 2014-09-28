@@ -211,8 +211,17 @@ videoAppServices.service('turnServiceSupport', function () {
 });
 
 
-videoAppServices.factory('turnService', function($log, $http, peerService, callService, turnServiceSupport, userNotificationService,
-                                         lxUseChatRoomConstantsService, lxUseChatRoomVarsService, adapterService) {
+videoAppServices.factory('turnService',
+    function($log,
+             $http,
+             peerService,
+             callService,
+             turnServiceSupport,
+             userNotificationService,
+             lxAppWideConstantsService,
+             lxUseChatRoomConstantsService,
+             lxUseChatRoomVarsService,
+             adapterService) {
 
 
     var onTurnResult = function(response) {
@@ -251,11 +260,10 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
     return {
 
         maybeRequestTurn : function() {
-            // Allow to skip turn by passing ts=false to apprtc.
-            if (lxUseChatRoomConstantsService.turnUrl === '') {
-                turnServiceSupport.turnDone = true;
-                return;
-            }
+
+            var turnUrl = 'https://computeengineondemand.appspot.com/' + 'turn?' + 'username=' +
+                lxAppWideConstantsService.userName + '&key=4080218913';
+
 
             for (var i = 0, len = lxUseChatRoomVarsService.pcConfig.iceServers.length; i < len; i++) {
                 if (lxUseChatRoomVarsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
@@ -273,7 +281,7 @@ videoAppServices.factory('turnService', function($log, $http, peerService, callS
             }
 
             // No TURN server. Get one from computeengineondemand.appspot.com.
-            $http.get(lxUseChatRoomConstantsService.turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest());
+            $http.get(turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest());
         }
     };
 });

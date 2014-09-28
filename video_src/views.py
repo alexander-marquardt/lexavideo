@@ -103,7 +103,7 @@ class MainPage(webapp2.RequestHandler):
         params = {
             'userInfoEmbeddedInHtmlJson' : json.dumps(
                 {
-                'userId' : user_obj.user_id,
+                'userName' : user_obj.user_name,
                 }),
             'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
             }

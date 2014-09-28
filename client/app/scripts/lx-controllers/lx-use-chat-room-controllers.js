@@ -25,8 +25,9 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.debugBuildEnabled = lxUseChatRoomConstantsService.debugBuildEnabled;
 
         $scope.lxUseChatRoomOuterCtrl = {};
-        lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(result) {
-            $scope.lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = result;
+        lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {
+            $scope.lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
+            $scope.lxUseChatRoomOuterCtrl.channelToken = data.channelToken;
         }, function(reason) {
             // This message should never be seen by the user since if the promise is rejected, they should already
             // have been redirected back to the landing page. However, it may be useful for future debugging, and
@@ -34,7 +35,7 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = reason;
         });
 
-        $scope.userId = lxAppWideConstantsService.userId;
+        $scope.userName = lxAppWideConstantsService.userName;
         $scope.roomName = lxUseChatRoomConstantsService.roomName;
 
     })

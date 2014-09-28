@@ -45,14 +45,14 @@ angular.module('lxUseChatRoom.services', [])
 
                 var roomObj = {};
                 roomObj.roomName = lxUseChatRoomConstantsService.roomName;
-                roomObj.userId = lxAppWideConstantsService.userId;
+                roomObj.userName = lxAppWideConstantsService.userName;
 
 
                 lxHttpHandleRoomService.enterIntoRoom(roomObj).then(
                     function(data){
                         if (data.statusString === 'roomCreated' || data.statusString === 'roomJoined') {
                             // everything OK
-                            deferredUserSuccessfullyEnteredRoom.resolve(true);
+                            deferredUserSuccessfullyEnteredRoom.resolve(data);
                         }
                         else {
                             // something went wrong - redirect back to login with an appropriate errorString
@@ -66,5 +66,5 @@ angular.module('lxUseChatRoom.services', [])
 
                 return deferredUserSuccessfullyEnteredRoom.promise;
             }
-        }
+        };
     });
