@@ -5,7 +5,9 @@
 </script>
 
 {% if redirect_after_error %}
-<h2>Error: room: {{ bad_room_name }} has redirected due to {{ error_string }}. Please try another room name.</h2>
+<h2 class="cl-xs-max-width">
+    We have not been able to give you access to the "{{ bad_room_name }}" room. Please try another room name.
+</h2>
 {% endif %}
 
 {% raw %}
