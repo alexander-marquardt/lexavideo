@@ -43,15 +43,15 @@ class RoomInfo(ndb.Model):
     def __str__(self):
         result = '['
         if self.room_creator_key:
-            result += "%s-%r" % (self.room_creator_key, self.room_creator_channel_open)
+            result += "%d-%r" % (self.room_creator_key.id(), self.room_creator_channel_open)
         if self.room_joiner_key:
-            result += ", %s-%r" % (self.room_joiner_key, self.room_joiner_channel_open)
+            result += ", %d-%r" % (self.room_joiner_key.id(), self.room_joiner_channel_open)
         result += ']'
         return result
 
 
-    def make_client_id(self, user_key_id):
-        return str(self.key.id()) + '/' + str(user_key_id)
+    def make_client_id(self, user_id):
+        return str(self.key.id()) + '/' + str(user_id)
 
     def is_room_creator(self, user_id):
         if self.room_creator_key and user_id == self.room_creator_key.id():
@@ -135,18 +135,18 @@ class RoomInfo(ndb.Model):
             return self.room_joiner_channel_open
 
 
-def connect_user_to_room(room_key_id, active_user_key_id):
+def connect_user_to_room(room_id, active_user_id):
 
-    room_obj = RoomInfo.get_by_id(room_key_id)
+    room_obj = RoomInfo.get_by_id(room_id)
 
     # Check if room has active_user in case that disconnect message comes before
     # connect message with unknown reason, observed with local AppEngine SDK.
-    if room_obj and room_obj.has_user(active_user_key_id):
-        room_obj.set_connected(active_user_key_id)
-        logging.info('User %d' % active_user_key_id + ' connected to room ' + room_obj.room_name)
+    if room_obj and room_obj.has_user(active_user_id):
+        room_obj.set_connected(active_user_id)
+        logging.info('User %d' % active_user_id + ' connected to room ' + room_obj.room_name)
         logging.info('RoomInfo ' + room_obj.room_name + ' has state ' + str(room_obj))
         
-        other_user = room_obj.get_other_user(active_user_key_id)
+        other_user = room_obj.get_other_user(active_user_id)
         
         message_obj = {'messageType' : 'roomStatus', 
                        'messagePayload': {
@@ -168,10 +168,10 @@ def connect_user_to_room(room_key_id, active_user_key_id):
             
         # Send a message to the active_user, indicating the "roomStatus"
         logging.debug('Sending message to active_user: %s' % repr(message_obj))
-        messaging.on_message(room_obj, active_user_key_id, json.dumps(message_obj))
+        messaging.on_message(room_obj, active_user_id, json.dumps(message_obj))
         
     else:
-        logging.warning('Unexpected Connect Message to room %d' % room_key_id + 'by user %d' % active_user_key_id)
+        logging.warning('Unexpected Connect Message to room %d' % room_id + 'by user %d' % active_user_id)
         
     return room_obj
 
@@ -182,40 +182,39 @@ class ConnectPage(webapp2.RequestHandler):
     def post(self):
         key = self.request.get('from')
         # the following list comprehension returns integer values that make up the client_id
-        room_key_id, user_key_id = [int(n) for n in key.split('/')]
+        room_id, user_id = [int(n) for n in key.split('/')]
 
-        room = connect_user_to_room(room_key_id, user_key_id)
-        if room and room.has_user(user_key_id):
-            messaging.send_saved_messages(room.make_client_id(user_key_id))
+        room = connect_user_to_room(room_id, user_id)
+        if room and room.has_user(user_id):
+            messaging.send_saved_messages(room.make_client_id(user_id))
 
 
 class DisconnectPage(webapp2.RequestHandler):
     
     @handle_exceptions
     def post(self):
-        # temporarily disable disconnect -- this will be replaced with a custom disconnect call from the javascript as opposed to monitoring 
-        # the channel stauts.
-        pass    
 
-        #key = self.request.get('from')
-        #roomName, user = key.split('/')
-        #with LOCK:
-            #room = RoomInfo.get_by_id(roomName)
-            #if room and room.has_user(user):
-                #other_user = room.get_other_user(user)
-                #room.remove_user(user)
-                #logging.info('User ' + user + ' removed from room ' + roomName)
-                #logging.info('Room ' + roomName + ' has state ' + str(room))
-                #if other_user and other_user != user:
+        key = self.request.get('from')
+        room_id, user_id = key.split('/')
 
-                    #message_object = {"messageType": "sdp",
-                                                        #"messagePayload" : {
-                                                            #"type" : "bye"
-                                                        #}}
-                    #channel.send_message(make_client_id(room, other_user),
-                                                                #json.dumps(message_object))
-                    #logging.info('Sent BYE to ' + other_user)
-        #logging.warning('User ' + user + ' disconnected from room ' + roomName)
+        room_obj = RoomInfo.get_by_id(room_id)
+        if room_obj and room_obj.has_user(user_id):
+            other_user_id = room_obj.get_other_user(user_id)
+            room_obj.remove_user(user_id)
+            logging.info('User %d' % user_id + ' removed from room %d' % room_id)
+            logging.info('Room %d ' % room_id + ' has state ' + str(room_obj))
+            if other_user_id and other_user_id != user_id:
+
+                message_object = {"messageType": "sdp",
+                                                    "messagePayload" : {
+                                                        "type" : "bye"
+                                                    }}
+
+                messaging.on_message(room_obj, other_user_id, json.dumps(message_object))
+
+                logging.info('Sent BYE to ' + other_user_id)
+
+        logging.warning('User %d' % user_id + ' disconnected from room %d' % room_id)
         
 
 class MessagePage(webapp2.RequestHandler):
