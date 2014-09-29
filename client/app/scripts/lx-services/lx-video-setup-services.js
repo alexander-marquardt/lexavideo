@@ -752,21 +752,23 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                     calleeStart(localVideoObject, remoteVideoObject);
                 }
             } else {
-                $log.debug('Not ready to start webRtc services.');
+                // By construction, this branch should not be executed since all of the pre-requisites for setting
+                // up a call should have been previously met.
+                $log.error('Not ready to start webRtc services.');
                 if (webRtcSessionService.started) {
-                    $log.debug('Because webRtcSessionService.started is true');
+                    $log.error('Because webRtcSessionService.started is true');
                 }
                 if (!webRtcSessionService.signalingReady) {
-                    $log.debug('Because webRtcSessionService.signalingReady is false');
+                    $log.error('Because webRtcSessionService.signalingReady is false');
                 }
                 if (!channelServiceSupport.channelReady) {
-                    $log.debug('Because channelServiceSupport.channelReady is false');
+                    $log.error('Because channelServiceSupport.channelReady is false');
                 }
                 if (!turnServiceSupport.turnDone) {
-                    $log.debug('Because turnServiceSupport.turnDone is false');
+                    $log.error('Because turnServiceSupport.turnDone is false');
                 }
                 if (!streamService.localStream) {
-                    $log.debug('Because streamService.localStream is false');
+                    $log.error('Because streamService.localStream is false');
                 }
             }
         },
