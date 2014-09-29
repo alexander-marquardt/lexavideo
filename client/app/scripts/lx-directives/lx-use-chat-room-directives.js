@@ -36,7 +36,7 @@ angular.module('lxUseChatRoom.directives', [])
                     return true;
                 }
                 catch (e) {
-                    e.message = '\n\tError in setupChannelAndTurn\n\t' + e.message;
+                    e.message = '\n\tError in lxInitializeChannelAndTurnDirective\n\t' + e.message;
                     $log.error(e);
                     return false;
                 }

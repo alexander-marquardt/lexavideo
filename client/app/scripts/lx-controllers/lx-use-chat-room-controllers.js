@@ -22,7 +22,7 @@ angular.module('lxUseChatRoom.controllers', [])
         // update the global vars that depend on lxUseChatRoomConstantsService
         lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.pcConfig);
 
-        $scope.debugBuildEnabled = lxUseChatRoomConstantsService.debugBuildEnabled;
+        $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
         $scope.lxUseChatRoomOuterCtrl = {};
 

@@ -526,7 +526,7 @@ videoAppServices.service('webRtcSessionService', function($log, $window, $rootSc
 
         stop : function() {
             self.started = false;
-            self.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
+            self.signalingReady = null;
             if (peerService.pc) {
                 peerService.pc.close();
             }

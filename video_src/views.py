@@ -105,7 +105,8 @@ class MainPage(webapp2.RequestHandler):
                 {
                 'userName' : user_obj.user_name,
                 }),
-            'ENABLE_LIVE_RELOAD' : vidsetup.ENABLE_LIVE_RELOAD,
+            'enableLiveReload' : vidsetup.ENABLE_LIVE_RELOAD,
+            'debugBuildEnabled' : vidsetup.DEBUG_BUILD,
             }
 
         write_response(self.response, response_type, target_page, params)        
