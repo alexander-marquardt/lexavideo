@@ -33,8 +33,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             screenXsMax : screenXsMax,
 
             // Update the globalvars with constants that have been loaded from the server
-            doUpdate: function(rtcInitiator, pcConfig) {
-                self.rtcInitiator = rtcInitiator;
+            doUpdate: function(pcConfig) {
                 self.pcConfig = pcConfig;
             }
         };

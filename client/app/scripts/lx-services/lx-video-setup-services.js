@@ -316,7 +316,7 @@ videoAppServices.factory('messageService',
                 'messagePayload': messagePayload
             };
 
-            // $log.log('C->S: ' + msgString);
+            $log.log('C->S: ' + angular.toJson(messagePayload));
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
             var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userName;
@@ -394,7 +394,7 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
     };
 
     this.onAddIceCandidateError = function(error) {
-        userNotificationService.messageError('Failed to add Ice Candidate: ' + error.toString());
+        log.error('Failed to add Ice Candidate: ' + error.toString());
     };
 });
 

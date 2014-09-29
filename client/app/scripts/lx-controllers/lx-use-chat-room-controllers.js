@@ -20,15 +20,20 @@ angular.module('lxUseChatRoom.controllers', [])
         // Do this before everything else, as many other functions require that this structure be setup!!
         angular.extend(lxUseChatRoomConstantsService, videoConstantsEmbeddedInHtml);
         // update the global vars that depend on lxUseChatRoomConstantsService
-        lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.rtcInitiator, lxUseChatRoomConstantsService.pcConfig);
+        lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.pcConfig);
 
         $scope.debugBuildEnabled = lxUseChatRoomConstantsService.debugBuildEnabled;
 
         $scope.lxUseChatRoomOuterCtrl = {};
+        
         lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {
+
             $scope.lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
             $scope.lxUseChatRoomOuterCtrl.channelToken = data.channelToken;
+
             lxUseChatRoomVarsService.roomId = data.roomId;
+            lxUseChatRoomVarsService.rtcInitiator = data.rtcInitiator;
+
         }, function(reason) {
             // This message should never be seen by the user since if the promise is rejected, they should already
             // have been redirected back to the landing page. However, it may be useful for future debugging, and

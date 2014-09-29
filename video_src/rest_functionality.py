@@ -20,61 +20,6 @@ from video_src import utils
 
 from video_src.error_handling import handle_exceptions
 
-class AddUserToRoom(webapp2.RequestHandler):
-
-    @handle_exceptions
-    def post(self, room_name_from_url):
-        room_dict = json.loads(self.request.body)
-        room_name_from_url = room_name_from_url.decode('utf8')
-        room_name = room_name_from_url.lower()
-
-        if room_name:
-
-            room = room_module.RoomInfo.get_by_id(room_name)
-            if not room and debug != "full":
-                # New room.
-                user = generate_random(8)
-                room = room_module.RoomInfo(id = room_name)
-                room.add_user(user)
-                logging.info('First user ' + user + ' added to room ' + room_name)
-                if debug != 'loopback':
-                    initiator = 0
-                else:
-                    room.add_user(user)
-                    initiator = 1
-            elif room and room.get_occupancy() == 1 and debug != 'full':
-                # 1 occupant.
-                user = generate_random(8)
-                room.add_user(user)
-                logging.info('Second user ' + user + ' added to room ' + room_name)
-                initiator = 1
-            else:
-                # 2 occupants (full).
-                logging.warning('Room ' + room_name + ' is full')
-
-                params = {
-                    'errorStatus': 'roomIsFull',
-                    'roomName': room_name,
-                }
-                return json.dumps(params)
-
-            logging.info('Room ' + room_name + ' has state ' + str(room))
-
-            token_timeout =  240 # minutes
-            token = messaging.create_channel(room, user, token_timeout)
-            turn_url = 'https://computeengineondemand.appspot.com/' + 'turn?' + 'username=' + user + '&key=4080218913'
-
-
-        else :
-            token = ''
-            turn_url = ''
-
-
-        # TODO deal with channelToken - needs to be passed to javascript
-        'channelToken'# : token
-        'turnUrl'# : turn_url,
-
-
 
 class HandleEnterIntoRoom(webapp2.RequestHandler):
     @handle_exceptions
@@ -163,6 +108,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
         room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get()
         current_user_name = room_dict['user_name']
         current_user_key = models.UserModel.query(models.UserModel.user_name == current_user_name).get(keys_only = True)
+        current_user_id = current_user_key.id()
 
         response_dict = {}
 
@@ -205,9 +151,13 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             response_dict['statusString'] = 'roomCreated'
 
         token_timeout =  240 # minutes
-        channel_token = messaging.create_channel(room_obj, current_user_key.id(), token_timeout)
+        channel_token = messaging.create_channel(room_obj, current_user_id, token_timeout)
         response_dict['channelToken'] = channel_token
         response_dict['roomId'] = room_obj.key.id()
+
+        # The creator of the room will not initiate the rtc session -- this will be done by the second person
+        # to join the room.
+        response_dict['rtcInitiator'] = not room_obj.is_room_creator(current_user_id)
 
         http_helpers.set_http_ok_json_response(self.response, response_dict)
 
