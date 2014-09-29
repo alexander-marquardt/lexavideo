@@ -28,7 +28,10 @@ angular.module('lxUseChatRoom.directives', [])
                     channelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, scope.lxUseChatRoomOuterCtrl.channelToken);
                     turnService.maybeRequestTurn();
 
-                    // rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
+                    // signalingReady will initially be set to be true if this is
+                    // the rtcInitiator, or false otherwise. In the case that this value is initially false, it will be set to
+                    // true once this client has received an sdp 'offer' from the other client.
+                    // Note: rtcInitiator is the 2nd person to join the chatroom, not the creator of the chatroom
                     webRtcSessionService.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
                     return true;
                 }
