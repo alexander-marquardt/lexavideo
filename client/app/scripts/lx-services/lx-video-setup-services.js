@@ -526,7 +526,9 @@ videoAppServices.service('webRtcSessionService', function($log, $window, $rootSc
 
         stop : function() {
             self.started = false;
-            self.signalingReady = null;
+            // If this user is rtcInitiator, then its signaling is ready. Otherwise wait for other 'offer' from
+            // the other client.
+            self.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
             if (peerService.pc) {
                 peerService.pc.close();
             }
