@@ -176,6 +176,20 @@ def connect_user_to_room(room_id, active_user_id):
     return room_obj
 
 
+class MessagePage(webapp2.RequestHandler):
+
+    @handle_exceptions
+    def post(self):
+        message = self.request.body
+        room_id = int(self.request.get('r'))
+        user_id = int(self.request.get('u'))
+        room_obj = RoomInfo.get_by_id(room_id)
+        if room_obj:
+                messaging.handle_message(room_obj, user_id, message)
+        else:
+            logging.error('Unknown room_id %d' % room_id)
+
+
 class ConnectPage(webapp2.RequestHandler):
     
     @handle_exceptions
@@ -217,16 +231,3 @@ class DisconnectPage(webapp2.RequestHandler):
             logging.warning('User %d' % user_id + ' disconnected from room %s (%d)' % (room_obj.room_name, room_id))
         else:
             logging.error('Room %d' % room_id + ' does not exist. Cannot disconnect user %d' % user_id)
-
-class MessagePage(webapp2.RequestHandler):
-    
-    @handle_exceptions
-    def post(self):
-        message = self.request.body
-        room_id = int(self.request.get('r'))
-        user_id = int(self.request.get('u'))
-        room_obj = RoomInfo.get_by_id(room_id)
-        if room_obj:
-                messaging.handle_message(room_obj, user_id, message)
-        else:
-            logging.error('Unknown room_id %d' % room_id)
