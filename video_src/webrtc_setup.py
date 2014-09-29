@@ -259,8 +259,7 @@ def get_video_params_json(room_name, user_agent):
             'stereoscopic': ssr,
             'includeVrJs': include_vr_js,
             'metaViewport': meta_viewport,
-            'debugBuildEnabled' : vidsetup.DEBUG_BUILD,
-        }        
+        }
         return json.dumps(server_video_params)
     except:
         error_status = 'serverError'
