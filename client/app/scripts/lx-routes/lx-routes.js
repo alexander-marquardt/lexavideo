@@ -20,7 +20,7 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
         }
     });
 
-    $routeProvider.when('/error/:roomName/:errorString', {
+    $routeProvider.when('/:roomName/error/:errorString', {
         templateUrl: function(params) {
             return '/_lx/lx-templates/lx-landing-page-main.html/error/' + params.roomName + '/' + params.errorString;
         }

@@ -25,7 +25,7 @@ angular.module('lxUseChatRoom.services', [])
                 roomName + ' due to server status: ' + statusString;
             deferredUserSuccessfullyEnteredRoom.reject(errorMsg);
             errorLogFn(errorMsg);
-            $location.path('/error/' + roomName + '/' + statusString);
+            $location.path('/' + roomName + '/error/' + statusString);
         };
 
         return {
@@ -60,7 +60,9 @@ angular.module('lxUseChatRoom.services', [])
                         }
                     },
                     function(data) {
-                        failedToEnterRoom($log.error, roomObj.roomName, data.statusString, deferredUserSuccessfullyEnteredRoom);
+                        // Failed to enter into the room. The 'data' returned from the reject is actually an object
+                        // containing another object called 'data'.
+                        failedToEnterRoom($log.error, roomObj.roomName, data.data.statusString, deferredUserSuccessfullyEnteredRoom);
                     }
                 );
 
