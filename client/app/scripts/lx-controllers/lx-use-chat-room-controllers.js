@@ -28,6 +28,7 @@ angular.module('lxUseChatRoom.controllers', [])
         lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {
             $scope.lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
             $scope.lxUseChatRoomOuterCtrl.channelToken = data.channelToken;
+            lxUseChatRoomVarsService.roomId = data.roomId;
         }, function(reason) {
             // This message should never be seen by the user since if the promise is rejected, they should already
             // have been redirected back to the landing page. However, it may be useful for future debugging, and

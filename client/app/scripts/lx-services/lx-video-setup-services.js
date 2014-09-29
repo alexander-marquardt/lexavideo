@@ -287,7 +287,13 @@ videoAppServices.factory('turnService',
 });
 
 
-videoAppServices.factory('messageService', function($http, $log, lxUseChatRoomConstantsService) {
+videoAppServices.factory('messageService',
+    function(
+        $http,
+        $log,
+        lxUseChatRoomVarsService,
+        lxUseChatRoomConstantsService,
+        lxAppWideConstantsService) {
 
     /*
     Functionality for posting messages to the server.
@@ -313,7 +319,7 @@ videoAppServices.factory('messageService', function($http, $log, lxUseChatRoomCo
             // $log.log('C->S: ' + msgString);
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
-            var path = '/_lx/message?r=' + lxUseChatRoomConstantsService.roomName + '&u=' + lxUseChatRoomConstantsService.myUsername;
+            var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userName;
 
             $http.post(path, messageObject).then(
                 function(/*response*/) {

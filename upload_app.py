@@ -32,9 +32,10 @@ now_in_seconds = calendar.timegm(time.gmtime())
 time_passed = now_in_seconds - modified_time
 if time_passed > max_time:
     minutes_passed = time_passed / 60
-    print "Warning: %.2f minutes have passed since you have run build_app.py." % minutes_passed
+    print "Warning: %.2f minutes have passed since app.yaml has been updated." % minutes_passed
+    print "Have you have run build_app.py from the mac environment?"
     print "Are you sure that you still want to upload version: %s [y/n]?" % version_id
-    choice = raw_input().lower();
+    choice = raw_input().lower()
     if choice == 'n' or choice == 'no':
         exit(1)    
 

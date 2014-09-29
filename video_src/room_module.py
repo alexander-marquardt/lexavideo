@@ -54,12 +54,12 @@ class RoomInfo(ndb.Model):
         return str(self.key.id()) + '/' + str(user_key_id)
 
 
-    def remove_user(self, user_key_id):
-        messaging.delete_saved_messages(self.make_client_id(user_key_id))
-        if user_key_id == self.room_joiner_key.id():
+    def remove_user(self, user_id):
+        messaging.delete_saved_messages(self.make_client_id(user_id))
+        if self.room_joiner_key and user_id == self.room_joiner_key.id():
             self.room_joiner_key = None
             self.room_joiner_channel_open = False
-        if user_key_id == self.room_creator_key.id():
+        if self.room_creator_key and user_id == self.room_creator_key.id():
             if self.room_joiner_key:
                 self.room_creator_key = self.room_joiner_key
                 self.room_creator_channel_open = self.room_joiner_channel_open
@@ -83,11 +83,11 @@ class RoomInfo(ndb.Model):
         return occupancy
 
 
-    def get_other_user(self, user_key_id):
-        if user_key_id == self.room_creator_key.id():
-            return self.room_joiner_key.id()
-        elif user_key_id == self.room_joiner_key.id():
-            return self.room_creator_key.id()
+    def get_other_user(self, user_id):
+        if self.room_creator_key and user_id == self.room_creator_key.id():
+            return self.room_joiner_key.id() if self.room_joiner_key else None
+        elif self.room_joiner_key and user_id == self.room_joiner_key.id():
+            return self.room_creator_key.id() if self.room_creator_key else None
         else:
             return None
 
@@ -214,10 +214,10 @@ class MessagePage(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         message = self.request.body
-        room_name = self.request.get('r')
-        user = self.request.get('u')
-        room_obj = RoomInfo.query(RoomInfo.room_name == room_name).get()
+        room_id = int(self.request.get('r'))
+        user_id = int(self.request.get('u'))
+        room_obj = RoomInfo.get_by_id(room_id)
         if room_obj:
-                messaging.handle_message(room_obj, user, message)
+                messaging.handle_message(room_obj, user_id, message)
         else:
-            logging.warning('Unknown room ' + room_name)
+            logging.error('Unknown room_id %d' % room_id)

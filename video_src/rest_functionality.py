@@ -207,6 +207,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
         token_timeout =  240 # minutes
         channel_token = messaging.create_channel(room_obj, current_user_key.id(), token_timeout)
         response_dict['channelToken'] = channel_token
+        response_dict['roomId'] = room_obj.key.id()
 
         http_helpers.set_http_ok_json_response(self.response, response_dict)
 
