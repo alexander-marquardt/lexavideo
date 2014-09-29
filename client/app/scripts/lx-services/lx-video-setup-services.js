@@ -726,7 +726,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
 
 
-    return {
+    var self = {
         hasAudioOrVideoMediaConstraints : false,
 
 
@@ -734,14 +734,14 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 
 
             if (!webRtcSessionService.started && webRtcSessionService.signalingReady && channelServiceSupport.channelReady &&
-                turnServiceSupport.turnDone && (streamService.localStream || !this.hasAudioOrVideoMediaConstraints)) {
+                turnServiceSupport.turnDone && (streamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
                 userNotificationService.setStatus('Connecting...');
                 $log.log('Creating PeerConnection.');
 
                 peerService.createPeerConnection(localVideoObject, remoteVideoObject, videoSignalingObject);
 
-                if (this.hasAudioOrVideoMediaConstraints) {
+                if (self.hasAudioOrVideoMediaConstraints) {
                     $log.log('Adding local stream.');
                     peerService.addLocalVideoStream(streamService.localStream);
                 } else {
@@ -781,14 +781,11 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 sessionDescriptionService.transitionSessionStatus('done');
                 streamService.localStream.stop();
                 webRtcSessionService.stop();
-                this.unMuteAudioAndVideo(localVideoObject);
+                self.unMuteAudioAndVideo(localVideoObject);
                 // will trigger BYE from server
                 channelServiceSupport.socket.close();
             };
         },
-
-
-
 
         setVideoMute : function(localVideoObject, newIsMutedValue) {
 
@@ -841,10 +838,11 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
         },
 
         unMuteAudioAndVideo : function (localVideoObject) {
-            this.setVideoMute(localVideoObject, false);
-            this.setAudioMute(localVideoObject, false);
+            self.setVideoMute(localVideoObject, false);
+            self.setAudioMute(localVideoObject, false);
         }
     };
+    return self;
 });
 
 

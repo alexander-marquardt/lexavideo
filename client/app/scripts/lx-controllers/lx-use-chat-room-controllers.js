@@ -25,7 +25,7 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.debugBuildEnabled = lxUseChatRoomConstantsService.debugBuildEnabled;
 
         $scope.lxUseChatRoomOuterCtrl = {};
-        
+
         lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {
 
             $scope.lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
