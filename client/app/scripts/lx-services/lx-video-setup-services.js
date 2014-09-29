@@ -91,7 +91,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
 
                 switch (messageObject.messageType) {
                     case 'sdp':
-                        $log.debug('S->C: ' + message.data);
+                        //$log.debug('S->C: ' + message.data);
 
                         var sdpObject = messageObject.messagePayload;
                         // Since the turn response is async and also GAE might disorder the
@@ -315,7 +315,7 @@ videoAppServices.factory('messageService',
                 'messagePayload': messagePayload
             };
 
-            $log.debug('C->S: ' + angular.toJson(messagePayload));
+            //$log.debug('C->S: ' + angular.toJson(messagePayload));
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
             var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userName;
