@@ -195,7 +195,7 @@ class DisconnectPage(webapp2.RequestHandler):
     def post(self):
 
         key = self.request.get('from')
-        room_id, user_id = key.split('/')
+        room_id, user_id = [int(n) for n in key.split('/')]
 
         room_obj = RoomInfo.get_by_id(room_id)
         if room_obj and room_obj.has_user(user_id):
@@ -212,10 +212,11 @@ class DisconnectPage(webapp2.RequestHandler):
 
                 messaging.on_message(room_obj, other_user_id, json.dumps(message_object))
 
-                logging.info('Sent BYE to ' + other_user_id)
+                logging.info('Sent BYE to %d' % other_user_id)
 
-        logging.warning('User %d' % user_id + ' disconnected from room %d' % room_id)
-        
+            logging.warning('User %d' % user_id + ' disconnected from room %s (%d)' % (room_obj.room_name, room_id))
+        else:
+            logging.error('Room %d' % room_id + ' does not exist. Cannot disconnect user %d' % user_id)
 
 class MessagePage(webapp2.RequestHandler):
     
