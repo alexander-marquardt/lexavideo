@@ -159,7 +159,9 @@ def connect_user_to_room(room_key_id, active_user_key_id):
         if (other_user):
             # If there is another user already in the room, then the other user should be the creator of the room. 
             # By design, if the creator of a room leaves the room, it should be vacated.
-            assert(room_obj.is_room_creator(other_user))
+            if(not room_obj.is_room_creator(other_user)):
+                logging.error('Other user should be creator if room already exists - should investigate what is happeneing')
+
             # send a message to the other user (the room creator) that someone has just joined the room
             logging.debug('Sending message to other_user: %s' % repr(message_obj))
             messaging.on_message(room_obj, other_user, json.dumps(message_obj))

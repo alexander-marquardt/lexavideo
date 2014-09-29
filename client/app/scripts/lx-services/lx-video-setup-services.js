@@ -91,7 +91,7 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
 
                 switch (messageObject.messageType) {
                     case 'sdp':
-                        //$log.log('S->C: ' + message.data);
+                        $log.debug('S->C: ' + message.data);
 
                         var sdpObject = messageObject.messagePayload;
                         // Since the turn response is async and also GAE might disorder the
@@ -245,8 +245,7 @@ videoAppServices.factory('turnService',
     var onTurnError = function() {
 
         userNotificationService.messageError('No TURN server; unlikely that media will traverse networks.  ' +
-            'If this persists please report it to ' +
-            'info@lexabit.com');
+            'If this persists please report it to info@lexabit.com');
     };
 
 
@@ -316,7 +315,7 @@ videoAppServices.factory('messageService',
                 'messagePayload': messagePayload
             };
 
-            $log.log('C->S: ' + angular.toJson(messagePayload));
+            $log.debug('C->S: ' + angular.toJson(messagePayload));
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
             var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userName;
