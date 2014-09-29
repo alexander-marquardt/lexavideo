@@ -69,7 +69,7 @@ videoAppServices.service('channelServiceSupport', function() {
 });
 
 videoAppServices.factory('channelService', function($log, $timeout, $rootScope, lxUseChatRoomConstantsService,
-                                                    callService, webRtcSessionService, userNotificationService,
+                                                    callService, webRtcSessionService,
                                                     channelServiceSupport, lxUseChatRoomVarsService, channelMessageService) {
 
     /*
@@ -109,9 +109,8 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
                                 webRtcSessionService.signalingReady = true;
                                 $log.debug('webRtcSessionService.signalingReady = true');
 
-                                // We may have been waiting for singalingReady to be true to begin the peer-to-peer video
-                                // call (as is the case if this user is not the rtcInitiator).
-                                // If this is the case, then we can now try to start the peer-to-peer transmission.
+                                // We may have been waiting for signalingReady to be true to attempt to start the peer-to-peer video
+                                // call because this user is not the rtcInitiator.
                                 if (videoSignalingObject.localHasSelectedVideoType === 'HD Video') {
                                     // We only transmit video if the local user has authorized it as indicated by this if statement.
                                     callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
@@ -156,7 +155,6 @@ videoAppServices.factory('channelService', function($log, $timeout, $rootScope, 
 
     var onChannelError = function() {
         $log.error('*** Channel error. ***');
-        userNotificationService.messageError('Channel error.');
         // channelServiceSupport.channelReady = false;
     };
 
@@ -217,7 +215,6 @@ videoAppServices.factory('turnService',
              peerService,
              callService,
              turnServiceSupport,
-             userNotificationService,
              lxAppWideConstantsService,
              lxUseChatRoomConstantsService,
              lxUseChatRoomVarsService,
@@ -244,7 +241,7 @@ videoAppServices.factory('turnService',
 
     var onTurnError = function() {
 
-        userNotificationService.messageError('No TURN server; unlikely that media will traverse networks.  ' +
+        $log.error('No TURN server; unlikely that media will traverse networks.  ' +
             'If this persists please report it to info@lexabit.com');
     };
 
@@ -332,7 +329,7 @@ videoAppServices.factory('messageService',
     };
 });
 
-videoAppServices.service('iceService', function($log, messageService, userNotificationService) {
+videoAppServices.service('iceService', function($log, messageService) {
     /*
     ICE = Interactive Connectivity Establishment.
     This service provides ICE methods that are used when setting up a peer connection.
@@ -393,13 +390,13 @@ videoAppServices.service('iceService', function($log, messageService, userNotifi
     };
 
     this.onAddIceCandidateError = function(error) {
-        log.error('Failed to add Ice Candidate: ' + error.toString());
+        $log.error('Failed to add Ice Candidate: ' + error.toString());
     };
 });
 
 videoAppServices.service('sessionDescriptionService', function(lxUseChatRoomVarsService, codecsService,
                                                                messageService, lxUseChatRoomConstantsService,
-                                                               adapterService, userNotificationService,
+                                                               adapterService,
                                                                peerService,
                                                                $log, $timeout) {
 
@@ -420,11 +417,11 @@ videoAppServices.service('sessionDescriptionService', function(lxUseChatRoomVars
     };
 
     var onCreateSessionDescriptionError = function(error) {
-        userNotificationService.messageError('Failed to create session description: ' + error.toString());
+        $log.error('Failed to create session description: ' + error.toString());
     };
 
     var onSetSessionDescriptionError = function(error) {
-        userNotificationService.messageError('Failed to set session description: ' + error.toString());
+        $log.error('Failed to set session description: ' + error.toString());
     };
     
     var setLocalAndSendMessage = function(pc) {
@@ -508,24 +505,23 @@ videoAppServices.service('sessionDescriptionService', function(lxUseChatRoomVars
 });
 
 videoAppServices.service('webRtcSessionService', function($log, $window, $rootScope, $timeout,
-                                            messageService, userNotificationService,
+                                            messageService,
                                             codecsService, lxUseChatRoomVarsService, sessionDescriptionService,
                                             lxUseChatRoomConstantsService, iceService, peerService,
                                             channelMessageService, adapterService) {
 
-    var self = this;
 
     var onRemoteHangup = function(self, localVideoObject) {
         $log.log('Session terminated.');
-        lxUseChatRoomVarsService.rtcInitiator = 0;
         sessionDescriptionService.transitionSessionStatus('waiting');
         self.stop(self, localVideoObject);
     };
 
-    var publicMethods = {
+    var self = {
 
         started : false,
-        signalingReady : false,
+        // initial value for signalingReady will be set in lxInitializeChannelAndTurnDirective
+        signalingReady : null,
 
 
         stop : function() {
@@ -541,7 +537,7 @@ videoAppServices.service('webRtcSessionService', function($log, $window, $rootSc
 
         processSignalingMessage : function( message, localVideoObject, remoteVideoObject) {
             if (!self.started) {
-                userNotificationService.messageError('peerConnection has not been created yet!');
+                $log.error('peerConnection has not been created yet!');
                 return;
             }
 
@@ -563,10 +559,10 @@ videoAppServices.service('webRtcSessionService', function($log, $window, $rootSc
         }
     };
 
-    angular.extend(self, publicMethods);
+    return self;
 });
 
-videoAppServices.factory('peerService', function($log, userNotificationService,
+videoAppServices.factory('peerService', function($log,
                                          iceService, lxUseChatRoomVarsService, lxUseChatRoomConstantsService,
                                          adapterService) {
 
@@ -659,7 +655,7 @@ videoAppServices.service('streamService', function() {
 
 });
 
-videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomConstantsService, adapterService, userNotificationService,
+videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomConstantsService, adapterService,
                           callService, streamService) {
 
 
@@ -711,7 +707,7 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
 });
 
 videoAppServices.factory('callService', function($log, turnServiceSupport, peerService, webRtcSessionService, channelServiceSupport,
-                                         userNotificationService, lxUseChatRoomConstantsService, lxUseChatRoomVarsService, channelMessageService,
+                                         lxUseChatRoomConstantsService, lxUseChatRoomVarsService, channelMessageService,
                                          streamService, sessionDescriptionService) {
 
 
@@ -735,8 +731,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
             if (!webRtcSessionService.started && webRtcSessionService.signalingReady && channelServiceSupport.channelReady &&
                 turnServiceSupport.turnDone && (streamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
-                userNotificationService.setStatus('Connecting...');
-                $log.log('Creating PeerConnection.');
+                $log.log('Connecting...Creating PeerConnection.');
 
                 peerService.createPeerConnection(localVideoObject, remoteVideoObject, videoSignalingObject);
 
@@ -872,7 +867,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, lxU
     };
 });
 
-videoAppServices.factory('codecsService', function($log, lxUseChatRoomConstantsService, userNotificationService){
+videoAppServices.factory('codecsService', function($log, lxUseChatRoomConstantsService){
 
     // Strip CN from sdp before CN constraints is ready.
     var removeCN = function(sdpLines, mLineIndex) {
@@ -993,7 +988,7 @@ videoAppServices.factory('codecsService', function($log, lxUseChatRoomConstantsS
         // Find m line for the given mediaType.
         var mLineIndex = findLine(sdpLines, 'm=', mediaType);
         if (mLineIndex === null) {
-            userNotificationService.messageError('Failed to add bandwidth line to sdp, as no m-line found');
+            $log.error('Failed to add bandwidth line to sdp, as no m-line found');
             return sdp;
         }
 
@@ -1007,7 +1002,7 @@ videoAppServices.factory('codecsService', function($log, lxUseChatRoomConstantsS
         var cLineIndex = findLineInRange(sdpLines, mLineIndex + 1, nextMLineIndex,
             'c=');
         if (cLineIndex === null) {
-            userNotificationService.messageError('Failed to add bandwidth line to sdp, as no c-line found');
+            $log.error('Failed to add bandwidth line to sdp, as no c-line found');
             return sdp;
         }
 
@@ -1047,7 +1042,7 @@ videoAppServices.factory('codecsService', function($log, lxUseChatRoomConstantsS
             var maxBitrate = lxUseChatRoomConstantsService.videoSendInitialBitrate;
             if (lxUseChatRoomConstantsService.videoSendBitrate) {
                 if (lxUseChatRoomConstantsService.videoSendInitialBitrate > lxUseChatRoomConstantsService.videoSendBitrate) {
-                    userNotificationService.messageError('Clamping initial bitrate to max bitrate of ' +
+                    $log.error('Clamping initial bitrate to max bitrate of ' +
                         lxUseChatRoomConstantsService.videoSendBitrate + ' kbps.');
                     lxUseChatRoomConstantsService.videoSendInitialBitrate = lxUseChatRoomConstantsService.videoSendBitrate;
                 }
@@ -1059,7 +1054,7 @@ videoAppServices.factory('codecsService', function($log, lxUseChatRoomConstantsS
             // Search for m line.
             var mLineIndex = findLine(sdpLines, 'm=', 'video');
             if (mLineIndex === null) {
-                userNotificationService.messageError('Failed to find video m-line');
+                $log.error('Failed to find video m-line');
                 return sdp;
             }
 
