@@ -502,7 +502,7 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
                           callService, streamService) {
 
 
-    var onUserMediaSuccess = function(localVideoObject, videoSignalingObject) {
+    var onUserMediaSuccess = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
         return function(stream) {
             $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
@@ -512,6 +512,7 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
             $timeout(function() {
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
             });
+            callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
         };
     };
 
@@ -530,11 +531,11 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
     return {
 
 
-        doGetUserMedia  : function(localVideoObject,  videoSignalingObject) {
+        doGetUserMedia  : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
                 adapterService.getUserMedia(lxUseChatRoomConstantsService.mediaConstraints,
-                    onUserMediaSuccess(localVideoObject, videoSignalingObject),
+                    onUserMediaSuccess(localVideoObject, remoteVideoObject, videoSignalingObject),
                     onUserMediaError(videoSignalingObject));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(lxUseChatRoomConstantsService.mediaConstraints) + '\'');

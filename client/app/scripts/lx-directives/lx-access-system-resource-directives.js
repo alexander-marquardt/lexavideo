@@ -26,7 +26,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
             callService.hasAudioOrVideoMediaConstraints = false;
         } else {
             callService.hasAudioOrVideoMediaConstraints = true;
-            mediaService.doGetUserMedia(localVideoObject, videoSignalingObject);
+            mediaService.doGetUserMedia(localVideoObject, remoteVideoObject, videoSignalingObject);
         }
     };
 

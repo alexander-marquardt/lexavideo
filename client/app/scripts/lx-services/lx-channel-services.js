@@ -130,7 +130,6 @@ angular.module('lxChannel.services', [])
                                     // true once this client has received an sdp 'offer' from the other client.
                                     // Note: rtcInitiator is the 2nd person to join the chat room, not the creator of the chat room
                                     webRtcSessionService.signalingReady = channelServiceSupport.rtcInitiator;
-                                    callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
                                 }
                             }
                             break;
