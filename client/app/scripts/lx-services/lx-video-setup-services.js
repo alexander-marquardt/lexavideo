@@ -386,7 +386,7 @@ videoAppServices.service('lxWebRtcSessionService',
     var self = {
 
         started : false,
-        // initial value for signalingReady will be set in lxInitializeChannelAndTurnDirective
+        // initial value for signalingReady will be set in lxChannelMessageService->onChannelMessage
         signalingReady : null,
 
 
@@ -628,6 +628,14 @@ videoAppServices.factory('lxCallService',
 
                     $log.log('Connecting...Creating PeerConnection.');
 
+                    if (!lxChannelSupportService.rtcInitiator) {
+                        if (lxPeerService.pc) {
+                            lxPeerService.pc.close();
+                        }
+                        lxPeerService.pc = null;
+                        lxPeerService.remoteStream = null;
+                    }
+
                     lxPeerService.createPeerConnection(localVideoObject, remoteVideoObject, videoSignalingObject);
 
                     if (self.hasAudioOrVideoMediaConstraints) {
@@ -636,6 +644,7 @@ videoAppServices.factory('lxCallService',
                     } else {
                         $log.log('Not sending any stream.');
                     }
+
                     lxWebRtcSessionService.started = true;
 
                     if (lxChannelSupportService.rtcInitiator) {
@@ -643,9 +652,10 @@ videoAppServices.factory('lxCallService',
                         lxSessionDescriptionService.doCall();
                     }
                     else {
-                        $log.log('Executing caleeStart()');
+                        $log.log('Executing calleeStart()');
                         calleeStart(localVideoObject, remoteVideoObject);
                     }
+
                 } else {
                     // By construction, this branch should not be executed since all of the pre-requisites for setting
                     // up a call should have been previously met.

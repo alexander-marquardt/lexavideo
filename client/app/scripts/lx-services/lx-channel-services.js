@@ -120,7 +120,7 @@ angular.module('lxChannel.services', [])
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
                             if ('rtcInitiator' in messageObject.messagePayload) {
-                                if (messageObject.messagePayload.rtcInitiator !== lxChannelSupportService.rtcInitiator) {
+                                //if (messageObject.messagePayload.rtcInitiator !== lxChannelSupportService.rtcInitiator) {
                                     // we are about to change the value of rtcInitiator. Make sure that anything that
                                     // depends on the old value is cleared.
                                     lxChannelSupportService.rtcInitiator = messageObject.messagePayload.rtcInitiator;
@@ -131,8 +131,11 @@ angular.module('lxChannel.services', [])
                                     // Note: rtcInitiator is the 2nd person to join the chat room, not the creator of the chat room
                                     lxWebRtcSessionService.signalingReady = lxChannelSupportService.rtcInitiator;
 
+                                
+                                    lxWebRtcSessionService.started = false;
+
                                     lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
-                                }
+                                //}
                             }
                             break;
 

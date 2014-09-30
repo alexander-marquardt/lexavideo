@@ -26,19 +26,22 @@
       <file leaf-file-name="lx-video-setup-services.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-video-setup-services.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.346154" vertical-offset="1062" max-vertical-offset="16215">
-              <caret line="87" column="41" selection-start-line="87" selection-start-column="40" selection-end-line="87" selection-end-column="41" />
+            <state vertical-scroll-proportion="-10.5" vertical-offset="9297" max-vertical-offset="16365">
+              <caret line="638" column="38" selection-start-line="638" selection-start-column="38" selection-end-line="638" selection-end-column="38" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lx-http-services.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="lx-http-services.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-http-services.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.921875" vertical-offset="207" max-vertical-offset="1020">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1020">
               <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
-              <folding />
+              <folding>
+                <marker date="1412107867000" expanded="true" signature="1253:2272" placeholder="{...}" />
+                <marker date="1412107867000" expanded="true" signature="1313:2262" placeholder="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -66,8 +69,8 @@
       <file leaf-file-name="lx-use-chat-room-services.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-use-chat-room-services.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="288" max-vertical-offset="1065">
-              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="297" max-vertical-offset="1065">
+              <caret line="43" column="68" selection-start-line="43" selection-start-column="68" selection-end-line="43" selection-end-column="68" />
               <folding />
             </state>
           </provider>
@@ -86,28 +89,28 @@
       <file leaf-file-name="lx-use-chat-room-controllers.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/lx-controllers/lx-use-chat-room-controllers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.076923" vertical-offset="218" max-vertical-offset="1995">
-              <caret line="32" column="66" selection-start-line="32" selection-start-column="66" selection-end-line="32" selection-end-column="66" />
+            <state vertical-scroll-proportion="-11.230769" vertical-offset="218" max-vertical-offset="2010">
+              <caret line="34" column="28" selection-start-line="34" selection-start-column="28" selection-end-line="34" selection-end-column="28" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lx-channel-services.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="lx-channel-services.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-channel-services.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.5" vertical-offset="563" max-vertical-offset="2910">
-              <caret line="54" column="12" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
+            <state vertical-scroll-proportion="0.7169811" vertical-offset="1463" max-vertical-offset="2955">
+              <caret line="133" column="32" selection-start-line="133" selection-start-column="32" selection-end-line="133" selection-end-column="32" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lx-ascii-video-directives.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/lx-directives/lx-ascii-video-directives.js">
+      <file leaf-file-name="lx-use-chat-room-main.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lx-templates/lx-use-chat-room-main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3855">
-              <caret line="173" column="93" selection-start-line="173" selection-start-column="93" selection-end-line="173" selection-end-column="93" />
+            <state vertical-scroll-proportion="-12.5" vertical-offset="0" max-vertical-offset="2010">
+              <caret line="20" column="33" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -151,7 +154,6 @@
         <option value="$PROJECT_DIR$/lx-templates/lx-create-chat-room-main.html" />
         <option value="$PROJECT_DIR$/scripts/lx-directives/lx-use-chat-room-directives.js.py" />
         <option value="$PROJECT_DIR$/lx-templates/lx-jinja-templates/lx-login-registration.html" />
-        <option value="$PROJECT_DIR$/lx-templates/lx-use-chat-room-main.html" />
         <option value="$PROJECT_DIR$/scripts/lx-controllers/lx-landing-page-controllers.js" />
         <option value="$PROJECT_DIR$/scripts/lx-controllers/lx-main-view-controllers.js" />
         <option value="$PROJECT_DIR$/lx-templates/lx-landing-page-main.html" />
@@ -165,18 +167,19 @@
         <option value="$PROJECT_DIR$/scripts/lx-directives/lx-main-video-directives.js" />
         <option value="$PROJECT_DIR$/scripts/lx-directives/lx-ascii-video-directives.js" />
         <option value="$PROJECT_DIR$/scripts/lx-directives/lx-user-input-feedback-directives.js" />
-        <option value="$PROJECT_DIR$/scripts/lx-services/lx-video-setup-services.js" />
-        <option value="$PROJECT_DIR$/scripts/lx-services/lx-channel-services.js" />
         <option value="$PROJECT_DIR$/scripts/lx-services/lx-use-chat-room-services.js" />
-        <option value="$PROJECT_DIR$/scripts/lx-controllers/lx-use-chat-room-controllers.js" />
         <option value="$PROJECT_DIR$/scripts/lx-directives/lx-use-chat-room-directives.js" />
         <option value="$PROJECT_DIR$/scripts/lx-services/lx-http-services.js" />
+        <option value="$PROJECT_DIR$/lx-templates/lx-use-chat-room-main.html" />
+        <option value="$PROJECT_DIR$/scripts/lx-controllers/lx-use-chat-room-controllers.js" />
+        <option value="$PROJECT_DIR$/scripts/lx-services/lx-video-setup-services.js" />
+        <option value="$PROJECT_DIR$/scripts/lx-services/lx-channel-services.js" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="728" />
-    <option name="y" value="25" />
+    <option name="x" value="805" />
+    <option name="y" value="78" />
     <option name="width" value="1624" />
     <option name="height" value="1261" />
   </component>
@@ -581,7 +584,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="728" y="25" width="1624" height="1261" extended-state="0" />
+    <frame x="805" y="78" width="1624" height="1261" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -856,13 +859,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lx-templates/lx-use-chat-room-main.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.25" vertical-offset="0" max-vertical-offset="1995">
-          <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lx-templates/lx-landing-page-main.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-12.5" vertical-offset="90" max-vertical-offset="1215">
@@ -970,35 +966,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-channel-services.js">
+    <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-http-services.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.5" vertical-offset="563" max-vertical-offset="2910">
-          <caret line="54" column="12" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-video-setup-services.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.346154" vertical-offset="1062" max-vertical-offset="16215">
-          <caret line="87" column="41" selection-start-line="87" selection-start-column="40" selection-end-line="87" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/lx-controllers/lx-use-chat-room-controllers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.076923" vertical-offset="218" max-vertical-offset="1995">
-          <caret line="32" column="66" selection-start-line="32" selection-start-column="66" selection-end-line="32" selection-end-column="66" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-use-chat-room-services.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="288" max-vertical-offset="1065">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1020">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <folding>
+            <marker date="1412107867000" expanded="true" signature="1253:2272" placeholder="{...}" />
+            <marker date="1412107867000" expanded="true" signature="1313:2262" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1010,10 +985,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-http-services.js">
+    <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-use-chat-room-services.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.921875" vertical-offset="207" max-vertical-offset="1020">
-          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="297" max-vertical-offset="1065">
+          <caret line="43" column="68" selection-start-line="43" selection-start-column="68" selection-end-line="43" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lx-templates/lx-use-chat-room-main.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.5" vertical-offset="0" max-vertical-offset="2010">
+          <caret line="20" column="33" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/lx-controllers/lx-use-chat-room-controllers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.230769" vertical-offset="218" max-vertical-offset="2010">
+          <caret line="34" column="28" selection-start-line="34" selection-start-column="28" selection-end-line="34" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-video-setup-services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.5" vertical-offset="9297" max-vertical-offset="16365">
+          <caret line="638" column="38" selection-start-line="638" selection-start-column="38" selection-end-line="638" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/lx-services/lx-channel-services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7169811" vertical-offset="1463" max-vertical-offset="2955">
+          <caret line="133" column="32" selection-start-line="133" selection-start-column="32" selection-end-line="133" selection-end-column="32" />
           <folding />
         </state>
       </provider>

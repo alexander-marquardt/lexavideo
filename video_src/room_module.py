@@ -168,10 +168,8 @@ def send_room_status_to_room_members(room_obj, user_id):
     if other_user_id:
         # send a message to the other user (the client already in the room) that someone has just joined the room
         logging.debug('Sending message to other_user: %s' % repr(message_obj))
-        # No need to set 'rtcInitiator' for the other_user_id, as it would have been set when other_user initially joined
-        # the room. In the case that this function has been called when a user has disconnected, this branch
-        # will never execute because other_user_id will be None - and so we don't set 'rtcInitiator' in this case
-        # either.
+
+        message_obj['messagePayload']['rtcInitiator'] = False
         messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
 
 
