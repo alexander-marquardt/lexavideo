@@ -502,7 +502,7 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
                           callService, streamService) {
 
 
-    var onUserMediaSuccess = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+    var onUserMediaSuccess = function(localVideoObject, videoSignalingObject) {
         return function(stream) {
             $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
@@ -512,7 +512,6 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
             $timeout(function() {
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
             });
-            callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
         };
     };
 
@@ -531,11 +530,11 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
     return {
 
 
-        doGetUserMedia  : function(localVideoObject,  remoteVideoObject, videoSignalingObject) {
+        doGetUserMedia  : function(localVideoObject,  videoSignalingObject) {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
                 adapterService.getUserMedia(lxUseChatRoomConstantsService.mediaConstraints,
-                    onUserMediaSuccess(localVideoObject, remoteVideoObject, videoSignalingObject),
+                    onUserMediaSuccess(localVideoObject, videoSignalingObject),
                     onUserMediaError(videoSignalingObject));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(lxUseChatRoomConstantsService.mediaConstraints) + '\'');
@@ -598,21 +597,21 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
             } else {
                 // By construction, this branch should not be executed since all of the pre-requisites for setting
                 // up a call should have been previously met.
-                $log.error('Not ready to start webRtc services.');
+                $log.debug('Not ready to start webRtc services.');
                 if (webRtcSessionService.started) {
-                    $log.error('Because webRtcSessionService.started is true');
+                    $log.debug('Because webRtcSessionService.started is true');
                 }
                 if (!webRtcSessionService.signalingReady) {
-                    $log.error('Because webRtcSessionService.signalingReady is false');
+                    $log.debug('Because webRtcSessionService.signalingReady is false');
                 }
                 if (!channelServiceSupport.channelReady) {
-                    $log.error('Because channelServiceSupport.channelReady is false');
+                    $log.debug('Because channelServiceSupport.channelReady is false');
                 }
                 if (!turnServiceSupport.turnDone) {
-                    $log.error('Because turnServiceSupport.turnDone is false');
+                    $log.debug('Because turnServiceSupport.turnDone is false');
                 }
                 if (!streamService.localStream) {
-                    $log.error('Because streamService.localStream is false');
+                    $log.debug('Because streamService.localStream is false');
                 }
             }
         },
