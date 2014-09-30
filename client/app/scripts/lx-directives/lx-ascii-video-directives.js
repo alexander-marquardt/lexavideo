@@ -14,8 +14,8 @@ var asciiVideoDirectives = angular.module('lxAsciiVideo.directives', []);
 
 
 
-asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interval, $log, streamService,
-                                                                         messageService, lxUseChatRoomConstantsService,
+asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interval, $log, lxStreamService,
+                                                                         lxMessageService, lxUseChatRoomConstantsService,
                                                                          lxUseChatRoomVarsService, lxAppWideConstantsService) {
 
     var canvasOptions = {
@@ -97,7 +97,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                 $asciiDrawingTextElement.html(asciiString);
                 var compressedString = LZString.compressToUTF16(asciiString);
                 // send the compressed string to the remote user (through the server)
-                messageService.sendMessage('videoStream', {streamType: 'ASCII Video', compressedVideoString: compressedString});
+                lxMessageService.sendMessage('videoStream', {streamType: 'ASCII Video', compressedVideoString: compressedString});
             }
         });
     };
@@ -139,7 +139,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
 
             function getAsciiVideoFromLocalStream() {
 
-                if (streamService.localStream) {
+                if (lxStreamService.localStream) {
                     getImageFromVideo(); // get the image without waiting for the first interval's delay
                     frameInterval = setInterval(function() {
                         getImageFromVideo();
@@ -171,7 +171,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                     thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // this should only be true for a single directive at a time
 
                     // TODO - remove this hack once we have a better way of getting the "session" status.
-                    // if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax || sessionDescriptionService.getSessionStatus() !== 'active') {
+                    // if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax || lxSessionDescriptionService.getSessionStatus() !== 'active') {
                     if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax) {
                         // This is not an xs display or we have not started a session. Therefore the ascii video should
                         // be generated only if this directive is declared on #id-local-ascii-video-wrapper-div as that
@@ -231,7 +231,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
 });
 
 
-asciiVideoDirectives.directive('lxDrawRemoteAsciiVideoDirective', function(channelService) {
+asciiVideoDirectives.directive('lxDrawRemoteAsciiVideoDirective', function(lxChannelService) {
 
 
     return {
@@ -239,11 +239,11 @@ asciiVideoDirectives.directive('lxDrawRemoteAsciiVideoDirective', function(chann
             link: function(scope, elem) {
                 var $asciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
 
-                scope.$watch(channelService.getAsciiVideoFrameUpdated(channelService), function() {
+                scope.$watch(lxChannelService.getAsciiVideoFrameUpdated(lxChannelService), function() {
 
-                    channelService.asciiVideoObject.videoFrameUpdated = false;
+                    lxChannelService.asciiVideoObject.videoFrameUpdated = false;
                     //
-                    var asciiString = LZString.decompressFromUTF16(channelService.asciiVideoObject.compressedVideoFrame);
+                    var asciiString = LZString.decompressFromUTF16(lxChannelService.asciiVideoObject.compressedVideoFrame);
                     $asciiDrawingTextElement.html(asciiString);
                 });
             }

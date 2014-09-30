@@ -7,7 +7,7 @@
 var lxVideoTypeNegotiationDirectives = angular.module('lxVideoNegotiation.directives', []);
 
 
-lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log, callService,
+lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log, lxCallService,
                                                                                            lxVideoSettingsNegotiationService) {
 
 
@@ -55,9 +55,9 @@ lxVideoTypeNegotiationDirectives.directive('lxVideoSettingsNegotiationDirective'
                     showMessageInVideoWindow(scope, elem, message);
                     scope.videoSignalingObject.localHasSelectedVideoType = 'HD Video';
 
-                    // once callService has made a successful connection (onRemoteStreamAdded callback is executed),
+                    // once lxCallService has made a successful connection (onRemoteStreamAdded callback is executed),
                     // then localIsSendingVideoType will be updated
-                    callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
+                    lxCallService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                 }
             });
         });

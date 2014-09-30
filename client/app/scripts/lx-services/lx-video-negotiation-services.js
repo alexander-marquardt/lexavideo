@@ -10,8 +10,8 @@ var lxVideoTypeNegotiationServices = angular.module('lxVideoNegotiation.services
 
 
 lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', function($animate, $log,
-                                                                             callService, messageService,
-                                                                             webRtcSessionService) {
+                                                                             lxCallService, lxMessageService,
+                                                                             lxWebRtcSessionService) {
 
 
 
@@ -22,7 +22,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
 
         // kill the webRtc session. Ascii video should start to be transmitted in both
         // directions.
-        webRtcSessionService.stop(webRtcSessionService);
+        lxWebRtcSessionService.stop(lxWebRtcSessionService);
     };
 
 
@@ -41,19 +41,19 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
             /* Requests and sets up the type of video that will be transmitted between the two users */
 
             sendRequestForVideoType : function (videoType) {
-                messageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', videoType: videoType});
+                lxMessageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', videoType: videoType});
             },
 
             sendAcceptanceOfVideoType : function(videoType) {
                 // send a message to the remote user to indicate that the local user has accepted their offer to
                 // change the current video settings (ie. from asciiVideo to hdVideo).
-                messageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', videoType: videoType});
+                lxMessageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', videoType: videoType});
             },
 
             sendDenyOfVideoType : function(videoType) {
                 // send a message to the remote user to indicate that local user has denied their offer to change the
                 // current video settings.
-                messageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', videoType: videoType});
+                lxMessageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', videoType: videoType});
             }
         },
 
@@ -179,7 +179,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
                         if (remoteSignalingStatus.videoType === 'HD Video') {
                             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteUserHasAcceptedYourRequestToTransmit: ' + 'HD Video';
                             // Setup the hdVideo to be transmitted via peer-to-peer transmission.
-                            callService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
+                            lxCallService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
                         }
 
                         else if (remoteSignalingStatus.videoType === 'ASCII Video') {

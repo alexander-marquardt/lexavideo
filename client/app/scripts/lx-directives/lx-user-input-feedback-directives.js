@@ -3,10 +3,13 @@
 
 angular.module('lxUserInputFeedback.directives', [])
 
-    .directive('checkForRoomOccupancyDirective', function($log,
-                                                 lxHttpHandleRoomService,
-                                                 lxLandingPageConstantsService,
-                                                 lxTimerService) {
+    .directive('checkForRoomOccupancyDirective',
+    function(
+        $log,
+
+        lxHttpHandleRoomService,
+        lxLandingPageConstantsService,
+        lxTimerService) {
 
         var timeSinceLastKeypressBeforeHttpCall = 300; // time in milliseconds
         var delayAction = lxTimerService.getDelayFn();

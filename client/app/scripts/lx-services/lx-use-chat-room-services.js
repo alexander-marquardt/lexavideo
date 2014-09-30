@@ -12,12 +12,12 @@ angular.module('lxUseChatRoom.services', [])
         $location,
         $window,
         $q,
-        channelService,
+        lxChannelService,
         lxHttpHandleRoomService,
         lxAppWideConstantsService,
         lxAppWideVarsService,
         lxUseChatRoomConstantsService,
-        messageService
+        lxMessageService
         ) {
 
         var failedToEnterRoom = function(errorLogFn, roomName, statusString, deferredUserSuccessfullyEnteredRoom) {
@@ -35,7 +35,7 @@ angular.module('lxUseChatRoom.services', [])
                 // Send BYE on refreshing(or leaving) a demo page
                 // to ensure the room is cleaned for next session.
                 $window.onbeforeunload = function () {
-                    messageService.sendMessage('sdp', {type: 'bye'});
+                    lxMessageService.sendMessage('sdp', {type: 'bye'});
                 };
 
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();

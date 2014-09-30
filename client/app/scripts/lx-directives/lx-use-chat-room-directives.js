@@ -8,12 +8,12 @@ angular.module('lxUseChatRoom.directives', [])
 
     function(
         $log,
-        channelService,
-        channelServiceSupport,
-        webRtcSessionService,
+        lxChannelService,
+        lxChannelSupportService,
+        lxWebRtcSessionService,
         lxUseChatRoomVarsService,
-        userNotificationService,
-        turnService
+        lxUserNotificationService,
+        lxTurnService
         ) {
 
 
@@ -24,9 +24,9 @@ angular.module('lxUseChatRoom.directives', [])
 
                 // Setup the channel and turn. If no exceptions are found returns true, otherwise false
                 try {
-                    userNotificationService.resetStatus();
-                    channelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, scope.lxUseChatRoomOuterCtrl.channelToken);
-                    turnService.maybeRequestTurn();
+                    lxUserNotificationService.resetStatus();
+                    lxChannelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, scope.lxUseChatRoomOuterCtrl.channelToken);
+                    lxTurnService.maybeRequestTurn();
 
                     return true;
                 }

@@ -8,16 +8,16 @@ var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 
 
 
-videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationService, $compile, callService) {
+videoAppDirectives.directive('lxCallStatusDirective', function(lxUserNotificationService, $compile, lxCallService) {
     return {
         restrict: 'A',
         link: function(scope, elem) {
 
             // we include doHangup on the scope because some of the getStatus calls can include
             // html that expects a doHangup function to be available.
-            scope.doHangup = callService.doHangup(scope.localVideoObject);
+            scope.doHangup = lxCallService.doHangup(scope.localVideoObject);
 
-            scope.$watch(userNotificationService.getStatus, function (statusHtml) {
+            scope.$watch(lxUserNotificationService.getStatus, function (statusHtml) {
 
                 var el = angular.element('<p class="navbar-text"/>');
                 el.append(statusHtml);
@@ -33,7 +33,7 @@ videoAppDirectives.directive('lxCallStatusDirective', function(userNotificationS
 
 
 
-videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($document, $log, callService) {
+videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($document, $log, lxCallService) {
 
 
     return {
@@ -57,10 +57,10 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
                 }
                 switch (event.keyCode) {
                     case 68:
-                        callService.setAudioMute(scope.localVideoObject, !scope.localVideoObject.isAudioMuted);
+                        lxCallService.setAudioMute(scope.localVideoObject, !scope.localVideoObject.isAudioMuted);
                         return false;
                     case 69:
-                        callService.setVideoMute(scope.localVideoObject, !scope.localVideoObject.isVideoMuted);
+                        lxCallService.setVideoMute(scope.localVideoObject, !scope.localVideoObject.isVideoMuted);
                         return false;
                     default:
                         return;
@@ -73,11 +73,11 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
 
 videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log,
                                               lxUseChatRoomVarsService, lxUseChatRoomConstantsService,
-                                              webRtcSessionService, userNotificationService,
-                                              adapterService, channelService, turnService,
-                                              callService, mediaService, sessionDescriptionService) {
+                                              lxWebRtcSessionService, lxUserNotificationService,
+                                              lxAdapterService, lxChannelService, lxTurnService,
+                                              lxCallService, lxMediaService, lxSessionDescriptionService) {
 
-    var sessionStatus; // value set in a $watch function that monitors sessionDescriptionService.getSessionStatus
+    var sessionStatus; // value set in a $watch function that monitors lxSessionDescriptionService.getSessionStatus
 
     return {
         restrict : 'A',
@@ -92,27 +92,27 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             var transitionVideoToActive = function() {
                 $log.log('\n\n*** Executing transitionVideoToActive ***\n\n');
-                userNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
+                lxUserNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
             };
 
             var removeMiniVideoElemsSrc = function() {
                 if (localVideoObject.miniVideoElemInsideRemoteHd && localVideoObject.miniVideoElemInsideRemoteHd.src) {
-                    adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd.src , '');
+                    lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd.src , '');
                 }
                 if (localVideoObject.miniVideoElemInsideRemoteAscii && localVideoObject.miniVideoElemInsideRemoteAscii.src) {
-                    adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii.src, '');
+                    lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii.src, '');
                 }
             };
 
             var transitionVideoToWaiting = function() {
                 $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
                 removeMiniVideoElemsSrc();
-                userNotificationService.resetStatus();
+                lxUserNotificationService.resetStatus();
             };
 
             var transitionVideoToDone = function() {
                 $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');
-                userNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>Click here</a> to rejoin.');
+                lxUserNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>Click here</a> to rejoin.');
             };
 
             var enablePrincipalVideoWindows = function() {
@@ -139,10 +139,10 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                     $log.error('Error: miniVideoElements not set');
                 } else {
                     if (videoSignalingObject.remoteIsSendingVideoType === 'HD Video') {
-                        adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
+                        lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
                     }
                     else if (videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video'){
-                        adapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
+                        lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
                     }
                     else if (videoSignalingObject.remoteIsSendingVideoType === null) {
                         $log.warn('Warning: cannot attach media stream when remoteIsSendingVideoType is null');
@@ -197,7 +197,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };*/
 
 
-            scope.$watch(sessionDescriptionService.getSessionStatus, function(status) {
+            scope.$watch(lxSessionDescriptionService.getSessionStatus, function(status) {
 
                 // get a local copy of the current session status, and take appropriate action.
                 sessionStatus = status;
