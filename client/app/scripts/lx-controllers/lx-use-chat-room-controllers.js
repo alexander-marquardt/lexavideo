@@ -32,7 +32,7 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxUseChatRoomOuterCtrl.channelToken = data.channelToken;
             $scope.lxUseChatRoomOuterCtrl.clientId = data.clientId;
 
-            lxUseChatRoomVarsService.roomId = data.roomId;
+            $scope.roomId = lxUseChatRoomVarsService.roomId = data.roomId;
 
         }, function(reason) {
             // This message should never be seen by the user since if the promise is rejected, they should already
@@ -43,6 +43,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.userName = lxAppWideConstantsService.userName;
         $scope.roomName = lxUseChatRoomConstantsService.roomName;
+
 
     })
 
