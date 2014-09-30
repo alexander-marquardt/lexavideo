@@ -155,9 +155,5 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
         response_dict['channelToken'] = channel_token
         response_dict['roomId'] = room_obj.key.id()
 
-        # The creator of the room will not initiate the rtc session -- this will be done by the second person
-        # to join the room.
-        response_dict['rtcInitiator'] = not room_obj.is_room_creator(current_user_id)
-
         http_helpers.set_http_ok_json_response(self.response, response_dict)
 

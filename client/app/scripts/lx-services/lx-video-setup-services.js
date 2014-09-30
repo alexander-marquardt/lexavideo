@@ -3,8 +3,6 @@
 var videoAppServices = angular.module('lxVideoSetup.services', []);
 
 
-// define externally defined variables so that jshint doesn't give warnings
-/* global goog */
 
 /* The following globally defined functions come from adapter.js, which is a "shim" to make sure that
    webRTC works in both Chrome and Firefox. */
@@ -155,7 +153,7 @@ videoAppServices.factory('messageService',
                 'messagePayload': messagePayload
             };
 
-            //$log.debug('C->S: ' + angular.toJson(messagePayload));
+            $log.debug('C->S: ' + angular.toJson(messagePayload));
             // NOTE: AppRTCClient.java searches & parses this line; update there when
             // changing here.
             var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userName;
@@ -351,7 +349,7 @@ videoAppServices.service('webRtcSessionService', function($log, $window, $rootSc
                                             messageService,
                                             codecsService, lxUseChatRoomVarsService, sessionDescriptionService,
                                             lxUseChatRoomConstantsService, iceService, peerService,
-                                            channelMessageService, adapterService) {
+                                            channelMessageService, channelServiceSupport, adapterService) {
 
 
     var onRemoteHangup = function(self, localVideoObject) {
@@ -371,7 +369,7 @@ videoAppServices.service('webRtcSessionService', function($log, $window, $rootSc
             self.started = false;
             // If this user is rtcInitiator, then its signaling is ready. Otherwise wait for other 'offer' from
             // the other client.
-            self.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
+            self.signalingReady = channelServiceSupport.rtcInitiator;
             if (peerService.pc) {
                 peerService.pc.close();
             }
@@ -504,7 +502,7 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
                           callService, streamService) {
 
 
-    var onUserMediaSuccess = function(localVideoObject, videoSignalingObject) {
+    var onUserMediaSuccess = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
         return function(stream) {
             $log.log('User has granted access to local media.');
             // Call the polyfill wrapper to attach the media stream to this element.
@@ -514,6 +512,7 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
             $timeout(function() {
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
             });
+            callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
         };
     };
 
@@ -532,11 +531,11 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
     return {
 
 
-        doGetUserMedia  : function(localVideoObject, videoSignalingObject) {
+        doGetUserMedia  : function(localVideoObject,  remoteVideoObject, videoSignalingObject) {
             // Call into getUserMedia via the polyfill (adapter.js).
             try {
                 adapterService.getUserMedia(lxUseChatRoomConstantsService.mediaConstraints,
-                    onUserMediaSuccess(localVideoObject, videoSignalingObject),
+                    onUserMediaSuccess(localVideoObject, remoteVideoObject, videoSignalingObject),
                     onUserMediaError(videoSignalingObject));
                 $log.log('Requested access to local media with mediaConstraints:\n' +
                     '  \'' + JSON.stringify(lxUseChatRoomConstantsService.mediaConstraints) + '\'');
@@ -588,10 +587,12 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 }
                 webRtcSessionService.started = true;
 
-                if (lxUseChatRoomVarsService.rtcInitiator) {
+                if (channelServiceSupport.rtcInitiator) {
+                    $log.log('Executing doCall()');
                     sessionDescriptionService.doCall();
                 }
                 else {
+                    $log.log('Executing caleeStart()');
                     calleeStart(localVideoObject, remoteVideoObject);
                 }
             } else {
@@ -687,7 +688,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 });
 
 
-videoAppServices.factory('userNotificationService', function($log, $timeout, lxUseChatRoomConstantsService, lxUseChatRoomVarsService) {
+videoAppServices.factory('userNotificationService', function($log, $timeout, lxUseChatRoomConstantsService, channelServiceSupport) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
@@ -705,7 +706,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, lxU
 
         },
         resetStatus : function() {
-          if (!lxUseChatRoomVarsService.rtcInitiator) {
+          if (!channelServiceSupport.rtcInitiator) {
               this.setStatus('Waiting for someone to join:  <a lass="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>' + lxUseChatRoomConstantsService.roomLink + '</a>');
           } else {
               this.setStatus('Initializing...');

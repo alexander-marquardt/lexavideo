@@ -13,7 +13,7 @@ def handle_message(room_obj, user_id, message):
 
     message_obj = json.loads(message)
     message = message.decode("utf-8")
-    other_user_id = room_obj.get_other_user(user_id)
+    other_user_id = room_obj.get_other_user_id(user_id)
     room_name = room_obj.room_name
 
     message_type = message_obj['messageType']

@@ -1,5 +1,7 @@
 'use strict';
 
+/* global goog */
+
 angular.module('lxChannel.services', [])
 
 
@@ -31,6 +33,7 @@ angular.module('lxChannel.services', [])
     .service('channelServiceSupport', function() {
         this.channelReady = false;
         this.socket = null;
+        this.rtcInitiator = undefined;
     })
 
     .factory('channelService',
@@ -40,6 +43,7 @@ angular.module('lxChannel.services', [])
              lxUseChatRoomConstantsService,
              callService,
              webRtcSessionService,
+             turnService,
              channelServiceSupport,
              lxUseChatRoomVarsService,
              channelMessageService) {
@@ -63,19 +67,19 @@ angular.module('lxChannel.services', [])
 
                     switch (messageObject.messageType) {
                         case 'sdp':
-                            //$log.debug('S->C: ' + message.data);
+                            $log.debug('S->C: ' + message.data);
 
                             var sdpObject = messageObject.messagePayload;
                             // Since the turn response is async and also GAE might disorder the
                             // Message delivery due to possible datastore query at server side,
                             // So callee needs to cache messages before peerConnection is created.
-                            if (!lxUseChatRoomVarsService.rtcInitiator && !webRtcSessionService.started) {
+                            if (!channelServiceSupport.rtcInitiator && !webRtcSessionService.started) {
                                 if (sdpObject.type === 'offer') {
                                     // Add offer to the beginning of msgQueue, since we can't handle
                                     // Early candidates before offer at present.
                                     channelMessageService.unshift(sdpObject);
                                     // Callee creates PeerConnection
-                                    // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
+                                    // Note: Callee is the person who created the chatroom and is waiting for someone to join
                                     // On the other hand, caller is the person who calls the callee, and is currently the second
                                     // person to join the chatroom.
                                     webRtcSessionService.signalingReady = true;
@@ -115,6 +119,20 @@ angular.module('lxChannel.services', [])
                         case 'roomStatus':
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
+                            if ('rtcInitiator' in messageObject.messagePayload) {
+                                if (messageObject.messagePayload.rtcInitiator !== channelServiceSupport.rtcInitiator) {
+                                    // we are about to change the value of rtcInitiator. Make sure that anything that
+                                    // depends on the old value is cleared.
+                                    channelServiceSupport.rtcInitiator = messageObject.messagePayload.rtcInitiator;
+
+                                    // signalingReady will initially be set to be true if this is
+                                    // the rtcInitiator, or false otherwise. In the case that this value is initially false, it will be set to
+                                    // true once this client has received an sdp 'offer' from the other client.
+                                    // Note: rtcInitiator is the 2nd person to join the chat room, not the creator of the chat room
+                                    webRtcSessionService.signalingReady = channelServiceSupport.rtcInitiator;
+                                    callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                                }
+                            }
                             break;
 
                         default:

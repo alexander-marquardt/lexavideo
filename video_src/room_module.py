@@ -95,7 +95,7 @@ class RoomInfo(ndb.Model):
         return occupancy
 
 
-    def get_other_user(self, user_id):
+    def get_other_user_id(self, user_id):
         if self.is_room_creator(user_id):
             return self.room_joiner_key.id() if self.room_joiner_key else None
         elif self.is_room_joiner(user_id):
@@ -135,47 +135,6 @@ class RoomInfo(ndb.Model):
             return self.room_joiner_channel_open
 
 
-def connect_user_to_room(room_id, active_user_id):
-
-    room_obj = RoomInfo.get_by_id(room_id)
-
-    # Check if room has active_user in case that disconnect message comes before
-    # connect message with unknown reason, observed with local AppEngine SDK.
-    if room_obj and room_obj.has_user(active_user_id):
-        room_obj.set_connected(active_user_id)
-        logging.info('User %d' % active_user_id + ' connected to room ' + room_obj.room_name)
-        logging.info('RoomInfo ' + room_obj.room_name + ' has state ' + str(room_obj))
-        
-        other_user = room_obj.get_other_user(active_user_id)
-        
-        message_obj = {'messageType' : 'roomStatus', 
-                       'messagePayload': {
-                           'roomName' : room_obj.room_name,
-                           'roomCreatorId' : room_obj.room_creator_key.id() if room_obj.room_creator_key else None,
-                           'roomJoinerId'  : room_obj.room_joiner_key.id() if room_obj.room_joiner_key else None,
-                       }    
-                       }
-    
-        if (other_user):
-            # If there is another user already in the room, then the other user should be the creator of the room. 
-            # By design, if the creator of a room leaves the room, it should be vacated.
-            if(not room_obj.is_room_creator(other_user)):
-                logging.error('Other user should be creator if room already exists - should investigate what is happeneing')
-
-            # send a message to the other user (the room creator) that someone has just joined the room
-            logging.debug('Sending message to other_user: %s' % repr(message_obj))
-            messaging.on_message(room_obj, other_user, json.dumps(message_obj))
-            
-        # Send a message to the active_user, indicating the "roomStatus"
-        logging.debug('Sending message to active_user: %s' % repr(message_obj))
-        messaging.on_message(room_obj, active_user_id, json.dumps(message_obj))
-        
-    else:
-        logging.warning('Unexpected Connect Message to room %d' % room_id + 'by user %d' % active_user_id)
-        
-    return room_obj
-
-
 class MessagePage(webapp2.RequestHandler):
 
     @handle_exceptions
@@ -190,13 +149,67 @@ class MessagePage(webapp2.RequestHandler):
             logging.error('Unknown room_id %d' % room_id)
 
 
+
+# Sends information about who is in the room, and which client should be designated as the 'rtcInitiator'
+def send_room_status_to_room_members(room_obj, user_id):
+    # This is called when a user either connects or disconnects from a room. It sends information
+    # to room members indicating the status of the room.
+
+    other_user_id = room_obj.get_other_user_id(user_id)
+
+    message_obj = {'messageType' : 'roomStatus',
+                   'messagePayload': {
+                       'roomName' : room_obj.room_name,
+                       'roomCreatorId' : room_obj.room_creator_key.id() if room_obj.room_creator_key else None,
+                       'roomJoinerId'  : room_obj.room_joiner_key.id() if room_obj.room_joiner_key else None,
+                       },
+                   }
+
+    if other_user_id:
+        # send a message to the other user (the client already in the room) that someone has just joined the room
+        logging.debug('Sending message to other_user: %s' % repr(message_obj))
+        # No need to set 'rtcInitiator' for the other_user_id, as it would have been set when other_user initially joined
+        # the room. In the case that this function has been called when a user has disconnected, this branch
+        # will never execute because other_user_id will be None - and so we don't set 'rtcInitiator' in this case
+        # either.
+        messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
+
+
+    # If there is already another user in the room, then the second person to connect will be the
+    # 'rtcInitiator'. Otherwise, the active user is alone in the room and is waiting for someone else
+    # to join, and therefore he will not be the 'rtcInitiator'.
+    message_obj['messagePayload']['rtcInitiator'] = True if other_user_id else False
+    # Send a message to the active client, indicating the room status
+    logging.debug('Sending message to active_user: %s' % repr(message_obj))
+    messaging.on_message(room_obj, user_id, json.dumps(message_obj))
+
+
+
+def connect_user_to_room(room_id, user_id):
+
+    room_obj = RoomInfo.get_by_id(room_id)
+
+    # Check if room has user_id in case that disconnect message comes before
+    # connect message with unknown reason, observed with local AppEngine SDK.
+    if room_obj and room_obj.has_user(user_id):
+        room_obj.set_connected(user_id)
+        logging.info('User %d' % user_id + ' connected to room ' + room_obj.room_name)
+        logging.info('RoomInfo ' + room_obj.room_name + ' has state ' + str(room_obj))
+
+        send_room_status_to_room_members(room_obj, user_id)
+
+    else:
+        logging.warning('Unexpected Connect Message to room %d' % room_id + 'by user %d' % user_id)
+        
+    return room_obj
+
+
 class ConnectPage(webapp2.RequestHandler):
     
     @handle_exceptions
     def post(self):
-        key = self.request.get('from')
-        # the following list comprehension returns integer values that make up the client_id
-        room_id, user_id = [int(n) for n in key.split('/')]
+        client_id = self.request.get('from')
+        room_id, user_id = [int(n) for n in client_id.split('/')]
 
         room = connect_user_to_room(room_id, user_id)
         if room and room.has_user(user_id):
@@ -208,26 +221,28 @@ class DisconnectPage(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
 
-        key = self.request.get('from')
-        room_id, user_id = [int(n) for n in key.split('/')]
+        client_id = self.request.get('from')
+        room_id, user_id = [int(n) for n in client_id.split('/')]
 
         room_obj = RoomInfo.get_by_id(room_id)
-        if room_obj and room_obj.has_user(user_id):
-            other_user_id = room_obj.get_other_user(user_id)
-            room_obj.remove_user(user_id)
-            logging.info('User %d' % user_id + ' removed from room %d' % room_id)
-            logging.info('Room %d ' % room_id + ' has state ' + str(room_obj))
-            if other_user_id and other_user_id != user_id:
+        if room_obj:
+            if room_obj.has_user(user_id):
+                room_obj.remove_user(user_id)
+                logging.info('User %d' % user_id + ' removed from room %d' % room_id)
+                logging.info('Room %d ' % room_id + ' has state ' + str(room_obj))
 
-                message_object = {"messageType": "sdp",
-                                                    "messagePayload" : {
-                                                        "type" : "bye"
-                                                    }}
+                other_user_id = room_obj.get_other_user_id(user_id)
+                if other_user_id:
+                    message_object = {"messageType": "sdp",
+                                                        "messagePayload" : {
+                                                            "type" : "bye"
+                                                        }}
+                    messaging.on_message(room_obj, other_user_id, json.dumps(message_object))
+                    logging.info('Sent "bye" to %d' % other_user_id)
 
-                messaging.on_message(room_obj, other_user_id, json.dumps(message_object))
+                send_room_status_to_room_members(room_obj, user_id)
+            else:
+                logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_obj.room_name, room_id, user_id))
 
-                logging.info('Sent BYE to %d' % other_user_id)
-
-            logging.warning('User %d' % user_id + ' disconnected from room %s (%d)' % (room_obj.room_name, room_id))
         else:
             logging.error('Room %d' % room_id + ' does not exist. Cannot disconnect user %d' % user_id)

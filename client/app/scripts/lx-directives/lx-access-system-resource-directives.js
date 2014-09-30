@@ -20,13 +20,13 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         watchWhichModalIsOpen = function() {};
 
 
-    var askForPermissionToCameraAndMicrophone = function(localVideoObject, videoSignalingObject) {
+    var askForPermissionToCameraAndMicrophone = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
         if (lxUseChatRoomConstantsService.mediaConstraints.audio === false &&
             lxUseChatRoomConstantsService.mediaConstraints.video === false) {
             callService.hasAudioOrVideoMediaConstraints = false;
         } else {
             callService.hasAudioOrVideoMediaConstraints = true;
-            mediaService.doGetUserMedia(localVideoObject, videoSignalingObject);
+            mediaService.doGetUserMedia(localVideoObject, remoteVideoObject, videoSignalingObject);
         }
     };
 
@@ -279,6 +279,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         link: function(scope, elem) {
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoObject = scope.localVideoObject;
+            var remoteVideoObject = scope.remoteVideoObject;
 
             if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
                 // If the users's device and browser support webRTC, then show them instructions on how to access their
@@ -288,7 +289,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                 var arrowElem = angular.element('<div class="cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
                 elem.append(arrowElem);
 
-                askForPermissionToCameraAndMicrophone(localVideoObject, videoSignalingObject);
+                askForPermissionToCameraAndMicrophone(localVideoObject, remoteVideoObject, videoSignalingObject);
 
                 watchWhichModalIsOpen =
                     scope.$watch(getWhichModalIsShown(scope), function(whichModalIsOpen) {

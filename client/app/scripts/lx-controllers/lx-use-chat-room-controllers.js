@@ -32,7 +32,6 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxUseChatRoomOuterCtrl.channelToken = data.channelToken;
 
             lxUseChatRoomVarsService.roomId = data.roomId;
-            lxUseChatRoomVarsService.rtcInitiator = data.rtcInitiator;
 
         }, function(reason) {
             // This message should never be seen by the user since if the promise is rejected, they should already
