@@ -227,18 +227,23 @@ class DisconnectPage(webapp2.RequestHandler):
         room_obj = RoomInfo.get_by_id(room_id)
         if room_obj:
             if room_obj.has_user(user_id):
+
+                # Get the other_user_id before removing the user_id from the room
+                other_user_id = room_obj.get_other_user_id(user_id)
+
                 room_obj.remove_user(user_id)
+
                 logging.info('User %d' % user_id + ' removed from room %d' % room_id)
                 logging.info('Room %d ' % room_id + ' has state ' + str(room_obj))
 
-                other_user_id = room_obj.get_other_user_id(user_id)
                 if other_user_id:
-                    message_object = {"messageType": "sdp",
-                                                        "messagePayload" : {
-                                                            "type" : "bye"
-                                                        }}
-                    messaging.on_message(room_obj, other_user_id, json.dumps(message_object))
-                    logging.info('Sent "bye" to %d' % other_user_id)
+                    pass
+                    # message_object = {"messageType": "sdp",
+                    #                                     "messagePayload" : {
+                    #                                         "type" : "bye"
+                    #                                     }}
+                    #logging.info('Sent "bye" to %d' % other_user_id)
+
 
                 send_room_status_to_room_members(room_obj, user_id)
             else:
