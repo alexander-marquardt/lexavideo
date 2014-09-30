@@ -32,12 +32,6 @@ angular.module('lxUseChatRoom.services', [])
 
             addUserToRoomAndSetupChannel : function() {
 
-                // Send BYE on refreshing(or leaving) a demo page
-                // to ensure the room is cleaned for next session.
-                $window.onbeforeunload = function () {
-                    lxMessageService.sendMessage('sdp', {type: 'bye'});
-                };
-
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();
 
                 $log.log('Initializing; room=' + lxUseChatRoomConstantsService.roomName + '.');
