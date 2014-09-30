@@ -279,6 +279,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
         link: function(scope, elem) {
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoObject = scope.localVideoObject;
+            var remoteVideoObject = scope.remoteVideoObject;
 
             if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
                 // If the users's device and browser support webRTC, then show them instructions on how to access their
@@ -316,6 +317,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                             lxModalSupportService.closeModal(currentModalInstance); // remove most recent modal box
 
                             videoSignalingObject.localHasSelectedVideoType = 'HD Video'; // default to 'HD Video' -- can change this later based on cookies etc.
+                            callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject)
                         }
                         else {
                             // We are waiting for camera access. Since the cameraStatus has changed, we need to show a new modal.

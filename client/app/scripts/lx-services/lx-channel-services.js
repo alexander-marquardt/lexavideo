@@ -64,7 +64,7 @@ angular.module('lxChannel.services', [])
 
                     switch (messageObject.messageType) {
                         case 'sdp':
-                            //$log.debug('S->C: ' + message.data);
+                            $log.debug('S->C: ' + message.data);
 
                             var sdpObject = messageObject.messagePayload;
                             // Since the turn response is async and also GAE might disorder the
@@ -121,7 +121,7 @@ angular.module('lxChannel.services', [])
                                     // we are about to change the value of rtcInitiator. Make sure that anything that
                                     // depends on the old value is cleared.
                                     channelServiceSupport.rtcInitiator = messageObject.messagePayload.rtcInitiator;
-                                    webRtcSessionService.stop();
+                                    //webRtcSessionService.stop();
                                     callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
                                 }
                             }

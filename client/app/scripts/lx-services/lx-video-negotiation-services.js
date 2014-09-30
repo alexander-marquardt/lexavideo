@@ -30,7 +30,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
         return function() {
             var returnVal = scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType + ' ' +
                 scope.videoSignalingObject.remoteVideoSignalingStatus.videoType;
-            $log.debug('returnVal is "' + returnVal +'"');
+            //$log.debug('returnVal is "' + returnVal +'"');
             return returnVal;
         };
     };
