@@ -347,11 +347,21 @@ videoAppServices.service('sessionDescriptionService', function(lxUseChatRoomVars
     angular.extend(self, publicMethods);
 });
 
-videoAppServices.service('webRtcSessionService', function($log, $window, $rootScope, $timeout,
-                                            messageService,
-                                            codecsService, lxUseChatRoomVarsService, sessionDescriptionService,
-                                            lxUseChatRoomConstantsService, iceService, peerService,
-                                            channelMessageService, adapterService) {
+videoAppServices.service('webRtcSessionService',
+    function($log,
+             $window,
+             $rootScope,
+             $timeout,
+             messageService,
+             codecsService,
+             channelServiceSupport,
+             lxUseChatRoomVarsService,
+             sessionDescriptionService,
+             lxUseChatRoomConstantsService,
+             iceService,
+             peerService,
+             channelMessageService,
+             adapterService) {
 
 
     var onRemoteHangup = function(self, localVideoObject) {
@@ -364,14 +374,14 @@ videoAppServices.service('webRtcSessionService', function($log, $window, $rootSc
 
         started : false,
         // initial value for signalingReady will be set in lxInitializeChannelAndTurnDirective
-        signalingReady : null,
+        signalingReady : false,
 
 
         stop : function() {
             self.started = false;
             // If this user is rtcInitiator, then its signaling is ready. Otherwise wait for other 'offer' from
             // the other client.
-            self.signalingReady = lxUseChatRoomVarsService.rtcInitiator;
+            self.signalingReady = channelServiceSupport.rtcInitiator;
             if (peerService.pc) {
                 peerService.pc.close();
             }
@@ -551,9 +561,17 @@ videoAppServices.factory('mediaService', function($log,$timeout, lxUseChatRoomCo
     };
 });
 
-videoAppServices.factory('callService', function($log, turnServiceSupport, peerService, webRtcSessionService, channelServiceSupport,
-                                         lxUseChatRoomConstantsService, lxUseChatRoomVarsService, channelMessageService,
-                                         streamService, sessionDescriptionService) {
+videoAppServices.factory('callService',
+    function($log,
+             turnServiceSupport,
+             peerService,
+             webRtcSessionService,
+             channelServiceSupport,
+             lxUseChatRoomConstantsService,
+             lxUseChatRoomVarsService,
+             channelMessageService,
+             streamService,
+             sessionDescriptionService) {
 
 
 
@@ -588,7 +606,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 }
                 webRtcSessionService.started = true;
 
-                if (lxUseChatRoomVarsService.rtcInitiator) {
+                if (channelServiceSupport.rtcInitiator) {
                     sessionDescriptionService.doCall();
                 }
                 else {
@@ -623,7 +641,7 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
                 streamService.localStream.stop();
                 webRtcSessionService.stop();
                 self.unMuteAudioAndVideo(localVideoObject);
-                // will trigger BYE from server
+                // will trigger bye from server
                 channelServiceSupport.socket.close();
             };
         },
@@ -687,7 +705,11 @@ videoAppServices.factory('callService', function($log, turnServiceSupport, peerS
 });
 
 
-videoAppServices.factory('userNotificationService', function($log, $timeout, lxUseChatRoomConstantsService, lxUseChatRoomVarsService) {
+videoAppServices.factory('userNotificationService',
+    function($log,
+             $timeout,
+             lxUseChatRoomConstantsService,
+             channelServiceSupport) {
     var currentState = 'Unknown state'; // this should never be displayed
     return {
         setStatus: function(state) {
@@ -705,7 +727,7 @@ videoAppServices.factory('userNotificationService', function($log, $timeout, lxU
 
         },
         resetStatus : function() {
-          if (!lxUseChatRoomVarsService.rtcInitiator) {
+          if (!channelServiceSupport.rtcInitiator) {
               this.setStatus('Waiting for someone to join:  <a lass="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>' + lxUseChatRoomConstantsService.roomLink + '</a>');
           } else {
               this.setStatus('Initializing...');

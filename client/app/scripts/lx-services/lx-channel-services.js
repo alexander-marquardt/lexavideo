@@ -31,6 +31,7 @@ angular.module('lxChannel.services', [])
     .service('channelServiceSupport', function() {
         this.channelReady = false;
         this.socket = null;
+        this.rtcInitiator = undefined;
     })
 
     .factory('channelService',
@@ -69,13 +70,13 @@ angular.module('lxChannel.services', [])
                             // Since the turn response is async and also GAE might disorder the
                             // Message delivery due to possible datastore query at server side,
                             // So callee needs to cache messages before peerConnection is created.
-                            if (!lxUseChatRoomVarsService.rtcInitiator && !webRtcSessionService.started) {
+                            if (!channelServiceSupport.rtcInitiator && !webRtcSessionService.started) {
                                 if (sdpObject.type === 'offer') {
                                     // Add offer to the beginning of msgQueue, since we can't handle
                                     // Early candidates before offer at present.
                                     channelMessageService.unshift(sdpObject);
                                     // Callee creates PeerConnection
-                                    // ARM Note: Callee is the person who created the chatroom and is waiting for someone to join
+                                    // Note: Callee is the person who created the chat-room and is waiting for someone to join
                                     // On the other hand, caller is the person who calls the callee, and is currently the second
                                     // person to join the chatroom.
                                     webRtcSessionService.signalingReady = true;
@@ -115,10 +116,19 @@ angular.module('lxChannel.services', [])
                         case 'roomStatus':
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
+                            if ('rtcInitiator' in messageObject.messagePayload) {
+                                if (messageObject.messagePayload.rtcInitiator != channelServiceSupport.rtcInitiator) {
+                                    // we are about to change the value of rtcInitiator. Make sure that anything that
+                                    // depends on the old value is cleared.
+                                    channelServiceSupport.rtcInitiator = messageObject.messagePayload.rtcInitiator;
+                                    webRtcSessionService.stop();
+                                    callService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                                }
+                            }
                             break;
 
                         default:
-                            $log.error('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
+                            $log.error('Error: Unknown messageType received on Channel: ' + JSON.stringify(messageObject));
                     }
                 });
 

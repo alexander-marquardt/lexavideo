@@ -15,10 +15,6 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         var screenXsMax = $('#id-dummy-xs-div').width();
         var self =  {
 
-            // The second person to join a chatroom will be the rtcInitiator. It is done in this manner because
-            // the first to join will be ready and waiting before the second person, and therefore it makes sense
-            // to have the second person initiate the call to to first person.
-            rtcInitiator : null, // set in updateGlobalVarsWithlxUseChatRoomConstantsService
             pcConfig : null,
 
             // Set up audio and video regardless of what devices are present.
