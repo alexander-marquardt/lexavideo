@@ -30,6 +30,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             $scope.lxUseChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
             $scope.lxUseChatRoomOuterCtrl.channelToken = data.channelToken;
+            $scope.lxUseChatRoomOuterCtrl.clientId = data.clientId;
 
             lxUseChatRoomVarsService.roomId = data.roomId;
 

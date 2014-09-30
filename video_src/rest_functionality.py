@@ -7,11 +7,11 @@ import logging
 import webapp2
 
 from google.appengine.ext import ndb
+from google.appengine.api import channel
 
 
 from video_src import constants
 from video_src import http_helpers
-from video_src import messaging
 from video_src import models
 from video_src import room_module
 from video_src import status_reporting
@@ -151,7 +151,9 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             response_dict['statusString'] = 'roomCreated'
 
         token_timeout =  240 # minutes
-        channel_token = messaging.create_channel(room_obj, current_user_id, token_timeout)
+        client_id = room_obj.make_client_id(current_user_id)
+        channel_token = channel.create_channel(client_id, token_timeout)
+        response_dict['clientId'] = client_id
         response_dict['channelToken'] = channel_token
         response_dict['roomId'] = room_obj.key.id()
 

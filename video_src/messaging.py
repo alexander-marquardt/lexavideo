@@ -71,9 +71,5 @@ def on_message(room_obj, to_user_id, message):
         new_message = models.Message(client_id = to_client_id, msg = message)
         new_message.put()
         #logging.info('Saved message for user ' + user)
-        
-        
-def create_channel(room_obj, user_key_id, duration_minutes):
-    client_id = room_obj.make_client_id(user_key_id)
-    return channel.create_channel(client_id, duration_minutes)        
+
 

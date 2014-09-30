@@ -16,8 +16,7 @@ angular.module('lxUseChatRoom.services', [])
         lxHttpHandleRoomService,
         lxAppWideConstantsService,
         lxAppWideVarsService,
-        lxUseChatRoomConstantsService,
-        lxMessageService
+        lxUseChatRoomConstantsService
         ) {
 
         var failedToEnterRoom = function(errorLogFn, roomName, statusString, deferredUserSuccessfullyEnteredRoom) {

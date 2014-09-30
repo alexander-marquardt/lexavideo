@@ -22,6 +22,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/handle_room/<room_name_from_url:.+>', rest_functionality.HandleEnterIntoRoom),
     (r'/_lx/message', room_module.MessagePage),
     (r'/_lx/log_error', error_reporting_from_client.LogClientError),
+    (r'/_lx/channel/manual_disconnect/', room_module.DisconnectPage),
     (r'/_ah/channel/connected/',  room_module.ConnectPage),
     (r'/_ah/channel/disconnected/',  room_module.DisconnectPage),
     (r'/.*', views.MainPage),

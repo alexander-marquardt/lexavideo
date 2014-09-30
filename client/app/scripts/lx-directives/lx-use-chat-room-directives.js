@@ -8,8 +8,10 @@ angular.module('lxUseChatRoom.directives', [])
 
     function(
         $log,
+        $window,
         lxChannelService,
         lxChannelSupportService,
+        lxHttpChannelService,
         lxWebRtcSessionService,
         lxUseChatRoomVarsService,
         lxUserNotificationService,
@@ -27,6 +29,12 @@ angular.module('lxUseChatRoom.directives', [])
                     lxUserNotificationService.resetStatus();
                     lxChannelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, scope.lxUseChatRoomOuterCtrl.channelToken);
                     lxTurnService.maybeRequestTurn();
+
+                    $window.onbeforeunload = function () {
+                        $log.debug('Manually disconnecting channel on window unload event.');
+                        lxHttpChannelService.manuallyDisconnectChannel(scope.lxUseChatRoomOuterCtrl.clientId);
+                    };
+
 
                     return true;
                 }
