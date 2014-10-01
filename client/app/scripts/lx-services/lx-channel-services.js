@@ -136,7 +136,10 @@ angular.module('lxChannel.services', [])
                                 // are required for a new peer session.
                                 lxWebRtcSessionService.started = false;
 
-                                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                                // Only start up HD Video if the user has authorized HD video
+                                if (videoSignalingObject.localHasSelectedVideoType === 'HD Video') {
+                                    lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                                }
                             }
                             break;
 
