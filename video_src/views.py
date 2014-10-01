@@ -103,10 +103,12 @@ class MainPage(webapp2.RequestHandler):
         params = {
             'userInfoEmbeddedInHtmlJson' : json.dumps(
                 {
-                'userName' : user_obj.user_name,
-                'debugBuildEnabled' : vidsetup.DEBUG_BUILD,
-                }),
-            'enable_live_reload' : vidsetup.ENABLE_LIVE_RELOAD,
+                    'userName': user_obj.user_name,
+                    'userId': user_obj.key.id(),
+                    'debugBuildEnabled': vidsetup.DEBUG_BUILD,
+                    }
+            ),
+            'enable_live_reload': vidsetup.ENABLE_LIVE_RELOAD,
             }
 
         write_response(self.response, response_type, target_page, params)        

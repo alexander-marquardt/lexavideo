@@ -118,6 +118,7 @@ angular.module('lxUseChatRoom.controllers', [])
             debugShowAllVideoWindows : false
         };
 
+        // setLocalVideoType is called directly from the html, and so it must be placed on the $scope.
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {
             // videoType should be 'HD Video' or 'ASCII Video'
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;

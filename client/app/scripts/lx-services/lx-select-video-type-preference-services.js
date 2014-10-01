@@ -127,6 +127,13 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                         self.negotiateVideoType.sendAcceptanceOfVideoType(remoteSignalingStatus.videoType);
                         $log.debug('Automatically settings video type to ' + remoteSignalingStatus.videoType + 'since it was already selected. ');
+
+                        // Remote and local users have both selected HD Video - so start it up!
+                        // Note: this is not necessary for ASCII video since ASCII video is automatically started as
+                        // soon as one of the users selects it.
+                        if (remoteSignalingStatus.videoType === 'HD Video') {
+                            lxCallService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
+                        }
                     }
                     else {
 
