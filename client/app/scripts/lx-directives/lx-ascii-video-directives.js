@@ -21,7 +21,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
     var canvasOptions = {
         width : 160,
         height : 120,
-        fps: 3  // this value is over-written for debugging in the link function below.
+        fps: 2  // this value is over-written for debugging in the link function below.
     };
 
 
@@ -111,7 +111,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
             var thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // mostly just used for debugging
 
             var videoElement = scope.localVideoObject.localVideoElem;
-            var $asciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
+            var $localAsciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
 
             var localCanvas = document.createElement('canvas');
             localCanvas.width = canvasOptions.width;
@@ -130,7 +130,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                 try {
                     if (scope.videoSignalingObject.localIsSendingVideoType === 'ASCII Video') {
                         localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
-                        onFrame(localCanvas, $asciiDrawingTextElement);
+                        onFrame(localCanvas, $localAsciiDrawingTextElement);
                     }
                 } catch (e) {
                     $log.error('Error drawing image in canvas' + e);
@@ -235,14 +235,17 @@ asciiVideoDirectives.directive('lxDrawRemoteAsciiVideoDirective', function(lxCha
     return {
             restrict: 'A',
             link: function(scope, elem) {
-                var $asciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
+
+                // Note the use of "first()" on the following find. This is necessary because we have mini-elements embedded
+                // that also contain cl-ascii-container and cl-ascii-drawing-text.
+                var $remoteAsciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text').first();
 
                 scope.$watch(lxChannelService.getAsciiVideoFrameUpdated(lxChannelService), function() {
 
                     lxChannelService.asciiVideoObject.videoFrameUpdated = false;
                     //
                     var asciiString = LZString.decompressFromUTF16(lxChannelService.asciiVideoObject.compressedVideoFrame);
-                    $asciiDrawingTextElement.html(asciiString);
+                    $remoteAsciiDrawingTextElement.html(asciiString);
                 });
             }
     };
