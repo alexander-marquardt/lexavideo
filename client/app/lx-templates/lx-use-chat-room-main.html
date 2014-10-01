@@ -69,7 +69,8 @@
                     <div class="col-sm-6" id="id-remote-video-wrapper-div">
                         <div class="text-center" >
                             <div ng-controller="lxVideoNegotiationCtrl">
-                                <div lx-video-wrapper-directive video-window = 'remote' ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.remoteIsSendingVideoType)">
+                                <div lx-video-wrapper-directive video-window = 'remote' id="id-remote-hd-video-wrapper-div"
+                                     ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.remoteIsSendingVideoType)">
                                     <h4>Remote HD Video</h4>
 
                                     <div  class="cl-my-well" style="display:inline-block">
