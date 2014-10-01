@@ -2,7 +2,7 @@
 
 
 
-angular.module('lxUseChatRoom.directives', [])
+angular.module('lxChatRoom.directives', [])
 
     .directive('lxInitializeChannelAndTurnDirective',
 
@@ -27,12 +27,12 @@ angular.module('lxUseChatRoom.directives', [])
                 // Setup the channel and turn. If no exceptions are found returns true, otherwise false
                 try {
                     lxUserNotificationService.resetStatus();
-                    lxChannelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, scope.lxUseChatRoomOuterCtrl.channelToken);
+                    lxChannelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, scope.lxChatRoomOuterCtrl.channelToken);
                     lxTurnService.maybeRequestTurn();
 
                     $window.onbeforeunload = function () {
                         $log.debug('Manually disconnecting channel on window unload event.');
-                        lxHttpChannelService.manuallyDisconnectChannel(scope.lxUseChatRoomOuterCtrl.clientId);
+                        lxHttpChannelService.manuallyDisconnectChannel(scope.lxChatRoomOuterCtrl.clientId);
                     };
 
 

@@ -6,12 +6,17 @@
 
 'use strict';
 
-var lxVideoTypeNegotiationServices = angular.module('lxVideoNegotiation.services', []);
+var lxSelectVideoTypePreferenceServices = angular.module('lxVideoNegotiation.services', []);
 
 
-lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', function($animate, $log,
-                                                                             lxCallService, lxMessageService,
-                                                                             lxWebRtcSessionService) {
+lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
+    function(
+        $animate,
+        $log,
+        lxCallService,
+        lxMessageService,
+        lxWebRtcSessionService)
+    {
 
 
 

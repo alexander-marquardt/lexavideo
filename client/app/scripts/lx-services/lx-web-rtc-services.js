@@ -1,6 +1,6 @@
 'use strict';
 
-var videoAppServices = angular.module('lxVideoSetup.services', []);
+var webRtcServices = angular.module('lxVideoSetup.services', []);
 
 
 
@@ -17,7 +17,7 @@ var videoAppServices = angular.module('lxVideoSetup.services', []);
 
 
 
-videoAppServices.service('lxAdapterService', function ($log) {
+webRtcServices.service('lxAdapterService', function ($log) {
     /* simple wrapper for global functions contained in adapter.js. This will make it
        easier to do unit testing in the future.
      */
@@ -37,7 +37,7 @@ videoAppServices.service('lxAdapterService', function ($log) {
 });
 
 
-videoAppServices.service('lxTurnSupportService', function () {
+webRtcServices.service('lxTurnSupportService', function () {
     // This function tracks some variables that are needed by multiple services, where one of the services has
     // a dependency on the other one.
     // In order to prevent circular dependencies, this variable needs to be in its own service, even though
@@ -50,7 +50,7 @@ videoAppServices.service('lxTurnSupportService', function () {
 });
 
 
-videoAppServices.factory('lxTurnService',
+webRtcServices.factory('lxTurnService',
     function(
         $log,
         $http,
@@ -128,55 +128,8 @@ videoAppServices.factory('lxTurnService',
 );
 
 
-videoAppServices.factory('lxMessageService',
-    function(
-        $http,
-        $log,
-        lxUseChatRoomVarsService,
-        lxUseChatRoomConstantsService,
-        lxAppWideConstantsService)
-    {
 
-        /*
-         Functionality for posting messages to the server.
-         */
-        return {
-            sendMessage : function(messageType, messagePayload) {
-                /*
-                 messageType: string indicating if this is a Signaling message or some other kind of message
-                 that is being sent over the Appengine Channel API.
-                 Allowed values:
-                 'sdp' - setting up peer to peer connection
-                 'video' - sending video/images through the server
-                 'chat' - chat messages sent through the server
-                 messagePayload: an object containing data that will be send from one peer to another through the server.
-                 Note: this data will be serialized automatically by AngularJS into a JSON object/string.
-                 */
-
-                var messageObject = {
-                    'messageType': messageType,
-                    'messagePayload': messagePayload
-                };
-
-                $log.debug('C->S: ' + angular.toJson(messagePayload));
-                // NOTE: AppRTCClient.java searches & parses this line; update there when
-                // changing here.
-                var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userName;
-
-                $http.post(path, messageObject).then(
-                    function(/*response*/) {
-                        //$log.log('Post success. Got response status: ' + response.statusText);
-                    },
-                    function(/*response*/) {
-                        //$log.log('Post error. Got response status: ' + response.statusText);
-                    }
-                );
-            }
-        };
-    }
-);
-
-videoAppServices.service('lxIceService', function($log, lxMessageService) {
+webRtcServices.service('lxIceService', function($log, lxMessageService) {
     /*
     ICE = Interactive Connectivity Establishment.
     This service provides ICE methods that are used when setting up a peer connection.
@@ -241,7 +194,7 @@ videoAppServices.service('lxIceService', function($log, lxMessageService) {
     };
 });
 
-videoAppServices.service('lxSessionDescriptionService',
+webRtcServices.service('lxSessionDescriptionService',
     function(
         $log,
         $timeout,
@@ -359,7 +312,7 @@ videoAppServices.service('lxSessionDescriptionService',
     }
 );
 
-videoAppServices.service('lxWebRtcSessionService',
+webRtcServices.service('lxWebRtcSessionService',
     function(
         $log,
         $window,
@@ -430,7 +383,7 @@ videoAppServices.service('lxWebRtcSessionService',
     return self;
 });
 
-videoAppServices.factory('lxPeerService',
+webRtcServices.factory('lxPeerService',
     function(
         $log,
 
@@ -524,13 +477,13 @@ videoAppServices.factory('lxPeerService',
 );
 
 
-videoAppServices.service('lxStreamService', function() {
+webRtcServices.service('lxStreamService', function() {
 
     this.localStream = null;
 
 });
 
-videoAppServices.factory('lxMediaService',
+webRtcServices.factory('lxMediaService',
     function(
         $log,
         $timeout,
@@ -591,7 +544,7 @@ videoAppServices.factory('lxMediaService',
     }
 );
 
-videoAppServices.factory('lxCallService',
+webRtcServices.factory('lxCallService',
     function(
         $log,
         lxTurnSupportService,
@@ -746,7 +699,7 @@ videoAppServices.factory('lxCallService',
 );
 
 
-videoAppServices.factory('lxUserNotificationService',
+webRtcServices.factory('lxUserNotificationService',
     function(
         $log,
         $timeout,

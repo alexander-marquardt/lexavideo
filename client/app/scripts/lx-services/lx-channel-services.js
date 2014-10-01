@@ -187,5 +187,52 @@ angular.module('lxChannel.services', [])
                 };
             }
         };
-    });
+    })
+    .factory('lxMessageService',
+    function(
+        $http,
+        $log,
+        lxUseChatRoomVarsService,
+        lxUseChatRoomConstantsService,
+        lxAppWideConstantsService)
+    {
+
+        /*
+         Functionality for posting messages to the server.
+         */
+        return {
+            sendMessage : function(messageType, messagePayload) {
+                /*
+                 messageType: string indicating if this is a Signaling message or some other kind of message
+                 that is being sent over the Appengine Channel API.
+                 Allowed values:
+                 'sdp' - setting up peer to peer connection
+                 'video' - sending video/images through the server
+                 'chat' - chat messages sent through the server
+                 messagePayload: an object containing data that will be send from one peer to another through the server.
+                 Note: this data will be serialized automatically by AngularJS into a JSON object/string.
+                 */
+
+                var messageObject = {
+                    'messageType': messageType,
+                    'messagePayload': messagePayload
+                };
+
+                $log.debug('C->S: ' + angular.toJson(messagePayload));
+                // NOTE: AppRTCClient.java searches & parses this line; update there when
+                // changing here.
+                var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userName;
+
+                $http.post(path, messageObject).then(
+                    function(/*response*/) {
+                        //$log.log('Post success. Got response status: ' + response.statusText);
+                    },
+                    function(/*response*/) {
+                        //$log.log('Post error. Got response status: ' + response.statusText);
+                    }
+                );
+            }
+        };
+    }
+);
 

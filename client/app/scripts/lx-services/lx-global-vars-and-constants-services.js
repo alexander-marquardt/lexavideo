@@ -57,7 +57,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
          */
 
         return {
-            /* This object will be loaded with a bunch of variables from server once the lxUseChatRoomOuterCtrl is loaded.
+            /* This object will be loaded with a bunch of variables from server once the lxChatRoomOuterCtrl is loaded.
 
             eg will contain:
             errorStatus : ...,

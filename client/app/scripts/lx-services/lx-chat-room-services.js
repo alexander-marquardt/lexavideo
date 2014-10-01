@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('lxUseChatRoom.services', [])
+angular.module('lxChatRoom.services', [])
 
     .factory('lxInitializeRoomService',
 

@@ -12,14 +12,15 @@ var videoApp = angular.module('videoApp', [
     // proprietary directives
     'lxAccessSystemResources.directives',
     'lxAsciiVideo.directives',
+    'lxChatRoom.directives',
     'lxCheckCompatibility.directives',
     'lxMainVideo.directives',
-    'lxUseChatRoom.directives',
     'lxUserInputFeedback.directives',
     'lxVideoNegotiation.directives',
 
     // proprietary services
     'lxChannel.services',
+    'lxChatRoom.services',
     'lxCodecs.services',
     'lxCheckCompatibility.services',
     'lxErrorHandling.services',
@@ -27,7 +28,6 @@ var videoApp = angular.module('videoApp', [
     'lxHttp.services',
     'lxVideoSetup.services',
     'lxModalSupport.services',
-    'lxUseChatRoom.services',
     'lxUtility.services',
     'lxVideoNegotiation.services',
 
