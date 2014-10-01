@@ -126,8 +126,11 @@ angular.module('lxChannel.services', [])
                             // person is joining a room, or if the person is already in a room.
                             if ('rtcInitiator' in messageObject.messagePayload) {
 
-                                // we are about to change the value of rtcInitiator that will be accessed throughout
-                                // the code.
+                                // Kill the current webRtc session - this is probably not strictly necessary, and could be removed
+                                // if it is found to cause delays and/or any other problems.
+                                lxWebRtcSessionService.stop();
+
+                                // Update the value of rtcInitiator that will be accessed throughout the code.
                                 lxChannelSupportService.rtcInitiator = messageObject.messagePayload.rtcInitiator;
 
                                 // signalingReady will initially be set to be true if this is
@@ -229,7 +232,7 @@ angular.module('lxChannel.services', [])
                 //$log.debug('C->S: ' + angular.toJson(messagePayload));
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
-                var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userName;
+                var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userId;
 
                 $http.post(path, messageObject).then(
                     function(/*response*/) {
