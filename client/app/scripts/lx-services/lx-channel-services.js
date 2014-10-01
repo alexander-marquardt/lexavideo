@@ -87,10 +87,8 @@ angular.module('lxChannel.services', [])
 
                                     // We may have been waiting for signalingReady to be true to attempt to start the peer-to-peer video
                                     // call because this user is not the rtcInitiator.
-                                    if (videoSignalingObject.localHasSelectedVideoType === 'HD Video') {
-                                        // We only transmit video if the local user has authorized it as indicated by this if statement.
-                                        lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
-                                    }
+                                    lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+
                                 } else {
                                     lxChannelMessageService.push(sdpObject);
                                 }
@@ -136,10 +134,8 @@ angular.module('lxChannel.services', [])
                                 // are required for a new peer session.
                                 lxWebRtcSessionService.started = false;
 
-                                // Only start up HD Video if the user has authorized HD video
-                                if (videoSignalingObject.localHasSelectedVideoType === 'HD Video') {
-                                    lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
-                                }
+                                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+
                             }
                             break;
 

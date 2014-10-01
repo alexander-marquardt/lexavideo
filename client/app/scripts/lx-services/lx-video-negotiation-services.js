@@ -22,7 +22,7 @@ lxVideoTypeNegotiationServices.factory('lxVideoSettingsNegotiationService', func
 
         // kill the webRtc session. Ascii video should start to be transmitted in both
         // directions.
-        lxWebRtcSessionService.stop(lxWebRtcSessionService);
+        lxWebRtcSessionService.stop();
     };
 
 
