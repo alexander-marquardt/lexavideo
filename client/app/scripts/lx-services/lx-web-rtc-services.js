@@ -85,8 +85,7 @@ webRtcServices.factory('lxTurnService',
 
         var onTurnError = function() {
 
-            $log.error('No TURN server; unlikely that media will traverse networks.  ' +
-                'If this persists please report it to info@lexabit.com');
+            $log.error('No TURN server; unlikely that media will traverse networks.');
         };
 
 
@@ -505,7 +504,6 @@ webRtcServices.factory('lxMediaService',
                 $timeout(function() {
                     videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
                 });
-                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
             };
         };
 

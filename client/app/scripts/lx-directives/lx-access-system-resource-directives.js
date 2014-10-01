@@ -316,7 +316,14 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
                             arrowElem.remove(); // take the arrow out of the dom completely
                             lxModalSupportService.closeModal(currentModalInstance); // remove most recent modal box
 
-                            videoSignalingObject.localHasSelectedVideoType = 'HD Video'; // default to 'HD Video' -- can change this later based on cookies etc.
+
+                             // default to 'HD Video' -- can change this later based on cookies etc.
+                            videoSignalingObject.localHasSelectedVideoType = 'HD Video';
+
+                            // If the user has just allowed access to their camera and microphone, then it is probably
+                            // necessary to start a new video call.
+                            lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+
                         }
                         else {
                             // We are waiting for camera access. Since the cameraStatus has changed, we need to show a new modal.
