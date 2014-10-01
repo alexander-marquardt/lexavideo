@@ -5,7 +5,7 @@
 # then this will happen automatically
 
 application: virtualvideoapp
-version: 2014-09-12-0324
+version: 2014-09-30-2326
 runtime: python27
 threadsafe: true
 api_version: 1
@@ -13,19 +13,19 @@ api_version: 1
 handlers:
 
 - url: /views
-  static_dir: client/app/views
+  static_dir: client/dist/views
 
 - url: /images
-  static_dir: client/app/images
+  static_dir: client/dist/images
 
 - url: /scripts
-  static_dir: client/app/scripts
+  static_dir: client/dist/scripts
   
 - url: /styles
-  static_dir: client/.tmp/styles
+  static_dir: client/dist/styles
   
 - url: /bower_components
-  static_dir: client/app/bower_components
+  static_dir: client/dist/bower_components
   
 
 ##############################
@@ -33,94 +33,94 @@ handlers:
 # Because we have placed favicons in the images directory, and because they need to appear as if they are in the root, 
 # we include each favicon individually here
 - url: /favicon.ico
-  static_files: client/app/images/favicons/favicon.ico
-  upload: client/app/images/favicons/favicon.ico
+  static_files: client/dist/images/favicons/favicon.ico
+  upload: client/dist/images/favicons/favicon.ico
 
 - url: /favicon-16x16.png
-  static_files: client/app/images/favicons/favicon-16x16.png
-  upload: client/app/images/favicons/favicon-16x16.png
+  static_files: client/dist/images/favicons/favicon-16x16.png
+  upload: client/dist/images/favicons/favicon-16x16.png
 
 - url: /favicon-32x32.png
-  static_files: client/app/images/favicons/favicon-32x32.png
-  upload: client/app/images/favicons/favicon-32x32.png
+  static_files: client/dist/images/favicons/favicon-32x32.png
+  upload: client/dist/images/favicons/favicon-32x32.png
 
 - url: /favicon-96x96.png
-  static_files: client/app/images/favicons/favicon-96x96.png
-  upload: client/app/images/favicons/favicon-96x96.png
+  static_files: client/dist/images/favicons/favicon-96x96.png
+  upload: client/dist/images/favicons/favicon-96x96.png
     
 - url: /favicon-160x160.png
-  static_files: client/app/images/favicons/favicon-160x160.png
-  upload: client/app/images/favicons/favicon-160x160.png
+  static_files: client/dist/images/favicons/favicon-160x160.png
+  upload: client/dist/images/favicons/favicon-160x160.png
 
 - url: /favicon-196x196.png
-  static_files: client/app/images/favicons/favicon-196x196.png
-  upload: client/app/images/favicons/favicon-196x196.png
+  static_files: client/dist/images/favicons/favicon-196x196.png
+  upload: client/dist/images/favicons/favicon-196x196.png
 
 
 
 - url: /apple-touch-icon.png
-  static_files: client/app/images/favicons/apple-touch-icon.png
-  upload: client/app/images/favicons/apple-touch-icon.png  
+  static_files: client/dist/images/favicons/apple-touch-icon.png
+  upload: client/dist/images/favicons/apple-touch-icon.png  
   
 - url: /apple-touch-icon-precomposed.png
-  static_files: client/app/images/favicons/apple-touch-icon-precomposed.png
-  upload: client/app/images/favicons/apple-touch-icon-precomposed.png
+  static_files: client/dist/images/favicons/apple-touch-icon-precomposed.png
+  upload: client/dist/images/favicons/apple-touch-icon-precomposed.png
 
 - url: /apple-touch-icon-57x57.png
-  static_files: client/app/images/favicons/apple-touch-icon-57x57.png
-  upload: client/app/images/favicons/apple-touch-icon-57x57.png
+  static_files: client/dist/images/favicons/apple-touch-icon-57x57.png
+  upload: client/dist/images/favicons/apple-touch-icon-57x57.png
 
 - url: /apple-touch-icon-60x60.png
-  static_files: client/app/images/favicons/apple-touch-icon-60x60.png
-  upload: client/app/images/favicons/apple-touch-icon-60x60.png
+  static_files: client/dist/images/favicons/apple-touch-icon-60x60.png
+  upload: client/dist/images/favicons/apple-touch-icon-60x60.png
 
 - url: /apple-touch-icon-72x72.png
-  static_files: client/app/images/favicons/apple-touch-icon-72x72.png
-  upload: client/app/images/favicons/apple-touch-icon-72x72.png
+  static_files: client/dist/images/favicons/apple-touch-icon-72x72.png
+  upload: client/dist/images/favicons/apple-touch-icon-72x72.png
 
 - url: /apple-touch-icon-76x76.png
-  static_files: client/app/images/favicons/apple-touch-icon-76x76.png
-  upload: client/app/images/favicons/apple-touch-icon-76x76.png
+  static_files: client/dist/images/favicons/apple-touch-icon-76x76.png
+  upload: client/dist/images/favicons/apple-touch-icon-76x76.png
 
 - url: /apple-touch-icon-114x114.png
-  static_files: client/app/images/favicons/apple-touch-icon-114x114.png
-  upload: client/app/images/favicons/apple-touch-icon-114x114.png
+  static_files: client/dist/images/favicons/apple-touch-icon-114x114.png
+  upload: client/dist/images/favicons/apple-touch-icon-114x114.png
 
 - url: /apple-touch-icon-120x120.png
-  static_files: client/app/images/favicons/apple-touch-icon-120x120.png
-  upload: client/app/images/favicons/apple-touch-icon-120x120.png
+  static_files: client/dist/images/favicons/apple-touch-icon-120x120.png
+  upload: client/dist/images/favicons/apple-touch-icon-120x120.png
 
 - url: /apple-touch-icon-144x144.png
-  static_files: client/app/images/favicons/apple-touch-icon-144x144.png
-  upload: client/app/images/favicons/apple-touch-icon-144x144.png
+  static_files: client/dist/images/favicons/apple-touch-icon-144x144.png
+  upload: client/dist/images/favicons/apple-touch-icon-144x144.png
 
 - url: /apple-touch-icon-152x152.png
-  static_files: client/app/images/favicons/apple-touch-icon-152x152.png
-  upload: client/app/images/favicons/apple-touch-icon-152x152.png
+  static_files: client/dist/images/favicons/apple-touch-icon-152x152.png
+  upload: client/dist/images/favicons/apple-touch-icon-152x152.png
 
 - url: /browserconfig.xml
-  static_files: client/app/images/favicons/browserconfig.xml
-  upload: client/app/images/favicons/browserconfig.xml
+  static_files: client/dist/images/favicons/browserconfig.xml
+  upload: client/dist/images/favicons/browserconfig.xml
   
 - url: /mstile-70x70.png
-  static_files: client/app/images/favicons/mstile-70x70.png
-  upload: client/app/images/favicons/mstile-70x70.png
+  static_files: client/dist/images/favicons/mstile-70x70.png
+  upload: client/dist/images/favicons/mstile-70x70.png
   
 - url: /mstile-144x144.png
-  static_files: client/app/images/favicons/mstile-144x144.png
-  upload: client/app/images/favicons/mstile-144x144.png
+  static_files: client/dist/images/favicons/mstile-144x144.png
+  upload: client/dist/images/favicons/mstile-144x144.png
 
 - url: /mstile-150x150.png
-  static_files: client/app/images/favicons/mstile-150x150.png
-  upload: client/app/images/favicons/mstile-150x150.png
+  static_files: client/dist/images/favicons/mstile-150x150.png
+  upload: client/dist/images/favicons/mstile-150x150.png
   
 - url: /mstile-310x150.png
-  static_files: client/app/images/favicons/mstile-310x150.png
-  upload: client/app/images/favicons/mstile-310x150.png  
+  static_files: client/dist/images/favicons/mstile-310x150.png
+  upload: client/dist/images/favicons/mstile-310x150.png  
   
 - url: /mstile-310x310.png
-  static_files: client/app/images/favicons/mstile-310x310.png
-  upload: client/app/images/favicons/mstile-310x310.png
+  static_files: client/dist/images/favicons/mstile-310x310.png
+  upload: client/dist/images/favicons/mstile-310x310.png
   
 # End of favicons
 ##############################
@@ -147,5 +147,5 @@ skip_files:
 - ^client/.*\.json$
 - ^client/test/.*
 - ^client/Gruntfile\.js
-
-
+- ^(.*/)?\..*$
+- ^client/app/.*
