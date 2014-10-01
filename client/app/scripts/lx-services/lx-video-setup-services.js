@@ -628,14 +628,6 @@ videoAppServices.factory('lxCallService',
 
                     $log.log('Connecting...Creating PeerConnection.');
 
-                    if (!lxChannelSupportService.rtcInitiator) {
-                        if (lxPeerService.pc) {
-                            lxPeerService.pc.close();
-                        }
-                        lxPeerService.pc = null;
-                        lxPeerService.remoteStream = null;
-                    }
-
                     lxPeerService.createPeerConnection(localVideoObject, remoteVideoObject, videoSignalingObject);
 
                     if (self.hasAudioOrVideoMediaConstraints) {
