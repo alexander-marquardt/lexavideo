@@ -164,10 +164,10 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                     // sits directly on the wrapper element. This if makes sure that they are initialized
                     // before attempting to modify the styles on these elements.
 
-                    // TODO - temporary hack until we sort out a better way to determine the "session" status. We cannot
-                    // depend on the peer connection values, since our session encompases ascii transmission as well..
-                    // remote the if (true) from the following line once this is fixed.
-                    if (sessionStatus === 'active') {
+                    // If this is an active HD session on a small screen, then we display the remote video with a local
+                    // video embedded inside of a mini-video element. Alternatively, if the remote user is sending
+                    // ASCII video, then we show the local video embedded inside of the ASCII video element.
+                    if (sessionStatus === 'active' || videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
                         if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
                             showMiniVideoElems();
                             // we are dealing with a small viewport, and should therefore hide the local video as it is
