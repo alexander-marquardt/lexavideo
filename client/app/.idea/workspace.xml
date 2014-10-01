@@ -91,11 +91,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lx-ascii-video-directives.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="lx-ascii-video-directives.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/lx-directives/lx-ascii-video-directives.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48455057" vertical-offset="0" max-vertical-offset="3870">
-              <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
+            <state vertical-scroll-proportion="-13.269231" vertical-offset="0" max-vertical-offset="3870">
+              <caret line="23" column="87" selection-start-line="23" selection-start-column="87" selection-end-line="23" selection-end-column="87" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.7380608" vertical-offset="0" max-vertical-offset="2190">
+              <caret line="34" column="47" selection-start-line="34" selection-start-column="47" selection-end-line="34" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -156,7 +166,6 @@
         <option value="$PROJECT_DIR$/scripts/lx-main.js" />
         <option value="$PROJECT_DIR$/scripts/lx-services/lx-chat-room-services.js" />
         <option value="$PROJECT_DIR$/scripts/lx-services/lx-video-setup-services.js" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/scripts/lx-directives/lx-select-video-type-preference-directives.js" />
         <option value="$PROJECT_DIR$/scripts/lx-services/lx-select-video-type-preference-services.js" />
         <option value="$PROJECT_DIR$/scripts/lx-services/lx-channel-services.js" />
@@ -165,12 +174,13 @@
         <option value="$PROJECT_DIR$/styles/_lx-main-ids.scss" />
         <option value="$PROJECT_DIR$/scripts/lx-directives/lx-main-video-directives.js" />
         <option value="$PROJECT_DIR$/scripts/lx-directives/lx-ascii-video-directives.js" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="808" />
-    <option name="y" value="53" />
+    <option name="x" value="859" />
+    <option name="y" value="138" />
     <option name="width" value="1617" />
     <option name="height" value="1261" />
   </component>
@@ -609,7 +619,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="808" y="53" width="1617" height="1261" extended-state="0" />
+    <frame x="859" y="138" width="1617" height="1261" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -941,14 +951,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-25.0" vertical-offset="1230" max-vertical-offset="2190">
-          <caret line="122" column="89" selection-start-line="122" selection-start-column="89" selection-end-line="122" selection-end-column="89" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/scripts/lx-directives/lx-select-video-type-preference-directives.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="21.944445" vertical-offset="1350" max-vertical-offset="2190">
@@ -1055,8 +1057,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/lx-directives/lx-ascii-video-directives.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48455057" vertical-offset="0" max-vertical-offset="3870">
-          <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
+        <state vertical-scroll-proportion="-13.269231" vertical-offset="0" max-vertical-offset="3870">
+          <caret line="23" column="87" selection-start-line="23" selection-start-column="87" selection-end-line="23" selection-end-column="87" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7380608" vertical-offset="0" max-vertical-offset="2190">
+          <caret line="34" column="47" selection-start-line="34" selection-start-column="47" selection-end-line="34" selection-end-column="47" />
           <folding />
         </state>
       </provider>
