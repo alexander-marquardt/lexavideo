@@ -120,22 +120,23 @@ angular.module('lxChannel.services', [])
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
                             if ('rtcInitiator' in messageObject.messagePayload) {
-                                //if (messageObject.messagePayload.rtcInitiator !== lxChannelSupportService.rtcInitiator) {
-                                    // we are about to change the value of rtcInitiator. Make sure that anything that
-                                    // depends on the old value is cleared.
-                                    lxChannelSupportService.rtcInitiator = messageObject.messagePayload.rtcInitiator;
+                                // we are about to change the value of rtcInitiator. Make sure that anything that
+                                // depends on the old value is cleared.
+                                lxChannelSupportService.rtcInitiator = messageObject.messagePayload.rtcInitiator;
 
-                                    // signalingReady will initially be set to be true if this is
-                                    // the rtcInitiator, or false otherwise. In the case that this value is initially false, it will be set to
-                                    // true once this client has received an sdp 'offer' from the other client.
-                                    // Note: rtcInitiator is the 2nd person to join the chat room, not the creator of the chat room
-                                    lxWebRtcSessionService.signalingReady = lxChannelSupportService.rtcInitiator;
+                                // signalingReady will initially be set to be true if this is
+                                // the rtcInitiator, or false otherwise. In the case that this value is initially false, it will be set to
+                                // true once this client has received an sdp 'offer' from the other client.
+                                // Note: rtcInitiator is the 2nd person to join the chat room, not the creator of the chat room
+                                lxWebRtcSessionService.signalingReady = lxChannelSupportService.rtcInitiator;
 
-                                
-                                    lxWebRtcSessionService.started = false;
+                                // when the server sends an rtcInitiator setting, this means that we are re-starting
+                                // the rtc negotiation and peer setup etc. from scratch. Set the following to false
+                                // so that the code inside maybeStart will execute all of the initializations that
+                                // are required for a new peer session.
+                                lxWebRtcSessionService.started = false;
 
-                                    lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
-                                //}
+                                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
                             }
                             break;
 
