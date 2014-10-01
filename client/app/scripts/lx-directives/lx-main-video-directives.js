@@ -91,11 +91,12 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
 
             var transitionVideoToActive = function() {
-                $log.log('\n\n*** Executing transitionVideoToActive ***\n\n');
+                $log.debug('\n\ntransitionVideoToActive\n\n');
                 lxUserNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
             };
 
             var removeMiniVideoElemsSrc = function() {
+                $log.debug('removeMiniVideoElemsSrc');
                 if (localVideoObject.miniVideoElemInsideRemoteHd && localVideoObject.miniVideoElemInsideRemoteHd.src) {
                     lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd.src , '');
                 }
@@ -105,36 +106,39 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };
 
             var transitionVideoToWaiting = function() {
-                $log.log('\n\n*** Executing transitionVideoToWaiting ***\n\n');
+                $log.log('\n\nExecuting transitionVideoToWaiting\n\n');
                 removeMiniVideoElemsSrc();
                 lxUserNotificationService.resetStatus();
             };
 
             var transitionVideoToDone = function() {
-                $log.log('\n\n*** Executing transitionVideoToDone ***\n\n');
+                $log.log('\n\nExecuting transitionVideoToDone\n\n');
                 lxUserNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>Click here</a> to rejoin.');
             };
 
             var enablePrincipalVideoWindows = function() {
+                $log.debug('enablePrincipalVideoWindows');
                 // if it is a wider screen, then show both windows
                 localVideoObject.localVideoWrapper.style.display = 'inline';
                 remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
             };
 
             var hideMiniVideoElems = function() {
+                $log.debug('hideMiniVideoElems');
                 if (localVideoObject.miniVideoElemInsideRemoteHd) {localVideoObject.miniVideoElemInsideRemoteHd.style.opacity = 0;}
                 if (localVideoObject.miniVideoElemInsideRemoteAscii) {localVideoObject.miniVideoElemInsideRemoteAscii.style.opacity = 0;}
                 removeMiniVideoElemsSrc();
             };
 
             var showMiniVideoElems = function() {
+                $log.debug('showMiniVideoElems');
                 if (localVideoObject.miniVideoElemInsideRemoteHd) {localVideoObject.miniVideoElemInsideRemoteHd.style.opacity = 1;}
                 if (localVideoObject.miniVideoElemInsideRemoteAscii) {localVideoObject.miniVideoElemInsideRemoteAscii.style.opacity = 1;}
                 reattachMediaStreamToMiniVideoElems();
             };
 
             var reattachMediaStreamToMiniVideoElems = function() {
-
+                $log.debug('reattachMediaStreamToMiniVideoElems');
                 if (!localVideoObject.miniVideoElemInsideRemoteHd || !localVideoObject.miniVideoElemInsideRemoteAscii) {
                     $log.error('Error: miniVideoElements not set');
                 } else {
@@ -154,7 +158,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };
 
             var setupForCurrentDisplaySize = function() {
-
+                $log.debug('setupForCurrentDisplaySize');
                 if (localVideoObject.localVideoWrapper && remoteVideoObject.remoteVideoWrapper) {
                     // the localVideoWrapper and remoteVideoWrapper are set by a directive that
                     // sits directly on the wrapper element. This if makes sure that they are initialized
@@ -163,7 +167,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                     // TODO - temporary hack until we sort out a better way to determine the "session" status. We cannot
                     // depend on the peer connection values, since our session encompases ascii transmission as well..
                     // remote the if (true) from the following line once this is fixed.
-                    if (true || sessionStatus === 'active') {
+                    if (sessionStatus === 'active') {
                         if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
                             showMiniVideoElems();
                             // we are dealing with a small viewport, and should therefore hide the local video as it is
@@ -262,7 +266,7 @@ videoAppDirectives.directive('lxVideoElementDirective', function($compile, $log)
     };
 });
 
-videoAppDirectives.directive('lxHdVideoWrapperDirective', function($log) {
+videoAppDirectives.directive('lxVideoWrapperDirective', function($log) {
     return {
         restrict : 'A',
         link: function(scope, elem, attrs) {

@@ -68,8 +68,8 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.localVideoObject = {
             localVideoElem :  undefined,  // set in lxVideoElementDirective
             localVideoWrapper : undefined, // set in lxHdVideoWrapperDirective
-            miniVideoElemInsideRemoteHd: undefined, //'To be set in miniVideoTemplateDirective' to .cl-mini-video-element in HD element
-            miniVideoElemInsideRemoteAscii: undefined, // 'To be set in miniVideoTemplateDirective' to .cl-mini-video-element in Ascii element
+            miniVideoElemInsideRemoteHd: undefined, //To be set in lxMiniVideoTemplateDirective to .cl-mini-video-element in HD element
+            miniVideoElemInsideRemoteAscii: undefined, // To be set in lxMiniVideoTemplateDirective to .cl-mini-video-element in Ascii element
             isVideoMuted : false,
             isAudioMuted : false
         };
@@ -111,7 +111,11 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // videoSignalingStatusForUserFeedback indicates what message/status the user should be shown about
             // the current video type requested/allowed/waiting for/etc.
-            videoSignalingStatusForUserFeedback : null
+            videoSignalingStatusForUserFeedback : null,
+
+            // The following is a flag that is used for debugging - will over-ride ng-show directives on the video
+            // windows to show any window that has this flag on it when it is set to true.
+            debugShowAllVideoWindows : false
         };
 
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {

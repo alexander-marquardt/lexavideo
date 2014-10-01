@@ -171,8 +171,8 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                     thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // this should only be true for a single directive at a time
 
                     // TODO - remove this hack once we have a better way of getting the "session" status.
-                    // if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax || lxSessionDescriptionService.getSessionStatus() !== 'active') {
-                    if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax) {
+                     if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax || lxSessionDescriptionService.getSessionStatus() !== 'active') {
+                    //if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax) {
                         // This is not an xs display or we have not started a session. Therefore the ascii video should
                         // be generated only if this directive is declared on #id-local-ascii-video-wrapper-div as that
                         // is the div that is currently visible to the user.
