@@ -159,19 +159,22 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             var setupForCurrentDisplaySize = function() {
                 $log.debug('setupForCurrentDisplaySize');
+
+
+                // the localVideoWrapper and remoteVideoWrapper are set by a directive that
+                // sits directly on the wrapper element. This if makes sure that they are initialized
+                // before attempting to modify the styles on these elements.
                 if (localVideoObject.localVideoWrapper && remoteVideoObject.remoteVideoWrapper) {
-                    // the localVideoWrapper and remoteVideoWrapper are set by a directive that
-                    // sits directly on the wrapper element. This if makes sure that they are initialized
-                    // before attempting to modify the styles on these elements.
+
 
                     // If this is an active HD session on a small screen, then we display the remote video with a local
                     // video embedded inside of a mini-video element. Alternatively, if the remote user is sending
                     // ASCII video, then we show the local video embedded inside of the ASCII video element.
                     if (sessionStatus === 'active' || videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
+
+                        // Check if this is a XS device, and if so, then embed local video inside the remote.
                         if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
                             showMiniVideoElems();
-                            // we are dealing with a small viewport, and should therefore hide the local video as it is
-                            // now embedded in a small window inside the remote video.
                             localVideoObject.localVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
                         } else {
@@ -179,10 +182,13 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                             hideMiniVideoElems();
                         }
                     }
+
+                    // We are waiting for the remote user to send either HD Video or ASCII video
                     else {
+                        // Check if we are dealing with a small viewport.
                         if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
-                            // we are dealing with a small viewport with only a single video window.
-                            // Therefore we should show the local video and hide the remote video
+
+                            // XS screen without a remote signal, therefore we should show the local video and hide the remote video
                             localVideoObject.localVideoWrapper.style.display = 'inline';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'none';
                             hideMiniVideoElems();
