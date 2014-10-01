@@ -2,7 +2,7 @@
 
 import re
 
-site_name = 'VideoconferenceClub'
+site_name = 'WebcamSurfing'
 
 room_min_chars = 3
 room_max_chars = 80

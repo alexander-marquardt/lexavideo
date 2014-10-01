@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da75d383-99a2-45e0-91d6-8ecb5d3d0f79" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-use-chat-room-controllers.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-use-chat-room-directives.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-use-chat-room-services.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.yaml" afterPath="$PROJECT_DIR$/app.yaml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/video_src/constants.py" afterPath="$PROJECT_DIR$/video_src/constants.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/index.html" afterPath="$PROJECT_DIR$/client/app/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-main.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-setup-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-setup-services.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/.idea/workspace.xml" afterPath="$PROJECT_DIR$/client/app/.idea/workspace.xml" />
     </list>
@@ -70,11 +76,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="vidsetup.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="vidsetup.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/vidsetup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4340836" vertical-offset="0" max-vertical-offset="622">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
               <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="constants.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/video_src/constants.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.096463025" vertical-offset="0" max-vertical-offset="622">
+              <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -152,18 +168,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rest_functionality.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/video_src/rest_functionality.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.0384616" vertical-offset="1932" max-vertical-offset="2505">
-              <caret line="127" column="65" selection-start-line="127" selection-start-column="65" selection-end-line="127" selection-end-column="65" />
-              <folding>
-                <element signature="e#23#34#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindManager">
@@ -186,7 +190,6 @@
         <option value="$PROJECT_DIR$/test_video_src/common_imports.py" />
         <option value="$PROJECT_DIR$/test_video_src/unittest_common.py" />
         <option value="$PROJECT_DIR$/video_src/status_reporting.py" />
-        <option value="$PROJECT_DIR$/video_src/constants.py" />
         <option value="$PROJECT_DIR$/video_src/error_reporting_from_client.py" />
         <option value="$PROJECT_DIR$/video_src/testing.py" />
         <option value="$PROJECT_DIR$/test_video_src/test_constants.py" />
@@ -214,6 +217,7 @@
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/video_src/room_module.py" />
         <option value="$PROJECT_DIR$/vidsetup.py" />
+        <option value="$PROJECT_DIR$/video_src/constants.py" />
       </list>
     </option>
   </component>
@@ -826,13 +830,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/video_src/constants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="540">
-          <caret line="4" column="9" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/node_modules/grunt-google-cdn/node_modules/bower/node_modules/insight/lib/insight.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46747968" vertical-offset="0" max-vertical-offset="1605">
@@ -1184,8 +1181,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/vidsetup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4340836" vertical-offset="0" max-vertical-offset="622">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="570">
           <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/video_src/constants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.096463025" vertical-offset="0" max-vertical-offset="622">
+          <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
           <folding />
         </state>
       </provider>

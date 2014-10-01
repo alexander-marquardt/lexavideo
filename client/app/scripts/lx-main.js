@@ -20,6 +20,7 @@ var videoApp = angular.module('videoApp', [
 
     // proprietary services
     'lxChannel.services',
+    'lxCodecs.services',
     'lxCheckCompatibility.services',
     'lxErrorHandling.services',
     'lxGlobalVarsAndConstants.services',
