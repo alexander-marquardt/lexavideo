@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da75d383-99a2-45e0-91d6-8ecb5d3d0f79" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-video-negotiation-directives.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-negotiation-services.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-video-setup-services.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/index.html" afterPath="$PROJECT_DIR$/client/app/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-channel-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-channel-services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-chat-room-controllers.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-controllers/lx-chat-room-controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-chat-room-directives.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-directives/lx-chat-room-directives.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-chat-room-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-chat-room-services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-services/lx-global-vars-and-constants-services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/scripts/lx-main.js" afterPath="$PROJECT_DIR$/client/app/scripts/lx-main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/lx-templates/lx-use-chat-room-main.html" afterPath="$PROJECT_DIR$/client/app/lx-templates/lx-use-chat-room-main.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/app/.idea/workspace.xml" afterPath="$PROJECT_DIR$/client/app/.idea/workspace.xml" />
     </list>
     <ignored path="my-video-app.iws" />
@@ -91,8 +82,8 @@
       <file leaf-file-name="constants.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/video_src/constants.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.096463025" vertical-offset="0" max-vertical-offset="622">
-              <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.72347265" vertical-offset="0" max-vertical-offset="622">
+              <caret line="30" column="28" selection-start-line="30" selection-start-column="28" selection-end-line="30" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -224,8 +215,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="349" />
-    <option name="y" value="78" />
+    <option name="x" value="338" />
+    <option name="y" value="114" />
     <option name="width" value="1596" />
     <option name="height" value="1245" />
   </component>
@@ -736,7 +727,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="349" y="78" width="1596" height="1245" extended-state="0" />
+    <frame x="338" y="114" width="1596" height="1245" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32871974" sideWeight="0.4993804" order="7" side_tool="false" content_ui="tabs" />
@@ -1191,8 +1182,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/video_src/constants.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.096463025" vertical-offset="0" max-vertical-offset="622">
-          <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.72347265" vertical-offset="0" max-vertical-offset="622">
+          <caret line="30" column="28" selection-start-line="30" selection-start-column="28" selection-end-line="30" selection-end-column="28" />
           <folding />
         </state>
       </provider>
