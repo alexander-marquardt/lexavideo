@@ -229,7 +229,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                     } else {
                         scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'conflictingVideoTypes';
-                        $log.error('videoType mismatch.');
+                        $log.warn('videoType mismatch.');
                     }
                 }
             });

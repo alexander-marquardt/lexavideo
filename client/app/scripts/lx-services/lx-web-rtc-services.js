@@ -558,9 +558,9 @@ webRtcServices.factory('lxCallService',
 
 
 
-        var calleeStart = function(localVideoObject, remoteVideoObject) {
+        var calleeStart = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
             // Callee starts to process cached offer and other messages.
-            while (lxChannelMessageService.getQueueLength() > 0) {
+            while (lxChannelMessageService.getQueueLength() > 0 && videoSignalingObject.localHasSelectedVideoType === 'HD Video') {
                 lxWebRtcSessionService.processSignalingMessage(lxChannelMessageService.shift(), localVideoObject, remoteVideoObject);
             }
         };
@@ -599,7 +599,7 @@ webRtcServices.factory('lxCallService',
                         }
                         else {
                             $log.log('Executing calleeStart()');
-                            calleeStart(localVideoObject, remoteVideoObject);
+                            calleeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
                         }
 
                     } else {
