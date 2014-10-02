@@ -109,6 +109,12 @@ class RoomInfo(ndb.Model):
 
 
     def add_user(self, user_key):
+
+        # If user is already in the room, then just return without doing anything
+        if user_key == self.room_creator_key or user_key == self.room_joiner_key:
+            return
+
+        # Add the user to the room
         if not self.room_creator_key:
             self.room_creator_key = user_key
         elif not self.room_joiner_key:
@@ -182,6 +188,15 @@ def send_room_status_to_room_members(room_obj, user_id):
     messaging.on_message(room_obj, user_id, json.dumps(message_obj))
 
 
+def get_room_by_id(room_id):
+
+    room_obj = RoomInfo.get_by_id(room_id)
+    if room_obj:
+        return room_obj
+    else:
+        logging.error('Attempt to get room by id failed. Room %d does not exist.' % room_id)
+        return None
+
 
 def connect_user_to_room(room_id, user_id):
 
@@ -209,9 +224,16 @@ class ConnectPage(webapp2.RequestHandler):
         client_id = self.request.get('from')
         room_id, user_id = [int(n) for n in client_id.split('/')]
 
-        room = connect_user_to_room(room_id, user_id)
-        if room and room.has_user(user_id):
-            messaging.send_saved_messages(room.make_client_id(user_id))
+        # Add user back into room. If they have a channel open to the room then they are by definition in the room
+        room_obj = get_room_by_id(room_id)
+        if room_obj:
+            user_key = ndb.Key('UserModel', user_id)
+            room_obj.add_user(user_key)
+            assert(room_obj.has_user(user_id))
+            connect_user_to_room(room_id, user_id)
+            messaging.send_saved_messages(room_obj.make_client_id(user_id))
+        else:
+            logging.error('Invalid room id: %d' % room_id)
 
 
 class DisconnectPage(webapp2.RequestHandler):

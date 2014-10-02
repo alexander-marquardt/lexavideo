@@ -61,7 +61,7 @@ def send_saved_messages(client_id):
     for message in messages:
         channel.send_message(client_id, message.msg)
         logging.info('Delivered saved message to ' + client_id)
-        message.delete()
+        message.key.delete()
         
 def on_message(room_obj, to_user_id, message):
     to_client_id = room_obj.make_client_id(to_user_id)
