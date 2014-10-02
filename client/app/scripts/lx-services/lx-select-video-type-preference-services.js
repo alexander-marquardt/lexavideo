@@ -151,7 +151,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + 'HD Video';
                         }
-                        
+
                         // by default, we do not ask for permission to switch to ascii video mode. If a remote user requests
                         // a switch to asciiVideo, then we will tear down the peer connection, and will transmit ascii video in
                         // both directions.

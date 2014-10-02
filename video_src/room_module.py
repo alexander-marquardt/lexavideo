@@ -163,11 +163,11 @@ def send_room_status_to_room_members(room_obj, user_id):
 
     other_user_id = room_obj.get_other_user_id(user_id)
 
-    message_obj = {'messageType' : 'roomStatus',
+    message_obj = {'messageType': 'roomStatus',
                    'messagePayload': {
-                       'roomName' : room_obj.room_name,
-                       'roomCreatorId' : room_obj.room_creator_key.id() if room_obj.room_creator_key else None,
-                       'roomJoinerId'  : room_obj.room_joiner_key.id() if room_obj.room_joiner_key else None,
+                       'roomName': room_obj.room_name,
+                       # 'roomCreatorId' : room_obj.room_creator_key.id() if room_obj.room_creator_key else None,
+                       # 'roomJoinerId'  : room_obj.room_joiner_key.id() if room_obj.room_joiner_key else None,
                        },
                    }
 
@@ -180,10 +180,16 @@ def send_room_status_to_room_members(room_obj, user_id):
         # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
         # once per session, unless the users become disconnected and need to re-connect.
         message_obj['messagePayload']['rtcInitiator'] = False
+        message_obj['messagePayload']['userId'] = other_user_id
+        message_obj['messagePayload']['remoteUserId'] = user_id
         messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
+
+        # The current user will be the rtcInitiator since there is already someone in the room.
         message_obj['messagePayload']['rtcInitiator'] = True
 
     # Send a message to the active client, indicating the room status
+    message_obj['messagePayload']['userId'] = user_id
+    message_obj['messagePayload']['remoteUserId'] = other_user_id
     logging.debug('Sending message to active_user: %s' % repr(message_obj))
     messaging.on_message(room_obj, user_id, json.dumps(message_obj))
 

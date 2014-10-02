@@ -91,8 +91,9 @@ angular.module('lxUseChatRoom.controllers', [])
             localIsSendingVideoType : null,  // null, 'ASCII Video', 'HD Video'
 
             localUserAccessCameraAndMicrophoneStatus : 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
-            remoteUserHasTurnedOnCamera : false,
-            remoteUserHasJoinedRoom : false,
+
+            // Once the remote user has joined the room, this will be modified to reflect their userId
+            remoteUserId : null,
 
             // if the local user requests the remote user to change the video type, we track the remote response
             // so that we can give the local user feedback.

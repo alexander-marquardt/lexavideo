@@ -118,6 +118,13 @@ angular.module('lxChannel.services', [])
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
 
+                            if ('remoteUserId' in messageObject.messagePayload) {
+                                videoSignalingObject.remoteUserId = messageObject.messagePayload.remoteUserId;
+                            }
+                            else {
+                                videoSignalingObject.remoteUserId = null;
+                            }
+
                             // See server-side code for more info on rtcInitiator. Basically, if rtcInitiator is sent to the
                             // client, it means that we should attempt to initiate a new rtc connection from scratch once
                             // all pre-conditions are in place for setting up. We do it like this to effectively
