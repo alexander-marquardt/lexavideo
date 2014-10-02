@@ -199,24 +199,29 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                         }
                     }
                 }
+            }
 
-
+            function watchForResize() {
+                $(window).on('resize.watchForAsciiResize', function() {
+                    sendAsciiVideoFromAppropriateWindow();
+                })
+            }
+            function removeWatchForResize() {
+                $(window).off('resize.watchForAsciiResize');
             }
 
             scope.$watch('videoSignalingObject.localIsSendingVideoType', function(newValue) {
                 if (newValue === 'ASCII Video') {
                     sendAsciiVideoFromAppropriateWindow();
+                    watchForResize();
                 } else {
                     // stop asciiVideo
                     if (thisDirectiveIsGeneratingAsciiVideoForTransmission) {
                         cancelLocalAsciiVideoTimers();
                         $log.log('Cancelled local ascii video');
                     }
+                    removeWatchForResize();
                 }
-            });
-
-            $(window).resize(function() {
-                sendAsciiVideoFromAppropriateWindow();
             });
 
             scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function() {
