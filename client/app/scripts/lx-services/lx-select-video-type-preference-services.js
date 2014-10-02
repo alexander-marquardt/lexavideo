@@ -102,6 +102,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         } else {
                             // since the remote user is already sending asciiVideo, we just accept it.
                             self.negotiateVideoType.sendAcceptanceOfVideoType('ASCII Video');
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
                         }
                         setVideoModeToAscii(scope);
                     }
