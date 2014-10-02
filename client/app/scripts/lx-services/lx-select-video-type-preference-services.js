@@ -89,26 +89,31 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
 
 
-                if (newVideoType === 'HD Video') {
-                    scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
-                    self.negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
-                }
-                else if (newVideoType === 'ASCII Video') {
-
-                    if (scope.videoSignalingObject.remoteIsSendingVideoType !== 'ASCII Video') {
+                if (scope.videoSignalingObject.remoteUserId) {
+                    if (newVideoType === 'HD Video') {
                         scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
-                        self.negotiateVideoType.sendRequestForVideoType(newVideoType);
-                    } else {
-                        // since the remote user is already sending asciiVideo, we just accept it.
-                        self.negotiateVideoType.sendAcceptanceOfVideoType('ASCII Video');
+                        self.negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
                     }
-                    setVideoModeToAscii(scope);
-                }
-                else if (newVideoType === null) {
-                    // do nothing
+                    else if (newVideoType === 'ASCII Video') {
+
+                        if (scope.videoSignalingObject.remoteIsSendingVideoType !== 'ASCII Video') {
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
+                            self.negotiateVideoType.sendRequestForVideoType(newVideoType);
+                        } else {
+                            // since the remote user is already sending asciiVideo, we just accept it.
+                            self.negotiateVideoType.sendAcceptanceOfVideoType('ASCII Video');
+                        }
+                        setVideoModeToAscii(scope);
+                    }
+                    else if (newVideoType === null) {
+                        // do nothing
+                    }
+                    else {
+                        $log.error('Unknown videoType: ' + newVideoType);
+                    }
                 }
                 else {
-                    $log.error('Unknown videoType: ' + newVideoType);
+                    scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteUserToJoin';
                 }
             });
 

@@ -95,6 +95,10 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                 var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
 
                 switch(newValue) {
+                    case 'waitingForRemoteUserToJoin':
+                        message = 'We are waiting for someone to join you in this room';
+                        showMessageInVideoWindow(scope, elem, message);
+                        break;
                     case 'remoteHasRequestedVideoType: ' + 'HD Video':
                         showRequestForHdVideo(scope, elem);
                         break;
