@@ -5,7 +5,9 @@ angular.module('lxUtility.services', [])
 
         return {
             getDelayFn : function() {
-                // Returns a function that wraps a callback inside a timeout
+                // Returns a function that wraps a callback inside a timeout. This can be used
+                // for ensuring that an action is only executed after a certain amount of time has passed
+                // since the last call to the callback function.
                 var timer = null;
                 return function(callback, delayMs){
                     clearTimeout (timer);

@@ -14,9 +14,16 @@ var asciiVideoDirectives = angular.module('lxAsciiVideo.directives', []);
 
 
 
-asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interval, $log, lxStreamService,
-                                                                         lxMessageService, lxUseChatRoomConstantsService,
-                                                                         lxUseChatRoomVarsService, lxAppWideConstantsService) {
+asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
+    function(
+        $interval,
+        $log,
+        lxStreamService,
+        lxMessageService,
+        lxTimerService,
+        lxUseChatRoomConstantsService,
+        lxUseChatRoomVarsService,
+        lxAppWideConstantsService) {
 
     var canvasOptions = {
         width : 160,
@@ -201,9 +208,17 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective', function($interv
                 }
             }
 
+
             function watchForResize() {
+
+                var delayAction = lxTimerService.getDelayFn();
+                var timeToPassSinceLastCall = 500; //ms
+
                 $(window).on('resize.watchForAsciiResize', function() {
-                    sendAsciiVideoFromAppropriateWindow();
+                    // Wait until the user has finished resizing the window before we call
+                    // sendAsciiVideoFromAppropriateWindow. Also, note that this is passed as a callback, and
+                    // therefore the function is passed without '()'
+                    delayAction(sendAsciiVideoFromAppropriateWindow, timeToPassSinceLastCall);
                 })
             }
             function removeWatchForResize() {
