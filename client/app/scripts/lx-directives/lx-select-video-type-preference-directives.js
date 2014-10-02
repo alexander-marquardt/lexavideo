@@ -7,17 +7,29 @@
 var lxSelectVideoTypePreferenceDirectives = angular.module('lxVideoNegotiation.directives', []);
 
 
-lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirective', function($animate, $log, lxCallService,
-                                                                                           lxVideoSettingsNegotiationService) {
+lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirective',
+    function(
+        $animate,
+        $log,
+        $timeout,
+        lxCallService,
+        lxVideoSettingsNegotiationService) {
 
 
-    var  showMessageInVideoWindow = function(scope, elem, message) {
+    var  showMessageInVideoWindow = function(scope, elem, message, fadeAwayTime) {
         elem.find('.navbar-text').remove(); // just in case there is already text there, remove the previous element
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
         var el = angular.element('<p class="navbar-text"/>');
         el.html(message);
         elem.append(el);
+
+        if (fadeAwayTime !== undefined) {
+            // make the message disappear after a certain amount of time in ms
+            $timeout(function() {
+                $animate.addClass(elem, 'ng-hide');
+            }, fadeAwayTime);
+        }
     };
 
     var removeMessageInVideoWindow = function(scope, elem) {
@@ -116,7 +128,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                     case 'remoteHasDeniedRequestToExchangeFormat: ' + 'ASCII Video':
                     case 'remoteHasDeniedRequestToExchangeFormat: ' + 'HD Video':
                         message = 'Remote user has denied your request to exchange ' + remoteSignalingStatus.videoType;
-                        showMessageInVideoWindow(scope, elem, message);
+                        showMessageInVideoWindow(scope, elem, message, 5000);
                         break;
 
                     case 'remoteUserHasAcceptedYourRequestToTransmit: ' + 'HD Video':
