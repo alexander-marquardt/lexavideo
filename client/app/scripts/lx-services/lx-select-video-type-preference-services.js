@@ -102,7 +102,15 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         } else {
                             // since the remote user is already sending asciiVideo, we just accept it.
                             self.negotiateVideoType.sendAcceptanceOfVideoType('ASCII Video');
-                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
+
+                            // If the remote user has not denied our request, we can safely remove use feedback. Otherwise
+                            // we don't want to remove user feedback that may indicate that the remote user has
+                            // denied our request.
+                            if (scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType !== 'denyVideoType') {
+                                // remove the user feedback indicating that we are waiting for the remote user
+                                // to accept HD video
+                                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
+                            }
                         }
                         setVideoModeToAscii(scope);
                     }
@@ -116,6 +124,13 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 else {
                     scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteUserToJoin';
                 }
+
+                // Set the remoteSignalingStatus properties to null, so that the watchers below are triggered
+                // when the remote user responds to our request, even if this is the same response that they
+                // previously sent to us.
+                // Note: if we do not reset these values , then future requests that are the same as the most recent request
+                // will not trigger execution in the watch function.
+                scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType = null;
             });
 
             // This watcher will monitor for remote requests to change the current video format, and will either
@@ -187,10 +202,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     // to the type that is currently/previously being sent.
                     scope.videoSignalingObject.localHasSelectedVideoType = scope.videoSignalingObject.localIsSendingVideoType;
 
-                    // Set the remoteSignalingStatus properties to null, in case the remote user denies the same request again.
-                    // Note: if we do not reset these values , then future requests that are the same as the most recent request
-                    // will not trigger execution in the watch function.
-                    remoteSignalingStatus.settingsType = null;
+
                 }
 
                 else if (remoteSignalingStatus.settingsType === 'acceptVideoType') {
