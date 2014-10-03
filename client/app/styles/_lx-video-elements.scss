@@ -85,6 +85,12 @@ video {
 }
 
 
+.cl-hide-on-larger-than-xs-media {
+  // if this class is present, then the element will not be shown on devices with wide screens
+  @media (min-width: $screen-sm-min) {
+    display: none;
+  }
+}
 
 .cl-mini-video-div {
   position: absolute;
@@ -94,10 +100,7 @@ video {
   left: 0px;
   opacity: 1.0;
 
-  @media (min-width: $screen-sm-min) {
-    // this mini-video is only intended for xs screens - hide for anything larger
-    display: none;
-  }
+  @extend .cl-hide-on-larger-than-xs-media;
 }
 
 .cl-mini-video-element {
