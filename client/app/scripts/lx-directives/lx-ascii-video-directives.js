@@ -135,7 +135,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
 
             var getImageFromVideo = function() {
                 try {
-                    if (scope.videoSignalingObject.localIsSendingVideoType === 'ASCII Video') {
+                    if (scope.videoSignalingObject.localHasSelectedVideoType === 'ASCII Video') {
                         localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
                         onFrame(localCanvas, $localAsciiDrawingTextElement);
                     }
@@ -145,6 +145,9 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
             };
 
             function getAsciiVideoFromLocalStream() {
+
+                // cancel existing intervals and timers - they will be re-started by the code below.
+                cancelLocalAsciiVideoTimers();
 
                 if (lxStreamService.localStream) {
                     getImageFromVideo(); // get the image without waiting for the first interval's delay
@@ -169,40 +172,35 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                 // Therefore, we check to see if this directive is defined on the div that is currently
                 // being displayed, and only then will the asciiVideo be generated.
 
-                // Make sure that we don't generate asciiVideo, unless it has specifically been requested.
-                if (scope.videoSignalingObject.localIsSendingVideoType === 'ASCII Video') {
 
-                    // cancel existing intervals and timers - they will be re-started by the code below.
-                    cancelLocalAsciiVideoTimers();
 
-                    thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // this should only be true for a single directive at a time
+                thisDirectiveIsGeneratingAsciiVideoForTransmission = false; // this should only be true for a single directive at a time
 
-                    if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax) {
-                        // This is not an xs display or we have not started a session. Therefore the ascii video should
-                        // be generated only if this directive is declared on #id-local-ascii-video-wrapper-div as that
-                        // is the div that is currently visible to the user.
-                        if (angular.element(elem).attr('id') === 'id-local-ascii-video-wrapper-div') { //id is without "#"
+                if (viewportSize.getWidth() > lxUseChatRoomVarsService.screenXsMax) {
+                    // This is not an xs display or we have not started a session. Therefore the ascii video should
+                    // be generated only if this directive is declared on #id-local-ascii-video-wrapper-div as that
+                    // is the div that is currently visible to the user.
+                    if (angular.element(elem).attr('id') === 'id-local-ascii-video-wrapper-div') { //id is without "#"
+                        getAsciiVideoFromLocalStream();
+                        thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
+                        $log.log('Getting local ascii video from: ' + angular.element(elem).attr('id'));
+                    }
+                } else {
+                    // This is an xs display, and therefore we need to look at which remote video type is
+                    // currently being displayed (ascii or hd), and then select the correct mini-video window
+                    // (remember that the mini-video window is shown inside the currently displayed remote video window).
+                    if (scope.videoSignalingObject.remoteIsSendingVideoType === 'HD Video') {
+                        if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div').length === 1) {
                             getAsciiVideoFromLocalStream();
                             thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
-                            $log.log('Getting local ascii video from: ' + angular.element(elem).attr('id'));
+                            $log.log('Getting local ascii video from mini-video inside hdVideo window');
                         }
-                    } else {
-                        // This is an xs display, and therefore we need to look at which remote video type is
-                        // currently being displayed (ascii or hd), and then select the correct mini-video window
-                        // (remember that the mini-video window is shown inside the currently displayed remote video window).
-                        if (scope.videoSignalingObject.remoteIsSendingVideoType === 'HD Video') {
-                            if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div').length === 1) {
-                                getAsciiVideoFromLocalStream();
-                                thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
-                                $log.log('Getting local ascii video from mini-video inside hdVideo window');
-                            }
-                        }
-                        if (scope.videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
-                            if (angular.element(elem).parents('#id-remote-ascii-video-wrapper-div').length === 1) {
-                                getAsciiVideoFromLocalStream();
-                                thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
-                                $log.log('Getting local ascii video from mini-video inside asciiVideo window');
-                            }
+                    }
+                    if (scope.videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
+                        if (angular.element(elem).parents('#id-remote-ascii-video-wrapper-div').length === 1) {
+                            getAsciiVideoFromLocalStream();
+                            thisDirectiveIsGeneratingAsciiVideoForTransmission = true;
+                            $log.log('Getting local ascii video from mini-video inside asciiVideo window');
                         }
                     }
                 }
@@ -225,7 +223,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                 $(window).off('resize.watchForAsciiResize');
             }
 
-            scope.$watch('videoSignalingObject.localIsSendingVideoType', function(newValue) {
+            scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newValue) {
                 if (newValue === 'ASCII Video') {
                     sendAsciiVideoFromAppropriateWindow();
                     watchForResize();

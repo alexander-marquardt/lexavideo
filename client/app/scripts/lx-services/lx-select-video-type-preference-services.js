@@ -122,17 +122,6 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     }
                 }
                 else {
-                    // The user is currently alone in the room. Allow them to freely switch between ASCII and HD Video
-                    // without waiting for feedback from the remote user
-                    if (newVideoType === 'HD Video') {
-                        scope.videoSignalingObject.localIsSendingVideoType = 'HD Video';
-                    }
-                    else if (newVideoType === 'ASCII Video') {
-                        scope.videoSignalingObject.localIsSendingVideoType = 'ASCII Video';
-                    }
-                    else {
-                        $log.error('Unknown videoType: ' + newVideoType);
-                    }
                     scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteUserToJoin';
                 }
 

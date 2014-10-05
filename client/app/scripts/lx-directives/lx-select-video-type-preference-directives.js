@@ -25,7 +25,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         elem.append(el);
 
         if (fadeAwayTime !== undefined) {
-            // make the message disappear after a certain amount of time in ms
+            // Make the message disappear after a certain amount of time in ms. Otherwise it will
+            // stay until it is removed.
             $timeout(function() {
                 $animate.addClass(elem, 'ng-hide');
             }, fadeAwayTime);

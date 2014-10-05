@@ -82,7 +82,7 @@ angular.module('lxUseChatRoom.controllers', [])
              */
 
             // localHasSelectedVideoType this reflects the value of the video selection button that is currently selected
-            localHasSelectedVideoType : null,  // 'null, 'ASCII Video', 'HD Video'
+            localHasSelectedVideoType : null,  // null, 'ASCII Video', 'HD Video'
 
             // localIsSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
             // the video transmission has started (ie. when lxPeerService.addLocalVideoStream is executed)
