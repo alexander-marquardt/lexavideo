@@ -89,7 +89,9 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
             scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newVideoType) {
 
 
+                // Check if there is a remote user in the room
                 if (scope.videoSignalingObject.remoteUserId) {
+
                     if (newVideoType === 'HD Video') {
                         scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
                         self.negotiateVideoType.sendRequestForVideoType(scope.videoSignalingObject.localHasSelectedVideoType);
@@ -121,6 +123,8 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         $log.error('Unknown videoType: ' + newVideoType);
                     }
                 }
+
+                // The current user is alone in the room
                 else {
                     scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteUserToJoin';
                 }

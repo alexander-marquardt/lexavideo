@@ -15,6 +15,8 @@ angular.module('lxHttp.services', [])
             enterIntoRoom : function(roomObj) {
                 // this will either create a room object on the server, or enter into an existing room corresponding
                 // to roomName.
+                // Note: the returned value is a promise that will be fulfilled once the resource
+                // has been created on the server.
                 return new RoomResource(roomObj).$save();
             },
 
