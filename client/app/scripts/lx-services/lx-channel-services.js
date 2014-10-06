@@ -119,10 +119,13 @@ angular.module('lxChannel.services', [])
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
 
                             if ('remoteUserId' in messageObject.messagePayload) {
+                                // Get the remoteUserId from the message payload - note that if there is no remote
+                                // user currently in the room, then this value will be null.
                                 videoSignalingObject.remoteUserId = messageObject.messagePayload.remoteUserId;
                             }
                             else {
-                                videoSignalingObject.remoteUserId = null;
+                                $log.error('remoteUserId not received in roomStatus messagePayload');
+                                //videoSignalingObject.remoteUserId = null;
                             }
 
                             // See server-side code for more info on rtcInitiator. Basically, if rtcInitiator is sent to the
