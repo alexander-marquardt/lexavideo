@@ -59,10 +59,16 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                 // Note: scope.videoSignalingObject.localIsSendingVideoType will be set to 'HD Video' once the
                 // stream is being sent - this happens in the onRemoteStreamAdded callback.
+
+                // HD Video videoSignalingStatusForUserFeedback messages are cleared inside the onRemoteStreamAdded callback
             }
             else if (videoType === 'ASCII Video') {
                 // Switch to ASCII video type, and stop  the HD video stream.
-                scope.videoSignalingObject.localIsSendingVideoType = 'ASCII Video';
+                scope.videoSignalingObject.localIsSendingVideoType = videoType;
+                scope.videoSignalingObject.remoteIsSendingVideoType = videoType;
+
+                // clear feedback messages
+                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
 
                 // kill the webRtc session. Ascii video should start to be transmitted in both directions.
                 lxWebRtcSessionService.stop();
@@ -131,18 +137,18 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
 
                 var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
-                var localIsRequestingVideoType = scope.videoSignalingObject.localIsRequestingVideoType;
+                var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
 
                 if (remoteSignalingStatus.settingsType === 'requestVideoType') {
                     // the remote user has requested a new videoType.
 
-                    if (remoteSignalingStatus.videoType === localIsRequestingVideoType) {
+                    if (remoteSignalingStatus.videoType === localHasSelectedVideoType) {
                         // the remote user has requested the videoType that the local user has already selected.
 
                         self.negotiateVideoType.sendAcceptanceOfVideoType(remoteSignalingStatus.videoType);
                         $log.debug('Automatically settings video type to ' + remoteSignalingStatus.videoType + 'since it was already selected. ');
 
-                        self.startVideoType(scope, localIsRequestingVideoType)
+                        self.startVideoType(scope, localHasSelectedVideoType)
 
                     }
                     else {
@@ -152,8 +158,8 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         $log.debug('Remote user has requested ' + remoteSignalingStatus.videoType);
 
 
-                        // if the remote user has requested HD Video, then we will prompt the local user to see if
-                        // they agree to transmit HD video. This prompting is triggered by the change in
+                        // We prompt the local user to see if they agree to transmit the new videoType.
+                        // This prompting is triggered by the change in
                         // videoSignalingStatusForUserFeedback and is handled in the directive code.
                         if (remoteSignalingStatus.videoType === 'HD Video' || remoteSignalingStatus.videoType === 'ASCII Video') {
                             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
@@ -186,9 +192,9 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     // ensure that the videoType that the remote user has accepted matches the value that has been
                     // selected by the local user.
                     $log.debug('Remote user has accepted ' + remoteSignalingStatus.videoType);
-                    if (remoteSignalingStatus.videoType === localIsRequestingVideoType) {
+                    if (remoteSignalingStatus.videoType === localHasSelectedVideoType) {
 
-                        self.startVideoType(scope, localIsRequestingVideoType);
+                        self.startVideoType(scope, localHasSelectedVideoType);
 
                         // we have finished with the current request, and are no longer requesting a new videoType.
                         scope.videoSignalingObject.localIsRequestingVideoType = null;

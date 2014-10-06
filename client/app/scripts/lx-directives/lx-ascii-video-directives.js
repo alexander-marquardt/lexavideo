@@ -135,7 +135,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
 
             var getImageFromVideo = function() {
                 try {
-                    if (scope.videoSignalingObject.localHasSelectedVideoType === 'ASCII Video') {
+                    if (scope.videoSignalingObject.localIsSendingVideoType === 'ASCII Video') {
                         localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
                         onFrame(localCanvas, $localAsciiDrawingTextElement);
                     }
@@ -223,7 +223,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                 $(window).off('resize.watchForAsciiResize');
             }
 
-            scope.$watch('videoSignalingObject.localHasSelectedVideoType', function(newValue) {
+            scope.$watch('videoSignalingObject.localIsSendingVideoType', function(newValue) {
                 if (newValue === 'ASCII Video') {
                     sendAsciiVideoFromAppropriateWindow();
                     watchForResize();

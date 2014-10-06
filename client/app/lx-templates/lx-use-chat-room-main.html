@@ -16,14 +16,9 @@
         <div lx-check-if-system-supports-web-rtc></div>
 
 
-        <div ng-if="debugBuildEnabled">
-            Room Name: {{ roomName }}<br>
-            Room Id:   {{ roomId }}<br>
-            User Name: {{ userName }}<br>
-        </div>
-
-
         <div ng-controller="lxMainVideoCtrl">
+
+
 
             <div lx-initialize-channel-and-turn-directive></div>
 
@@ -35,7 +30,7 @@
 
                     <div lx-video-wrapper-directive video-window='local' class="col-sm-6" id="id-local-video-wrapper-div">
                         <div class="text-center">
-                            <div ng-show="(videoSignalingObject.localHasSelectedVideoType == 'HD Video' || videoSignalingObject.localHasSelectedVideoType == null) || videoSignalingObject.debugShowAllVideoWindows" >
+                            <div ng-show="(videoSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.localIsSendingVideoType) || videoSignalingObject.debugShowAllVideoWindows" >
                                 <h4>Local HD Video</h4>
                                 <div style="display:inline-block" class="cl-my-well" >
                                     <div style="position: relative">
@@ -48,7 +43,7 @@
                             </div>
 
                             <div lx-generate-ascii-video-directive id="id-local-ascii-video-wrapper-div"
-                                 ng-show="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') || videoSignalingObject.debugShowAllVideoWindows" >
+                                 ng-show="(videoSignalingObject.localIsSendingVideoType == 'ASCII Video') || videoSignalingObject.debugShowAllVideoWindows" >
                                 <h4>Local ASCII Video</h4>
                                 <div class="cl-my-well" style="display:inline-block" >
                                     <div style="position: relative">
@@ -126,6 +121,31 @@
                 </div>
 
                 <div lx-monitor-control-keys-directive ></div>
+            </div>
+
+            <div ng-if="debugBuildEnabled">
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <td>Room Name: {{ roomName }}</td>
+                        <td>Room Id:   {{ roomId }}</td>
+                    </tr>
+                    <tr>
+                        <td>User Name: {{ userName }}</td>
+                        <td>Remote User Id: {{ videoSignalingObject.remoteUserId }}</td>
+                    </tr>
+                    <tr>
+                        <td>localHasSelectedVideoType: {{ videoSignalingObject.localHasSelectedVideoType }}</td>
+                        <td>localIsRequestingVideoType: {{ videoSignalingObject.localIsRequestingVideoType }}</td>
+                    </tr>
+                    <tr>
+                        <td>localIsSendingVideoType: {{ videoSignalingObject.localIsSendingVideoType }}</td>
+                        <td>remoteIsSendingVideoType: {{ videoSignalingObject.remoteIsSendingVideoType }}</td>
+                    </tr>
+                    <tr>
+                        <td>remoteSettingsType: {{ videoSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>
+                        <td>remoteRequestVideoType: {{ videoSignalingObject.remoteVideoSignalingStatus.videoType }}</td>
+                    </tr>
+                </table>
             </div>
 
             <!-- Footer div is at the bottom of the page, but is placed here so that it
