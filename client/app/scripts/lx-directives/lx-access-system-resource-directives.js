@@ -319,6 +319,7 @@ lxAccessSystemResources.directive('lxAccessCameraAndMicrophoneDirective', functi
 
                              // default to 'HD Video' -- can change this later based on cookies etc.
                             videoSignalingObject.localHasSelectedVideoType = 'HD Video';
+                            videoSignalingObject.localIsRequestingVideoType = 'HD Video';
 
                             // If the user has just allowed access to their camera and microphone, then it is probably
                             // necessary to start a new video call.
