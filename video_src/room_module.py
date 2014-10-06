@@ -188,6 +188,7 @@ def send_room_status_to_room_members(room_obj, user_id):
         message_obj['messagePayload']['rtcInitiator'] = False
         message_obj['messagePayload']['userId'] = other_user_id
         message_obj['messagePayload']['remoteUserId'] = user_id
+        logging.info('Sending user %d room status %s' % (other_user_id, json.dumps(message_obj)))
         messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
 
 
@@ -198,7 +199,7 @@ def send_room_status_to_room_members(room_obj, user_id):
     # Send a message to the active client, indicating the room status
     message_obj['messagePayload']['userId'] = user_id
     message_obj['messagePayload']['remoteUserId'] = other_user_id
-    logging.debug('Sending message to active_user: %s' % repr(message_obj))
+    logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
     messaging.on_message(room_obj, user_id, json.dumps(message_obj))
 
 
@@ -270,16 +271,10 @@ class DisconnectPage(webapp2.RequestHandler):
                 logging.info('User %d' % user_id + ' removed from room %d' % room_id)
                 logging.info('Room %d ' % room_id + ' has state ' + str(room_obj))
 
+                # The 'active' user has disconnected from the room, so we want to send an update to the remote
+                # user informing them of the new status.
                 if other_user_id:
-                    pass
-                    # message_object = {"messageType": "sdp",
-                    #                                     "messagePayload" : {
-                    #                                         "type" : "bye"
-                    #                                     }}
-                    #logging.info('Sent "bye" to %d' % other_user_id)
-
-
-                send_room_status_to_room_members(room_obj, user_id)
+                    send_room_status_to_room_members(room_obj, other_user_id)
             else:
                 logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_obj.room_name, room_id, user_id))
 
