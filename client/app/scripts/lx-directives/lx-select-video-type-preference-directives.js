@@ -105,8 +105,10 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
     return {
         restrict: 'A',
+        template: '<nav class="navbar navbar-inverse navbar-fixed-bottom cl-navbar-absolute-bottom cl-show-hide-fade ng-hide" ></nav>',
         link : function(scope, elem) {
             var message;
+            var navelem = angular.element(elem).find('nav.navbar');
 
             scope.$watch(getVideoSignalingStatusForUserFeedback(scope), function(newValue) {
 
@@ -116,38 +118,38 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                 switch(newValue) {
                     case 'waitingForRemoteUserToJoin':
                         message = 'We are waiting for someone to join you in this room';
-                        showMessageInVideoWindow(scope, elem, message);
+                        showMessageInVideoWindow(scope, navelem, message);
                         break;
                     case 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType:
-                        showRequestForChangeVideoType(scope, elem, remoteSignalingStatus.videoType);
+                        showRequestForChangeVideoType(scope, navelem, remoteSignalingStatus.videoType);
                         break;
 
                     case 'waitingForRemoteToAcceptVideoType: ' +  localIsRequestingVideoType:
                         message = 'We are waiting for remote user to accept your request to exchange ' + localIsRequestingVideoType;
-                        showMessageInVideoWindow(scope, elem, message);
+                        showMessageInVideoWindow(scope, navelem, message);
                         break;
 
 
                     case 'remoteHasDeniedRequestToExchangeFormat: ' + remoteSignalingStatus.videoType:
                         message = 'Remote user has denied your request to exchange ' + remoteSignalingStatus.videoType;
-                        showMessageInVideoWindow(scope, elem, message, 5000);
+                        showMessageInVideoWindow(scope, navelem, message, 5000);
                         break;
 
                     case 'remoteUserHasAcceptedYourRequestToTransmit: ' + remoteSignalingStatus.videoType:
                         message = 'Remote user has accepted your request to transmit ' + remoteSignalingStatus.videoType +
                                 ' . Please wait a moment for the new video format to begin transmission.';
-                        showMessageInVideoWindow(scope, elem, message);
+                        showMessageInVideoWindow(scope, navelem, message);
                         break;
 
                     case 'conflictingVideoTypes':
                         message = 'It appears that you have requested to use ' + localIsRequestingVideoType +
                                                     ' but the remote user has accepted ' + remoteSignalingStatus.videoType +
                                                     '. We were unable to change the video format. Please try again.';
-                        showMessageInVideoWindow(scope, elem, message);
+                        showMessageInVideoWindow(scope, navelem, message);
                         break;
 
                     case null:
-                        removeMessageInVideoWindow(scope, elem);
+                        removeMessageInVideoWindow(scope, navelem);
                         break;
 
                     default:
