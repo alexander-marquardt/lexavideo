@@ -96,15 +96,19 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
     }
 
 
-    var onFrame = function(canvas, $asciiDrawingTextElement) {
+    var onFrame = function(canvas, $asciiDrawingTextElement, remoteUserId) {
 
         asciiFromCanvas(canvas, {
             contrast: 128,
             callback: function(asciiString) {
                 $asciiDrawingTextElement.html(asciiString);
                 var compressedString = LZString.compressToUTF16(asciiString);
-                // send the compressed string to the remote user (through the server)
-                lxMessageService.sendMessage('videoStream', {streamType: 'ASCII Video', compressedVideoString: compressedString});
+
+                // check if the remote user is connected before sending the ascii image to the server
+                if (remoteUserId) {
+                     // send the compressed string to the remote user (through the server)
+                    lxMessageService.sendMessage('videoStream', {streamType: 'ASCII Video', compressedVideoString: compressedString});
+                }
             }
         });
     };
@@ -137,7 +141,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                 try {
                     if (scope.videoSignalingObject.localIsSendingVideoType === 'ASCII Video') {
                         localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
-                        onFrame(localCanvas, $localAsciiDrawingTextElement);
+                        onFrame(localCanvas, $localAsciiDrawingTextElement, scope.videoSignalingObject.remoteUserId);
                     }
                 } catch (e) {
                     $log.error('Error drawing image in canvas' + e);
