@@ -147,7 +147,20 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 if (newRemoteUserId === null && oldRemoteUserId) {
                     scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteUserHasLeftRoom';
                 }
+
+                if (newRemoteUserId === null) {
+                    // remote user is not connected, so set the signaling status to null
+                    scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType = null;
+                    scope.videoSignalingObject.remoteVideoSignalingStatus.videoType = null;
+
+                    // remote user is not connected, so set the sending videoType to null
+                    scope.videoSignalingObject.remoteIsSendingVideoType = null;
+                }
             });
+
+//            Object.observe(scope.videoSignalingObject.remoteVideoSignalingStatus, function(changes) {
+//                $log.debug('Changes: ' + angular.toJson(changes));
+//            });
 
             // This watcher will monitor for remote requests to change the current video format, and will either
             // respond directly, or modify a variable that will trigger another watcher that will request user

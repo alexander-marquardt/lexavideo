@@ -69,7 +69,9 @@
                         <div class="text-center" >
                             <div ng-controller="lxVideoNegotiationCtrl">
                                 <div id="id-remote-hd-video-wrapper-div"
-                                     ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.remoteIsSendingVideoType) || videoSignalingObject.debugShowAllVideoWindows">
+                                     ng-show="videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||
+                                     (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == 'HD Video') ||
+                                     videoSignalingObject.debugShowAllVideoWindows">
                                     <h4>Remote HD Video</h4>
 
                                     <div  class="cl-my-well" style="display:inline-block">
@@ -82,7 +84,9 @@
                                 </div>
 
                                 <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"
-                                     ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'ASCII Video') || videoSignalingObject.debugShowAllVideoWindows">
+                                     ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'ASCII Video') ||
+                                     (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ||
+                                     videoSignalingObject.debugShowAllVideoWindows">
                                     <h4>Remote ASCII Video</h4>
                                     <div style="display:inline-block" class="cl-my-well">
                                         <div style="position: relative">
@@ -134,8 +138,8 @@
                         <td>remoteIsSendingVideoType: {{ videoSignalingObject.remoteIsSendingVideoType }}</td>
                     </tr>
                     <tr>
-                        <td>remoteSettingsType: {{ videoSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>
-                        <td>remoteRequestVideoType: {{ videoSignalingObject.remoteVideoSignalingStatus.videoType }}</td>
+                        <td>remoteVideoSignalingStatus.settingsType: {{ videoSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>
+                        <td>remoteVideoSignalingStatus.videoType: {{ videoSignalingObject.remoteVideoSignalingStatus.videoType }}</td>
                     </tr>
                 </table>
             </div>
