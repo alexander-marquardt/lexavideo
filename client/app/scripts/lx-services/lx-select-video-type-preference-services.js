@@ -60,14 +60,15 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 // Note: scope.videoSignalingObject.localIsSendingVideoType will be set to 'HD Video' once the
                 // stream is being sent - this happens in the onRemoteStreamAdded callback.
 
-                // HD Video videoSignalingStatusForUserFeedback messages are cleared inside the onRemoteStreamAdded callback
+                // Note: HD Video videoSignalingStatusForUserFeedback messages are cleared inside the onRemoteStreamAdded callback
             }
             else if (videoType === 'ASCII Video') {
                 // Switch to ASCII video type, and stop  the HD video stream.
                 scope.videoSignalingObject.localIsSendingVideoType = videoType;
                 scope.videoSignalingObject.remoteIsSendingVideoType = videoType;
 
-                // clear feedback messages
+                // clear feedback messages - ASCII video transmission will start immediately and therefore
+                // user will not see any feedback regarding the transition to ASCII video. 
                 scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
 
                 // kill the webRtc session. Ascii video should start to be transmitted in both directions.
