@@ -128,6 +128,9 @@ angular.module('lxChannel.services', [])
                                 //videoSignalingObject.remoteUserId = null;
                             }
 
+                            videoSignalingObject.localHasSelectedVideoType = messageObject.messagePayload['currentlySelectedVideoType'];
+                            videoSignalingObject.localIsRequestingVideoType =  messageObject.messagePayload['currentlySelectedVideoType'];
+
                             // See server-side code for more info on rtcInitiator. Basically, if rtcInitiator is sent to the
                             // client, it means that we should attempt to initiate a new rtc connection from scratch once
                             // all pre-conditions are in place for setting up. We do it like this to effectively

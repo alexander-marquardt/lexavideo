@@ -28,6 +28,12 @@ def handle_message(room_obj, from_user_id, message):
             logging.info('Room ' + room_name + ' has state ' + repr(room_obj))
 
     if message_type == 'videoSettings':
+        if message_payload['settingsType'] == 'acceptVideoType':
+            # If the user is sending an 'acceptVideoType' message, then both parties have agreed to the new video
+            # format, and this is now the new default format for the current room.
+            room_obj.currently_selected_video_type = message_payload['videoType']
+            room_obj.put()
+
         logging.info('videoSettings message received: ' + repr(message_payload))
 
 

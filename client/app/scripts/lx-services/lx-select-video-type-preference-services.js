@@ -68,7 +68,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 scope.videoSignalingObject.remoteIsSendingVideoType = videoType;
 
                 // clear feedback messages - ASCII video transmission will start immediately and therefore
-                // user will not see any feedback regarding the transition to ASCII video. 
+                // user will not see any feedback regarding the transition to ASCII video.
                 scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
 
                 // kill the webRtc session. Ascii video should start to be transmitted in both directions.

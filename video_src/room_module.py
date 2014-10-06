@@ -40,6 +40,11 @@ class RoomInfo(ndb.Model):
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
+    # When a user first joins the room, this will be the type of video that they will display. If a user is alone
+    # in a room and changes their video type, then the next person to join will automatically have that video type
+    # selected as well.
+    currently_selected_video_type = ndb.StringProperty(default = 'HD Video')
+
     def __str__(self):
         result = '['
         if self.room_creator_key:
@@ -166,6 +171,7 @@ def send_room_status_to_room_members(room_obj, user_id):
     message_obj = {'messageType': 'roomStatus',
                    'messagePayload': {
                        'roomName': room_obj.room_name,
+                       'currentlySelectedVideoType': room_obj.currently_selected_video_type,
                        # 'roomCreatorId' : room_obj.room_creator_key.id() if room_obj.room_creator_key else None,
                        # 'roomJoinerId'  : room_obj.room_joiner_key.id() if room_obj.room_joiner_key else None,
                        },
@@ -184,6 +190,8 @@ def send_room_status_to_room_members(room_obj, user_id):
         message_obj['messagePayload']['remoteUserId'] = user_id
         messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
 
+
+    if other_user_id:
         # The current user will be the rtcInitiator since there is already someone in the room.
         message_obj['messagePayload']['rtcInitiator'] = True
 
