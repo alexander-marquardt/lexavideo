@@ -100,19 +100,19 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
             // the current video type. This may require some attention in the case that a client that has received a request
             // and sent an acceptance of a particular video type, may also then send a duplicate request for that same
             // video type. This duplicate request is harmless and should be ignored by the recipient.
-            scope.$watch('videoSignalingObject.localIsRequestingVideoType', function(newVideoType) {
+            scope.$watch('videoSignalingObject.localIsRequestingVideoType', function(localIsRequestingVideoType) {
 
                 // if the user has not explicitly requested a modification to the video type by pressing on one of the
-                // buttons, then newVideoType should be null and this code should not be executed.
-                if (newVideoType != null) {
+                // buttons, then localIsRequestingVideoType should be null and this code should not be executed.
+                if (localIsRequestingVideoType != null) {
                     // Check if there is a remote user in the room
                     if (scope.videoSignalingObject.remoteUserId) {
 
-                        if (newVideoType === 'HD Video' || newVideoType === 'ASCII Video') {
+                        if (localIsRequestingVideoType === 'HD Video' || localIsRequestingVideoType === 'ASCII Video') {
 
                             // remove the user feedback indicating that we are waiting for the remote user
                             // to accept HD video
-                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + newVideoType;
+                            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAcceptVideoType: ' + localIsRequestingVideoType;
 
                             // No need to re-negotiate the videoType, since we have just set it back to a previous value due to
                             // a remote denial for a proposed new videoType.
@@ -120,13 +120,23 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                         }
                         else {
-                            $log.error('Unknown videoType: ' + newVideoType);
+                            $log.error('Unknown videoType: ' + localIsRequestingVideoType);
                         }
                     }
 
                     // The current user is alone in the room
                     else {
                         scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteUserToJoin';
+
+                        // Send an 'accept' of the selected videoType to the server -- this will cause the room
+                        // to update it's value stored for 'currently_selected_video_type'. Future joiners to
+                        // the room will have their videoType initialized to this value.
+                        self.negotiateVideoType.sendAcceptanceOfVideoType(localIsRequestingVideoType);
+
+
+                        // set localIsSendingVideoType to localIsRequestingVideoType so that they will be shown the
+                        // correct video windows.
+                        scope.videoSignalingObject.localIsSendingVideoType = localIsRequestingVideoType;
                     }
                 }
             });
