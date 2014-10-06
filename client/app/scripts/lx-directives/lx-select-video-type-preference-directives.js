@@ -63,8 +63,14 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                 // Other user has requested videoType video, and this user has agreed to send it.
                 message = 'We are now setting up the communications for transmitting ' + videoType;
                 showMessageInVideoWindow(scope, elem, message);
+
+                // by changing localHasSelectedVideoType, we will change the video selection button to the new
+                // videoType
                 scope.videoSignalingObject.localHasSelectedVideoType = videoType;
-                scope.videoSignalingObject.localIsRequestingVideoType = videoType;
+
+                // The local user has not actually requested any videoType - he is only responding to the remote request.
+                // We do not want to execute watchers or change user feedback messages based on the new videoType.
+                scope.videoSignalingObject.localIsRequestingVideoType = null;
 
                 lxVideoSettingsNegotiationService.startVideoType(scope, videoType);
 
