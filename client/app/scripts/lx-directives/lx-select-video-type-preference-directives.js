@@ -70,7 +70,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
                 // The local user has not actually requested any videoType - he is only responding to the remote request.
                 // We do not want to execute watchers or change user feedback messages based on the new videoType.
-                scope.videoSignalingObject.localIsRequestingVideoType = null;
+                scope.videoSignalingObject.localIsNegotiatingForVideoType = null;
 
                 lxVideoSettingsNegotiationService.startVideoType(scope, videoType);
 
@@ -113,7 +113,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
             scope.$watch(getVideoSignalingStatusForUserFeedback(scope), function(newValue) {
 
                 var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
-                var localIsRequestingVideoType = scope.videoSignalingObject.localIsRequestingVideoType;
+                var localIsNegotiatingForVideoType = scope.videoSignalingObject.localIsNegotiatingForVideoType;
 
                 switch(newValue) {
                     case 'waitingForRemoteUserToJoin':
@@ -124,8 +124,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         showRequestForChangeVideoType(scope, navelem, remoteSignalingStatus.videoType);
                         break;
 
-                    case 'waitingForRemoteToAcceptVideoType: ' +  localIsRequestingVideoType:
-                        message = 'We are waiting for remote user to accept your request to exchange ' + localIsRequestingVideoType;
+                    case 'waitingForRemoteToAcceptVideoType: ' +  localIsNegotiatingForVideoType:
+                        message = 'We are waiting for remote user to accept your request to exchange ' + localIsNegotiatingForVideoType;
                         showMessageInVideoWindow(scope, navelem, message);
                         break;
 
@@ -142,7 +142,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         break;
 
                     case 'conflictingVideoTypes':
-                        message = 'It appears that you have requested to use ' + localIsRequestingVideoType +
+                        message = 'It appears that you have requested to use ' + localIsNegotiatingForVideoType +
                                                     ' but the remote user has accepted ' + remoteSignalingStatus.videoType +
                                                     '. We were unable to change the video format. Please try again.';
                         showMessageInVideoWindow(scope, navelem, message);

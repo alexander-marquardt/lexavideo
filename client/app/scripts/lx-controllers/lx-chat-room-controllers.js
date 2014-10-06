@@ -85,16 +85,16 @@ angular.module('lxUseChatRoom.controllers', [])
             // clicked on. This is used for highlighting the button that the user has currently selected.
             localHasSelectedVideoType : null,  // null, 'ASCII Video', 'HD Video'.
 
-            // localIsRequestingVideoType is almost the same as localHasSelectedVideoType and when the user initially
+            // localIsNegotiatingForVideoType is almost the same as localHasSelectedVideoType and when the user initially
             // presses the videoType button, both values will be set to the same value.
-            // However, localIsRequestingVideoType is the value that will
+            // However, localIsNegotiatingForVideoType is the value that will
             // be watched for changes and that is monitored throughout the video-type-preference code. The difference between
-            // localIsRequestingVideoType and localHasSelectedVideoType is that localIsRequestingVideoType (this
+            // localIsNegotiatingForVideoType and localHasSelectedVideoType is that localIsNegotiatingForVideoType (this
             // variable) will not be updated based on feedback from from the remote user such as rejection of a request,
             // while localHasSelectedVideoType will always be updated to reflect the most up-to-date status of the
             // signaling between the local and remote user. This is necessary to prevent our watchers from executing
             // after receiving a rejection of a request to modify the videoType from a remote client.
-            localIsRequestingVideoType: null,
+            localIsNegotiatingForVideoType: null,
 
             // localIsSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
             // the video transmission has started (ie. when lxPeerService.addLocalVideoStream is executed)
@@ -134,7 +134,7 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {
             // videoType should be 'HD Video' or 'ASCII Video'
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
-            $scope.videoSignalingObject.localIsRequestingVideoType = localHasSelectedVideoType;
+            $scope.videoSignalingObject.localIsNegotiatingForVideoType = localHasSelectedVideoType;
         };
 
         $scope.myUsername = lxUseChatRoomConstantsService.myUsername;
