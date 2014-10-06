@@ -504,6 +504,9 @@ webRtcServices.factory('lxMediaService',
                 $timeout(function() {
                     videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
                 });
+
+                // we might have been waiting for access to the media stream to start the call.
+                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject)
             };
         };
 
@@ -580,7 +583,7 @@ webRtcServices.factory('lxCallService',
                     if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
                         lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
-                        $log.log('Connecting...Creating PeerConnection.');
+                        $log.debug('Starting webRtc services!!');
 
                         lxPeerService.createPeerConnection(localVideoObject, remoteVideoObject, videoSignalingObject);
 
