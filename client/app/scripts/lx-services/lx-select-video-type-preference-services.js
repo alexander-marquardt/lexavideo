@@ -141,6 +141,14 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 }
             });
 
+
+            // Monitor remoteUserId to track if the remote user is currently in the room, or out of it
+            scope.$watch('videoSignalingObject.remoteUserId', function(newRemoteUserId, oldRemoteUserId) {
+                if (newRemoteUserId === null && oldRemoteUserId) {
+                    scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteUserHasLeftRoom';
+                }
+            });
+
             // This watcher will monitor for remote requests to change the current video format, and will either
             // respond directly, or modify a variable that will trigger another watcher that will request user
             // feedback on how to respond. More details in the comments below.
@@ -157,7 +165,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         // the remote user has requested the videoType that the local user has already selected.
 
                         self.negotiateVideoType.sendAcceptanceOfVideoType(remoteSignalingStatus.videoType);
-                        $log.debug('Automatically settings video type to ' + remoteSignalingStatus.videoType + 'since it was already selected. ');
+                        $log.debug('Automatically accepting video type ' + remoteSignalingStatus.videoType + ' since it was already selected locally. ');
 
                         self.startVideoType(scope, localHasSelectedVideoType)
 

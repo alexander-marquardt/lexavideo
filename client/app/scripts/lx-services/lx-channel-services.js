@@ -125,7 +125,6 @@ angular.module('lxChannel.services', [])
                             }
                             else {
                                 $log.error('remoteUserId not received in roomStatus messagePayload');
-                                //videoSignalingObject.remoteUserId = null;
                             }
 
                             videoSignalingObject.localHasSelectedVideoType = messageObject.messagePayload['currentlySelectedVideoType'];

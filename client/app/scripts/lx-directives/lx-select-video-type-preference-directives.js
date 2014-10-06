@@ -141,6 +141,11 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         showMessageInVideoWindow(scope, navelem, message);
                         break;
 
+                    case 'remoteUserHasLeftRoom':
+                        message = 'Remote user has left the room. We are now waiting for another person to join you';
+                        showMessageInVideoWindow(scope, navelem, message);
+                        break;
+
                     case 'conflictingVideoTypes':
                         message = 'It appears that you have requested to use ' + localIsNegotiatingForVideoType +
                                                     ' but the remote user has accepted ' + remoteSignalingStatus.videoType +

@@ -73,7 +73,7 @@ def on_message(room_obj, to_user_id, message):
     to_client_id = room_obj.make_client_id(to_user_id)
     if room_obj.is_connected(to_user_id):
         channel.send_message(to_client_id, message)
-        logging.info('Delivered message to user %d' % to_user_id)
+        #logging.info('Delivered message to user %d' % to_user_id)
     else:
         new_message = models.Message(client_id = to_client_id, msg = message)
         new_message.put()
