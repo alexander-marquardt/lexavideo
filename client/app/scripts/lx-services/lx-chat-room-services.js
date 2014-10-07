@@ -38,8 +38,7 @@ angular.module('lxChatRoom.services', [])
 
                 var roomObj = {};
                 roomObj.roomName = lxUseChatRoomConstantsService.roomName;
-                roomObj.userName = lxAppWideConstantsService.userName;
-
+                roomObj.userId = lxAppWideConstantsService.userId;
 
                 lxHttpHandleRoomService.enterIntoRoom(roomObj).then(
                     function(data){

@@ -104,14 +104,12 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # log this error for further analysis
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
 
-
-        room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get()
-        current_user_name = room_dict['user_name']
-        current_user_key = models.UserModel.query(models.UserModel.user_name == current_user_name).get(keys_only = True)
-        current_user_id = current_user_key.id()
+        current_user_id = room_dict['user_id']
+        current_user_key = ndb.Key('UserModel', current_user_id)
 
         response_dict = {}
 
+        room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get()
         if room_obj:
             # The room has already been created - try to add this user to the room.
             # Check to make sure that they have not already been added before adding.
