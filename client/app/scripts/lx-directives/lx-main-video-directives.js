@@ -90,7 +90,6 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
             var $miniVideoDiv = angular.element(elem).find('#id-mini-video-div');
 
-
             var transitionVideoToActive = function() {
                 $log.debug('\n\ntransitionVideoToActive\n\n');
                 lxUserNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
@@ -174,11 +173,10 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                             localVideoObject.localHdVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteHdVideoWrapper.style.display = 'inline';
 
-                            // attach the mini-video window to the HD Video wrapper
+//                            // attach the mini-video window to the HD Video wrapper
                             var miniVideoDiv = $miniVideoDiv.detach();
                             if ( videoSignalingObject.remoteIsSendingVideoType === 'HD Video') {
                                 angular.element(remoteVideoObject.remoteHdVideoElem).parent().prepend(miniVideoDiv);
-                                reattachMediaStreamToMiniVideoElems();
                             }
                             else if (videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
                                 angular.element(remoteVideoObject.remoteAsciiVideoElem).parent().prepend(miniVideoDiv);
@@ -186,6 +184,9 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                             else {
                                 throw new Error('Unknown videoype: ' + videoSignalingObject.remoteIsSendingVideoType)
                             }
+                            // The following line is necessary or else Firefox video will freeze after detaching the
+                            // and re-attaching the video element.
+                            reattachMediaStreamToMiniVideoElems();
 
                         } else {
                             // XS screen without a remote signal, therefore we should show the local video and hide the remote video
