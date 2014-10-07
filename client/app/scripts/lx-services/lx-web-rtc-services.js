@@ -189,7 +189,7 @@ webRtcServices.service('lxIceService', function($log, lxMessageService) {
     };
 
     this.onAddIceCandidateError = function(error) {
-        $log.error('Failed to add Ice Candidate: ' + error.toString());
+        $log.error('Failed to add Ice Candidate: ' + angular.toJson(error));
     };
 });
 
@@ -375,7 +375,7 @@ webRtcServices.factory('lxPeerService',
     {
 
 
-        var pcStatus = function (self) {
+        var pcStatus = function () {
             var contents = '';
             if (self.pc) {
                 contents += 'Gathering: ' + self.pc.iceGatheringState + '\n';
@@ -386,7 +386,7 @@ webRtcServices.factory('lxPeerService',
             return contents;
         };
 
-        var onRemoteStreamAdded = function(self, localVideoObject, remoteVideoObject, videoSignalingObject) {
+        var onRemoteStreamAdded = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
             return function(mediaStreamEvent) {
                 $log.log('Remote stream added.');
                 lxAdapterService.attachMediaStream(remoteVideoObject.remoteVideoElem, mediaStreamEvent.stream);
@@ -403,29 +403,29 @@ webRtcServices.factory('lxPeerService',
             $log.info('Remote stream removed.');
         };
 
-        var onSignalingStateChanged = function(self){
+        var onSignalingStateChanged = function(){
             return function() {
-                $log.info(pcStatus(self));
+                $log.info(pcStatus());
             };
         };
 
-        var onIceConnectionStateChanged = function(self) {
+        var onIceConnectionStateChanged = function() {
             return function() {
-                $log.info(pcStatus(self));
+                $log.info(pcStatus());
             };
         };
 
 
 
         /* Externally visible variables and methods */
-        return {
+        var self =  {
             pc : null,
             remoteStream : null,
             createPeerConnection : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
                 try {
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
-                    this.pc = new lxAdapterService.RTCPeerConnection(lxUseChatRoomVarsService.pcConfig, lxUseChatRoomConstantsService.pcConstraints);
-                    this.pc.onicecandidate = lxIceService.onIceCandidate;
+                    self.pc = new lxAdapterService.RTCPeerConnection(lxUseChatRoomVarsService.pcConfig, lxUseChatRoomConstantsService.pcConstraints);
+                    self.pc.onicecandidate = lxIceService.onIceCandidate;
                     $log.log('Created RTCPeerConnnection with:\n' +
                         '  config: \'' + JSON.stringify(lxUseChatRoomVarsService.pcConfig) + '\';\n' +
                         '  constraints: \'' + JSON.stringify(lxUseChatRoomConstantsService.pcConstraints) + '\'.');
@@ -434,26 +434,27 @@ webRtcServices.factory('lxPeerService',
                     $log.error(e);
                     return;
                 }
-                this.pc.onaddstream = onRemoteStreamAdded(this, localVideoObject, remoteVideoObject, videoSignalingObject);
-                this.pc.onremovestream = onRemoteStreamRemoved;
-                this.pc.onsignalingstatechange = onSignalingStateChanged(this);
-                this.pc.oniceconnectionstatechange = onIceConnectionStateChanged(this);
+                self.pc.onaddstream = onRemoteStreamAdded(localVideoObject, remoteVideoObject, videoSignalingObject);
+                self.pc.onremovestream = onRemoteStreamRemoved;
+                self.pc.onsignalingstatechange = onSignalingStateChanged();
+                self.pc.oniceconnectionstatechange = onIceConnectionStateChanged();
             },
             removeLocalVideoStream : function(/*localStream*/) {
-                if (this.pc) {
+                if (self.pc) {
                     $log.error('This functionality is not supported by Firefox as of Aug 18 2014, and therefore should not be used.');
-                    //this.pc.removeStream(localStream);
+                    //self.pc.removeStream(localStream);
                 }
             },
             addLocalVideoStream : function(localStream) {
 
-                if (this.pc) {
-                    this.pc.addStream(localStream);
+                if (self.pc) {
+                    self.pc.addStream(localStream);
                 } else {
                     $log.error('Error: no peer connection has been established, and therefore we cannot add the stream to it.');
                 }
             }
         };
+        return self;
     }
 );
 
