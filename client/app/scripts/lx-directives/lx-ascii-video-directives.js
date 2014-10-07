@@ -271,7 +271,7 @@ asciiVideoDirectives.directive('lxDrawRemoteAsciiVideoDirective', function(lxCha
                 });
 
                 // monitor to see if remote user stops sending, and if they do then remove the currently displayed
-                // image. 
+                // image.
                 scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
                     if (remoteIsSendingVideoType === null) {
                         // remote is not transmitting, so hide the ascii video element

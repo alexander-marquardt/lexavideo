@@ -104,11 +104,11 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
                     });
 
                     if (invalidCharacterCount === 1) {
-                        $scope.invalidCharacterFeedback = invalidCharacterFeedbackArray[0] + ' is not allowed in the room name';
+                        $scope.invalidCharacterFeedback = invalidCharacterFeedbackArray[0] + ' is not allowed in the private chat name';
                     }
                     else  {
                         $scope.invalidCharacterFeedback =  invalidCharacterFeedbackArray.slice(0, invalidCharacterFeedbackArray.length-1).join(',') + ' and ' +
-                            invalidCharacterFeedbackArray.slice(-1) + ' are not allowed in the room name';
+                            invalidCharacterFeedbackArray.slice(-1) + ' are not allowed in the private chat name';
                     }
                 }
         });

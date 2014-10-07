@@ -103,11 +103,11 @@ angular.module('lxUserInputFeedback.directives', [])
                                                 ctrl.$setValidity('roomIsFull', true);
 
                                                 if (data.roomIsRegistered === false || data.numInRoom === 0) {
-                                                    ctrl.roomIsEmptyMessage = 'Room name is available!';
+                                                    ctrl.roomIsEmptyMessage = 'Private chat name is available!';
                                                     ctrl.submitButtonText = 'Create!';
                                                 }
                                                 else {
-                                                    var msg = data.roomName + ' has ' + data.numInRoom + ' occupant';
+                                                    var msg = 'Chat ' + data.roomName + ' has ' + data.numInRoom + ' occupant';
                                                     var plural = msg + 's';
                                                     ctrl.roomNotFullMessage = data.numInRoom === 1 ? msg : plural;
                                                     ctrl.submitButtonText = 'Join!';
@@ -117,7 +117,7 @@ angular.module('lxUserInputFeedback.directives', [])
                                         else {
                                             // This will likely occasionally happen, but if it happens too often then it is likely an indication
                                             // that something is going wrong
-                                            $log.warn('Warning: room name ' + data.roomName +
+                                            $log.warn('Warning: private chat name ' + data.roomName +
                                                 ' returned from server does not match most recently typed room name ' + inputElement.value);
                                         }
                                     }, function() {

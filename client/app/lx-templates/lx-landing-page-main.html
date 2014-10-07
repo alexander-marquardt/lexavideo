@@ -20,13 +20,13 @@
         <div >
             <div class="col-xs-12">
                 <div class="well cl-xs-max-width">
-                    <h3>Enter into a chat room</h3>
+                    <h3>Enter into a private chat (one-on-one)</h3>
                     <div class="clearfix">
                         <form name="createRoomForm" role="form" novalidate>
                             <div class="form-group">
                                 <div class="cl-room-name-input input-group">
                                     <input class=" form-control"
-                                           placeholder="room name"
+                                           placeholder="chat name"
                                            name="roomNameInputElem"
                                            ng-model="roomObj.roomName"
                                            ng-minlength="{{ minInputLength }}"
@@ -48,12 +48,12 @@
                                     <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
                                     added and removed from the DOM -->
                                     <div class="text-danger" ng-show="createRoomForm.roomNameInputElem.$dirty">
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a room name</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Room name must be at least {{ minInputLength }} characters</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Room name cannot be longer than {{ maxInputLength }} characters</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a chat name</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">
                                             {{ invalidCharacterFeedback }}</small>
-                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Room is full</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Chat is full</small>
                                     </div>
                                     <div  ng-show="createRoomForm.$valid">
                                         <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
