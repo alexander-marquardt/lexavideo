@@ -61,8 +61,8 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.remoteVideoObject = {
             remoteVideoElem : undefined, // set in lxVideoElementDirective
-            remoteVideoWrapper : undefined // set in lxHdVideoWrapperDirective
-
+            remoteVideoWrapper : undefined, // set in lxHdVideoWrapperDirective
+            remoteAsciiVideoElem: undefined // set in lxDrawRemoteAsciiVideoDirective
         };
 
         $scope.localVideoObject = {

@@ -82,13 +82,13 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
     return {
         restrict : 'A',
-        link: function(scope) {
+        link: function(scope, elem) {
 
             var remoteVideoObject = scope.remoteVideoObject;
             var localVideoObject = scope.localVideoObject;
             var videoSignalingObject = scope.videoSignalingObject;
 
-
+            var $miniVideoDiv = angular.element(elem).find('#id-mini-video-div');
 
 
             var transitionVideoToActive = function() {
@@ -169,15 +169,30 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                         // If this is an active HD session on a small screen, then we display the remote video with a local
                         // video embedded inside of a mini-video element. Alternatively, if the remote user is sending
                         // ASCII video, then we show the local video embedded inside of the ASCII video element.
-                        if ( videoSignalingObject.remoteIsSendingVideoType === 'HD Video' || videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
+                        if ( videoSignalingObject.remoteIsSendingVideoType !== null) {
                             showMiniVideoElems();
                             localVideoObject.localVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
+
+                            // attach the mini-video window to the HD Video wrapper
+                            var miniVideoDiv = $miniVideoDiv.detach();
+                            if ( videoSignalingObject.remoteIsSendingVideoType === 'HD Video') {
+                                angular.element(remoteVideoObject.remoteVideoElem).parent().prepend(miniVideoDiv);
+                                reattachMediaStreamToMiniVideoElems();
+                            }
+                            else if (videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
+                                angular.element(remoteVideoObject.remoteAsciiVideoElem).parent().prepend(miniVideoDiv);
+                            }
+                            else {
+                                throw new Error('Unknown videoype: ' + videoSignalingObject.remoteIsSendingVideoType)
+                            }
+
                         } else {
                             // XS screen without a remote signal, therefore we should show the local video and hide the remote video
                             localVideoObject.localVideoWrapper.style.display = 'inline';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'none';
-                            hideMiniVideoElems();                        }
+                            hideMiniVideoElems();
+                        }
                     }
 
                     // This is not an XS device - this is a normal display

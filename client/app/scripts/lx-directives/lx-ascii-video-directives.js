@@ -237,6 +237,8 @@ asciiVideoDirectives.directive('lxDrawRemoteAsciiVideoDirective', function(lxCha
                         $remoteAsciiDrawingTextElement.removeClass('cl-transparent');
                     }
                 });
+
+                scope.remoteVideoObject.remoteAsciiVideoElem = angular.element(elem).find('.cl-ascii-container')[0];
             }
     };
 
