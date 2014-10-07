@@ -157,20 +157,23 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                 // cancel existing intervals and timers - they will be re-started by the code below.
                 cancelLocalAsciiVideoTimers();
 
-                // Since we can have multiple declarations of this directive (lxGenerateAsciiVideoDirective) on a single
-                // page (for example, one for the mini video window, and one for the normal video size), for efficiency,
-                // we need to make sure that we only generate and display ascii text from the currently displayed ascii
-                // video window. The following check makes sure that this is the case.
-                if (elem.is(':visible')) {
 
-                    if (lxStreamService.localStream) {
+                // Wait for the localStream to be setup before attempting to create ascii video from it.
+                if (lxStreamService.localStream) {
+
+                    // Since we can have multiple declarations of this directive (lxGenerateAsciiVideoDirective) on a single
+                    // page (for example, one for the mini video window, and one for the normal video size), for efficiency,
+                    // we need to make sure that we only generate and display ascii text from the currently displayed ascii
+                    // video window. The following check makes sure that this is the case.
+                    if (elem.is(':visible')) {
                         getImageFromVideo(); // get the image without waiting for the first interval's delay
                         frameInterval = setInterval(function () {
                             getImageFromVideo();
                         }, Math.round(1000 / canvasOptions.fps));
-                    } else {
-                        getStreamTimeout = setTimeout(getAsciiVideoFromLocalStream, 200);
                     }
+                }
+                else {
+                    getStreamTimeout = setTimeout(getAsciiVideoFromLocalStream, 200);
                 }
             }
 
