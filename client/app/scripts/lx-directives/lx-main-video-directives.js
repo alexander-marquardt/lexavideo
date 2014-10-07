@@ -98,11 +98,8 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
             var removeMiniVideoElemsSrc = function() {
                 $log.debug('removeMiniVideoElemsSrc');
-                if (localVideoObject.miniVideoElemInsideRemoteHd && localVideoObject.miniVideoElemInsideRemoteHd.src) {
-                    lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd.src , '');
-                }
-                if (localVideoObject.miniVideoElemInsideRemoteAscii && localVideoObject.miniVideoElemInsideRemoteAscii.src) {
-                    lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii.src, '');
+                if (localVideoObject.miniVideoElemInsideRemoteVideoWindow && localVideoObject.miniVideoElemInsideRemoteVideoWindow.src) {
+                    lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteVideoWindow.src , '');
                 }
             };
 
@@ -126,34 +123,31 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
             var hideMiniVideoElems = function() {
                 $log.debug('hideMiniVideoElems');
-                if (localVideoObject.miniVideoElemInsideRemoteHd) {localVideoObject.miniVideoElemInsideRemoteHd.style.opacity = 0;}
-                if (localVideoObject.miniVideoElemInsideRemoteAscii) {localVideoObject.miniVideoElemInsideRemoteAscii.style.opacity = 0;}
+                if (localVideoObject.miniVideoElemInsideRemoteVideoWindow) {
+                    localVideoObject.miniVideoElemInsideRemoteVideoWindow.style.opacity = 0;
+                }
                 removeMiniVideoElemsSrc();
             };
 
             var showMiniVideoElems = function() {
                 $log.debug('showMiniVideoElems');
-                if (localVideoObject.miniVideoElemInsideRemoteHd) {localVideoObject.miniVideoElemInsideRemoteHd.style.opacity = 1;}
-                if (localVideoObject.miniVideoElemInsideRemoteAscii) {localVideoObject.miniVideoElemInsideRemoteAscii.style.opacity = 1;}
+                if (localVideoObject.miniVideoElemInsideRemoteVideoWindow) {
+                    localVideoObject.miniVideoElemInsideRemoteVideoWindow.style.opacity = 1;
+                }
                 reattachMediaStreamToMiniVideoElems();
             };
 
             var reattachMediaStreamToMiniVideoElems = function() {
                 $log.debug('reattachMediaStreamToMiniVideoElems');
-                if (!localVideoObject.miniVideoElemInsideRemoteHd || !localVideoObject.miniVideoElemInsideRemoteAscii) {
+                if (!localVideoObject.miniVideoElemInsideRemoteVideoWindow) {
                     $log.error('Error: miniVideoElements not set');
                 } else {
-                    if (videoSignalingObject.remoteIsSendingVideoType === 'HD Video') {
-                        lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteHd, localVideoObject.localVideoElem);
+                    if (videoSignalingObject.remoteIsSendingVideoType !== null) {
+                        lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteVideoWindow, localVideoObject.localVideoElem);
                     }
-                    else if (videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video'){
-                        lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteAscii, localVideoObject.localVideoElem);
-                    }
-                    else if (videoSignalingObject.remoteIsSendingVideoType === null) {
+
+                    else  {
                         $log.warn('Warning: cannot attach media stream when remoteIsSendingVideoType is null');
-                    }
-                    else {
-                        $log.error('Error: unknown remoteIsSendingVideoType: ' + videoSignalingObject.remoteIsSendingVideoType);
                     }
                 }
             };
@@ -274,16 +268,7 @@ videoAppDirectives.directive('lxMiniVideoTemplateDirective', function($log) {
         restrict : 'A',
         templateUrl: 'lx-template-cache/mini-video-template.html',
         link: function(scope, elem) {
-            if (angular.element(elem).parents('#id-remote-hd-video-wrapper-div').length === 1) {
-                scope.localVideoObject.miniVideoElemInsideRemoteHd = angular.element(elem).find('.cl-mini-video-element')[0];
-            }
-            else if (angular.element(elem).parents('#id-remote-ascii-video-wrapper-div').length === 1) {
-                scope.localVideoObject.miniVideoElemInsideRemoteAscii = angular.element(elem).find('.cl-mini-video-element')[0];
-            }
-            else {
-                $log.log('Error: directive lx-mini-video-template-directive must be inside either ' +
-                    'id-remote-hd-video-wrapper-div, or id-remote-ascii-video-wrapper-div');
-            }
+            scope.localVideoObject.miniVideoElemInsideRemoteVideoWindow = angular.element(elem).find('.cl-mini-video-element')[0];
         }
     };
 });
