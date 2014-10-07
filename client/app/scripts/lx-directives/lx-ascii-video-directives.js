@@ -120,7 +120,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
             var frameInterval;
             var getStreamTimeout;
 
-            var videoElement = scope.localVideoObject.localVideoElem;
+            var videoElement = scope.localVideoObject.localHdVideoElem;
             var $localAsciiDrawingTextElement = angular.element(elem).find('.cl-ascii-container').find('.cl-ascii-drawing-text');
 
             var localCanvas = document.createElement('canvas');

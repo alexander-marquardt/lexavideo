@@ -242,7 +242,7 @@ webRtcServices.factory('lxSessionDescriptionService',
             var innerWaitForRemoteVideo = function() {
 
                 var videoTracks = lxPeerService.remoteStream.getVideoTracks();
-                if (!(videoTracks.length === 0 || remoteVideoObject.remoteVideoElem.currentTime > 0)) {
+                if (!(videoTracks.length === 0 || remoteVideoObject.remoteHdVideoElem.currentTime > 0)) {
                     $timeout(innerWaitForRemoteVideo, 100);
                 }
             };
@@ -389,7 +389,7 @@ webRtcServices.factory('lxPeerService',
         var onRemoteStreamAdded = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
             return function(mediaStreamEvent) {
                 $log.log('Remote stream added.');
-                lxAdapterService.attachMediaStream(remoteVideoObject.remoteVideoElem, mediaStreamEvent.stream);
+                lxAdapterService.attachMediaStream(remoteVideoObject.remoteHdVideoElem, mediaStreamEvent.stream);
                 self.remoteStream = mediaStreamEvent.stream;
 
                 videoSignalingObject.videoSignalingStatusForUserFeedback = null; // clear feedback messages
@@ -481,8 +481,8 @@ webRtcServices.factory('lxMediaService',
             return function(stream) {
                 $log.log('User has granted access to local media.');
                 // Call the polyfill wrapper to attach the media stream to this element.
-                lxAdapterService.attachMediaStream(localVideoObject.localVideoElem, stream);
-                localVideoObject.localVideoElem.style.opacity = 1;
+                lxAdapterService.attachMediaStream(localVideoObject.localHdVideoElem, stream);
+                localVideoObject.localHdVideoElem.style.opacity = 1;
                 lxStreamService.localStream = stream;
                 $timeout(function() {
                     videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
