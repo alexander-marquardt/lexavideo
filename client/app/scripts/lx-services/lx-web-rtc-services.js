@@ -255,9 +255,6 @@ webRtcServices.factory('lxSessionDescriptionService',
         };
 
         var self =  {
-            getSessionStatus : function() {
-                return sessionStatus;
-            },
 
             transitionSessionStatus : function(status) {
                 $timeout(function() {

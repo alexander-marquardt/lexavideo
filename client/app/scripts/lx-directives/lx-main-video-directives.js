@@ -157,12 +157,6 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 }
             };
 
-            var setupXsScreenWhenNoRemote = function() {
-                // XS screen without a remote signal, therefore we should show the local video and hide the remote video
-                localVideoObject.localVideoWrapper.style.display = 'inline';
-                remoteVideoObject.remoteVideoWrapper.style.display = 'none';
-                hideMiniVideoElems();
-            };
 
             var setupForCurrentDisplaySize = function() {
                 $log.debug('setupForCurrentDisplaySize');
@@ -180,13 +174,15 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                         // If this is an active HD session on a small screen, then we display the remote video with a local
                         // video embedded inside of a mini-video element. Alternatively, if the remote user is sending
                         // ASCII video, then we show the local video embedded inside of the ASCII video element.
-                        if (sessionStatus === 'active' || videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
+                        if ( videoSignalingObject.remoteIsSendingVideoType === 'HD Video' || videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
                             showMiniVideoElems();
                             localVideoObject.localVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
                         } else {
-                            setupXsScreenWhenNoRemote();
-                        }
+                            // XS screen without a remote signal, therefore we should show the local video and hide the remote video
+                            localVideoObject.localVideoWrapper.style.display = 'inline';
+                            remoteVideoObject.remoteVideoWrapper.style.display = 'none';
+                            hideMiniVideoElems();                        }
                     }
 
                     // This is not an XS device - this is a normal display
@@ -203,50 +199,13 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
             };*/
 
 
-            scope.$watch(lxSessionDescriptionService.getSessionStatus, function(status) {
 
-                // get a local copy of the current session status, and take appropriate action.
-                sessionStatus = status;
-                if (status === 'initializing') {
-                   $log.log('sessionStatus is set to "initializing"');
-                } else if (status === 'active') {
-                    transitionVideoToActive();
-                } else if (status === 'waiting') {
-                    transitionVideoToWaiting();
-                } else if (status === 'done') {
-                    transitionVideoToDone();
-                } else {
-                    $log.error('Error: unknown status received');
-                }
-
-
-                // If session status changes, then make sure to setup the current view based on the display
-                // size and the current connection status.
-                setupForCurrentDisplaySize();
-
-            });
 
             scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(newRemoteIsSendingVideoType, oldRemoteIsSendingVideoType) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
-                // Therefore, we need to make sure that the mini-video window inside the currently displayed remote
-                // video window is the only one that is active.
+                // We need to make sure that correct windows aer enabled for the current videoType..
                 $log.info('Remote remoteIsSendingVideoType is now: ' + newRemoteIsSendingVideoType + ' Old value was: ' + oldRemoteIsSendingVideoType);
-
-                // check if this is an XS device
-                if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
-                    if (newRemoteIsSendingVideoType !== null) {
-                        setupForCurrentDisplaySize();
-                    }
-                    else {
-                        setupXsScreenWhenNoRemote();
-                    }
-                }
-
-                // this is larger than an XS device
-                else {
-                    // we can do the "normal" setup since this is normal display size.
-                    setupForCurrentDisplaySize();
-                }
+                setupForCurrentDisplaySize();
             });
 
             $(window).resize(function() {
