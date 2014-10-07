@@ -157,6 +157,13 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 }
             };
 
+            var setupXsScreenWhenNoRemote = function() {
+                // XS screen without a remote signal, therefore we should show the local video and hide the remote video
+                localVideoObject.localVideoWrapper.style.display = 'inline';
+                remoteVideoObject.remoteVideoWrapper.style.display = 'none';
+                hideMiniVideoElems();
+            };
+
             var setupForCurrentDisplaySize = function() {
                 $log.debug('setupForCurrentDisplaySize');
 
@@ -187,11 +194,7 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                     else {
                         // Check if we are dealing with a small viewport.
                         if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
-
-                            // XS screen without a remote signal, therefore we should show the local video and hide the remote video
-                            localVideoObject.localVideoWrapper.style.display = 'inline';
-                            remoteVideoObject.remoteVideoWrapper.style.display = 'none';
-                            hideMiniVideoElems();
+                            setupXsScreenWhenNoRemote();
                         } else {
                             enablePrincipalVideoWindows();
                             hideMiniVideoElems();
@@ -230,14 +233,26 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
 
             });
 
-            scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(newValue, oldValue) {
+            scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(newRemoteIsSendingVideoType, oldRemoteIsSendingVideoType) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // Therefore, we need to make sure that the mini-video window inside the currently displayed remote
                 // video window is the only one that is active.
-                $log.info('Remote remoteIsSendingVideoType is now: ' + newValue + ' Old value was: ' + oldValue);
+                $log.info('Remote remoteIsSendingVideoType is now: ' + newRemoteIsSendingVideoType + ' Old value was: ' + oldRemoteIsSendingVideoType);
+
+                // check if this is an XS device
                 if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
-                    removeMiniVideoElemsSrc();
-                    reattachMediaStreamToMiniVideoElems();
+                    if (newRemoteIsSendingVideoType !== null) {
+                        setupForCurrentDisplaySize();
+                    }
+                    else {
+                        setupXsScreenWhenNoRemote();
+                    }
+                }
+
+                // this is larger than an XS device
+                else {
+                    // we can do the "normal" setup since this is normal display size.
+                    setupForCurrentDisplaySize();
                 }
             });
 
