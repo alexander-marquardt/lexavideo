@@ -205,9 +205,6 @@ webRtcServices.factory('lxSessionDescriptionService',
         lxUseChatRoomConstantsService,
         lxUseChatRoomVarsService)
     {
-
-        var sessionStatus = 'initializing'; // "initializing", "waiting", "active", or "done"
-
         var onSetSessionDescriptionSuccess = function() {
             $log.log('Set session description success.');
         };
@@ -245,9 +242,7 @@ webRtcServices.factory('lxSessionDescriptionService',
             var innerWaitForRemoteVideo = function() {
 
                 var videoTracks = lxPeerService.remoteStream.getVideoTracks();
-                if (videoTracks.length === 0 || remoteVideoObject.remoteVideoElem.currentTime > 0) {
-                    self.transitionSessionStatus('active');
-                } else {
+                if (!(videoTracks.length === 0 || remoteVideoObject.remoteVideoElem.currentTime > 0)) {
                     $timeout(innerWaitForRemoteVideo, 100);
                 }
             };
@@ -255,12 +250,6 @@ webRtcServices.factory('lxSessionDescriptionService',
         };
 
         var self =  {
-
-            transitionSessionStatus : function(status) {
-                $timeout(function() {
-                    sessionStatus = status;
-                });
-            },
 
             doAnswer : function() {
                 $log.log('Sending answer to peer.');
@@ -285,7 +274,6 @@ webRtcServices.factory('lxSessionDescriptionService',
                         waitForRemoteVideo(localVideoObject, remoteVideoObject);
                     } else {
                         $log.log('Not receiving any stream.');
-                        self.transitionSessionStatus('active');
                     }
                 };
 
@@ -326,7 +314,6 @@ webRtcServices.service('lxWebRtcSessionService',
 
     var onRemoteHangup = function(self, localVideoObject) {
         $log.log('Session terminated.');
-        lxSessionDescriptionService.transitionSessionStatus('waiting');
         self.stop(self, localVideoObject);
     };
 
@@ -626,7 +613,6 @@ webRtcServices.factory('lxCallService',
             doHangup : function(localVideoObject) {
                 return function() {
                     $log.log('*** Hanging up. ***');
-                    lxSessionDescriptionService.transitionSessionStatus('done');
                     lxStreamService.localStream.stop();
                     lxWebRtcSessionService.stop();
                     self.unMuteAudioAndVideo(localVideoObject);

@@ -71,13 +71,14 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
 });
 
 
-videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log,
-                                              lxUseChatRoomVarsService, lxUseChatRoomConstantsService,
-                                              lxWebRtcSessionService, lxUserNotificationService,
-                                              lxAdapterService, lxChannelService, lxTurnService,
-                                              lxCallService, lxMediaService, lxSessionDescriptionService) {
+videoAppDirectives.directive('lxVideoContainerDirective',
+    function($window,
+             $log,
+             lxUseChatRoomVarsService,
+             lxUseChatRoomConstantsService,
+             lxUserNotificationService,
+             lxAdapterService) {
 
-    var sessionStatus; // value set in a $watch function that monitors lxSessionDescriptionService.getSessionStatus
 
     return {
         restrict : 'A',
