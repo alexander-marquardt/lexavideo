@@ -135,7 +135,9 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             # This is a newly created room. Therefore we should set the room creator to the user_name that was passed in.
             room_dict['room_creator_key'] = current_user_key
-            del room_dict['user_name']
+
+            # remove 'user_id' from the room_dict since it is not stored on the room_obj.
+            del room_dict['user_id']
 
             # The RoomName has been added to the roomName structure. Now create a new Room object
             # for the new room.
