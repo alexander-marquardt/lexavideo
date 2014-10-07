@@ -33,6 +33,15 @@
   opacity:0;
 }
 
+.cl-transparent {
+  -webkit-transition: opacity 3s ease-in-out;
+  -moz-transition: opacity 3s ease-in-out;
+  -ms-transition: opacity 3s ease-in-out;
+  -o-transition: opacity 3s ease-in-out;
+  transition: opacity 3s ease-in-out;
+  opacity:0;
+}
+
 .cl-show-hide-fade.ng-hide-add, .cl-show-hide-fade.ng-hide-remove {
   display: block!important;
 }

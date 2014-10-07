@@ -269,6 +269,17 @@ asciiVideoDirectives.directive('lxDrawRemoteAsciiVideoDirective', function(lxCha
                     var asciiString = LZString.decompressFromUTF16(lxChannelService.asciiVideoObject.compressedVideoFrame);
                     $remoteAsciiDrawingTextElement.html(asciiString);
                 });
+
+                // monitor to see if remote user stops sending, and if they do then remove the currently displayed
+                // image. 
+                scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
+                    if (remoteIsSendingVideoType === null) {
+                        // remote is not transmitting, so hide the ascii video element
+                        $remoteAsciiDrawingTextElement.addClass('cl-transparent');
+                    } else {
+                        $remoteAsciiDrawingTextElement.removeClass('cl-transparent');
+                    }
+                });
             }
     };
 

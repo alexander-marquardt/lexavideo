@@ -324,7 +324,7 @@ webRtcServices.service('lxWebRtcSessionService',
         signalingReady : null,
 
 
-        stop : function() {
+        stop: function() {
             self.started = false;
             // If this user is rtcInitiator, then its signaling is ready. Otherwise wait for other 'offer' from
             // the other client.
@@ -337,7 +337,7 @@ webRtcServices.service('lxWebRtcSessionService',
             lxChannelMessageService.clearQueue();
         },
 
-        processSignalingMessage : function( message, localVideoObject, remoteVideoObject) {
+        processSignalingMessage: function( message, localVideoObject, remoteVideoObject) {
             if (!self.started) {
                 $log.error('peerConnection has not been created yet!');
                 return;
