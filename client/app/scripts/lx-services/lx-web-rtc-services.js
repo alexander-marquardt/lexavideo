@@ -193,7 +193,7 @@ webRtcServices.service('lxIceService', function($log, lxMessageService) {
     };
 });
 
-webRtcServices.service('lxSessionDescriptionService',
+webRtcServices.factory('lxSessionDescriptionService',
     function(
         $log,
         $timeout,
@@ -206,7 +206,6 @@ webRtcServices.service('lxSessionDescriptionService',
         lxUseChatRoomVarsService)
     {
 
-        var self = this;
         var sessionStatus = 'initializing'; // "initializing", "waiting", "active", or "done"
 
         var onSetSessionDescriptionSuccess = function() {
@@ -255,7 +254,7 @@ webRtcServices.service('lxSessionDescriptionService',
             innerWaitForRemoteVideo();
         };
 
-        var publicMethods =  {
+        var self =  {
             getSessionStatus : function() {
                 return sessionStatus;
             },
@@ -306,8 +305,7 @@ webRtcServices.service('lxSessionDescriptionService',
                     onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
             }
         };
-
-        angular.extend(self, publicMethods);
+        return self;
     }
 );
 
