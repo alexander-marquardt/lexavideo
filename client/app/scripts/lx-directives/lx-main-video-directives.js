@@ -174,34 +174,27 @@ videoAppDirectives.directive('lxVideoContainerDirective', function($window, $log
                 if (localVideoObject.localVideoWrapper && remoteVideoObject.remoteVideoWrapper) {
 
 
-                    // If this is an active HD session on a small screen, then we display the remote video with a local
-                    // video embedded inside of a mini-video element. Alternatively, if the remote user is sending
-                    // ASCII video, then we show the local video embedded inside of the ASCII video element.
-                    if (sessionStatus === 'active' || videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
+                    // Check if this is a XS device, and if so, then embed local video inside the remote.
+                    if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
 
-                        // Check if this is a XS device, and if so, then embed local video inside the remote.
-                        if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
+                        // If this is an active HD session on a small screen, then we display the remote video with a local
+                        // video embedded inside of a mini-video element. Alternatively, if the remote user is sending
+                        // ASCII video, then we show the local video embedded inside of the ASCII video element.
+                        if (sessionStatus === 'active' || videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
                             showMiniVideoElems();
                             localVideoObject.localVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'inline';
                         } else {
-                            enablePrincipalVideoWindows();
-                            hideMiniVideoElems();
+                            setupXsScreenWhenNoRemote();
                         }
                     }
 
-                    // We are waiting for the remote user to send either HD Video or ASCII video
+                    // This is not an XS device - this is a normal display
                     else {
-                        // Check if we are dealing with a small viewport.
-                        if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
-                            setupXsScreenWhenNoRemote();
-                        } else {
-                            enablePrincipalVideoWindows();
-                            hideMiniVideoElems();
-                        }
+                        enablePrincipalVideoWindows();
+                        hideMiniVideoElems();
                     }
                 }
-
             };
 /*
             scope.enterFullScreen = function () {
