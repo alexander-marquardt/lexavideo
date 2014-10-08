@@ -253,8 +253,8 @@ angular.module('lxAccessSystemResources.services', [])
 
         var removeModalWatcher = function() {
             // de-register the watchers that are no longer required
-            watchLocalUserAccessCameraAndMicrophoneStatus && watchLocalUserAccessCameraAndMicrophoneStatus();
-            watchWhichModalIsOpen && watchWhichModalIsOpen();
+            if (watchLocalUserAccessCameraAndMicrophoneStatus) {watchLocalUserAccessCameraAndMicrophoneStatus();}
+            if (watchWhichModalIsOpen) {watchWhichModalIsOpen();}
         };
 
         var getWhichModalIsShown = function(scope) {
@@ -363,5 +363,5 @@ angular.module('lxAccessSystemResources.services', [])
                 }
                 return isSupported;
             }
-        }
+        };
     });

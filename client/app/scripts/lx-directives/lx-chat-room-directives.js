@@ -75,9 +75,9 @@ angular.module('lxChatRoom.directives', [])
                         lxVideoSettingsNegotiationService.watchForVideoSettingsChanges (scope);
                         watchListener(); // removes the watcher
                     }
-                })
+                });
             }
-        }
+        };
     })
     .directive('lxAccessCameraAndMicrophoneDirective',
     function(

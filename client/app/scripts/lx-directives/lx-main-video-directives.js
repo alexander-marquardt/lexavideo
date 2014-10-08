@@ -90,10 +90,10 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
             var $miniVideoDiv = angular.element(elem).find('#id-mini-video-div');
 
-            var transitionVideoToActive = function() {
-                $log.debug('\n\ntransitionVideoToActive\n\n');
-                lxUserNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
-            };
+//            var transitionVideoToActive = function() {
+//                $log.debug('\n\ntransitionVideoToActive\n\n');
+//                lxUserNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
+//            };
 
             var removeMiniVideoElemsSrc = function() {
                 $log.debug('removeMiniVideoElemsSrc');
@@ -102,16 +102,16 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                 }
             };
 
-            var transitionVideoToWaiting = function() {
-                $log.log('\n\nExecuting transitionVideoToWaiting\n\n');
-                removeMiniVideoElemsSrc();
-                lxUserNotificationService.resetStatus();
-            };
+//            var transitionVideoToWaiting = function() {
+//                $log.log('\n\nExecuting transitionVideoToWaiting\n\n');
+//                removeMiniVideoElemsSrc();
+//                lxUserNotificationService.resetStatus();
+//            };
 
-            var transitionVideoToDone = function() {
-                $log.log('\n\nExecuting transitionVideoToDone\n\n');
-                lxUserNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>Click here</a> to rejoin.');
-            };
+//            var transitionVideoToDone = function() {
+//                $log.log('\n\nExecuting transitionVideoToDone\n\n');
+//                lxUserNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>Click here</a> to rejoin.');
+//            };
 
             var enablePrincipalVideoWindows = function() {
                 $log.debug('enablePrincipalVideoWindows');
@@ -182,7 +182,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                                 angular.element(remoteVideoObject.remoteAsciiVideoElem).parent().prepend(miniVideoDiv);
                             }
                             else {
-                                throw new Error('Unknown videoype: ' + videoSignalingObject.remoteIsSendingVideoType)
+                                throw new Error('Unknown videoype: ' + videoSignalingObject.remoteIsSendingVideoType);
                             }
                             // The following line is necessary or else Firefox video will freeze after detaching the
                             // and re-attaching the video element.
@@ -279,13 +279,14 @@ videoAppDirectives.directive('lxVideoWrapperDirective', function($log) {
     };
 });
 
-videoAppDirectives.directive('lxMiniVideoTemplateDirective', function($log) {
-    return {
-        restrict : 'A',
-        templateUrl: 'lx-template-cache/mini-video-template.html',
-        link: function(scope, elem) {
-            scope.localVideoObject.miniVideoElemInsideRemoteVideoWindow = angular.element(elem).find('.cl-mini-video-element')[0];
-        }
-    };
-});
+videoAppDirectives.directive('lxMiniVideoTemplateDirective',
+    function() {
+        return {
+            restrict : 'A',
+            templateUrl: 'lx-template-cache/mini-video-template.html',
+            link: function(scope, elem) {
+                scope.localVideoObject.miniVideoElemInsideRemoteVideoWindow = angular.element(elem).find('.cl-mini-video-element')[0];
+            }
+        };
+    });
 

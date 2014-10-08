@@ -87,7 +87,7 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
                     // fail if called more than once on a single modal instance.
                     // If the modal.close() method is ever re-written to correctly handle multiple closings of the
                     // same dialog, then this can be removed.
-                    $log.warn(e.message)
+                    $log.warn(e.message);
                 } else {
                     e.message = '\n\tError in closeModal\n\t' + e.message;
                     $log.error(e);

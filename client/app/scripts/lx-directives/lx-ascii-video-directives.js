@@ -7,7 +7,6 @@
 // define externally defined variables so that jshint doesn't give warnings
 /* global $ */
 /* global LZString */
-/* global viewportSize */
 
 var asciiVideoDirectives = angular.module('lxAsciiVideo.directives', []);
 
@@ -187,7 +186,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                     // sendAsciiVideoFromAppropriateWindow. Also, note that this is passed as a callback, and
                     // therefore the function is passed without '()'
                     delayAction(getAsciiVideoFromLocalStream, timeToPassSinceLastCall);
-                })
+                });
             }
 
             function removeWatchForResize() {
@@ -201,7 +200,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                 } else {
                     // stop asciiVideo
                     cancelLocalAsciiVideoTimers();
-                    removeWatchForResize()
+                    removeWatchForResize();
                 }
             });
 

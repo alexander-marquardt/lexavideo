@@ -489,7 +489,7 @@ webRtcServices.factory('lxMediaService',
                 });
 
                 // we might have been waiting for access to the media stream to start the call.
-                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject)
+                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
             };
         };
 

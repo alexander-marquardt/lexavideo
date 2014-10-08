@@ -112,7 +112,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                 // if the user has not explicitly requested a modification to the video type by pressing on one of the
                 // buttons, then localIsNegotiatingForVideoType should be null and this code should not be executed.
-                if (localIsNegotiatingForVideoType != null) {
+                if (localIsNegotiatingForVideoType !== null) {
 
                     // Check if there is a remote user in the room
                     if (scope.videoSignalingObject.remoteUserId) {
@@ -188,7 +188,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         self.negotiateVideoType.sendAcceptanceOfVideoType(remoteSignalingStatus.videoType);
                         $log.debug('Automatically accepting video type ' + remoteSignalingStatus.videoType + ' since it was already selected locally. ');
 
-                        self.startVideoType(scope, localHasSelectedVideoType)
+                        self.startVideoType(scope, localHasSelectedVideoType);
 
                     }
                     else {
