@@ -177,7 +177,14 @@ def send_room_status_to_room_members(room_obj, user_id):
                        },
                    }
 
+    user_obj = models.UserModel.get_by_id(user_id)
+    user_name = user_obj.user_name
+
     if other_user_id:
+
+        other_user_obj = models.UserModel.get_by_id(other_user_id)
+        other_user_name = other_user_obj.user_name
+
         # send a message to the other user (the client already in the room) that someone has just joined the room
         logging.debug('Sending message to other_user: %s' % repr(message_obj))
 
@@ -187,6 +194,7 @@ def send_room_status_to_room_members(room_obj, user_id):
         # once per session, unless the users become disconnected and need to re-connect.
         message_obj['messagePayload']['rtcInitiator'] = False
         message_obj['messagePayload']['userId'] = other_user_id
+        message_obj['messagePayload']['remoteUserName'] = user_name
         message_obj['messagePayload']['remoteUserId'] = user_id
         logging.info('Sending user %d room status %s' % (other_user_id, json.dumps(message_obj)))
         messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
@@ -198,6 +206,7 @@ def send_room_status_to_room_members(room_obj, user_id):
 
     # Send a message to the active client, indicating the room status
     message_obj['messagePayload']['userId'] = user_id
+    message_obj['messagePayload']['remoteUserName'] = other_user_name
     message_obj['messagePayload']['remoteUserId'] = other_user_id
     logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
     messaging.on_message(room_obj, user_id, json.dumps(message_obj))

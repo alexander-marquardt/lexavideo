@@ -122,6 +122,7 @@ angular.module('lxChannel.services', [])
                                 // Get the remoteUserId from the message payload - note that if there is no remote
                                 // user currently in the room, then this value will be null.
                                 videoSignalingObject.remoteUserId = messageObject.messagePayload.remoteUserId;
+                                videoSignalingObject.remoteUserName = messageObject.messagePayload.remoteUserName;
                             }
                             else {
                                 $log.error('remoteUserId not received in roomStatus messagePayload');

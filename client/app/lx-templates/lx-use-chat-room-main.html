@@ -126,19 +126,23 @@
                     </tr>
                     <tr>
                         <td>User Name: {{ userName }}</td>
+                        <td>Remote User Name: {{ videoSignalingObject.remoteUserName }}</td>
+                    </tr>
+                    <tr>
+                        <td>User Id: {{ userId }}</td>
                         <td>Remote User Id: {{ videoSignalingObject.remoteUserId }}</td>
                     </tr>
                     <tr>
                         <td>localHasSelectedVideoType: {{ videoSignalingObject.localHasSelectedVideoType }}</td>
+                        <td>remoteVideoSignalingStatus.settingsType: {{ videoSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>
+                    </tr>
+                    <tr>
                         <td>localIsNegotiatingForVideoType: {{ videoSignalingObject.localIsNegotiatingForVideoType }}</td>
+                        <td>remoteVideoSignalingStatus.videoType: {{ videoSignalingObject.remoteVideoSignalingStatus.videoType }}</td>
                     </tr>
                     <tr>
                         <td>localIsSendingVideoType: {{ videoSignalingObject.localIsSendingVideoType }}</td>
                         <td>remoteIsSendingVideoType: {{ videoSignalingObject.remoteIsSendingVideoType }}</td>
-                    </tr>
-                    <tr>
-                        <td>remoteVideoSignalingStatus.settingsType: {{ videoSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>
-                        <td>remoteVideoSignalingStatus.videoType: {{ videoSignalingObject.remoteVideoSignalingStatus.videoType }}</td>
                     </tr>
                 </table>
             </div>

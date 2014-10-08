@@ -42,6 +42,7 @@ angular.module('lxUseChatRoom.controllers', [])
         });
 
         $scope.userName = lxAppWideConstantsService.userName;
+        $scope.userId = lxAppWideConstantsService.userId;
         $scope.roomName = lxUseChatRoomConstantsService.roomName;
 
 
@@ -104,15 +105,16 @@ angular.module('lxUseChatRoom.controllers', [])
             // the video transmission has started (ie. when lxPeerService.addLocalVideoStream is executed)
             localIsSendingVideoType : null,  // null, 'ASCII Video', 'HD Video'
 
-            localUserAccessCameraAndMicrophoneStatus : 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
+            localUserAccessCameraAndMicrophoneStatus: 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
 
             // Once the remote user has joined the room, this will be modified to reflect their userId
-            remoteUserId : null,
+            remoteUserId: null,
+            remoteUserName: null,
 
             // if the local user requests the remote user to change the video type, we track the remote response
             // so that we can give the local user feedback.
             // The value will be set in onChannelMessage.
-            remoteVideoSignalingStatus : {
+            remoteVideoSignalingStatus: {
                 settingsType: null,  // will be set to null, 'requestVideoType', 'acceptVideoType', or 'denyVideoType'
                 videoType: null      // null, 'ASCII Video', 'HD Video'
             },

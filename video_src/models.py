@@ -27,7 +27,6 @@ class UserModel(ndb.Model):
 
 
 
-
 class Message(ndb.Model):
     client_id = ndb.StringProperty()
     msg = ndb.TextProperty()
