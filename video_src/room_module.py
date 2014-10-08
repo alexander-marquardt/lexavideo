@@ -28,15 +28,13 @@ class RoomInfo(ndb.Model):
     # The following is used for showing/remembering the room nam as it was written i.e.
     # if the user wrote 'aLeX', it will be stored here as 'aLeX'
     room_name_as_written = ndb.StringProperty(default = None)
-    
-    # track the users that have joined into a room (ie. opened the URL to join a room)
-    room_creator_key = ndb.KeyProperty(kind = models.UserModel)
-    room_joiner_key = ndb.KeyProperty(kind = models.UserModel)
-    
-    # track if the users in the room have a channel open (channel api)
-    room_creator_channel_open = ndb.BooleanProperty(default=False)
-    room_joiner_channel_open = ndb.BooleanProperty(default=False)
-    
+
+    # room_members_ids contains ids of all users currently in a chat room.
+    room_members_ids = ndb.IntegerProperty(repeated=True)
+
+    # track if the users in the room have a channel open (channel api). This array should be stored in parallel
+    # to the room_members_keys array.
+    room_members_channel_open = ndb.BooleanProperty(repeated = True)
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -47,103 +45,85 @@ class RoomInfo(ndb.Model):
 
     def __str__(self):
         result = '['
-        if self.room_creator_key:
-            result += "%d-%r" % (self.room_creator_key.id(), self.room_creator_channel_open)
-        if self.room_joiner_key:
-            result += ", %d-%r" % (self.room_joiner_key.id(), self.room_joiner_channel_open)
+        if self.room_members_ids:
+            for i in range(len(self.room_members_ids)):
+                result += "%d-%r" % (self.room_members_ids[i], self.room_members_channel_open[i])
         result += ']'
         return result
 
 
     def make_client_id(self, user_id):
+        # client id is the room id + / + user id
         return str(self.key.id()) + '/' + str(user_id)
 
-    def is_room_creator(self, user_id):
-        if self.room_creator_key and user_id == self.room_creator_key.id():
-            return True
-        else:
-            return False
 
-    def is_room_joiner(self, user_id):
-        if self.room_joiner_key and user_id == self.room_joiner_key.id():
-            return True
-        else:
-            return False
-
-
+    @handle_exceptions
     def remove_user(self, user_id):
         messaging.delete_saved_messages(self.make_client_id(user_id))
-        if self.is_room_joiner(user_id):
-            self.room_joiner_key = None
-            self.room_joiner_channel_open = False
-        if self.is_room_creator(user_id):
-            if self.room_joiner_key:
-                self.room_creator_key = self.room_joiner_key
-                self.room_creator_channel_open = self.room_joiner_channel_open
-                self.room_joiner_key = None
-                self.room_joiner_channel_open = False
-            else:
-                self.room_creator_key = None
-                self.room_creator_channel_open = False
-        if self.get_occupancy() > 0:
+
+        idx = self.room_members_ids.index(user_id)
+        if idx:
+            del self.room_members_ids[idx]
+            del self.room_members_channel_open[idx]
             self.put()
         else:
-            self.key.delete()
-        
+            raise Exception("user_id %d not found in room." % user_id)
+
 
     def get_occupancy(self):
-        occupancy = 0
-        if self.room_creator_key:
-            occupancy += 1
-        if self.room_joiner_key:
-            occupancy += 1
-        return occupancy
+        return len(self.room_members_ids)
 
 
+    @handle_exceptions
     def get_other_user_id(self, user_id):
-        if self.is_room_creator(user_id):
-            return self.room_joiner_key.id() if self.room_joiner_key else None
-        elif self.is_room_joiner(user_id):
-            return self.room_creator_key.id() if self.room_creator_key else None
-        else:
+        # Currently this function is written based on the assumption that there is a maximum of two users in a room.
+        # If this assumption is not true in the future, then we would have to pass back a list of "other users"
+        occupancy = self.get_occupancy()
+        if occupancy == 0:
+            raise Exception('This function should not be called on an empty room')
+        elif occupancy == 1:
+            # only one user in the room means that there is no "other user"
             return None
+        elif occupancy == 2:
+            for i in range(len(self.room_members_ids)):
+                if self.room_members_ids[i] !=  user_id:
+                    return self.room_members_ids[i]
+        else: # occupancy > 2:
+            raise Exception('Room should not have more than two people in it')
 
 
     def has_user(self, user_id):
-        return (user_id and (self.is_room_creator(user_id) or self.is_room_joiner(user_id)))
+        if user_id in self.room_members_ids:
+            return True
+        else:
+            return False
 
 
-    def add_user(self, user_key):
+    def add_user(self, user_id):
 
         # If user is already in the room, then just return without doing anything
-        if user_key == self.room_creator_key or user_key == self.room_joiner_key:
+        if user_id in self.room_members_ids:
             return
 
         # Add the user to the room
-        if not self.room_creator_key:
-            self.room_creator_key = user_key
-        elif not self.room_joiner_key:
-            self.room_joiner_key = user_key
-        else:
-            raise RuntimeError('room is full')
-        
+        self.room_members_ids.append(user_id)
+        self.room_members_channel_open.append(False)
+
         self.put()
 
 
     def set_connected(self, user_id):
-        if self.is_room_creator(user_id):
-            self.room_creator_channel_open = True
-        if self.is_room_joiner(user_id):
-            self.room_joiner_channel_open = True
+
+        idx = self.room_members_ids.index(user_id)
+        self.room_members_channel_open[idx] = True
 
         self.put()
 
 
     def is_connected(self, user_id):
-        if self.is_room_creator(user_id):
-            return self.room_creator_channel_open
-        if self.is_room_joiner(user_id):
-            return self.room_joiner_channel_open
+
+        idx = self.room_members_ids.index(user_id)
+        return self.room_members_channel_open[idx]
 
 
 class MessagePage(webapp2.RequestHandler):
@@ -162,6 +142,7 @@ class MessagePage(webapp2.RequestHandler):
 
 
 # Sends information about who is in the room, and which client should be designated as the 'rtcInitiator'
+@handle_exceptions
 def send_room_status_to_room_members(room_obj, user_id):
     # This is called when a user either connects or disconnects from a room. It sends information
     # to room members indicating the status of the room.
@@ -173,8 +154,6 @@ def send_room_status_to_room_members(room_obj, user_id):
                    'messagePayload': {
                        'roomName': room_obj.room_name,
                        'currentlySelectedVideoType': room_obj.currently_selected_video_type,
-                       # 'roomCreatorId' : room_obj.room_creator_key.id() if room_obj.room_creator_key else None,
-                       # 'roomJoinerId'  : room_obj.room_joiner_key.id() if room_obj.room_joiner_key else None,
                        },
                    }
 
@@ -223,6 +202,7 @@ def get_room_by_id(room_id):
         return None
 
 
+@handle_exceptions
 def connect_user_to_room(room_id, user_id):
 
     room_obj = RoomInfo.get_by_id(room_id)
@@ -252,8 +232,7 @@ class ConnectPage(webapp2.RequestHandler):
         # Add user back into room. If they have a channel open to the room then they are by definition in the room
         room_obj = get_room_by_id(room_id)
         if room_obj:
-            user_key = ndb.Key('UserModel', user_id)
-            room_obj.add_user(user_key)
+            room_obj.add_user(user_id)
             assert(room_obj.has_user(user_id))
             connect_user_to_room(room_id, user_id)
             messaging.send_saved_messages(room_obj.make_client_id(user_id))

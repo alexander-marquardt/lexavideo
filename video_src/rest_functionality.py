@@ -105,7 +105,6 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
 
         current_user_id = room_dict['user_id']
-        current_user_key = ndb.Key('UserModel', current_user_id)
 
         response_dict = {}
 
@@ -116,7 +115,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             occupancy = room_obj.get_occupancy()
 
-            if current_user_key == room_obj.room_creator_key or current_user_key == room_obj.room_joiner_key:
+            if current_user_id in room_obj.room_members_ids:
                 # do nothing as this user is already in the room - report status as "roomJoined"
                 # so javascript does not have to deal with a special case.
                 response_dict = {'statusString': 'roomJoined'}
@@ -128,16 +127,17 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             else:
                 # This is a new user joining the room
-                room_obj.add_user(current_user_key)
+                room_obj.add_user(current_user_id)
                 response_dict['statusString'] = 'roomJoined'
 
         else:
-
-            # This is a newly created room. Therefore we should set the room creator to the user_name that was passed in.
-            room_dict['room_creator_key'] = current_user_key
-
             # remove 'user_id' from the room_dict since it is not stored on the room_obj.
+            user_id = room_dict['user_id']
             del room_dict['user_id']
+
+            # This is a newly created room. Therefore we should add the current user to room_members_ids.
+            room_dict['room_members_ids'] = [user_id,]
+            room_dict['room_members_channel_open'] = [False,]
 
             # The RoomName has been added to the roomName structure. Now create a new Room object
             # for the new room.
