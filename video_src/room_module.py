@@ -167,6 +167,7 @@ def send_room_status_to_room_members(room_obj, user_id):
     # to room members indicating the status of the room.
 
     other_user_id = room_obj.get_other_user_id(user_id)
+    other_user_name = None
 
     message_obj = {'messageType': 'roomStatus',
                    'messagePayload': {

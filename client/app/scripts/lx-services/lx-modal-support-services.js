@@ -82,11 +82,12 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
             try {
                 currentModalInstance.close();
             } catch(e) {
-                if (e instanceof TypeError && e.message === 'Cannot read property \'value\' of undefined') {
+                if (e instanceof TypeError) {
                     // Don't do anything -- this error is expected, and occurs because the close() method will
                     // fail if called more than once on a single modal instance.
                     // If the modal.close() method is ever re-written to correctly handle multiple closings of the
                     // same dialog, then this can be removed.
+                    $log.warn(e.message)
                 } else {
                     e.message = '\n\tError in closeModal\n\t' + e.message;
                     $log.error(e);
