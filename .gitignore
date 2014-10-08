@@ -36,3 +36,6 @@ Regions
 
 client/build_settings.json
 
+# PyCharm related files
+.idea/workspace.xml
+client/app/.idea/workspace.xml
