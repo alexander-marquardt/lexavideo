@@ -109,42 +109,47 @@
                     </div>
                 </div>
             </div>
-
-            <h4>Chat room status:
-                <span ng-show="!videoSignalingObject.remoteUserId">Waiting for someone to join ... </span>
-                <span ng-show="videoSignalingObject.remoteUserName!=videoSignalingObject.remoteUserId">{{ videoSignalingObject.remoteUserName }} has joined</span>
-                <span ng-show="videoSignalingObject.remoteUserId && videoSignalingObject.remoteUserName==videoSignalingObject.remoteUserId">Guest has joined</span>
-            </h4>
-
-            <div ng-if="debugBuildEnabled">
-                <table class="table table-bordered table-striped">
-                    <tr>
-                        <td>Room Name: {{ roomName }}</td>
-                        <td>Room Id:   {{ roomId }}</td>
-                    </tr>
-                    <tr>
-                        <td>User Name: {{ userName }}</td>
-                        <td>Remote User Name: {{ videoSignalingObject.remoteUserName }}</td>
-                    </tr>
-                    <tr>
-                        <td>User Id: {{ userId }}</td>
-                        <td>Remote User Id: {{ videoSignalingObject.remoteUserId }}</td>
-                    </tr>
-                    <tr>
-                        <td>localHasSelectedVideoType: {{ videoSignalingObject.localHasSelectedVideoType }}</td>
-                        <td>remoteVideoSignalingStatus.settingsType: {{ videoSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>
-                    </tr>
-                    <tr>
-                        <td>localIsNegotiatingForVideoType: {{ videoSignalingObject.localIsNegotiatingForVideoType }}</td>
-                        <td>remoteVideoSignalingStatus.videoType: {{ videoSignalingObject.remoteVideoSignalingStatus.videoType }}</td>
-                    </tr>
-                    <tr>
-                        <td>localIsSendingVideoType: {{ videoSignalingObject.localIsSendingVideoType }}</td>
-                        <td>remoteIsSendingVideoType: {{ videoSignalingObject.remoteIsSendingVideoType }}</td>
-                    </tr>
-                </table>
+            <div class="row">
+                <div class="text-center">
+                    <h4>Chat room status:
+                        <span ng-show="!videoSignalingObject.remoteUserId">Waiting for someone to join ... </span>
+                        <span ng-show="videoSignalingObject.remoteUserName!=videoSignalingObject.remoteUserId">{{ videoSignalingObject.remoteUserName }} has joined</span>
+                        <span ng-show="videoSignalingObject.remoteUserId && videoSignalingObject.remoteUserName==videoSignalingObject.remoteUserId">Guest has joined</span>
+                    </h4>
+                </div>
             </div>
-
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <div ng-if="debugBuildEnabled">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <td>Room Name: {{ roomName }}</td>
+                                <td>Room Id:   {{ roomId }}</td>
+                            </tr>
+                            <tr>
+                                <td>User Name: {{ userName }}</td>
+                                <td>Remote User Name: {{ videoSignalingObject.remoteUserName }}</td>
+                            </tr>
+                            <tr>
+                                <td>User Id: {{ userId }}</td>
+                                <td>Remote User Id: {{ videoSignalingObject.remoteUserId }}</td>
+                            </tr>
+                            <tr>
+                                <td>localHasSelectedVideoType: {{ videoSignalingObject.localHasSelectedVideoType }}</td>
+                                <td>remoteVideoSignalingStatus.settingsType: {{ videoSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>
+                            </tr>
+                            <tr>
+                                <td>localIsNegotiatingForVideoType: {{ videoSignalingObject.localIsNegotiatingForVideoType }}</td>
+                                <td>remoteVideoSignalingStatus.videoType: {{ videoSignalingObject.remoteVideoSignalingStatus.videoType }}</td>
+                            </tr>
+                            <tr>
+                                <td>localIsSendingVideoType: {{ videoSignalingObject.localIsSendingVideoType }}</td>
+                                <td>remoteIsSendingVideoType: {{ videoSignalingObject.remoteIsSendingVideoType }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <!-- Footer div is at the bottom of the page, but is placed here so that it
             has access to the main-video-ctrl scope -->
 
