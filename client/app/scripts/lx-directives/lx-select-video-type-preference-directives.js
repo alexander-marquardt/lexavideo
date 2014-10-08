@@ -153,6 +153,11 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         showMessageInVideoWindow(scope, navelem, message);
                         break;
 
+                    case 'mustEnableVideoToStartTransmission':
+                        message = 'You must give access to your camera and microphone before we can setup a video conversation';
+                        showMessageInVideoWindow(scope, navelem, message);
+                        break;
+
                     case null:
                         removeMessageInVideoWindow(scope, navelem);
                         break;

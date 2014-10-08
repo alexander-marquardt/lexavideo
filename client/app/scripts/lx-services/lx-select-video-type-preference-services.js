@@ -61,6 +61,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 // Un-mute the audio in case that the user has just switched from ascii video back to HD video.
                 lxCallService.setAudioMute(scope.localVideoObject, false);
 
+
                 // Note: scope.videoSignalingObject.localIsSendingVideoType will be set to 'HD Video' once the
                 // stream is being sent - this happens in the onRemoteStreamAdded callback.
 
@@ -100,7 +101,6 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
         watchForVideoSettingsChanges : function(scope) {
 
 
-
             // Monitor localIsNegotiatingForVideoType for changes, and if it changes then initiate an exchange with the remote
             // peer to star to exchange the newly selected video type.
             // Note: since we may set the localIsNegotiatingForVideoType value upon accepting a remote request to change the
@@ -113,6 +113,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 // if the user has not explicitly requested a modification to the video type by pressing on one of the
                 // buttons, then localIsNegotiatingForVideoType should be null and this code should not be executed.
                 if (localIsNegotiatingForVideoType != null) {
+
                     // Check if there is a remote user in the room
                     if (scope.videoSignalingObject.remoteUserId) {
 
@@ -174,7 +175,6 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
             // respond directly, or modify a variable that will trigger another watcher that will request user
             // feedback on how to respond. More details in the comments below.
             scope.$watch(watchRemoteVideoSignalingStatus(scope), function() {
-
 
                 var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
                 var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
