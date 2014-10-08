@@ -55,15 +55,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm"
-                                        ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
-                                        ng-click="setLocalVideoType('HD Video')">HD Video</button>
-                                <button type="button" class="btn btn-sm"
-                                        ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
-                                        ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
-                            </div>
                         </div>
                     </div>
 
@@ -100,26 +91,24 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class = "cl-hide-on-larger-than-xs">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm"
-                                            ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
-                                            ng-click="setLocalVideoType('HD Video')">HD Video</button>
-                                    <button type="button" class="btn btn-sm"
-                                            ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
-                                            ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
-                                </div>
-                            </div>
-
-
                         </div>
                     </div>
                 </div>
 
                 <div lx-monitor-control-keys-directive ></div>
+            </div> <!-- end row -->
+            <div class="row">
+                <div class="col-sm-6 text-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm"
+                                ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
+                                ng-click="setLocalVideoType('HD Video')">HD Video</button>
+                        <button type="button" class="btn btn-sm"
+                                ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
+                                ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
+                    </div>
+                </div>
             </div>
-
 
             <h4>Chat room status:
                 <span ng-show="!videoSignalingObject.remoteUserId">Waiting for someone to join ... </span>
