@@ -23,8 +23,8 @@ angular.module('lxAccessSystemResources.services', [])
 
     // initially define the watchers as dummy functions, so that they can be "de-registered" even if they were not
     // initially called.
-    var watchLocalUserAccessCameraAndMicrophoneStatus = function() {},
-        watchWhichModalIsOpen = function() {};
+    var watchLocalUserAccessCameraAndMicrophoneStatus = null,
+        watchWhichModalIsOpen = null;
 
 
     var askForPermissionToCameraAndMicrophone = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
@@ -253,8 +253,8 @@ angular.module('lxAccessSystemResources.services', [])
 
     var removeModalWatcher = function() {
     // de-register the watchers that are no longer required
-        watchLocalUserAccessCameraAndMicrophoneStatus();
-        watchWhichModalIsOpen();
+        watchLocalUserAccessCameraAndMicrophoneStatus && watchLocalUserAccessCameraAndMicrophoneStatus();
+        watchWhichModalIsOpen && watchWhichModalIsOpen();
     };
 
     var getWhichModalIsShown = function(scope) {
@@ -287,6 +287,8 @@ angular.module('lxAccessSystemResources.services', [])
             var localVideoObject = scope.localVideoObject;
             var remoteVideoObject = scope.remoteVideoObject;
 
+            removeModalWatcher();
+
             if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
                 // If the users's device and browser support webRTC, then show them instructions on how to access their
                 // camera and microphone. Otherwise, they should already have been shown instructions from
@@ -298,7 +300,7 @@ angular.module('lxAccessSystemResources.services', [])
                 askForPermissionToCameraAndMicrophone(localVideoObject, remoteVideoObject, videoSignalingObject);
 
                 watchWhichModalIsOpen =
-                    scope.$watch(getWhichModalIsShown(scope), function(whichModalIsOpen) {
+                    scope.$watch(getWhichModalIsShown(scope), function (whichModalIsOpen) {
                         // keep an eye on which modal is currently open, and if it changes then we will
                         // modify the notification arrow to point to the correct location, or to be removed if
                         // it is no longer needed.
