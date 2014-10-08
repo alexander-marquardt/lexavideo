@@ -57,6 +57,10 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 // then localIsSendingVideoType will be updated
                 lxCallService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
 
+
+                // Un-mute the audio in case that the user has just switched from ascii video back to HD video.
+                lxCallService.setAudioMute(scope.localVideoObject, false);
+
                 // Note: scope.videoSignalingObject.localIsSendingVideoType will be set to 'HD Video' once the
                 // stream is being sent - this happens in the onRemoteStreamAdded callback.
 
@@ -73,6 +77,10 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                 // kill the webRtc session. Ascii video should start to be transmitted in both directions.
                 lxWebRtcSessionService.stop();
+
+                // mute the audio - this should technically not be necessary, but for some reason during a firefox to chrome session
+                // the audio continues to transmit even though the rtcSession was stopped.
+                lxCallService.setAudioMute(scope.localVideoObject, true);
             }
             else {
                 $log.error('Unknown video type received: ' + videoType);
