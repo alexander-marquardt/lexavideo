@@ -57,24 +57,28 @@ class RoomInfo(ndb.Model):
         return str(self.key.id()) + '/' + str(user_id)
 
 
-    @handle_exceptions
     def remove_user(self, user_id):
         messaging.delete_saved_messages(self.make_client_id(user_id))
 
-        idx = self.room_members_ids.index(user_id)
-        if idx:
+        idx = None
+        try:
+            # if the user_id is not in the list, an exception will be raised
+            idx = self.room_members_ids.index(user_id)
+        except:
+            logging.error("user_id %d not found in room - why is it being removed?" % user_id)
+
+        if idx != None:
             del self.room_members_ids[idx]
             del self.room_members_channel_open[idx]
             self.put()
-        else:
-            raise Exception("user_id %d not found in room." % user_id)
+
+
 
 
     def get_occupancy(self):
         return len(self.room_members_ids)
 
 
-    @handle_exceptions
     def get_other_user_id(self, user_id):
         # Currently this function is written based on the assumption that there is a maximum of two users in a room.
         # If this assumption is not true in the future, then we would have to pass back a list of "other users"
