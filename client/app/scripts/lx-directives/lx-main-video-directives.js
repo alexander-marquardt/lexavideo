@@ -116,8 +116,8 @@ videoAppDirectives.directive('lxVideoContainerDirective',
             var enablePrincipalVideoWindows = function() {
                 $log.debug('enablePrincipalVideoWindows');
                 // if it is a wider screen, then show both windows
-                localVideoObject.localHdVideoWrapper.style.display = 'inline';
-                remoteVideoObject.remoteHdVideoWrapper.style.display = 'inline';
+                localVideoObject.localHdVideoWrapper.style.display = 'inline-block';
+                remoteVideoObject.remoteHdVideoWrapper.style.display = 'inline-block';
             };
 
             var hideMiniVideoElems = function() {
@@ -171,7 +171,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                         if ( videoSignalingObject.remoteIsSendingVideoType !== null) {
                             showMiniVideoElems();
                             localVideoObject.localHdVideoWrapper.style.display = 'none';
-                            remoteVideoObject.remoteHdVideoWrapper.style.display = 'inline';
+                            remoteVideoObject.remoteHdVideoWrapper.style.display = 'inline-block';
 
 //                            // attach the mini-video window to the HD Video wrapper
                             var miniVideoDiv = $miniVideoDiv.detach();
@@ -190,7 +190,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
                         } else {
                             // XS screen without a remote signal, therefore we should show the local video and hide the remote video
-                            localVideoObject.localHdVideoWrapper.style.display = 'inline';
+                            localVideoObject.localHdVideoWrapper.style.display = 'inline-block';
                             remoteVideoObject.remoteHdVideoWrapper.style.display = 'none';
                             hideMiniVideoElems();
                         }
