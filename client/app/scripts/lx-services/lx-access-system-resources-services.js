@@ -289,10 +289,11 @@ angular.module('lxAccessSystemResources.services', [])
 
                 removeModalWatcher();
 
+                // If the users's device and browser support webRTC, then show them instructions on how to access their
+                // camera and microphone. Otherwise, they should already have been shown instructions from
+                // lx-check-compatibility-directives, which would have told them what they need to do to access the site.
                 if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
-                    // If the users's device and browser support webRTC, then show them instructions on how to access their
-                    // camera and microphone. Otherwise, they should already have been shown instructions from
-                    // lx-check-compatibility-directives, which would have told them what they need to do to access the site.
+
 
                     var arrowElem = angular.element('<div class="cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
                     $('body').append(arrowElem);
@@ -346,15 +347,21 @@ angular.module('lxAccessSystemResources.services', [])
         return {
             checkBrowserVersionToSeeIfGetUserMediaSupported: function () {
 
+                var isSupported = true;
+
                 if (lxCheckCompatibilityService.isIosDevice) {
                     lxModalSupportService.showStandardModalWindow('lx-template-cache/ios-is-not-supported-modal.html');
+                    isSupported = false;
                 }
                 else if (!lxCheckCompatibilityService.isSupportedBrowser) {
                     lxModalSupportService.showStandardModalWindow('lx-template-cache/browser-is-not-supported-modal.html');
+                    isSupported = false;
                 }
                 else if (!lxCheckCompatibilityService.browserVersionIsSupported) {
                     lxModalSupportService.showStandardModalWindow('lx-template-cache/browser-version-is-not-supported-modal.html');
+                    isSupported = false;
                 }
+                return isSupported;
             }
         }
     });

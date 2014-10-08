@@ -51,6 +51,7 @@ angular.module('lxUseChatRoom.controllers', [])
     function (
         $scope,
         lxAccessCameraAndMicrophoneService,
+        lxCheckIfSystemSupportsWebRtcService,
         lxUseChatRoomConstantsService) {
 
         $scope.accessCameraAndMicrophoneObject = {
@@ -141,7 +142,14 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         $scope.showCameraAndMicrophoneInstructions = function() {
-            lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess($scope);
+
+            // checkBrowserVersionToSeeIfGetUserMediaSupported will show a modal to the user if their browser/device is
+            // not supported. If it is supported, then it will return true and the prompt for access to camera and mic
+            // will be presented.
+            if (lxCheckIfSystemSupportsWebRtcService.checkBrowserVersionToSeeIfGetUserMediaSupported($scope)) {
+                lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess($scope);
+            }
+
         };
 
         $scope.myUsername = lxUseChatRoomConstantsService.myUsername;
