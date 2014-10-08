@@ -19,6 +19,7 @@ var videoApp = angular.module('videoApp', [
     'lxVideoNegotiation.directives',
 
     // proprietary services
+    'lxAccessSystemResources.services',
     'lxChannel.services',
     'lxChatRoom.services',
     'lxCodecs.services',
