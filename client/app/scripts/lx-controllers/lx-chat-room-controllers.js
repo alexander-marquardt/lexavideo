@@ -47,7 +47,11 @@ angular.module('lxUseChatRoom.controllers', [])
 
     })
 
-    .controller('lxMainVideoCtrl', function ($scope, lxUseChatRoomConstantsService) {
+    .controller('lxMainVideoCtrl',
+    function (
+        $scope,
+        lxAccessCameraAndMicrophoneService,
+        lxUseChatRoomConstantsService) {
 
         $scope.accessCameraAndMicrophoneObject = {
             // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
@@ -134,6 +138,10 @@ angular.module('lxUseChatRoom.controllers', [])
             // videoType should be 'HD Video' or 'ASCII Video'
             $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
             $scope.videoSignalingObject.localIsNegotiatingForVideoType = localHasSelectedVideoType;
+        };
+
+        $scope.showCameraAndMicrophoneInstructions = function() {
+            lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess($scope);
         };
 
         $scope.myUsername = lxUseChatRoomConstantsService.myUsername;

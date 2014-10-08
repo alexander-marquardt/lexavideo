@@ -10,6 +10,7 @@ var lxSelectVideoTypePreferenceDirectives = angular.module('lxVideoNegotiation.d
 lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirective',
     function(
         $animate,
+        $compile,
         $log,
         $timeout,
         lxCallService,
@@ -22,7 +23,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         elem.html('');
         var el = angular.element('<p class="navbar-text"/>');
         el.html(message);
-        elem.append(el);
+        var compiledEl = $compile(el)(scope);
+        elem.append(compiledEl);
 
         if (fadeAwayTime !== undefined) {
             // Make the message disappear after a certain amount of time in ms. Otherwise it will
@@ -154,7 +156,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         break;
 
                     case 'mustEnableVideoToStartTransmission':
-                        message = 'You must give access to your camera and microphone before we can setup a video conversation';
+                        message = 'You must give access to your camera and microphone before we can setup a video conversation. ' +
+                        'Click <a href="#" ng-click="showCameraAndMicrophoneInstructions()">here</a> for more information';
                         showMessageInVideoWindow(scope, navelem, message);
                         break;
 

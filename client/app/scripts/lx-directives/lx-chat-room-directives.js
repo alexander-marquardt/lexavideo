@@ -86,8 +86,8 @@ angular.module('lxChatRoom.directives', [])
 
         return {
             restrict: 'A',
-            link: function(scope, elem) {
-                lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess(scope, elem);
+            link: function(scope) {
+                lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess(scope);
             }
         };
     });

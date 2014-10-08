@@ -282,7 +282,7 @@ angular.module('lxAccessSystemResources.services', [])
     };
 
     return {
-        showModalsAndArrowsForGrantingCameraAndMicrophoneAccess: function(scope, elem) {
+        showModalsAndArrowsForGrantingCameraAndMicrophoneAccess: function(scope) {
             var videoSignalingObject = scope.videoSignalingObject;
             var localVideoObject = scope.localVideoObject;
             var remoteVideoObject = scope.remoteVideoObject;
@@ -293,7 +293,7 @@ angular.module('lxAccessSystemResources.services', [])
                 // lx-check-compatibility-directives, which would have told them what they need to do to access the site.
 
                 var arrowElem = angular.element('<div class="cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
-                elem.append(arrowElem);
+                $('body').append(arrowElem);
 
                 askForPermissionToCameraAndMicrophone(localVideoObject, remoteVideoObject, videoSignalingObject);
 
