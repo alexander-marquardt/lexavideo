@@ -26,6 +26,8 @@
             <div lx-access-camera-and-microphone-directive></div>
             <div lx-video-negotiation-directive></div>
 
+
+
             <div class="row">
                 <div lx-video-container-directive>
 
@@ -117,6 +119,13 @@
 
                 <div lx-monitor-control-keys-directive ></div>
             </div>
+
+
+            <h4>Chat room status:
+                <span ng-show="!videoSignalingObject.remoteUserId">Waiting for someone to join ... </span>
+                <span ng-show="videoSignalingObject.remoteUserName!=videoSignalingObject.remoteUserId">{{ videoSignalingObject.remoteUserName }} has joined</span>
+                <span ng-show="videoSignalingObject.remoteUserId && videoSignalingObject.remoteUserName==videoSignalingObject.remoteUserId">Guest has joined</span>
+            </h4>
 
             <div ng-if="debugBuildEnabled">
                 <table class="table table-bordered table-striped">
