@@ -72,6 +72,7 @@
                             <div id="id-remote-hd-video-wrapper-div"
                                  ng-show="videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||
                                  (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == 'HD Video') ||
+                                 (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == null) ||
                                  videoSignalingObject.debugShowAllVideoWindows">
                                 <h4>Remote HD Video</h4>
 
