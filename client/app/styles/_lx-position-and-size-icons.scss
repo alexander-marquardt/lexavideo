@@ -32,21 +32,48 @@
   @extend .icon-lx-close;
 }
 
-.cl-call-control-icon-wrapper-cfg {
+.cl-lx-call-control-wrapper-cfg {
   vertical-align: middle;
   display: inline-block;
   position: relative;
-  height: 3em;
-  width: 4em;
+  height: 1em;
+  width: 1em;
+}
+
+
+%call-control-icon-common {
+  position: absolute;
+  font-size: 2em;
+  bottom: 0em;
+
 }
 
 // Hangup phone icon
 .icon-lx-phone-hang-up-cfg {
   color: $deep-red;
-  position: absolute;
-  font-size: 3em;
-  bottom: 0em;
   left: 50%;
-  margin-left: -0.5em; //relative to the new font-size of 3em 
+  top: 50%;
+  margin-top: -0.5em;
+  margin-left: -0.5em; //relative to the new font-size of 3em
+  @extend %call-control-icon-common;
   @extend .icon-lx-phone-hang-up;
 }
+
+.icon-lx-microphone-cfg {
+  left: 50%;
+  top: 50%;
+  margin-top: -0.5em;
+  margin-left: -0.3em; //relative to the new font-size of 3em
+  @extend %call-control-icon-common;
+  @extend .icon-lx-microphone;
+}
+
+.icon-lx-vid-cam-filled-cfg {
+  left: 50%;
+  top: 50%;
+  margin-top: -0.5em;
+  margin-left: -0.5em; //relative to the new font-size of 3em
+  @extend %call-control-icon-common;
+  @extend .icon-lx-vid-cam-filled;
+}
+
