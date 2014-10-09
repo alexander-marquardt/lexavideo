@@ -46,5 +46,7 @@
   position: absolute;
   font-size: 3em;
   bottom: 0em;
+  left: 50%;
+  margin-left: -0.5em; //relative to the new font-size of 3em 
   @extend .icon-lx-phone-hang-up;
 }
