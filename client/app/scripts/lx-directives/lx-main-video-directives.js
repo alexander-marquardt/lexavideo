@@ -57,10 +57,10 @@ videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($documen
                 }
                 switch (event.keyCode) {
                     case 68:
-                        lxCallService.setAudioMute(scope.localVideoObject, !scope.localVideoObject.isAudioMuted);
+                        lxCallService.setMicrophoneMute(scope.localVideoObject, !scope.localVideoObject.isMicrophoneMuted);
                         return false;
                     case 69:
-                        lxCallService.setVideoMute(scope.localVideoObject, !scope.localVideoObject.isVideoMuted);
+                        lxCallService.setWebcamMute(scope.localVideoObject, !scope.localVideoObject.isWebcamMuted);
                         return false;
                     default:
                         return;
@@ -89,11 +89,6 @@ videoAppDirectives.directive('lxVideoContainerDirective',
             var videoSignalingObject = scope.videoSignalingObject;
 
             var $miniVideoDiv = angular.element(elem).find('#id-mini-video-div');
-
-//            var transitionVideoToActive = function() {
-//                $log.debug('\n\ntransitionVideoToActive\n\n');
-//                lxUserNotificationService.setStatus('<input type="button" class="btn btn-default btn-sm navbar-btn" id="hangup" value="Hang up" ng-click="doHangup()" />');
-//            };
 
             var removeMiniVideoElemsSrc = function() {
                 $log.debug('removeMiniVideoElemsSrc');

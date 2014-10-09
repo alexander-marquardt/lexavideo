@@ -59,7 +59,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
 
                 // Un-mute the audio in case that the user has just switched from ascii video back to HD video.
-                lxCallService.setAudioMute(scope.localVideoObject, false);
+                lxCallService.setMicrophoneMute(scope.localVideoObject, false);
 
 
                 // Note: scope.videoSignalingObject.localIsSendingVideoType will be set to 'HD Video' once the
@@ -81,7 +81,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                 // mute the audio - this should technically not be necessary, but for some reason during a firefox to chrome session
                 // the audio continues to transmit even though the rtcSession was stopped.
-                lxCallService.setAudioMute(scope.localVideoObject, true);
+                lxCallService.setMicrophoneMute(scope.localVideoObject, true);
             }
             else {
                 $log.error('Unknown video type received: ' + videoType);

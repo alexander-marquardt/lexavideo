@@ -77,7 +77,11 @@
 }
 
 .icon-lx-thick-forward-slash-cfg {
-  color: #FFF;
+  color: $btn-gray-bg;
   @extend %call-control-icon-common;
   @extend .icon-lx-thick-forward-slash;
+}
+
+.btn-gray {
+  @include button-variant($btn-default-color, $btn-gray-bg, $btn-default-border);
 }

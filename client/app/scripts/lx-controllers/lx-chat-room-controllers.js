@@ -52,6 +52,7 @@ angular.module('lxUseChatRoom.controllers', [])
     function (
         $scope,
         lxAccessCameraAndMicrophoneService,
+        lxCallService,
         lxCheckIfSystemSupportsWebRtcService,
         lxUseChatRoomConstantsService) {
 
@@ -75,8 +76,8 @@ angular.module('lxUseChatRoom.controllers', [])
             localHdVideoElem :  undefined,  // set in lxVideoElementDirective
             localHdVideoWrapper : undefined, // set in lxHdVideoWrapperDirective
             miniVideoElemInsideRemoteVideoWindow: undefined, //To be set in lxMiniVideoTemplateDirective to .cl-mini-video-element in HD element
-            isVideoMuted : false,
-            isAudioMuted : false
+            isWebcamMuted : false,
+            isMicrophoneMuted : false
         };
 
         $scope.videoSignalingObject = {
@@ -152,6 +153,14 @@ angular.module('lxUseChatRoom.controllers', [])
                 lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess($scope);
             }
 
+        };
+
+        $scope.toggleWebcamMute = function() {
+            lxCallService.toggleWebcamMute($scope.localVideoObject);
+        };
+
+        $scope.toggleMicrophoneMute = function() {
+            lxCallService.toggleMicrophoneMute($scope.localVideoObject);
         };
 
         $scope.myUsername = lxUseChatRoomConstantsService.myUsername;

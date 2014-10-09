@@ -622,19 +622,19 @@ webRtcServices.factory('lxCallService',
                 };
             },
 
-            setVideoMute : function(localVideoObject, newIsMutedValue) {
+            setWebcamMute : function(localVideoObject, newIsMutedValue) {
 
                 var i;
                 var videoTracks = lxStreamService.localStream.getVideoTracks();
 
-                localVideoObject.isVideoMuted = newIsMutedValue;
+                localVideoObject.isWebcamMuted = newIsMutedValue;
 
                 if (videoTracks.length === 0) {
                     $log.log('No local video available.');
                     return;
                 }
 
-                if (!localVideoObject.isVideoMuted) {
+                if (!localVideoObject.isWebcamMuted) {
                     for (i = 0; i < videoTracks.length; i++) {
                         videoTracks[i].enabled = true;
                     }
@@ -647,19 +647,23 @@ webRtcServices.factory('lxCallService',
                 }
             },
 
-            setAudioMute : function(localVideoObject, newIsMutedValue) {
+            toggleWebcamMute : function(localVideoObject) {
+                self.setWebcamMute(localVideoObject, !localVideoObject.isWebcamMuted);
+            },
+
+            setMicrophoneMute : function(localVideoObject, newIsMutedValue) {
                 var i;
                 // Call the getAudioTracks method via adapter.js.
                 var audioTracks = lxStreamService.localStream.getAudioTracks();
 
-                localVideoObject.isAudioMuted = newIsMutedValue;
+                localVideoObject.isMicrophoneMuted = newIsMutedValue;
 
                 if (audioTracks.length === 0) {
                     $log.log('No local audio available.');
                     return;
                 }
 
-                if (!localVideoObject.isAudioMuted) {
+                if (!localVideoObject.isMicrophoneMuted) {
                     for (i = 0; i < audioTracks.length; i++) {
                         audioTracks[i].enabled = true;
                     }
@@ -672,9 +676,13 @@ webRtcServices.factory('lxCallService',
                 }
             },
 
+            toggleMicrophoneMute: function(localVideoObject) {
+                self.setMicrophoneMute(localVideoObject, !localVideoObject.isMicrophoneMuted)
+            },
+
             unMuteAudioAndVideo : function (localVideoObject) {
-                self.setVideoMute(localVideoObject, false);
-                self.setAudioMute(localVideoObject, false);
+                self.setWebcamMute(localVideoObject, false);
+                self.setMicrophoneMute(localVideoObject, false);
             }
         };
         return self;
