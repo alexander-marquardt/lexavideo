@@ -14,16 +14,16 @@
 }
 
 // The video camera icon
-.icon-lx-vid-cam-line-cfg {
+.icon-lx-video-camera-line-cfg {
   color:#888888;
   position:absolute;
   bottom: -0.15em;
   font-size:1.5em;
-  @extend .icon-lx-vid-cam-line;
+  @extend .icon-lx-video-camera-line;
 }
 
 // The "x" that will be placed over the video camera icon
-.icon-lx-close-over-vid-cam-line-cfg {
+.icon-lx-close-over-video-camera-line-cfg {
   color: $deep-red;
   position:absolute;
   left:0.9em;
@@ -45,35 +45,39 @@
   position: absolute;
   font-size: 2em;
   bottom: 0em;
+  left: 50%;
+  top: 50%;
+  margin-top: -0.5em;
+  margin-left: -0.5em; //relative to the new font-size of 3em
 
 }
 
 // Hangup phone icon
 .icon-lx-phone-hang-up-cfg {
   color: $deep-red;
-  left: 50%;
-  top: 50%;
-  margin-top: -0.5em;
-  margin-left: -0.5em; //relative to the new font-size of 3em
   @extend %call-control-icon-common;
   @extend .icon-lx-phone-hang-up;
 }
 
 .icon-lx-microphone-cfg {
-  left: 50%;
-  top: 50%;
-  margin-top: -0.5em;
-  margin-left: -0.3em; //relative to the new font-size of 3em
   @extend %call-control-icon-common;
+  margin-left: -0.3em; //relative to the new font-size of 3em
   @extend .icon-lx-microphone;
 }
 
-.icon-lx-vid-cam-filled-cfg {
-  left: 50%;
-  top: 50%;
-  margin-top: -0.5em;
-  margin-left: -0.5em; //relative to the new font-size of 3em
+.icon-lx-video-camera-filled-cfg {
   @extend %call-control-icon-common;
-  @extend .icon-lx-vid-cam-filled;
+  @extend .icon-lx-video-camera-filled;
 }
 
+.icon-lx-thin-forward-slash-cfg {
+  color: $deep-red;
+  @extend %call-control-icon-common;
+  @extend .icon-lx-thin-forward-slash;
+}
+
+.icon-lx-thick-forward-slash-cfg {
+  color: #FFF;
+  @extend %call-control-icon-common;
+  @extend .icon-lx-thick-forward-slash;
+}

@@ -4,6 +4,72 @@
 		{
 			"icon": {
 				"paths": [
+					"M4.794 929.802l925.005-925.005 89.391 89.391-925.005 925.005-89.391-89.391z"
+				],
+				"attrs": [
+					{
+						"opacity": 1,
+						"visibility": false
+					}
+				],
+				"grid": 0,
+				"tags": [
+					"thin-forward-slash"
+				]
+			},
+			"attrs": [
+				{
+					"opacity": 1,
+					"visibility": false
+				}
+			],
+			"properties": {
+				"order": 46,
+				"id": 17,
+				"prevSize": 32,
+				"code": 58881,
+				"name": "thin-forward-slash",
+				"ligatures": ""
+			},
+			"setIdx": 0,
+			"iconIdx": 0
+		},
+		{
+			"icon": {
+				"paths": [
+					"M4.26 850.769l848.205-848.205 168.962 168.962-848.205 848.205-168.962-168.962z"
+				],
+				"attrs": [
+					{
+						"opacity": 1,
+						"visibility": false
+					}
+				],
+				"grid": 0,
+				"tags": [
+					"thick-forward-slash"
+				]
+			},
+			"attrs": [
+				{
+					"opacity": 1,
+					"visibility": false
+				}
+			],
+			"properties": {
+				"order": 47,
+				"id": 2,
+				"prevSize": 32,
+				"code": 58880,
+				"name": "thick-forward-slash",
+				"ligatures": ""
+			},
+			"setIdx": 0,
+			"iconIdx": 1
+		},
+		{
+			"icon": {
+				"paths": [
 					"M960 192h-28.384c-16.8 0-32.928 6.624-44.928 18.432l-86.688 85.504v-39.936c0-53.024-43.008-96-96-96h-608c-52.928 0-96 43.040-96 96v512c0 52.992 42.976 96 96 96h608c52.992 0 96-43.008 96-96v-39.072l86.688 85.504c12 11.808 28.128 18.432 44.928 18.432h28.384c35.328 0 64-28.64 64-64v-512.864c0-35.36-28.672-64-64-64zM96 800c-17.664 0-32-14.368-32-32v-512c0-17.696 14.304-32 32-32h608c17.632 0 32 14.336 32 32v512c0 17.632-14.368 32-32 32h-608zM960 768.864h-32l-128-128v-0.864l-32-32v-192l160-160h32v512.864z"
 				],
 				"attrs": [
@@ -16,15 +82,15 @@
 				{}
 			],
 			"properties": {
-				"id": 0,
-				"order": 1,
+				"order": 48,
+				"id": 4,
 				"prevSize": 32,
-				"code": 58880,
-				"name": "vid-cam-line",
+				"code": 58882,
+				"name": "vid-camera-line",
 				"ligatures": ""
 			},
 			"setIdx": 0,
-			"iconIdx": 0
+			"iconIdx": 2
 		},
 		{
 			"icon": {
@@ -41,15 +107,15 @@
 				{}
 			],
 			"properties": {
-				"id": 1,
-				"order": 2,
+				"order": 61,
+				"id": 5,
 				"prevSize": 32,
-				"code": 58881,
+				"code": 58883,
 				"name": "3-vert-dots",
 				"ligatures": ""
 			},
 			"setIdx": 0,
-			"iconIdx": 1
+			"iconIdx": 3
 		},
 		{
 			"icon": {
@@ -66,15 +132,15 @@
 				{}
 			],
 			"properties": {
-				"id": 2,
-				"order": 3,
+				"order": 54,
+				"id": 6,
 				"prevSize": 32,
-				"code": 58882,
+				"code": 58884,
 				"name": "close",
 				"ligatures": ""
 			},
 			"setIdx": 0,
-			"iconIdx": 2
+			"iconIdx": 4
 		},
 		{
 			"icon": {
@@ -91,15 +157,15 @@
 				{}
 			],
 			"properties": {
-				"id": 3,
-				"order": 4,
+				"order": 55,
+				"id": 7,
 				"prevSize": 32,
-				"code": 58883,
+				"code": 58885,
 				"name": "check-mark",
 				"ligatures": ""
 			},
 			"setIdx": 0,
-			"iconIdx": 3
+			"iconIdx": 5
 		},
 		{
 			"icon": {
@@ -116,15 +182,15 @@
 				{}
 			],
 			"properties": {
-				"id": 4,
-				"order": 5,
+				"order": 56,
+				"id": 8,
 				"prevSize": 32,
-				"code": 58884,
+				"code": 58886,
 				"name": "arrow-up",
 				"ligatures": ""
 			},
 			"setIdx": 0,
-			"iconIdx": 4
+			"iconIdx": 6
 		},
 		{
 			"icon": {
@@ -141,15 +207,15 @@
 				{}
 			],
 			"properties": {
-				"id": 5,
-				"order": 6,
+				"order": 57,
+				"id": 9,
 				"prevSize": 32,
 				"code": 61501,
 				"name": "vid-cam-filled",
 				"ligatures": ""
 			},
 			"setIdx": 0,
-			"iconIdx": 5
+			"iconIdx": 7
 		},
 		{
 			"icon": {
@@ -167,15 +233,15 @@
 				{}
 			],
 			"properties": {
-				"id": 6,
-				"order": 7,
+				"order": 58,
+				"id": 10,
 				"prevSize": 32,
 				"code": 61744,
 				"name": "microphone",
 				"ligatures": ""
 			},
 			"setIdx": 0,
-			"iconIdx": 6
+			"iconIdx": 8
 		},
 		{
 			"icon": {
@@ -193,15 +259,15 @@
 				{}
 			],
 			"properties": {
-				"id": 7,
-				"order": 8,
+				"order": 59,
+				"id": 11,
 				"prevSize": 32,
 				"code": 61745,
 				"name": "microphone-off",
 				"ligatures": ""
 			},
 			"setIdx": 0,
-			"iconIdx": 7
+			"iconIdx": 9
 		},
 		{
 			"icon": {
@@ -218,15 +284,15 @@
 				"grid": 16
 			},
 			"properties": {
-				"id": 60,
-				"order": 10,
+				"order": 60,
+				"id": 12,
 				"prevSize": 32,
-				"code": 58885,
+				"code": 58887,
 				"name": "phone",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 60
+			"setIdx": 0,
+			"iconIdx": 10
 		},
 		{
 			"icon": {
@@ -243,15 +309,41 @@
 				"grid": 16
 			},
 			"properties": {
-				"id": 61,
-				"order": 9,
+				"order": 50,
+				"id": 13,
 				"prevSize": 32,
-				"code": 58886,
+				"code": 58888,
 				"name": "phone-hang-up",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 61
+			"setIdx": 0,
+			"iconIdx": 11
+		},
+		{
+			"icon": {
+				"paths": [
+					"M0 512c0 282.77 229.23 512 512 512 282.772 0 512-229.23 512-512s-229.228-512-512-512c-282.77 0-512 229.23-512 512zM896 512c0 73.236-20.512 141.68-56.088 199.912l-527.822-527.824c58.23-35.578 126.674-56.088 199.91-56.088 212.076 0 384 171.922 384 384zM128 512c0-73.236 20.512-141.678 56.090-199.912l527.822 527.824c-58.234 35.578-126.676 56.088-199.912 56.088-212.076 0-384-171.922-384-384z"
+				],
+				"tags": [
+					"blocked",
+					"cancel",
+					"stop",
+					"forbidden",
+					"denied",
+					"banned"
+				],
+				"grid": 16
+			},
+			"properties": {
+				"order": 51,
+				"id": 14,
+				"prevSize": 32,
+				"code": 58891,
+				"name": "blocked",
+				"ligatures": ""
+			},
+			"setIdx": 0,
+			"iconIdx": 12
 		},
 		{
 			"icon": {
@@ -268,15 +360,15 @@
 				"grid": 16
 			},
 			"properties": {
-				"id": 276,
-				"order": 12,
+				"order": 52,
+				"id": 15,
 				"prevSize": 32,
-				"code": 58887,
+				"code": 58892,
 				"name": "volume-high",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 276
+			"setIdx": 0,
+			"iconIdx": 13
 		},
 		{
 			"icon": {
@@ -293,15 +385,15 @@
 				"grid": 16
 			},
 			"properties": {
-				"id": 280,
-				"order": 11,
+				"order": 53,
+				"id": 16,
 				"prevSize": 32,
-				"code": 58888,
+				"code": 58893,
 				"name": "volume-mute",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 280
+			"setIdx": 0,
+			"iconIdx": 14
 		}
 	],
 	"height": 1024,

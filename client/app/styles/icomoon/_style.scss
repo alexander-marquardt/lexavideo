@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?3d34p4');
-	src:url('fonts/icomoon.eot?#iefix3d34p4') format('embedded-opentype'),
-		url('fonts/icomoon.woff?3d34p4') format('woff'),
-		url('fonts/icomoon.ttf?3d34p4') format('truetype'),
-		url('fonts/icomoon.svg?3d34p4#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?-h1th3k');
+	src:url('fonts/icomoon.eot?#iefix-h1th3k') format('embedded-opentype'),
+		url('fonts/icomoon.woff?-h1th3k') format('woff'),
+		url('fonts/icomoon.ttf?-h1th3k') format('truetype'),
+		url('fonts/icomoon.svg?-h1th3k#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,22 +23,28 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.icon-lx-vid-cam-line:before {
-	content: "\e600";
-}
-.icon-lx-3-vert-dots:before {
+.icon-lx-thin-forward-slash:before {
 	content: "\e601";
 }
-.icon-lx-close:before {
+.icon-lx-thick-forward-slash:before {
+	content: "\e600";
+}
+.icon-lx-video-camera-line:before {
 	content: "\e602";
 }
-.icon-lx-check-mark:before {
+.icon-lx-3-vert-dots:before {
 	content: "\e603";
 }
-.icon-lx-arrow-up:before {
+.icon-lx-close:before {
 	content: "\e604";
 }
-.icon-lx-vid-cam-filled:before {
+.icon-lx-check-mark:before {
+	content: "\e605";
+}
+.icon-lx-arrow-up:before {
+	content: "\e606";
+}
+.icon-lx-video-camera-filled:before {
 	content: "\f03d";
 }
 .icon-lx-microphone:before {
@@ -48,14 +54,17 @@
 	content: "\f131";
 }
 .icon-lx-phone:before {
-	content: "\e605";
-}
-.icon-lx-phone-hang-up:before {
-	content: "\e606";
-}
-.icon-lx-volume-high:before {
 	content: "\e607";
 }
-.icon-lx-volume-mute:before {
+.icon-lx-phone-hang-up:before {
 	content: "\e608";
+}
+.icon-lx-blocked:before {
+	content: "\e60b";
+}
+.icon-lx-volume-high:before {
+	content: "\e60c";
+}
+.icon-lx-volume-mute:before {
+	content: "\e60d";
 }
