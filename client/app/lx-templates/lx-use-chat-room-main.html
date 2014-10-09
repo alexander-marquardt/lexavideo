@@ -101,14 +101,21 @@
                 <div lx-monitor-control-keys-directive ></div>
             </div> <!-- end row -->
             <div class="row">
-                <div class="col-xs-12 text-center">
+                <div class="col-sm-6 text-center">
+                    <span class="cl-call-control-icon-wrapper-cfg">
+                        <span class="icon-lx-phone-hang-up-cfg"></span>
+                    </span>
+                </div>
+
+                <div class="col-sm-6 text-center">
                         <button type="button" class="btn btn-sm"
                                 ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
                                 ng-click="setLocalVideoType('HD Video')">HD Video</button>
                         <button type="button" class="btn btn-sm"
                                 ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
                                 ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
-                        <span class="icon-lx-phone-hang-up-cfg"></span>
+
+
                 </div>
             </div>
             <div class="row">

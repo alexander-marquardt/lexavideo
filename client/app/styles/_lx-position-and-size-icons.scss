@@ -6,6 +6,7 @@
 // The following will contain the video camera and the "x" together - used for positioning
 // of the camera and the "x" icons relative to each other.
 .cl-camera-access-denied-wrapper-cfg {
+  vertical-align: middle;
   display:inline-block;
   position:relative;
   height: 1em;
@@ -16,7 +17,7 @@
 .icon-lx-vid-cam-line-cfg {
   color:#888888;
   position:absolute;
-  bottom:-0.25em;
+  bottom: -0.15em;
   font-size:1.5em;
   @extend .icon-lx-vid-cam-line;
 }
@@ -26,17 +27,24 @@
   color: $deep-red;
   position:absolute;
   left:0.9em;
-  top: 1.1em;
+  bottom: -0.4em;
   font-size:0.7em;
   @extend .icon-lx-close;
 }
 
+.cl-call-control-icon-wrapper-cfg {
+  vertical-align: middle;
+  display: inline-block;
+  position: relative;
+  height: 3em;
+  width: 4em;
+}
 
 // Hangup phone icon
 .icon-lx-phone-hang-up-cfg {
-  display: inline;
   color: $deep-red;
-  position: relative;
+  position: absolute;
   font-size: 3em;
+  bottom: 0em;
   @extend .icon-lx-phone-hang-up;
 }
