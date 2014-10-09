@@ -14,7 +14,6 @@ angular.module('lxChatRoom.directives', [])
         lxHttpChannelService,
         lxWebRtcSessionService,
         lxUseChatRoomVarsService,
-        lxUserNotificationService,
         lxTurnService
         ) {
 
@@ -26,7 +25,6 @@ angular.module('lxChatRoom.directives', [])
 
                 // Setup the channel and turn. If no exceptions are found returns true, otherwise false
                 try {
-                    lxUserNotificationService.resetStatus();
                     lxChannelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, scope.lxChatRoomOuterCtrl.channelToken);
                     lxTurnService.maybeRequestTurn();
 

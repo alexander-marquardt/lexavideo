@@ -677,7 +677,7 @@ webRtcServices.factory('lxCallService',
             },
 
             toggleMicrophoneMute: function(localVideoObject) {
-                self.setMicrophoneMute(localVideoObject, !localVideoObject.isMicrophoneMuted)
+                self.setMicrophoneMute(localVideoObject, !localVideoObject.isMicrophoneMuted);
             },
 
             unMuteAudioAndVideo : function (localVideoObject) {
@@ -688,40 +688,4 @@ webRtcServices.factory('lxCallService',
         return self;
     }
 );
-
-
-webRtcServices.factory('lxUserNotificationService',
-    function(
-        $log,
-        $timeout,
-        lxUseChatRoomConstantsService,
-        lxChannelSupportService)
-    {
-        var currentState = 'Unknown state'; // this should never be displayed
-        return {
-            setStatus: function(state) {
-
-                // use r to ensure that $apply is called after the current digest cycle.
-                $timeout(function() {
-                    currentState = state;
-                });
-            },
-            getStatus: function() {
-                return currentState;
-            },
-            messageError : function(msg) {
-                $log.error(msg);
-
-            },
-            resetStatus : function() {
-                if (!lxChannelSupportService.rtcInitiator) {
-                    this.setStatus('Waiting for someone to join:  <a lass="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>' + lxUseChatRoomConstantsService.roomLink + '</a>');
-                } else {
-                    this.setStatus('Initializing...');
-                }
-            }
-        };
-    }
-);
-
 

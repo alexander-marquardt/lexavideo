@@ -8,30 +8,6 @@ var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 
 
 
-videoAppDirectives.directive('lxCallStatusDirective', function(lxUserNotificationService, $compile, lxCallService) {
-    return {
-        restrict: 'A',
-        link: function(scope, elem) {
-
-            // we include doHangup on the scope because some of the getStatus calls can include
-            // html that expects a doHangup function to be available.
-            scope.doHangup = lxCallService.doHangup(scope.localVideoObject);
-
-            scope.$watch(lxUserNotificationService.getStatus, function (statusHtml) {
-
-                var el = angular.element('<p class="navbar-text"/>');
-                el.append(statusHtml);
-                var compileFn = $compile(el);
-                compileFn(scope);
-                elem.html('');
-                elem.append(el);
-            });
-        }
-    };
-});
-
-
-
 
 videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($document, $log, lxCallService) {
 
@@ -76,7 +52,6 @@ videoAppDirectives.directive('lxVideoContainerDirective',
              $log,
              lxUseChatRoomVarsService,
              lxUseChatRoomConstantsService,
-             lxUserNotificationService,
              lxAdapterService) {
 
 
@@ -96,17 +71,6 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                     lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteVideoWindow.src , '');
                 }
             };
-
-//            var transitionVideoToWaiting = function() {
-//                $log.log('\n\nExecuting transitionVideoToWaiting\n\n');
-//                removeMiniVideoElemsSrc();
-//                lxUserNotificationService.resetStatus();
-//            };
-
-//            var transitionVideoToDone = function() {
-//                $log.log('\n\nExecuting transitionVideoToDone\n\n');
-//                lxUserNotificationService.setStatus('You have left the call. <a class="navbar-link" href=' + lxUseChatRoomConstantsService.roomLink + '>Click here</a> to rejoin.');
-//            };
 
             var enablePrincipalVideoWindows = function() {
                 $log.debug('enablePrincipalVideoWindows');
