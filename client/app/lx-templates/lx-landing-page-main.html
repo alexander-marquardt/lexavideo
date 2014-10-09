@@ -54,6 +54,7 @@
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern" style="vertical-align: middle">
                                             {{ invalidCharacterFeedback }}</small>
                                         <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Chat is full</small>
+                                        <small  ng-show="createRoomForm.roomNameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
                                     </div>
                                     <div  ng-show="createRoomForm.$valid">
                                         <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">

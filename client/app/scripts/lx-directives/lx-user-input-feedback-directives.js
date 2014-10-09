@@ -67,6 +67,9 @@ angular.module('lxUserInputFeedback.directives', [])
                          */
                         ctrl.$setValidity('roomIsFull', true);
 
+                        // same logic applies to the networkOrServerError validity flag as to roomIsFull
+                        ctrl.$setValidity('networkOrServerError', true);
+
                         /*
                         Keep track of if the user is still typing or not, and while they are typing we disable the
                         submit button for creating/joining a room.
@@ -116,12 +119,15 @@ angular.module('lxUserInputFeedback.directives', [])
                                         }
                                         else {
                                             // This will likely occasionally happen, but if it happens too often then it is likely an indication
-                                            // that something is going wrong
+                                            // that something is going wrong. This can occur because of server delay in responding
+                                            // to recent requests. It is not serious and can be ignored.
                                             $log.warn('Warning: private chat name ' + data.roomName +
                                                 ' returned from server does not match most recently typed room name ' + inputElement.value);
                                         }
+
                                     }, function() {
-                                        throw new Error('checkForRoomOccupancy - unknown server error');
+                                        ctrl.$setValidity('networkOrServerError', false);
+                                        $log.error('checkForRoomOccupancy - unknown network or server error');
                                     })
                                     ['finally'](function () {
                                         ctrl.userIsWaitingForRoomStatus = false;

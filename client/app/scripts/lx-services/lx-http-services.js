@@ -30,7 +30,8 @@ angular.module('lxHttp.services', [])
                         $log.debug('getRoom function - returned object: ' + angular.toJson(data));
 
                     }, function() {
-                        throw new Error('lxHandleRoomService.getRoom - server error');
+                        // something went wrong and the request failed
+                        $log.error('lxHandleRoomService.getRoom - network or server error');
                     });
                 }
                 return roomObj;
