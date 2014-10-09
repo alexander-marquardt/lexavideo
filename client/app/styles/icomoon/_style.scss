@@ -1,15 +1,15 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?5p9eqv');
-	src:url('fonts/icomoon.eot?#iefix5p9eqv') format('embedded-opentype'),
-		url('fonts/icomoon.woff?5p9eqv') format('woff'),
-		url('fonts/icomoon.ttf?5p9eqv') format('truetype'),
-		url('fonts/icomoon.svg?5p9eqv#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?3d34p4');
+	src:url('fonts/icomoon.eot?#iefix3d34p4') format('embedded-opentype'),
+		url('fonts/icomoon.woff?3d34p4') format('woff'),
+		url('fonts/icomoon.ttf?3d34p4') format('truetype'),
+		url('fonts/icomoon.svg?3d34p4#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-lx-"], [class*=" icon-lx-"] {
 	font-family: 'icomoon';
 	speak: none;
 	font-style: normal;
@@ -23,8 +23,20 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-lx-vid-cam-line:before {
+	content: "\e600";
+}
 .icon-lx-3-vert-dots:before {
 	content: "\e601";
+}
+.icon-lx-close:before {
+	content: "\e602";
+}
+.icon-lx-check-mark:before {
+	content: "\e603";
+}
+.icon-lx-arrow-up:before {
+	content: "\e604";
 }
 .icon-lx-vid-cam-filled:before {
 	content: "\f03d";
@@ -35,15 +47,15 @@
 .icon-lx-microphone-off:before {
 	content: "\f131";
 }
-.icon-lx-close:before {
-	content: "\e602";
+.icon-lx-phone:before {
+	content: "\e605";
 }
-.icon-lx-checkmark:before {
-	content: "\e603";
+.icon-lx-phone-hang-up:before {
+	content: "\e606";
 }
-.icon-lx-arrow-up:before {
-	content: "\e604";
+.icon-lx-volume-high:before {
+	content: "\e607";
 }
-.icon-lx-vid-cam-line:before {
-	content: "\e600";
+.icon-lx-volume-mute:before {
+	content: "\e608";
 }

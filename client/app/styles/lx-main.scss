@@ -1,5 +1,6 @@
 // the following call will override conflicting variable declarations in the bootstrap definitions.
 @import "./lx-override-bootstrap.scss";
+@import "./lx-custom-variables";
 
 // bower:scss
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
@@ -9,6 +10,7 @@
 @import "./lx-video-elements";
 @import "./lx-access-camera-prompts";
 @import "./lx-main-ids";
+@import "./lx-position-and-size-icons";
 
 
 /* Icomoon fonts used in this site are currently based on a combination of standard icomoon.io icoMoon-Free,

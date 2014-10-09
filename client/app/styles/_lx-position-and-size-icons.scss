@@ -1,0 +1,42 @@
+
+/* NOTE: Any classes that extend icons *must* start with "icon-lx" - see the _styles.scss file for the
+         associated selectors */
+
+
+// The following will contain the video camera and the "x" together - used for positioning
+// of the camera and the "x" icons relative to each other.
+.cl-camera-access-denied-wrapper-cfg {
+  display:inline-block;
+  position:relative;
+  height: 1em;
+  width: 1.5em
+}
+
+// The video camera icon
+.icon-lx-vid-cam-line-cfg {
+  color:#888888;
+  position:absolute;
+  bottom:-0.25em;
+  font-size:1.5em;
+  @extend .icon-lx-vid-cam-line;
+}
+
+// The "x" that will be placed over the video camera icon
+.icon-lx-close-over-vid-cam-line-cfg {
+  color: $deep-red;
+  position:absolute;
+  left:0.9em;
+  top: 1.1em;
+  font-size:0.7em;
+  @extend .icon-lx-close;
+}
+
+
+// Hangup phone icon
+.icon-lx-phone-hang-up-cfg {
+  display: inline;
+  color: $deep-red;
+  position: relative;
+  font-size: 3em;
+  @extend .icon-lx-phone-hang-up;
+}
