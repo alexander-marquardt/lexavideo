@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="Only watch files in video_src" pattern="file:video_src//*" />
-</component>
