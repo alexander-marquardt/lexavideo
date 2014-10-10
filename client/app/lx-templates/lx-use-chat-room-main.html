@@ -100,7 +100,17 @@
                 <div lx-monitor-control-keys-directive ></div>
             </div> <!-- end row -->
             <div class="row">
-                <div class="col-xs-6 text-center">
+
+                <div class="col-xs-6 text-center col-sm-push-6">
+                        <button type="button" class="btn btn-sm"
+                                ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
+                                ng-click="setLocalVideoType('HD Video')">HD Video</button>
+                        <button type="button" class="btn btn-sm"
+                                ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
+                                ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
+                </div>
+
+                <div class="col-xs-6 text-center col-sm-pull-6">
 
 
                     <!-- enable/disable video - button that indicates that the video stream is currently enabled -->
@@ -153,16 +163,7 @@
 
                 </div>
 
-                <div class="col-xs-6 text-center">
-                        <button type="button" class="btn btn-sm"
-                                ng-class="(videoSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
-                                ng-click="setLocalVideoType('HD Video')">HD Video</button>
-                        <button type="button" class="btn btn-sm"
-                                ng-class="(videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
-                                ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
 
-
-                </div>
             </div>
             <div class="row">
                 <div class="text-center">
