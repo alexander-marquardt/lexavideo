@@ -163,5 +163,9 @@ angular.module('lxUseChatRoom.controllers', [])
             lxCallService.toggleMicrophoneMute($scope.localVideoObject);
         };
 
+        $scope.doHangup = function() {
+            lxCallService.doHangup($scope.localVideoObject);
+        };
+
         $scope.myUsername = lxUseChatRoomConstantsService.myUsername;
     });

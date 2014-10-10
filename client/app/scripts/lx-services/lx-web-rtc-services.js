@@ -612,14 +612,12 @@ webRtcServices.factory('lxCallService',
             },
 
             doHangup : function(localVideoObject) {
-                return function() {
-                    $log.log('*** Hanging up. ***');
-                    lxStreamService.localStream.stop();
-                    lxWebRtcSessionService.stop();
-                    self.unMuteAudioAndVideo(localVideoObject);
-                    // will trigger BYE from server
-                    lxChannelSupportService.socket.close();
-                };
+                $log.log('*** Hanging up. ***');
+                lxStreamService.localStream.stop();
+                lxWebRtcSessionService.stop();
+                self.unMuteAudioAndVideo(localVideoObject);
+                // will trigger BYE from server
+                lxChannelSupportService.socket.close();
             },
 
             setWebcamMute : function(localVideoObject, newIsMutedValue) {
