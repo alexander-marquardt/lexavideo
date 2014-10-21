@@ -110,6 +110,45 @@
 
                 <div class="col-xs-6 text-center col-sm-pull-6">
 
+
+                    <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
+                    <button ng-show="!localVideoObject.isMicrophoneMuted" type="button" class="btn btn-sm btn-default"
+                            ng-click="toggleMicrophoneMute()">
+                        <span class="cl-lx-call-control-wrapper-cfg">
+                            <span class="icon-lx-microphone-cfg"></span>
+                        </span>
+                    </button>
+
+                    <button ng-show="localVideoObject.isMicrophoneMuted" type="button" class="btn btn-sm btn-gray"
+                            ng-click="toggleMicrophoneMute()">
+
+                        <span class="cl-lx-call-control-wrapper-cfg">
+                            <span class="icon-lx-microphone-cfg"></span>
+                            <span class="icon-lx-thick-forward-slash-cfg"></span>
+                            <span class="icon-lx-thin-forward-slash-cfg"></span>
+                        </span>
+                    </button>
+
+                    
+                    <!-- enable/disable remote audio -->
+                    <button ng-show="!remoteVideoObject.remoteHdVideoElem.muted" type="button" class="btn btn-sm btn-default"
+                            ng-click="toggleAudioMute()">
+                        <span class="cl-lx-call-control-wrapper-cfg">
+                            <span class="icon-lx-volume-high-cfg"></span>
+                        </span>
+                    </button>
+
+                    <button ng-show="remoteVideoObject.remoteHdVideoElem.muted" type="button" class="btn btn-sm btn-gray"
+                            ng-click="toggleAudioMute()">
+
+                        <span class="cl-lx-call-control-wrapper-cfg">
+                            <span class="icon-lx-volume-high-cfg"></span>
+                            <span class="icon-lx-thick-forward-slash-cfg"></span>
+                            <span class="icon-lx-thin-forward-slash-cfg"></span>
+                        </span>
+                    </button>
+
+
                     <!-- enable/disable video - button that indicates that the video stream is currently enabled -->
                     <button ng-show="!localVideoObject.isWebcamMuted" type="button" class="btn btn-sm btn-default"
                             ng-click="toggleWebcamMute()">
@@ -130,48 +169,16 @@
                     </button>
 
 
-                    <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
-                    <button ng-show="!localVideoObject.isMicrophoneMuted" type="button" class="btn btn-sm btn-default"
-                            ng-click="toggleMicrophoneMute()">
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-microphone-cfg"></span>
-                        </span>
-                    </button>
-
-                    <button ng-show="localVideoObject.isMicrophoneMuted" type="button" class="btn btn-sm btn-gray"
-                            ng-click="toggleMicrophoneMute()">
-
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-microphone-cfg"></span>
-                            <span class="icon-lx-thick-forward-slash-cfg"></span>
-                            <span class="icon-lx-thin-forward-slash-cfg"></span>
-                        </span>
-                    </button>
-
-                    <!-- enable/disable remote audio -->
-                    <button ng-show="!remoteVideoObject.remoteHdVideoElem.muted" type="button" class="btn btn-sm btn-default"
-                            ng-click="toggleAudioMute()">
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-volume-high-cfg"></span>
-                        </span>
-                    </button>
-
-                    <button ng-show="remoteVideoObject.remoteHdVideoElem.muted" type="button" class="btn btn-sm btn-gray"
-                            ng-click="toggleAudioMute()">
-
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-volume-high-cfg"></span>
-                            <span class="icon-lx-thick-forward-slash-cfg"></span>
-                            <span class="icon-lx-thin-forward-slash-cfg"></span>
-                        </span>
-                    </button>
-
+                    <!-- hangup button -->
                     <button type="button" class="btn btn-sm btn-default"
                             ng-click="doHangup()">
                         <span class="cl-lx-call-control-wrapper-cfg">
                             <span class="icon-lx-phone-hang-up-cfg"></span>
                         </span>
                     </button>
+
+
+
 
                 </div>
             </div>
