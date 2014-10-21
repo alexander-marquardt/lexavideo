@@ -50,44 +50,52 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
             }
         },
 
-        startVideoType: function(scope, videoType) {
+        startVideoType: (function() {
 
-            if (videoType === 'HD Video') {
-                // once lxCallService has made a successful connection (onRemoteStreamAdded callback is executed),
-                // then localIsSendingVideoType will be updated
-                lxCallService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
+            var localMicrophoneIsMutedPreviousSelection = null;
+
+            return function(scope, videoType) {
+
+                if (videoType === 'HD Video') {
+                    // once lxCallService has made a successful connection (onRemoteStreamAdded callback is executed),
+                    // then localIsSendingVideoType will be updated
+                    lxCallService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
 
 
-                // Note: scope.videoSignalingObject.localIsSendingVideoType will be set to 'HD Video' once the
-                // stream is being sent - this happens in the onRemoteStreamAdded callback.
+                    // If we have previously switched to non-HD video transmission, then we explicitly disabled
+                    // the microphone (see below). Therefore, when we switch back to HD mode, we set the microphone
+                    // mute to the value that the user had previously selected.
+                    if (localMicrophoneIsMutedPreviousSelection !== null) {
+                        // set the local microphone to the value that it had before switching to non-HD video
+                        lxCallService.setMicrophoneMute(scope.localVideoObject, localMicrophoneIsMutedPreviousSelection);
+                    }
+                    // Note: scope.videoSignalingObject.localIsSendingVideoType will be set to 'HD Video' once the
+                    // stream is being sent - this happens in the onRemoteStreamAdded callback.
 
-                // Note: HD Video videoSignalingStatusForUserFeedback messages are cleared inside the onRemoteStreamAdded callback
-            }
-            else if (videoType === 'ASCII Video') {
-                // Switch to ASCII video type, and stop  the HD video stream.
-                scope.videoSignalingObject.localIsSendingVideoType = videoType;
-                scope.videoSignalingObject.remoteIsSendingVideoType = videoType;
+                    // Note: HD Video videoSignalingStatusForUserFeedback messages are cleared inside the onRemoteStreamAdded callback
+                }
+                else if (videoType === 'ASCII Video') {
+                    // Switch to ASCII video type, and stop  the HD video stream.
+                    scope.videoSignalingObject.localIsSendingVideoType = videoType;
+                    scope.videoSignalingObject.remoteIsSendingVideoType = videoType;
 
-                // Disable microphone and audio -- they don't work with Ascii video, and we don't want to
-                // surprise the user when they switch to normal video by turning them on automatically.
-                lxCallService.setMicrophoneMute(scope.localVideoObject, true);
-                lxCallService.setAudioMute(scope.remoteVideoObject, true);
+                    // clear feedback messages - ASCII video transmission will start immediately and therefore
+                    // user will not see any feedback regarding the transition to ASCII video.
+                    scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
 
-                // clear feedback messages - ASCII video transmission will start immediately and therefore
-                // user will not see any feedback regarding the transition to ASCII video.
-                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
+                    // kill the webRtc session. Ascii video should start to be transmitted in both directions.
+                    lxWebRtcSessionService.stop();
 
-                // kill the webRtc session. Ascii video should start to be transmitted in both directions.
-                lxWebRtcSessionService.stop();
-
-                // mute the audio - this should technically not be necessary, but for some reason during a firefox to chrome session
-                // the audio continues to transmit even though the rtcSession was stopped.
-                lxCallService.setMicrophoneMute(scope.localVideoObject, true);
-            }
-            else {
-                $log.error('Unknown video type received: ' + videoType);
-            }
-        },
+                    // mute the audio - this should technically not be necessary, but for some reason during a firefox to chrome session
+                    // the audio continues to transmit even though the rtcSession was stopped.
+                    localMicrophoneIsMutedPreviousSelection = scope.localVideoObject.isMicrophoneMuted;
+                    lxCallService.setMicrophoneMute(scope.localVideoObject, true);
+                }
+                else {
+                    $log.error('Unknown video type received: ' + videoType);
+                }
+            };
+        })(),
 
         /*
          This function will monitor the type of video that the local user and that the remote user have
