@@ -7,46 +7,6 @@ var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 /* global viewportSize */
 
 
-
-
-videoAppDirectives.directive('lxMonitorControlKeysDirective', function ($document, $log, lxCallService) {
-
-
-    return {
-        restrict : 'A',
-        link: function(scope) {
-
-            // Mac: hotkey is Command.
-            // Non-Mac: hotkey is Control.
-            // <hotkey>-D: toggle audio mute.
-            // <hotkey>-E: toggle video mute.
-            // <hotkey>-I: toggle Info box.
-            // Return false to screen out original Chrome shortcuts.
-            $document.on('keydown', function(event) {
-                $log.log('Key pressed ' + event.keyCode);
-                var hotkey = event.ctrlKey;
-                if (navigator.appVersion.indexOf('Mac') !== -1) {
-                    hotkey = event.metaKey;
-                }
-                if (!hotkey) {
-                    return;
-                }
-                switch (event.keyCode) {
-                    case 68:
-                        lxCallService.setMicrophoneMute(scope.localVideoObject, !scope.localVideoObject.isMicrophoneMuted);
-                        return false;
-                    case 69:
-                        lxCallService.setWebcamMute(scope.localVideoObject, !scope.localVideoObject.isWebcamMuted);
-                        return false;
-                    default:
-                        return;
-                }
-            });
-        }
-    };
-});
-
-
 videoAppDirectives.directive('lxVideoContainerDirective',
     function($window,
              $log,
