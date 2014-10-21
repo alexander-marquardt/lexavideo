@@ -70,6 +70,11 @@
   @extend .icon-lx-video-camera-filled;
 }
 
+.icon-lx-volume-high-cfg {
+  @extend %call-control-icon-common;
+  @extend .icon-lx-volume-high;
+}
+
 .icon-lx-thin-forward-slash-cfg {
   color: $deep-red;
   @extend %call-control-icon-common;

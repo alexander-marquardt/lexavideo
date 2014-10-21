@@ -110,7 +110,6 @@
 
                 <div class="col-xs-6 text-center col-sm-pull-6">
 
-
                     <!-- enable/disable video - button that indicates that the video stream is currently enabled -->
                     <button ng-show="!localVideoObject.isWebcamMuted" type="button" class="btn btn-sm btn-default"
                             ng-click="toggleWebcamMute()">
@@ -120,7 +119,6 @@
                         </span>
                     </button>
 
-                    <!-- enable/disable video - button that indicates tht the video stream is currently disabled -->
                     <button ng-show="localVideoObject.isWebcamMuted" type="button" class="btn btn-sm btn-gray"
                             ng-click="toggleWebcamMute()">
 
@@ -140,7 +138,6 @@
                         </span>
                     </button>
 
-                    <!-- enable/disable video - button that indicates tht the microphone stream is currently disabled -->
                     <button ng-show="localVideoObject.isMicrophoneMuted" type="button" class="btn btn-sm btn-gray"
                             ng-click="toggleMicrophoneMute()">
 
@@ -151,6 +148,23 @@
                         </span>
                     </button>
 
+                    <!-- enable/disable remote audio -->
+                    <button ng-show="!remoteVideoObject.remoteHdVideoElem.muted" type="button" class="btn btn-sm btn-default"
+                            ng-click="toggleAudioMute()">
+                        <span class="cl-lx-call-control-wrapper-cfg">
+                            <span class="icon-lx-volume-high-cfg"></span>
+                        </span>
+                    </button>
+
+                    <button ng-show="remoteVideoObject.remoteHdVideoElem.muted" type="button" class="btn btn-sm btn-gray"
+                            ng-click="toggleAudioMute()">
+
+                        <span class="cl-lx-call-control-wrapper-cfg">
+                            <span class="icon-lx-volume-high-cfg"></span>
+                            <span class="icon-lx-thick-forward-slash-cfg"></span>
+                            <span class="icon-lx-thin-forward-slash-cfg"></span>
+                        </span>
+                    </button>
 
                     <button type="button" class="btn btn-sm btn-default"
                             ng-click="doHangup()">
@@ -160,9 +174,8 @@
                     </button>
 
                 </div>
-
-
             </div>
+
             <div class="row">
                 <div class="text-center">
                     <h4>Chat room status:

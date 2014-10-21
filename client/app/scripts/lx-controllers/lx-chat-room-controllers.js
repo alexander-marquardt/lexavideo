@@ -63,21 +63,21 @@ angular.module('lxUseChatRoom.controllers', [])
             // This variable should be used as follows:
             // accessCameraAndMicrophoneObject.modalsCurrentlyShown[modal-index#] = templateUrl (where template Url is unique
             // for each modal).
-            modalsCurrentlyShown : []
+            modalsCurrentlyShown: []
         };
 
         $scope.remoteVideoObject = {
-            remoteHdVideoElem : undefined, // set in lxVideoElementDirective
-            remoteHdVideoWrapper : undefined, // set in lxHdVideoWrapperDirective
+            remoteHdVideoElem: undefined, // set in lxVideoElementDirective
+            remoteHdVideoWrapper: undefined, // set in lxHdVideoWrapperDirective
             remoteAsciiVideoElem: undefined // set in lxDrawRemoteAsciiVideoDirective
         };
 
         $scope.localVideoObject = {
-            localHdVideoElem :  undefined,  // set in lxVideoElementDirective
-            localHdVideoWrapper : undefined, // set in lxHdVideoWrapperDirective
+            localHdVideoElem:  undefined,  // set in lxVideoElementDirective
+            localHdVideoWrapper: undefined, // set in lxHdVideoWrapperDirective
             miniVideoElemInsideRemoteVideoWindow: undefined, //To be set in lxMiniVideoTemplateDirective to .cl-mini-video-element in HD element
-            isWebcamMuted : false,
-            isMicrophoneMuted : false
+            isWebcamMuted: false,
+            isMicrophoneMuted: false
         };
 
         $scope.videoSignalingObject = {
@@ -89,7 +89,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // localHasSelectedVideoType this reflects the value of the video selection button that the user has
             // clicked on. This is used for highlighting the button that the user has currently selected.
-            localHasSelectedVideoType : null,  // null, 'ASCII Video', 'HD Video'.
+            localHasSelectedVideoType: null,  // null, 'ASCII Video', 'HD Video'.
 
             // localIsNegotiatingForVideoType is almost the same as localHasSelectedVideoType and when the user initially
             // presses the videoType button, both values will be set to the same value.
@@ -104,7 +104,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // localIsSendingVideoType will be updated after the remote user has agreed to exchange the new video type and once
             // the video transmission has started (ie. when lxPeerService.addLocalVideoStream is executed)
-            localIsSendingVideoType : null,  // null, 'ASCII Video', 'HD Video'
+            localIsSendingVideoType: null,  // null, 'ASCII Video', 'HD Video'
 
             localUserAccessCameraAndMicrophoneStatus: 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
 
@@ -125,16 +125,16 @@ angular.module('lxUseChatRoom.controllers', [])
              (ie. when lxPeerService.onRemoteStreamAdded is called). In the case of asciiVideo, this will be updated once
              we have received confirmation from the remote user.
              */
-            remoteIsSendingVideoType : null,
+            remoteIsSendingVideoType: null,
 
 
             // videoSignalingStatusForUserFeedback indicates what message/status the user should be shown about
             // the current video type requested/allowed/waiting for/etc.
-            videoSignalingStatusForUserFeedback : null,
+            videoSignalingStatusForUserFeedback: null,
 
             // The following is a flag that is used for debugging - will over-ride ng-show directives on the video
             // windows to show any window that has this flag on it when it is set to true.
-            debugShowAllVideoWindows : false
+            debugShowAllVideoWindows: false
         };
 
         // setLocalVideoType is called directly from the html, and so it must be placed on the $scope.
@@ -161,6 +161,10 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.toggleMicrophoneMute = function() {
             lxCallService.toggleMicrophoneMute($scope.localVideoObject);
+        };
+
+        $scope.toggleAudioMute = function() {
+            lxCallService.toggleAudioMute($scope.remoteVideoObject);
         };
 
         $scope.doHangup = function() {

@@ -678,6 +678,10 @@ webRtcServices.factory('lxCallService',
                 self.setMicrophoneMute(localVideoObject, !localVideoObject.isMicrophoneMuted);
             },
 
+            toggleAudioMute: function(remoteVideoObject) {
+                remoteVideoObject.remoteHdVideoElem.muted = !remoteVideoObject.remoteHdVideoElem.muted;
+            },
+
             unMuteAudioAndVideo : function (localVideoObject) {
                 self.setWebcamMute(localVideoObject, false);
                 self.setMicrophoneMute(localVideoObject, false);
