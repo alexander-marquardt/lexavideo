@@ -611,11 +611,10 @@ webRtcServices.factory('lxCallService',
                 }
             },
 
-            doHangup : function(localVideoObject) {
+            doHangup : function() {
                 $log.log('*** Hanging up. ***');
                 lxStreamService.localStream.stop();
                 lxWebRtcSessionService.stop();
-                self.unMuteAudioAndVideo(localVideoObject);
                 // will trigger BYE from server
                 lxChannelSupportService.socket.close();
             },
@@ -680,11 +679,6 @@ webRtcServices.factory('lxCallService',
 
             toggleAudioMute: function(remoteVideoObject) {
                 remoteVideoObject.remoteHdVideoElem.muted = !remoteVideoObject.remoteHdVideoElem.muted;
-            },
-
-            unMuteAudioAndVideo : function (localVideoObject) {
-                self.setWebcamMute(localVideoObject, false);
-                self.setMicrophoneMute(localVideoObject, false);
             }
         };
         return self;

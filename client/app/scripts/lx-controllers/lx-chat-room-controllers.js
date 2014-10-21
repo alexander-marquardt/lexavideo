@@ -168,7 +168,7 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         $scope.doHangup = function() {
-            lxCallService.doHangup($scope.localVideoObject);
+            lxCallService.doHangup();
         };
 
         $scope.myUsername = lxUseChatRoomConstantsService.myUsername;
