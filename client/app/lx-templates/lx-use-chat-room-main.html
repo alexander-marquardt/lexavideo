@@ -113,6 +113,7 @@
 
                     <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
                     <button ng-show="!localVideoObject.isMicrophoneMuted" type="button" class="btn btn-sm btn-default"
+                            ng-class="(videoSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled' : ''"
                             ng-click="toggleMicrophoneMute()">
                         <span class="cl-lx-call-control-wrapper-cfg">
                             <span class="icon-lx-microphone-cfg"></span>
@@ -120,6 +121,7 @@
                     </button>
 
                     <button ng-show="localVideoObject.isMicrophoneMuted" type="button" class="btn btn-sm btn-gray"
+                            ng-class="(videoSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled' : ''"
                             ng-click="toggleMicrophoneMute()">
 
                         <span class="cl-lx-call-control-wrapper-cfg">
@@ -132,6 +134,7 @@
                     
                     <!-- enable/disable remote audio -->
                     <button ng-show="!remoteVideoObject.remoteHdVideoElem.muted" type="button" class="btn btn-sm btn-default"
+                            ng-class="(videoSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled' : ''"
                             ng-click="toggleAudioMute()">
                         <span class="cl-lx-call-control-wrapper-cfg">
                             <span class="icon-lx-volume-high-cfg"></span>
@@ -139,6 +142,7 @@
                     </button>
 
                     <button ng-show="remoteVideoObject.remoteHdVideoElem.muted" type="button" class="btn btn-sm btn-gray"
+                            ng-class="(videoSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled' : ''"
                             ng-click="toggleAudioMute()">
 
                         <span class="cl-lx-call-control-wrapper-cfg">

@@ -58,10 +58,6 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 lxCallService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject);
 
 
-                // Un-mute the audio in case that the user has just switched from ascii video back to HD video.
-                lxCallService.setMicrophoneMute(scope.localVideoObject, false);
-
-
                 // Note: scope.videoSignalingObject.localIsSendingVideoType will be set to 'HD Video' once the
                 // stream is being sent - this happens in the onRemoteStreamAdded callback.
 
@@ -71,6 +67,11 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 // Switch to ASCII video type, and stop  the HD video stream.
                 scope.videoSignalingObject.localIsSendingVideoType = videoType;
                 scope.videoSignalingObject.remoteIsSendingVideoType = videoType;
+
+                // Disable microphone and audio -- they don't work with Ascii video, and we don't want to
+                // surprise the user when they switch to normal video by turning them on automatically.
+                lxCallService.setMicrophoneMute(scope.localVideoObject, true);
+                lxCallService.setAudioMute(scope.remoteVideoObject, true);
 
                 // clear feedback messages - ASCII video transmission will start immediately and therefore
                 // user will not see any feedback regarding the transition to ASCII video.
