@@ -43,6 +43,10 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
         };
     };
 
+    var watchLocalStream = function() {
+        return lxStreamService.localStream;
+    };
+
     var self =  {
 
         negotiateVideoType :  {
@@ -118,6 +122,20 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
          be finalized.
          */
         watchForVideoSettingsChanges : function(scope) {
+
+            // Watch to see if the user has given access to their camera/microphone (localStream), and if so
+            // make sure that the user feedback is correct, and that the videoSignalingObject is updated to
+            // reflect the new value.
+            scope.$watch(watchLocalStream, function(localStream) {
+
+                if (localStream) {
+                    // If the user was being shown a message telling them to enable their video, then we can now remove
+                    // this message.
+                    if (scope.videoSignalingObject.videoSignalingStatusForUserFeedback === 'mustEnableVideoToStartTransmission') {
+                        scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
+                    }
+                }
+            });
 
 
             // Monitor localIsNegotiatingForVideoType for changes, and if it changes then initiate an exchange with the remote

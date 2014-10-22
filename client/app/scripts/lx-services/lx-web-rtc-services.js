@@ -483,28 +483,24 @@ webRtcServices.factory('lxMediaService',
                 // Call the polyfill wrapper to attach the media stream to this element.
                 lxAdapterService.attachMediaStream(localVideoObject.localHdVideoElem, stream);
                 localVideoObject.localHdVideoElem.style.opacity = 1;
-                lxStreamService.localStream = stream;
+
 
                 // since microphone and/or webcam may have been muted before localStream was set, we now make sure that
                 // the audioTracks settings for the current audio/video stream reflect the current value.
                 lxCallService.setMicrophoneMute(localVideoObject, localVideoObject.isMicrophoneMuted);
                 lxCallService.setWebcamMute(localVideoObject, localVideoObject.isWebcamMuted);
 
-                // If the user was beign shown a message telling them to enable their video, then we can now remove
-                // this message.
-                if (videoSignalingObject.videoSignalingStatusForUserFeedback === 'mustEnableVideoToStartTransmission') {
-                    videoSignalingObject.videoSignalingStatusForUserFeedback = null;
-                }
-
                 // Since onUserMediaSuccess is asynchronously called, we wrap the assignment of
                 // some variables in a $timeout so that angular watchers will
                 // be triggered when their value is updated.
                 $timeout(function() {
-                    videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
-                });
+                    lxStreamService.localStream = stream;
 
-                // we might have been waiting for access to the media stream to start the call.
-                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                    videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
+
+                    // we might have been waiting for access to the media stream to start the call.
+                    lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                });
             };
         };
 
