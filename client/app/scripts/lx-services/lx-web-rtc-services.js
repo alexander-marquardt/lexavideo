@@ -490,6 +490,12 @@ webRtcServices.factory('lxMediaService',
                 lxCallService.setMicrophoneMute(localVideoObject, localVideoObject.isMicrophoneMuted);
                 lxCallService.setWebcamMute(localVideoObject, localVideoObject.isWebcamMuted);
 
+                // If the user was beign shown a message telling them to enable their video, then we can now remove
+                // this message.
+                if (videoSignalingObject.videoSignalingStatusForUserFeedback === 'mustEnableVideoToStartTransmission') {
+                    videoSignalingObject.videoSignalingStatusForUserFeedback = null;
+                }
+
                 // Since onUserMediaSuccess is asynchronously called, we wrap the assignment of
                 // some variables in a $timeout so that angular watchers will
                 // be triggered when their value is updated.

@@ -118,10 +118,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                 var localIsNegotiatingForVideoType = scope.videoSignalingObject.localIsNegotiatingForVideoType;
 
                 switch(newValue) {
-                    case 'waitingForRemoteUserToJoin':
-                        message = 'We are waiting for someone to join you in this room';
-                        showMessageInVideoWindow(scope, navelem, message);
-                        break;
+
                     case 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType:
                         showRequestForChangeVideoType(scope, navelem, remoteSignalingStatus.videoType);
                         break;
@@ -140,11 +137,6 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                     case 'remoteUserHasAcceptedYourRequestToTransmit: ' + remoteSignalingStatus.videoType:
                         message = 'Remote user has accepted your request to transmit ' + remoteSignalingStatus.videoType +
                                 ' . Please wait a moment for the new video format to begin transmission.';
-                        showMessageInVideoWindow(scope, navelem, message);
-                        break;
-
-                    case 'remoteUserHasLeftRoom':
-                        message = 'Remote user has left the room. We are now waiting for another person to join you';
                         showMessageInVideoWindow(scope, navelem, message);
                         break;
 

@@ -149,8 +149,6 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                     // The current user is alone in the room
                     else {
-                        setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'waitingForRemoteUserToJoin');
-
                         // Send an 'accept' of the selected videoType to the server -- this will cause the room
                         // to update it's value stored for 'currently_selected_video_type'. Future joiners to
                         // the room will have their videoType initialized to this value.
@@ -166,12 +164,10 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
 
             // Monitor remoteUserId to track if the remote user is currently in the room, or out of it
-            scope.$watch('videoSignalingObject.remoteUserId', function(newRemoteUserId, oldRemoteUserId) {
-                if (newRemoteUserId === null && oldRemoteUserId) {
-                    setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'remoteUserHasLeftRoom');
-                }
+            scope.$watch('videoSignalingObject.remoteUserId', function(newRemoteUserId) {
 
                 if (newRemoteUserId === null) {
+
                     // remote user is not connected, so set the signaling status to null
                     scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType = null;
                     scope.videoSignalingObject.remoteVideoSignalingStatus.videoType = null;
