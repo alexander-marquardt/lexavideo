@@ -101,6 +101,7 @@ angular.module('lxChannel.services', [])
                             if (messageObject.messagePayload.streamType === 'ASCII Video') {
                                 self.asciiVideoObject.videoFrameUpdated = true;
                                 self.asciiVideoObject.compressedVideoFrame = messageObject.messagePayload.compressedVideoString;
+                                videoSignalingObject.remoteIsSendingVideoType = 'ASCII Video';
                             }
                             else {
                                 $log.log('Error: unknown video type received: ' + messageObject.messagePayload.streamType);
@@ -114,6 +115,7 @@ angular.module('lxChannel.services', [])
                             videoSignalingObject.remoteVideoSignalingStatus.videoType = messageObject.messagePayload.videoType;
                             $log.debug('received remote video type of: ' + messageObject.messagePayload.videoType);
                             break;
+
 
                         case 'roomStatus':
                             // status of who is currently in the room.

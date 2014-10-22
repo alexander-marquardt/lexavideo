@@ -119,6 +119,11 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
                 switch(newValue) {
 
+                    case 'localUserIsAlone':
+                        message = 'There is no one else in this chat room right now';
+                        showMessageInVideoWindow(scope, navelem, message);
+                        break;
+
                     case 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType:
                         showRequestForChangeVideoType(scope, navelem, remoteSignalingStatus.videoType);
                         break;
@@ -150,6 +155,11 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                     case 'mustEnableVideoToStartTransmission':
                         message = 'You must give access to your camera before we can setup a video conversation. ' +
                         'Click <a href="#" ng-click="showCameraAndMicrophoneInstructions()">here</a> for more details';
+                        showMessageInVideoWindow(scope, navelem, message);
+                        break;
+
+                    case 'remoteHasNotEnabledVideoYet':
+                        message = 'We are waiting for remote user to give access to their camera and microphone';
                         showMessageInVideoWindow(scope, navelem, message);
                         break;
 
