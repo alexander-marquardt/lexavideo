@@ -484,6 +484,15 @@ webRtcServices.factory('lxMediaService',
                 lxAdapterService.attachMediaStream(localVideoObject.localHdVideoElem, stream);
                 localVideoObject.localHdVideoElem.style.opacity = 1;
                 lxStreamService.localStream = stream;
+
+                // since microphone and/or webcam may have been muted before localStream was set, we now make sure that
+                // the audioTracks settings for the current audio/video stream reflect the current value.
+                lxCallService.setMicrophoneMute(localVideoObject, localVideoObject.isMicrophoneMuted);
+                lxCallService.setWebcamMute(localVideoObject, localVideoObject.isWebcamMuted);
+
+                // Since onUserMediaSuccess is asynchronously called, we wrap the assignment of
+                // some variables in a $timeout so that angular watchers will
+                // be triggered when their value is updated.
                 $timeout(function() {
                     videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
                 });
@@ -622,25 +631,32 @@ webRtcServices.factory('lxCallService',
             setWebcamMute : function(localVideoObject, newIsMutedValue) {
 
                 var i;
-                var videoTracks = lxStreamService.localStream.getVideoTracks();
 
                 localVideoObject.isWebcamMuted = newIsMutedValue;
 
-                if (videoTracks.length === 0) {
-                    $log.log('No local video available.');
-                    return;
-                }
+                // localStream might not be available if the user has not yet clicked on "Allow" for accessing
+                // their camera and microphone. If this is the case, then we don't try to modify the stream
+                // right now. This function should be called again once the stream is added which will then
+                // ensure that the videoTracks reflect the value that the user has selected.
+                if (lxStreamService.localStream) {
+                    var videoTracks = lxStreamService.localStream.getVideoTracks();
 
-                if (!localVideoObject.isWebcamMuted) {
-                    for (i = 0; i < videoTracks.length; i++) {
-                        videoTracks[i].enabled = true;
+                    if (videoTracks.length === 0) {
+                        $log.log('No local video available.');
+                        return;
                     }
-                    $log.log('Video unmuted.');
-                } else {
-                    for (i = 0; i < videoTracks.length; i++) {
-                        videoTracks[i].enabled = false;
+
+                    if (!localVideoObject.isWebcamMuted) {
+                        for (i = 0; i < videoTracks.length; i++) {
+                            videoTracks[i].enabled = true;
+                        }
+                        $log.log('Video unmuted.');
+                    } else {
+                        for (i = 0; i < videoTracks.length; i++) {
+                            videoTracks[i].enabled = false;
+                        }
+                        $log.log('Video muted.');
                     }
-                    $log.log('Video muted.');
                 }
             },
 
@@ -650,26 +666,36 @@ webRtcServices.factory('lxCallService',
 
             setMicrophoneMute : function(localVideoObject, newIsMutedValue) {
                 var i;
-                // Call the getAudioTracks method via adapter.js.
-                var audioTracks = lxStreamService.localStream.getAudioTracks();
 
                 localVideoObject.isMicrophoneMuted = newIsMutedValue;
 
-                if (audioTracks.length === 0) {
-                    $log.log('No local audio available.');
-                    return;
-                }
+                // localStream might not be available if the user has not yet clicked on "Allow" for accessing
+                // their camera and microphone.
+                if (lxStreamService.localStream) {
 
-                if (!localVideoObject.isMicrophoneMuted) {
-                    for (i = 0; i < audioTracks.length; i++) {
-                        audioTracks[i].enabled = true;
+                    // Call the getAudioTracks method via adapter.js.
+                    var audioTracks = lxStreamService.localStream.getAudioTracks();
+
+                    if (audioTracks.length === 0) {
+                        $log.log('No local audio available.');
+                        return;
                     }
-                    $log.log('Audio unmuted.');
-                } else {
-                    for (i = 0; i < audioTracks.length; i++){
-                        audioTracks[i].enabled = false;
+
+                    // if microphone is not muted
+                    if (!localVideoObject.isMicrophoneMuted) {
+                        for (i = 0; i < audioTracks.length; i++) {
+                            audioTracks[i].enabled = true;
+                        }
+                        $log.log('Audio unmuted.');
                     }
-                    $log.log('Audio muted.');
+
+                    // else microphone is muted
+                    else {
+                        for (i = 0; i < audioTracks.length; i++) {
+                            audioTracks[i].enabled = false;
+                        }
+                        $log.log('Audio muted.');
+                    }
                 }
             },
 
