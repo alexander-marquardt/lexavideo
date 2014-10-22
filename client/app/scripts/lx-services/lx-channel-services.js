@@ -112,6 +112,7 @@ angular.module('lxChannel.services', [])
 
                             videoSignalingObject.remoteVideoSignalingStatus.settingsType = messageObject.messagePayload.settingsType;
                             videoSignalingObject.remoteVideoSignalingStatus.videoType = messageObject.messagePayload.videoType;
+                            $log.debug('received remote video type of: ' + messageObject.messagePayload.videoType);
                             break;
 
                         case 'roomStatus':
