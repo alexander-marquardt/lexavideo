@@ -339,7 +339,7 @@ webRtcServices.service('lxWebRtcSessionService',
 
         processSignalingMessage: function( message, localVideoObject, remoteVideoObject) {
             if (!self.started) {
-                $log.error('peerConnection has not been created yet!');
+                $log.warn('peerConnection has not been created yet!');
                 return;
             }
 
