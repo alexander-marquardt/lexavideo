@@ -108,7 +108,7 @@ angular.module('lxChannel.services', [])
                                 // remote user has already started transmitting HD Video. If we do not include this
                                 // check, then the act of receiving an ASCII video frame would incorrectly switch the
                                 // remoteIsSendingVideoType to ASCII Video.
-                                if (videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') {
+                                if (videoSignalingObject.localHasSelectedVideoType === 'ASCII Video') {
                                     videoSignalingObject.remoteIsSendingVideoType = 'ASCII Video';
                                 }
                             }

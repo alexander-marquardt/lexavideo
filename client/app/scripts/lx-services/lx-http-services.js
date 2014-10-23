@@ -59,6 +59,8 @@ angular.module('lxHttp.services', [])
                     $log.warn('Failed to send manual disconnect to server for clientId: ' + clientId);
                 });
 
+                // close the socket
+                lxChannelSupportService.socket.close();
             }
         };
     })

@@ -624,10 +624,9 @@ webRtcServices.factory('lxCallService',
 
             doHangup : function() {
                 $log.log('*** Hanging up. ***');
-                lxStreamService.localStream.stop();
+                if (lxStreamService.localStream) {lxStreamService.localStream.stop()};
                 lxWebRtcSessionService.stop();
-                // will trigger BYE from server
-                lxChannelSupportService.socket.close();
+
             },
 
             setWebcamMute : function(localVideoObject, newIsMutedValue) {
