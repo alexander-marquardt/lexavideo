@@ -101,7 +101,16 @@ angular.module('lxChannel.services', [])
                             if (messageObject.messagePayload.streamType === 'ASCII Video') {
                                 self.asciiVideoObject.videoFrameUpdated = true;
                                 self.asciiVideoObject.compressedVideoFrame = messageObject.messagePayload.compressedVideoString;
-                                videoSignalingObject.remoteIsSendingVideoType = 'ASCII Video';
+
+
+                                // Only update the remoteIsSendingVideoType if the local user has selected/accepted this type.
+                                // This check is necessary because an ASCII Video frame may be received after the
+                                // remote user has already started transmitting HD Video. If we do not include this
+                                // check, then the act of receiving an ASCII video frame would incorrectly switch the
+                                // remoteIsSendingVideoType to ASCII Video.
+                                if (videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') {
+                                    videoSignalingObject.remoteIsSendingVideoType = 'ASCII Video';
+                                }
                             }
                             else {
                                 $log.log('Error: unknown video type received: ' + messageObject.messagePayload.streamType);
