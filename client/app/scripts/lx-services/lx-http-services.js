@@ -41,7 +41,9 @@ angular.module('lxHttp.services', [])
     .factory('lxHttpChannelService',
     function (
         $log,
-        $http) {
+        $http,
+        lxChannelSupportService
+        ) {
 
         return {
             manuallyDisconnectChannel: function(clientId) {

@@ -54,10 +54,6 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
         };
     };
 
-    var watchLocalStream = function() {
-        return lxStreamService.localStream;
-    };
-
     var self =  {
 
         negotiateVideoType :  {
@@ -136,7 +132,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
             // Watch to see if the user has given access to their camera/microphone (localStream), and if so
             // make sure that the user feedback is correct, and that the videoSignalingObject is updated to
             // reflect the new value.
-            scope.$watch(watchLocalStream, function(localStream) {
+            scope.$watch(lxStreamService.getLocalStream, function(localStream) {
 
                 if (localStream) {
 

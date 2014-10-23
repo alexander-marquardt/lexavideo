@@ -459,10 +459,16 @@ webRtcServices.factory('lxPeerService',
 );
 
 
-webRtcServices.service('lxStreamService', function() {
+webRtcServices.factory('lxStreamService', function() {
 
-    this.localStream = null;
+    var self = {
+        localStream: null,
+        getLocalStream: function() {
+            return self.localStream;
+        }
+    };
 
+    return self;
 });
 
 webRtcServices.factory('lxMediaService',
@@ -624,7 +630,7 @@ webRtcServices.factory('lxCallService',
 
             doHangup : function() {
                 $log.log('*** Hanging up. ***');
-                if (lxStreamService.localStream) {lxStreamService.localStream.stop()};
+                if (lxStreamService.localStream) {lxStreamService.localStream.stop();}
                 lxWebRtcSessionService.stop();
 
             },
