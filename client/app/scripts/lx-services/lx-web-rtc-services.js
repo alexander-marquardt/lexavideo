@@ -474,6 +474,7 @@ webRtcServices.factory('lxStreamService', function() {
 webRtcServices.factory('lxMediaService',
     function(
         $log,
+        $rootScope,
         $timeout,
 
         lxAdapterService,
@@ -483,6 +484,7 @@ webRtcServices.factory('lxMediaService',
     {
 
 
+        // This is a callback function that is executed after the user has given access to their camera and microphone.
         var onUserMediaSuccess = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
             return function(stream) {
                 $log.log('User has granted access to local media.');
@@ -490,23 +492,24 @@ webRtcServices.factory('lxMediaService',
                 lxAdapterService.attachMediaStream(localVideoObject.localHdVideoElem, stream);
                 localVideoObject.localHdVideoElem.style.opacity = 1;
 
+                videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
+
+                lxStreamService.localStream = stream;
 
                 // since microphone and/or webcam may have been muted before localStream was set, we now make sure that
                 // the audioTracks settings for the current audio/video stream reflect the current value.
                 lxCallService.setMicrophoneMute(localVideoObject, localVideoObject.isMicrophoneMuted);
                 lxCallService.setWebcamMute(localVideoObject, localVideoObject.isWebcamMuted);
 
-                // Since onUserMediaSuccess is asynchronously called, we wrap the assignment of
-                // some variables in a $timeout so that angular watchers will
-                // be triggered when their value is updated.
-                $timeout(function() {
-                    lxStreamService.localStream = stream;
 
-                    videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
+                // we might have been waiting for access to the media stream to start the call.
+                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
 
-                    // we might have been waiting for access to the media stream to start the call.
-                    lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
-                });
+
+                // Since onUserMediaSuccess is asynchronously called, we manually call a $apply
+                // on the rootScope, so that angular watchers will re-evaluate to see if the above
+                // values have been updated.
+                $rootScope.$apply();
             };
         };
 
