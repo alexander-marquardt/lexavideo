@@ -60,11 +60,40 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             /* This object will be loaded with a bunch of variables from server once the lxChatRoomOuterCtrl is loaded.
 
             eg will contain:
-            errorStatus : ...,
-            myUsername : ..,
+            roomName: ..,
+            pcConfig: ...
             etc.
-            (Look at the server code to see which variables will be embedded)
+            (Look at the server code to see which variables will be embedded - these are currently passed in through videoConstantsEmbeddedInHtml)
+
+            TODO - Eventually, constants that are still loaded from the server should be moved into this factory.
              */
+
+            mediaConstraints: {
+                'video': {
+                    'mandatory': {
+
+                    },
+
+                    // Note: place 'goog' constraints in the optional section, as they will not work in other browsers.
+                    // Also, have a look at the apprtc code (server side) to see how they setup these constraints.
+                    'optional': []
+                },
+
+                'audio' : {
+                    mandatory: {
+
+                    },
+                    optional: []
+                }
+            },
+            'videoSendInitialBitrate': '',
+            'audioRecvBitrate': '',
+            'audioSendBitrate': '',
+            'videoRecvBitrate': '',
+            'videoSendBitrate': '',
+            'stereoscopic': '',
+            'stereo': false
+
         };
     })
 

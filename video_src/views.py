@@ -54,7 +54,7 @@ class UserChatRoomMain(webapp2.RequestHandler):
         params = {
             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
             'site_name' : constants.site_name,
-            'serverVideoParamsJson' : server_video_params_json}
+            'videoConstantsEmbeddedInHtmlJson' : server_video_params_json}
         
         # update the self.response with the current view
         template = jinja_environment.get_template(current_template)

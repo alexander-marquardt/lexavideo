@@ -66,44 +66,6 @@ def make_loopback_answer(message):
 
 
 
-def add_media_track_constraint(track_constraints, constraint_string):
-    tokens = constraint_string.split(':')
-    mandatory = True
-    if len(tokens) == 2:
-        # If specified, e.g. mandatory:minHeight=720, set mandatory appropriately.
-        mandatory = (tokens[0] == 'mandatory')
-    else:
-        # Otherwise, default to mandatory, except for goog constraints, which
-        # won't work in other browsers.
-        mandatory = not tokens[0].startswith('goog')
-
-    tokens = tokens[-1].split('=')
-    if len(tokens) == 2:
-        if mandatory:
-            track_constraints['mandatory'][tokens[0]] = tokens[1]
-        else:
-            track_constraints['optional'].append({tokens[0]: tokens[1]})
-    else:
-        logging.error('Ignoring malformed constraint: ' + constraint_string)
-
-def make_media_track_constraints(constraints_string):
-    if not constraints_string or constraints_string.lower() == 'true':
-        track_constraints = True
-    elif constraints_string.lower() == 'false':
-        track_constraints = False
-    else:
-        track_constraints = {'mandatory': {}, 'optional': []}
-        for constraint_string in constraints_string.split(','):
-            add_media_track_constraint(track_constraints, constraint_string)
-
-    return track_constraints
-
-def make_media_stream_constraints(audio, video):
-    stream_constraints = (
-        {'audio': make_media_track_constraints(audio),
-         'video': make_media_track_constraints(video)})
-    logging.info('Applying media constraints: ' + str(stream_constraints))
-    return stream_constraints
 
 def maybe_add_constraint(constraints, param, constraint):
     if (param.lower() == 'true'):
@@ -186,37 +148,15 @@ def get_video_params_json(room_name, user_agent):
     
         audio_send_codec = get_preferred_audio_send_codec(user_agent)    
         audio_receive_codec = get_preferred_audio_receive_codec()
-        
-        # Set stereo to false by default.
-        stereo = 'false'
-        
-        # Read url params audio send bitrate (asbr) & audio receive bitrate (arbr)
-        asbr = ''
-        arbr = ''
-        
-        # Read url params video send bitrate (vsbr) & video receive bitrate (vrbr)
-        vsbr = ''
-        vrbr = ''
-        
-        # Read url params for the initial video send bitrate (vsibr)
-        vsibr = ''
-        
+
+
         # Options for making pcConstraints
         dtls = ''
         dscp = ''
         ipv6 = ''
         opusfec = ''
         
-        # Stereoscopic rendering.  Expects remote video to be a side-by-side view of
-        # two cameras' captures, which will each be fed to one eye.
-        ssr = ''
-        
-        # Avoid pulling down vr.js (>25KB, minified) if not needed.
-        include_vr_js = ''
-        if ssr == 'true':
-            include_vr_js = ('<script src="/js/vr.js"></script>\n' +
-                             '<script src="/js/stereoscopic.js"></script>')
-        
+
         # Disable pinch-zoom scaling since we manage video real-estate explicitly
         # (via full-screen) and don't want devicePixelRatios changing dynamically.
         meta_viewport = ''
@@ -240,24 +180,14 @@ def get_video_params_json(room_name, user_agent):
         pc_config = make_pc_config(stun_server, turn_server, ts_pwd, ice_transports)
         pc_constraints = make_pc_constraints(dtls, dscp, ipv6, opusfec)
         offer_constraints = make_offer_constraints()
-        media_constraints = make_media_stream_constraints(audio, video)            
-        
+
         server_video_params = {
             'roomName': room_name,
             'pcConfig': pc_config,
             'pcConstraints': pc_constraints,
             'offerConstraints': offer_constraints,
-            'mediaConstraints': media_constraints,
-            'stereo': stereo,
-            'audioRecvBitrate': arbr,
-            'audioSendBitrate': asbr,
-            'videoRecvBitrate': vrbr,
-            'videoSendBitrate': vsbr,
-            'videoSendInitialBitrate': vsibr,
             'audioSendCodec': audio_send_codec,
             'audioReceiveCodec': audio_receive_codec,
-            'stereoscopic': ssr,
-            'includeVrJs': include_vr_js,
             'metaViewport': meta_viewport,
         }
         return json.dumps(server_video_params)
