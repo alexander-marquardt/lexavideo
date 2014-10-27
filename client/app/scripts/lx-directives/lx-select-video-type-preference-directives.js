@@ -133,10 +133,14 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         showMessageInVideoWindow(scope, navelem, message);
                         break;
 
+                    case 'remoteHasSetVideoToAscii':
+                        message = 'Remote user has switched to ASCII Video mode';
+                        showMessageInVideoWindow(scope, navelem, message, 6000);
+                        break;
 
                     case 'remoteHasDeniedRequestToExchangeFormat: ' + remoteSignalingStatus.videoType:
                         message = 'Remote user has denied your request to exchange ' + remoteSignalingStatus.videoType;
-                        showMessageInVideoWindow(scope, navelem, message, 5000);
+                        showMessageInVideoWindow(scope, navelem, message, 4000);
                         break;
 
                     case 'remoteUserHasAcceptedYourRequestToTransmit: ' + remoteSignalingStatus.videoType:

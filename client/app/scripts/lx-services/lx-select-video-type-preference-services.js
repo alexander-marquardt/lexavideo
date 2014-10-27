@@ -104,10 +104,6 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     // Switch to ASCII video type, and stop  the HD video stream.
                     scope.videoSignalingObject.localIsSendingVideoType = videoType;
 
-                    // clear feedback messages - ASCII video transmission will start immediately and therefore
-                    // user will not see any feedback regarding the transition to ASCII video.
-                    setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
-
                     // kill the webRtc session. Ascii video should start to be transmitted in both directions.
                     lxWebRtcSessionService.stop();
 
@@ -150,7 +146,11 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'remoteHasNotEnabledVideoYet');
                 }
                 else {
-                    setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
+                    // if videoSignalingStatusForUserFeedback is 'remoteHasSetVideoToAscii' leave the message up
+                    // until it fades away on its own (it has a timer associated with it).
+                    if (scope.videoSignalingObject.videoSignalingStatusForUserFeedback !== 'remoteHasSetVideoToAscii') {
+                        setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
+                    }
                 }
             });
 
@@ -243,6 +243,16 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     }
 
 
+                    var haveAutomaticallyAcceptedAsciiVideo = false;
+                    // If the remote user has proposed to exchange ASCII Video, then automatically accept it.
+                    // By setting the value of localHasSelectedVideoType, this will trigger the code block
+                    // below that detects if the local client has selected the same videoType as the remote client.
+                    if (remoteSignalingStatus.videoType === 'ASCII Video') {
+                        localHasSelectedVideoType = 'ASCII Video';
+                        scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
+                        haveAutomaticallyAcceptedAsciiVideo = true;
+                    }
+
 
                     // if the remote user has requested the videoType that the local user has already selected then
                     // automatically accept the switch to the new videoType
@@ -253,8 +263,16 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                         self.startVideoType(scope, localHasSelectedVideoType);
 
-                        // clear the user feedback in the video window
-                        setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
+                        // If this is being executed as a result of the client automatically accepting the switch
+                        // to Ascii video, then the user should be informed of what has just happened.
+                        if (haveAutomaticallyAcceptedAsciiVideo) {
+                            setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'remoteHasSetVideoToAscii');
+                        }
+                        // Otherwise, clear the user feedback in the video window since the client has switched to the
+                        // videoType that the user has selected -- they don't need any extra feedback.
+                        else {
+                            setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
+                        }
                     }
 
                     // else the remote user has requested a different videoType than what the local user has currently selected
