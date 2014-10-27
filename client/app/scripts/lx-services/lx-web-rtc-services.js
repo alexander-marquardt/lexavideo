@@ -513,10 +513,19 @@ webRtcServices.factory('lxMediaService',
             };
         };
 
+        // Return a function that is triggered if there is a problem when accessing the users camera and microphone.
         var onUserMediaError = function(videoSignalingObject) {
-            return function(error) {
-                $log.warn('Failed to get access to local media. Error code was ' +
-                    error.code + '. Continuing without sending a stream.');
+            return function(e) {
+
+                // For some reason, we cannot override e.message when error is an object with NavigatorUserMediaError
+                // as a prototype. So make a copy of the error object, and use that instead.
+
+                var newError = {};
+                angular.extend(newError, e);
+                var message = '\n\tFailed to get access to local media. Error was ' +
+                    e.toString() + angular.toJson(e) + '. Continuing without sending a stream.\n\t';
+                newError.message = message + e.message;
+                $log.error(newError);
 
                 $timeout(function() {
                     lxCallService.hasAudioOrVideoMediaConstraints = false;
