@@ -90,3 +90,23 @@
 .btn-gray {
   @include button-variant($btn-default-color, $btn-gray-bg, $btn-default-border);
 }
+
+
+// Chatbox icons
+
+%chatbox-chat-bubble-icons-common {
+  font-size: 3em;
+}
+
+.icon-lx-chat-bubble-left-cfg {
+  color: $gray-light;
+  @extend %chatbox-chat-bubble-icons-common;
+  @extend .icon-lx-chat-bubble-left;
+}
+
+
+.icon-lx-chat-bubble-right-cfg {
+  color: $gray-light;
+  @extend %chatbox-chat-bubble-icons-common;
+  @extend .icon-lx-chat-bubble-right;
+}
