@@ -3,14 +3,20 @@ $deep-red : #ff0000;
 $btn-gray-bg: #c0c0c0;
 
 
+
+/* The following section defines the width of the video elements for various viewport sizes.
+   note that for sm and larger devices, two video elements are shown side-by-side. This means that
+   we also have to account for two gutter widths (1/2 on left and right side of screen, and 1 between
+   the video elements */
+
 /* Small devices (tablets, 768px and up) */
-$sm-vid-width: 335px;
+$sm-vid-width: ($container-sm - $grid-gutter-width * 2) / 2;
 
 /* Medium devices (desktops, 992px and up) */
-$md-vid-width: 445px;
+$md-vid-width: ($container-md - $grid-gutter-width * 2) / 2;
 
 /* Large devices (large desktops, 1200px and up) */
-$lg-vid-width : 555px;
+$lg-vid-width : ($container-lg - $grid-gutter-width *2) / 2;
 
 $xs-viewport-sizes-list: 320px, 360px, 400px, 480px, 600px;
 
