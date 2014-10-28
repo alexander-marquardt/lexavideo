@@ -39,3 +39,20 @@
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #555;
 }
+
+
+
+@mixin generate-match-video-column-sizing() {
+  @for $idx from 2 through length($viewport-sizes-list) {
+    @media (min-width: nth($viewport-sizes-list, $idx)) {
+      width: nth($video-column-width-list, $idx);
+    }
+  }
+}
+
+.cl-match-chatbox-to-video-sizing {
+  box-sizing: border-box;
+  width: nth($video-column-width-list, 1);
+
+  @include generate-match-video-column-sizing();
+}
