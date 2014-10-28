@@ -62,11 +62,6 @@
   max-width: $screen-md-max;
 }
 
-.cl-logo-min-width {
-  min-width: $screen-xs-max/3;
-}
-
-
 
 @mixin my-mixin-border-glow($color, $opacity) {
   border-color: rgba($color, $opacity);
@@ -95,4 +90,21 @@
 
 .cl-feedback-on-input-validity-div {
   min-height: 20px
+}
+
+
+
+@mixin generate-match-video-column-sizing() {
+  @for $idx from 2 through length($viewport-sizes-list) {
+    @media (min-width: nth($viewport-sizes-list, $idx)) {
+      width: nth($video-column-width-list, $idx);
+    }
+  }
+}
+
+.cl-match-element-to-video-sizing {
+  box-sizing: border-box;
+  width: nth($video-column-width-list, 1);
+
+  @include generate-match-video-column-sizing();
 }
