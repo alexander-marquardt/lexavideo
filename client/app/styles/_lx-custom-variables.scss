@@ -19,8 +19,6 @@ $xs-viewport-sizes-list: 320px, 360px, 400px, 480px, 600px;
 $viewport-sizes-list: join($xs-viewport-sizes-list, ($screen-sm-min, $screen-md-min, $screen-lg-min));
 
 // Take into account if there is only a single video window, or if there are two windows side-by-side
-$video-sizes-with-borders-list: join($xs-viewport-sizes-list, ($sm-vid-width, $md-vid-width, $lg-vid-width));
-$video-sizes-list: ();
-@each $size in $video-sizes-with-borders-list {
-  $video-sizes-list: append($video-sizes-list, $size - 2px);
-}
+$video-sizes-list: join($xs-viewport-sizes-list, ($sm-vid-width, $md-vid-width, $lg-vid-width));
+
+
