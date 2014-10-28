@@ -1,27 +1,5 @@
 
 
-/* Small devices (tablets, 768px and up) */
-$sm-vid-width: 335px;
-
-/* Medium devices (desktops, 992px and up) */
-$md-vid-width: 445px;
-
-/* Large devices (large desktops, 1200px and up) */
-$lg-vid-width : 555px;
-
-$xs-viewport-sizes-list: 320px, 360px, 400px, 480px, 600px;
-
-// As the viewport size changes, we change the size of the video windows. Also, once the size
-// gets through sm or larger, we place two windows side-by-side instead of one embedded inside the other.
-$viewport-sizes-list: join($xs-viewport-sizes-list, ($screen-sm-min, $screen-md-min, $screen-lg-min));
-
-// Take into account if there is only a single video window, or if there are two windows side-by-side
-$video-sizes-with-borders-list: join($xs-viewport-sizes-list, ($sm-vid-width, $md-vid-width, $lg-vid-width));
-$video-sizes-list: ();
-@each $size in $video-sizes-with-borders-list {
-  $video-sizes-list: append($video-sizes-list, $size - 2px);
-}
-
 
 $mini-video-width-percentage : 30%;
 
