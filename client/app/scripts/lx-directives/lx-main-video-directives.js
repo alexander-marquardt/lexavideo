@@ -147,39 +147,44 @@ videoAppDirectives.directive('lxVideoContainerDirective',
     };
 });
 
-videoAppDirectives.directive('lxVideoElementDirective', function($compile, $log) {
-    return {
-        restrict : 'A',
-        link: function(scope, elem, attrs) {
-            var e;
+videoAppDirectives.directive('lxVideoElementDirective',
+    function(
+        $log
+        )
+    {
+        return {
+            restrict : 'A',
+            link: function(scope, elem, attrs) {
+                var e;
 
-            if (attrs.videoWindow === 'local' ) {
-                e = angular.element('<video class="cl-video-sizing" autoplay="autoplay" muted="true"></video>');
-                scope.localVideoObject.localHdVideoElem = e[0];
-            }
-            else if (attrs.videoWindow === 'remote' ) {
-                e = angular.element('<video class="cl-video-sizing" autoplay="autoplay"></video>');
-                scope.remoteVideoObject.remoteHdVideoElem = e[0];
+                if (attrs.videoWindow === 'local' ) {
+                    e = angular.element('<video class="cl-video-sizing" autoplay="autoplay" muted="true"></video>');
+                    scope.localVideoObject.localHdVideoElem = e[0];
+                }
+                else if (attrs.videoWindow === 'remote' ) {
+                    e = angular.element('<video class="cl-video-sizing" autoplay="autoplay"></video>');
+                    scope.remoteVideoObject.remoteHdVideoElem = e[0];
 
-                // Watch to see if the remote video is not transmitting, and if it stops then hide the video element.
-                // This is done so that the user will not see a frozen image from the last frame tha the remote user
-                // transmitted.
-                scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
-                    if (remoteIsSendingVideoType === null) {
-                        // remote is not transmitting, so hide the video element
-                        e.addClass('cl-transparent');
-                    } else {
-                        e.removeClass('cl-transparent');
-                    }
-                });
+                    // Watch to see if the remote video is not transmitting, and if it stops then hide the video element.
+                    // This is done so that the user will not see a frozen image from the last frame tha the remote user
+                    // transmitted.
+                    scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
+                        if (remoteIsSendingVideoType === null) {
+                            // remote is not transmitting, so hide the video element
+                            e.addClass('cl-transparent');
+                        } else {
+                            e.removeClass('cl-transparent');
+                        }
+                    });
+                }
+                else {
+                    $log.error('Attribute must be "local" or "remote"');
+                }
+                elem.append(e);
             }
-            else {
-                $log.error('Attribute must be "local" or "remote"');
-            }
-            elem.append(e);
-        }
-    };
-});
+        };
+    }
+);
 
 videoAppDirectives.directive('lxVideoWrapperDirective', function($log) {
     return {
