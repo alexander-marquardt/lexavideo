@@ -49,7 +49,7 @@
                                         <input class="form-control input-sm"
                                                name="messageInputElem"
                                                placeholder="Type your message here..."
-                                               ng-model="msgObj.messageString"
+                                               ng-model="inputMessageString"
                                                maxlength="{{ maxMsgLength }}"
                                                required
                                                 />
@@ -57,7 +57,7 @@
 
 
                                         <span class="input-group-btn">
-                                            <button ng-click="sendMessage(msgObj)"
+                                            <button ng-click="sendChatMessageFn()"
                                                     class="btn btn-primary btn-sm"
                                                     ng-disabled="sendMessageForm.$invalid">
                                                 Send
@@ -83,8 +83,7 @@
         </div>
         <div class="col-xs-9 col-md-10 chat-body text-right">
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                dolor, quis ullamcorper ligula sodales.
+                {{ chatMessage }}
             </p>
         </div>
     </div>

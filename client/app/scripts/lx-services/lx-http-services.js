@@ -102,24 +102,15 @@ angular.module('lxHttp.services', [])
                 // changing here.
                 var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userId;
 
-                $http.post(path, messageObject).then(
+                var httpPromise = $http.post(path, messageObject).then(
                     function(/*response*/) {
                         //$log.log('Post success. Got response status: ' + response.statusText);
-
-                        // if this is a chatMessage, then we need to indicate that it has been successfully delivered
-                        if (messageType === 'chatMessage') {
-
-                        }
                     },
                     function(/*response*/) {
                         //$log.log('Post error. Got response status: ' + response.statusText);
-
-                        // if this is a chatMessage, then we need to indicate to the user that it has not been delivered
-                        if (messageType === 'chatMessage') {
-
-                        }
                     }
                 );
+                return httpPromise;
             }
         };
     }

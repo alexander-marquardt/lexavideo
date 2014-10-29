@@ -13,9 +13,13 @@ angular.module('lxChatbox.directives', [])
         return {
             restrict: 'A',
             templateUrl: 'lx-template-cache/wrapped-chat-message.html',
-            link: function (scope, elem) {
+            link: function (scope) {
 
+                // watch to see if the local user has sent a new chat message to the remote user
+                scope.$watch('sendMessageString', function(newValue) {
+                    scope.chatMessage = newValue;
+                });
             }
-        }
+        };
     }
 );
