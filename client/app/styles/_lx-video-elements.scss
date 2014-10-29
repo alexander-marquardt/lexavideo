@@ -132,3 +132,7 @@ video {
 
   @include generate-ascii-mini-span();
 }
+
+.cl-video-label {
+  margin-top: -10px;
+}

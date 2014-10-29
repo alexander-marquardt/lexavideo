@@ -9,7 +9,12 @@
                         <div class="panel panel-primary">
 
                             <div class="panel-heading">
-                                <span class="icon-lx-chat-bubble-dual"></span> Chat
+                                <span class="icon-lx-chat-bubble-dual"></span>Chat room:
+
+                                <span ng-show="!videoSignalingObject.remoteUserId">Waiting for someone to join ... </span>
+                                <span ng-show="videoSignalingObject.remoteUserName!=videoSignalingObject.remoteUserId">{{ videoSignalingObject.remoteUserName }} has joined</span>
+                                <span ng-show="videoSignalingObject.remoteUserId && videoSignalingObject.remoteUserName==videoSignalingObject.remoteUserId">Guest has joined</span>
+
                             </div>
                             <div class="panel-body">
                                 <div lx-show-chat-messages-directive></div>

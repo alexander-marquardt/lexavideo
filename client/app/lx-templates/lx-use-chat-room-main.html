@@ -27,83 +27,10 @@
             <div lx-video-negotiation-directive></div>
             <div lx-access-camera-and-microphone-directive></div>
 
-            <div class="row">
-                <div lx-video-container-directive>
-
-                    <div class="col-sm-6 text-center" >
-                        <div lx-video-wrapper-directive video-window='local'  id="id-local-video-wrapper-div">
-                            <div class="text-center">
-                                <div ng-show="(videoSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.localIsSendingVideoType) || videoSignalingObject.debugShowAllVideoWindows" >
-                                    <h4>Local HD Video</h4>
-                                    <div style="display:inline-block" class="cl-my-well" >
-                                        <div style="position: relative">
-                                            <div lx-video-element-directive video-window='local'></div>
-                                            <div lx-video-settings-negotiation-directive class="cl-hide-on-larger-than-xs"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div lx-generate-ascii-video-directive id="id-local-ascii-video-wrapper-div"
-                                     ng-show="(videoSignalingObject.localIsSendingVideoType == 'ASCII Video') || videoSignalingObject.debugShowAllVideoWindows" >
-                                    <h4>Local ASCII Video</h4>
-                                    <div class="cl-my-well" style="display:inline-block" >
-                                        <div style="position: relative">
-                                            <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
-                                            <pre class="cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
-                                            </span></pre>
-                                            <div lx-video-settings-negotiation-directive class="cl-hide-on-larger-than-xs"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 text-center" >
-                        <div lx-video-wrapper-directive video-window='remote' id="id-remote-video-wrapper-div">
-                            <div lx-mini-video-template-directive></div>
-                            <div class="text-center" >
-                                <div id="id-remote-hd-video-wrapper-div"
-                                     ng-show="videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||
-                                     (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == 'HD Video') ||
-                                     (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == null) ||
-                                     videoSignalingObject.debugShowAllVideoWindows">
-                                    <h4>Remote HD Video</h4>
-
-                                    <div  class="cl-my-well" style="display:inline-block">
-                                        <div style="position: relative">
-                                            <div lx-video-element-directive video-window='remote'></div>
-                                            <div lx-video-settings-negotiation-directive></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"
-                                     ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'ASCII Video') ||
-                                     (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ||
-                                     videoSignalingObject.debugShowAllVideoWindows">
-                                    <h4>Remote ASCII Video</h4>
-                                    <div style="display:inline-block" class="cl-my-well">
-                                        <div style="position: relative">
-                                            <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
-                                            <pre class = "cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
-                                            </span></pre>
-                                            <div lx-video-settings-negotiation-directive></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- end row -->
-            <div class="row">
+            <!-- This row contains the buttons that control the videoType that will be transmitted and microphone/sound/video mute -->
+            <div class="row" style="margin-bottom:10px">
 
                 <div class="col-xs-12 text-center">
-
-
-
-
                     <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
                     <button ng-show="!localVideoObject.isMicrophoneMuted && videoSignalingObject.localIsSendingVideoType != 'ASCII Video'"
                             type="button" class="btn btn-sm btn-default"
@@ -125,7 +52,7 @@
                         </span>
                     </button>
 
-                    
+
                     <!-- enable/disable remote audio -->
                     <button ng-show="!remoteVideoObject.remoteHdVideoElem.muted && videoSignalingObject.localIsSendingVideoType != 'ASCII Video'"
                             type="button" class="btn btn-sm btn-default"
@@ -187,14 +114,76 @@
             </div>
 
             <div class="row">
-                <div class="text-center">
-                    <h4>Chat room status:
-                        <span ng-show="!videoSignalingObject.remoteUserId">Waiting for someone to join ... </span>
-                        <span ng-show="videoSignalingObject.remoteUserName!=videoSignalingObject.remoteUserId">{{ videoSignalingObject.remoteUserName }} has joined</span>
-                        <span ng-show="videoSignalingObject.remoteUserId && videoSignalingObject.remoteUserName==videoSignalingObject.remoteUserId">Guest has joined</span>
-                    </h4>
+                <div lx-video-container-directive>
+
+                    <div class="col-sm-6 text-center" >
+                        <div lx-video-wrapper-directive video-window='local'  id="id-local-video-wrapper-div">
+                            <div class="text-center">
+                                <div ng-show="(videoSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.localIsSendingVideoType) || videoSignalingObject.debugShowAllVideoWindows" >
+                                    <div style="display:inline-block" class="cl-my-well" >
+                                        <div style="position: relative">
+                                            <div lx-video-element-directive video-window='local'></div>
+                                            <div lx-video-settings-negotiation-directive class="cl-hide-on-larger-than-xs"></div>
+                                        </div>
+                                    </div>
+                                    <h4 class="cl-video-label">Local HD Video</h4>
+                                </div>
+
+                                <div lx-generate-ascii-video-directive id="id-local-ascii-video-wrapper-div"
+                                     ng-show="(videoSignalingObject.localIsSendingVideoType == 'ASCII Video') || videoSignalingObject.debugShowAllVideoWindows" >
+                                    <div class="cl-my-well" style="display:inline-block" >
+                                        <div style="position: relative">
+                                            <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
+                                            <pre class="cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
+                                            </span></pre>
+                                            <div lx-video-settings-negotiation-directive class="cl-hide-on-larger-than-xs"></div>
+                                        </div>
+                                    </div>
+                                    <h4 class="cl-video-label">Local ASCII Video</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 text-center" >
+                        <div lx-video-wrapper-directive video-window='remote' id="id-remote-video-wrapper-div">
+                            <div lx-mini-video-template-directive></div>
+                            <div class="text-center" >
+                                <div id="id-remote-hd-video-wrapper-div"
+                                     ng-show="videoSignalingObject.remoteIsSendingVideoType == 'HD Video' ||
+                                     (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == 'HD Video') ||
+                                     (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == null) ||
+                                     videoSignalingObject.debugShowAllVideoWindows">
+
+                                    <div  class="cl-my-well" style="display:inline-block">
+                                        <div style="position: relative">
+                                            <div lx-video-element-directive video-window='remote'></div>
+                                            <div lx-video-settings-negotiation-directive></div>
+                                        </div>
+                                    </div>
+                                    <h4 class="cl-video-label">Remote HD Video</h4>
+                                </div>
+
+                                <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"
+                                     ng-show="(videoSignalingObject.remoteIsSendingVideoType == 'ASCII Video') ||
+                                     (!videoSignalingObject.remoteIsSendingVideoType && videoSignalingObject.localHasSelectedVideoType == 'ASCII Video') ||
+                                     videoSignalingObject.debugShowAllVideoWindows">
+                                    <div style="display:inline-block" class="cl-my-well">
+                                        <div style="position: relative">
+                                            <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
+                                            <pre class = "cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
+                                            </span></pre>
+                                            <div lx-video-settings-negotiation-directive></div>
+                                        </div>
+                                    </div>
+                                    <h4 class="cl-video-label">Remote ASCII Video</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </div> <!-- end row -->
+
             <div class="row">
                 <div class="col-xs-12 text-center">
                     <div ng-if="debugBuildEnabled">
