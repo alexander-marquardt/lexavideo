@@ -8,6 +8,8 @@ angular.module('lxChatbox.controllers', [])
 
     .controller('lxChatboxMainCtrl',
     function (
+        $anchorScroll,
+        $location,
         $log,
         $scope,
         lxMessageService
@@ -46,6 +48,11 @@ angular.module('lxChatbox.controllers', [])
             // clear the input box
             $scope.inputMessageString = '';
 
+        };
+
+        $scope.scrollToChatboxScrollAnchor = function() {
+            $location.hash('id-chatbox-scroll-anchor');
+            $anchorScroll();
         };
     }
 );

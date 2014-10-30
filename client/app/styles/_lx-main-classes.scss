@@ -33,6 +33,10 @@
   opacity:0;
 }
 
+.cl-make-opaque {
+  opacity: 1;
+}
+
 .cl-transparent {
   -webkit-transition: opacity 3s ease-in-out;
   -moz-transition: opacity 3s ease-in-out;

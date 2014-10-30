@@ -47,6 +47,7 @@
                                                         </div>
                                                         <div class="cl-chat-divider"></div>
                                 <div lx-show-chat-messages-directive></div>
+                                <a id="id-chatbox-scroll-anchor"></a>
                              </div>
                             <div class="panel-footer">
                                 <form name="sendMessageForm" role="form" novalidate>
@@ -56,6 +57,7 @@
                                                placeholder="Type your message here..."
                                                ng-model="inputMessageString"
                                                maxlength="{{ maxMsgLength }}"
+                                               ng-click="scrollToChatboxScrollAnchor()"
                                                required
                                                 />
 
