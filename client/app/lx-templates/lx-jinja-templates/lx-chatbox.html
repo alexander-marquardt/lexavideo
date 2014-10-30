@@ -17,7 +17,6 @@
 
                             </div>
                             <div class="panel-body">
-                                <div lx-show-chat-messages-directive></div>
 
                                                         <div class="row cl-chat-row">
                                                             <div class="col-xs-3 col-md-2 text-left">
@@ -47,7 +46,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="cl-chat-divider"></div>
-                            </div>
+                                <div lx-show-chat-messages-directive></div>
+                             </div>
                             <div class="panel-footer">
                                 <form name="sendMessageForm" role="form" novalidate>
                                     <div class="input-group">
@@ -80,18 +80,5 @@
     </div>
 </div>
 
-<script type="text/ng-template" id="lx-template-cache/wrapped-chat-message.html">
-    <div class="row cl-chat-row">
-        <div class="col-xs-3 col-md-2 text-left">
-            <span class="icon-lx-chat-bubble-left-cfg clearfix"></span>
-            <small class="text-muted clearfix"><span class="icon-lx-time"></span>24:05</small>
-        </div>
-        <div class="col-xs-9 col-md-10 chat-body text-right">
-            <p>
-                {{ chatMessage }}
-            </p>
-        </div>
-    </div>
-    <div class="cl-chat-divider"></div>
-</script>
+
 {% endraw %}
