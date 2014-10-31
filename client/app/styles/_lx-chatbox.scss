@@ -26,7 +26,6 @@
   display: inline-block;
   position: relative;
   padding: 5px;
-  background: #eee;
   border: $gray-light solid 1px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -41,68 +40,77 @@
 .bubble-left {
   float: left;
   text-align: left;
+  background: $gray-lighter;
 }
 
 .bubble-right {
   float: right;
   text-align: right;
+  background: $primary-lighter;
 }
 
+/* The bubble arrows are made by overlaying two triangles on top of each other. The first is a dark color, and the
+   second is a light color. The part of the dark triangle that is visible is the "border" of the triangle, and the
+   part of the triangle that is light is the "content" of the chat bubble.
+
+   These bubble-*-arrow classes should be placed in divs immediately before the chat bubble. This is true not only
+   for the left side arrow, but also for the right side arrow (elements that float to the right are stacked from
+   the right side in the order that they appear in the html)*/
+
+// the dark part of the "arrow"
+%bubble-arrow-common {
+  vertical-align: top;
+  position: relative;
+  display: inline-block;
+  top: 10px;
+  left: 0px;
+  border-style: solid;
+}
 
 // the dark part of the "arrow" on the left side of the bubble
 .bubble-left-arrow {
   float: left;
-  vertical-align: top;
-  position: relative;
-  display: inline-block;
-  top: 8px;
-  left: 0px;
-  border-style: solid;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-light transparent transparent;
   z-index: 1;
+  @extend %bubble-arrow-common;
 }
-
-// the light part of the "arrow" on the left side of the bubble
-.bubble-left-arrow:before {
-  content: "";
-  position: absolute;
-  top: -5px;
-  left: 2px;
-  border-style: solid;
-  border-width: 5px 10px 5px 0;
-  border-color: transparent #eee transparent transparent;
-  display: block;
-  width: 0;
-  z-index: 2;
-}
-
 
 // the dark part of the right arrow on the right side of the chat bubble
 .bubble-right-arrow {
   float:right;
-  vertical-align: top;
-  position: relative;
-  display: inline-block;
-  left: 0px;
-  top: 8px;
   border-width: 5px 0px 5px 10px;
-  border-style: solid;
   border-color: transparent transparent transparent $gray-light;
   z-index: 1;
+  @extend %bubble-arrow-common;
 }
 
-// the light part of the right arrow on the right side of the chat bubble
-.bubble-right-arrow:before {
+// the light part of the "arrow"
+%arrow-overlay-common {
   content: "";
   position: absolute;
   top: -5px;
-  left: -12px;
   border-style: solid;
-  border-width: 5px 0px 5px 10px;
-  border-color: transparent  transparent transparent #eee;
   display: block;
   width: 0;
-  z-index: 2;
+}
 
+// the light part of the "arrow" on the left side of the bubble
+// :before is treated as the first child of .bubble-left-arrow
+.bubble-left-arrow:before {
+  left: 2px;
+  border-width: 5px 10px 5px 0;
+  border-color: transparent $gray-lighter transparent transparent;
+  z-index: 2;
+  @extend %arrow-overlay-common;
+}
+
+// the light part of the right arrow on the right side of the chat bubble
+// :before is treated as the first child of .bubble-right-arrow
+.bubble-right-arrow:before {
+  left: -12px;
+  border-width: 5px 0px 5px 10px;
+  border-color: transparent  transparent transparent $primary-lighter;
+  z-index: 2;
+  @extend %arrow-overlay-common;
 }
