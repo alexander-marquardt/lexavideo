@@ -26,17 +26,20 @@
 .bubble {
   position: relative;
   padding: 5px;
-  background: white;
+  background: #eee;
   border: $gray-light solid 1px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.25);
+
+  float: left;
+  box-sizing: border-box;
 }
 
-// the dark part of the "arrow" on the side of the bubble
+// the light part of the "arrow" on the side of the bubble
 .bubble:after {
   content: "";
   position: absolute;
@@ -44,13 +47,13 @@
   left: -8px;
   border-style: solid;
   border-width: 5px 10px 5px 0;
-  border-color: transparent white;
+  border-color: transparent #eee transparent transparent;
   display: block;
   width: 0;
   z-index: 1;
 }
 
-// the light part of the "arrow" on the side of the bubble
+// the dark part of the "arrow" on the side of the bubble
 .bubble:before {
   content: "";
   position: absolute;
@@ -58,17 +61,46 @@
   left: -10px;
   border-style: solid;
   border-width: 5px 10px 5px 0;
-  border-color: transparent $gray-light;
+  border-color: transparent $gray-light transparent transparent;
   display: block;
   width: 0;
   z-index: 0;
 }
 
-.bubble-right:after {
-  border-width: 5px 0px 5px 10px;
-
+.bubble-right {
+  float: right;
+  margin-left: auto;
+  text-align: right;
 }
 
-.bubble-right:before {
-    border-width: 5px 0px 5px 10px;
+.bubble-wrap {
+  display: inline-block;
+}
+
+// the dark part of the right arrow on the right side of the chat bubble
+.bubble-right-arrow {
+  vertical-align: top;
+  position: relative;
+  display: inline-block;
+  left: -4px; //offset to compensate for the shadow
+  top: 8px;
+  border-width: 5px 0px 5px 10px;
+  border-style: solid;
+  border-color: transparent transparent transparent $gray-light;
+  z-index: 0;
+}
+
+// the light part of the right arrow on the right side of the chat bubble
+.bubble-right-arrow:before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -12px;
+  border-style: solid;
+  border-width: 5px 0px 5px 10px;
+  border-color: transparent  transparent transparent #eee;
+  display: block;
+  width: 0;
+  z-index: 1;
+
 }
