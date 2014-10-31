@@ -53,7 +53,9 @@
    second is a light color. The part of the dark triangle that is visible is the "border" of the triangle, and the
    part of the triangle that is light is the "content" of the chat bubble.
 
-   These bubble-*-arrow classes should be placed in divs *inside* the chat bubble.*/
+   The bubble arrow is attached to an <i> element that must be placed inside the bubble div.
+   eg: <div class="bubble bubble-right"><i></i>text goes here</div>  -- the selection of <i> is arbitrary and
+   can be changed to another tag if necessary by modifying the css and html. */
 
 // the dark part of the "arrow"
 %bubble-arrow-common {
@@ -65,7 +67,7 @@
 }
 
 // the dark part of the "arrow" on the left side of the bubble
-.bubble-left-arrow {
+.bubble-left>i {
   left: -10px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-light transparent transparent;
@@ -74,7 +76,7 @@
 }
 
 // the dark part of the right arrow on the right side of the chat bubble
-.bubble-right-arrow {
+.bubble-right>i {
   left: 100%;
   border-width: 5px 0px 5px 10px;
   border-color: transparent transparent transparent $gray-light;
@@ -93,8 +95,8 @@
 }
 
 // the light part of the "arrow" on the left side of the bubble
-// :before is treated as the first child of .bubble-left-arrow
-.bubble-left-arrow:after {
+// :after is treated as the last child of .bubble-left-arrow
+.bubble-left>i:after {
   left: 2px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-lighter transparent transparent;
@@ -103,8 +105,8 @@
 }
 
 // the light part of the right arrow on the right side of the chat bubble
-// :before is treated as the first child of .bubble-right-arrow
-.bubble-right-arrow:after {
+// :after is treated as the last child of .bubble-right-arrow
+.bubble-right>i:after {
   left: -12px;
   border-width: 5px 0px 5px 10px;
   border-color: transparent  transparent transparent $primary-lighter;
