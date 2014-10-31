@@ -24,6 +24,7 @@
 
 // Original bubbles generated at: http://html-generator.weebly.com/css-speech-bubble-generator.html
 .bubble {
+  display: inline-block;
   position: relative;
   padding: 5px;
   background: #eee;
@@ -37,6 +38,7 @@
 
   float: left;
   box-sizing: border-box;
+  z-index: 0;
 }
 
 // the light part of the "arrow" on the side of the bubble
@@ -50,7 +52,7 @@
   border-color: transparent #eee transparent transparent;
   display: block;
   width: 0;
-  z-index: 1;
+  z-index: 2;
 }
 
 // the dark part of the "arrow" on the side of the bubble
@@ -64,30 +66,28 @@
   border-color: transparent $gray-light transparent transparent;
   display: block;
   width: 0;
-  z-index: 0;
+  z-index: 1;
 }
 
 .bubble-right {
   float: right;
-  margin-left: auto;
   text-align: right;
-}
-
-.bubble-wrap {
   display: inline-block;
+  position: relative;
 }
 
 // the dark part of the right arrow on the right side of the chat bubble
 .bubble-right-arrow {
+  float:right;
   vertical-align: top;
   position: relative;
   display: inline-block;
-  left: -4px; //offset to compensate for the shadow
+  left: 0px;
   top: 8px;
   border-width: 5px 0px 5px 10px;
   border-style: solid;
   border-color: transparent transparent transparent $gray-light;
-  z-index: 0;
+  z-index: 1;
 }
 
 // the light part of the right arrow on the right side of the chat bubble
@@ -101,6 +101,6 @@
   border-color: transparent  transparent transparent #eee;
   display: block;
   width: 0;
-  z-index: 1;
+  z-index: 2;
 
 }
