@@ -53,23 +53,20 @@
    second is a light color. The part of the dark triangle that is visible is the "border" of the triangle, and the
    part of the triangle that is light is the "content" of the chat bubble.
 
-   These bubble-*-arrow classes should be placed in divs immediately before the chat bubble. This is true not only
-   for the left side arrow, but also for the right side arrow (elements that float to the right are stacked from
-   the right side in the order that they appear in the html)*/
+   These bubble-*-arrow classes should be placed in divs *inside* the chat bubble.*/
 
 // the dark part of the "arrow"
 %bubble-arrow-common {
   vertical-align: top;
-  position: relative;
+  position: absolute;
   display: inline-block;
   top: 10px;
-  left: 0px;
   border-style: solid;
 }
 
 // the dark part of the "arrow" on the left side of the bubble
 .bubble-left-arrow {
-  float: left;
+  left: -10px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-light transparent transparent;
   z-index: 1;
@@ -78,7 +75,7 @@
 
 // the dark part of the right arrow on the right side of the chat bubble
 .bubble-right-arrow {
-  float:right;
+  left: 100%;
   border-width: 5px 0px 5px 10px;
   border-color: transparent transparent transparent $gray-light;
   z-index: 1;
@@ -97,7 +94,7 @@
 
 // the light part of the "arrow" on the left side of the bubble
 // :before is treated as the first child of .bubble-left-arrow
-.bubble-left-arrow:before {
+.bubble-left-arrow:after {
   left: 2px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-lighter transparent transparent;
@@ -107,7 +104,7 @@
 
 // the light part of the right arrow on the right side of the chat bubble
 // :before is treated as the first child of .bubble-right-arrow
-.bubble-right-arrow:before {
+.bubble-right-arrow:after {
   left: -12px;
   border-width: 5px 0px 5px 10px;
   border-color: transparent  transparent transparent $primary-lighter;
