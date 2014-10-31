@@ -21,3 +21,54 @@
     overflow-y: scroll;
     height: 250px;
 }
+
+// Original bubbles generated at: http://html-generator.weebly.com/css-speech-bubble-generator.html
+.bubble {
+  position: relative;
+  padding: 5px;
+  background: white;
+  border: $gray-light solid 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
+}
+
+// the dark part of the "arrow" on the side of the bubble
+.bubble:after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: -8px;
+  border-style: solid;
+  border-width: 5px 10px 5px 0;
+  border-color: transparent white;
+  display: block;
+  width: 0;
+  z-index: 1;
+}
+
+// the light part of the "arrow" on the side of the bubble
+.bubble:before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: -10px;
+  border-style: solid;
+  border-width: 5px 10px 5px 0;
+  border-color: transparent $gray-light;
+  display: block;
+  width: 0;
+  z-index: 0;
+}
+
+.bubble-right:after {
+  border-width: 5px 0px 5px 10px;
+
+}
+
+.bubble-right:before {
+    border-width: 5px 0px 5px 10px;
+}
