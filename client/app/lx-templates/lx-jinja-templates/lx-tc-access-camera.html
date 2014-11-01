@@ -1,8 +1,3 @@
-
-{% raw %}
-
-
-
 <!-- Mac prompt for access to users camera -->
 <script type="text/ng-template" id="lx-template-cache/chrome-mac-access-camera-modal.html">
     <div class="modal-header">
@@ -70,11 +65,11 @@
                      <li>Click on "Settings".</li>
                      <li>Click on "Content settings".</li>
                      <li>Click on "Website settings".</li>
-                     <li>Once you are in the Website settings menu, you can search for www.videochathub.com and
+                     <li>Once you are in the Website settings menu, you can search for www.{{ site_name }} and
                          change the camera permissions.</li>
                  </ol>
 
-            <p>Note: if you have trouble finding www.videochathub.com in the "Website settings" menu mentioned above, you might
+            <p>Note: if you have trouble finding www.{{ site_name }} in the "Website settings" menu mentioned above, you might
                 want to clear your browser cache. You can accomplish this as follows:
                 <ol>
                     <li>Click on the drop-down menu (
@@ -219,4 +214,3 @@
     </div>
 </script>
 
-{% endraw %}

@@ -12,7 +12,8 @@
 .panel-body
 {
     overflow-y: scroll;
-    height: 250px;
+    min-height: 50px;
+    max-height: 250px;
 }
 
 .bubble {

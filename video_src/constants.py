@@ -2,7 +2,7 @@
 
 import re
 
-site_name = 'ChatSurfing'
+site_name = 'chatsurfing.com'
 
 room_min_chars = 3
 room_max_chars = 80
