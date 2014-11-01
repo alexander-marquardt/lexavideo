@@ -3,13 +3,6 @@
 .cl-chat-row {
   color: #777777;
 }
-.cl-chat-divider
-{
-
-  border-bottom: 1px dotted #B3A9A9;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
 
 .panel .slidedown .glyphicon, .chat .glyphicon
 {
@@ -23,9 +16,10 @@
 }
 
 .bubble {
-  display: inline-block;
+  display: block;
   position: relative;
   padding: 5px;
+  margin-bottom: 5px;
   border: $gray-light solid 1px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -45,7 +39,7 @@
 
 .bubble-right {
   float: right;
-  text-align: right;
+  text-align: left;
   background: $primary-lighter;
 }
 
@@ -61,7 +55,7 @@
 %bubble-arrow-common {
   vertical-align: top;
   position: absolute;
-  display: inline-block;
+  display: block;
   top: 10px;
   border-style: solid;
 }
@@ -113,3 +107,11 @@
   z-index: 2;
   @extend %arrow-overlay-common;
 }
+
+.cl-chat-time-display {
+  //display: inline-block;
+  font-size: 65%;
+  vertical-align: sub;
+  //float: right;
+}
+
