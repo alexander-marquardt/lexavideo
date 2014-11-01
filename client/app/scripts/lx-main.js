@@ -34,6 +34,9 @@ var videoApp = angular.module('videoApp', [
     'lxUtility.services',
     'lxVideoNegotiation.services',
 
+    // vendor directives
+    'scrollGlue.directives',
+
     // angular services
     'ngAnimate',
     'ui.bootstrap'

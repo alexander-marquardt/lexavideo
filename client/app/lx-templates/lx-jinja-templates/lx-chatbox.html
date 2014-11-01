@@ -16,9 +16,8 @@
                                 <span ng-show="videoSignalingObject.remoteUserId && videoSignalingObject.remoteUserName==videoSignalingObject.remoteUserId">Guest has joined</span>
 
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body" scroll-glue>
                                 <div lx-show-chat-messages-directive></div>
-                                <a id="id-chatbox-scroll-anchor"></a>
                              </div>
                             <div class="panel-footer">
                                 <form name="sendMessageForm" role="form" novalidate>
