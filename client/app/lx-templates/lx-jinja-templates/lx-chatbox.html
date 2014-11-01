@@ -16,7 +16,7 @@
                                 <span ng-show="videoSignalingObject.remoteUserId && videoSignalingObject.remoteUserName==videoSignalingObject.remoteUserId">Guest has joined</span>
 
                             </div>
-                            <div class="panel-body" scroll-glue>
+                            <div class="panel-body" scroll-glue="chatPanelIsGlued">
                                 <div lx-show-chat-messages-directive></div>
                              </div>
                             <div class="panel-footer">
@@ -27,7 +27,7 @@
                                                placeholder="Type your message here..."
                                                ng-model="inputMessageString"
                                                maxlength="{{ maxMsgLength }}"
-                                               ng-click="scrollToChatboxScrollAnchor()"
+                                               ng-click="chatPanelIsGlued = true"
                                                required
                                                 />
 

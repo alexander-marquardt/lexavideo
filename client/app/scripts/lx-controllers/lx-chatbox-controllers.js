@@ -21,7 +21,7 @@ angular.module('lxChatbox.controllers', [])
         $scope.inputMessageString = '';
         $scope.sendMessageString = '';
 
-        $scope.maxMsgLength = 1000;
+        $scope.maxMsgLength = 5000;
 
         $scope.sendChatMessageFn = function() {
 
@@ -47,10 +47,6 @@ angular.module('lxChatbox.controllers', [])
 
             // clear the input box
             $scope.inputMessageString = '';
-
-        };
-
-        $scope.scrollToChatboxScrollAnchor = function() {
 
         };
     }

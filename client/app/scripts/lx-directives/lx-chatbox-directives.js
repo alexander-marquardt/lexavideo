@@ -39,7 +39,6 @@ angular.module('lxChatbox.directives', [])
                     $timeout(function() {
                         outerElement.addClass('cl-show-element');
                     });
-                    scope.scrollToChatboxScrollAnchor();
                 };
 
                 // watch to see if the local user has sent a new chat message to the remote user
