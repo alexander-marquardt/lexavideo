@@ -51,7 +51,7 @@ angular.module('lxChatbox.controllers', [])
         };
 
         $scope.scrollToChatboxScrollAnchor = function() {
-            $location.hash('id-chatbox-scroll-anchor');
+            $location.hash('#id-chatbox-scroll-anchor');
             $anchorScroll();
         };
     }
