@@ -23,7 +23,7 @@
                     return getter(scope);
                 },
                 setValue: function(){}
-            }
+            };
         }
 
         function twoWayBindingState(getter, setter, scope){
@@ -42,7 +42,7 @@
         }
 
         function createActivationState(attr, scope){
-            if(attr !== ""){
+            if(attr !== '') {
                 var getter = $parse(attr);
                 if(getter.assign !== undefined){
                     return twoWayBindingState(getter, getter.assign, scope);
@@ -65,7 +65,7 @@
                     el.scrollTop = el.scrollHeight;
                 }
 
-                function onScopeChanges(scope){
+                function onScopeChanges(){
                     if(activationState.getValue()){
                         scrollToBottom();
                     }

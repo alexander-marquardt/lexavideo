@@ -181,7 +181,7 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'chatMessage':
-                            scope.chatMessageObject.chatMessage = messageObject.messagePayload;
+                            chatMessageObject.chatMessage = messageObject.messagePayload;
                             break;
 
                         default:
