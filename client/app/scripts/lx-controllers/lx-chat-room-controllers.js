@@ -66,6 +66,10 @@ angular.module('lxUseChatRoom.controllers', [])
             modalsCurrentlyShown: []
         };
 
+        $scope.chatMessageObject = {
+            chatMessage: undefined
+        };
+
         $scope.remoteVideoObject = {
             remoteHdVideoElem: undefined, // set in lxVideoElementDirective
             remoteHdVideoWrapper: undefined, // set in lxHdVideoWrapperDirective

@@ -59,8 +59,13 @@ angular.module('lxChannel.services', [])
             };
         };
 
-        var onChannelMessage = function(self, localVideoObject, remoteVideoObject, videoSignalingObject) {
+        var onChannelMessage = function(self, scope) {
             return function(message) {
+
+                var localVideoObject = scope.localVideoObject;
+                var remoteVideoObject = scope.remoteVideoObject;
+                var videoSignalingObject = scope.videoSignalingObject;
+                var chatMessageObject = scope.chatMessageObject;
 
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
@@ -175,6 +180,10 @@ angular.module('lxChannel.services', [])
                             }
                             break;
 
+                        case 'chatMessage':
+                            scope.chatMessageObject.chatMessage = messageObject.messagePayload;
+                            break;
+
                         default:
                             $log.error('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
                     }
@@ -193,21 +202,22 @@ angular.module('lxChannel.services', [])
             lxChannelSupportService.channelReady = false;
         };
 
-        var handler = function(self, localVideoObject, remoteVideoObject, videoSignalingObject) {
+        var handler = function(self, scope) {
             return {
                 'onopen': onChannelOpened(),
-                'onmessage': onChannelMessage(self, localVideoObject, remoteVideoObject, videoSignalingObject),
+                'onmessage': onChannelMessage(self, scope),
                 'onerror': onChannelError,
                 'onclose': onChannelClosed
             };
         };
 
         return {
-            openChannel: function(localVideoObject, remoteVideoObject, videoSignalingObject, channelToken) {
+            openChannel: function(scope) {
+
                 $log.info('*** Opening channel. ***');
                 try {
-                    var channel = new goog.appengine.Channel(channelToken);
-                    lxChannelSupportService.socket = channel.open(handler(this, localVideoObject, remoteVideoObject, videoSignalingObject));
+                    var channel = new goog.appengine.Channel(scope.lxChatRoomOuterCtrl.channelToken);
+                    lxChannelSupportService.socket = channel.open(handler(this, scope));
                 } catch(e) {
                     e.message = '\n\tError in openChannel\n\t' + e.message;
                     $log.error(e);

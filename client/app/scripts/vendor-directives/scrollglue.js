@@ -1,3 +1,5 @@
+// Original code can be found at https://github.com/Luegg/angularjs-scroll-glue
+
 (function(angular, undefined){
     'use strict';
 

@@ -25,7 +25,7 @@ angular.module('lxChatRoom.directives', [])
 
                 // Setup the channel and turn. If no exceptions are found returns true, otherwise false
                 try {
-                    lxChannelService.openChannel(scope.localVideoObject, scope.remoteVideoObject, scope.videoSignalingObject, scope.lxChatRoomOuterCtrl.channelToken);
+                    lxChannelService.openChannel(scope);
                     lxTurnService.maybeRequestTurn();
 
                     $window.onbeforeunload = function () {
