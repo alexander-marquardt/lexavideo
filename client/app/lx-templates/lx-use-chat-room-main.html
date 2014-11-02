@@ -28,9 +28,9 @@
             <div lx-access-camera-and-microphone-directive></div>
 
             <!-- This row contains the buttons that control the videoType that will be transmitted and microphone/sound/video mute -->
-            <div class="row" style="margin-bottom:10px">
+            <div class="row cl-row-no-xs-margins" style="margin-bottom:10px">
 
-                <div class="col-xs-12 text-center">
+                <div class="col-xs-12 text-center cl-col-no-xs-padding">
                     <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
                     <button ng-show="!localVideoObject.isMicrophoneMuted && videoSignalingObject.localIsSendingVideoType != 'ASCII Video'"
                             type="button" class="btn btn-sm btn-default"
@@ -113,10 +113,10 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row cl-row-no-xs-margins">
                 <div lx-video-container-directive>
 
-                    <div class="col-sm-6 text-center" >
+                    <div class="col-sm-6 text-center cl-col-no-xs-padding" >
                         <div lx-video-wrapper-directive video-window='local'  id="id-local-video-wrapper-div">
                             <div class="text-center">
                                 <div ng-show="(videoSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoSignalingObject.localIsSendingVideoType) || videoSignalingObject.debugShowAllVideoWindows" >
@@ -145,7 +145,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-6 text-center" >
+                    <div class="col-sm-6 text-center cl-col-no-xs-padding" >
                         <div lx-video-wrapper-directive video-window='remote' id="id-remote-video-wrapper-div">
                             <div lx-mini-video-template-directive></div>
                             <div class="text-center" >
@@ -184,38 +184,38 @@
                 </div>
             </div> <!-- end row -->
 
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <div ng-if="debugBuildEnabled">
-                        <table class="table table-bordered table-striped">
-                            <tr>
-                                <td>Room Name: {{ roomName }}</td>
-                                <td>Room Id:   {{ roomId }}</td>
-                            </tr>
-                            <tr>
-                                <td>User Name: {{ userName }}</td>
-                                <td>Remote User Name: {{ videoSignalingObject.remoteUserName }}</td>
-                            </tr>
-                            <tr>
-                                <td>User Id: {{ userId }}</td>
-                                <td>Remote User Id: {{ videoSignalingObject.remoteUserId }}</td>
-                            </tr>
-                            <tr>
-                                <td>localHasSelectedVideoType: {{ videoSignalingObject.localHasSelectedVideoType }}</td>
-                                <td>remoteVideoSignalingStatus.settingsType: {{ videoSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>
-                            </tr>
-                            <tr>
-                                <td>localIsNegotiatingForVideoType: {{ videoSignalingObject.localIsNegotiatingForVideoType }}</td>
-                                <td>remoteVideoSignalingStatus.videoType: {{ videoSignalingObject.remoteVideoSignalingStatus.videoType }}</td>
-                            </tr>
-                            <tr>
-                                <td>localIsSendingVideoType: {{ videoSignalingObject.localIsSendingVideoType }}</td>
-                                <td>remoteIsSendingVideoType: {{ videoSignalingObject.remoteIsSendingVideoType }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="row">-->
+                <!--<div class="col-xs-12 text-center">-->
+                    <!--<div ng-if="debugBuildEnabled">-->
+                        <!--<table class="table table-bordered table-striped">-->
+                            <!--<tr>-->
+                                <!--<td>Room Name: {{ roomName }}</td>-->
+                                <!--<td>Room Id:   {{ roomId }}</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>User Name: {{ userName }}</td>-->
+                                <!--<td>Remote User Name: {{ videoSignalingObject.remoteUserName }}</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>User Id: {{ userId }}</td>-->
+                                <!--<td>Remote User Id: {{ videoSignalingObject.remoteUserId }}</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>localHasSelectedVideoType: {{ videoSignalingObject.localHasSelectedVideoType }}</td>-->
+                                <!--<td>remoteVideoSignalingStatus.settingsType: {{ videoSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>localIsNegotiatingForVideoType: {{ videoSignalingObject.localIsNegotiatingForVideoType }}</td>-->
+                                <!--<td>remoteVideoSignalingStatus.videoType: {{ videoSignalingObject.remoteVideoSignalingStatus.videoType }}</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                                <!--<td>localIsSendingVideoType: {{ videoSignalingObject.localIsSendingVideoType }}</td>-->
+                                <!--<td>remoteIsSendingVideoType: {{ videoSignalingObject.remoteIsSendingVideoType }}</td>-->
+                            <!--</tr>-->
+                        <!--</table>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
     </div>
 </div>

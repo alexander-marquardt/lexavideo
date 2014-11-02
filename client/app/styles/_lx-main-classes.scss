@@ -1,4 +1,27 @@
 
+/* no-xs-padding/no-xs-margins are used to remove the padding/margin from xs devices. This
+   allows us to fully use the screen space for content as opposed to whitespace */
+.cl-container-no-xs-padding {
+  @media(max-width: $screen-xs-max) {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
+.cl-row-no-xs-margins {
+  @media(max-width: $screen-xs-max) {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
+
+.cl-col-no-xs-padding {
+  @media(max-width: $screen-xs-max) {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
 
 .cl-my-well {
   margin-bottom: 10px;

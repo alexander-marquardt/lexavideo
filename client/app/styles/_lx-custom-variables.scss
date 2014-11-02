@@ -26,7 +26,7 @@ $xs-viewport-sizes-list: 320px, 360px, 400px, 480px, 600px;
 // setup the video window sizes that are associated with the above viewport sizes.
 $xs-video-sizes-list: ();
 @each $viewport-size in $xs-viewport-sizes-list {
-  $video-size: $viewport-size - $scrollbar-width - $grid-gutter-width;
+  $video-size: $viewport-size - $scrollbar-width;
   $xs-video-sizes-list: append($xs-video-sizes-list, $video-size);
 }
 
