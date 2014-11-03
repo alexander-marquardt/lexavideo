@@ -5,8 +5,10 @@ import webapp2
 
 from google.appengine.ext import ndb
 
+from video_src import http_helpers
 from video_src import messaging
 from video_src import models
+from video_src import status_reporting
 
 from video_src.error_handling import handle_exceptions
 
@@ -138,11 +140,16 @@ class MessagePage(webapp2.RequestHandler):
         room_id = int(self.request.get('r'))
         user_id = int(self.request.get('u'))
         room_obj = RoomInfo.get_by_id(room_id)
-        if room_obj:
-                messaging.handle_message(room_obj, user_id, message)
-        else:
-            logging.error('Unknown room_id %d' % room_id)
+        try:
+            if room_obj:
+                    messaging.handle_message(room_obj, user_id, message)
+            else:
+                raise Exception('Unknown room_id %d' % room_id)
 
+        except:
+            status_string = 'unableToDeliverMessage'
+            http_status_code = 403 # Forbidden - request is valid, but server is refusing to respond to it
+            http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging.warning, http_status_code)
 
 
 # Sends information about who is in the room, and which client should be designated as the 'rtcInitiator'
