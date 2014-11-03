@@ -22,11 +22,21 @@
   }
 }
 
+.cl-panel-xs-margin {
+    @media(max-width: $screen-xs-max) {
+      margin-bottom: 5px;
+    }
+}
 
 .cl-my-well {
   margin-bottom: 10px;
   background-color: #000; // previously #f5f5f5;
   border: 1px solid #e3e3d3;
+  display:inline-block;
+  vertical-align: top;
+  @media(max-width: $screen-xs-max) {
+      margin-bottom: 5px;
+  }
 }
 
 .cl-mini-well {
