@@ -181,7 +181,9 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'chatMessage':
-                            chatMessageObject.chatMessage = messageObject.messagePayload;
+                            chatMessageObject.receivedMessageString = messageObject.messagePayload;
+                            // receivedMessageStringToggle is used for triggering the watcher
+                            chatMessageObject.receivedMessageStringToggle = ! chatMessageObject.receivedMessageStringToggle;
                             break;
 
                         default:

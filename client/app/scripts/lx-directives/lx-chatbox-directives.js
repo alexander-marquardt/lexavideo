@@ -76,15 +76,15 @@ angular.module('lxChatbox.directives', [])
                 };
 
                 // watch to see if the local user has sent a new chat message to the remote user
-                scope.$watch('sendMessageString', function(newValue) {
-                    if (newValue) {
-                        addMessageToDisplay(newValue, 'sender');
+                scope.$watch('sendMessageStringToggle', function() {
+                    if (scope.sendMessageString) {
+                        addMessageToDisplay(scope.sendMessageString, 'sender');
                     }
                 });
 
-                scope.$watch('chatMessageObject.chatMessage', function(newValue) {
-                    if (newValue) {
-                        addMessageToDisplay(newValue, 'receiver');
+                scope.$watch('chatMessageObject.receivedMessageStringToggle', function(newValue) {
+                    if (scope.chatMessageObject.receivedMessageString) {
+                        addMessageToDisplay(scope.chatMessageObject.receivedMessageString, 'receiver');
                     }
                 });
             }

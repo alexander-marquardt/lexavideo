@@ -67,7 +67,12 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         $scope.chatMessageObject = {
-            chatMessage: undefined
+            receivedMessageString: undefined,
+
+           // receivedMessageStringToggle is toggled every time the user sends a message - this is necessary because
+            // if we just watch receivedMessageString for changes to trigger sending of the message, then the user will not be
+            // able to send the same message twice.
+            receivedMessageStringToggle: false
         };
 
         $scope.remoteVideoObject = {

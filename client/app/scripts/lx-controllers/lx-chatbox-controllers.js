@@ -21,11 +21,17 @@ angular.module('lxChatbox.controllers', [])
         $scope.inputMessageString = '';
         $scope.sendMessageString = '';
 
+        // sendMessageStringToggle is toggled every time the user sends a message - this is necessary because
+        // if we just watch sendMessageString for changes to trigger sending of the message, then the user will not be
+        // able to send the same message twice.
+        $scope.sendMessageStringToggle = false;
+
         $scope.maxMsgLength = 5000;
 
         $scope.sendChatMessageFn = function() {
 
             var chatMessage = $scope.inputMessageString ;
+            $scope.sendMessageStringToggle = !$scope.sendMessageStringToggle;
 
             $scope.sendMessageString = chatMessage;
             var messageType = 'chatMessage';
