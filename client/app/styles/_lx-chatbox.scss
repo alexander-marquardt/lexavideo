@@ -34,24 +34,21 @@
   z-index: 0;
 }
 
-.bubble.bubble-error {
-    border: $brand-danger solid 1px;
-}
-
-.bubble-left {
+.bubble.bubble-left {
   float: left;
   text-align: left;
   background: $gray-lighter;
 }
 
-.bubble-left.bubble-error {
-  backround: $brand-danger-lighter;
-}
-
-.bubble-right {
+.bubble.bubble-right {
   float: right;
   text-align: left;
   background: $brand-primary-lighter;
+}
+
+.bubble.bubble-error {
+    border: $brand-danger solid 1px;
+    background: $brand-danger-lighter;
 }
 
 /* The bubble arrows are made by overlaying two triangles on top of each other. The first is a dark color, and the
@@ -72,7 +69,7 @@
 }
 
 // the dark part of the "arrow" on the left side of the bubble
-.bubble-left>i {
+.bubble.bubble-left>i {
   left: -10px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-light transparent transparent;
@@ -80,19 +77,20 @@
   @extend %bubble-arrow-common;
 }
 
-.bubble-left.bubble-error>i {
-  border-color: transparent $brand-danger transparent transparent;
-}
-
-
 // the dark part of the right arrow on the right side of the chat bubble
-.bubble-right>i {
+.bubble.bubble-right>i {
   left: 100%;
   border-width: 5px 0px 5px 10px;
   border-color: transparent transparent transparent $gray-light;
   z-index: 1;
   @extend %bubble-arrow-common;
 }
+
+
+.bubble.bubble-error>i {
+  border-color: transparent $brand-danger transparent transparent;
+}
+
 
 // the light part of the "arrow"
 %arrow-overlay-common {
@@ -106,7 +104,7 @@
 
 // the light part of the "arrow" on the left side of the bubble
 // :after is treated as the last child of .bubble-left-arrow
-.bubble-left>i:after {
+.bubble.bubble-left>i:after {
   left: 2px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-lighter transparent transparent;
@@ -116,12 +114,16 @@
 
 // the light part of the right arrow on the right side of the chat bubble
 // :after is treated as the last child of .bubble-right-arrow
-.bubble-right>i:after {
+.bubble.bubble-right>i:after {
   left: -12px;
   border-width: 5px 0px 5px 10px;
   border-color: transparent  transparent transparent $brand-primary-lighter;
   z-index: 2;
   @extend %arrow-overlay-common;
+}
+
+.bubble.bubble-left.bubble-error>i:after {
+  border-color: transparent $brand-danger-lighter transparent transparent;
 }
 
 .cl-chat-time-display {
