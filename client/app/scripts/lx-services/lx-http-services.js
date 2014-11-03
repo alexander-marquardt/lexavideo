@@ -102,14 +102,7 @@ angular.module('lxHttp.services', [])
                 // changing here.
                 var path = '/_lx/message?r=' + lxUseChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userId;
 
-                var httpPromise = $http.post(path, messageObject).then(
-                    function(/*response*/) {
-                        //$log.log('Post success. Got response status: ' + response.statusText);
-                    },
-                    function(/*response*/) {
-                        //$log.log('Post error. Got response status: ' + response.statusText);
-                    }
-                );
+                var httpPromise = $http.post(path, messageObject);
                 return httpPromise;
             }
         };

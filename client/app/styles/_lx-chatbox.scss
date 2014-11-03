@@ -34,16 +34,24 @@
   z-index: 0;
 }
 
+.bubble.bubble-error {
+    border: $brand-danger solid 1px;
+}
+
 .bubble-left {
   float: left;
   text-align: left;
   background: $gray-lighter;
 }
 
+.bubble-left.bubble-error {
+  backround: $brand-danger-lighter;
+}
+
 .bubble-right {
   float: right;
   text-align: left;
-  background: $primary-lighter;
+  background: $brand-primary-lighter;
 }
 
 /* The bubble arrows are made by overlaying two triangles on top of each other. The first is a dark color, and the
@@ -71,6 +79,11 @@
   z-index: 1;
   @extend %bubble-arrow-common;
 }
+
+.bubble-left.bubble-error>i {
+  border-color: transparent $brand-danger transparent transparent;
+}
+
 
 // the dark part of the right arrow on the right side of the chat bubble
 .bubble-right>i {
@@ -106,7 +119,7 @@
 .bubble-right>i:after {
   left: -12px;
   border-width: 5px 0px 5px 10px;
-  border-color: transparent  transparent transparent $primary-lighter;
+  border-color: transparent  transparent transparent $brand-primary-lighter;
   z-index: 2;
   @extend %arrow-overlay-common;
 }

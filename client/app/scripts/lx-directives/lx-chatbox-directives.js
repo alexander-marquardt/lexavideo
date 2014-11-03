@@ -25,20 +25,13 @@ angular.module('lxChatbox.directives', [])
                 var chatPanelHeadingElement = chatPanelBody.prev();
                 var chatPanel = chatPanelBody.parent();
 
-                var addMessageToDisplay = function(message, isSenderOrReceiver) {
+                var addMessageToDisplay = function(message, bubbleSide, transmittedSuccessBoolean) {
+                    // message: The text that will be displayed to the user
+                    // bubbleSide: 'left' (message sent) or 'right' (message received)
+                    // transmittedSuccessBoolean: true or false. true if message sent/received correctly, false otherwise.
 
                     var timeString = lxTimeService.getTimeString();
 
-                    var bubbleSide;
-                    if (isSenderOrReceiver === 'sender') {
-                        bubbleSide = 'left';
-                    }
-                    else if (isSenderOrReceiver === 'receiver') {
-                        bubbleSide = 'right';
-                    }
-                    else {
-                        throw new Error('Unknown isSenderOrReceiver value of: ' + isSenderOrReceiver);
-                    }
 
                     // The following code will "flash" the chat panel heading when the user is not looking at the bottom
                     // of their chat messages - this should help them notice when new messages have been received.
@@ -54,9 +47,13 @@ angular.module('lxChatbox.directives', [])
 
                     var outerElement = angular.element('<div class="cl-fade-in-chat-bubble-element">');
                     var messageElement = angular.element('<div  class="row cl-chat-row">');
+                    var bubbleErrorClass = '';
+                    if (!transmittedSuccessBoolean) {
+                        bubbleErrorClass = 'bubble-error';
+                    }
 
                     messageElement.append(angular.element('<div class="col-xs-12 chat-body">')
-                            .append(angular.element('<div class="bubble bubble-' + bubbleSide + '"><i></i>')
+                            .append(angular.element('<div class="bubble bubble-' + bubbleSide + ' ' + bubbleErrorClass + '"><i></i>')
                                 .append(message)
                                 .append(angular.element('<span class="cl-chat-time-display">')
                                     .append('&nbsp;&nbsp;' + timeString)
@@ -71,20 +68,24 @@ angular.module('lxChatbox.directives', [])
                         outerElement.addClass('cl-show-new-chat-bubble-element');
 
                     });
-
-
                 };
 
                 // watch to see if the local user has sent a new chat message to the remote user
-                scope.$watch('sendMessageStringToggle', function() {
+                scope.$watch('sendMessageStringTime', function() {
                     if (scope.sendMessageString) {
-                        addMessageToDisplay(scope.sendMessageString, 'sender');
+                        addMessageToDisplay(scope.sendMessageString, 'left', true);
                     }
                 });
 
-                scope.$watch('chatMessageObject.receivedMessageStringToggle', function(newValue) {
+                scope.$watch('sendMessageStringFailedTime', function() {
+                    if (scope.sendMessageFailedString) {
+                        addMessageToDisplay(scope.sendMessageFailedString, 'left', false);
+                    }
+                });
+
+                scope.$watch('chatMessageObject.receivedMessageStringTime', function(newValue) {
                     if (scope.chatMessageObject.receivedMessageString) {
-                        addMessageToDisplay(scope.chatMessageObject.receivedMessageString, 'receiver');
+                        addMessageToDisplay(scope.chatMessageObject.receivedMessageString, 'right', true);
                     }
                 });
             }

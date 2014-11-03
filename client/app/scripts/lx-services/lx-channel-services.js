@@ -183,7 +183,7 @@ angular.module('lxChannel.services', [])
                         case 'chatMessage':
                             chatMessageObject.receivedMessageString = messageObject.messagePayload;
                             // receivedMessageStringToggle is used for triggering the watcher
-                            chatMessageObject.receivedMessageStringToggle = ! chatMessageObject.receivedMessageStringToggle;
+                            chatMessageObject.receivedMessageStringTime = new Date().getTime();
                             break;
 
                         default:
