@@ -51,7 +51,7 @@ def handle_message(room_obj, from_user_id, message):
 
     else:
         logging.warning('Cannot deliver message from user: %s to other_user: %s since they are not in the room: %s' % (from_user_id, to_user_id, room_name))
-        raise Exception('cannotDeliverMessageOtherUserNotInRoom')
+        raise Exception('otherUserNotInRoom')
         # For unittest
         #on_message(room, user, message)
 
@@ -80,5 +80,5 @@ def on_message(room_obj, to_user_id, message):
         # new_message = models.Message(client_id = to_client_id, msg = message)
         # new_message.put()
         logging.error('Unable to deliver message to user ' + to_client_id + ' since they are not connected to the room.')
-
+        raise Exception('otherUserChannelNotConnected')
 

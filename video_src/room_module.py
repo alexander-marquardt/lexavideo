@@ -140,25 +140,40 @@ class MessagePage(webapp2.RequestHandler):
         room_id = int(self.request.get('r'))
         user_id = int(self.request.get('u'))
         room_obj = RoomInfo.get_by_id(room_id)
-        try:
-            if room_obj:
-                messaging.handle_message(room_obj, user_id, message)
-            else:
-                logging.error('Unknown room_id %d' % room_id)
-                raise Exception('unknownRoomId')
 
-        except Exception as e:
-            if e.message == 'cannotDeliverMessageOtherUserNotInRoom':
+        try:
+            try:
+                if room_obj:
+                    messaging.handle_message(room_obj, user_id, message)
+                else:
+                    logging.error('Unknown room_id %d' % room_id)
+                    raise Exception('unknownRoomId')
+
+            except Exception as e:
+
                 status_string = e.message
-                http_status_code = 403 # Forbidden - request is valid, but server is refusing to respond to it
-                logging_function = logging.warning
-            else:
-                status_string = 'unableToDeliverMessageUnknownError'
-                http_status_code = 500
-                logging_function = logging.error
+
+                # if 'otherUserNotInRoom' then we will give the user feedback indicating that they are alone in the room
+                # and that is why their message was not delivered. This is not a serious error, and so we only log
+                # it with a warning message and return a http 403 code.
+                if status_string == 'otherUserNotInRoom':
+                     # 403 = Forbidden - request is valid, but server is refusing to respond to it
+                    http_status_code = 403
+                    logging_function = logging.warning
+
+                # else, we don't know what happened so return a 500 error and log all relevant information
+                else:
+                    # re-raise the exception so that it will be caught by the following except clause
+                    raise
+
+                http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function, http_status_code)
+
+        except:
+            status_string = 'Unknown server error'
+            http_status_code = 500
+            logging_function = logging.error
 
             http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function, http_status_code)
-
 
 
 # Sends information about who is in the room, and which client should be designated as the 'rtcInitiator'

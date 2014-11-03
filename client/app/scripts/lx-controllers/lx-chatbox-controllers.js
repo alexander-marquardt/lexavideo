@@ -49,7 +49,7 @@ angular.module('lxChatbox.controllers', [])
                 function(response) {
                     $scope.sendMessageStringFailedTime = new Date().getTime();
 
-                    if (response.data.statusString === 'cannotDeliverMessageOtherUserNotInRoom') {
+                    if (response.data.statusString === 'otherUserNotInRoom') {
                         $scope.sendMessageFailedString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + chatMessage;
                     } else {
                          $scope.sendMessageFailedString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + chatMessage;
