@@ -43,15 +43,17 @@ angular.module('lxChatbox.controllers', [])
 
                     $scope.sendMessageStringTime = new Date().getTime();
                     $scope.sendMessageString = chatMessage;
-                    $log.debug(messageType + ' sendMessage success.');
-
                 },
 
                 // message was not delivered to the server
-                function() {
+                function(response) {
                     $scope.sendMessageStringFailedTime = new Date().getTime();
-                    $scope.sendMessageFailedString = chatMessage;
-                    $log.debug(messageType + ' sendMessage FAILURE.');
+
+                    if (response.data.statusString === 'cannotDeliverMessageOtherUserNotInRoom') {
+                        $scope.sendMessageFailedString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + chatMessage;
+                    } else {
+                         $scope.sendMessageFailedString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + chatMessage;
+                    }
                 }
             );
 

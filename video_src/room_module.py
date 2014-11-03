@@ -142,14 +142,23 @@ class MessagePage(webapp2.RequestHandler):
         room_obj = RoomInfo.get_by_id(room_id)
         try:
             if room_obj:
-                    messaging.handle_message(room_obj, user_id, message)
+                messaging.handle_message(room_obj, user_id, message)
             else:
-                raise Exception('Unknown room_id %d' % room_id)
+                logging.error('Unknown room_id %d' % room_id)
+                raise Exception('unknownRoomId')
 
-        except:
-            status_string = 'unableToDeliverMessage'
-            http_status_code = 403 # Forbidden - request is valid, but server is refusing to respond to it
-            http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging.warning, http_status_code)
+        except Exception as e:
+            if e.message == 'cannotDeliverMessageOtherUserNotInRoom':
+                status_string = e.message
+                http_status_code = 403 # Forbidden - request is valid, but server is refusing to respond to it
+                logging_function = logging.warning
+            else:
+                status_string = 'unableToDeliverMessageUnknownError'
+                http_status_code = 500
+                logging_function = logging.error
+
+            http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function, http_status_code)
+
 
 
 # Sends information about who is in the room, and which client should be designated as the 'rtcInitiator'

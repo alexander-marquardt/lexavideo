@@ -161,3 +161,7 @@ $transition-border-fast-easing-string: border $fast-easing-delay ease;
   -o-transition: $transition-border-fast-easing-string;
   transition: $transition-border-fast-easing-string;
 }
+
+.cl-text-danger {
+  color: $brand-danger;
+}
