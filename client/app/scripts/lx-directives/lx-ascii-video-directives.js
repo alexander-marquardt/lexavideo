@@ -19,7 +19,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
         $log,
         lxStreamService,
         lxMessageService,
-        lxTimerService,
+        lxDelayActionService,
         lxUseChatRoomConstantsService,
         lxUseChatRoomVarsService,
         lxAppWideConstantsService) {
@@ -178,7 +178,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
 
             function watchForResize() {
 
-                var delayAction = lxTimerService.getDelayFn();
+                var delayAction = lxDelayActionService.getDelayFn();
                 var timeToPassSinceLastCall = 500; //ms
 
                 $(window).on('resize.watchForAsciiResize', function() {

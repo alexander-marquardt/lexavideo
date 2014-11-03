@@ -11,7 +11,8 @@ angular.module('lxChatbox.directives', [])
 
     function(
         $compile,
-        $timeout
+        $timeout,
+        lxTimeService
         ) {
 
         var flashChatboxNotificationTime = 500; //ms
@@ -25,6 +26,8 @@ angular.module('lxChatbox.directives', [])
                 var chatPanel = chatPanelBody.parent();
 
                 var addMessageToDisplay = function(message, isSenderOrReceiver) {
+
+                    var timeString = lxTimeService.getTimeString();
 
                     var bubbleSide;
                     if (isSenderOrReceiver === 'sender') {
@@ -55,8 +58,8 @@ angular.module('lxChatbox.directives', [])
                     messageElement.append(angular.element('<div class="col-xs-12 chat-body">')
                             .append(angular.element('<div class="bubble bubble-' + bubbleSide + '"><i></i>')
                                 .append(message)
-                                .append(angular.element('<small class="text-muted cl-chat-time-display">&nbsp;<span class="icon-lx-time">')
-                                    .append('time')
+                                .append(angular.element('<span class="text-muted cl-chat-time-display">')
+                                    .append('&nbsp;&nbsp;' + timeString)
                             )
                         )
                     );

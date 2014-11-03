@@ -9,10 +9,10 @@ angular.module('lxUserInputFeedback.directives', [])
 
         lxHttpHandleRoomService,
         lxLandingPageConstantsService,
-        lxTimerService) {
+        lxDelayActionService) {
 
         var timeSinceLastKeypressBeforeHttpCall = 300; // time in milliseconds
-        var delayAction = lxTimerService.getDelayFn();
+        var delayAction = lxDelayActionService.getDelayFn();
 
 
         return {

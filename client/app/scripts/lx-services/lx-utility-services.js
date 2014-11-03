@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lxUtility.services', [])
-    .factory('lxTimerService', function() {
+    .factory('lxDelayActionService', function() {
 
         return {
             getDelayFn : function() {
@@ -15,6 +15,31 @@ angular.module('lxUtility.services', [])
                 };
             }
         };
+    })
+
+    .factory('lxTimeService', function() {
+
+        // pad integers with zeros if necessary. ie. 6 seconds would be displayed as 06 seconds.
+        function zfill(number, size) {
+          number = number.toString();
+          while (number.length < size) number = "0" + number;
+          return number;
+        }
+
+        return {
+            getTimeString : function() {
+                var now = new Date();
+                var h=now.getHours();
+                var m=now.getMinutes();
+                var s=now.getSeconds();
+
+                m = zfill(m, 2);
+                s = zfill(s, 2);
+
+                var currentTimeString = h + ':' + m + ':' + s;
+                return currentTimeString;
+            }
+        }
     });
 
 
