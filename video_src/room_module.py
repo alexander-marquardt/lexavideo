@@ -58,7 +58,7 @@ class RoomInfo(ndb.Model):
 
 
     def remove_user(self, user_id):
-        messaging.delete_saved_messages(self.make_client_id(user_id))
+        # messaging.delete_saved_messages(self.make_client_id(user_id))
 
         idx = None
         try:
@@ -239,7 +239,7 @@ class ConnectPage(webapp2.RequestHandler):
             room_obj.add_user(user_id)
             assert(room_obj.has_user(user_id))
             connect_user_to_room(room_id, user_id)
-            messaging.send_saved_messages(room_obj.make_client_id(user_id))
+            # messaging.send_saved_messages(room_obj.make_client_id(user_id))
         else:
             logging.error('Invalid room id: %d' % room_id)
 

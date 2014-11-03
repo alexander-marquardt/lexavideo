@@ -54,29 +54,30 @@ def handle_message(room_obj, from_user_id, message):
         # For unittest
         #on_message(room, user, message)
 
-    
-def delete_saved_messages(client_id):
-    messages =models.Message.get_saved_messages(client_id)
-    for message in messages:
-        message.key.delete()
-        logging.info('Deleted the saved message for ' + client_id)    
+
+# def delete_saved_messages(client_id):
+#     messages =models.Message.get_saved_messages(client_id)
+#     for message in messages:
+#         message.key.delete()
+#         logging.info('Deleted the saved message for ' + client_id)
 
 
-def send_saved_messages(client_id):
-    messages = models.Message.get_saved_messages(client_id)
-    for message in messages:
-        channel.send_message(client_id, message.msg)
-        logging.info('Delivered saved message to ' + client_id)
-        message.key.delete()
+# def send_saved_messages(client_id):
+#     messages = models.Message.get_saved_messages(client_id)
+#     for message in messages:
+#         channel.send_message(client_id, message.msg)
+#         logging.info('Delivered saved message to ' + client_id)
+#         message.key.delete()
         
 def on_message(room_obj, to_user_id, message):
     to_client_id = room_obj.make_client_id(to_user_id)
+
     if room_obj.is_connected(to_user_id):
         channel.send_message(to_client_id, message)
         #logging.info('Delivered message to user %d' % to_user_id)
     else:
-        new_message = models.Message(client_id = to_client_id, msg = message)
-        new_message.put()
-        #logging.info('Saved message for user ' + user)
+        # new_message = models.Message(client_id = to_client_id, msg = message)
+        # new_message.put()
+        logging.error('Unable to deliver message to user ' + to_client_id + ' since they are not connected to the room.')
 
 

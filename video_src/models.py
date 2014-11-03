@@ -26,11 +26,11 @@ class UserModel(ndb.Model):
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
 
-
-class Message(ndb.Model):
-    client_id = ndb.StringProperty()
-    msg = ndb.TextProperty()
-
-    @classmethod
-    def get_saved_messages(cls, client_id):
-        return cls.gql("WHERE client_id = :id", id=client_id)
+#
+# class Message(ndb.Model):
+#     client_id = ndb.StringProperty()
+#     msg = ndb.TextProperty()
+#
+#     @classmethod
+#     def get_saved_messages(cls, client_id):
+#         return cls.gql("WHERE client_id = :id", id=client_id)
