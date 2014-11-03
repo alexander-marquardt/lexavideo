@@ -26,13 +26,6 @@ angular.module('lxHttp.services', [])
                 var roomObj = null;
                 if (roomName) {
                     roomObj = RoomResource.get({roomName:roomName});
-                    roomObj.$promise.then(function(data) {
-                        $log.debug('getRoom function - returned object: ' + angular.toJson(data));
-
-                    }, function() {
-                        // something went wrong and the request failed
-                        $log.error('lxHandleRoomService.getRoom - network or server error');
-                    });
                 }
                 return roomObj;
             }
