@@ -16,6 +16,7 @@
   height: 200px;
 }
 
+
 .bubble {
   display: block;
   position: relative;
@@ -115,5 +116,23 @@
   font-size: 65%;
   vertical-align: sub;
   //float: right;
+}
+
+
+.cl-fade-in-chat-bubble-element {
+  opacity:0.5;
+  -webkit-transition: opacity 1s ease-in;
+  -moz-transition: opacity 1s ease-in;
+  -ms-transition: opacity 1s ease-in;
+  -o-transition: opacity 1s ease-in;
+  transition: opacity 1s ease-in;
+}
+
+.cl-fade-in-chat-bubble-element.cl-show-new-chat-bubble-element {
+  opacity: 1;
+}
+
+.cl-flash-chat-heading {
+  opacity:0.5;
 }
 

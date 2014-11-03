@@ -74,19 +74,6 @@
   opacity:0;
 }
 
-.cl-fade-in-element {
-  opacity:0.5;
-  -webkit-transition: opacity 1s ease-in;
-  -moz-transition: opacity 1s ease-in;
-  -ms-transition: opacity 1s ease-in;
-  -o-transition: opacity 1s ease-in;
-  transition: opacity 1s ease-in;
-}
-
-.cl-fade-in-element.cl-show-element {
-  opacity: 1;
-}
-
 .cl-room-name-input {
   max-width: $screen-xs-max;
 }
@@ -129,6 +116,10 @@
   @include my-mixin-border-glow($brand-success,  1)
 }
 
+.cl-primary-color-glow {
+   @include my-mixin-border-glow($brand-primary,  1)
+}
+
 .cl-feedback-on-input-validity-div {
   min-height: 20px
 }
@@ -148,4 +139,25 @@
   width: nth($video-column-width-list, 1);
 
   @include generate-match-video-column-sizing();
+}
+
+
+$fast-easing-delay: 0.35s;
+
+$transition-string: opacity $fast-easing-delay ease-in-out;
+.cl-transition-opacity-fast-easing {
+  -webkit-transition: $transition-string;
+  -moz-transition: $transition-string;
+  -ms-transition: $transition-string;
+  -o-transition: $transition-string;
+  transition: $transition-string;
+}
+
+$transition-border-fast-easing-string: border $fast-easing-delay ease;
+.cl-transition-border-fast-easing {
+  -webkit-transition: $transition-border-fast-easing-string;
+  -moz-transition: $transition-border-fast-easing-string;
+  -ms-transition: $transition-border-fast-easing-string;
+  -o-transition: $transition-border-fast-easing-string;
+  transition: $transition-border-fast-easing-string;
 }

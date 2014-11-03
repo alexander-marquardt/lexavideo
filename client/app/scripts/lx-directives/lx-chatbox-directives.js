@@ -13,11 +13,16 @@ angular.module('lxChatbox.directives', [])
         $compile,
         $timeout
         ) {
+
+        var flashChatboxNotificationTime = 500; //ms
+
         return {
             restrict: 'A',
             link: function (scope, elem) {
 
-
+                var chatPanelBody = angular.element(elem).parent();
+                var chatPanelHeadingElement = chatPanelBody.prev();
+                var chatPanel = chatPanelBody.parent();
 
                 var addMessageToDisplay = function(message, isSenderOrReceiver) {
 
@@ -32,10 +37,20 @@ angular.module('lxChatbox.directives', [])
                         throw new Error('Unknown isSenderOrReceiver value of: ' + isSenderOrReceiver);
                     }
 
-                    var outerElement = angular.element('<div class="cl-fade-in-element">');
+                    // The following code will "flash" the chat panel heading when the user is not looking at the bottom
+                    // of their chat messages - this should help them notice when new messages have been received.
+                    if (!scope.chatPanelIsGlued) {
+                        chatPanelHeadingElement.addClass('cl-flash-chat-heading');
+                        chatPanel.addClass('cl-primary-color-glow');
+
+                        $timeout(function() {
+                            chatPanelHeadingElement.removeClass('cl-flash-chat-heading');
+                            chatPanel.removeClass('cl-primary-color-glow');
+                        }, flashChatboxNotificationTime);
+                    }
+
+                    var outerElement = angular.element('<div class="cl-fade-in-chat-bubble-element">');
                     var messageElement = angular.element('<div  class="row cl-chat-row">');
-
-
 
                     messageElement.append(angular.element('<div class="col-xs-12 chat-body">')
                             .append(angular.element('<div class="bubble bubble-' + bubbleSide + '"><i></i>')
@@ -50,8 +65,11 @@ angular.module('lxChatbox.directives', [])
                     var compiledElement = $compile(outerElement)(scope);
                     elem.append(compiledElement);
                     $timeout(function() {
-                        outerElement.addClass('cl-show-element');
+                        outerElement.addClass('cl-show-new-chat-bubble-element');
+
                     });
+
+
                 };
 
                 // watch to see if the local user has sent a new chat message to the remote user
