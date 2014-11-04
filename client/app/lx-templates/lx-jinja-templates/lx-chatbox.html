@@ -6,7 +6,8 @@
             <div class="cl-match-element-to-video-sizing" style="display:inline-block">
                 <div class="row cl-row-no-xs-margins">
                     <div class="col-md-10 col-lg-8 cl-col-no-xs-padding">
-                        <div class="panel panel-primary cl-panel-xs-margin cl-transition-border-fast-easing">
+
+                        <div class="panel  cl-panel-xs-margin cl-transition-border-fast-easing"  ng-class="videoSignalingObject.remoteUserId ? 'panel-primary' : 'panel-waiting'">
 
                             <div class="panel-heading cl-transition-opacity-fast-easing">
                                 <span class="icon-lx-chat-bubble-dual"></span>Chat room:
@@ -23,6 +24,7 @@
                                 <form name="sendMessageForm" role="form" novalidate>
                                     <div class="input-group">
                                         <input class="form-control input-sm"
+                                               ng-class="videoSignalingObject.remoteUserId ? '' : 'cl-warning-input-glow'"
                                                name="messageInputElem"
                                                placeholder="Type your message here..."
                                                ng-model="inputMessageString"

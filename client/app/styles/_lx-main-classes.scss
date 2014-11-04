@@ -165,3 +165,7 @@ $transition-border-fast-easing-string: border $fast-easing-delay ease;
 .cl-text-danger {
   color: $brand-danger;
 }
+
+.panel-waiting {
+  @include panel-variant($panel-waiting-border, $panel-waiting-text, $panel-waiting-heading-bg, $panel-waiting-border);
+}

@@ -5,6 +5,11 @@ $brand-primary-lighter: #daf6fd;
 $brand-danger-lighter: #fee;
 
 
+$panel-waiting-text: #594625 !default;
+$panel-waiting-bg: #ffb307 !default;
+$panel-waiting-border: #bbb !default;
+$panel-waiting-heading-bg: #ffb307;
+
 /* The following section defines the width of the video elements for various viewport sizes.
    note that for sm and larger devices, two video elements are shown side-by-side. This means that
    we also have to account for two gutter widths (1/2 on left and right side of screen, and 1 between
