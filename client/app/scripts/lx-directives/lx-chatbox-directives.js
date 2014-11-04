@@ -21,6 +21,7 @@ angular.module('lxChatbox.directives', [])
             restrict: 'A',
             link: function (scope, elem) {
 
+                var numMessagesReceivedSinceWindowLastActive = 0;
                 var chatPanelBody = angular.element(elem).parent();
                 var chatPanelHeadingElement = chatPanelBody.prev();
                 var chatPanel = chatPanelBody.parent();
@@ -83,9 +84,25 @@ angular.module('lxChatbox.directives', [])
                     }
                 });
 
+                var window_focus;
+
+                $(window).focus(function() {
+                    window_focus = true;
+                    numMessagesReceivedSinceWindowLastActive = 0;
+                    document.title = $('#id-document-title-div').text();
+                }).blur(function() {
+                    window_focus = false;
+                });
+
+
                 scope.$watch('chatMessageObject.receivedMessageStringTime', function(newValue) {
                     if (scope.chatMessageObject.receivedMessageString) {
                         addMessageToDisplay(scope.chatMessageObject.receivedMessageString, 'right', true);
+                        numMessagesReceivedSinceWindowLastActive ++;
+
+                        if (!window_focus) {
+                            document.title = '(' + numMessagesReceivedSinceWindowLastActive + ') ' + $('#id-document-title-div').text();
+                        }
                     }
                 });
             }
