@@ -43,6 +43,8 @@ angular.module('lxChatbox.controllers', [])
 
                     $scope.sendMessageStringTime = new Date().getTime();
                     $scope.sendMessageString = chatMessage;
+                    // clear the input box
+                    $scope.inputMessageString = '';
                 },
 
                 // message was not delivered to the server
@@ -57,8 +59,7 @@ angular.module('lxChatbox.controllers', [])
                 }
             );
 
-            // clear the input box
-            $scope.inputMessageString = '';
+
 
         };
     }

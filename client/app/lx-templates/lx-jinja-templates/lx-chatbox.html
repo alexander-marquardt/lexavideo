@@ -24,7 +24,7 @@
                                 <form name="sendMessageForm" role="form" novalidate>
                                     <div class="input-group">
                                         <input class="form-control input-sm"
-                                               ng-class="videoSignalingObject.remoteUserId ? '' : 'cl-warning-input-glow'"
+                                               ng-class="videoSignalingObject.remoteUserId ? '' : 'cl-invalid-input-glow'"
                                                name="messageInputElem"
                                                placeholder="Type your message here..."
                                                ng-model="inputMessageString"
@@ -37,7 +37,8 @@
 
                                         <span class="input-group-btn">
                                             <button ng-click="sendChatMessageFn()"
-                                                    class="btn btn-primary btn-sm"
+                                                    class="btn  btn-sm"
+                                                    ng-class="videoSignalingObject.remoteUserId ? 'btn-primary' : 'btn-danger'"
                                                     ng-disabled="sendMessageForm.$invalid">
                                                 Send
                                             </button>

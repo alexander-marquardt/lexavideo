@@ -5,10 +5,10 @@ $brand-primary-lighter: #daf6fd;
 $brand-danger-lighter: #fee;
 
 
-$panel-waiting-text: #594625 !default;
-$panel-waiting-bg: #ffb307 !default;
+$panel-waiting-text: white !default;
+$panel-waiting-bg: $brand-danger !default;
 $panel-waiting-border: #bbb !default;
-$panel-waiting-heading-bg: #ffb307;
+$panel-waiting-heading-bg: $brand-danger;
 
 /* The following section defines the width of the video elements for various viewport sizes.
    note that for sm and larger devices, two video elements are shown side-by-side. This means that
