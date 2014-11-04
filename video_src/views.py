@@ -53,7 +53,7 @@ class UserChatRoomMain(webapp2.RequestHandler):
         server_video_params_json = webrtc_setup.get_video_params_json(room_name, user_agent)
         params = {
             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
-            'site_name' : constants.site_name,
+            'site_name_dot_com' : constants.site_name_dot_com,
             'videoConstantsEmbeddedInHtmlJson' : server_video_params_json}
         
         # update the self.response with the current view
@@ -71,7 +71,7 @@ class LandingPageMain(webapp2.RequestHandler):
 
         params = {
             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
-            'site_name' : constants.site_name,
+            'site_name_dot_com' : constants.site_name_dot_com,
             'redirect_after_error' : redirect_after_error,
             'bad_room_name' : bad_room_name,
             'error_string' : error_string,
