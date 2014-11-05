@@ -76,6 +76,25 @@ angular.module('lxChatbox.directives', [])
             }
         };
 
+        // Add classes that will make the chat panel "flash". Note that timeouts are necessary because
+        // css transitions work depending on the transition class being defined on the element before
+        // the actual transition event occurs.
+        var flashChatPanel = function(chatPanel, chatPanelHeadingElement) {
+            chatPanelHeadingElement.addClass('cl-transition-opacity');
+            $timeout(function() {
+                chatPanelHeadingElement.addClass('cl-flash-chat-heading');
+                chatPanel.addClass('cl-primary-color-glow');
+                $timeout(function() {
+                    chatPanelHeadingElement.removeClass('cl-flash-chat-heading');
+                    chatPanel.removeClass('cl-primary-color-glow');
+
+                    $timeout(function() {
+                        chatPanelHeadingElement.removeClass('cl-transition-opacity');
+                    }, flashChatboxNotificationTime);
+                }, flashChatboxNotificationTime);
+
+            })
+        };
 
         return {
             restrict: 'A',
@@ -97,13 +116,7 @@ angular.module('lxChatbox.directives', [])
                     // The following code will "flash" the chat panel heading when the user is not looking at the bottom
                     // of their chat messages - this should help them notice when new messages have been received.
                     if (!scope.chatPanelIsGlued) {
-                        chatPanelHeadingElement.addClass('cl-flash-chat-heading');
-                        chatPanel.addClass('cl-primary-color-glow');
-
-                        $timeout(function() {
-                            chatPanelHeadingElement.removeClass('cl-flash-chat-heading');
-                            chatPanel.removeClass('cl-primary-color-glow');
-                        }, flashChatboxNotificationTime);
+                        flashChatPanel(chatPanel, chatPanelHeadingElement);
                     }
 
                     var outerElement = angular.element('<div class="cl-fade-in-chat-bubble-element">');

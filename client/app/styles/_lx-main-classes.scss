@@ -144,17 +144,26 @@
 
 $fast-easing-delay: 0.35s;
 
-$transition-string: opacity $fast-easing-delay ease-in-out;
-.cl-transition-opacity-fast-easing {
-  -webkit-transition: $transition-string;
-  -moz-transition: $transition-string;
-  -ms-transition: $transition-string;
-  -o-transition: $transition-string;
-  transition: $transition-string;
+$transition-background-color-string: background-color $fast-easing-delay ease;
+.cl-transition-background-color {
+  -webkit-transition: $transition-background-color-string;
+  -moz-transition: $transition-background-color-string;
+  -ms-transition: $transition-background-color-string;
+  -o-transition: $transition-background-color-string;
+  transition: $transition-background-color-string;
+}
+
+$transition-opacity-string: opacity $fast-easing-delay ease;
+.cl-transition-opacity {
+  -webkit-transition: $transition-opacity-string;
+  -moz-transition: $transition-opacity-string;
+  -ms-transition: $transition-opacity-string;
+  -o-transition: $transition-opacity-string;
+  transition: $transition-opacity-string;
 }
 
 $transition-border-fast-easing-string: border $fast-easing-delay ease;
-.cl-transition-border-fast-easing {
+.cl-transition-border {
   -webkit-transition: $transition-border-fast-easing-string;
   -moz-transition: $transition-border-fast-easing-string;
   -ms-transition: $transition-border-fast-easing-string;
