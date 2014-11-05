@@ -134,12 +134,12 @@
 
 
 .cl-fade-in-chat-bubble-element {
-  opacity:0.5;
-  -webkit-transition: opacity 1s ease-in;
-  -moz-transition: opacity 1s ease-in;
-  -ms-transition: opacity 1s ease-in;
-  -o-transition: opacity 1s ease-in;
-  transition: opacity 1s ease-in;
+  opacity:0.3;
+  -webkit-transition: opacity 0.6s ease-out;
+  -moz-transition: opacity 0.6s ease-out;
+  -ms-transition: opacity 0.6s ease-out;
+  -o-transition: opacity 0.6s ease-out;
+  transition: opacity 0.6s ease-out;
 }
 
 .cl-fade-in-chat-bubble-element.cl-show-new-chat-bubble-element {
