@@ -49,32 +49,31 @@ angular.module('lxChatbox.directives', [])
             if (!windowFocus) {
                 document.title = '(' + numMessagesReceivedSinceWindowLastActive + ') ' + $('#id-document-title-div').text();
 
-                if (timerId) {
-                    // a previous timer was running, so we remove it.
-                    $timeout.cancel(timerId);
+                // check to see if the title is already flashing by seeing if timerId has been set. If it is already
+                // flashing, then don't star any new timer-loops. 
+                if (!timerId) {
+                    // don't start flashing until 10 seconds have passed.
+                    var timeoutDelay = 10000;
+                    // the following timer is used for switching between the title with and without the number of
+                    // new messages included in the title.
+                    var timeoutFn = function () {
+                        timerId = $timeout(function () {
+                            if (numMessagesIsShownToggle) {
+                                document.title = $('#id-document-title-div').text();
+
+                            } else {
+                                // the arrow is now shown, display it for a while
+                                document.title = '(' + numMessagesReceivedSinceWindowLastActive + ') ' + $('#id-document-title-div').text();
+                            }
+                            numMessagesIsShownToggle = !numMessagesIsShownToggle;
+                            // after initial wait, start flashing every 2 seconds.
+                            timeoutDelay = 1000;
+
+                            timeoutFn();
+                        }, timeoutDelay);
+                    };
+                    timeoutFn();
                 }
-
-                // don't start flashing until 10 seconds have passed.
-                var timeoutDelay = 10000;
-                // the following timer is used for switching between the title with and without the number of
-                // new messages included in the title.
-                var timeoutFn = function () {
-                    timerId = $timeout(function () {
-                        if (numMessagesIsShownToggle) {
-                            document.title = $('#id-document-title-div').text();
-
-                        } else {
-                            // the arrow is now shown, display it for a while
-                            document.title = '(' + numMessagesReceivedSinceWindowLastActive + ') ' + $('#id-document-title-div').text();
-                        }
-                        numMessagesIsShownToggle = !numMessagesIsShownToggle;
-                        // after initial wait, start flashing every 2 seconds.
-                        timeoutDelay = 1000;
-
-                        timeoutFn();
-                    }, timeoutDelay);
-                };
-                timeoutFn();
             }
             // otherwise the user is currently looking at the window, and so we make sure that the
             // display does not show number of messages and that the timer and counter are reset.
