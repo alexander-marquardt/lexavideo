@@ -21,6 +21,7 @@ angular.module('lxChatbox.directives', [])
             restrict: 'A',
             link: function (scope, elem) {
 
+                var window_focus;
                 var numMessagesReceivedSinceWindowLastActive = 0;
                 var chatPanelBody = angular.element(elem).parent();
                 var chatPanelHeadingElement = chatPanelBody.prev();
@@ -71,14 +72,23 @@ angular.module('lxChatbox.directives', [])
                     });
                 };
 
-                var window_focus;
+
+                // function that removes the message counter from the document title, and resets the
+                // message counter back to zero.
+                var resetDocumentTitleToDefault = function() {
+                    numMessagesReceivedSinceWindowLastActive = 0;
+                    document.title = $('#id-document-title-div').text();
+                    // remove blinking of the number of messages
+                    $timeout.cancel(timerId);
+                };
+
+
+                // self-executing function that monitors the window to see if it has focus, and set the window_focus
+                // variable appropriately
                 (function setWindowFocus() {
                     $(window).focus(function() {
                         window_focus = true;
-                        numMessagesReceivedSinceWindowLastActive = 0;
-                        document.title = $('#id-document-title-div').text();
-                        // remove blinking of the number of messages
-                        $timeout.cancel(timerId);
+                        resetDocumentTitleToDefault();
                     }).blur(function() {
                         window_focus = false;
                     });
@@ -120,6 +130,11 @@ angular.module('lxChatbox.directives', [])
                             }, timeoutDelay);
                         };
                         timeoutFn();
+                    }
+                    // otherwise the user is currently looking at the window, and so we make sure that the
+                    // display does not show number of messages and that the timer and counter are reset.
+                    else {
+                        resetDocumentTitleToDefault();
                     }
                 };
 
