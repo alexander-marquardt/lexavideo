@@ -93,7 +93,7 @@ angular.module('lxChatbox.directives', [])
                     }, flashChatboxNotificationTime);
                 }, flashChatboxNotificationTime);
 
-            })
+            });
         };
 
         return {
