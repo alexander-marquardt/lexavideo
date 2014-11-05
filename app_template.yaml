@@ -125,6 +125,7 @@ handlers:
 
 inbound_services:
 - channel_presence
+- warmup
 
 libraries:
 - name: jinja2
