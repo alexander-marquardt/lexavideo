@@ -22,7 +22,9 @@ angular.module('lxUtility.services', [])
         // pad integers with zeros if necessary. ie. 6 seconds would be displayed as 06 seconds.
         function zfill(number, size) {
           number = number.toString();
-          while (number.length < size) number = "0" + number;
+          while (number.length < size) {
+              number = '0' + number;
+          }
           return number;
         }
 
@@ -39,7 +41,7 @@ angular.module('lxUtility.services', [])
                 var currentTimeString = h + ':' + m + ':' + s;
                 return currentTimeString;
             }
-        }
+        };
     });
 
 
