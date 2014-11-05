@@ -80,20 +80,13 @@ angular.module('lxChatbox.directives', [])
         // css transitions work depending on the transition class being defined on the element before
         // the actual transition event occurs.
         var flashChatPanel = function(chatPanel, chatPanelHeadingElement) {
-            chatPanelHeadingElement.addClass('cl-transition-opacity');
+            chatPanelHeadingElement.addClass('cl-flash-chat-heading');
+            chatPanel.addClass('cl-primary-color-glow');
             $timeout(function() {
-                chatPanelHeadingElement.addClass('cl-flash-chat-heading');
-                chatPanel.addClass('cl-primary-color-glow');
-                $timeout(function() {
-                    chatPanelHeadingElement.removeClass('cl-flash-chat-heading');
-                    chatPanel.removeClass('cl-primary-color-glow');
+                chatPanelHeadingElement.removeClass('cl-flash-chat-heading');
+                chatPanel.removeClass('cl-primary-color-glow');
+            }, flashChatboxNotificationTime);
 
-                    $timeout(function() {
-                        chatPanelHeadingElement.removeClass('cl-transition-opacity');
-                    }, flashChatboxNotificationTime);
-                }, flashChatboxNotificationTime);
-
-            });
         };
 
         return {
