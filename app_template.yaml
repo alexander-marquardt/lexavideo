@@ -12,6 +12,9 @@ handlers:
 - url: /images
   static_dir: BASE_STATIC_DIR/images
 
+- url: /sounds
+  static_dir: BASE_STATIC_DIR/sounds
+
 - url: /scripts
   static_dir: BASE_STATIC_DIR/scripts
   

@@ -41,6 +41,24 @@ angular.module('lxChatbox.directives', [])
             });
         })();
 
+        var canPlayMp3 = false;
+        (function setCanPlayMp3Boolean() {
+            var fakeAudioElement = document.createElement('audio');
+            if (fakeAudioElement.canPlayType) {
+                if (fakeAudioElement.canPlayType('audio/mpeg')) {
+                    canPlayMp3 = true;
+                }
+            }
+        })();
+
+        var playSoundOnMessage = function() {
+            if (canPlayMp3) {
+                var sound = new Audio("/sounds/croak.mp3");
+                sound.volume = 0.3;
+                sound.play();
+            }
+        };
+
         // Displays the number of messages received in the document title , and flashes the
         // number of messages to get the users attention.
         var showNumMessagesInDocumentTitle = function() {
@@ -159,6 +177,7 @@ angular.module('lxChatbox.directives', [])
                         if (!windowFocus) {
                             numMessagesReceivedSinceLastWindowFocus++;
                             showNumMessagesInDocumentTitle();
+                            playSoundOnMessage();
                         } else {
                             numMessagesReceivedSinceLastWindowFocus = 0;
                         }
