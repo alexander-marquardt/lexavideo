@@ -18,7 +18,7 @@ angular.module('lxAccessSystemResources.services', [])
              lxCheckCompatibilityService,
              lxModalSupportService) {
 
-        var timerId;
+        var showArrowTimerId = null;
         var currentModalInstance = null;
 
         // initially define the watchers as dummy functions, so that they can be "de-registered" even if they were not
@@ -37,9 +37,10 @@ angular.module('lxAccessSystemResources.services', [])
             }
         };
 
-        var showArrowPointingToWhereUserShouldLook = function(scope, arrowElem, videoSignalingObject) {
+        var showArrowPointingToWhereUserShouldLook = function(scope, videoSignalingObject) {
             var arrowClass = '';
             var timeoutInMilliseconds = 0;
+            var arrowElem = null;
 
             if ($.browser.name === 'chrome') {
                 if ($.browser.platform === 'mac') {
@@ -71,9 +72,12 @@ angular.module('lxAccessSystemResources.services', [])
                 }
             }
 
+            // only show the arrow if the arrowClass has been defined -- if it has not been defined, then
+            // no arrow should be shown.
             if (arrowClass !== '') {
-                // only show the arrow if the arrowClass has been defined -- if it has not been defined, then
-                // no arrow should be shown.
+
+                arrowElem = angular.element('<div class="cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
+                $('body').append(arrowElem);
                 arrowElem.addClass(arrowClass);
 
                 if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
@@ -82,14 +86,17 @@ angular.module('lxAccessSystemResources.services', [])
 
                 if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'allowAccess') {
 
-                    $log.log('starting arrow timer');
-                    if (timerId) {
+
+                    if (showArrowTimerId) {
+                        $log.debug('removing old arrow timer');
                         // a previous timer was running, so we remove it.
-                        removeArrowAndAssociatedWatchers(arrowElem);
+                        $timeout.cancel(showArrowTimerId);
+                        showArrowTimerId = null;
                     }
 
+                    $log.debug('starting arrow timer');
                     var timeoutFn = function() {
-                        timerId = $timeout(function() {
+                        showArrowTimerId = $timeout(function() {
                             if (arrowElem.hasClass('cl-show-arrow')) {
                                 arrowElem.removeClass('cl-show-arrow');
                                 timeoutInMilliseconds = 3000;
@@ -108,6 +115,7 @@ angular.module('lxAccessSystemResources.services', [])
                 removeArrowAndAssociatedWatchers(arrowElem);
             }
 
+            return arrowElem;
         };
 
 
@@ -245,10 +253,17 @@ angular.module('lxAccessSystemResources.services', [])
 
 
         var removeArrowAndAssociatedWatchers = function(arrowElem) {
-            arrowElem.removeClass('cl-show-arrow');
-            // cancel timer that is no longer required
             $log.log('removing arrow and watchers');
-            $timeout.cancel(timerId);
+
+            if (arrowElem !== null) {
+                arrowElem.remove();
+            }
+            // cancel timer that is no longer required
+            if (showArrowTimerId) {
+                $log.debug('canceling old arrow timer');
+                $timeout.cancel(showArrowTimerId);
+                showArrowTimerId = null;
+            }
         };
 
         var removeModalWatcher = function() {
@@ -294,9 +309,7 @@ angular.module('lxAccessSystemResources.services', [])
                 // lx-check-compatibility-directives, which would have told them what they need to do to access the site.
                 if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
 
-
-                    var arrowElem = angular.element('<div class="cl-arrow"><span class="icon-lx-arrow-up"></span></div>');
-                    $('body').append(arrowElem);
+                    var arrowElem = null;
 
                     askForPermissionToCameraAndMicrophone(localVideoObject, remoteVideoObject, videoSignalingObject);
 
@@ -308,7 +321,7 @@ angular.module('lxAccessSystemResources.services', [])
 
                             if (whichModalIsOpen !== null) {
                                 $log.log('showing arrow pointing to accept button. whichModalIsOpen is: ' + whichModalIsOpen);
-                                showArrowPointingToWhereUserShouldLook(scope, arrowElem, videoSignalingObject);
+                                arrowElem = showArrowPointingToWhereUserShouldLook(scope, videoSignalingObject);
                             } else {
                                 // no dialog is shown, so no arrow needs to be shown either.
                                 removeArrowAndAssociatedWatchers(arrowElem);
@@ -318,9 +331,9 @@ angular.module('lxAccessSystemResources.services', [])
                     watchLocalUserAccessCameraAndMicrophoneStatus =
                         scope.$watch(watchCameraStatus(scope), function(cameraStatus, previousCameraStatus) {
                             $log.info('cameraStatus is: ' + cameraStatus + ' previousCameraStatus: ' + previousCameraStatus);
+                            removeArrowAndAssociatedWatchers(arrowElem);
+
                             if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
-                                // access has been given, no need to show arrows pointing to camera icons and allow buttons
-                                removeArrowAndAssociatedWatchers(arrowElem);
                                 removeModalWatcher();
                                 arrowElem.remove(); // take the arrow out of the dom completely
                                 lxModalSupportService.closeModal(currentModalInstance); // remove most recent modal box
