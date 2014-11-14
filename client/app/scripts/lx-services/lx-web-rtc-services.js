@@ -554,7 +554,7 @@ webRtcServices.factory('lxMediaService',
                     } 
 
                     else {
-                        $log.debug('getUserMedia request has already been made, and so we are not making a new call to getUserMedia')
+                        $log.debug('getUserMedia request has already been made, and so we are not making a new call to getUserMedia');
                     }
 
                 } catch (e) {
