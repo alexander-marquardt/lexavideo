@@ -540,12 +540,22 @@ webRtcServices.factory('lxMediaService',
             doGetUserMedia  : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
                 // Call into getUserMedia via the polyfill (adapter.js).
                 try {
-                    lxAdapterService.getUserMedia(lxUseChatRoomConstantsService.mediaConstraints,
-                        onUserMediaSuccess(localVideoObject, remoteVideoObject, videoSignalingObject),
-                        onUserMediaError(videoSignalingObject));
-                    $log.log('Requested access to local media with mediaConstraints:\n' +
-                        '  \'' + JSON.stringify(lxUseChatRoomConstantsService.mediaConstraints) + '\'');
-                    videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'waitingForResponse';
+
+                    // if we have already made a request to access the camera, then don't make another one while we are
+                    // still waiting for the response -- this would cause multiple "Allow" buttons to be stacked on each
+                    // other in the containing browser.
+                    if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'waitingForResponse') {
+                        lxAdapterService.getUserMedia(lxUseChatRoomConstantsService.mediaConstraints,
+                            onUserMediaSuccess(localVideoObject, remoteVideoObject, videoSignalingObject),
+                            onUserMediaError(videoSignalingObject));
+                        $log.debug('Requested access to local media with mediaConstraints:\n' +
+                            '  \'' + JSON.stringify(lxUseChatRoomConstantsService.mediaConstraints) + '\'');
+                        videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'waitingForResponse';
+                    } 
+
+                    else {
+                        $log.debug('getUserMedia request has already been made, and so we are not making a new call to getUserMedia')
+                    }
 
                 } catch (e) {
                     e.message = '\n\tError in doGetUserMedia\n\t' + e.message;
