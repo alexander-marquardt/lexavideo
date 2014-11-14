@@ -35,9 +35,9 @@ angular.module('lxCheckCompatibility.services', [])
             var chromeRequiredVersion = 30;
             var operaRequiredVersion = 20;
 
-            if ($.browser.mozilla && $.browser.version <  mozillaRequiredVersion ||
-                $.browser.chrome && $.browser.version < chromeRequiredVersion ||
-                $.browser.opera && $.browser.version < operaRequiredVersion) {
+            if ($.browser.mozilla && $.browser.versionNumber <  mozillaRequiredVersion ||
+                $.browser.chrome && $.browser.versionNumber < chromeRequiredVersion ||
+                $.browser.opera && $.browser.versionNumber < operaRequiredVersion) {
                 // The users browser is out of date and needs to be updated before they can access the website.
                 return false;
             } else {
