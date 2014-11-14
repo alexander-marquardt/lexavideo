@@ -17,6 +17,17 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         lxVideoSettingsNegotiationService) {
 
 
+    var messageFadeTimerId = null;
+
+
+    var cancelFadeTimer = function() {
+        // Cancel any existing timers to prevent messages from fading away when they should not
+        if (messageFadeTimerId) {
+            $timeout.cancel(messageFadeTimerId);
+            messageFadeTimerId = null;
+        }
+    };
+
     var  showMessageInVideoWindow = function(scope, elem, message, fadeAwayTime) {
         elem.find('.navbar-text').remove(); // just in case there is already text there, remove the previous element
         $animate.removeClass(elem, 'ng-hide');
@@ -26,10 +37,12 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         var compiledEl = $compile(el)(scope);
         elem.append(compiledEl);
 
+        cancelFadeTimer();
+
         if (fadeAwayTime !== undefined) {
             // Make the message disappear after a certain amount of time in ms. Otherwise it will
             // stay until it is removed.
-            $timeout(function() {
+            messageFadeTimerId = $timeout(function() {
                 $animate.addClass(elem, 'ng-hide');
             }, fadeAwayTime);
         }
@@ -45,6 +58,11 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         // if the other user has requested an hdVideo session, the local user must accept before we will
         // send and receive HD video.
 
+
+        // make sure that there are no timers set that would fade-away the request/information displayed that is
+        // prompting the user to accept/deny a change to the video format.
+        cancelFadeTimer();
+
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
         var el = angular.element('<p class="navbar-text"/>');
@@ -56,6 +74,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         elem.append(el, buttonGroup);
 
         yesButton.on('click', function() {
+            $log.debug('Change video type accepted');
+
             var message;
 
             scope.$apply(function() {
@@ -80,6 +100,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         });
 
         noButton.on('click', function() {
+            $log.debug('Change video type denied');
+
             scope.$apply(function() {
                 lxVideoSettingsNegotiationService.negotiateVideoType.sendDenyOfVideoType(videoType);
                 $animate.addClass(elem, 'ng-hide');
@@ -125,6 +147,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         break;
 
                     case 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType:
+                        // message here is just for  $log.debug called after the end of this switch block
+                        message = 'received remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
                         showRequestForChangeVideoType(scope, navelem, remoteSignalingStatus.videoType);
                         break;
 
@@ -168,12 +192,16 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         break;
 
                     case null:
+                        message = 'null videoSignalingStatusForUserFeedback received - removing message in video window';
                         removeMessageInVideoWindow(scope, navelem);
                         break;
 
                     default:
-                        $log.error('Unknown videoWindowSignalingMessage value: ' + newValue);
+                        message = 'Unknown videoWindowSignalingMessage value: ' + newValue;
+                        $log.error(message);
                 }
+
+                $log.debug(message);
             });
         }
     };
