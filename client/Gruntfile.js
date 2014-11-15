@@ -298,6 +298,7 @@ module.exports = function (grunt) {
                         '*.html',
                         'lx-templates/{,*/}*.html',
                         'images/{,*/}*.{webp}',
+                        'sounds/{,*}*.*',
                         'fonts/*'
                     ]
                 }, {
