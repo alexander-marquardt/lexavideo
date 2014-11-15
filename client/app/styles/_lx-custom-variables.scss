@@ -27,22 +27,22 @@ $md-vid-width: ($container-md - $grid-gutter-width * 2) / 2;
 $lg-vid-width : ($container-lg - $grid-gutter-width *2) / 2;
 
 // these are some of the more common viewport sizes for mobile browsers.
-$xs-viewport-sizes-list: 320px, 360px, 400px, 480px, 600px;
+$xs-viewport-widths-list: 320px, 360px, 400px, 480px, 600px;
 
 // setup the video window sizes that are associated with the above viewport sizes.
-$xs-video-sizes-list: ();
-@each $viewport-size in $xs-viewport-sizes-list {
+$xs-video-widths-list: ();
+@each $viewport-size in $xs-viewport-widths-list {
   $video-size: $viewport-size - $scrollbar-width;
-  $xs-video-sizes-list: append($xs-video-sizes-list, $video-size);
+  $xs-video-widths-list: append($xs-video-widths-list, $video-size);
 }
 
 // As the viewport size changes, we change the size of the video windows. Also, once the size
 // gets through sm or larger, we place two windows side-by-side instead of one embedded inside the other.
-$viewport-sizes-list: join($xs-viewport-sizes-list, ($screen-sm-min, $screen-md-min, $screen-lg-min));
+$viewport-widths-list: join($xs-viewport-widths-list, ($screen-sm-min, $screen-md-min, $screen-lg-min));
 
 // Take into account if there is only a single video window, or if there are two windows side-by-side
-$video-sizes-list: join($xs-video-sizes-list, ($sm-vid-width, $md-vid-width, $lg-vid-width));
+$video-widths-list: join($xs-video-widths-list, ($sm-vid-width, $md-vid-width, $lg-vid-width));
 
 // This list takes into account the total width of the video elements, and can be used for matching
 // other elements to the exact width required by the video elements.
-$video-column-width-list: join($xs-video-sizes-list, ($container-sm - $grid-gutter-width, $container-md - $grid-gutter-width, $container-lg - $grid-gutter-width));
+$video-column-width-list: join($xs-video-widths-list, ($container-sm - $grid-gutter-width, $container-md - $grid-gutter-width, $container-lg - $grid-gutter-width));

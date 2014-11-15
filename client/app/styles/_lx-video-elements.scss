@@ -14,18 +14,18 @@ $characters-per-row : 80;
 }
 
 @mixin generate-video-sizing() {
-  @for $idx from 2 through length($viewport-sizes-list) {
-    @media (min-width: nth($viewport-sizes-list, $idx)) {
-      width: nth($video-sizes-list, $idx);
-      height: nth($video-sizes-list, $idx) * $video-aspect-ratio;
+  @for $idx from 2 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
+      width: nth($video-widths-list, $idx);
+      height: nth($video-widths-list, $idx) * $video-aspect-ratio;
     }
   }
 }
 
 .cl-video-sizing {
   box-sizing: border-box;
-  width: nth($video-sizes-list, 1);
-  height: nth($video-sizes-list, 1) * $video-aspect-ratio;
+  width: nth($video-widths-list, 1);
+  height: nth($video-widths-list, 1) * $video-aspect-ratio;
 
   @include generate-video-sizing();
 }
@@ -69,10 +69,10 @@ video {
 
 
 @mixin generate-ascii-container-sizing() {
-  @for $idx from 2 through length($xs-viewport-sizes-list) {
-    @media (min-width: nth($viewport-sizes-list, $idx)) {
-      width: ($mini-video-width-percentage / 100%) * nth($video-sizes-list, $idx);
-      height: ($mini-video-width-percentage / 100%) * nth($video-sizes-list, $idx) * $video-aspect-ratio;
+  @for $idx from 2 through length($xs-viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
+      width: ($mini-video-width-percentage / 100%) * nth($video-widths-list, $idx);
+      height: ($mini-video-width-percentage / 100%) * nth($video-widths-list, $idx) * $video-aspect-ratio;
     }
   }
 }
@@ -81,8 +81,8 @@ video {
 .cl-mini-ascii-container-sizing {
   box-sizing: border-box;
 
-  width: ($mini-video-width-percentage / 100%) * nth($video-sizes-list, 1);
-  height: ($mini-video-width-percentage / 100%) * nth($video-sizes-list, 1) * $video-aspect-ratio;
+  width: ($mini-video-width-percentage / 100%) * nth($video-widths-list, 1);
+  height: ($mini-video-width-percentage / 100%) * nth($video-widths-list, 1) * $video-aspect-ratio;
 
   @include generate-ascii-container-sizing();
 }
@@ -95,10 +95,10 @@ video {
 
 
 @mixin generate-ascii-normal-span() {
-  @for $idx from 2 through length($viewport-sizes-list) {
-    @media (min-width: nth($viewport-sizes-list, $idx)) {
-      font-size: nth($video-sizes-list, $idx) / $characters-per-row;
-      line-height: nth($video-sizes-list, $idx) / $characters-per-row;
+  @for $idx from 2 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
+      font-size: nth($video-widths-list, $idx) / $characters-per-row;
+      line-height: nth($video-widths-list, $idx) / $characters-per-row;
     }
   }
 }
@@ -106,18 +106,18 @@ video {
 .cl-ascii-normal-span {
   box-sizing: border-box;
 
-  font-size: nth($video-sizes-list, 1) / $characters-per-row;
-  line-height: nth($video-sizes-list, 1) / $characters-per-row;
+  font-size: nth($video-widths-list, 1) / $characters-per-row;
+  line-height: nth($video-widths-list, 1) / $characters-per-row;
   letter-spacing: -0.1em;
 
   @include generate-ascii-normal-span();
 }
 
 @mixin generate-ascii-mini-span() {
-  @for $idx from 2 through length($xs-viewport-sizes-list) {
-    @media (min-width: nth($xs-viewport-sizes-list, $idx)) {
-      font-size: ($mini-video-width-percentage / 100%) * nth($video-sizes-list, $idx) / $characters-per-row;
-      line-height: ($mini-video-width-percentage / 100%) * nth($video-sizes-list, $idx) / $characters-per-row;
+  @for $idx from 2 through length($xs-viewport-widths-list) {
+    @media (min-width: nth($xs-viewport-widths-list, $idx)) {
+      font-size: ($mini-video-width-percentage / 100%) * nth($video-widths-list, $idx) / $characters-per-row;
+      line-height: ($mini-video-width-percentage / 100%) * nth($video-widths-list, $idx) / $characters-per-row;
     }
   }
 }
@@ -126,8 +126,8 @@ video {
   // This is applied when the ascii text is being shown in the "mini-video" window
   box-sizing: border-box;
 
-  font-size: ($mini-video-width-percentage / 100%) * (nth($video-sizes-list, 1) / $characters-per-row);
-  line-height:($mini-video-width-percentage / 100%) * (nth($video-sizes-list, 1) / $characters-per-row);
+  font-size: ($mini-video-width-percentage / 100%) * (nth($video-widths-list, 1) / $characters-per-row);
+  line-height:($mini-video-width-percentage / 100%) * (nth($video-widths-list, 1) / $characters-per-row);
   letter-spacing: -0.1em;
 
   @include generate-ascii-mini-span();

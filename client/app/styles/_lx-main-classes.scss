@@ -127,8 +127,8 @@
 
 
 @mixin generate-match-video-column-sizing() {
-  @for $idx from 2 through length($viewport-sizes-list) {
-    @media (min-width: nth($viewport-sizes-list, $idx)) {
+  @for $idx from 2 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
       width: nth($video-column-width-list, $idx);
     }
   }
