@@ -129,7 +129,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
     return {
         restrict: 'A',
-        template: '<nav class="navbar navbar-inverse navbar-fixed-bottom cl-navbar-absolute-bottom cl-show-hide-fade ng-hide" ></nav>',
+        template: '<nav class="navbar navbar-inverse navbar-fixed-top cl-navbar-video-overlay cl-show-hide-fade ng-hide" ></nav>',
         link : function(scope, elem) {
             var message;
             var navelem = angular.element(elem).find('nav.navbar');
@@ -154,7 +154,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
                     case 'waitingForRemoteToAcceptVideoType: ' +  localIsNegotiatingForVideoType:
                         message = 'We are waiting for remote user to accept your request to exchange ' + localIsNegotiatingForVideoType;
-                        showMessageInVideoWindow(scope, navelem, message);
+                        showMessageInVideoWindow(scope, navelem, message, 8000);
                         break;
 
                     case 'remoteHasSetVideoToAscii':
