@@ -125,9 +125,11 @@ angular.module('lxChatbox.directives', [])
 
 
                     // The following code will "flash" the chat panel heading when the user is not looking at the bottom
-                    // of their chat messages - this should help them notice when new messages have been received.
-                    if (!scope.chatPanelIsGlued) {
+                    // of their chat messages, or when the current window does not have focus.
+                    // This should help them notice when new messages have been received.
+                    if (!scope.chatPanelIsGlued || !windowFocus) {
                         flashChatPanel(chatPanel, chatPanelHeadingElement);
+                        playSoundOnMessage();
                     }
 
                     var outerElement = angular.element('<div class="cl-fade-in-chat-bubble-element">');
@@ -177,7 +179,7 @@ angular.module('lxChatbox.directives', [])
                         if (!windowFocus) {
                             numMessagesReceivedSinceLastWindowFocus++;
                             showNumMessagesInDocumentTitle();
-                            playSoundOnMessage();
+
                         } else {
                             numMessagesReceivedSinceLastWindowFocus = 0;
                         }
