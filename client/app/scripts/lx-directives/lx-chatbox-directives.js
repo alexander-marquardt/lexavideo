@@ -99,10 +99,10 @@ angular.module('lxChatbox.directives', [])
         // the actual transition event occurs.
         var flashChatPanel = function(chatPanel, chatPanelHeadingElement) {
             chatPanelHeadingElement.addClass('cl-flash-chat-heading');
-            chatPanel.addClass('cl-primary-color-glow');
+            chatPanel.addClass('cl-chatbox-glow');
             $timeout(function() {
                 chatPanelHeadingElement.removeClass('cl-flash-chat-heading');
-                chatPanel.removeClass('cl-primary-color-glow');
+                chatPanel.removeClass('cl-chatbox-glow');
             }, flashChatboxNotificationTime);
 
         };
