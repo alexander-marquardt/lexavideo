@@ -12,11 +12,12 @@ angular.module('lxChatbox.directives', [])
     function(
         $compile,
         $timeout,
+        lxSoundService,
         lxTimeService
         ) {
 
         var flashChatboxNotificationTime = 500; //ms
-        var windowFocus;
+        var windowFocus = true;
         var numMessagesReceivedSinceLastWindowFocus = 0;
         var numMessagesIsShownToggle = true;
         var timerId;
@@ -41,19 +42,10 @@ angular.module('lxChatbox.directives', [])
             });
         })();
 
-        var canPlayMp3 = false;
-        (function setCanPlayMp3Boolean() {
-            var fakeAudioElement = document.createElement('audio');
-            if (fakeAudioElement.canPlayType) {
-                if (fakeAudioElement.canPlayType('audio/mpeg')) {
-                    canPlayMp3 = true;
-                }
-            }
-        })();
 
         var playSoundOnMessage = function() {
-            if (canPlayMp3) {
-                var sound = new Audio("/sounds/croak.mp3");
+            if (lxSoundService.canPlayMp3) {
+                var sound = new Audio('/sounds/croak.mp3');
                 sound.volume = 0.3;
                 sound.play();
             }

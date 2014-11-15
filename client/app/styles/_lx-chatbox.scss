@@ -4,6 +4,13 @@
   color: #777777;
 }
 
+// This div is used to push the chat down to the bottom of the chat panel when there are just a few
+// chat messages sent. This makes it more likely that if the user is looking at the video that they
+// will see the new message.
+.cl-dummy-blank-div-in-chat-panel {
+  height: 162px;
+}
+
 .panel .slidedown .glyphicon, .chat .glyphicon
 {
     margin-right: 5px;

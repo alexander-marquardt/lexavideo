@@ -30,6 +30,10 @@ angular.module('lxChatbox.controllers', [])
 
         $scope.maxMsgLength = 5000;
 
+
+        // initially keep the chat panel glued so that the most recent messages are shown.
+        $scope.chatPanelIsGlued = true;
+
         $scope.sendChatMessageFn = function() {
 
             var chatMessage = $scope.inputMessageString ;
@@ -58,9 +62,6 @@ angular.module('lxChatbox.controllers', [])
                     }
                 }
             );
-
-
-
         };
     }
 );

@@ -42,6 +42,21 @@ angular.module('lxUtility.services', [])
                 return currentTimeString;
             }
         };
-    });
+    })
 
+    .factory('lxSoundService', function() {
+        var canPlayMp3 = false;
+        (function setCanPlayMp3Boolean() {
+            var fakeAudioElement = document.createElement('audio');
+            if (fakeAudioElement.canPlayType) {
+                if (fakeAudioElement.canPlayType('audio/mpeg')) {
+                    canPlayMp3 = true;
+                }
+            }
+        })();
+
+        return {
+            canPlayMp3: canPlayMp3
+        };
+    });
 
