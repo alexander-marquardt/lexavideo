@@ -7,7 +7,9 @@
                 <div class="row cl-row-no-xs-margins">
                     <div class="col-md-10 col-lg-8 cl-col-no-xs-padding">
 
-                        <div class="panel  cl-panel-xs-margin cl-transition-border"  ng-class="videoSignalingObject.remoteUserId ? 'panel-primary' : 'panel-waiting'">
+                        <div class="panel  cl-panel-xs-margin cl-transition-border"
+                             ng-class="videoSignalingObject.remoteUserId ? 'panel-primary' : 'panel-waiting'"
+                             ng-click="userHasAlreadyClickedInChatPanel = true">
 
                             <div class="panel-heading  cl-transition-opacity-and-background-color">
                                 <span class="icon-lx-chat-bubble-dual"></span>Chat room:

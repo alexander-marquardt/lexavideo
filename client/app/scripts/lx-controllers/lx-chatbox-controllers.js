@@ -34,6 +34,10 @@ angular.module('lxChatbox.controllers', [])
         // initially keep the chat panel glued so that the most recent messages are shown.
         $scope.chatPanelIsGlued = true;
 
+        // userHasClickedInChatPanelInput is used to give the user more flashes/sounds if they have not yet
+        // clicked in the chat panel input.
+        $scope.userHasAlreadyClickedInChatPanel = false;
+
         $scope.sendChatMessageFn = function() {
 
             var chatMessage = $scope.inputMessageString ;
