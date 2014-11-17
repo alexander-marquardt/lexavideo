@@ -56,9 +56,6 @@
         browser[ matched.browser ] = true;
         browser.version = matched.version;
         browser.versionNumber = parseInt(matched.version);
-        // browser.version is a string that may contain something like 23.233.23.55 which cannot easily be used for
-        // comparisons
-        browser.version = 'Don\'t use this unless you know what you are doing - temporarily disabled - use versionNumber instead'
     }
 
     if ( matched.platform ) {
