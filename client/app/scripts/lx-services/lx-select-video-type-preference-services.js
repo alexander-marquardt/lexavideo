@@ -19,29 +19,29 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
         lxWebRtcSessionService)
     {
 
-    var setVideoSignalingStatusForUserFeedback = function(videoSignalingObject, newValue) {
+    var setVideoSignalingStatusForUserFeedback = function(scope, newValue) {
 
         // if the user has not yet given access to their local stream, then this is the feedback message
         // that they will be shown.
         if (!lxStreamService.localStream) {
-            videoSignalingObject.videoSignalingStatusForUserFeedback = 'mustEnableVideoToStartTransmission';
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'mustEnableVideoToStartTransmission';
         }
 
         // if there is no remote user in the room, then indicate that they are not connected to anyone right now
-        else if (!videoSignalingObject.remoteUserId) {
-            videoSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
+        else if (!scope.roomOccupancyObject.remoteUserId) {
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
         }
 
         // else if the remote user has not yet given access to their camera and microphone, we show the local
         // user a message indicating that we are still waiting for the remote user to permit access.
-        else if (!videoSignalingObject.remoteIsSendingVideoType) {
-            videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
+        else if (!scope.videoSignalingObject.remoteIsSendingVideoType) {
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
         }
 
         // if the user has already given access to their local stream, then we can show them the
         // feedback that has been requested.
         else {
-            videoSignalingObject.videoSignalingStatusForUserFeedback = newValue;
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = newValue;
         }
     };
 
@@ -135,7 +135,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     // If the user was being shown a message telling them to enable their video, then we can now remove
                     // this message.
                     if (scope.videoSignalingObject.videoSignalingStatusForUserFeedback === 'mustEnableVideoToStartTransmission') {
-                        setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
+                        setVideoSignalingStatusForUserFeedback(scope, null);
                     }
                 }
             });
@@ -143,13 +143,13 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
             scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
 
                 if (remoteIsSendingVideoType === null) {
-                    setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'remoteHasNotEnabledVideoYet');
+                    setVideoSignalingStatusForUserFeedback(scope, 'remoteHasNotEnabledVideoYet');
                 }
                 else {
                     // if videoSignalingStatusForUserFeedback is 'remoteHasSetVideoToAscii' leave the message up
                     // until it fades away on its own (it has a timer associated with it).
                     if (scope.videoSignalingObject.videoSignalingStatusForUserFeedback !== 'remoteHasSetVideoToAscii') {
-                        setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
+                        setVideoSignalingStatusForUserFeedback(scope, null);
                     }
                 }
             });
@@ -163,13 +163,13 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 if (localIsNegotiatingForVideoType !== null) {
 
                     // Check if there is a remote user in the room
-                    if (scope.videoSignalingObject.remoteUserId) {
+                    if (scope.roomOccupancyObject.remoteUserId) {
 
                         if (localIsNegotiatingForVideoType === 'HD Video' || localIsNegotiatingForVideoType === 'ASCII Video') {
 
                             // remove the user feedback indicating that we are waiting for the remote user
                             // to accept HD video
-                            setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'waitingForRemoteToAcceptVideoType: ' + localIsNegotiatingForVideoType);
+                            setVideoSignalingStatusForUserFeedback(scope, 'waitingForRemoteToAcceptVideoType: ' + localIsNegotiatingForVideoType);
 
                             // No need to re-negotiate the videoType, since we have just set it back to a previous value due to
                             // a remote denial for a proposed new videoType.
@@ -184,7 +184,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     // The current user is alone in the room
                     else {
 
-                        setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
+                        setVideoSignalingStatusForUserFeedback(scope, null);
 
                         // Send an 'accept' of the selected videoType to the server -- this will cause the room
                         // to update it's value stored for 'currently_selected_video_type'. Future joiners to
@@ -201,7 +201,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
 
             // Monitor remoteUserId to track if the remote user is currently in the room, or out of it
-            scope.$watch('videoSignalingObject.remoteUserId', function(newRemoteUserId) {
+            scope.$watch('roomOccupancyObject.remoteUserId', function(newRemoteUserId) {
 
                 if (newRemoteUserId === null) {
 
@@ -214,7 +214,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     scope.videoSignalingObject.remoteIsSendingVideoType = null;
                 }
 
-                setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
+                setVideoSignalingStatusForUserFeedback(scope, null);
 
             });
 
@@ -266,12 +266,12 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         // If this is being executed as a result of the client automatically accepting the switch
                         // to Ascii video, then the user should be informed of what has just happened.
                         if (haveAutomaticallyAcceptedAsciiVideo) {
-                            setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'remoteHasSetVideoToAscii');
+                            setVideoSignalingStatusForUserFeedback(scope, 'remoteHasSetVideoToAscii');
                         }
                         // Otherwise, clear the user feedback in the video window since the client has switched to the
                         // videoType that the user has selected -- they don't need any extra feedback.
                         else {
-                            setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, null);
+                            setVideoSignalingStatusForUserFeedback(scope, null);
                         }
                     }
 
@@ -288,7 +288,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         // This prompting is triggered by the change in
                         // videoSignalingStatusForUserFeedback and is handled in the directive code.
                         if (remoteSignalingStatus.videoType === 'HD Video' || remoteSignalingStatus.videoType === 'ASCII Video') {
-                            setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType);
+                            setVideoSignalingStatusForUserFeedback(scope, 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType);
                         }
 
                         else {
@@ -301,7 +301,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 else if (remoteSignalingStatus.requestAcceptOrDenyVideoType === 'denyVideoType') {
 
                     $log.debug('Remote user has denied ' + remoteSignalingStatus.videoType);
-                    setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'remoteHasDeniedRequestToExchangeFormat: ' + remoteSignalingStatus.videoType);
+                    setVideoSignalingStatusForUserFeedback(scope, 'remoteHasDeniedRequestToExchangeFormat: ' + remoteSignalingStatus.videoType);
 
                     // since the request to transmit a new format was denied, change the localHasSelectedVideoType back
                     // to the type that is currently/previously being sent - this will change the button that the user
@@ -326,7 +326,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         scope.videoSignalingObject.localIsNegotiatingForVideoType = null;
 
                     } else {
-                        setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'conflictingVideoTypes');
+                        setVideoSignalingStatusForUserFeedback(scope, 'conflictingVideoTypes');
                         $log.warn('videoType mismatch.');
                     }
                 }

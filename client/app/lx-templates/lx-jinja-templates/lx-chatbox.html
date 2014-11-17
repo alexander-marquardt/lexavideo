@@ -8,15 +8,15 @@
                     <div class="col-md-10 col-lg-8 cl-col-no-xs-padding">
 
                         <div class="panel  cl-panel-xs-margin cl-transition-border"
-                             ng-class="videoSignalingObject.remoteUserId ? 'panel-primary' : 'panel-waiting'"
+                             ng-class="roomOccupancyObject.remoteUserId ? 'panel-primary' : 'panel-waiting'"
                              ng-click="userHasAlreadyClickedInChatPanel = true">
 
                             <div class="panel-heading  cl-transition-opacity-and-background-color">
                                 <span class="icon-lx-chat-bubble-dual"></span>Chat room:
 
-                                <span ng-show="!videoSignalingObject.remoteUserId">Waiting for someone to join ... </span>
-                                <span ng-show="videoSignalingObject.remoteUserName!=videoSignalingObject.remoteUserId">{{ videoSignalingObject.remoteUserName }} has joined</span>
-                                <span ng-show="videoSignalingObject.remoteUserId && videoSignalingObject.remoteUserName==videoSignalingObject.remoteUserId">Guest has joined</span>
+                                <span ng-show="!roomOccupancyObject.remoteUserId">Waiting for someone to join ... </span>
+                                <span ng-show="roomOccupancyObject.remoteUserName!=roomOccupancyObject.remoteUserId">{{ roomOccupancyObject.remoteUserName }} has joined</span>
+                                <span ng-show="roomOccupancyObject.remoteUserId && roomOccupancyObject.remoteUserName==roomOccupancyObject.remoteUserId">Guest has joined</span>
 
                             </div>
                             <div class="panel-body" scroll-glue="chatPanelIsGlued">
@@ -27,7 +27,7 @@
                                 <form name="sendMessageForm" role="form" novalidate>
                                     <div class="input-group">
                                         <input class="form-control input-sm"
-                                               ng-class="videoSignalingObject.remoteUserId ? '' : 'cl-invalid-input-glow'"
+                                               ng-class="roomOccupancyObject.remoteUserId ? '' : 'cl-invalid-input-glow'"
                                                name="messageInputElem"
                                                placeholder="Type your message here..."
                                                ng-model="inputMessageString"
@@ -41,7 +41,7 @@
                                         <span class="input-group-btn">
                                             <button ng-click="sendChatMessageFn()"
                                                     class="btn  btn-sm"
-                                                    ng-class="videoSignalingObject.remoteUserId ? 'btn-primary' : 'btn-danger'"
+                                                    ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'"
                                                     ng-disabled="sendMessageForm.$invalid">
                                                 Send
                                             </button>

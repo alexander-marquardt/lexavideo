@@ -66,6 +66,7 @@ angular.module('lxChannel.services', [])
                 var remoteVideoObject = scope.remoteVideoObject;
                 var videoSignalingObject = scope.videoSignalingObject;
                 var chatMessageObject = scope.chatMessageObject;
+                var roomOccupancyObject = scope.roomOccupancyObject;
 
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
@@ -138,8 +139,8 @@ angular.module('lxChannel.services', [])
                             if ('remoteUserId' in messageObject.messagePayload) {
                                 // Get the remoteUserId from the message payload - note that if there is no remote
                                 // user currently in the room, then this value will be null.
-                                videoSignalingObject.remoteUserId = messageObject.messagePayload.remoteUserId;
-                                videoSignalingObject.remoteUserName = messageObject.messagePayload.remoteUserName;
+                                roomOccupancyObject.remoteUserId = messageObject.messagePayload.remoteUserId;
+                                roomOccupancyObject.remoteUserName = messageObject.messagePayload.remoteUserName;
                             }
                             else {
                                 $log.error('remoteUserId not received in roomStatus messagePayload');

@@ -89,6 +89,12 @@ angular.module('lxUseChatRoom.controllers', [])
             isMicrophoneMuted: false
         };
 
+        $scope.roomOccupancyObject = {
+            // Once the remote user has joined the room, this will be modified to reflect their userId
+            remoteUserId: null,
+            remoteUserName: null
+        };
+
         $scope.videoSignalingObject = {
             /*
             We currently only modify the video stream transmission to hdVideo if both the local and remote users
@@ -117,9 +123,6 @@ angular.module('lxUseChatRoom.controllers', [])
 
             localUserAccessCameraAndMicrophoneStatus: 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
 
-            // Once the remote user has joined the room, this will be modified to reflect their userId
-            remoteUserId: null,
-            remoteUserName: null,
 
             // if the local user requests the remote user to change the video type, we track the remote response
             // so that we can give the local user feedback.

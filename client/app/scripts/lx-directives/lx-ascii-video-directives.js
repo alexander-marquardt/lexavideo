@@ -139,7 +139,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                 try {
                     if (scope.videoSignalingObject.localIsSendingVideoType === 'ASCII Video') {
                         localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
-                        onFrame(localCanvas, $localAsciiDrawingTextElement, scope.videoSignalingObject.remoteUserId);
+                        onFrame(localCanvas, $localAsciiDrawingTextElement, scope.roomOccupancyObject.remoteUserId);
                     }
                 } catch (e) {
                     $log.error('Error drawing image in canvas' + e);
