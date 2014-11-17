@@ -123,3 +123,42 @@ def send_room_occupancy_to_room_members(room_obj, user_id):
     message_obj['messagePayload']['remoteUserId'] = other_user_id
     logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
     on_message(room_obj, user_id, json.dumps(message_obj))
+
+
+
+@handle_exceptions
+def send_room_video_settings_to_room_members(room_obj):
+
+
+    video_enabled_ids = room_obj.video_enabled_ids
+
+    # Check if there are two people in the room that have enabled video, and if so send
+    # a message to each of them to start the webRtc negotiation.
+    length_of_video_enabled_ids = len(video_enabled_ids)
+    assert(length_of_video_enabled_ids <= 2)
+
+    is_initiator = False
+    if length_of_video_enabled_ids == 2:
+
+        for user_id in video_enabled_ids:
+            message_obj = {'messageType': 'roomInitialVideoSettings',
+                   'messagePayload': {
+                       'roomVideoType': room_obj.room_video_type,
+                       },
+                   }
+
+
+            # send a message to the other user (the client already in the room) that someone has just joined the room
+            logging.debug('Sending message to other_user: %s' % repr(message_obj))
+
+            # If there is already another user in the room, then the second person to connect will be the
+            # 'rtcInitiator'. By sending this 'rtcInitiator' value to the clients, this will re-initiate
+            # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
+            # once per session, unless the users become disconnected and need to re-connect.
+            message_obj['messagePayload']['rtcInitiator'] = is_initiator
+            logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
+            on_message(room_obj, user_id, json.dumps(message_obj))
+            is_initiator = not is_initiator
+
+    else:
+        logging.info('Not sending room video settings since user is alone in the room.')
