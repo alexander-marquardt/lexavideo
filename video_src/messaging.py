@@ -5,7 +5,9 @@ import logging
 from google.appengine.api import channel
 
 from video_src import models
+from error_handling import handle_exceptions
 
+@handle_exceptions
 def handle_message(room_obj, from_user_id, message):
     # This function passes a message from one user in a given "room" to the other user in the same room.
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
@@ -73,7 +75,8 @@ def handle_message(room_obj, from_user_id, message):
 #         channel.send_message(client_id, message.msg)
 #         logging.info('Delivered saved message to ' + client_id)
 #         message.key.delete()
-        
+
+@handle_exceptions
 def on_message(room_obj, to_user_id, message):
     to_client_id = room_obj.make_client_id(to_user_id)
 
@@ -86,3 +89,37 @@ def on_message(room_obj, to_user_id, message):
         logging.error('Unable to deliver message to user ' + to_client_id + ' since they are not connected to the room.')
         raise Exception('otherUserChannelNotConnected')
 
+
+# Sends information about who is in the room, and which client should be designated as the 'rtcInitiator'
+@handle_exceptions
+def send_room_occupancy_to_room_members(room_obj, user_id):
+    # This is called when a user either connects or disconnects from a room. It sends information
+    # to room members indicating the status of who is in the room.
+
+    other_user_id = room_obj.get_other_user_id(user_id)
+    other_user_name = None
+
+    message_obj = {'messageType': 'roomOccupancy',
+                   'messagePayload': {},
+                   }
+    user_obj = models.UserModel.get_by_id(user_id)
+    user_name = user_obj.user_name
+
+    # If there is already a user in the room, then they will be notified that a new user has just joined the room.
+    # Note that since we are sending the occupancy to the "other" user, we send the active users name and id
+    if other_user_id:
+        message_obj['messagePayload']['remoteUserName'] = user_name
+        message_obj['messagePayload']['remoteUserId'] = user_id
+        logging.info('Sending user %d room status %s' % (other_user_id, json.dumps(message_obj)))
+        on_message(room_obj, other_user_id, json.dumps(message_obj))
+
+        other_user_obj = models.UserModel.get_by_id(other_user_id)
+        other_user_name = other_user_obj.user_name
+
+
+    # Send a message to the active client, indicating the room occupancy. Note that since we are sending occupancy
+    # to the "active" usr, we send the "other" user name and id
+    message_obj['messagePayload']['remoteUserName'] = other_user_name
+    message_obj['messagePayload']['remoteUserId'] = other_user_id
+    logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
+    on_message(room_obj, user_id, json.dumps(message_obj))
