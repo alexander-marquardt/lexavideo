@@ -41,15 +41,17 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = reason;
         });
 
-        $scope.userName = lxAppWideConstantsService.userName;
-        $scope.userId = lxAppWideConstantsService.userId;
-        $scope.roomName = lxUseChatRoomConstantsService.roomName;
+
 
 
         $scope.roomOccupancyObject = {
             // Once the remote user has joined the room, this will be modified to reflect their userId
             remoteUserId: null,
-            remoteUserName: null
+            remoteUserName: null,
+
+            userName: lxAppWideConstantsService.userName,
+            userId: lxAppWideConstantsService.userId,
+            roomName: lxUseChatRoomConstantsService.roomName
         };
         
     })
