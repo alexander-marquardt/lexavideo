@@ -56,7 +56,8 @@ def handle_message(room_obj, from_user_id, message):
         on_message(room_obj, to_user_id, message)
 
     else:
-        logging.warning('Cannot deliver message from user: %s to other_user: %s since they are not in the room: %s' % (from_user_id, to_user_id, room_name))
+        logging.warning('Cannot deliver message type: %s from user: %s to other_user: %s since they are not in the room: %s' % (
+            message_type, from_user_id, to_user_id, room_name))
         raise Exception('otherUserNotInRoom')
         # For unittest
         #on_message(room, user, message)
