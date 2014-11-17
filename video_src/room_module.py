@@ -178,27 +178,48 @@ class MessagePage(webapp2.RequestHandler):
 
 # Sends information about who is in the room, and which client should be designated as the 'rtcInitiator'
 @handle_exceptions
-def send_room_status_to_room_members(room_obj, user_id):
+def send_room_occupancy_to_room_members(room_obj, user_id):
     # This is called when a user either connects or disconnects from a room. It sends information
-    # to room members indicating the status of the room.
+    # to room members indicating the status of who is in the room.
 
     other_user_id = room_obj.get_other_user_id(user_id)
     other_user_name = None
 
-    message_obj = {'messageType': 'roomStatus',
-                   'messagePayload': {
-                       'roomName': room_obj.room_name,
-                       'roomVideoType': room_obj.room_video_type,
-                       },
+    message_obj = {'messageType': 'roomOccupancy',
+                   'messagePayload': {},
                    }
-
     user_obj = models.UserModel.get_by_id(user_id)
     user_name = user_obj.user_name
 
+    # If there is already a user in the room, then they will be notified that a new user has just joined the room.
+    # Note that since we are sending the occupancy to the "other" user, we send the active users name and id
+    if other_user_id:
+        message_obj['messagePayload']['remoteUserName'] = user_name
+        message_obj['messagePayload']['remoteUserId'] = user_id
+        logging.info('Sending user %d room status %s' % (other_user_id, json.dumps(message_obj)))
+        messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
+
+
+    # Send a message to the active client, indicating the room occupancy. Note that since we are sending occupancy
+    # to the "active" usr, we send the "other" user name and id
+    message_obj['messagePayload']['remoteUserName'] = other_user_name
+    message_obj['messagePayload']['remoteUserId'] = other_user_id
+    logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
+    messaging.on_message(room_obj, user_id, json.dumps(message_obj))
+
+@handle_exceptions
+def send_room_video_settings_to_room_members(room_obj, user_id):
+
+    other_user_id = room_obj.get_other_user_id(user_id)
+
     if other_user_id:
 
-        other_user_obj = models.UserModel.get_by_id(other_user_id)
-        other_user_name = other_user_obj.user_name
+        message_obj = {'messageType': 'roomInitialVideoSettings',
+               'messagePayload': {
+                   'roomVideoType': room_obj.room_video_type,
+                   },
+               }
+
 
         # send a message to the other user (the client already in the room) that someone has just joined the room
         logging.debug('Sending message to other_user: %s' % repr(message_obj))
@@ -208,23 +229,17 @@ def send_room_status_to_room_members(room_obj, user_id):
         # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
         # once per session, unless the users become disconnected and need to re-connect.
         message_obj['messagePayload']['rtcInitiator'] = False
-        message_obj['messagePayload']['userId'] = other_user_id
-        message_obj['messagePayload']['remoteUserName'] = user_name
-        message_obj['messagePayload']['remoteUserId'] = user_id
         logging.info('Sending user %d room status %s' % (other_user_id, json.dumps(message_obj)))
         messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
 
 
-    if other_user_id:
         # The current user will be the rtcInitiator since there is already someone in the room.
         message_obj['messagePayload']['rtcInitiator'] = True
+        logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
+        messaging.on_message(room_obj, user_id, json.dumps(message_obj))
 
-    # Send a message to the active client, indicating the room status
-    message_obj['messagePayload']['userId'] = user_id
-    message_obj['messagePayload']['remoteUserName'] = other_user_name
-    message_obj['messagePayload']['remoteUserId'] = other_user_id
-    logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
-    messaging.on_message(room_obj, user_id, json.dumps(message_obj))
+    else:
+        logging.info('Not sending room video settings since user is alone in the room.')
 
 
 def get_room_by_id(room_id):
@@ -249,7 +264,8 @@ def connect_user_to_room(room_id, user_id):
         logging.info('User %d' % user_id + ' connected to room ' + room_obj.room_name)
         logging.info('RoomInfo ' + room_obj.room_name + ' has state ' + str(room_obj))
 
-        send_room_status_to_room_members(room_obj, user_id)
+        send_room_occupancy_to_room_members(room_obj, user_id)
+        send_room_video_settings_to_room_members(room_obj, user_id)
 
     else:
         logging.warning('Unexpected Connect Message to room %d' % room_id + 'by user %d' % user_id)
@@ -298,7 +314,9 @@ class DisconnectPage(webapp2.RequestHandler):
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
                 if other_user_id:
-                    send_room_status_to_room_members(room_obj, other_user_id)
+                    send_room_occupancy_to_room_members(room_obj, other_user_id)
+                    send_room_video_settings_to_room_members(room_obj, other_user_id)
+
             else:
                 logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_obj.room_name, room_id, user_id))
 

@@ -131,7 +131,7 @@ angular.module('lxChannel.services', [])
                             break;
 
 
-                        case 'roomStatus':
+                        case 'roomOccupancy':
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
 
@@ -144,6 +144,9 @@ angular.module('lxChannel.services', [])
                             else {
                                 $log.error('remoteUserId not received in roomStatus messagePayload');
                             }
+                            break;
+
+                        case 'roomInitialVideoSettings':
 
                             // roomStatus can force the local user into a videoType selection - this is intended for when
                             // the user joins an existing room that the other user has already set to a particular
