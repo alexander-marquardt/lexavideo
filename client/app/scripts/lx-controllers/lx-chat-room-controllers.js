@@ -26,23 +26,6 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.lxChatRoomOuterCtrl = {};
 
-        lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {
-
-            $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
-            $scope.lxChatRoomOuterCtrl.channelToken = data.channelToken;
-            $scope.lxChatRoomOuterCtrl.clientId = data.clientId;
-
-            $scope.roomId = lxUseChatRoomVarsService.roomId = data.roomId;
-
-        }, function(reason) {
-            // This message should never be seen by the user since if the promise is rejected, they should already
-            // have been redirected back to the landing page. However, it may be useful for future debugging, and
-            // so we leave it.
-            $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = reason;
-        });
-
-
-
 
         $scope.roomOccupancyObject = {
             // Once the remote user has joined the room, this will be modified to reflect their userId
@@ -53,7 +36,22 @@ angular.module('lxUseChatRoom.controllers', [])
             userId: lxAppWideConstantsService.userId,
             roomName: lxUseChatRoomConstantsService.roomName
         };
-        
+
+
+        lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {
+
+            $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
+            $scope.lxChatRoomOuterCtrl.channelToken = data.channelToken;
+            $scope.lxChatRoomOuterCtrl.clientId = data.clientId;
+
+            $scope.roomOccupancyObject.roomId = lxUseChatRoomVarsService.roomId = data.roomId;
+
+        }, function(reason) {
+            // This message should never be seen by the user since if the promise is rejected, they should already
+            // have been redirected back to the landing page. However, it may be useful for future debugging, and
+            // so we leave it.
+            $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = reason;
+        });
     })
 
     .controller('lxMainVideoCtrl',

@@ -227,6 +227,9 @@ def send_room_occupancy_to_room_members(room_obj, user_id):
         logging.info('Sending user %d room status %s' % (other_user_id, json.dumps(message_obj)))
         messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
 
+        other_user_obj = models.UserModel.get_by_id(other_user_id)
+        other_user_name = other_user_obj.user_name
+
 
     # Send a message to the active client, indicating the room occupancy. Note that since we are sending occupancy
     # to the "active" usr, we send the "other" user name and id

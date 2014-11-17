@@ -188,16 +188,16 @@
                     <div ng-if="debugBuildEnabled">
                         <table class="table table-bordered table-striped">
                             <tr>
-                                <td>Room Name: {{ roomName }}</td>
-                                <td>Room Id:   {{ roomId }}</td>
+                                <td>Room Name: {{ roomOccupancyObject.roomName }}</td>
+                                <td>Room Id:   {{ roomOccupancyObject.roomId }}</td>
                             </tr>
                             <tr>
-                                <td>User Name: {{ userName }}</td>
-                                <td>Remote User Name: {{ videoTypeSignalingObject.remoteUserName }}</td>
+                                <td>User Name: {{ roomOccupancyObject.userName }}</td>
+                                <td>Remote User Name: {{ roomOccupancyObject.remoteUserName }}</td>
                             </tr>
                             <tr>
-                                <td>User Id: {{ userId }}</td>
-                                <td>Remote User Id: {{ videoTypeSignalingObject.remoteUserId }}</td>
+                                <td>User Id: {{ roomOccupancyObject.userId }}</td>
+                                <td>Remote User Id: {{ roomOccupancyObject.remoteUserId }}</td>
                             </tr>
                             <tr>
                                 <td>localHasSelectedVideoType: {{ videoTypeSignalingObject.localHasSelectedVideoType }}</td>
