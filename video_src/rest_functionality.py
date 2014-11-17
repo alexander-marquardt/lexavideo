@@ -127,7 +127,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             else:
                 # This is a new user joining the room
-                room_obj.add_user(current_user_id)
+                room_obj.add_user_to_room(current_user_id)
                 response_dict['statusString'] = 'roomJoined'
 
         else:

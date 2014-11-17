@@ -133,7 +133,7 @@ class RoomInfo(ndb.Model):
             return False
 
 
-    def add_user(self, user_id):
+    def add_user_to_room(self, user_id):
 
         # If user is already in the room, then just return without doing anything
         if user_id in self.room_members_ids:
@@ -314,7 +314,7 @@ class ConnectPage(webapp2.RequestHandler):
         # Add user back into room. If they have a channel open to the room then they are by definition in the room
         room_obj = get_room_by_id(room_id)
         if room_obj:
-            room_obj.add_user(user_id)
+            room_obj.add_user_to_room(user_id)
 
             # TODO - remove the following line once we have signalling for enabling video working
             room_obj.add_user_id_to_video_enabled_ids(user_id)
