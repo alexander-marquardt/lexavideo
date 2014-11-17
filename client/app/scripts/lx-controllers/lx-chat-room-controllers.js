@@ -98,7 +98,7 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
 
-        $scope.videoSignalingObject = {
+        $scope.videoTypeSignalingObject = {
             /*
             We currently only modify the video stream transmission to hdVideo if both the local and remote users
             agree to exchange hdVideo. Therefore, it is necessary to do some handshaking before enabling hdVideo.
@@ -156,19 +156,19 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.setLocalVideoType = function(localHasSelectedVideoType) {
             // videoType should be 'HD Video' or 'ASCII Video'
 
-            // videoSignalingObject.localHasSelectedVideoType reflects the value of the video selection button that
+            // videoTypeSignalingObject.localHasSelectedVideoType reflects the value of the video selection button that
             // is shown to the user. This value may be changed by the local user pressing on the button, or it may
             // be changed if the local user has requested to exchange a given videoType (ie. HD Video), but the remote user
             // has rejected this request -- in this case, the button will be switched back to its previous value without
             // the local user actually pressing the button.
-            $scope.videoSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
+            $scope.videoTypeSignalingObject.localHasSelectedVideoType = localHasSelectedVideoType;
 
-            // The videoSignalingObject.localIsNegotiatingForVideoType is used for triggering watches that execute
+            // The videoTypeSignalingObject.localIsNegotiatingForVideoType is used for triggering watches that execute
             // when the user switches to a new video type. Note: unlike the above value, this value is set to null
             // if the remote user rejects a request to change the video format. This null value indicates that
             // that inner watch functionality should not execute again, until the value is set to non-null, which
             // only occurs when the local user actually presses the button to select a new videoType.
-            $scope.videoSignalingObject.localIsNegotiatingForVideoType = localHasSelectedVideoType;
+            $scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = localHasSelectedVideoType;
         };
 
         $scope.showCameraAndMicrophoneInstructions = function() {

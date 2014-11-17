@@ -21,7 +21,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
             var remoteVideoObject = scope.remoteVideoObject;
             var localVideoObject = scope.localVideoObject;
-            var videoSignalingObject = scope.videoSignalingObject;
+            var videoSignalingObject = scope.videoTypeSignalingObject;
 
             var $miniVideoDiv = angular.element(elem).find('#id-mini-video-div');
 
@@ -168,7 +168,7 @@ videoAppDirectives.directive('lxVideoElementDirective',
                     // Watch to see if the remote video is not transmitting, and if it stops then hide the video element.
                     // This is done so that the user will not see a frozen image from the last frame tha the remote user
                     // transmitted.
-                    scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
+                    scope.$watch('videoTypeSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
                         if (remoteIsSendingVideoType === null) {
                             // remote is not transmitting, so hide the video element
                             e.addClass('cl-transparent');

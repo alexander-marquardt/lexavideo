@@ -292,13 +292,13 @@ angular.module('lxAccessSystemResources.services', [])
 
         var watchCameraStatus = function(scope) {
             return function () {
-                return scope.videoSignalingObject.localUserAccessCameraAndMicrophoneStatus;
+                return scope.videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus;
             };
         };
 
         return {
             showModalsAndArrowsForGrantingCameraAndMicrophoneAccess: function(scope) {
-                var videoSignalingObject = scope.videoSignalingObject;
+                var videoSignalingObject = scope.videoTypeSignalingObject;
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteVideoObject;
 

@@ -64,7 +64,7 @@ angular.module('lxChannel.services', [])
 
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteVideoObject;
-                var videoSignalingObject = scope.videoSignalingObject;
+                var videoSignalingObject = scope.videoTypeSignalingObject;
                 var chatMessageObject = scope.chatMessageObject;
                 var roomOccupancyObject = scope.roomOccupancyObject;
 

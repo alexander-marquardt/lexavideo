@@ -88,11 +88,11 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
                 // by changing localHasSelectedVideoType, we will change the video selection button to the new
                 // videoType
-                scope.videoSignalingObject.localHasSelectedVideoType = videoType;
+                scope.videoTypeSignalingObject.localHasSelectedVideoType = videoType;
 
                 // The local user has not actually requested any videoType - he is only responding to the remote request.
                 // We do not want to execute watchers or change user feedback messages based on the new videoType.
-                scope.videoSignalingObject.localIsNegotiatingForVideoType = null;
+                scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = null;
 
                 lxVideoSettingsNegotiationService.startVideoType(scope, videoType);
 
@@ -109,20 +109,20 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                 // Set the remoteSignalingStatus properties to null, in case the remote user tries to make the same request again.
                 // Note: if we do not reset these values , then future requests that are the same as the most recent request
                 // will not trigger execution in the watch function.
-                scope.videoSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = null;
-                scope.videoSignalingObject.remoteVideoSignalingStatus.videoType = null;
+                scope.videoTypeSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = null;
+                scope.videoTypeSignalingObject.remoteVideoSignalingStatus.videoType = null;
 
                 // Also set the videoSignalingStatusForUserFeedback so that the user will be shown the prompt if
                 // the same (denied) request is made again.
-                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = null;
+                scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = null;
             });
         });
     };
 
     var getVideoSignalingStatusForUserFeedback = function(scope) {
         return function(){
-            //$log.debug('videoSignalingStatusForUserFeedback is: ' + scope.videoSignalingObject.videoSignalingStatusForUserFeedback);
-            return scope.videoSignalingObject.videoSignalingStatusForUserFeedback;
+            //$log.debug('videoSignalingStatusForUserFeedback is: ' + scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback);
+            return scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback;
         };
     };
 
@@ -136,8 +136,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
             scope.$watch(getVideoSignalingStatusForUserFeedback(scope), function(newValue) {
 
-                var remoteSignalingStatus = scope.videoSignalingObject.remoteVideoSignalingStatus;
-                var localIsNegotiatingForVideoType = scope.videoSignalingObject.localIsNegotiatingForVideoType;
+                var remoteSignalingStatus = scope.videoTypeSignalingObject.remoteVideoSignalingStatus;
+                var localIsNegotiatingForVideoType = scope.videoTypeSignalingObject.localIsNegotiatingForVideoType;
 
                 switch(newValue) {
 

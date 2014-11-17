@@ -137,7 +137,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
 
             var getImageFromVideo = function() {
                 try {
-                    if (scope.videoSignalingObject.localIsSendingVideoType === 'ASCII Video') {
+                    if (scope.videoTypeSignalingObject.localIsSendingVideoType === 'ASCII Video') {
                         localCanvasContext.drawImage(videoElement, 0, 0 , canvasOptions.width, canvasOptions.height);
                         onFrame(localCanvas, $localAsciiDrawingTextElement, scope.roomOccupancyObject.remoteUserId);
                     }
@@ -193,7 +193,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                 $(window).off('resize.watchForAsciiResize');
             }
 
-            scope.$watch('videoSignalingObject.localIsSendingVideoType', function(newValue) {
+            scope.$watch('videoTypeSignalingObject.localIsSendingVideoType', function(newValue) {
                 if (newValue === 'ASCII Video') {
                     getAsciiVideoFromLocalStream();
                     watchForResize();
@@ -231,7 +231,7 @@ asciiVideoDirectives.directive('lxDrawRemoteAsciiVideoDirective', function(lxCha
 
                 // monitor to see if remote user stops sending, and if they do then remove the currently displayed
                 // image.
-                scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
+                scope.$watch('videoTypeSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
                     if (remoteIsSendingVideoType === null) {
                         // remote is not transmitting, so hide the ascii video element
                         $remoteAsciiDrawingTextElement.addClass('cl-transparent');
