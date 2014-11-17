@@ -17,11 +17,12 @@
 
         <div ng-controller="lxMainVideoCtrl">
 
+            <div lx-initialize-channel-directive></div>
 
+            <div lx-initialize-turn-directive></div>
 
             {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-chatbox.html" %}{% raw %}
 
-            <div lx-initialize-channel-and-turn-directive></div>
 
             {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-access-camera.html" %}{% raw %}
             <div lx-video-negotiation-directive></div>
