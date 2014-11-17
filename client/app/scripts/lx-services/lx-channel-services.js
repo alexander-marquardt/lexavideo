@@ -125,7 +125,7 @@ angular.module('lxChannel.services', [])
                         case 'videoSettings':
                             // message received that indicates a modification to the current video transmission configuration
 
-                            videoSignalingObject.remoteVideoSignalingStatus.settingsType = messageObject.messagePayload.settingsType;
+                            videoSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = messageObject.messagePayload.requestAcceptOrDenyVideoType;
                             videoSignalingObject.remoteVideoSignalingStatus.videoType = messageObject.messagePayload.videoType;
                             $log.debug('received remote video type of: ' + messageObject.messagePayload.videoType);
                             break;

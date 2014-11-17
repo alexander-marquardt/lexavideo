@@ -47,7 +47,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
     var watchRemoteVideoSignalingStatus = function(scope) {
         return function() {
-            var returnVal = scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType + ' ' +
+            var returnVal = scope.videoSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType + ' ' +
                 scope.videoSignalingObject.remoteVideoSignalingStatus.videoType;
             //$log.debug('returnVal is "' + returnVal +'"');
             return returnVal;
@@ -60,19 +60,19 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
             /* Requests and sets up the type of video that will be transmitted between the two users */
 
             sendRequestForVideoType : function (videoType) {
-                lxMessageService.sendMessage('videoSettings', {settingsType: 'requestVideoType', videoType: videoType});
+                lxMessageService.sendMessage('videoSettings', {requestAcceptOrDenyVideoType: 'requestVideoType', videoType: videoType});
             },
 
             sendAcceptanceOfVideoType : function(videoType) {
                 // send a message to the remote user to indicate that the local user has accepted their offer to
                 // change the current video settings (ie. from asciiVideo to hdVideo).
-                lxMessageService.sendMessage('videoSettings', {settingsType: 'acceptVideoType', videoType: videoType});
+                lxMessageService.sendMessage('videoSettings', {requestAcceptOrDenyVideoType: 'acceptVideoType', videoType: videoType});
             },
 
             sendDenyOfVideoType : function(videoType) {
                 // send a message to the remote user to indicate that local user has denied their offer to change the
                 // current video settings.
-                lxMessageService.sendMessage('videoSettings', {settingsType: 'denyVideoType', videoType: videoType});
+                lxMessageService.sendMessage('videoSettings', {requestAcceptOrDenyVideoType: 'denyVideoType', videoType: videoType});
             }
         },
 
@@ -207,7 +207,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
 
                     // remote user is not connected, so set the signaling status to null
-                    scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType = null;
+                    scope.videoSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = null;
                     scope.videoSignalingObject.remoteVideoSignalingStatus.videoType = null;
 
                     // remote user is not connected, so set the sending videoType to null
@@ -227,7 +227,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 var localHasSelectedVideoType = scope.videoSignalingObject.localHasSelectedVideoType;
 
                 // check if the remote user has requested a new videoType.
-                if (remoteSignalingStatus.settingsType === 'requestVideoType') {
+                if (remoteSignalingStatus.requestAcceptOrDenyVideoType === 'requestVideoType') {
 
                     // If the local user has not yet given access to their camera, then automatically accept the
                     // video type proposed by the remote user
@@ -298,7 +298,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
 
                 }
 
-                else if (remoteSignalingStatus.settingsType === 'denyVideoType') {
+                else if (remoteSignalingStatus.requestAcceptOrDenyVideoType === 'denyVideoType') {
 
                     $log.debug('Remote user has denied ' + remoteSignalingStatus.videoType);
                     setVideoSignalingStatusForUserFeedback(scope.videoSignalingObject, 'remoteHasDeniedRequestToExchangeFormat: ' + remoteSignalingStatus.videoType);
@@ -312,7 +312,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                     scope.videoSignalingObject.localIsNegotiatingForVideoType = null;
                 }
 
-                else if (remoteSignalingStatus.settingsType === 'acceptVideoType') {
+                else if (remoteSignalingStatus.requestAcceptOrDenyVideoType === 'acceptVideoType') {
                     // remote user has sent an acceptance of the requested videoType
 
                     // ensure that the videoType that the remote user has accepted matches the value that has been
@@ -337,7 +337,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 // Note: if we do not reset these values , then future requests that are the same as the most recent request
                 // will not trigger execution of this watch function, which means that the local user would not see any new
                 // requests that are the same as a previous request that they have already responded to.
-                scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType = null;
+                scope.videoSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = null;
 
             });
         }

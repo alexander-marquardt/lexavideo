@@ -125,7 +125,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // so that we can give the local user feedback.
             // The value will be set in onChannelMessage.
             remoteVideoSignalingStatus: {
-                settingsType: null,  // will be set to null, 'requestVideoType', 'acceptVideoType', or 'denyVideoType'
+                requestAcceptOrDenyVideoType: null,  // will be set to null, 'requestVideoType', 'acceptVideoType', or 'denyVideoType'
                 videoType: null      // null, 'ASCII Video', 'HD Video'
             },
 

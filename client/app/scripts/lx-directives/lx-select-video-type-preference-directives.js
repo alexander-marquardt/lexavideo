@@ -109,7 +109,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                 // Set the remoteSignalingStatus properties to null, in case the remote user tries to make the same request again.
                 // Note: if we do not reset these values , then future requests that are the same as the most recent request
                 // will not trigger execution in the watch function.
-                scope.videoSignalingObject.remoteVideoSignalingStatus.settingsType = null;
+                scope.videoSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = null;
                 scope.videoSignalingObject.remoteVideoSignalingStatus.videoType = null;
 
                 // Also set the videoSignalingStatusForUserFeedback so that the user will be shown the prompt if
