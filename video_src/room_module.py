@@ -43,7 +43,7 @@ class RoomInfo(ndb.Model):
     # When a user first joins the room, this will be the type of video that they will display. If a user is alone
     # in a room and changes their video type, then the next person to join will automatically have that video type
     # selected as well.
-    currently_selected_video_type = ndb.StringProperty(default = 'HD Video')
+    room_video_type = ndb.StringProperty(default = 'HD Video')
 
     def __str__(self):
         result = '['
@@ -188,7 +188,7 @@ def send_room_status_to_room_members(room_obj, user_id):
     message_obj = {'messageType': 'roomStatus',
                    'messagePayload': {
                        'roomName': room_obj.room_name,
-                       'currentlySelectedVideoType': room_obj.currently_selected_video_type,
+                       'roomVideoType': room_obj.room_video_type,
                        },
                    }
 

@@ -145,8 +145,11 @@ angular.module('lxChannel.services', [])
                                 $log.error('remoteUserId not received in roomStatus messagePayload');
                             }
 
-                            videoSignalingObject.localHasSelectedVideoType = messageObject.messagePayload.currentlySelectedVideoType;
-                            videoSignalingObject.localIsNegotiatingForVideoType =  messageObject.messagePayload.currentlySelectedVideoType;
+                            // roomStatus can force the local user into a videoType selection - this is intended for when
+                            // the user joins an existing room that the other user has already set to a particular
+                            // videoType.
+                            videoSignalingObject.localHasSelectedVideoType = messageObject.messagePayload.roomVideoType;
+                            videoSignalingObject.localIsNegotiatingForVideoType =  messageObject.messagePayload.roomVideoType;
 
                             // See server-side code for more info on rtcInitiator. Basically, if rtcInitiator is sent to the
                             // client, it means that we should attempt to initiate a new rtc connection from scratch once
