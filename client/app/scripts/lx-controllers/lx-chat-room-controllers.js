@@ -46,6 +46,12 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.roomName = lxUseChatRoomConstantsService.roomName;
 
 
+        $scope.roomOccupancyObject = {
+            // Once the remote user has joined the room, this will be modified to reflect their userId
+            remoteUserId: null,
+            remoteUserName: null
+        };
+        
     })
 
     .controller('lxMainVideoCtrl',
@@ -89,11 +95,6 @@ angular.module('lxUseChatRoom.controllers', [])
             isMicrophoneMuted: false
         };
 
-        $scope.roomOccupancyObject = {
-            // Once the remote user has joined the room, this will be modified to reflect their userId
-            remoteUserId: null,
-            remoteUserName: null
-        };
 
         $scope.videoSignalingObject = {
             /*
