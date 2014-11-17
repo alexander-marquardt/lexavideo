@@ -68,14 +68,12 @@ class RoomInfo(ndb.Model):
         except:
             # if an exception is generated, then the from_user_id is not in the list of ids, and should be added
             self.video_enabled_ids.append(user_id)
-            self.put()
 
 
 
     def remove_user_id_from_video_enabled_ids(self, user_id):
         try:
             self.video_enabled_ids.remove(user_id)
-            self.put()
         except:
             # exception means that the value was not found in the list. We therefore don't need to remove anything
             # from the list.
@@ -100,7 +98,6 @@ class RoomInfo(ndb.Model):
         if idx != None:
             del self.room_members_ids[idx]
             del self.room_members_channel_open[idx]
-            self.put()
 
 
 
@@ -143,15 +140,11 @@ class RoomInfo(ndb.Model):
         self.room_members_ids.append(user_id)
         self.room_members_channel_open.append(False)
 
-        self.put()
-
 
     def set_connected(self, user_id):
 
         idx = self.room_members_ids.index(user_id)
         self.room_members_channel_open[idx] = True
-
-        self.put()
 
 
     def is_connected(self, user_id):
@@ -247,6 +240,7 @@ class ConnectPage(webapp2.RequestHandler):
             room_obj.add_user_id_to_video_enabled_ids(user_id)
             assert(room_obj.has_user(user_id))
             room_obj.connect_user_to_room(user_id)
+            room_obj.put()
 
             messaging.send_room_occupancy_to_room_members(room_obj, user_id)
             messaging.send_room_video_settings_to_room_members(room_obj)
@@ -272,6 +266,7 @@ class DisconnectPage(webapp2.RequestHandler):
 
                 room_obj.remove_user(user_id)
                 room_obj.remove_user_id_from_video_enabled_ids(user_id)
+                room_obj.put()
 
                 logging.info('User %d' % user_id + ' removed from room %d' % room_id)
                 logging.info('Room %d ' % room_id + ' has state ' + str(room_obj))
