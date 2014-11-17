@@ -286,9 +286,7 @@ def get_room_by_id(room_id):
 
 
 @handle_exceptions
-def connect_user_to_room(room_id, user_id):
-
-    room_obj = RoomInfo.get_by_id(room_id)
+def connect_user_to_room(room_obj, user_id):
 
     # Check if room has user_id in case that disconnect message comes before
     # connect message with unknown reason, observed with local AppEngine SDK.
@@ -301,7 +299,7 @@ def connect_user_to_room(room_id, user_id):
         send_room_video_settings_to_room_members(room_obj)
 
     else:
-        logging.warning('Unexpected Connect Message to room %d' % room_id + 'by user %d' % user_id)
+        logging.warning('Unexpected Connect Message to room %d' % room_obj.room_name + 'by user %d' % user_id)
         
     return room_obj
 
@@ -321,7 +319,7 @@ class ConnectPage(webapp2.RequestHandler):
             # TODO - remove the following line once we have signalling for enabling video working
             room_obj.add_user_id_to_video_enabled_ids(user_id)
             assert(room_obj.has_user(user_id))
-            connect_user_to_room(room_id, user_id)
+            connect_user_to_room(room_obj, user_id)
             # messaging.send_saved_messages(room_obj.make_client_id(user_id))
         else:
             logging.error('Invalid room id: %d' % room_id)
