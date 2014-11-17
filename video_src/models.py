@@ -8,7 +8,7 @@ from google.appengine.ext import ndb
 # Use TextProperty instead of StringProperty for msg because
 # the session description can be more than 500 characters.
 
-    
+
     
 class UserModel(ndb.Model):
 

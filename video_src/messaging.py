@@ -37,6 +37,10 @@ def handle_message(room_obj, from_user_id, message):
         logging.info('videoSettings message received: ' + repr(message_payload))
 
 
+    if message_type == 'startVideo':
+        room_obj.add_user_id_to_video_enabled_ids(from_user_id)
+
+
     if to_user_id and room_obj.has_user(to_user_id):
         if message_type == 'sdp' and message_payload['type'] == 'offer':
             # This is just for debugging

@@ -8,9 +8,9 @@ from google.appengine.ext import ndb
 from video_src import http_helpers
 from video_src import messaging
 from video_src import models
-from video_src import status_reporting
 
 from video_src.error_handling import handle_exceptions
+
 
 
 class RoomName(ndb.Model):
@@ -45,6 +45,13 @@ class RoomInfo(ndb.Model):
     # selected as well.
     room_video_type = ndb.StringProperty(default = 'HD Video')
 
+        # As each user enables video, their user ID will be added to this array (which should never have more
+    # than two ids given the current video standard). If a user stops their video or leaves a room, then
+    # their id will be removed from this array.
+    # When the second user activates their video, then the WebRTC signalling will start between the two users.
+    video_enabled_ids = ndb.IntegerProperty(repeated=True)
+
+
     def __str__(self):
         result = '['
         if self.room_members_ids:
@@ -52,6 +59,27 @@ class RoomInfo(ndb.Model):
                 result += "%d-%r" % (self.room_members_ids[i], self.room_members_channel_open[i])
         result += ']'
         return result
+
+
+    def add_user_id_to_video_enabled_ids(self, user_id):
+
+        try:
+            self.video_enabled_ids.index(user_id)
+        except:
+            # if an exception is generated, then the from_user_id is not in the list of ids, and should be added
+            self.video_enabled_ids.append(user_id)
+            self.put()
+
+
+
+    def remove_user_id_from_video_enabled_ids(self, user_id):
+        try:
+            self.video_enabled_ids.remove(user_id)
+            self.put()
+        except:
+            # exception means that the value was not found in the list. We therefore don't need to remove anything
+            # from the list.
+            pass
 
 
     def make_client_id(self, user_id):
@@ -208,38 +236,43 @@ def send_room_occupancy_to_room_members(room_obj, user_id):
     messaging.on_message(room_obj, user_id, json.dumps(message_obj))
 
 @handle_exceptions
-def send_room_video_settings_to_room_members(room_obj, user_id):
-
-    other_user_id = room_obj.get_other_user_id(user_id)
-
-    if other_user_id:
-
-        message_obj = {'messageType': 'roomInitialVideoSettings',
-               'messagePayload': {
-                   'roomVideoType': room_obj.room_video_type,
-                   },
-               }
+def send_room_video_settings_to_room_members(room_obj):
 
 
-        # send a message to the other user (the client already in the room) that someone has just joined the room
-        logging.debug('Sending message to other_user: %s' % repr(message_obj))
 
-        # If there is already another user in the room, then the second person to connect will be the
-        # 'rtcInitiator'. By sending this 'rtcInitiator' value to the clients, this will re-initiate
-        # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
-        # once per session, unless the users become disconnected and need to re-connect.
-        message_obj['messagePayload']['rtcInitiator'] = False
-        logging.info('Sending user %d room status %s' % (other_user_id, json.dumps(message_obj)))
-        messaging.on_message(room_obj, other_user_id, json.dumps(message_obj))
+    video_enabled_ids = room_obj.video_enabled_ids
+
+    # Check if there are two people in the room that have enabled video, and if so send
+    # a message to each of them to start the webRtc negotiation.
+    length_of_video_enabled_ids = len(video_enabled_ids)
+    assert(length_of_video_enabled_ids <= 2)
+
+    is_initiator = False
+    if length_of_video_enabled_ids == 2:
+
+        for user_id in video_enabled_ids:
+            message_obj = {'messageType': 'roomInitialVideoSettings',
+                   'messagePayload': {
+                       'roomVideoType': room_obj.room_video_type,
+                       },
+                   }
 
 
-        # The current user will be the rtcInitiator since there is already someone in the room.
-        message_obj['messagePayload']['rtcInitiator'] = True
-        logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
-        messaging.on_message(room_obj, user_id, json.dumps(message_obj))
+            # send a message to the other user (the client already in the room) that someone has just joined the room
+            logging.debug('Sending message to other_user: %s' % repr(message_obj))
+
+            # If there is already another user in the room, then the second person to connect will be the
+            # 'rtcInitiator'. By sending this 'rtcInitiator' value to the clients, this will re-initiate
+            # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
+            # once per session, unless the users become disconnected and need to re-connect.
+            message_obj['messagePayload']['rtcInitiator'] = is_initiator
+            logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
+            messaging.on_message(room_obj, user_id, json.dumps(message_obj))
+            is_initiator = not is_initiator
 
     else:
         logging.info('Not sending room video settings since user is alone in the room.')
+
 
 
 def get_room_by_id(room_id):
@@ -265,7 +298,7 @@ def connect_user_to_room(room_id, user_id):
         logging.info('RoomInfo ' + room_obj.room_name + ' has state ' + str(room_obj))
 
         send_room_occupancy_to_room_members(room_obj, user_id)
-        send_room_video_settings_to_room_members(room_obj, user_id)
+        send_room_video_settings_to_room_members(room_obj)
 
     else:
         logging.warning('Unexpected Connect Message to room %d' % room_id + 'by user %d' % user_id)
@@ -284,6 +317,9 @@ class ConnectPage(webapp2.RequestHandler):
         room_obj = get_room_by_id(room_id)
         if room_obj:
             room_obj.add_user(user_id)
+
+            # TODO - remove the following line once we have signalling for enabling video working
+            room_obj.add_user_id_to_video_enabled_ids(user_id)
             assert(room_obj.has_user(user_id))
             connect_user_to_room(room_id, user_id)
             # messaging.send_saved_messages(room_obj.make_client_id(user_id))
@@ -307,6 +343,7 @@ class DisconnectPage(webapp2.RequestHandler):
                 other_user_id = room_obj.get_other_user_id(user_id)
 
                 room_obj.remove_user(user_id)
+                room_obj.remove_user_id_from_video_enabled_ids(user_id)
 
                 logging.info('User %d' % user_id + ' removed from room %d' % room_id)
                 logging.info('Room %d ' % room_id + ' has state ' + str(room_obj))
@@ -315,7 +352,7 @@ class DisconnectPage(webapp2.RequestHandler):
                 # user informing them of the new status.
                 if other_user_id:
                     send_room_occupancy_to_room_members(room_obj, other_user_id)
-                    send_room_video_settings_to_room_members(room_obj, other_user_id)
+                    send_room_video_settings_to_room_members(room_obj)
 
             else:
                 logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_obj.room_name, room_id, user_id))
