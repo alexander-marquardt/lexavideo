@@ -24,7 +24,12 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
-        $scope.lxChatRoomOuterCtrl = {};
+        $scope.lxChatRoomOuterCtrl = {
+            showVideoElementsAndStartVideo: false,
+            userSuccessfullyEnteredRoom: false,
+            channelToken: null,
+            clientId: null
+        };
 
 
         $scope.roomOccupancyObject = {
