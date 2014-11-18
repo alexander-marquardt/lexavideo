@@ -223,6 +223,22 @@ def get_room_by_id(room_id):
         return None
 
 
+# The following function connects a given user to a chat room.
+# This is done in a transaction to ensure that after two users are in a room, that no
+# more users will be added.
+@ndb.transactional
+def connect_user_to_room_transaction(room_id, user_id):
+
+    room_obj = get_room_by_id(room_id)
+    room_obj.add_user_to_room(user_id)
+
+    # TODO - remove the following line once we have signalling for enabling video working
+    room_obj.add_user_id_to_video_enabled_ids(user_id)
+    assert(room_obj.has_user(user_id))
+    room_obj.connect_user_to_room(user_id)
+    room_obj.put()
+    return room_obj
+
 
 class ConnectPage(webapp2.RequestHandler):
     
@@ -234,13 +250,8 @@ class ConnectPage(webapp2.RequestHandler):
         # Add user back into room. If they have a channel open to the room then they are by definition in the room
         room_obj = get_room_by_id(room_id)
         if room_obj:
-            room_obj.add_user_to_room(user_id)
 
-            # TODO - remove the following line once we have signalling for enabling video working
-            room_obj.add_user_id_to_video_enabled_ids(user_id)
-            assert(room_obj.has_user(user_id))
-            room_obj.connect_user_to_room(user_id)
-            room_obj.put()
+            room_obj = connect_user_to_room_transaction(room_id, user_id)
 
             messaging.send_room_occupancy_to_room_members(room_obj, user_id)
             messaging.send_room_video_settings_to_room_members(room_obj)
