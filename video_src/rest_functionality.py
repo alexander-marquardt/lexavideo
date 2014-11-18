@@ -115,20 +115,30 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             occupancy = room_obj.get_occupancy()
 
+
             if current_user_id in room_obj.room_members_ids:
                 # do nothing as this user is already in the room - report status as "roomJoined"
                 # so javascript does not have to deal with a special case.
                 response_dict = {'statusString': 'roomJoined'}
 
+
+            # Room is full - return an error
             elif occupancy == 2:
-                # Room is full - return an error
                 logging.warning('Room ' + room_name + ' is full')
                 response_dict['statusString'] = 'roomIsFull'
 
+
+            # This is a new user joining the room
             else:
-                # This is a new user joining the room
-                room_obj = room_module.txn_add_user_to_room(room_obj.key.id(), current_user_id)
-                response_dict['statusString'] = 'roomJoined'
+
+                try:
+                    room_obj = room_module.txn_add_user_to_room(room_obj.key.id(), current_user_id)
+                    response_dict['statusString'] = 'roomJoined'
+
+                # If the user cannot be added to the room, then an exception will be generated - let the client
+                # know that the server had a problem.
+                except:
+                    response_dict['statusString'] = 'serverError'
 
         else:
             user_id = room_dict['user_id']
