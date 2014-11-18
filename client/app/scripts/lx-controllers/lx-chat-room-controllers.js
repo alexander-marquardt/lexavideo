@@ -37,7 +37,6 @@ angular.module('lxUseChatRoom.controllers', [])
             roomName: lxUseChatRoomConstantsService.roomName
         };
 
-
         lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {
 
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
@@ -52,25 +51,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // so we leave it.
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = reason;
         });
-    })
 
-    .controller('lxMainVideoCtrl',
-    function (
-        $scope,
-        lxAccessCameraAndMicrophoneService,
-        lxCallService,
-        lxCheckIfSystemSupportsWebRtcService,
-        lxUseChatRoomConstantsService) {
-
-        $scope.accessCameraAndMicrophoneObject = {
-            // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
-            // a single modal should be shown at once, due to the asynchronous callback nature of the .close() function,
-            // we cannot guarantee that the current modal is closed before a new one is opened.
-            // This variable should be used as follows:
-            // accessCameraAndMicrophoneObject.modalsCurrentlyShown[modal-index#] = templateUrl (where template Url is unique
-            // for each modal).
-            modalsCurrentlyShown: []
-        };
 
         $scope.chatMessageObject = {
             receivedMessageString: undefined,
@@ -81,21 +62,8 @@ angular.module('lxUseChatRoom.controllers', [])
             receivedMessageStringTime: 0
         };
 
-        $scope.remoteVideoObject = {
-            remoteHdVideoElem: undefined, // set in lxVideoElementDirective
-            remoteHdVideoWrapper: undefined, // set in lxHdVideoWrapperDirective
-            remoteAsciiVideoElem: undefined // set in lxDrawRemoteAsciiVideoDirective
-        };
-
-        $scope.localVideoObject = {
-            localHdVideoElem:  undefined,  // set in lxVideoElementDirective
-            localHdVideoWrapper: undefined, // set in lxHdVideoWrapperDirective
-            miniVideoElemInsideRemoteVideoWindow: undefined, //To be set in lxMiniVideoTemplateDirective to .cl-mini-video-element in HD element
-            isWebcamMuted: false,
-            isMicrophoneMuted: false
-        };
-
-
+        // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
+        // here because information received on the channel needs to be written into these objects.
         $scope.videoTypeSignalingObject = {
             /*
             We currently only modify the video stream transmission to hdVideo if both the local and remote users
@@ -148,6 +116,39 @@ angular.module('lxUseChatRoom.controllers', [])
             // The following is a flag that is used for debugging - will over-ride ng-show directives on the video
             // windows to show any window that has this flag on it when it is set to true.
             debugShowAllVideoWindows: false
+        };
+
+        $scope.remoteVideoObject = {
+            remoteHdVideoElem: undefined, // set in lxVideoElementDirective
+            remoteHdVideoWrapper: undefined, // set in lxHdVideoWrapperDirective
+            remoteAsciiVideoElem: undefined // set in lxDrawRemoteAsciiVideoDirective
+        };
+
+        $scope.localVideoObject = {
+            localHdVideoElem:  undefined,  // set in lxVideoElementDirective
+            localHdVideoWrapper: undefined, // set in lxHdVideoWrapperDirective
+            miniVideoElemInsideRemoteVideoWindow: undefined, //To be set in lxMiniVideoTemplateDirective to .cl-mini-video-element in HD element
+            isWebcamMuted: false,
+            isMicrophoneMuted: false
+        };
+    })
+
+    .controller('lxMainVideoCtrl',
+    function (
+        $scope,
+        lxAccessCameraAndMicrophoneService,
+        lxCallService,
+        lxCheckIfSystemSupportsWebRtcService,
+        lxUseChatRoomConstantsService) {
+
+        $scope.accessCameraAndMicrophoneObject = {
+            // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
+            // a single modal should be shown at once, due to the asynchronous callback nature of the .close() function,
+            // we cannot guarantee that the current modal is closed before a new one is opened.
+            // This variable should be used as follows:
+            // accessCameraAndMicrophoneObject.modalsCurrentlyShown[modal-index#] = templateUrl (where template Url is unique
+            // for each modal).
+            modalsCurrentlyShown: []
         };
 
         // setLocalVideoType is called directly from the html, and so it must be placed on the $scope.

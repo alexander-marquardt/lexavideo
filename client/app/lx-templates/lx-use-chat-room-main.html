@@ -17,9 +17,7 @@
 
         <div ng-controller="lxMainVideoCtrl">
 
-            <div lx-initialize-channel-directive></div>
 
-            <div lx-initialize-turn-directive></div>
 
             {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-chatbox.html" %}{% raw %}
 
@@ -215,7 +213,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> <!-- lxMainVideoController -->
+
+        <div lx-initialize-channel-directive></div>
+        <div lx-initialize-turn-directive></div>
+
     </div>
 </div>
 
