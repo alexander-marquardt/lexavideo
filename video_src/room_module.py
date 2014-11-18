@@ -51,18 +51,24 @@ class RoomInfo(ndb.Model):
     def __str__(self):
         result = '['
         if self.room_members_ids:
+            result += "room_members_ids: "
             for i in range(len(self.room_members_ids)):
-                result += "%d" % (self.room_members_ids[i])
+                result += "%d " % (self.room_members_ids[i])
+
+            result += " video_enabled_ids: "
+            for i in range(len(self.video_enabled_ids)):
+                result += "%d " % (self.video_enabled_ids[i])
+
         result += ']'
         return result
 
 
     def add_user_id_to_video_enabled_ids(self, user_id):
 
-        try:
-            self.video_enabled_ids.index(user_id)
-        except:
-            # if an exception is generated, then the from_user_id is not in the list of ids, and should be added
+
+        if user_id in self.video_enabled_ids:
+            return
+        else:
             self.video_enabled_ids.append(user_id)
 
 
@@ -79,20 +85,6 @@ class RoomInfo(ndb.Model):
     def make_client_id(self, user_id):
         # client id is the room id + / + user id
         return str(self.key.id()) + '/' + str(user_id)
-
-
-    def remove_user(self, user_id):
-        # messaging.delete_saved_messages(self.make_client_id(user_id))
-
-        idx = None
-        try:
-            # if the user_id is not in the list, an exception will be raised
-            idx = self.room_members_ids.index(user_id)
-        except:
-            logging.error("user_id %d not found in room - why is it being removed?" % user_id)
-
-        if idx != None:
-            del self.room_members_ids[idx]
 
 
 
@@ -134,6 +126,18 @@ class RoomInfo(ndb.Model):
 
         # Add the user to the room
         self.room_members_ids.append(user_id)
+
+
+    def remove_user_from_room(self, user_id):
+
+        try:
+            # if the user_id is not in the list, an exception will be raised
+            self.room_members_ids.remove(user_id)
+        except:
+            logging.error("user_id %d not found in room - why is it being removed?" % user_id)
+
+
+
 
 
 class MessagePage(webapp2.RequestHandler):
@@ -195,20 +199,27 @@ def get_room_by_id(room_id):
 # This is done in a transaction to ensure that after two users are in a room, that no
 # more users will be added.
 @ndb.transactional
-def add_user_to_room_transaction(room_id, user_id):
+def txn_add_user_to_room(room_id, user_id):
 
+    logging.info('Attempting to add user %d to room %d ' % (user_id, room_id))
     room_obj = get_room_by_id(room_id)
+    if room_obj:
+        if not room_obj.has_user(user_id):
+            occupancy = room_obj.get_occupancy()
+            if occupancy >= 2:
+                raise Exception("This room already has two users in it. No new users can be added. room_obj: %s " % room_obj)
 
-    occupancy = room_obj.get_occupancy()
-    if occupancy >= 2:
-        raise Exception("This room already has two users in it. No new users can be added.")
+            room_obj.add_user_to_room(user_id)
 
-    room_obj.add_user_to_room(user_id)
+            # TODO - remove the following line once we have signalling for enabling video working - temporary hack
+            room_obj.add_user_id_to_video_enabled_ids(user_id)
 
-    # TODO - remove the following line once we have signalling for enabling video working - temporary hack
-    room_obj.add_user_id_to_video_enabled_ids(user_id)
+            room_obj.put()
+        else:
+            logging.info('Room already has user %d - not added' % user_id)
+    else:
+         logging.error('Invalid room id: %d' % room_id)
 
-    room_obj.put()
     return room_obj
 
 
@@ -219,17 +230,27 @@ class ConnectPage(webapp2.RequestHandler):
         client_id = self.request.get('from')
         room_id, user_id = [int(n) for n in client_id.split('/')]
 
-        # Add user back into room. If they have a channel open to the room then they are by definition in the room
-        room_obj = get_room_by_id(room_id)
-        if room_obj:
+        # Add user to the room. If they have a channel open to the room then they are by definition in the room
+        # This is necessary for the dev server, since the channel disconnects each time that the
+        # client-side javascript is paused. Therefore, it is quite helpful to automatically put the user back in the
+        # room if the user still has a channel open and wishes to connect to the current room.
+        room_obj = txn_add_user_to_room(room_id, user_id)
 
-            room_obj = add_user_to_room_transaction(room_id, user_id)
+        messaging.send_room_occupancy_to_room_members(room_obj, user_id)
+        messaging.send_room_video_settings_to_room_members(room_obj)
 
-            messaging.send_room_occupancy_to_room_members(room_obj, user_id)
-            messaging.send_room_video_settings_to_room_members(room_obj)
 
-        else:
-            logging.error('Invalid room id: %d' % room_id)
+
+@ndb.transactional
+def txn_remove_user_from_room(room_id, user_id):
+
+    logging.info('Removing user %d from room %d ' % (user_id, room_id))
+
+    room_obj = get_room_by_id(room_id)
+    room_obj.remove_user_from_room(user_id)
+    room_obj.remove_user_id_from_video_enabled_ids(user_id)
+
+    return room_obj
 
 
 class DisconnectPage(webapp2.RequestHandler):
@@ -247,12 +268,10 @@ class DisconnectPage(webapp2.RequestHandler):
                 # Get the other_user_id before removing the user_id from the room
                 other_user_id = room_obj.get_other_user_id(user_id)
 
-                room_obj.remove_user(user_id)
-                room_obj.remove_user_id_from_video_enabled_ids(user_id)
+                room_obj = txn_remove_user_from_room(room_id, user_id)
                 room_obj.put()
 
-                logging.info('User %d' % user_id + ' removed from room %d' % room_id)
-                logging.info('Room %d ' % room_id + ' has state ' + str(room_obj))
+                logging.info('User %d' % user_id + ' removed from room %d state: %s' % (room_id, str(room_obj)))
 
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.

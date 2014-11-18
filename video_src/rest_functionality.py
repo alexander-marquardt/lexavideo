@@ -127,16 +127,22 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             else:
                 # This is a new user joining the room
-                room_module.add_user_to_room_transaction(current_user_id)
+                room_obj = room_module.txn_add_user_to_room(room_obj.key.id(), current_user_id)
                 response_dict['statusString'] = 'roomJoined'
 
         else:
-            # remove 'user_id' from the room_dict since it is not stored on the room_obj.
+            # remove 'user_id' from the room_dict since it will not be stored on the room_obj, and since we
+            # pass room_dict into RoomInfo to create a new room_obj.
             user_id = room_dict['user_id']
             del room_dict['user_id']
 
             # This is a newly created room. Therefore we should add the current user to room_members_ids.
             room_dict['room_members_ids'] = [user_id,]
+
+            # TODO - the following declaration can be removed once we have implemented the UI for enabling video
+            # This is a newly created room. Therefore we should add the current user to video_enabled_ids.
+            room_dict['video_enabled_ids'] = [user_id,]
+
 
             # The RoomName has been added to the roomName structure. Now create a new Room object
             # for the new room.
@@ -146,8 +152,12 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 room_obj.put()
                 return room_obj
 
-            room_obj = create_room_transaction(room_dict)
-            response_dict['statusString'] = 'roomCreated'
+            try:
+                room_obj = create_room_transaction(room_dict)
+                response_dict['statusString'] = 'roomCreated'
+            except:
+                response_dict['statusString'] = 'serverError'
+
 
         token_timeout =  240 # minutes
         client_id = room_obj.make_client_id(current_user_id)

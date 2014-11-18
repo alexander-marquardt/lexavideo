@@ -162,4 +162,4 @@ def send_room_video_settings_to_room_members(room_obj):
             is_initiator = not is_initiator
 
     else:
-        logging.info('Not sending room video settings since user is alone in the room.')
+        logging.warning('Not sending room video settings since only one user has enabled video. Room object: %s' % room_obj)
