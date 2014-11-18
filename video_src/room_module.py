@@ -195,7 +195,7 @@ def get_room_by_id(room_id):
         return None
 
 
-# The following function connects a given user to a chat room.
+# The following function adds a given user to a chat room.
 # This is done in a transaction to ensure that after two users are in a room, that no
 # more users will be added.
 @ndb.transactional
@@ -203,24 +203,43 @@ def txn_add_user_to_room(room_id, user_id):
 
     logging.info('Attempting to add user %d to room %d ' % (user_id, room_id))
     room_obj = get_room_by_id(room_id)
+    status_string = None
+
     if room_obj:
-        if not room_obj.has_user(user_id):
-            occupancy = room_obj.get_occupancy()
-            if occupancy >= 2:
-                raise Exception("This room already has two users in it. No new users can be added. room_obj: %s " % room_obj)
 
-            room_obj.add_user_to_room(user_id)
+        occupancy = room_obj.get_occupancy()
 
-            # TODO - remove the following line once we have signalling for enabling video working - temporary hack
-            room_obj.add_user_id_to_video_enabled_ids(user_id)
 
-            room_obj.put()
-        else:
+        if room_obj.has_user(user_id):
+            # do nothing as this user is already in the room - report status as "roomJoined"
+            # so javascript does not have to deal with a special case.
+            status_string = 'roomJoined'
             logging.info('Room already has user %d - not added' % user_id)
+
+        # Room is full - return a roomIsFull status
+        elif occupancy >= 2:
+            logging.warning('Room ' + room_obj.room_name + ' is full')
+            status_string = 'roomIsFull'
+
+        # This is a new user joining the room
+        else:
+
+            try:
+                room_obj.add_user_to_room(user_id)
+                # TODO - remove the following line once we have signalling for enabling video working - temporary hack
+                room_obj.add_user_id_to_video_enabled_ids(user_id)
+                status_string = 'roomJoined'
+                room_obj.put()
+
+            # If the user cannot be added to the room, then an exception will be generated - let the client
+            # know that the server had a problem.
+            except:
+               status_string = 'serverError'
+
     else:
          logging.error('Invalid room id: %d' % room_id)
 
-    return room_obj
+    return (room_obj, status_string)
 
 
 class ConnectPage(webapp2.RequestHandler):
@@ -234,7 +253,7 @@ class ConnectPage(webapp2.RequestHandler):
         # This is necessary for the dev server, since the channel disconnects each time that the
         # client-side javascript is paused. Therefore, it is quite helpful to automatically put the user back in the
         # room if the user still has a channel open and wishes to connect to the current room.
-        room_obj = txn_add_user_to_room(room_id, user_id)
+        (room_obj, dummy_status_string) = txn_add_user_to_room(room_id, user_id)
 
         messaging.send_room_occupancy_to_room_members(room_obj, user_id)
         messaging.send_room_video_settings_to_room_members(room_obj)

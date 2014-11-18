@@ -110,35 +110,9 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
         room_obj = room_module.RoomInfo.query(room_module.RoomInfo.room_name == room_name).get()
         if room_obj:
-            # The room has already been created - try to add this user to the room.
-            # Check to make sure that they have not already been added before adding.
-
-            occupancy = room_obj.get_occupancy()
-
-
-            if current_user_id in room_obj.room_members_ids:
-                # do nothing as this user is already in the room - report status as "roomJoined"
-                # so javascript does not have to deal with a special case.
-                response_dict = {'statusString': 'roomJoined'}
-
-
-            # Room is full - return an error
-            elif occupancy == 2:
-                logging.warning('Room ' + room_name + ' is full')
-                response_dict['statusString'] = 'roomIsFull'
-
-
-            # This is a new user joining the room
-            else:
-
-                try:
-                    room_obj = room_module.txn_add_user_to_room(room_obj.key.id(), current_user_id)
-                    response_dict['statusString'] = 'roomJoined'
-
-                # If the user cannot be added to the room, then an exception will be generated - let the client
-                # know that the server had a problem.
-                except:
-                    response_dict['statusString'] = 'serverError'
+            # The room has already been created - try to add this user to the room. This is done in a transaction
+            # to ensure that only two people can join a room.
+            (room_obj, response_dict['statusString']) = room_module.txn_add_user_to_room(room_obj.key.id(), current_user_id)
 
         else:
             user_id = room_dict['user_id']
