@@ -48,7 +48,7 @@
   left: 50%;
   top: 50%;
   margin-top: -0.5em;
-  margin-left: -0.5em; //relative to the new font-size of 3em
+  margin-left: -0.5em; //relative to the new font-size of 2em
 
 }
 
@@ -109,4 +109,16 @@
   color: $gray-light;
   @extend %chatbox-chat-bubble-icons-common;
   @extend .icon-lx-chat-bubble-right;
+}
+
+.icon-lx-start-video-camera-wrapper-cfg {
+  @extend .cl-lx-call-control-wrapper-cfg;
+  width: 2em;
+  margin-left: -0.5em;
+}
+
+.icon-lx-start-video-camera-cfg {
+  @extend %call-control-icon-common;
+  @extend .icon-lx-video-camera-filled;
+  top: 40%;
 }

@@ -24,30 +24,42 @@
                                 <div lx-show-chat-messages-directive></div>
                              </div>
                             <div class="panel-footer">
-                                <form name="sendMessageForm" role="form" novalidate>
-                                    <div class="input-group">
-                                        <input class="form-control input-sm"
-                                               ng-class="roomOccupancyObject.remoteUserId ? '' : 'cl-invalid-input-glow'"
-                                               name="messageInputElem"
-                                               placeholder="Type your message here..."
-                                               ng-model="inputMessageString"
-                                               maxlength="{{ maxMsgLength }}"
-                                               ng-click="chatPanelIsGlued = true"
-                                               required
-                                                />
+                                <div class="row">
+                                    <div class="col-xs-8 col-sm-10">
+                                        <form name="sendMessageForm" role="form" novalidate>
+                                            <div class="input-group">
+                                                <input class="form-control input-sm"
+                                                       ng-class="roomOccupancyObject.remoteUserId ? '' : 'cl-invalid-input-glow'"
+                                                       name="messageInputElem"
+                                                       placeholder="Type your message here..."
+                                                       ng-model="inputMessageString"
+                                                       maxlength="{{ maxMsgLength }}"
+                                                       ng-click="chatPanelIsGlued = true"
+                                                       required
+                                                        />
 
 
 
-                                        <span class="input-group-btn">
-                                            <button ng-click="sendChatMessageFn()"
-                                                    class="btn  btn-sm"
-                                                    ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'"
-                                                    ng-disabled="sendMessageForm.$invalid">
-                                                Send
-                                            </button>
-                                        </span>
+                                                <span class="input-group-btn">
+                                                    <button ng-click="sendChatMessageFn()"
+                                                            class="btn  btn-sm pull-right"
+                                                            ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'"
+                                                            ng-disabled="sendMessageForm.$invalid">
+                                                        Send
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
+                                    <div class="col-xs-4 col-sm-2">
+                                        <button type="button" class="btn btn-sm btn-primary pull-right">
+                                            <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                                <span class="icon-lx-start-video-camera-cfg"></span>
+                                            </span>
+                                            Start Video
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
