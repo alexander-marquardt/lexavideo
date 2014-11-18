@@ -130,6 +130,7 @@ class RoomInfo(ndb.Model):
             return False
 
 
+    # Add the user to the room_members_ids list
     def add_user_to_room(self, user_id):
 
         # If user is already in the room, then just return without doing anything
@@ -151,6 +152,7 @@ class RoomInfo(ndb.Model):
 
         idx = self.room_members_ids.index(user_id)
         return self.room_members_channel_open[idx]
+
 
 
     def connect_user_to_room(self, user_id):
@@ -230,11 +232,16 @@ def get_room_by_id(room_id):
 def connect_user_to_room_transaction(room_id, user_id):
 
     room_obj = get_room_by_id(room_id)
+
+    occupancy = room_obj.get_occupancy()
+    if occupancy >= 2:
+        raise Exception("This room already has two users in it. No new users can be added.")
+
     room_obj.add_user_to_room(user_id)
 
-    # TODO - remove the following line once we have signalling for enabling video working
+    # TODO - remove the following line once we have signalling for enabling video working - temporary hack
     room_obj.add_user_id_to_video_enabled_ids(user_id)
-    assert(room_obj.has_user(user_id))
+
     room_obj.connect_user_to_room(user_id)
     room_obj.put()
     return room_obj
