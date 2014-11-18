@@ -195,7 +195,7 @@ def get_room_by_id(room_id):
 # This is done in a transaction to ensure that after two users are in a room, that no
 # more users will be added.
 @ndb.transactional
-def connect_user_to_room_transaction(room_id, user_id):
+def add_user_to_room_transaction(room_id, user_id):
 
     room_obj = get_room_by_id(room_id)
 
@@ -223,7 +223,7 @@ class ConnectPage(webapp2.RequestHandler):
         room_obj = get_room_by_id(room_id)
         if room_obj:
 
-            room_obj = connect_user_to_room_transaction(room_id, user_id)
+            room_obj = add_user_to_room_transaction(room_id, user_id)
 
             messaging.send_room_occupancy_to_room_members(room_obj, user_id)
             messaging.send_room_video_settings_to_room_members(room_obj)
