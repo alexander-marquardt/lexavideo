@@ -131,10 +131,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 response_dict['statusString'] = 'roomJoined'
 
         else:
-            # remove 'user_id' from the room_dict since it will not be stored on the room_obj, and since we
-            # pass room_dict into RoomInfo to create a new room_obj.
             user_id = room_dict['user_id']
-            del room_dict['user_id']
 
             # This is a newly created room. Therefore we should add the current user to room_members_ids.
             room_dict['room_members_ids'] = [user_id,]
@@ -148,6 +145,8 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # for the new room.
             @ndb.transactional
             def create_room_transaction(room_dict):
+                # remove 'user_id' from the room_dict since it will not be stored on the room_obj
+                del room_dict['user_id']
                 room_obj = room_module.RoomInfo(**room_dict)
                 room_obj.put()
                 return room_obj
