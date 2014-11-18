@@ -34,10 +34,6 @@ class RoomInfo(ndb.Model):
     # room_members_ids contains ids of all users currently in a chat room.
     room_members_ids = ndb.IntegerProperty(repeated=True)
 
-    # track if the users in the room have a channel open (channel api). This array should be stored in parallel
-    # to the room_members_keys array.
-    room_members_channel_open = ndb.BooleanProperty(repeated = True)
-
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
     # When a user first joins the room, this will be the type of video that they will display. If a user is alone
@@ -56,7 +52,7 @@ class RoomInfo(ndb.Model):
         result = '['
         if self.room_members_ids:
             for i in range(len(self.room_members_ids)):
-                result += "%d-%r" % (self.room_members_ids[i], self.room_members_channel_open[i])
+                result += "%d" % (self.room_members_ids[i])
         result += ']'
         return result
 
@@ -97,7 +93,6 @@ class RoomInfo(ndb.Model):
 
         if idx != None:
             del self.room_members_ids[idx]
-            del self.room_members_channel_open[idx]
 
 
 
@@ -139,35 +134,6 @@ class RoomInfo(ndb.Model):
 
         # Add the user to the room
         self.room_members_ids.append(user_id)
-        self.room_members_channel_open.append(False)
-
-
-    def set_connected(self, user_id):
-
-        idx = self.room_members_ids.index(user_id)
-        self.room_members_channel_open[idx] = True
-
-
-    def is_connected(self, user_id):
-
-        idx = self.room_members_ids.index(user_id)
-        return self.room_members_channel_open[idx]
-
-
-
-    def connect_user_to_room(self, user_id):
-
-        # Check if room has user_id in case that disconnect message comes before
-        # connect message with unknown reason, observed with local AppEngine SDK.
-        if self.has_user(user_id):
-            self.set_connected(user_id)
-            logging.info('User %d' % user_id + ' connected to room ' + self.room_name)
-            logging.info('RoomInfo ' + self.room_name + ' has state ' + str(self))
-
-
-        else:
-            logging.warning('Unexpected Connect Message to room %d' % room_obj.room_name + 'by user %d' % user_id)
-
 
 
 class MessagePage(webapp2.RequestHandler):
@@ -242,7 +208,6 @@ def connect_user_to_room_transaction(room_id, user_id):
     # TODO - remove the following line once we have signalling for enabling video working - temporary hack
     room_obj.add_user_id_to_video_enabled_ids(user_id)
 
-    room_obj.connect_user_to_room(user_id)
     room_obj.put()
     return room_obj
 

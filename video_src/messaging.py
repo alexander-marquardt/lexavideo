@@ -81,7 +81,7 @@ def handle_message(room_obj, from_user_id, message):
 def on_message(room_obj, to_user_id, message):
     to_client_id = room_obj.make_client_id(to_user_id)
 
-    if room_obj.is_connected(to_user_id):
+    if room_obj.has_user(to_user_id):
         channel.send_message(to_client_id, message)
         #logging.info('Delivered message to user %d' % to_user_id)
     else:

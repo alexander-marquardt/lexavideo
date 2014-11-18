@@ -137,7 +137,6 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             # This is a newly created room. Therefore we should add the current user to room_members_ids.
             room_dict['room_members_ids'] = [user_id,]
-            room_dict['room_members_channel_open'] = [False,]
 
             # The RoomName has been added to the roomName structure. Now create a new Room object
             # for the new room.
