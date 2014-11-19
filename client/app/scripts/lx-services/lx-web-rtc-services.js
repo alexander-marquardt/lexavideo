@@ -6,6 +6,8 @@ var webRtcServices = angular.module('lxVideoSetup.services', []);
 
 /* The following globally defined functions come from adapter.js, which is a "shim" to make sure that
    webRTC works in both Chrome and Firefox. */
+/* global webrtcDetectedBrowser */
+/* global webrtcDetectedVersion */
 /* global createIceServers */
 /* global getUserMedia */
 /* global RTCPeerConnection */
@@ -22,13 +24,21 @@ webRtcServices.service('lxAdapterService', function ($log) {
        easier to do unit testing in the future.
      */
     try {
-        this.createIceServers = createIceServers;
-        this.RTCPeerConnection = RTCPeerConnection;
-        this.RTCSessionDescription = RTCSessionDescription;
-        this.getUserMedia = getUserMedia;
-        this.attachMediaStream = attachMediaStream;
-        this.reattachMediaStream = reattachMediaStream;
-        this.RTCIceCandidate = RTCIceCandidate;
+        this.webrtcDetectedBrowser = webrtcDetectedBrowser;
+
+        // only setup the remaining variables if we know that the adapter service has set them up.
+        // If webrtcDetectedBrowser is null, then many of the following variables have not been initialized
+        // and should not be accessed.
+        if (webrtcDetectedBrowser) {
+            this.webrtcDetectedVersion = webrtcDetectedVersion;
+            this.createIceServers = createIceServers;
+            this.RTCPeerConnection = RTCPeerConnection;
+            this.RTCSessionDescription = RTCSessionDescription;
+            this.getUserMedia = getUserMedia;
+            this.attachMediaStream = attachMediaStream;
+            this.reattachMediaStream = reattachMediaStream;
+            this.RTCIceCandidate = RTCIceCandidate;
+        }
     }
     catch(e) {
         e.message = '\n\tError in lxAdapterService\n\t' + e.message;
@@ -58,6 +68,7 @@ webRtcServices.factory('lxTurnService',
         lxAdapterService,
         lxAppWideConstantsService,
         lxCallService,
+        lxCheckCompatibilityService,
         lxPeerService,
         lxTurnSupportService,
         lxUseChatRoomConstantsService,
@@ -100,27 +111,37 @@ webRtcServices.factory('lxTurnService',
 
             maybeRequestTurn : function() {
 
-                var turnUrl = 'https://computeengineondemand.appspot.com/' + 'turn?' + 'username=' +
-                    lxAppWideConstantsService.userName + '&key=4080218913';
+                // If the broswer supports WebRTC, then setup a turn server
+                if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
+
+                    var turnUrl = 'https://computeengineondemand.appspot.com/' + 'turn?' + 'username=' +
+                        lxAppWideConstantsService.userName + '&key=4080218913';
 
 
-                for (var i = 0, len = lxUseChatRoomVarsService.pcConfig.iceServers.length; i < len; i++) {
-                    if (lxUseChatRoomVarsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
+                    for (var i = 0, len = lxUseChatRoomVarsService.pcConfig.iceServers.length; i < len; i++) {
+                        if (lxUseChatRoomVarsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
+                            lxTurnSupportService.turnDone = true;
+                            return;
+                        }
+                    }
+
+                    var currentDomain = document.domain;
+                    if (currentDomain.search('localhost') === -1 &&
+                        currentDomain.search('apprtc') === -1) {
+                        // Not authorized domain. Try with default STUN instead.
                         lxTurnSupportService.turnDone = true;
                         return;
                     }
+
+                    // No TURN server. Get one from computeengineondemand.appspot.com.
+                    $http.get(turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest());
                 }
 
-                var currentDomain = document.domain;
-                if (currentDomain.search('localhost') === -1 &&
-                    currentDomain.search('apprtc') === -1) {
-                    // Not authorized domain. Try with default STUN instead.
-                    lxTurnSupportService.turnDone = true;
-                    return;
+                // otherwise, the browser does not support WebRtc - we do not try to setup video
+                else {
+                    $log.warn('This browser does not support WebRTC - we cannot setup a video connection');
                 }
 
-                // No TURN server. Get one from computeengineondemand.appspot.com.
-                $http.get(turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest());
             }
         };
     }
