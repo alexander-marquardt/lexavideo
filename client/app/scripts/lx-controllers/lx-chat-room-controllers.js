@@ -12,6 +12,7 @@ angular.module('lxUseChatRoom.controllers', [])
     .controller('lxChatRoomOuterCtrl',
     function($scope,
              lxAppWideConstantsService,
+             lxMessageService,
              lxUseChatRoomConstantsService,
              lxUseChatRoomVarsService,
              lxInitializeRoomService) {
@@ -57,6 +58,10 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = reason;
         });
 
+        $scope.showVideoElementsAndStartVideoFn = function() {
+            $scope.lxChatRoomOuterCtrl.showVideoElementsAndStartVideo = true;
+            lxMessageService.sendMessage('startVideo', {});
+        };
 
         $scope.chatMessageObject = {
             receivedMessageString: undefined,

@@ -1,16 +1,8 @@
 
-import json
 import logging
-import webapp2
 
 from google.appengine.ext import ndb
-
-from video_src import http_helpers
-from video_src import messaging
 from video_src import models
-
-from video_src.error_handling import handle_exceptions
-
 
 
 class RoomName(ndb.Model):
@@ -63,35 +55,13 @@ class RoomInfo(ndb.Model):
         return result
 
 
-    def add_user_id_to_video_enabled_ids(self, user_id):
-
-
-        if user_id in self.video_enabled_ids:
-            return
-        else:
-            self.video_enabled_ids.append(user_id)
-
-
-
-    def remove_user_id_from_video_enabled_ids(self, user_id):
-        try:
-            self.video_enabled_ids.remove(user_id)
-        except:
-            # exception means that the value was not found in the list. We therefore don't need to remove anything
-            # from the list.
-            pass
-
-
     def make_client_id(self, user_id):
         # client id is the room id + / + user id
         return str(self.key.id()) + '/' + str(user_id)
 
 
-
-
     def get_occupancy(self):
         return len(self.room_members_ids)
-
 
     def get_other_user_id(self, user_id):
         # Currently this function is written based on the assumption that there is a maximum of two users in a room.
@@ -109,90 +79,64 @@ class RoomInfo(ndb.Model):
         else: # occupancy > 2:
             raise Exception('Room should not have more than two people in it')
 
-
-    def has_user(self, user_id):
-        if user_id in self.room_members_ids:
+    def has_user(room_obj, user_id):
+        if user_id in room_obj.room_members_ids:
             return True
         else:
             return False
 
 
-    # Add the user to the room_members_ids list
-    def add_user_to_room(self, user_id):
-
-        # If user is already in the room, then just return without doing anything
-        if user_id in self.room_members_ids:
-            return
-
-        # Add the user to the room
-        self.room_members_ids.append(user_id)
-
-
-    def remove_user_from_room(self, user_id):
-
-        try:
-            # if the user_id is not in the list, an exception will be raised
-            self.room_members_ids.remove(user_id)
-        except:
-            logging.error("user_id %d not found in room - why is it being removed?" % user_id)
-
-
-
-
-
-class MessagePage(webapp2.RequestHandler):
-
-    @handle_exceptions
-    def post(self):
-        message = self.request.body
-        room_id = int(self.request.get('r'))
-        user_id = int(self.request.get('u'))
-        room_obj = RoomInfo.get_by_id(room_id)
-
-        try:
-            try:
-                if room_obj:
-                    messaging.handle_message(room_obj, user_id, message)
-                else:
-                    logging.error('Unknown room_id %d' % room_id)
-                    raise Exception('unknownRoomId')
-
-            except Exception as e:
-
-                status_string = e.message
-
-                # if 'otherUserNotInRoom' then we will give the user feedback indicating that they are alone in the room
-                # and that is why their message was not delivered. This is not a serious error, and so we only log
-                # it with a warning message and return a http 403 code.
-                if status_string == 'otherUserNotInRoom':
-                     # 403 = Forbidden - request is valid, but server is refusing to respond to it
-                    http_status_code = 403
-                    logging_function = logging.warning
-
-                # else, we don't know what happened so return a 500 error and log all relevant information
-                else:
-                    # re-raise the exception so that it will be caught by the following except clause
-                    raise
-
-                http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function, http_status_code)
-
-        except:
-            status_string = 'Unknown server error'
-            http_status_code = 500
-            logging_function = logging.error
-
-            http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function, http_status_code)
-
-
-
 def get_room_by_id(room_id):
 
     room_obj = RoomInfo.get_by_id(room_id)
-    if room_obj:
-        return room_obj
-    else:
+    if not room_obj:
         logging.error('Attempt to get room by id failed. Room %d does not exist.' % room_id)
-        return None
+
+    return room_obj
+
+@ndb.transactional
+def txn_add_user_id_to_video_enabled_ids(room_id, user_id):
+
+    room_obj =  get_room_by_id(room_id)
+
+    if user_id in room_obj.video_enabled_ids:
+        logging.info('Not added to video_enalbed_ids. user %d to %s' %(user_id, room_obj))
+        return
+    else:
+        logging.info('Adding video_enalbed_ids. user %d to %s' %(user_id, room_obj))
+        room_obj.video_enabled_ids.append(user_id)
+        room_obj.put()
+
+    return room_obj
+
+@ndb.transactional
+def remove_user_id_from_video_enabled_ids(room_id, user_id):
+
+    room_obj = get_room_by_id(room_id)
+
+    if user_id in room_obj.video_enabled_ids:
+        room_obj.video_enabled_ids.remove(user_id)
+        room_obj.put()
+
+    return room_obj
+
+@ndb.transactional
+def txn_remove_user_from_room(room_id, user_id):
+
+    logging.info('Removing user %d from room %d ' % (user_id, room_id))
+
+    room_obj = get_room_by_id(room_id)
+    try:
+        # if the user_id is not in the list, an exception will be raised
+        room_obj.room_members_ids.remove(user_id)
+    except:
+        logging.error("user_id %d not found in room - why is it being removed?" % user_id)
+
+    if user_id in room_obj.video_enabled_ids:
+        room_obj.video_enabled_ids.remove(user_id)
+
+    room_obj.put()
+    return room_obj
 
 
 # The following function adds a given user to a chat room.
@@ -225,11 +169,13 @@ def txn_add_user_to_room(room_id, user_id):
         else:
 
             try:
-                room_obj.add_user_to_room(user_id)
-                # TODO - remove the following line once we have signalling for enabling video working - temporary hack
-                room_obj.add_user_id_to_video_enabled_ids(user_id)
+                # If user is not already in the room, then add them
+                if not user_id in room_obj.room_members_ids:
+                    room_obj.room_members_ids.append(user_id)
+                    room_obj.put()
+
                 status_string = 'roomJoined'
-                room_obj.put()
+
 
             # If the user cannot be added to the room, then an exception will be generated - let the client
             # know that the server had a problem.
@@ -242,64 +188,3 @@ def txn_add_user_to_room(room_id, user_id):
     return (room_obj, status_string)
 
 
-class ConnectPage(webapp2.RequestHandler):
-    
-    @handle_exceptions
-    def post(self):
-        client_id = self.request.get('from')
-        room_id, user_id = [int(n) for n in client_id.split('/')]
-
-        # Add user to the room. If they have a channel open to the room then they are by definition in the room
-        # This is necessary for the dev server, since the channel disconnects each time that the
-        # client-side javascript is paused. Therefore, it is quite helpful to automatically put the user back in the
-        # room if the user still has a channel open and wishes to connect to the current room.
-        (room_obj, dummy_status_string) = txn_add_user_to_room(room_id, user_id)
-
-        messaging.send_room_occupancy_to_room_members(room_obj, user_id)
-        messaging.send_room_video_settings_to_room_members(room_obj)
-
-
-
-@ndb.transactional
-def txn_remove_user_from_room(room_id, user_id):
-
-    logging.info('Removing user %d from room %d ' % (user_id, room_id))
-
-    room_obj = get_room_by_id(room_id)
-    room_obj.remove_user_from_room(user_id)
-    room_obj.remove_user_id_from_video_enabled_ids(user_id)
-
-    return room_obj
-
-
-class DisconnectPage(webapp2.RequestHandler):
-    
-    @handle_exceptions
-    def post(self):
-
-        client_id = self.request.get('from')
-        room_id, user_id = [int(n) for n in client_id.split('/')]
-
-        room_obj = get_room_by_id(room_id)
-        if room_obj:
-            if room_obj.has_user(user_id):
-
-                # Get the other_user_id before removing the user_id from the room
-                other_user_id = room_obj.get_other_user_id(user_id)
-
-                room_obj = txn_remove_user_from_room(room_id, user_id)
-                room_obj.put()
-
-                logging.info('User %d' % user_id + ' removed from room %d state: %s' % (room_id, str(room_obj)))
-
-                # The 'active' user has disconnected from the room, so we want to send an update to the remote
-                # user informing them of the new status.
-                if other_user_id:
-                    messaging.send_room_occupancy_to_room_members(room_obj, other_user_id)
-                    messaging.send_room_video_settings_to_room_members(room_obj)
-
-            else:
-                logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_obj.room_name, room_id, user_id))
-
-        else:
-            logging.error('Room %d' % room_id + ' does not exist. Cannot disconnect user %d' % user_id)

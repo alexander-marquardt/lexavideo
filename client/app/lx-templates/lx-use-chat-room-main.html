@@ -13,6 +13,7 @@
     <div ng-if="lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom == true">
         {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-chatbox.html" %}{% raw %}
 
+        <div ng-if="lxChatRoomOuterCtrl.showVideoElementsAndStartVideo == true">
         <div ng-controller="lxMainVideoCtrl">
 
             {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
@@ -209,7 +210,9 @@
                     </div>
                 </div>
             </div>
+
         </div> <!-- lxMainVideoController -->
+        </div>
 
         <div lx-initialize-channel-directive></div>
         <div lx-initialize-turn-directive></div>

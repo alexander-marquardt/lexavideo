@@ -10,7 +10,7 @@ import webapp2
 
 from video_src import error_reporting_from_client
 from video_src import rest_functionality
-from video_src import room_module
+from video_src import messaging
 from video_src import views
 
 
@@ -20,11 +20,11 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-landing-page-main.html>', views.LandingPageMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
     webapp2.Route(r'/_lx/handle_room/<room_name_from_url:.+>', rest_functionality.HandleEnterIntoRoom),
-    (r'/_lx/message', room_module.MessagePage),
+    (r'/_lx/message', messaging.MessagePage),
     (r'/_lx/log_error', error_reporting_from_client.LogClientError),
-    (r'/_lx/channel/manual_disconnect/', room_module.DisconnectPage),
-    (r'/_ah/channel/connected/',  room_module.ConnectPage),
-    (r'/_ah/channel/disconnected/',  room_module.DisconnectPage),
+    (r'/_lx/channel/manual_disconnect/', messaging.DisconnectPage),
+    (r'/_ah/channel/connected/',  messaging.ConnectPage),
+    (r'/_ah/channel/disconnected/',  messaging.DisconnectPage),
     (r'/.*', views.MainPage),
     (r'/', views.MainPage),
     ], debug=True)

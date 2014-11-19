@@ -104,7 +104,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # log this error for further analysis
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
 
-        current_user_id = room_dict['user_id']
+        user_id = long(room_dict['user_id'])
 
         response_dict = {}
 
@@ -112,10 +112,9 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
         if room_obj:
             # The room has already been created - try to add this user to the room. This is done in a transaction
             # to ensure that only two people can join a room.
-            (room_obj, response_dict['statusString']) = room_module.txn_add_user_to_room(room_obj.key.id(), current_user_id)
+            (room_obj, response_dict['statusString']) = room_module.txn_add_user_to_room(room_obj.key.id(), user_id)
 
         else:
-            user_id = room_dict['user_id']
 
             # This is a newly created room. Therefore we should add the current user to room_members_ids.
             room_dict['room_members_ids'] = [user_id,]
@@ -143,7 +142,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
 
         token_timeout =  240 # minutes
-        client_id = room_obj.make_client_id(current_user_id)
+        client_id = room_obj.make_client_id(user_id)
         channel_token = channel.create_channel(client_id, token_timeout)
         response_dict['clientId'] = client_id
         response_dict['channelToken'] = channel_token
