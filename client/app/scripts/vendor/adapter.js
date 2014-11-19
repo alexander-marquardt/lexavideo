@@ -4,17 +4,13 @@
  *  Use of this source code is governed by a BSD-style license
  *  that can be found in the LICENSE file in the root of the source
  *  tree.
+ *
+ *  Updated from https://raw.githubusercontent.com/GoogleChrome/webrtc/master/samples/web/js/adapter.js on Nov 19 2014.
  */
 
 /* More information about these options at jshint.com/docs/options */
-
-/* jshint browser: true, camelcase: true, curly: true, devel: true,
- eqeqeq: true, forin: false, globalstrict: true, quotmark: single,
- undef: true, unused: strict */
-
 /* global mozRTCIceCandidate, mozRTCPeerConnection,
  mozRTCSessionDescription, webkitRTCPeerConnection */
-
 /* exported trace */
 
 'use strict';
@@ -125,13 +121,11 @@ if (navigator.mozGetUserMedia) {
     attachMediaStream = function(element, stream) {
         console.log('Attaching media stream');
         element.mozSrcObject = stream;
-        element.play();
     };
 
     reattachMediaStream = function(to, from) {
         console.log('Reattaching media stream');
         to.mozSrcObject = from.mozSrcObject;
-        to.play();
     };
 
 } else if (navigator.webkitGetUserMedia) {
