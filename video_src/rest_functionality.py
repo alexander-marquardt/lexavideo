@@ -119,11 +119,6 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # This is a newly created room. Therefore we should add the current user to room_members_ids.
             room_dict['room_members_ids'] = [user_id,]
 
-            # TODO - the following declaration can be removed once we have implemented the UI for enabling video
-            # This is a newly created room. Therefore we should add the current user to video_enabled_ids.
-            room_dict['video_enabled_ids'] = [user_id,]
-
-
             # The RoomName has been added to the roomName structure. Now create a new Room object
             # for the new room.
             @ndb.transactional
