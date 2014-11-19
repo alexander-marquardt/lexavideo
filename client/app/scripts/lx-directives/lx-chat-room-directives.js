@@ -48,7 +48,7 @@ angular.module('lxChatRoom.directives', [])
 
         return {
             restrict: 'A',
-            link: function(scope) {
+            link: function() {
                 try {
                     lxTurnService.maybeRequestTurn();
                 }
@@ -58,7 +58,7 @@ angular.module('lxChatRoom.directives', [])
                     return false;
                 }
             }
-        }
+        };
     })
 
     // Directive that will control signalling between two users about the type of video that they wish to transmit.
