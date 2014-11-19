@@ -25,7 +25,8 @@
                              </div>
                             <div class="panel-footer">
                                 <div class="row">
-                                    <div class="col-xs-8 col-sm-10">
+                                    <div class="col-xs-8 col-sm-10"
+                                         ng-class="lxChatRoomOuterCtrl.showVideoElementsAndStartVideo ? 'col-xs-12 col-sm-12': ''">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -51,11 +52,12 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="col-xs-4 col-sm-2">
+                                    <div class="col-xs-4 col-sm-2"
+                                         ng-hide="lxChatRoomOuterCtrl.showVideoElementsAndStartVideo">
                                         <button type="button"
                                                 ng-click="showVideoElementsAndStartVideoFn()"
                                                 class="btn btn-sm pull-right"
-                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger disabled'">
+                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
                                             </span>
