@@ -32,7 +32,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         elem.find('.navbar-text').remove(); // just in case there is already text there, remove the previous element
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
-        var el = angular.element('<p class="navbar-text"/>');
+        var el = angular.element('<p class="navbar-text cl-navbar-text-size "/>');
         el.html(message);
         var compiledEl = $compile(el)(scope);
         elem.append(compiledEl);
@@ -65,7 +65,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
-        var el = angular.element('<p class="navbar-text"/>');
+        var el = angular.element('<p class="navbar-text cl-navbar-text-size"/>');
         el.html('Stranger has requested to exchange ' + videoType + '. Do you accept? ');
         var buttonGroup = angular.element('<div class="btn-group"></div>');
         var yesButton = angular.element('<button type="button" class="btn btn-default btn-sm navbar-btn">Yes</button>');

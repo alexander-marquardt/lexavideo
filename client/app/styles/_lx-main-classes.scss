@@ -169,3 +169,21 @@ $transition-border: border $fast-easing-delay ease;
 .panel-waiting {
   @include panel-variant($panel-waiting-border, $panel-waiting-text, $panel-waiting-heading-bg, $panel-waiting-border);
 }
+
+
+//.navbar-inverse .cl-navbar-text-danger {
+//  color: $brand-danger;
+//}
+
+@mixin generate-navbar-text-size-mixin {
+  @for $idx from 2 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
+      font-size: nth($video-navbar-text-overlay-font-size-list, $idx);
+    }
+  }
+}
+
+.cl-navbar-text-size {
+  font-size: nth($video-navbar-text-overlay-font-size-list, 1);
+  @include generate-navbar-text-size-mixin();
+}
