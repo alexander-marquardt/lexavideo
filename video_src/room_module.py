@@ -101,7 +101,6 @@ def txn_add_user_id_to_video_enabled_ids(room_id, user_id):
 
     if user_id in room_obj.video_enabled_ids:
         logging.info('Not added to video_enalbed_ids. user %d to %s' %(user_id, room_obj))
-        return
     else:
         logging.info('Adding video_enalbed_ids. user %d to %s' %(user_id, room_obj))
         room_obj.video_enabled_ids.append(user_id)
