@@ -134,13 +134,14 @@ angular.module('lxChatbox.directives', [])
 
 
                     // The messageIdHtml is used for finding this message when an acknowledgement is received from
-                    // the remote client.
+                    // the remote client. Note that the ack will be the messageUniqueId, which allows us to precisely
+                    // locate the associated element..
                     var messageIdHtml = '';
                     if ('messageUniqueId' in messagePayload) {
                         messageIdHtml = 'id="id-msg-' + messagePayload.messageUniqueId + '"';
                         // show a clock icon, that indicates that the message has not been delivered yet - this will
                         // later be replaced by the time if the message is delivered.
-                        timeString = '<span class="icon-lx-time"></span>';
+                        timeString = '<span class="icon-lx-time">&nbsp;</span>';
                     }
 
                     // This message doesn't have a unique Id, and so will not receive an acknowledgement - so we show
@@ -161,11 +162,13 @@ angular.module('lxChatbox.directives', [])
                     );
                     outerElement.append(messageElement);
 
-                    var compiledElement = $compile(outerElement)(scope);
-                    elem.append(compiledElement);
+                    elem.append(outerElement);
                     $timeout(function() {
-                        outerElement.addClass('cl-show-new-chat-bubble-element');
-
+                        // only if this message is not waiting for an ack should we show it immediately. Otherwise,
+                        // we should wait for the ack signal, which comes in the form of a messageUniqueId value.
+                        if (! ('messageUniqueId' in messagePayload)) {
+                            outerElement.addClass('cl-show-new-chat-bubble-element');
+                        }
                     });
                 };
 
@@ -174,9 +177,12 @@ angular.module('lxChatbox.directives', [])
                 // icon
                 var updateMessageWithAcknowledgement = function(ackMessageUniqueId) {
                     var timeString = lxTimeService.getTimeString();
-                    var timeSpanElem = chatPanelBody.find('#id-msg-' + ackMessageUniqueId).find('.cl-chat-time-display');
-                    timeSpanElem.html('&nbsp;&nbsp;' + timeString);
+                    var msgElem = chatPanelBody.find('#id-msg-' + ackMessageUniqueId);
+                    var timeSpanElem = msgElem.find('.cl-chat-time-display');
+                    timeSpanElem.html('&nbsp;&nbsp;' + timeString + ' <span class="icon-lx-check-mark"></span>');
 
+                    var outerElement = msgElem.parents('.cl-fade-in-chat-bubble-element');
+                    outerElement.addClass('cl-show-new-chat-bubble-element');
                 };
 
                 // watch to see if the local user has sent a new chat message to the remote user

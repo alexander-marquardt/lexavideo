@@ -107,7 +107,7 @@
 				{}
 			],
 			"properties": {
-				"order": 15,
+				"order": 11,
 				"id": 5,
 				"prevSize": 32,
 				"code": 58883,
@@ -132,15 +132,40 @@
 				{}
 			],
 			"properties": {
-				"order": 8,
+				"order": 6,
 				"id": 6,
 				"prevSize": 32,
 				"code": 58884,
-				"name": "close",
+				"name": "x-symbol",
 				"ligatures": ""
 			},
 			"setIdx": 0,
 			"iconIdx": 4
+		},
+		{
+			"icon": {
+				"paths": [
+					"M864 128l-480 480-224-224-160 160 384 384 640-640z"
+				],
+				"attrs": [
+					{}
+				],
+				"defaultCode": 58883,
+				"grid": 0
+			},
+			"attrs": [
+				{}
+			],
+			"properties": {
+				"order": 18,
+				"id": 7,
+				"prevSize": 32,
+				"code": 58889,
+				"name": "check-mark",
+				"ligatures": ""
+			},
+			"setIdx": 0,
+			"iconIdx": 5
 		},
 		{
 			"icon": {
@@ -157,7 +182,7 @@
 				{}
 			],
 			"properties": {
-				"order": 10,
+				"order": 7,
 				"id": 8,
 				"prevSize": 32,
 				"code": 58886,
@@ -182,7 +207,7 @@
 				{}
 			],
 			"properties": {
-				"order": 11,
+				"order": 8,
 				"id": 9,
 				"prevSize": 32,
 				"code": 61501,
@@ -208,7 +233,7 @@
 				{}
 			],
 			"properties": {
-				"order": 12,
+				"order": 9,
 				"id": 10,
 				"prevSize": 32,
 				"code": 61744,
@@ -233,7 +258,7 @@
 				{}
 			],
 			"properties": {
-				"order": 23,
+				"order": 16,
 				"id": 201,
 				"prevSize": 32,
 				"code": 57618,
@@ -258,7 +283,7 @@
 			],
 			"properties": {
 				"id": 112,
-				"order": 22,
+				"order": 15,
 				"prevSize": 32,
 				"code": 57617,
 				"name": "chat-bubble-right"
@@ -282,7 +307,7 @@
 			],
 			"properties": {
 				"id": 22,
-				"order": 16,
+				"order": 12,
 				"prevSize": 32,
 				"code": 61463,
 				"name": "time"
@@ -306,7 +331,7 @@
 			],
 			"properties": {
 				"id": 112,
-				"order": 17,
+				"order": 13,
 				"prevSize": 32,
 				"code": 61559,
 				"name": "cevron-up"
@@ -330,7 +355,7 @@
 			],
 			"properties": {
 				"id": 113,
-				"order": 18,
+				"order": 14,
 				"prevSize": 32,
 				"code": 61560,
 				"name": "chevron-down"
@@ -353,7 +378,7 @@
 				"grid": 16
 			},
 			"properties": {
-				"order": 14,
+				"order": 10,
 				"id": 12,
 				"prevSize": 32,
 				"code": 58887,
@@ -403,7 +428,7 @@
 				"grid": 16
 			},
 			"properties": {
-				"order": 6,
+				"order": 5,
 				"id": 15,
 				"prevSize": 32,
 				"code": 58892,
@@ -430,7 +455,7 @@
 			},
 			"properties": {
 				"id": 31,
-				"order": 25,
+				"order": 17,
 				"prevSize": 32,
 				"code": 58885,
 				"name": "chat-bubble-dual"
