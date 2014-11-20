@@ -46,7 +46,9 @@ angular.module('lxChatbox.controllers', [])
                 messageString: $scope.inputMessageString,
 
                 // The following ID is unique because the user will never be physically able to send more than 1 message per millisecond
-                messageUniqueId:  new Date().getTime()
+                messageUniqueId:  new Date().getTime(),
+
+                transmittedToServer: null
             };
 
             var sendMessagePromise = lxMessageService.sendMessage(messageType, $scope.sendMessagePayload);

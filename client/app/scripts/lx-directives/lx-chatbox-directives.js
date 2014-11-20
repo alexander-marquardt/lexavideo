@@ -103,17 +103,16 @@ angular.module('lxChatbox.directives', [])
             restrict: 'A',
             link: function (scope, elem) {
 
-
+                var timeString;
                 var chatPanelBody = angular.element(elem).parent();
                 var chatPanelHeadingElement = chatPanelBody.prev();
                 var chatPanel = chatPanelBody.parent();
 
-                var addMessageToDisplay = function(messageString, bubbleSide, transmittedSuccessBoolean) {
+                var addMessageToDisplay = function(messagePayload, bubbleSide, transmittedSuccessBoolean) {
                     // message: The text that will be displayed to the user
                     // bubbleSide: 'left' (message sent) or 'right' (message received)
                     // transmittedSuccessBoolean: true or false. true if message sent/received correctly, false otherwise.
 
-                    var timeString = lxTimeService.getTimeString();
 
 
                     // The following code will "flash" the chat panel heading when the user is not looking at the bottom
@@ -133,11 +132,30 @@ angular.module('lxChatbox.directives', [])
                         bubbleErrorClass = 'bubble-error';
                     }
 
+
+                    // The messageIdHtml is used for finding this message when an acknowledgement is received from
+                    // the remote client.
+                    var messageIdHtml = '';
+                    if ('messageUniqueId' in messagePayload) {
+                        messageIdHtml = 'id="id-msg-' + messagePayload.messageUniqueId + '"';
+                        // show a clock icon, that indicates that the message has not been delivered yet - this will
+                        // later be replaced by the time if the message is delivered.
+                        timeString = '<span class="icon-lx-time"></span>';
+                    }
+
+                    // This message doesn't have a unique Id, and so will not receive an acknowledgement - so we show
+                    // the current time - this will be the case for received messages.
+                    else {
+                        timeString = lxTimeService.getTimeString();
+                    }
+
                     messageElement.append(angular.element('<div class="col-xs-12 chat-body">')
                             .append(angular.element('<div class="bubble bubble-' + bubbleSide + ' ' + bubbleErrorClass + '"><i></i>')
-                                .append(messageString)
-                                .append(angular.element('<span class="cl-chat-time-display">')
-                                    .append('&nbsp;&nbsp;' + timeString)
+                                .append(angular.element('<div ' + messageIdHtml + '>')
+                                    .append(messagePayload.messageString)
+                                    .append(angular.element('<span class="cl-chat-time-display">')
+                                        .append('&nbsp;&nbsp;' + timeString)
+                                )
                             )
                         )
                     );
@@ -152,16 +170,25 @@ angular.module('lxChatbox.directives', [])
                 };
 
 
+                // Find the message that has been acknowledged, and update it to show the time instead of the clock
+                // icon
+                var updateMessageWithAcknowledgement = function(ackMessageUniqueId) {
+                    var timeString = lxTimeService.getTimeString();
+                    var timeSpanElem = chatPanelBody.find('#id-msg-' + ackMessageUniqueId).find('.cl-chat-time-display');
+                    timeSpanElem.html('&nbsp;&nbsp;' + timeString);
+
+                };
+
                 // watch to see if the local user has sent a new chat message to the remote user
                 scope.$watch('sendMessageTime', function() {
                     if (scope.sendMessagePayload.messageString) {
-                        addMessageToDisplay(scope.sendMessagePayload.messageString, 'left', scope.sendMessagePayload.transmittedToServer);
+                        addMessageToDisplay(scope.sendMessagePayload, 'left', scope.sendMessagePayload.transmittedToServer);
                     }
                 });
 
                 scope.$watch('receivedChatMessageObject.receivedMessageTime', function() {
                     if (scope.receivedChatMessageObject.messageString) {
-                        addMessageToDisplay(scope.receivedChatMessageObject.messageString, 'right', true);
+                        addMessageToDisplay(scope.receivedChatMessageObject, 'right', true);
                         // if the user is not looking at the current window, then show them how many messages
                         // they have missed while they were not paying attention.
                         if (!windowFocus) {
@@ -171,6 +198,12 @@ angular.module('lxChatbox.directives', [])
                         } else {
                             numMessagesReceivedSinceLastWindowFocus = 0;
                         }
+                    }
+                });
+
+                scope.$watch('ackChatMessageObject.ackMessageUniqueId', function(ackMessageUniqueId) {
+                    if (ackMessageUniqueId) {
+                        updateMessageWithAcknowledgement(ackMessageUniqueId);
                     }
                 });
             }
