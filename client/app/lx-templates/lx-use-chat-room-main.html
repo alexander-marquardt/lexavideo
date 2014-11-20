@@ -11,213 +11,22 @@
     <!-- the following ng-if statement ensures that in the case that we have to redirect the user back to the landing page
          that the modal boxes and camera prompts and other things have not already started to execute -->
     <div ng-if="lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom == true">
-        {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-chatbox.html" %}{% raw %}
+        {% endraw %}{% include "lx-templates/lx-chatbox.html" %}{% raw %}
 
         <div ng-if="lxChatRoomOuterCtrl.showVideoElementsAndStartVideo == true">
-        <div ng-controller="lxMainVideoCtrl">
 
-            {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
-            <div lx-check-if-system-supports-web-rtc-directive></div>
+            {% endraw %}{% include "lx-templates/lx-video-elements.html" %}{% raw %}
 
-            {% endraw %}{% include "lx-templates/lx-jinja-templates/lx-tc-access-camera.html" %}{% raw %}
-            <div lx-video-negotiation-directive></div>
-            <div lx-access-camera-and-microphone-directive></div>
-
-
-
-            <div class="row cl-row-no-xs-margins">
-                <div lx-video-container-directive>
-
-                    <div class="col-sm-6 text-center cl-col-no-xs-padding" >
-                        <div lx-video-wrapper-directive video-window='local'  id="id-local-video-wrapper-div">
-                            <div class="text-center">
-                                <div ng-show="(videoTypeSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoTypeSignalingObject.localIsSendingVideoType) || videoTypeSignalingObject.debugShowAllVideoWindows" >
-                                    <div class="cl-my-well" >
-                                        <div style="position: relative">
-                                            <div lx-video-element-directive video-window='local'></div>
-                                            <div lx-video-settings-negotiation-directive class="cl-hide-on-larger-than-xs"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div lx-generate-ascii-video-directive id="id-local-ascii-video-wrapper-div"
-                                     ng-show="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') || videoTypeSignalingObject.debugShowAllVideoWindows" >
-                                    <div class="cl-my-well" >
-                                        <div style="position: relative">
-                                            <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
-                                            <pre class="cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
-                                            </span></pre>
-                                            <div lx-video-settings-negotiation-directive class="cl-hide-on-larger-than-xs"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 text-center cl-col-no-xs-padding" >
-                        <div lx-video-wrapper-directive video-window='remote' id="id-remote-video-wrapper-div">
-                            <div lx-mini-video-template-directive></div>
-                            <div class="text-center" >
-                                <div id="id-remote-hd-video-wrapper-div"
-                                     ng-show="videoTypeSignalingObject.remoteIsSendingVideoType == 'HD Video' ||
-                                     (!videoTypeSignalingObject.remoteIsSendingVideoType && videoTypeSignalingObject.localHasSelectedVideoType == 'HD Video') ||
-                                     (!videoTypeSignalingObject.remoteIsSendingVideoType && videoTypeSignalingObject.localHasSelectedVideoType == null) ||
-                                     videoTypeSignalingObject.debugShowAllVideoWindows">
-
-                                    <div class="cl-my-well">
-                                        <div style="position: relative">
-                                            <div lx-video-element-directive video-window='remote'></div>
-                                            <div lx-video-settings-negotiation-directive></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"
-                                     ng-show="(videoTypeSignalingObject.remoteIsSendingVideoType == 'ASCII Video') ||
-                                     (!videoTypeSignalingObject.remoteIsSendingVideoType && videoTypeSignalingObject.localHasSelectedVideoType == 'ASCII Video') ||
-                                     videoTypeSignalingObject.debugShowAllVideoWindows">
-                                    <div class="cl-my-well">
-                                        <div style="position: relative">
-                                            <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
-                                            <pre class = "cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
-                                            </span></pre>
-                                            <div lx-video-settings-negotiation-directive></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- This row contains the buttons that control the videoType that will be transmitted and microphone/sound/video mute -->
-            <div class="row cl-row-no-xs-margins" style="margin-bottom:10px">
-
-                <div class="col-xs-12 text-center cl-col-no-xs-padding">
-                    <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
-                    <button ng-show="!localVideoObject.isMicrophoneMuted && videoTypeSignalingObject.localIsSendingVideoType != 'ASCII Video'"
-                            type="button" class="btn btn-sm btn-default"
-                            ng-click="toggleMicrophoneMute()">
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-microphone-cfg"></span>
-                        </span>
-                    </button>
-
-                    <button ng-show="localVideoObject.isMicrophoneMuted || videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video'"
-                            type="button" class="btn btn-sm btn-gray"
-                            ng-class="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled' : ''"
-                            ng-click="toggleMicrophoneMute()">
-
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-microphone-cfg"></span>
-                            <span class="icon-lx-thick-forward-slash-cfg"></span>
-                            <span class="icon-lx-thin-forward-slash-cfg"></span>
-                        </span>
-                    </button>
-
-
-                    <!-- enable/disable remote audio -->
-                    <button ng-show="!remoteVideoObject.remoteHdVideoElem.muted && videoTypeSignalingObject.localIsSendingVideoType != 'ASCII Video'"
-                            type="button" class="btn btn-sm btn-default"
-                            ng-click="toggleAudioMute()">
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-volume-high-cfg"></span>
-                        </span>
-                    </button>
-
-                    <button ng-show="remoteVideoObject.remoteHdVideoElem.muted || videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video'"
-                            type="button" class="btn btn-sm btn-gray"
-                            ng-class="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled' : ''"
-                            ng-click="toggleAudioMute()">
-
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-volume-high-cfg"></span>
-                            <span class="icon-lx-thick-forward-slash-cfg"></span>
-                            <span class="icon-lx-thin-forward-slash-cfg"></span>
-                        </span>
-                    </button>
-
-
-                    <!-- enable/disable video - button that indicates that the video stream is currently enabled -->
-                    <button ng-show="!localVideoObject.isWebcamMuted" type="button" class="btn btn-sm btn-default"
-                            ng-click="toggleWebcamMute()">
-
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-video-camera-filled-cfg"></span>
-                        </span>
-                    </button>
-
-                    <button ng-show="localVideoObject.isWebcamMuted" type="button" class="btn btn-sm btn-gray"
-                            ng-click="toggleWebcamMute()">
-
-                        <span class="cl-lx-call-control-wrapper-cfg">
-                            <span class="icon-lx-video-camera-filled-cfg"></span>
-                            <span class="icon-lx-thick-forward-slash-cfg"></span>
-                            <span class="icon-lx-thin-forward-slash-cfg"></span>
-                        </span>
-                    </button>
-
-
-                    <!-- hangup button -->
-                    <!--<button type="button" class="btn btn-sm btn-default"-->
-                            <!--ng-click="doHangup()">-->
-                        <!--<span class="cl-lx-call-control-wrapper-cfg">-->
-                            <!--<span class="icon-lx-phone-hang-up-cfg"></span>-->
-                        <!--</span>-->
-                    <!--</button>-->
-
-                    <button type="button" class="btn btn-sm"
-                            ng-class="(videoTypeSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
-                            ng-click="setLocalVideoType('HD Video')">HD Video</button>
-                    <button type="button" class="btn btn-sm"
-                            ng-class="(videoTypeSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
-                            ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
-
-                </div>
-            </div>
-
-            <div class="row cl-row-no-xs-margins">
-                <div class="col-xs-12 text-center cl-col-no-xs-padding">
-                    <div ng-if="debugBuildEnabled">
-                        <table class="table table-bordered table-striped">
-                            <tr>
-                                <td>Room Name: {{ roomOccupancyObject.roomName }}</td>
-                                <td>Room Id:   {{ roomOccupancyObject.roomId }}</td>
-                            </tr>
-                            <tr>
-                                <td>User Name: {{ roomOccupancyObject.userName }}</td>
-                                <td>Remote User Name: {{ roomOccupancyObject.remoteUserName }}</td>
-                            </tr>
-                            <tr>
-                                <td>User Id: {{ roomOccupancyObject.userId }}</td>
-                                <td>Remote User Id: {{ roomOccupancyObject.remoteUserId }}</td>
-                            </tr>
-                            <tr>
-                                <td>localHasSelectedVideoType: {{ videoTypeSignalingObject.localHasSelectedVideoType }}</td>
-                                <td>remoteVideoSignalingStatus.settingsType: {{ videoTypeSignalingObject.remoteVideoSignalingStatus.settingsType }}</td>
-                            </tr>
-                            <tr>
-                                <td>localIsNegotiatingForVideoType: {{ videoTypeSignalingObject.localIsNegotiatingForVideoType }}</td>
-                                <td>remoteVideoSignalingStatus.videoType: {{ videoTypeSignalingObject.remoteVideoSignalingStatus.videoType }}</td>
-                            </tr>
-                            <tr>
-                                <td>localIsSendingVideoType: {{ videoTypeSignalingObject.localIsSendingVideoType }}</td>
-                                <td>remoteIsSendingVideoType: {{ videoTypeSignalingObject.remoteIsSendingVideoType }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </div> <!-- lxMainVideoController -->
         </div>
 
         <div lx-initialize-channel-directive></div>
         <div lx-initialize-turn-directive></div>
 
     </div>
-</div>
 
 {% endraw %}
+
+    {% include "lx-templates/lx-debugging-info.html" %}
+
+</div>
+
