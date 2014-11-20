@@ -64,16 +64,18 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         $scope.receivedChatMessageObject = {
-            receivedMessageString: undefined,
+            messageString: undefined,
 
-           // receivedMessageStringTime is updated every time the user sends a message - this is necessary because
+           // receivedMessageTime is updated every time the user sends a message - this is necessary because
             // if we just watch receivedMessageString for changes to trigger sending of the message, then the user will not be
             // able to send the same message twice.
-            receivedMessageStringTime: 0,
+            receivedMessageTime: 0
+        };
 
-            // receivedMessageUniqueId is used for sending an acknowledgement to the sender that their message was
-            // correctly received.
-            receivedMessageUniqueId: null
+        // ackChatMessageObject holds the acknowledgement that the remote client has received a message that
+        // was sent from the local user
+        $scope.ackChatMessageObject = {
+            ackMessageUniqueId: null
         };
 
         // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them

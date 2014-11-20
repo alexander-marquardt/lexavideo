@@ -41,34 +41,30 @@ angular.module('lxChatbox.controllers', [])
         $scope.sendChatMessageFn = function() {
 
             var messageType = 'chatMessage';
-            var chatMessage = $scope.inputMessageString ;
-            var messagePayload = {
-                'messageString': chatMessage,
+
+            $scope.sendMessagePayload = {
+                messageString: $scope.inputMessageString,
 
                 // The following ID is unique because the user cannot send more than 1 message per millisecond
-                'messageUniqueId':  new Date().getTime()
+                messageUniqueId:  new Date().getTime()
             };
-            var sendMessagePromise = lxMessageService.sendMessage(messageType, messagePayload);
 
+            var sendMessagePromise = lxMessageService.sendMessage(messageType, $scope.sendMessagePayload);
             sendMessagePromise.then(
 
                 // message was successfully delivered to the server
                 function() {
-
-                    $scope.sendMessageTimeSent = new Date().getTime();
-                    $scope.sendMessageString = chatMessage;
                     // clear the input box
                     $scope.inputMessageString = '';
                 },
 
                 // message was not delivered to the server
                 function(response) {
-                    $scope.sendMessageTimeFailed = new Date().getTime();
 
                     if (response.data.statusString === 'otherUserNotInRoom') {
-                        $scope.sendMessageFailedString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + chatMessage;
+                        $scope.sendMessagePayload.sendMessageString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + chatMessage;
                     } else {
-                         $scope.sendMessageFailedString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + chatMessage;
+                        $scope.sendMessagePayload.sendMessageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + chatMessage;
                     }
                 }
             );

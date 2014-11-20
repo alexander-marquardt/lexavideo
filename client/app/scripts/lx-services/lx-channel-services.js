@@ -40,13 +40,13 @@ angular.module('lxChannel.services', [])
     function($log,
              $timeout,
              $rootScope,
-             lxUseChatRoomConstantsService,
              lxCallService,
-             lxWebRtcSessionService,
-             lxTurnService,
+             lxChannelMessageService,
              lxChannelSupportService,
-             lxUseChatRoomVarsService,
-             lxChannelMessageService) {
+             lxMessageService,
+             lxWebRtcSessionService
+
+             ) {
 
         /*
          Provides functionality for opening up and handling callbacks from the Google App-engine "Channel API".
@@ -65,8 +65,6 @@ angular.module('lxChannel.services', [])
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteVideoObject;
                 var videoSignalingObject = scope.videoTypeSignalingObject;
-                var receivedChatMessageObject = scope.receivedChatMessageObject;
-                var roomOccupancyObject = scope.roomOccupancyObject;
 
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
@@ -133,6 +131,8 @@ angular.module('lxChannel.services', [])
 
 
                         case 'roomOccupancy':
+                            var roomOccupancyObject = scope.roomOccupancyObject;
+
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
 
@@ -188,10 +188,19 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'chatMessage':
-                            receivedChatMessageObject.receivedMessageString = messageObject.messagePayload.messageString;
-                            receivedChatMessageObject.receivedMessageUniqueId = messageObject.messagePayload.messageUniqueId
+                            var receivedChatMessageObject = scope.receivedChatMessageObject;
+
+                            receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
                             // receivedMessageStringToggle is used for triggering the watcher
-                            receivedChatMessageObject.receivedMessageStringTime = new Date().getTime();
+                            receivedChatMessageObject.receivedMessageTime = new Date().getTime();
+
+                            // acknowledge receipt of the message
+                            lxMessageService.sendMessage('ackChatMessage', {'ackMessageUniqueId': messageObject.messagePayload.messageUniqueId});
+                            break;
+
+                        case 'ackChatMessage':
+                            var ackChatMessageObject = scope.ackChatMessageObject;
+                            ackChatMessageObject.ackMessageUniqueId = messageObject.messagePayload.ackMessageUniqueId;
                             break;
 
                         default:

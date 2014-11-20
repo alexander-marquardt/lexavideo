@@ -108,7 +108,7 @@ angular.module('lxChatbox.directives', [])
                 var chatPanelHeadingElement = chatPanelBody.prev();
                 var chatPanel = chatPanelBody.parent();
 
-                var addMessageToDisplay = function(message, bubbleSide, transmittedSuccessBoolean) {
+                var addMessageToDisplay = function(messageString, bubbleSide, transmittedSuccessBoolean) {
                     // message: The text that will be displayed to the user
                     // bubbleSide: 'left' (message sent) or 'right' (message received)
                     // transmittedSuccessBoolean: true or false. true if message sent/received correctly, false otherwise.
@@ -135,7 +135,7 @@ angular.module('lxChatbox.directives', [])
 
                     messageElement.append(angular.element('<div class="col-xs-12 chat-body">')
                             .append(angular.element('<div class="bubble bubble-' + bubbleSide + ' ' + bubbleErrorClass + '"><i></i>')
-                                .append(message)
+                                .append(messageString)
                                 .append(angular.element('<span class="cl-chat-time-display">')
                                     .append('&nbsp;&nbsp;' + timeString)
                             )
@@ -153,21 +153,15 @@ angular.module('lxChatbox.directives', [])
 
 
                 // watch to see if the local user has sent a new chat message to the remote user
-                scope.$watch('sendMessageTimeSent', function() {
-                    if (scope.sendMessageString) {
-                        addMessageToDisplay(scope.sendMessageString, 'left', true);
+                scope.$watch('sendMessagePayload.messageUniqueId', function() {
+                    if (scope.sendMessagePayload.messageString) {
+                        addMessageToDisplay(scope.sendMessagePayload.messageString, 'left', true);
                     }
                 });
 
-                scope.$watch('sendMessageTimeFailed', function() {
-                    if (scope.sendMessageFailedString) {
-                        addMessageToDisplay(scope.sendMessageFailedString, 'left', false);
-                    }
-                });
-
-                scope.$watch('receivedChatMessageObject.receivedMessageStringTime', function() {
-                    if (scope.receivedChatMessageObject.receivedMessageString) {
-                        addMessageToDisplay(scope.receivedChatMessageObject.receivedMessageString, 'right', true);
+                scope.$watch('receivedChatMessageObject.receivedMessageTime', function() {
+                    if (scope.receivedChatMessageObject.messageString) {
+                        addMessageToDisplay(scope.receivedChatMessageObject.messageString, 'right', true);
                         // if the user is not looking at the current window, then show them how many messages
                         // they have missed while they were not paying attention.
                         if (!windowFocus) {
