@@ -187,3 +187,13 @@ $transition-border: border $fast-easing-delay ease;
   font-size: nth($video-navbar-text-overlay-font-size-list, 1);
   @include generate-navbar-text-size-mixin();
 }
+
+
+.cl-text-size-1_5em {
+  font-size: 15em;
+}
+
+.cl-text-size-2_0em {
+  font-size: 2em;
+}
+

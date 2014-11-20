@@ -12,7 +12,10 @@
                              ng-click="userHasAlreadyClickedInChatPanel = true">
 
                             <div class="panel-heading  cl-transition-opacity-and-background-color">
-                                <span class="icon-lx-chat-bubble-dual"></span>Chat room:
+                                <span class="cl-text-size-2_0em" style="display:inline-block;line-height:1em;">
+                                    <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
+                                    &nbsp;{{ roomOccupancyObject.roomName }}&nbsp;
+                                </span>
 
                                 <span ng-show="!roomOccupancyObject.remoteUserId">Waiting for someone to join ... </span>
                                 <span ng-show="roomOccupancyObject.remoteUserName!=roomOccupancyObject.remoteUserId">{{ roomOccupancyObject.remoteUserName }} has joined</span>
