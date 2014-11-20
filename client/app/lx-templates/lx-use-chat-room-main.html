@@ -22,6 +22,42 @@
         <div lx-initialize-channel-directive></div>
         <div lx-initialize-turn-directive></div>
 
+        <div class="row cl-row-no-xs-margins">
+            <div class="col-xs-12 text-center cl-col-no-xs-padding">
+                <div class="cl-match-element-to-video-sizing" style="display:inline-block">
+                    <div class="row cl-row-no-xs-margins">
+                        <div class="col-md-10 col-lg-8 cl-col-no-xs-padding">
+
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-xs-8 col-sm-10 cl-text-size-1_5em">
+                                        Remote user has requested to exchange video. Do you accept?
+                                    </div>
+
+
+                                    <div class="col-xs-4 col-sm-2"
+                                         ng-hide="lxChatRoomOuterCtrl.showVideoElementsAndStartVideo">
+                                        <button type="button"
+                                                ng-click="showVideoElementsAndStartVideoFn()"
+                                                ng-dblclick="showVideoElementsAndStartVideoFn()"
+                                                class="btn btn-sm pull-right"
+                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                            <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                                <span class="icon-lx-start-video-camera-cfg"></span>
+                                            </span>
+                                            Start Video
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
 {% endraw %}
