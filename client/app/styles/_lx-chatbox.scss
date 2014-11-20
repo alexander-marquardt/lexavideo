@@ -53,10 +53,10 @@
   background: $brand-primary-lighter;
 }
 
-//.bubble.bubble-error {
-//    border: $brand-danger solid 1px;
-//    background: $brand-danger-lighter;
-//}
+.bubble.bubble-error {
+    border: $brand-danger solid 1px;
+    background: $brand-danger-lighter;
+}
 
 /* The bubble arrows are made by overlaying two triangles on top of each other. The first is a dark color, and the
    second is a light color. The part of the dark triangle that is visible is the "border" of the triangle, and the
