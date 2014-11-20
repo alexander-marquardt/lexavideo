@@ -45,7 +45,7 @@ angular.module('lxChatbox.controllers', [])
             $scope.sendMessagePayload = {
                 messageString: $scope.inputMessageString,
 
-                // The following ID is unique because the user cannot send more than 1 message per millisecond
+                // The following ID is unique because the user will never be physically able to send more than 1 message per millisecond
                 messageUniqueId:  new Date().getTime()
             };
 
@@ -56,18 +56,24 @@ angular.module('lxChatbox.controllers', [])
                 function() {
                     // clear the input box
                     $scope.inputMessageString = '';
+
                 },
 
                 // message was not delivered to the server
                 function(response) {
 
+
+
                     if (response.data.statusString === 'otherUserNotInRoom') {
-                        $scope.sendMessagePayload.sendMessageString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + chatMessage;
+                        $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + $scope.inputMessageString;
                     } else {
-                        $scope.sendMessagePayload.sendMessageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + chatMessage;
+                        $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + $scope.inputMessageString;
                     }
                 }
-            );
+            )['finally'](function () {
+                // once the promise is resolved, update the sendMessageTime which will trigger some watchers
+                $scope.sendMessageTime = new Date().getTime()
+            });
         };
     }
 );

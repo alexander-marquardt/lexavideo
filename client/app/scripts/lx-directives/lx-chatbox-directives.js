@@ -153,7 +153,7 @@ angular.module('lxChatbox.directives', [])
 
 
                 // watch to see if the local user has sent a new chat message to the remote user
-                scope.$watch('sendMessagePayload.messageUniqueId', function() {
+                scope.$watch('sendMessageTime', function() {
                     if (scope.sendMessagePayload.messageString) {
                         addMessageToDisplay(scope.sendMessagePayload.messageString, 'left', true);
                     }

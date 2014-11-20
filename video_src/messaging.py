@@ -10,7 +10,7 @@ from video_src import models
 from video_src import http_helpers
 from error_handling import handle_exceptions
 
-@handle_exceptions
+# Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
 def handle_message(room_obj, from_user_id, message):
     # This function passes a message from one user in a given "room" to the other user in the same room.
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
