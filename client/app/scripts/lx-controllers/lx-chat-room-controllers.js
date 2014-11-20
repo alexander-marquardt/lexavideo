@@ -63,13 +63,17 @@ angular.module('lxUseChatRoom.controllers', [])
             lxMessageService.sendMessage('startVideo', {});
         };
 
-        $scope.chatMessageObject = {
+        $scope.receivedChatMessageObject = {
             receivedMessageString: undefined,
 
            // receivedMessageStringTime is updated every time the user sends a message - this is necessary because
             // if we just watch receivedMessageString for changes to trigger sending of the message, then the user will not be
             // able to send the same message twice.
-            receivedMessageStringTime: 0
+            receivedMessageStringTime: 0,
+
+            // receivedMessageUniqueId is used for sending an acknowledgement to the sender that their message was
+            // correctly received.
+            receivedMessageUniqueId: null
         };
 
         // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them

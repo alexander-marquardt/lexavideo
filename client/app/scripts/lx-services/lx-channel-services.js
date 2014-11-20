@@ -65,7 +65,7 @@ angular.module('lxChannel.services', [])
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteVideoObject;
                 var videoSignalingObject = scope.videoTypeSignalingObject;
-                var chatMessageObject = scope.chatMessageObject;
+                var receivedChatMessageObject = scope.receivedChatMessageObject;
                 var roomOccupancyObject = scope.roomOccupancyObject;
 
                 $rootScope.$apply(function() {
@@ -188,9 +188,10 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'chatMessage':
-                            chatMessageObject.receivedMessageString = messageObject.messagePayload;
+                            receivedChatMessageObject.receivedMessageString = messageObject.messagePayload.messageString;
+                            receivedChatMessageObject.receivedMessageUniqueId = messageObject.messagePayload.messageUniqueId
                             // receivedMessageStringToggle is used for triggering the watcher
-                            chatMessageObject.receivedMessageStringTime = new Date().getTime();
+                            receivedChatMessageObject.receivedMessageStringTime = new Date().getTime();
                             break;
 
                         default:

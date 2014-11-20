@@ -22,11 +22,11 @@ angular.module('lxChatbox.controllers', [])
         $scope.sendMessageString = '';
         $scope.sendMessageFailedString = '';
 
-        // sendMessageStringTime is updated every time the user sends a message - this is necessary because
+        // sendMessageTimeSent is updated every time the user sends a message - this is necessary because
         // if we just watch sendMessageString for changes to trigger sending of the message, then the user will not be
         // able to send the same message twice.
         $scope.sendMessageStringTime = 0;
-        $scope.sendMessageStringFailedTime = 0;
+        $scope.sendMessageTimeFailed = 0;
 
         $scope.maxMsgLength = 5000;
 
@@ -40,16 +40,22 @@ angular.module('lxChatbox.controllers', [])
 
         $scope.sendChatMessageFn = function() {
 
-            var chatMessage = $scope.inputMessageString ;
             var messageType = 'chatMessage';
-            var sendMessagePromise = lxMessageService.sendMessage(messageType, chatMessage);
+            var chatMessage = $scope.inputMessageString ;
+            var messagePayload = {
+                'messageString': chatMessage,
+
+                // The following ID is unique because the user cannot send more than 1 message per millisecond
+                'messageUniqueId':  new Date().getTime()
+            };
+            var sendMessagePromise = lxMessageService.sendMessage(messageType, messagePayload);
 
             sendMessagePromise.then(
 
                 // message was successfully delivered to the server
                 function() {
 
-                    $scope.sendMessageStringTime = new Date().getTime();
+                    $scope.sendMessageTimeSent = new Date().getTime();
                     $scope.sendMessageString = chatMessage;
                     // clear the input box
                     $scope.inputMessageString = '';
@@ -57,7 +63,7 @@ angular.module('lxChatbox.controllers', [])
 
                 // message was not delivered to the server
                 function(response) {
-                    $scope.sendMessageStringFailedTime = new Date().getTime();
+                    $scope.sendMessageTimeFailed = new Date().getTime();
 
                     if (response.data.statusString === 'otherUserNotInRoom') {
                         $scope.sendMessageFailedString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + chatMessage;
