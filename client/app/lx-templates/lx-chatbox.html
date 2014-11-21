@@ -29,7 +29,7 @@
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-xs-8 col-sm-10"
-                                         ng-class="lxChatRoomOuterCtrl.showVideoElementsAndStartVideoCameraCamera ? 'col-xs-12 col-sm-12': ''">
+                                         ng-class="videoCameraStatusObject.showVideoElementsAndStartVideoCameraCamera ? 'col-xs-12 col-sm-12': ''">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -56,7 +56,7 @@
                                         </form>
                                     </div>
                                     <div class="col-xs-4 col-sm-2"
-                                         ng-hide="lxChatRoomOuterCtrl.showVideoElementsAndStartVideoCamera">
+                                         ng-hide="videoCameraStatusObject.showVideoElementsAndStartVideoCamera">
                                         <button type="button"
                                                 ng-click="showVideoElementsAndStartVideoFn()"
                                                 ng-dblclick="showVideoElementsAndStartVideoFn()"

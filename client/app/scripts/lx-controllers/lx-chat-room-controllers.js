@@ -26,7 +26,7 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
         $scope.lxChatRoomOuterCtrl = {
-            showVideoElementsAndStartVideoCamera: false,
+
             userSuccessfullyEnteredRoom: false,
             channelToken: null,
             clientId: null
@@ -58,8 +58,12 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = reason;
         });
 
+        $scope.videoCameraStatusObject = {
+            showVideoElementsAndStartVideoCamera: false
+        };
+
         $scope.showVideoElementsAndStartVideoFn = function() {
-            $scope.lxChatRoomOuterCtrl.showVideoElementsAndStartVideoCamera = true;
+            $scope.videoCameraStatusObject.showVideoElementsAndStartVideoCamera = true;
             lxMessageService.sendMessage('startVideoCamera', {requestAcceptOrDenyStartVideoCamera: 'requestVideoCamera'});
         };
 
@@ -77,6 +81,7 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.ackChatMessageObject = {
             ackMessageUniqueId: null
         };
+
 
         // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
         // here because information received on the channel needs to be written into these objects.

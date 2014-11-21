@@ -13,7 +13,7 @@
     <div ng-if="lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom == true">
         {% endraw %}{% include "lx-templates/lx-chatbox.html" %}{% raw %}
 
-        <div ng-if="lxChatRoomOuterCtrl.showVideoElementsAndStartVideoCamera == true">
+        <div ng-if="videoCameraStatusObject.showVideoElementsAndStartVideoCamera == true">
 
             {% endraw %}{% include "lx-templates/lx-video-elements.html" %}{% raw %}
 
@@ -36,7 +36,7 @@
 
 
                                     <div class="col-xs-4 col-sm-2"
-                                         ng-hide="lxChatRoomOuterCtrl.showVideoElementsAndStartVideoCamera">
+                                         ng-hide="videoCameraStatusObject.showVideoElementsAndStartVideoCamera">
 
                                             <button type="button"
                                                     class="btn btn-sm pull-right btn-block"

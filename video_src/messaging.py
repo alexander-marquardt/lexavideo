@@ -27,8 +27,7 @@ def handle_message(room_obj, from_user_id, message):
     if message_type == 'startVideoCamera':
         room_obj = room_module.txn_add_user_id_to_video_enabled_ids(room_obj.key.id(), from_user_id)
         send_room_video_settings_to_room_members(room_obj)
-        # return now, since startVideo is a message intended for the server and should not reach the other client
-        return
+
 
     if message_type == 'sdp':
         if message_payload['type'] == 'bye':

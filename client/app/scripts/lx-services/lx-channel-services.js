@@ -198,9 +198,16 @@ angular.module('lxChannel.services', [])
                             lxMessageService.sendMessage('ackChatMessage', {'ackMessageUniqueId': messageObject.messagePayload.messageUniqueId});
                             break;
 
+
+                        // If client receives ackChatMessage, it means that the message (as indicated by ackMessageUniqueId)
+                        // that was sent to the remote user has been successfully received.
                         case 'ackChatMessage':
-                            var ackChatMessageObject = scope.ackChatMessageObject;
-                            ackChatMessageObject.ackMessageUniqueId = messageObject.messagePayload.ackMessageUniqueId;
+                            scope.ackChatMessageObject.ackMessageUniqueId = messageObject.messagePayload.ackMessageUniqueId;
+                            break;
+
+                        case 'startVideoCamera':
+
+
                             break;
 
                         default:
