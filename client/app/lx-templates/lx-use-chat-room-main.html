@@ -13,7 +13,7 @@
     <div ng-if="lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom == true">
         {% endraw %}{% include "lx-templates/lx-chatbox.html" %}{% raw %}
 
-        <div ng-if="videoCameraStatusObject.showVideoElementsAndStartVideoCamera == true">
+        <div ng-if="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == true">
 
             {% endraw %}{% include "lx-templates/lx-video-elements.html" %}{% raw %}
 

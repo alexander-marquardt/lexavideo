@@ -24,9 +24,11 @@ def handle_message(room_obj, from_user_id, message):
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
 
-    if message_type == 'startVideoCamera':
-        room_obj = room_module.txn_add_user_id_to_video_enabled_ids(room_obj.key.id(), from_user_id)
-        send_room_video_settings_to_room_members(room_obj)
+    if message_type == 'videoCameraStatus':
+
+        if message_payload['videoElementsEnabledAndCameraAccessRequested']:
+            room_obj = room_module.txn_add_user_id_to_video_enabled_ids(room_obj.key.id(), from_user_id)
+            send_room_video_settings_to_room_members(room_obj)
 
 
     if message_type == 'sdp':
@@ -159,8 +161,8 @@ def send_room_video_settings_to_room_members(room_obj):
             # send a message to the other user (the client already in the room) that someone has just joined the room
             logging.debug('Sending message to other_user: %s' % repr(message_obj))
 
-            # If there is already another user in the room, then the second person to connect will be the
-            # 'rtcInitiator'. By sending this 'rtcInitiator' value to the clients, this will re-initiate
+            # The second person to connect will be the 'rtcInitiator'.
+            # By sending this 'rtcInitiator' value to the clients, this will re-initiate
             # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
             # once per session, unless the users become disconnected and need to re-connect.
             message_obj['messagePayload']['rtcInitiator'] = is_initiator

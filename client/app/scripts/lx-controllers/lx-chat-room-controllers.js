@@ -59,12 +59,17 @@ angular.module('lxUseChatRoom.controllers', [])
         });
 
         $scope.videoCameraStatusObject = {
-            showVideoElementsAndStartVideoCamera: false
+
+            // Note: the following values are "requests" for camera access, because they only enable the display
+            // of the video elements and show the access prompt that the user must click on before actual camera
+            // "access" is given.
+            localHasEnabledVideoElementsAndRequestedCameraAccess: false,
+            remoteHasEnabledVideoElementsAndRequestedCameraAccess: false
         };
 
         $scope.showVideoElementsAndStartVideoFn = function() {
-            $scope.videoCameraStatusObject.showVideoElementsAndStartVideoCamera = true;
-            lxMessageService.sendMessage('startVideoCamera', {requestAcceptOrDenyStartVideoCamera: 'requestVideoCamera'});
+            $scope.videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess = true;
+            lxMessageService.sendMessage('videoCameraStatus', {videoElementsEnabledAndCameraAccessRequested: true});
         };
 
         $scope.receivedChatMessageObject = {

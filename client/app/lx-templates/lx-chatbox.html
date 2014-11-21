@@ -29,7 +29,7 @@
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-xs-8 col-sm-10"
-                                         ng-class="videoCameraStatusObject.showVideoElementsAndStartVideoCameraCamera ? 'col-xs-12 col-sm-12': ''">
+                                         ng-class="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess ? 'col-xs-12 col-sm-12': ''">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -56,7 +56,7 @@
                                         </form>
                                     </div>
                                     <div class="col-xs-4 col-sm-2"
-                                         ng-hide="videoCameraStatusObject.showVideoElementsAndStartVideoCamera">
+                                         ng-hide="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess">
                                         <button type="button"
                                                 ng-click="showVideoElementsAndStartVideoFn()"
                                                 ng-dblclick="showVideoElementsAndStartVideoFn()"
@@ -73,20 +73,20 @@
                         </div>
 
 
-                        <div class="well">
+                        <div class="well"
+                             ng-hide="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess">
                             <div class="row">
                                 <div class="col-xs-8 col-sm-10 cl-text-size-1_5em">
                                     Remote user has requested to exchange video. Do you accept?
                                 </div>
 
 
-                                <div class="col-xs-4 col-sm-2"
-                                     ng-hide="videoCameraStatusObject.showVideoElementsAndStartVideoCamera">
+                                <div class="col-xs-4 col-sm-2">
 
                                         <button type="button"
                                                 class="btn btn-sm pull-right btn-block"
-                                                ng-click="showVideoElementsAndStartVideoCameraFn()"
-                                                ng-dblclick="showVideoElementsAndStartVideoCameraFn()"
+                                                ng-click="localHasEnabledVideoElementsAndRequestedCameraAccessFn()"
+                                                ng-dblclick="localHasEnabledVideoElementsAndRequestedCameraAccessFn()"
                                                 ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
@@ -95,8 +95,8 @@
                                         </button>
                                         <button type="button"
                                                 class="btn btn-sm pull-right btn-block"
-                                                ng-click="showVideoElementsAndStartVideoCameraFn()"
-                                                ng-dblclick="showVideoElementsAndStartVideoCameraFn()"
+                                                ng-click="localHasEnabledVideoElementsAndRequestedCameraAccessFn()"
+                                                ng-dblclick="localHasEnabledVideoElementsAndRequestedCameraAccessFn()"
                                                 ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
