@@ -74,7 +74,7 @@ angular.module('lxChatbox.controllers', [])
                 }
             )['finally'](function () {
                 // once the promise is resolved, update the sendMessageTime which will trigger some watchers.
-                $scope.sendMessageTime = new Date().getTime()
+                $scope.sendMessageTime = new Date().getTime();
             });
         };
     }

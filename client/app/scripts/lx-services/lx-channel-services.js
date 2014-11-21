@@ -205,9 +205,18 @@ angular.module('lxChannel.services', [])
                             scope.ackChatMessageObject.ackMessageUniqueId = messageObject.messagePayload.ackMessageUniqueId;
                             break;
 
-                        case 'startVideoCamera':
+                        case 'videoCameraStatus':
+                            scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess = +
+                                   messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
 
+                            // if remote has sent a message with their EnabledVideoElements.. status, then if they
+                            // have requested video, and the local user has not enabled video, then we will show
+                            // the local user a prompt for them to enable their video.
+                            if (scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess &&
+                                !scope.videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess) {
 
+                                scope.videoCameraStatusObject.waitingFoLocalToRespondToRemoteRequest = true;
+                            }
                             break;
 
                         default:
