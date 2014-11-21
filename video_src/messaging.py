@@ -27,7 +27,7 @@ def handle_message(room_obj, from_user_id, message):
     if message_type == 'videoCameraStatus':
 
         if message_payload['videoElementsEnabledAndCameraAccessRequested']:
-            room_obj = room_module.txn_add_user_id_to_video_enabled_ids(room_obj.key.id(), from_user_id)
+            room_obj = room_module.txn_add_user_id_to_video_elements_enabled_user_ids(room_obj.key.id(), from_user_id)
             send_room_video_settings_to_room_members(room_obj)
 
 
@@ -139,18 +139,18 @@ def send_room_occupancy_to_room_members(room_obj, user_id):
 def send_room_video_settings_to_room_members(room_obj):
 
 
-    video_enabled_ids = room_obj.video_enabled_ids
+    video_elements_enabled_user_ids = room_obj.video_elements_enabled_user_ids
 
     # Check if there are two people in the room that have enabled video, and if so send
     # a message to each of them to start the webRtc negotiation.
-    length_of_video_enabled_ids = len(video_enabled_ids)
-    assert(length_of_video_enabled_ids <= 2)
+    length_of_video_elements_enabled_user_ids = len(video_elements_enabled_user_ids)
+    assert(length_of_video_elements_enabled_user_ids <= 2)
 
     is_initiator = False
-    if length_of_video_enabled_ids == 2:
+    if length_of_video_elements_enabled_user_ids == 2:
         logging.info('Sending room video settings for room %s' % room_obj)
 
-        for user_id in video_enabled_ids:
+        for user_id in video_elements_enabled_user_ids:
             message_obj = {'messageType': 'roomInitialVideoSettings',
                    'messagePayload': {
                        'roomVideoType': room_obj.room_video_type,

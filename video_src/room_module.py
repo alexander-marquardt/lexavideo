@@ -37,7 +37,7 @@ class RoomInfo(ndb.Model):
     # than two ids given the current video standard). If a user stops their video or leaves a room, then
     # their id will be removed from this array.
     # When the second user activates their video, then the WebRTC signalling will start between the two users.
-    video_enabled_ids = ndb.IntegerProperty(repeated=True)
+    video_elements_enabled_user_ids = ndb.IntegerProperty(repeated=True)
 
 
     def __str__(self):
@@ -47,9 +47,9 @@ class RoomInfo(ndb.Model):
             for i in range(len(self.room_members_ids)):
                 result += "%d " % (self.room_members_ids[i])
 
-            result += " video_enabled_ids: "
-            for i in range(len(self.video_enabled_ids)):
-                result += "%d " % (self.video_enabled_ids[i])
+            result += " video_elements_enabled_user_ids: "
+            for i in range(len(self.video_elements_enabled_user_ids)):
+                result += "%d " % (self.video_elements_enabled_user_ids[i])
 
         result += ']'
         return result
@@ -95,26 +95,26 @@ def get_room_by_id(room_id):
     return room_obj
 
 @ndb.transactional
-def txn_add_user_id_to_video_enabled_ids(room_id, user_id):
+def txn_add_user_id_to_video_elements_enabled_user_ids(room_id, user_id):
 
     room_obj =  get_room_by_id(room_id)
 
-    if user_id in room_obj.video_enabled_ids:
+    if user_id in room_obj.video_elements_enabled_user_ids:
         logging.info('Not added to video_enalbed_ids. user %d to %s' %(user_id, room_obj))
     else:
         logging.info('Adding video_enalbed_ids. user %d to %s' %(user_id, room_obj))
-        room_obj.video_enabled_ids.append(user_id)
+        room_obj.video_elements_enabled_user_ids.append(user_id)
         room_obj.put()
 
     return room_obj
 
 @ndb.transactional
-def remove_user_id_from_video_enabled_ids(room_id, user_id):
+def remove_user_id_from_video_elements_enabled_user_ids(room_id, user_id):
 
     room_obj = get_room_by_id(room_id)
 
-    if user_id in room_obj.video_enabled_ids:
-        room_obj.video_enabled_ids.remove(user_id)
+    if user_id in room_obj.video_elements_enabled_user_ids:
+        room_obj.video_elements_enabled_user_ids.remove(user_id)
         room_obj.put()
 
     return room_obj
@@ -131,8 +131,8 @@ def txn_remove_user_from_room(room_id, user_id):
     except:
         logging.error("user_id %d not found in room - why is it being removed?" % user_id)
 
-    if user_id in room_obj.video_enabled_ids:
-        room_obj.video_enabled_ids.remove(user_id)
+    if user_id in room_obj.video_elements_enabled_user_ids:
+        room_obj.video_elements_enabled_user_ids.remove(user_id)
 
     room_obj.put()
     return room_obj
