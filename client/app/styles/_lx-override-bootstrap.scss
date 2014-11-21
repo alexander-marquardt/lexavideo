@@ -10,5 +10,6 @@ $brand-danger:          #E75045;
 // change the default "glow" on input forms
 $input-border-focus:    #0a95b4;
 
-$panel-primary-border: #bbb !default;
-$well-border: #bbb !default;
+$standard-border-color: #bbb; // this is a non-bootstrap/custom intermediate variable
+$panel-primary-border: $standard-border-color !default;
+$well-border: $standard-border-color !default;
