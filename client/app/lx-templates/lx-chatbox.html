@@ -76,37 +76,33 @@
                         <div class="well"
                              ng-show="videoCameraStatusObject.waitingFoLocalToRespondToRemoteRequest">
                             <div class="row ">
-                                <div class="col-xs-8 col-sm-10 cl-text-size-1_5em ">
+                                <div class="col-xs-12 cl-text-size-1_5em ">
                                     <div>Remote user has requested to exchange video. Do you accept?</div>
-                                </div>
 
 
-                                <div class="col-xs-4 col-sm-2">
-
-                                        <button type="button"
-                                                class="btn btn-sm pull-right btn-block"
-                                                ng-click="showVideoElementsAndStartVideoFn(true)"
-                                                ng-dblclick="showVideoElementsAndStartVideoFn(true)"
-                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
-                                            <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                                <span class="icon-lx-start-video-camera-cfg"></span>
-                                            </span>
-                                            Start
-                                        </button>
-                                        <button type="button"
-                                                class="btn btn-sm pull-right btn-block"
-                                                ng-click="showVideoElementsAndStartVideoFn(false)"
-                                                ng-dblclick="showVideoElementsAndStartVideoFn(false)"
-                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
-                                            <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                                <span class="icon-lx-start-video-camera-cfg"></span>
-                                                <span class="icon-lx-deny-start-video-camera-forward-slash-cfg"></span>
-                                            </span>
-                                            Deny
-                                        </button>
+                                    <button type="button"
+                                            class="btn btn-sm "
+                                            ng-click="showVideoElementsAndStartVideoFn(true)"
+                                            ng-dblclick="showVideoElementsAndStartVideoFn(true)"
+                                            ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                        <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                            <span class="icon-lx-start-video-camera-cfg"></span>
+                                        </span>
+                                        Start
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-sm "
+                                            ng-click="showVideoElementsAndStartVideoFn(false)"
+                                            ng-dblclick="showVideoElementsAndStartVideoFn(false)"
+                                            ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                        <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                            <span class="icon-lx-start-video-camera-cfg"></span>
+                                            <span class="icon-lx-deny-start-video-camera-forward-slash-cfg"></span>
+                                        </span>
+                                        Deny
+                                    </button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
