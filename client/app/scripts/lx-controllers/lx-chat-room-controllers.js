@@ -26,7 +26,7 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
         $scope.lxChatRoomOuterCtrl = {
-            showVideoElementsAndStartVideo: false,
+            showVideoElementsAndStartVideoCamera: false,
             userSuccessfullyEnteredRoom: false,
             channelToken: null,
             clientId: null
@@ -59,8 +59,8 @@ angular.module('lxUseChatRoom.controllers', [])
         });
 
         $scope.showVideoElementsAndStartVideoFn = function() {
-            $scope.lxChatRoomOuterCtrl.showVideoElementsAndStartVideo = true;
-            lxMessageService.sendMessage('startVideo', {});
+            $scope.lxChatRoomOuterCtrl.showVideoElementsAndStartVideoCamera = true;
+            lxMessageService.sendMessage('startVideoCamera', {requestAcceptOrDenyStartVideoCamera: 'requestVideoCamera'});
         };
 
         $scope.receivedChatMessageObject = {
