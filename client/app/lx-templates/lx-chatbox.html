@@ -22,7 +22,52 @@
                                 <span ng-show="roomOccupancyObject.remoteUserId && roomOccupancyObject.remoteUserName==roomOccupancyObject.remoteUserId">Guest has joined</span>
 
                             </div>
-                            <div class="panel-body" scroll-glue="chatPanelIsGlued">
+
+                            <div style="position: relative; width: 100%">
+                            <div class="well"
+                                 style="
+                                 position:absolute;
+                                 width: 100%;
+                                 z-index: 10"
+                                 >
+                                 <!--ng-show="videoCameraStatusObject.waitingFoLocalToRespondToRemoteRequest"-->
+
+                                <div class="row ">
+                                    <div class="col-xs-12 cl-text-size-1_5em ">
+                                        <div>Remote user has requested to exchange video. Do you accept?</div>
+
+
+                                        <button type="button"
+                                                class="btn btn-sm "
+                                                ng-click="showVideoElementsAndStartVideoFn(true)"
+                                                ng-dblclick="showVideoElementsAndStartVideoFn(true)"
+                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                            <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                                <span class="icon-lx-start-video-camera-cfg"></span>
+                                            </span>
+                                            Start
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-sm "
+                                                ng-click="showVideoElementsAndStartVideoFn(false)"
+                                                ng-dblclick="showVideoElementsAndStartVideoFn(false)"
+                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                            <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                                <span class="icon-lx-start-video-camera-cfg"></span>
+                                                <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
+                                                <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
+                                            </span>
+                                            Deny
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="panel-body" scroll-glue="chatPanelIsGlued"">
+
+
+
                                 <div class="cl-dummy-blank-div-in-chat-panel"></div>
                                 <div lx-show-chat-messages-directive></div>
                              </div>
@@ -73,38 +118,7 @@
                         </div>
 
 
-                        <div class="well"
-                             ng-show="videoCameraStatusObject.waitingFoLocalToRespondToRemoteRequest">
-                            <div class="row ">
-                                <div class="col-xs-12 cl-text-size-1_5em ">
-                                    <div>Remote user has requested to exchange video. Do you accept?</div>
 
-
-                                    <button type="button"
-                                            class="btn btn-sm "
-                                            ng-click="showVideoElementsAndStartVideoFn(true)"
-                                            ng-dblclick="showVideoElementsAndStartVideoFn(true)"
-                                            ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
-                                        <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                            <span class="icon-lx-start-video-camera-cfg"></span>
-                                        </span>
-                                        Start
-                                    </button>
-                                    <button type="button"
-                                            class="btn btn-sm "
-                                            ng-click="showVideoElementsAndStartVideoFn(false)"
-                                            ng-dblclick="showVideoElementsAndStartVideoFn(false)"
-                                            ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
-                                        <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                            <span class="icon-lx-start-video-camera-cfg"></span>
-                                            <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
-                                            <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
-                                        </span>
-                                        Deny
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
