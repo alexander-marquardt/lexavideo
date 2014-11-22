@@ -35,8 +35,8 @@ videoAppDirectives.directive('lxVideoContainerDirective',
             var enablePrincipalVideoWindows = function() {
                 $log.debug('enablePrincipalVideoWindows');
                 // if it is a wider screen, then show both windows
-                localVideoObject.localHdVideoWrapper.style.display = 'inline-block';
-                remoteVideoObject.remoteHdVideoWrapper.style.display = 'inline-block';
+                localVideoObject.localVideoWrapper.style.display = 'inline-block';
+                remoteVideoObject.remoteVideoWrapper.style.display = 'inline-block';
             };
 
             var hideMiniVideoElems = function() {
@@ -75,10 +75,10 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                 $log.debug('setupForCurrentDisplaySize');
 
 
-                // the localHdVideoWrapper and remoteHdVideoWrapper are set by a directive that
+                // the localVideoWrapper and remoteVideoWrapper are set by a directive that
                 // sits directly on the wrapper element. This if makes sure that they are initialized
                 // before attempting to modify the styles on these elements.
-                if (localVideoObject.localHdVideoWrapper && remoteVideoObject.remoteHdVideoWrapper) {
+                if (localVideoObject.localVideoWrapper && remoteVideoObject.remoteVideoWrapper) {
 
 
                     // Check if this is a XS device, and if so, then embed local video inside the remote.
@@ -89,8 +89,8 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                         // ASCII video, then we show the local video embedded inside of the ASCII video element.
                         if ( videoSignalingObject.remoteIsSendingVideoType !== null) {
                             showMiniVideoElems();
-                            localVideoObject.localHdVideoWrapper.style.display = 'none';
-                            remoteVideoObject.remoteHdVideoWrapper.style.display = 'inline-block';
+                            localVideoObject.localVideoWrapper.style.display = 'none';
+                            remoteVideoObject.remoteVideoWrapper.style.display = 'inline-block';
 
 //                            // attach the mini-video window to the HD Video wrapper
                             var miniVideoDiv = $miniVideoDiv.detach();
@@ -109,8 +109,8 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
                         } else {
                             // XS screen without a remote signal, therefore we should show the local video and hide the remote video
-                            localVideoObject.localHdVideoWrapper.style.display = 'inline-block';
-                            remoteVideoObject.remoteHdVideoWrapper.style.display = 'none';
+                            localVideoObject.localVideoWrapper.style.display = 'inline-block';
+                            remoteVideoObject.remoteVideoWrapper.style.display = 'none';
                             hideMiniVideoElems();
                         }
                     }
@@ -191,10 +191,10 @@ videoAppDirectives.directive('lxVideoWrapperDirective', function($log) {
         restrict : 'A',
         link: function(scope, elem, attrs) {
             if (attrs.videoWindow === 'local' ) {
-                scope.localVideoObject.localHdVideoWrapper = elem[0];
+                scope.localVideoObject.localVideoWrapper = elem[0];
             }
             else if (attrs.videoWindow === 'remote' ) {
-                scope.remoteVideoObject.remoteHdVideoWrapper = elem[0];
+                scope.remoteVideoObject.remoteVideoWrapper = elem[0];
             }
             else {
                 $log.error('Attribute must be "local" or "remote"');
