@@ -11,6 +11,11 @@
   }
 }
 
+#id-local-video-wrapper-div {
+  // initially is displayed on any sized device - will only be removed in the case that we are on an xs device
+  // and the remote user has connected (in this case, local video will be shown in a mini-video window)
+  display: inline-block;
+}
 
 /* Place "dummy" css declarations below this comment -- these are css declarations that are only used
  for transmitting sass variables into javascript, by creating a dummy element with the given property
