@@ -123,24 +123,31 @@
   top: 40%;
 }
 
-.icon-lx-deny-start-video-camera-forward-slash-cfg {
+.icon-lx-deny-start-video-camera-thick-forward-slash-cfg {
   @extend %call-control-icon-common;
   @extend .icon-lx-thick-forward-slash;
   top: 40%;
 }
 
-.btn-primary .icon-lx-deny-start-video-camera-forward-slash-cfg {
+.btn-primary .icon-lx-deny-start-video-camera-thick-forward-slash-cfg {
   color: $brand-primary;
 }
 
-.btn-primary:hover .icon-lx-deny-start-video-camera-forward-slash-cfg {
+.btn-primary:hover .icon-lx-deny-start-video-camera-thick-forward-slash-cfg {
   color: darken($brand-primary, 10%);
 }
 
-.btn-danger .icon-lx-deny-start-video-camera-forward-slash-cfg {
+.btn-danger .icon-lx-deny-start-video-camera-thick-forward-slash-cfg {
   color: $brand-danger;
 }
 
-.btn-danger:hover .icon-lx-deny-start-video-camera-forward-slash-cfg {
+.btn-danger:hover .icon-lx-deny-start-video-camera-thick-forward-slash-cfg {
   color: darken($brand-danger, 10%);
+}
+
+.icon-lx-deny-start-video-camera-thin-forward-slash-cfg {
+  color: $deep-red;;
+  @extend %call-control-icon-common;
+  @extend .icon-lx-thin-forward-slash;
+  top: 40%;
 }
