@@ -1,4 +1,10 @@
 
+$short-chat-panel-height: 200px;
+$tall-chat-panel-height: 400px;
+
+// $estimated-bubble-height is used for computing the offset required in the first div to push the first
+// message to the bottom of the chat panel.
+$estimated-bubble-height: 30px;
 
 .cl-chat-row {
   color: #777777;
@@ -7,20 +13,26 @@
 // This div is used to push the chat down to the bottom of the chat panel when there are just a few
 // chat messages sent. This makes it more likely that if the user is looking at the video that they
 // will see the new message.
-.cl-dummy-blank-div-in-chat-panel {
-  height: 162px;
+.cl-dummy-blank-div-in-short-chat-panel {
+  height: $short-chat-panel-height - $estimated-bubble-height;
 }
 
-.panel .slidedown .glyphicon, .chat .glyphicon
-{
-    margin-right: 5px;
+.cl-dummy-blank-div-in-tall-chat-panel {
+  height: $tall-chat-panel-height - $estimated-bubble-height;
 }
 
-.panel-body
+.cl-chat-panel-body
 {
   padding: 0px 15px 0px 15px;
   overflow-y: scroll;
-  height: 200px;
+}
+
+.cl-chat-panel-body-short {
+  height: $short-chat-panel-height;
+}
+
+.cl-chat-panel-body-tall {
+  height: $tall-chat-panel-height;
 }
 
 
