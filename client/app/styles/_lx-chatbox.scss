@@ -161,3 +161,11 @@
 .cl-chatbox-glow {
    @include my-mixin-border-glow($brand-primary,  1, 5)
 }
+
+.cl-prompt-for-video-access {
+     margin-left: -15px;
+     margin-right: -15px;
+     margin-bottom: 0px;
+     padding-top: 3px;
+     padding-bottom: 3px;
+}
