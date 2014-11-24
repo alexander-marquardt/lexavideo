@@ -176,7 +176,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                     case 'conflictingVideoTypes':
                         message = 'It appears that you have requested to use ' + localIsNegotiatingForVideoType +
                                                     ' but the remote user has accepted ' + remoteSignalingStatus.videoType +
-                                                    '. We were unable to change the video format. Please try again.';
+                                                    '. We were unable to change the video format.';
                         showMessageInVideoWindow(scope, navelem, message);
                         break;
 

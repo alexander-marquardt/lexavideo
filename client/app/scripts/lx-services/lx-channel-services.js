@@ -149,7 +149,7 @@ angular.module('lxChannel.services', [])
 
                         case 'roomInitialVideoSettings':
 
-                            // roomStatus can force the local user into a videoType selection - this is intended for when
+                            // roomInitialVideoSettings can force the local user into a videoType selection - this is intended for when
                             // the user joins an existing room that the other user has already set to a particular
                             // videoType.
                             videoSignalingObject.localHasSelectedVideoType = messageObject.messagePayload.roomVideoType;

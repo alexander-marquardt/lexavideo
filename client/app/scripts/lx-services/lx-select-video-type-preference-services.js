@@ -162,8 +162,10 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                 // buttons, then localIsNegotiatingForVideoType should be null and this code should not be executed.
                 if (localIsNegotiatingForVideoType !== null) {
 
-                    // Check if there is a remote user in the room
-                    if (scope.roomOccupancyObject.remoteUserId) {
+                    // Check if there is a remote user has enabled their video elements - if so, then we are
+                    // negotiating video settings with a remote user and need to ensure that local and remote
+                    // use are in sync.
+                    if (scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess) {
 
                         if (localIsNegotiatingForVideoType === 'HD Video' || localIsNegotiatingForVideoType === 'ASCII Video') {
 
@@ -181,7 +183,7 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         }
                     }
 
-                    // The current user is alone in the room
+                    // The current user is not signaling video to any other user.
                     else {
 
                         setVideoSignalingStatusForUserFeedback(scope, null);
@@ -325,7 +327,13 @@ lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
                         // we have finished with the current request, and are no longer requesting a new videoType.
                         scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = null;
 
-                    } else {
+                    }
+
+                    // Remote user has send an acceptance of a video type that we are not currently requesting
+                    else {
+                        // send the remote user a new request for the videoType that the local user has currently selected
+                        scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = localHasSelectedVideoType;
+                        self.negotiateVideoType.sendRequestForVideoType(scope.videoTypeSignalingObject.localIsNegotiatingForVideoType);
                         setVideoSignalingStatusForUserFeedback(scope, 'conflictingVideoTypes');
                         $log.warn('videoType mismatch.');
                     }
