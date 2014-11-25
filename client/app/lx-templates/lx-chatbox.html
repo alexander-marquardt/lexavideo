@@ -32,9 +32,12 @@
                                     'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>
                                 <div lx-show-chat-messages-directive></div>
 
+
+                                <!-- This is the html that prompts the user to exchange video with the remote user if the
+                                     remote user has requested to do so -->
                                 <div class="well cl-show-hide-fade cl-prompt-for-video-access"
                                      ng-show="videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' &&
-                                              videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess != 'doNotActivateVideo'">
+                                              videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'waitingForActivateVideo'">
 
                                     <div class="row ">
                                         <div class="col-xs-12 cl-text-size-1_5em ">
@@ -70,7 +73,8 @@
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-xs-8 col-sm-10"
-                                         ng-class="videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' ? 'col-xs-12 col-sm-12': ''">
+                                         ng-class="videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' &&
+                                                  videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'waitingForActivateVideo' ? 'col-xs-12 col-sm-12': ''">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -97,7 +101,8 @@
                                         </form>
                                     </div>
                                     <div class="col-xs-4 col-sm-2"
-                                         ng-hide="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' ">
+                                         ng-hide="videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' &&
+                                                  videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'waitingForActivateVideo'">
                                         <button type="button"
                                                 ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
                                                 ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
