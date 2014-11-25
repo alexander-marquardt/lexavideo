@@ -27,6 +27,14 @@
                     <td>localIsSendingVideoType: {{ videoTypeSignalingObject.localIsSendingVideoType }}</td>
                     <td>remoteIsSendingVideoType: {{ videoTypeSignalingObject.remoteIsSendingVideoType }}</td>
                 </tr>
+                <tr>
+                    <td>
+                        remoteHasEnabledVideoElementsAndRequestedCameraAccess:<br> {{ videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess }}
+                    </td>
+                    <td>
+                        waitingFoLocalToRespondToRemoteRequest:<br> {{ videoCameraStatusObject.waitingFoLocalToRespondToRemoteRequest }}
+                    </td>
+                </tr>
             </table>
         </div>
     </div>

@@ -9,7 +9,7 @@
 var lxSelectVideoTypePreferenceServices = angular.module('lxVideoNegotiation.services', []);
 
 
-lxSelectVideoTypePreferenceServices.factory('lxVideoSettingsNegotiationService',
+lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeService',
     function(
         $animate,
         $log,

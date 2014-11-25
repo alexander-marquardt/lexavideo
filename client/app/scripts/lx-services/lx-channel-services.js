@@ -206,7 +206,7 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'videoCameraStatus':
-                            scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess = +
+                            scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess =
                                    messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
 
                             // if remote has sent a message with their EnabledVideoElements.. status, then if they

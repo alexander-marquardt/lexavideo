@@ -17,7 +17,7 @@
                                     &nbsp;{{ roomOccupancyObject.roomName }}&nbsp;
                                 </span>
 
-                                <span ng-show="!roomOccupancyObject.remoteUserId">Waiting for someone to join ... </span>
+                                <span ng-show="!roomOccupancyObject.remoteUserId">Waiting for someone to join {{ roomOccupancyObject.roomName }} </span>
                                 <span ng-show="roomOccupancyObject.remoteUserName!=roomOccupancyObject.remoteUserId">{{ roomOccupancyObject.remoteUserName }} has joined</span>
                                 <span ng-show="roomOccupancyObject.remoteUserId && roomOccupancyObject.remoteUserName==roomOccupancyObject.remoteUserId">Guest has joined</span>
 

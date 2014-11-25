@@ -14,7 +14,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         $log,
         $timeout,
         lxCallService,
-        lxVideoSettingsNegotiationService) {
+        lxSelectAndNegotiateVideoTypeService) {
 
 
     var messageFadeTimerId = null;
@@ -79,7 +79,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
             var message;
 
             scope.$apply(function() {
-                lxVideoSettingsNegotiationService.negotiateVideoType.sendAcceptanceOfVideoType(videoType);
+                lxSelectAndNegotiateVideoTypeService.negotiateVideoType.sendAcceptanceOfVideoType(videoType);
                 $animate.addClass(elem, 'ng-hide'); // this class is added so that when we show the element, it will fade in.
 
                 // Other user has requested videoType video, and this user has agreed to send it.
@@ -94,7 +94,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                 // We do not want to execute watchers or change user feedback messages based on the new videoType.
                 scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = null;
 
-                lxVideoSettingsNegotiationService.startVideoType(scope, videoType);
+                lxSelectAndNegotiateVideoTypeService.startVideoType(scope, videoType);
 
             });
         });
@@ -103,7 +103,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
             $log.debug('Change video type denied');
 
             scope.$apply(function() {
-                lxVideoSettingsNegotiationService.negotiateVideoType.sendDenyOfVideoType(videoType);
+                lxSelectAndNegotiateVideoTypeService.negotiateVideoType.sendDenyOfVideoType(videoType);
                 $animate.addClass(elem, 'ng-hide');
 
                 // Set the remoteSignalingStatus properties to null, in case the remote user tries to make the same request again.

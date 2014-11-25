@@ -65,13 +65,13 @@ angular.module('lxChatRoom.directives', [])
     // (ie. HD Video or Ascii Video)
     .directive('lxVideoNegotiationDirective',
     function (
-        lxVideoSettingsNegotiationService) {
+        lxSelectAndNegotiateVideoTypeService) {
 
 
         return {
             restrict: 'A',
             link: function(scope) {
-                lxVideoSettingsNegotiationService.watchForVideoSettingsChanges (scope);
+                lxSelectAndNegotiateVideoTypeService.watchForVideoSettingsChanges (scope);
             }
         };
     })
