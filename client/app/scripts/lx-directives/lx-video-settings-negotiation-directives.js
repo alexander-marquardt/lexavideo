@@ -152,6 +152,12 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         showRequestForChangeVideoType(scope, navelem, remoteSignalingStatus.videoType);
                         break;
 
+
+                    case 'waitingForRemoteToAgreeToExchangeVideo':
+                        message = 'We are waiting for the remote user to agree to exchange video';
+                        showMessageInVideoWindow(scope, navelem, message);
+                        break;
+
                     case 'waitingForRemoteToAcceptVideoType: ' +  localIsNegotiatingForVideoType:
                         message = 'We are waiting for remote user to accept your request to exchange ' + localIsNegotiatingForVideoType;
                         showMessageInVideoWindow(scope, navelem, message, 8000);

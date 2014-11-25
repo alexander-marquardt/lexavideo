@@ -32,9 +32,13 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
         }
 
+        else if (!scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess) {
+            scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
+        }
+
         // else if the remote user has not yet given access to their camera and microphone, we show the local
         // user a message indicating that we are still waiting for the remote user to permit access.
-        else if (!scope.videoTypeSignalingObject.remoteIsSendingVideoType) {
+        else if (!scope.videoTypeSignalingObject.remoteIsSendingVideoType ) {
             scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
         }
 
@@ -201,6 +205,11 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                 }
             });
 
+            // remote user has either entered or left the room.
+            scope.$watch('roomOccupancyObject.remoteUserId', function() {
+                // clear feedback messages
+                setVideoSignalingStatusForUserFeedback(scope, null);
+            });
 
             // Monitor remoteHasEnabledVideoElementsAndRequestedCameraAccess to track if the remote user has activated
             // their video elements and requested access to their camera.
@@ -217,7 +226,8 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                     scope.videoTypeSignalingObject.remoteIsSendingVideoType = null;
                 }
 
-                //setVideoSignalingStatusForUserFeedback(scope, null);
+                // clear feedback messages
+                setVideoSignalingStatusForUserFeedback(scope, null);
 
             });
 
