@@ -24,7 +24,7 @@ def handle_message(room_obj, from_user_id, message):
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
 
-    if message_type == 'videoCameraStatus':
+    if message_type == 'videoCameraStatusMsg':
 
         if message_payload['videoElementsEnabledAndCameraAccessRequested']:
             room_obj = room_module.txn_add_user_id_to_video_elements_enabled_user_ids(room_obj.key.id(), from_user_id)
@@ -39,7 +39,7 @@ def handle_message(room_obj, from_user_id, message):
             logging.info('User %d ' % from_user_id + ' quit from room ' + room_name)
             logging.info('Room ' + room_name + ' has state ' + repr(room_obj))
 
-    if message_type == 'videoSettings':
+    if message_type == 'videoSettingsMsg':
         if message_payload['requestAcceptOrDenyVideoType'] == 'acceptVideoType':
             # If the user is sending an 'acceptVideoType' message, then both parties have agreed to the new video
             # format, and this is now the new default format for the current room.
@@ -108,7 +108,7 @@ def send_room_occupancy_to_room_members(room_obj, user_id):
     other_user_id = room_obj.get_other_user_id(user_id)
     other_user_name = None
 
-    message_obj = {'messageType': 'roomOccupancy',
+    message_obj = {'messageType': 'roomOccupancyMsg',
                    'messagePayload': {},
                    }
     user_obj = models.UserModel.get_by_id(user_id)
@@ -151,7 +151,7 @@ def send_room_video_settings_to_room_members(room_obj):
         logging.info('Sending room video settings for room %s' % room_obj)
 
         for user_id in video_elements_enabled_user_ids:
-            message_obj = {'messageType': 'roomInitialVideoSettings',
+            message_obj = {'messageType': 'roomInitialVideoSettingsMsg',
                    'messagePayload': {
                        'roomVideoType': room_obj.room_video_type,
                        },

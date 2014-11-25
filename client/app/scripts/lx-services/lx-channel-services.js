@@ -101,7 +101,7 @@ angular.module('lxChannel.services', [])
                             }
                             break;
 
-                        case 'videoStream':
+                        case 'videoStreamData':
                             if (messageObject.messagePayload.streamType === 'ASCII Video') {
                                 self.asciiVideoObject.videoFrameUpdated = true;
                                 self.asciiVideoObject.compressedVideoFrame = messageObject.messagePayload.compressedVideoString;
@@ -121,7 +121,7 @@ angular.module('lxChannel.services', [])
                             }
                             break;
 
-                        case 'videoSettings':
+                        case 'videoSettingsMsg':
                             // message received that indicates a modification to the current video transmission configuration
 
                             videoSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = messageObject.messagePayload.requestAcceptOrDenyVideoType;
@@ -130,7 +130,7 @@ angular.module('lxChannel.services', [])
                             break;
 
 
-                        case 'roomOccupancy':
+                        case 'roomOccupancyMsg':
                             var roomOccupancyObject = scope.roomOccupancyObject;
 
                             // status of who is currently in the room.
@@ -147,9 +147,9 @@ angular.module('lxChannel.services', [])
                             }
                             break;
 
-                        case 'roomInitialVideoSettings':
+                        case 'roomInitialVideoSettingsMsg':
 
-                            // roomInitialVideoSettings can force the local user into a videoType selection - this is intended for when
+                            // roomInitialVideoSettingsMsg can force the local user into a videoType selection - this is intended for when
                             // the user joins an existing room that the other user has already set to a particular
                             // videoType.
                             videoSignalingObject.localHasSelectedVideoType = messageObject.messagePayload.roomVideoType;
@@ -187,7 +187,7 @@ angular.module('lxChannel.services', [])
                             }
                             break;
 
-                        case 'chatMessage':
+                        case 'chatDataMsg':
                             var receivedChatMessageObject = scope.receivedChatMessageObject;
 
                             receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
@@ -205,7 +205,7 @@ angular.module('lxChannel.services', [])
                             scope.ackChatMessageObject.ackMessageUniqueId = messageObject.messagePayload.ackMessageUniqueId;
                             break;
 
-                        case 'videoCameraStatus':
+                        case 'videoCameraStatusMsg':
                             scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess =
                                    messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
 

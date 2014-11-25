@@ -60,19 +60,19 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             /* Requests and sets up the type of video that will be transmitted between the two users */
 
             sendRequestForVideoType : function (videoType) {
-                lxMessageService.sendMessage('videoSettings', {requestAcceptOrDenyVideoType: 'requestVideoType', videoType: videoType});
+                lxMessageService.sendMessage('videoSettingsMsg', {requestAcceptOrDenyVideoType: 'requestVideoType', videoType: videoType});
             },
 
             sendAcceptanceOfVideoType : function(videoType) {
                 // send a message to the remote user to indicate that the local user has accepted their offer to
                 // change the current video settings (ie. from asciiVideo to hdVideo).
-                lxMessageService.sendMessage('videoSettings', {requestAcceptOrDenyVideoType: 'acceptVideoType', videoType: videoType});
+                lxMessageService.sendMessage('videoSettingsMsg', {requestAcceptOrDenyVideoType: 'acceptVideoType', videoType: videoType});
             },
 
             sendDenyOfVideoType : function(videoType) {
                 // send a message to the remote user to indicate that local user has denied their offer to change the
                 // current video settings.
-                lxMessageService.sendMessage('videoSettings', {requestAcceptOrDenyVideoType: 'denyVideoType', videoType: videoType});
+                lxMessageService.sendMessage('videoSettingsMsg', {requestAcceptOrDenyVideoType: 'denyVideoType', videoType: videoType});
             }
         },
 

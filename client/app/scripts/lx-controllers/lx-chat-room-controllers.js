@@ -71,7 +71,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.showVideoElementsAndStartVideoFn = function(enableVideoElements) {
             $scope.videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess = enableVideoElements;
-            lxMessageService.sendMessage('videoCameraStatus', {videoElementsEnabledAndCameraAccessRequested: enableVideoElements});
+            lxMessageService.sendMessage('videoCameraStatusMsg', {videoElementsEnabledAndCameraAccessRequested: enableVideoElements});
 
             // set waitingFoLocalToRespondToRemoteRequest to false since the user has either accepted or denied
             // access to their camera (either of their own volition or in response to a remote request - it doesn't

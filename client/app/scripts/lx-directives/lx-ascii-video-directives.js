@@ -106,7 +106,7 @@ asciiVideoDirectives.directive('lxGenerateAsciiVideoDirective',
                 // check if the remote user is connected before sending the ascii image to the server
                 if (remoteUserId) {
                      // send the compressed string to the remote user (through the server)
-                    lxMessageService.sendMessage('videoStream', {streamType: 'ASCII Video', compressedVideoString: compressedString});
+                    lxMessageService.sendMessage('videoStreamData', {streamType: 'ASCII Video', compressedVideoString: compressedString});
                 }
             }
         });
