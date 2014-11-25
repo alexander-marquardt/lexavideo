@@ -158,6 +158,11 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         showMessageInVideoWindow(scope, navelem, message);
                         break;
 
+                    case 'remoteHasDeniedToExchangeVideo':
+                        message = 'Remote user has denied your request to exchange video';
+                        showMessageInVideoWindow(scope, navelem, message);
+                        break;
+
                     case 'waitingForRemoteToAcceptVideoType: ' +  localIsNegotiatingForVideoType:
                         message = 'We are waiting for remote user to accept your request to exchange ' + localIsNegotiatingForVideoType;
                         showMessageInVideoWindow(scope, navelem, message, 8000);

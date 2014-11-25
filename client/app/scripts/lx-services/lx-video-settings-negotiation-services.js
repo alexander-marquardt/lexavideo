@@ -32,8 +32,12 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
         }
 
-        else if (!scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess) {
+        else if (scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess === 'waitingForActivateVideo') {
             scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
+        }
+
+        else if (scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess === 'activateVideo') {
+            scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedToExchangeVideo';
         }
 
         // else if the remote user has not yet given access to their camera and microphone, we show the local
@@ -215,7 +219,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             // their video elements and requested access to their camera.
             scope.$watch('videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess', function(remoteHasEnabledVideoElementsAndRequestedCameraAccess) {
 
-                if (!remoteHasEnabledVideoElementsAndRequestedCameraAccess) {
+                if (remoteHasEnabledVideoElementsAndRequestedCameraAccess === 'waitingForActivateVideo') {
 
 
                     // remote user has not enabled their video elements, so set the signaling status to null
