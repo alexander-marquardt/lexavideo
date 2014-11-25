@@ -11,6 +11,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
     .controller('lxChatRoomOuterCtrl',
     function($scope,
+             lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxMessageService,
              lxUseChatRoomConstantsService,
@@ -64,14 +65,21 @@ angular.module('lxUseChatRoom.controllers', [])
             // of the video elements and show the access prompt that the user must click on before actual camera
             // "access" is given.
             localHasEnabledVideoElementsAndRequestedCameraAccess: false,
-            remoteHasEnabledVideoElementsAndRequestedCameraAccess: false,
+            remoteHasEnabledVideoElementsAndRequestedCameraAccess: null,
 
             waitingFoLocalToRespondToRemoteRequest: false
         };
 
-        $scope.showVideoElementsAndStartVideoFn = function(enableVideoElements) {
-            $scope.videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess = enableVideoElements;
-            lxMessageService.sendMessage('videoCameraStatusMsg', {videoElementsEnabledAndCameraAccessRequested: enableVideoElements});
+
+
+        $scope.showVideoElementsAndStartVideoFn = function(localVideoElementsEnabled, queryForRemoteVideoElementsEnabled) {
+
+            $scope.videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess = localVideoElementsEnabled;
+
+            lxAccessVideoElementsAndAccessCameraService.startExchangeOfIfVideoElementsEnabled(
+                $scope,
+                localVideoElementsEnabled,
+                queryForRemoteVideoElementsEnabled);
 
             // set waitingFoLocalToRespondToRemoteRequest to false since the user has either accepted or denied
             // access to their camera (either of their own volition or in response to a remote request - it doesn't

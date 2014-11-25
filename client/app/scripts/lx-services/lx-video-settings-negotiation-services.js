@@ -202,13 +202,14 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             });
 
 
-            // Monitor remoteUserId to track if the remote user is currently in the room, or out of it
-            scope.$watch('roomOccupancyObject.remoteUserId', function(newRemoteUserId) {
+            // Monitor remoteHasEnabledVideoElementsAndRequestedCameraAccess to track if the remote user has activated
+            // their video elements and requested access to their camera.
+            scope.$watch('videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess', function(remoteHasEnabledVideoElementsAndRequestedCameraAccess) {
 
-                if (newRemoteUserId === null) {
+                if (!remoteHasEnabledVideoElementsAndRequestedCameraAccess) {
 
 
-                    // remote user is not connected, so set the signaling status to null
+                    // remote user has not enabled their video elements, so set the signaling status to null
                     scope.videoTypeSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = null;
                     scope.videoTypeSignalingObject.remoteVideoSignalingStatus.videoType = null;
 
@@ -216,7 +217,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                     scope.videoTypeSignalingObject.remoteIsSendingVideoType = null;
                 }
 
-                setVideoSignalingStatusForUserFeedback(scope, null);
+                //setVideoSignalingStatusForUserFeedback(scope, null);
 
             });
 
@@ -352,3 +353,31 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
     };
     return self;
 });
+
+lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCameraService',
+    function(
+        lxMessageService
+    ) {
+
+        return {
+            startExchangeOfIfVideoElementsEnabled: function(scope, localVideoElementsEnabled, queryForRemoteVideoElementsEnabled) {
+
+                // Only attempt to send a message if there is another user in the room
+                if (scope.roomOccupancyObject.remoteUserId) {
+                    lxMessageService.sendMessage('videoCameraStatusMsg',
+                        {
+                            videoElementsEnabledAndCameraAccessRequested: localVideoElementsEnabled,
+
+                            // The following will result in the remote user sending their status of the video Elements
+                            // and camera access (ie. have they started the process to enable them) - currently
+                            // we request this information every time that we send the remote user the local status -
+                            // this is strictly not necessary, but doesn't cost much and provides some redundancy in
+                            // the case of un-delivered messages.
+                            queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled
+                        }
+                    );
+                }
+            }
+        }
+    }
+);

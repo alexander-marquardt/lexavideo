@@ -42,8 +42,8 @@
 
                                             <button type="button"
                                                     class="btn btn-sm "
-                                                    ng-click="showVideoElementsAndStartVideoFn(true)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn(true)"
+                                                    ng-click="showVideoElementsAndStartVideoFn(true, false)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn(true, false)"
                                                     ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
@@ -52,8 +52,8 @@
                                             </button>
                                             <button type="button"
                                                     class="btn btn-sm "
-                                                    ng-click="showVideoElementsAndStartVideoFn(false)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn(false)"
+                                                    ng-click="showVideoElementsAndStartVideoFn(false, false)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn(false, false)"
                                                     ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
@@ -98,8 +98,8 @@
                                     <div class="col-xs-4 col-sm-2"
                                          ng-hide="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess || videoCameraStatusObject.waitingFoLocalToRespondToRemoteRequest">
                                         <button type="button"
-                                                ng-click="showVideoElementsAndStartVideoFn(true)"
-                                                ng-dblclick="showVideoElementsAndStartVideoFn(true)"
+                                                ng-click="showVideoElementsAndStartVideoFn(true, true)"
+                                                ng-dblclick="showVideoElementsAndStartVideoFn(true, true)"
                                                 class="btn btn-sm pull-right"
                                                 ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
