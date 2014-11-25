@@ -26,7 +26,7 @@ def handle_message(room_obj, from_user_id, message):
 
     if message_type == 'videoCameraStatusMsg':
 
-        if message_payload['videoElementsEnabledAndCameraAccessRequested']:
+        if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'activateVideo':
             room_obj = room_module.txn_add_user_id_to_video_elements_enabled_user_ids(room_obj.key.id(), from_user_id)
             send_room_video_settings_to_room_members(room_obj)
 
