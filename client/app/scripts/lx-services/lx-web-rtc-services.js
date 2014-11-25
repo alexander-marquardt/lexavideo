@@ -407,15 +407,15 @@ webRtcServices.factory('lxPeerService',
             return contents;
         };
 
-        var onRemoteStreamAdded = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+        var onRemoteStreamAdded = function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
             return function(mediaStreamEvent) {
                 $log.log('Remote stream added.');
                 lxAdapterService.attachMediaStream(remoteVideoObject.remoteHdVideoElem, mediaStreamEvent.stream);
                 self.remoteStream = mediaStreamEvent.stream;
 
-                videoSignalingObject.videoSignalingStatusForUserFeedback = null; // clear feedback messages
-                videoSignalingObject.localIsSendingVideoType = 'HD Video';
-                videoSignalingObject.remoteIsSendingVideoType = 'HD Video';
+                videoTypeSignalingObject.videoSignalingStatusForUserFeedback = null; // clear feedback messages
+                videoTypeSignalingObject.localIsSendingVideoType = 'HD Video';
+                videoTypeSignalingObject.remoteIsSendingVideoType = 'HD Video';
             };
         };
 
@@ -442,7 +442,7 @@ webRtcServices.factory('lxPeerService',
         var self =  {
             pc : null,
             remoteStream : null,
-            createPeerConnection : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+            createPeerConnection : function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
                 try {
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
                     self.pc = new lxAdapterService.RTCPeerConnection(lxUseChatRoomVarsService.pcConfig, lxUseChatRoomConstantsService.pcConstraints);
@@ -455,7 +455,7 @@ webRtcServices.factory('lxPeerService',
                     $log.error(e);
                     return;
                 }
-                self.pc.onaddstream = onRemoteStreamAdded(localVideoObject, remoteVideoObject, videoSignalingObject);
+                self.pc.onaddstream = onRemoteStreamAdded(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
                 self.pc.onremovestream = onRemoteStreamRemoved;
                 self.pc.onsignalingstatechange = onSignalingStateChanged();
                 self.pc.oniceconnectionstatechange = onIceConnectionStateChanged();
@@ -506,14 +506,14 @@ webRtcServices.factory('lxMediaService',
 
 
         // This is a callback function that is executed after the user has given access to their camera and microphone.
-        var onUserMediaSuccess = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+        var onUserMediaSuccess = function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
             return function(stream) {
                 $log.log('User has granted access to local media.');
                 // Call the polyfill wrapper to attach the media stream to this element.
                 lxAdapterService.attachMediaStream(localVideoObject.localHdVideoElem, stream);
                 localVideoObject.localHdVideoElem.style.opacity = 1;
 
-                videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
+                videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
 
                 lxStreamService.localStream = stream;
 
@@ -524,7 +524,7 @@ webRtcServices.factory('lxMediaService',
 
 
                 // we might have been waiting for access to the media stream to start the call.
-                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
 
 
                 // Since onUserMediaSuccess is asynchronously called, we manually call a $apply
@@ -535,7 +535,7 @@ webRtcServices.factory('lxMediaService',
         };
 
         // Return a function that is triggered if there is a problem when accessing the users camera and microphone.
-        var onUserMediaError = function(videoSignalingObject) {
+        var onUserMediaError = function(videoTypeSignalingObject) {
             return function(e) {
 
                 // For some reason, we cannot override e.message when error is an object with NavigatorUserMediaError
@@ -550,7 +550,7 @@ webRtcServices.factory('lxMediaService',
 
                 $timeout(function() {
                     lxCallService.hasAudioOrVideoMediaConstraints = false;
-                    videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
+                    videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
                 });
             };
         };
@@ -558,20 +558,20 @@ webRtcServices.factory('lxMediaService',
         return {
 
 
-            doGetUserMedia  : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+            doGetUserMedia  : function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
                 // Call into getUserMedia via the polyfill (adapter.js).
                 try {
 
                     // if we have already made a request to access the camera, then don't make another one while we are
                     // still waiting for the response -- this would cause multiple "Allow" buttons to be stacked on each
                     // other in the containing browser.
-                    if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'waitingForResponse') {
+                    if (videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'waitingForResponse') {
                         lxAdapterService.getUserMedia(lxUseChatRoomConstantsService.mediaConstraints,
-                            onUserMediaSuccess(localVideoObject, remoteVideoObject, videoSignalingObject),
-                            onUserMediaError(videoSignalingObject));
+                            onUserMediaSuccess(localVideoObject, remoteVideoObject, videoTypeSignalingObject),
+                            onUserMediaError(videoTypeSignalingObject));
                         $log.debug('Requested access to local media with mediaConstraints:\n' +
                             '  \'' + JSON.stringify(lxUseChatRoomConstantsService.mediaConstraints) + '\'');
-                        videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'waitingForResponse';
+                        videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'waitingForResponse';
                     } 
 
                     else {
@@ -581,7 +581,7 @@ webRtcServices.factory('lxMediaService',
                 } catch (e) {
                     e.message = '\n\tError in doGetUserMedia\n\t' + e.message;
                     $log.error(e);
-                    videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
+                    videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'denyAccess';
                 }
             }
         };
@@ -604,9 +604,9 @@ webRtcServices.factory('lxCallService',
 
 
 
-        var calleeStart = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+        var calleeStart = function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
             // Callee starts to process cached offer and other messages.
-            while (lxChannelMessageService.getQueueLength() > 0 && videoSignalingObject.localHasSelectedVideoType === 'HD Video') {
+            while (lxChannelMessageService.getQueueLength() > 0 && videoTypeSignalingObject.localHasSelectedVideoType === 'HD Video') {
                 lxWebRtcSessionService.processSignalingMessage(lxChannelMessageService.shift(), localVideoObject, remoteVideoObject);
             }
         };
@@ -617,18 +617,18 @@ webRtcServices.factory('lxCallService',
             hasAudioOrVideoMediaConstraints : false,
 
 
-            maybeStart : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+            maybeStart : function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
 
                 // Only transmit HD video if the local user has authorized it by selecting the HD Video button,
                 // or by leaving the default as HD Video.
-                if (videoSignalingObject.localHasSelectedVideoType === 'HD Video') {
+                if (videoTypeSignalingObject.localHasSelectedVideoType === 'HD Video') {
 
                     if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
                         lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
                         $log.debug('Starting webRtc services!!');
 
-                        lxPeerService.createPeerConnection(localVideoObject, remoteVideoObject, videoSignalingObject);
+                        lxPeerService.createPeerConnection(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
 
                         if (self.hasAudioOrVideoMediaConstraints) {
                             $log.log('Adding local stream.');
@@ -645,7 +645,7 @@ webRtcServices.factory('lxCallService',
                         }
                         else {
                             $log.log('Executing calleeStart()');
-                            calleeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                            calleeStart(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
                         }
 
                     } else {

@@ -65,7 +65,7 @@ angular.module('lxChannel.services', [])
 
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteVideoObject;
-                var videoSignalingObject = scope.videoTypeSignalingObject;
+                var videoTypeSignalingObject = scope.videoTypeSignalingObject;
 
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
@@ -92,7 +92,7 @@ angular.module('lxChannel.services', [])
 
                                     // We may have been waiting for signalingReady to be true to attempt to start the peer-to-peer video
                                     // call because this user is not the rtcInitiator.
-                                    lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                                    lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
 
                                 } else {
                                     lxChannelMessageService.push(sdpObject);
@@ -113,8 +113,8 @@ angular.module('lxChannel.services', [])
                                 // remote user has already started transmitting HD Video. If we do not include this
                                 // check, then the act of receiving an ASCII video frame would incorrectly switch the
                                 // remoteIsSendingVideoType to ASCII Video.
-                                if (videoSignalingObject.localHasSelectedVideoType === 'ASCII Video') {
-                                    videoSignalingObject.remoteIsSendingVideoType = 'ASCII Video';
+                                if (videoTypeSignalingObject.localHasSelectedVideoType === 'ASCII Video') {
+                                    videoTypeSignalingObject.remoteIsSendingVideoType = 'ASCII Video';
                                 }
                             }
                             else {
@@ -125,8 +125,8 @@ angular.module('lxChannel.services', [])
                         case 'videoSettingsMsg':
                             // message received that indicates a modification to the current video transmission configuration
 
-                            videoSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = messageObject.messagePayload.requestAcceptOrDenyVideoType;
-                            videoSignalingObject.remoteVideoSignalingStatus.videoType = messageObject.messagePayload.videoType;
+                            videoTypeSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = messageObject.messagePayload.requestAcceptOrDenyVideoType;
+                            videoTypeSignalingObject.remoteVideoSignalingStatus.videoType = messageObject.messagePayload.videoType;
                             $log.debug('received remote video type of: ' + messageObject.messagePayload.videoType);
                             break;
 
@@ -163,8 +163,8 @@ angular.module('lxChannel.services', [])
                             // roomInitialVideoSettingsMsg can force the local user into a videoType selection - this is intended for when
                             // the user joins an existing room that the other user has already set to a particular
                             // videoType.
-                            videoSignalingObject.localHasSelectedVideoType = messageObject.messagePayload.roomVideoType;
-                            videoSignalingObject.localIsNegotiatingForVideoType =  messageObject.messagePayload.roomVideoType;
+                            videoTypeSignalingObject.localHasSelectedVideoType = messageObject.messagePayload.roomVideoType;
+                            videoTypeSignalingObject.localIsNegotiatingForVideoType =  messageObject.messagePayload.roomVideoType;
 
                             // See server-side code for more info on rtcInitiator. Basically, if rtcInitiator is sent to the
                             // client, it means that we should attempt to initiate a new rtc connection from scratch once
@@ -193,7 +193,7 @@ angular.module('lxChannel.services', [])
                                 // are required for a new peer session.
                                 lxWebRtcSessionService.started = false;
 
-                                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoSignalingObject);
+                                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
 
                             }
                             break;

@@ -21,7 +21,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
             var remoteVideoObject = scope.remoteVideoObject;
             var localVideoObject = scope.localVideoObject;
-            var videoSignalingObject = scope.videoTypeSignalingObject;
+            var videoTypeSignalingObject = scope.videoTypeSignalingObject;
 
             var $miniVideoDiv = angular.element(elem).find('#id-mini-video-div');
 
@@ -60,7 +60,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                 if (!localVideoObject.miniVideoElemInsideRemoteVideoWindow) {
                     $log.error('Error: miniVideoElements not set');
                 } else {
-                    if (videoSignalingObject.remoteIsSendingVideoType !== null) {
+                    if (videoTypeSignalingObject.remoteIsSendingVideoType !== null) {
                         lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteVideoWindow, localVideoObject.localHdVideoElem);
                     }
 
@@ -87,21 +87,21 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                         // If this is an active HD session on a small screen, then we display the remote video with a local
                         // video embedded inside of a mini-video element. Alternatively, if the remote user is sending
                         // ASCII video, then we show the local video embedded inside of the ASCII video element.
-                        if ( videoSignalingObject.remoteIsSendingVideoType !== null) {
+                        if ( videoTypeSignalingObject.remoteIsSendingVideoType !== null) {
                             showMiniVideoElems();
                             localVideoObject.localVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'inline-block';
 
 //                            // attach the mini-video window to the HD Video wrapper
                             var miniVideoDiv = $miniVideoDiv.detach();
-                            if ( videoSignalingObject.remoteIsSendingVideoType === 'HD Video') {
+                            if ( videoTypeSignalingObject.remoteIsSendingVideoType === 'HD Video') {
                                 angular.element(remoteVideoObject.remoteHdVideoElem).parent().prepend(miniVideoDiv);
                             }
-                            else if (videoSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
+                            else if (videoTypeSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
                                 angular.element(remoteVideoObject.remoteAsciiVideoElem).parent().prepend(miniVideoDiv);
                             }
                             else {
-                                throw new Error('Unknown videoype: ' + videoSignalingObject.remoteIsSendingVideoType);
+                                throw new Error('Unknown videoype: ' + videoTypeSignalingObject.remoteIsSendingVideoType);
                             }
                             // The following line is necessary or else Firefox video will freeze after detaching the
                             // and re-attaching the video element.
@@ -131,7 +131,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
 
 
-            scope.$watch('videoSignalingObject.remoteIsSendingVideoType', function(newRemoteIsSendingVideoType, oldRemoteIsSendingVideoType) {
+            scope.$watch('videoTypeSignalingObject.remoteIsSendingVideoType', function(newRemoteIsSendingVideoType, oldRemoteIsSendingVideoType) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // We need to make sure that correct windows aer enabled for the current videoType..
                 $log.info('Remote remoteIsSendingVideoType is now: ' + newRemoteIsSendingVideoType + ' Old value was: ' + oldRemoteIsSendingVideoType);
