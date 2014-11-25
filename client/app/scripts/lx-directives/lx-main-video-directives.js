@@ -28,7 +28,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
             var removeMiniVideoElemsSrc = function() {
                 $log.debug('removeMiniVideoElemsSrc');
                 if (localVideoObject.miniVideoElemInsideRemoteVideoWindow && localVideoObject.miniVideoElemInsideRemoteVideoWindow.src) {
-                    lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteVideoWindow.src , '');
+                    lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteVideoWindow , '');
                 }
             };
 
