@@ -72,9 +72,10 @@
                             </div>
                             <div class="panel-footer">
                                 <div class="row">
+
+                                    <!-- Chat message input and send message button -->
                                     <div class="col-xs-8 col-sm-10"
-                                         ng-class="videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' &&
-                                                  videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'waitingForActivateVideo' ? 'col-xs-12 col-sm-12': ''">
+                                         ng-class="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' ? 'col-xs-12 col-sm-12': ''">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -100,9 +101,10 @@
                                             </div>
                                         </form>
                                     </div>
+
+                                    <!-- This is the code for the video activation button -->
                                     <div class="col-xs-4 col-sm-2"
-                                         ng-hide="videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' &&
-                                                  videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'waitingForActivateVideo'">
+                                         ng-hide="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo'">
                                         <button type="button"
                                                 ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
                                                 ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
