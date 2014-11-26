@@ -74,10 +74,7 @@
                                 <div class="row">
 
                                     <!-- Chat message input and send message button -->
-                                    <div class="col-xs-8 col-sm-10"
-                                         ng-class="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ||
-                                                   (videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
-                                                   videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo') ? 'col-xs-12 col-sm-12': ''">
+                                    <div class="col-xs-8 col-sm-10">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -118,6 +115,24 @@
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
                                             </span>
                                             Video
+                                        </button>
+                                    </div>
+
+                                    <div class="col-xs-4 col-sm-2"
+                                         ng-show="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ||
+                                                 (videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
+                                                 videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo')">
+                                        <button type="button"
+                                                ng-click="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
+                                                ng-dblclick="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
+                                                class="btn btn-sm pull-right"
+                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                            <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                                <span class="icon-lx-start-video-camera-cfg"></span>
+                                                <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
+                                                <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
+                                            </span>
+                                                Stop
                                         </button>
                                     </div>
                                 </div>
