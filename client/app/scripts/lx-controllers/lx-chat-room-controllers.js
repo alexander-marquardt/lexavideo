@@ -66,21 +66,21 @@ angular.module('lxUseChatRoom.controllers', [])
             // "access" is given. After this, there is a browser prompt that the user will have to accept in order
             // to access their camera and microphone.
 
-            // localHasEnabledVideoElementsAndRequestedCameraAccess and
-            // remoteHasEnabledVideoElementsAndRequestedCameraAccess can be the following values:
+            // localVideoActivationStatus and
+            // remoteVideoActivationStatus can be the following values:
             //    'waitingForActivateVideo': user has not made any request for a video exchange
             //    'activateVideo': user has activated video elements
             //    'doNotActivateVideo': user has denied activation of video elements
-            localHasEnabledVideoElementsAndRequestedCameraAccess: 'waitingForActivateVideo',
+            localVideoActivationStatus: 'waitingForActivateVideo',
 
-            remoteHasEnabledVideoElementsAndRequestedCameraAccess: 'waitingForActivateVideo'
+            remoteVideoActivationStatus: 'waitingForActivateVideo'
         };
 
 
 
         $scope.showVideoElementsAndStartVideoFn = function(localVideoElementsEnabled, queryForRemoteVideoElementsEnabled) {
 
-            $scope.videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess = localVideoElementsEnabled;
+            $scope.videoCameraStatusObject.localVideoActivationStatus = localVideoElementsEnabled;
 
             lxAccessVideoElementsAndAccessCameraService.startExchangeOfIfVideoElementsEnabled(
                 $scope,

@@ -148,7 +148,7 @@ angular.module('lxChannel.services', [])
                                     // and the remote user have enabled video elements or not.
                                     lxAccessVideoElementsAndAccessCameraService.startExchangeOfIfVideoElementsEnabled(
                                         scope,
-                                        scope.videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess,
+                                        scope.videoCameraStatusObject.localVideoActivationStatus,
                                         true /* queryForRemoteVideoElementsEnabled - ie. ask remote to respond with their status */
                                     );
                                 }
@@ -217,7 +217,7 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'videoCameraStatusMsg':
-                            scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess =
+                            scope.videoCameraStatusObject.remoteVideoActivationStatus =
                                    messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
 
                             // Check if the remote user has requested an update of the local users status
@@ -226,7 +226,7 @@ angular.module('lxChannel.services', [])
 
                                     lxAccessVideoElementsAndAccessCameraService.startExchangeOfIfVideoElementsEnabled(
                                         scope,
-                                        scope.videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess,
+                                        scope.videoCameraStatusObject.localVideoActivationStatus,
                                         /* queryForRemoteVideoElementsEnabled is false to prevent endless queries back and forth */
                                         false
                                     )

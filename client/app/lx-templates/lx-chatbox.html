@@ -26,9 +26,9 @@
 
                             <div class="panel-body cl-chat-panel-body"
                                  scroll-glue="chatPanelIsGlued"
-                                 ng-class="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' ?
+                                 ng-class="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ?
                                     'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">
-                                <div ng-class="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' ?
+                                <div ng-class="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ?
                                     'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>
                                 <div lx-show-chat-messages-directive></div>
 
@@ -36,8 +36,8 @@
                                 <!-- This is the html that prompts the user to exchange video with the remote user if the
                                      remote user has requested to do so -->
                                 <div class="well cl-show-hide-fade cl-prompt-for-video-access"
-                                     ng-show="videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' &&
-                                              videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'waitingForActivateVideo'">
+                                     ng-show="videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
+                                              videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo'">
 
                                     <div class="row ">
                                         <div class="col-xs-12 cl-text-size-1_5em ">
@@ -75,7 +75,7 @@
 
                                     <!-- Chat message input and send message button -->
                                     <div class="col-xs-8 col-sm-10"
-                                         ng-class="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo' ? 'col-xs-12 col-sm-12': ''">
+                                         ng-class="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ? 'col-xs-12 col-sm-12': ''">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -104,7 +104,7 @@
 
                                     <!-- This is the code for the video activation button -->
                                     <div class="col-xs-4 col-sm-2"
-                                         ng-hide="videoCameraStatusObject.localHasEnabledVideoElementsAndRequestedCameraAccess == 'activateVideo'">
+                                         ng-hide="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo'">
                                         <button type="button"
                                                 ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
                                                 ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"

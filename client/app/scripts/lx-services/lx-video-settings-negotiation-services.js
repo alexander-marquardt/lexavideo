@@ -32,11 +32,11 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
         }
 
-        else if (scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess === 'waitingForActivateVideo') {
+        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'waitingForActivateVideo') {
             scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
         }
 
-        else if (scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess === 'doNotActivateVideo') {
+        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'doNotActivateVideo') {
             scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedToExchangeVideo';
         }
 
@@ -174,7 +174,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                     // Check if there is a remote user has enabled their video elements - if so, then we are
                     // negotiating video settings with a remote user and need to ensure that local and remote
                     // use are in sync.
-                    if (scope.videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess) {
+                    if (scope.videoCameraStatusObject.remoteVideoActivationStatus) {
 
                         if (localIsNegotiatingForVideoType === 'HD Video' || localIsNegotiatingForVideoType === 'ASCII Video') {
 
@@ -219,11 +219,11 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                 setVideoSignalingStatusForUserFeedback(scope, null);
             });
 
-            // Monitor remoteHasEnabledVideoElementsAndRequestedCameraAccess to track if the remote user has activated
+            // Monitor remoteVideoActivationStatus to track if the remote user has activated
             // their video elements and requested access to their camera.
-            scope.$watch('videoCameraStatusObject.remoteHasEnabledVideoElementsAndRequestedCameraAccess', function(remoteHasEnabledVideoElementsAndRequestedCameraAccess) {
+            scope.$watch('videoCameraStatusObject.remoteVideoActivationStatus', function(remoteVideoActivationStatus) {
 
-                if (remoteHasEnabledVideoElementsAndRequestedCameraAccess === 'waitingForActivateVideo') {
+                if (remoteVideoActivationStatus === 'waitingForActivateVideo') {
 
 
                     // remote user has not enabled their video elements, so set the signaling status to null
