@@ -146,7 +146,8 @@
 }
 
 .icon-lx-deny-start-video-camera-thin-forward-slash-cfg {
-  color: $deep-red;;
+  color: $deep-red;
+  color: white;
   @extend %call-control-icon-common;
   @extend .icon-lx-thin-forward-slash;
   top: 40%;

@@ -101,16 +101,18 @@
                                         </form>
                                     </div>
 
-                                    <!-- This is the code for the video activation button -->
+                                    <!-- This is the code for the video activation/stop button -->
 
                                     <!-- only show the video/stop video button if the user is not currently being shown the
                                          prompt window to enable/deny video -->
                                     <div ng-hide="videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
                                               videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo'">
 
-                                        <div class="col-xs-4 col-sm-2"
-                                             ng-show="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo'">
+
+                                        <div class="col-xs-4 col-sm-2">
+                                            <!-- "Start" video button -->
                                             <button type="button"
+                                                    ng-show="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo'"
                                                     ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
                                                     ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
                                                     class="btn btn-sm pull-right"
@@ -120,11 +122,10 @@
                                                 </span>
                                                 Video
                                             </button>
-                                        </div>
 
-                                        <div class="col-xs-4 col-sm-2"
-                                             ng-show="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo'">
+                                            <!-- "Stop" video button -->
                                             <button type="button"
+                                                    ng-show="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo'"
                                                     ng-click="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
                                                     ng-dblclick="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
                                                     class="btn btn-sm pull-right"
