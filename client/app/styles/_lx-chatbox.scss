@@ -178,10 +178,7 @@ $estimated-bubble-height: 30px;
 
 
 .cl-prompt-for-video-access {
-     margin-left: 0px;
-     margin-right: 0px;
-     margin-top: 15px;
-     margin-bottom: 15px;
+     margin-top: 20px;
      padding-top: 3px;
      padding-bottom: 3px;
      @include my-mixin-border-glow($brand-primary,  1, 2)
