@@ -174,7 +174,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                     // Check if there is a remote user has enabled their video elements - if so, then we are
                     // negotiating video settings with a remote user and need to ensure that local and remote
                     // use are in sync.
-                    if (scope.videoCameraStatusObject.remoteVideoActivationStatus) {
+                    if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'activateVideo') {
 
                         if (localIsNegotiatingForVideoType === 'HD Video' || localIsNegotiatingForVideoType === 'ASCII Video') {
 
