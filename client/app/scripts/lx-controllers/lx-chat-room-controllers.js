@@ -115,7 +115,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // localHasSelectedVideoType this reflects the value of the video selection button that the user has
             // clicked on. This is used for highlighting the button that the user has currently selected.
-            localHasSelectedVideoType: null,  // null, 'ASCII Video', 'HD Video'.
+            localHasSelectedVideoType: 'HD Video',  // null, 'ASCII Video', 'HD Video'.
 
             // localIsNegotiatingForVideoType is almost the same as localHasSelectedVideoType and when the user initially
             // presses the videoType button, both values will be set to the same value.
