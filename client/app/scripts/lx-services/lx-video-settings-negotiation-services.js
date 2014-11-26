@@ -155,7 +155,8 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                 }
                 else {
                     // if videoSignalingStatusForUserFeedback is 'remoteHasSetVideoToAscii' leave the message up
-                    // until it fades away on its own (it has a timer associated with it).
+                    // until it fades away on its own (it has a timer associated with it), however for any other
+                    // videoSignalingStatusForUserFeedback remove the feedback.
                     if (scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback !== 'remoteHasSetVideoToAscii') {
                         setVideoSignalingStatusForUserFeedback(scope, null);
                     }
@@ -191,7 +192,8 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                         }
                     }
 
-                    // The current user is not signaling video to any other user.
+                    // The current user is not signaling video to any other user since they are either alone in
+                    // the chat room, or the other user has not enabled their video elements.
                     else {
 
                         setVideoSignalingStatusForUserFeedback(scope, null);
@@ -211,7 +213,9 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
 
             // remote user has either entered or left the room.
             scope.$watch('roomOccupancyObject.remoteUserId', function() {
-                // clear feedback messages
+                // call code to generate feedback messages with a null value - this will result in the feedback
+                // being updated with one of the message override values defined in setVideoSignalingStatusForUserFeedback,
+                // or possibly by clearing the feedback in the case that none of the overrides are triggered.
                 setVideoSignalingStatusForUserFeedback(scope, null);
             });
 
