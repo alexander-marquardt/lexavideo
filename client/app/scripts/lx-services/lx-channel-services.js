@@ -231,6 +231,20 @@ angular.module('lxChannel.services', [])
                                         false
                                     )
                             }
+
+                            // If the local user has denied video activation (as indicated by 'doNotActivateVideo'),
+                            // then by construction this was triggered by a remoteVideoActivationStatus of 'activateVideo' .
+                            // If the  remote user now has a status other than 'activateVideo' then they are not currently
+                            // attempting to exchange video.
+                            // Reset localVideoActivationStatus to 'waitingForActivateVideo' so that the remote user will
+                            // be able to send a new request to the local user to enable (or deny) access to their video
+                            // elements.
+                            if (scope.videoCameraStatusObject.remoteVideoActivationStatus !== 'activateVideo' &&
+                                scope.videoCameraStatusObject.localVideoActivationStatus === 'doNotActivateVideo') {
+
+                                scope.videoCameraStatusObject.localVideoActivationStatus = 'waitingForActivateVideo';
+                            }
+
                             break;
 
                         default:

@@ -102,38 +102,41 @@
                                     </div>
 
                                     <!-- This is the code for the video activation button -->
-                                    <div class="col-xs-4 col-sm-2"
-                                         ng-hide="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ||
-                                                 (videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
-                                                 videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo')">
-                                        <button type="button"
-                                                ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
-                                                ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
-                                                class="btn btn-sm pull-right"
-                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
-                                            <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                                <span class="icon-lx-start-video-camera-cfg"></span>
-                                            </span>
-                                            Video
-                                        </button>
-                                    </div>
 
-                                    <div class="col-xs-4 col-sm-2"
-                                         ng-show="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ||
-                                                 (videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
-                                                 videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo')">
-                                        <button type="button"
-                                                ng-click="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
-                                                ng-dblclick="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
-                                                class="btn btn-sm pull-right"
-                                                ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
-                                            <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                                <span class="icon-lx-start-video-camera-cfg"></span>
-                                                <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
-                                                <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
-                                            </span>
-                                                Stop
-                                        </button>
+                                    <!-- only show the video/stop video button if the user is not currently being shown the
+                                         prompt window to enable/deny video -->
+                                    <div ng-hide="videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
+                                              videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo'">
+
+                                        <div class="col-xs-4 col-sm-2"
+                                             ng-show="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo'">
+                                            <button type="button"
+                                                    ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
+                                                    class="btn btn-sm pull-right"
+                                                    ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                                <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                                    <span class="icon-lx-start-video-camera-cfg"></span>
+                                                </span>
+                                                Video
+                                            </button>
+                                        </div>
+
+                                        <div class="col-xs-4 col-sm-2"
+                                             ng-show="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo'">
+                                            <button type="button"
+                                                    ng-click="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
+                                                    class="btn btn-sm pull-right"
+                                                    ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                                <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                                    <span class="icon-lx-start-video-camera-cfg"></span>
+                                                    <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
+                                                    <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
+                                                </span>
+                                                    Stop
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
