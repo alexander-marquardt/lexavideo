@@ -146,7 +146,7 @@ angular.module('lxChannel.services', [])
                                 if (roomOccupancyObject.remoteUserId) {
                                     // The following function is executed when remote user joins the room - and makes sure that they
                                     // and the remote user have enabled video elements or not.
-                                    lxAccessVideoElementsAndAccessCameraService.startExchangeOfIfVideoElementsEnabled(
+                                    lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                                         scope,
                                         scope.videoCameraStatusObject.localVideoActivationStatus,
                                         true /* queryForRemoteVideoElementsEnabled - ie. ask remote to respond with their status */
@@ -224,7 +224,7 @@ angular.module('lxChannel.services', [])
                             if ('queryVideoElementsEnabledAndCameraAccessRequested' in messageObject.messagePayload &&
                                 messageObject.messagePayload.queryVideoElementsEnabledAndCameraAccessRequested) {
 
-                                    lxAccessVideoElementsAndAccessCameraService.startExchangeOfIfVideoElementsEnabled(
+                                    lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                                         scope,
                                         scope.videoCameraStatusObject.localVideoActivationStatus,
                                         /* queryForRemoteVideoElementsEnabled is false to prevent endless queries back and forth */

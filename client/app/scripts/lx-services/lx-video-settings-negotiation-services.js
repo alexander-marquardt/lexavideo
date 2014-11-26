@@ -378,7 +378,7 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
     ) {
 
         return {
-            startExchangeOfIfVideoElementsEnabled: function(scope, localVideoElementsEnabled, queryForRemoteVideoElementsEnabled) {
+            sendStatusOfVideoElementsEnabled: function(scope, localVideoElementsEnabled, queryForRemoteVideoElementsEnabled) {
 
                 // Only attempt to send a message if there is another user in the room
                 if (scope.roomOccupancyObject.remoteUserId) {

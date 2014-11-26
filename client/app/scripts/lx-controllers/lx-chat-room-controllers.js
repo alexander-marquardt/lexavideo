@@ -13,6 +13,7 @@ angular.module('lxUseChatRoom.controllers', [])
     function($scope,
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
+             lxCallService,
              lxMessageService,
              lxUseChatRoomConstantsService,
              lxUseChatRoomVarsService,
@@ -78,14 +79,22 @@ angular.module('lxUseChatRoom.controllers', [])
 
 
 
-        $scope.showVideoElementsAndStartVideoFn = function(localVideoElementsEnabled, queryForRemoteVideoElementsEnabled) {
+        $scope.showVideoElementsAndStartVideoFn = function(localVideoActivationStatus, queryForRemoteVideoElementsEnabled) {
 
-            $scope.videoCameraStatusObject.localVideoActivationStatus = localVideoElementsEnabled;
+            $scope.videoCameraStatusObject.localVideoActivationStatus = localVideoActivationStatus;
 
-            lxAccessVideoElementsAndAccessCameraService.startExchangeOfIfVideoElementsEnabled(
+            lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                 $scope,
-                localVideoElementsEnabled,
+                localVideoActivationStatus,
                 queryForRemoteVideoElementsEnabled);
+
+            // If this has been called with localVideoElementsEnabled !== 'activateVideo', then the user has either
+            // (1) hung-up/stopped the call, or (2) denied to setup video elements. In the case 1, the
+            // call must be hung up. In case 2, the call does not need to be hung up, but for simplicity
+            // and because it shouldn't hurt anything to do so, we also hangup the cal for this case.
+            if (localVideoActivationStatus !== 'activateVideo') {
+                lxCallService.doHangup();
+            }
         };
 
         $scope.receivedChatMessageObject = {
