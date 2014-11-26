@@ -75,7 +75,9 @@
 
                                     <!-- Chat message input and send message button -->
                                     <div class="col-xs-8 col-sm-10"
-                                         ng-class="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ? 'col-xs-12 col-sm-12': ''">
+                                         ng-class="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ||
+                                                   (videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
+                                                   videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo') ? 'col-xs-12 col-sm-12': ''">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -104,7 +106,9 @@
 
                                     <!-- This is the code for the video activation button -->
                                     <div class="col-xs-4 col-sm-2"
-                                         ng-hide="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo'">
+                                         ng-hide="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ||
+                                                 (videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
+                                                 videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo')">
                                         <button type="button"
                                                 ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
                                                 ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
