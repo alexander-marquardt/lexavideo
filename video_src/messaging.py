@@ -64,11 +64,14 @@ def handle_message(room_obj, from_user_id, message):
         on_message(room_obj, to_user_id, message)
 
     else:
-        logging.warning('Cannot deliver message type: %s from user: %s to other_user: %s since they are not in the room: %s' % (
-            message_type, from_user_id, to_user_id, room_name))
-        raise Exception('otherUserNotInRoom')
-        # For unittest
-        #on_message(room, user, message)
+
+        # We expect 'acceptVideoType' message to be received if the user is alone in the room, since they
+        # can change the default videoType on the room before another user joins them.
+        if message_payload['requestAcceptOrDenyVideoType'] != 'acceptVideoType':
+            logging.warning('Cannot deliver message type: %s from user: %s to other_user: %s since they are not in the room: %s' % (
+                message_type, from_user_id, to_user_id, room_name))
+            raise Exception('otherUserNotInRoom')
+
 
 
 # def delete_saved_messages(client_id):
