@@ -108,7 +108,7 @@
 
             <button ng-show="localVideoObject.isMicrophoneMuted || videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video'"
                     type="button" class="btn btn-sm btn-default"
-                    ng-class="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled' : ''"
+                    ng-class="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled btn-gray' : ''"
                     ng-click="toggleMicrophoneMute()">
                 <span class="cl-lx-call-control-wrapper-cfg">
                     <span class="icon-lx-microphone-cfg"></span>
@@ -130,7 +130,7 @@
 
             <button ng-show="remoteVideoObject.remoteHdVideoElem.muted || videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video'"
                     type="button" class="btn btn-sm btn-default"
-                    ng-class="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled' : ''"
+                    ng-class="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled btn-gray' : ''"
                     ng-click="toggleAudioMute()">
                 <span class="cl-lx-call-control-wrapper-cfg">
                     <span class="icon-lx-volume-high-cfg"></span>
