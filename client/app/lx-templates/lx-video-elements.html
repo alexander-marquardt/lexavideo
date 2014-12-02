@@ -21,7 +21,13 @@
 
             <!-- The following wraps the local video window -->
             <div class="col-sm-6 text-center cl-col-no-xs-padding" >
-                <div lx-video-wrapper-directive video-window='local'  id="id-local-video-wrapper-div">
+                <div lx-video-wrapper-directive video-window='local'  class="cl-video-wrapper-div" id="id-local-video-wrapper-div">
+
+                    <div class="cl-abs-bottom-of-video-wrapper">
+                        {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
+                    </div>
+
+
                     <div class="text-center">
                         <div ng-show="(videoTypeSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoTypeSignalingObject.localIsSendingVideoType) || videoTypeSignalingObject.debugShowAllVideoWindows" >
                             <div class="cl-my-well" >
@@ -53,7 +59,11 @@
 
             <!-- The following wraps the remote video window -->
             <div class="col-sm-6 text-center cl-col-no-xs-padding" >
-                <div lx-video-wrapper-directive video-window='remote' id="id-remote-video-wrapper-div">
+                <div lx-video-wrapper-directive video-window='remote' class="cl-video-wrapper-div" id="id-remote-video-wrapper-div">
+                    <div class="cl-abs-bottom-of-video-wrapper cl-hide-on-larger-than-xs">
+                        {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
+                    </div>
+
                     <div lx-mini-video-template-directive></div>
                     <div class="text-center" >
                         <div id="id-remote-hd-video-wrapper-div"

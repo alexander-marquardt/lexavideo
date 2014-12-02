@@ -6,11 +6,10 @@ $mini-video-width-percentage : 30%;
 $video-aspect-ratio : 3/4;
 $characters-per-row : 80;
 
-.cl-local-video-wrapper-div {
-  //position: absolute;
-  //transform: scale(-1, 1);
-  //-webkit-transform: scale(-1, 1);
-  //-webkit-backface-visibility: hidden;
+.cl-video-wrapper-div {
+  margin-bottom: 10px;
+  display: inline-block;
+  position: relative;
 }
 
 @mixin generate-video-sizing() {
@@ -131,4 +130,24 @@ video {
   letter-spacing: -0.1em;
 
   @include generate-ascii-mini-span();
+}
+
+.cl-text-outline
+{
+  color: white;
+  text-shadow:
+  -1px -1px 0 #000,
+  1px -1px 0 #000,
+  -1px 1px 0 #000,
+  1px 1px 0 #000;
+  font-weight: 250;
+  letter-spacing: 2px;
+}
+
+.cl-abs-bottom-of-video-wrapper {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  text-align: left;
+  z-index: 5;
 }
