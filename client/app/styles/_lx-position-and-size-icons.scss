@@ -54,9 +54,9 @@
 
 // Hangup phone icon
 .icon-lx-phone-hang-up-cfg {
-  color: $deep-red;
   @extend %call-control-icon-common;
   @extend .icon-lx-phone-hang-up;
+  margin-top: -0.60em;
 }
 
 .icon-lx-microphone-cfg {
@@ -76,7 +76,6 @@
 }
 
 .icon-lx-thin-forward-slash-cfg {
-  color: $deep-red;
   @extend %call-control-icon-common;
   @extend .icon-lx-thin-forward-slash;
 }
@@ -89,26 +88,6 @@
 
 .btn-gray {
   @include button-variant($btn-default-color, $btn-gray-bg, $btn-default-border);
-}
-
-
-// Chatbox icons
-
-%chatbox-chat-bubble-icons-common {
-  font-size: 1.5em;
-}
-
-.icon-lx-chat-bubble-left-cfg {
-  color: $gray-light;
-  @extend %chatbox-chat-bubble-icons-common;
-  @extend .icon-lx-chat-bubble-left;
-}
-
-
-.icon-lx-chat-bubble-right-cfg {
-  color: $gray-light;
-  @extend %chatbox-chat-bubble-icons-common;
-  @extend .icon-lx-chat-bubble-right;
 }
 
 .icon-lx-start-video-camera-wrapper-cfg {
@@ -152,3 +131,24 @@
   @extend .icon-lx-thin-forward-slash;
   top: 40%;
 }
+
+
+// Chatbox icons
+
+%chatbox-chat-bubble-icons-common {
+  font-size: 1.5em;
+}
+
+.icon-lx-chat-bubble-left-cfg {
+  color: $gray-light;
+  @extend %chatbox-chat-bubble-icons-common;
+  @extend .icon-lx-chat-bubble-left;
+}
+
+
+.icon-lx-chat-bubble-right-cfg {
+  color: $gray-light;
+  @extend %chatbox-chat-bubble-icons-common;
+  @extend .icon-lx-chat-bubble-right;
+}
+
