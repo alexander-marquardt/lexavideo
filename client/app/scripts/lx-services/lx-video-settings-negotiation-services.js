@@ -93,7 +93,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                 if (videoType === 'HD Video') {
                     // once lxCallService has made a successful connection (onRemoteStreamAdded callback is executed),
                     // then localIsSendingVideoType will be updated
-                    lxCallService.maybeStart(scope.localVideoObject, scope.remoteVideoObject, scope.videoTypeSignalingObject);
+                    lxCallService.maybeStart(scope);
 
 
                     // If we have previously switched to non-HD video transmission, then we explicitly disabled

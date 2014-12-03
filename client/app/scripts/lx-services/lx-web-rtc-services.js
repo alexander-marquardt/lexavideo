@@ -506,7 +506,11 @@ webRtcServices.factory('lxMediaService',
 
 
         // This is a callback function that is executed after the user has given access to their camera and microphone.
-        var onUserMediaSuccess = function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
+        var onUserMediaSuccess = function(scope) {
+
+            var localVideoObject = scope.localVideoObject;
+            var videoTypeSignalingObject = scope.videoTypeSignalingObject;
+
             return function(stream) {
                 $log.log('User has granted access to local media.');
                 // Call the polyfill wrapper to attach the media stream to this element.
@@ -524,7 +528,7 @@ webRtcServices.factory('lxMediaService',
 
 
                 // we might have been waiting for access to the media stream to start the call.
-                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
+                lxCallService.maybeStart(scope);
 
 
                 // Since onUserMediaSuccess is asynchronously called, we manually call a $apply
@@ -558,7 +562,10 @@ webRtcServices.factory('lxMediaService',
         return {
 
 
-            doGetUserMedia  : function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
+            doGetUserMedia  : function(scope) {
+
+                var videoTypeSignalingObject = scope.videoTypeSignalingObject;
+
                 // Call into getUserMedia via the polyfill (adapter.js).
                 try {
 
@@ -567,7 +574,7 @@ webRtcServices.factory('lxMediaService',
                     // other in the containing browser.
                     if (videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'waitingForResponse') {
                         lxAdapterService.getUserMedia(lxUseChatRoomConstantsService.mediaConstraints,
-                            onUserMediaSuccess(localVideoObject, remoteVideoObject, videoTypeSignalingObject),
+                            onUserMediaSuccess(scope),
                             onUserMediaError(videoTypeSignalingObject));
                         $log.debug('Requested access to local media with mediaConstraints:\n' +
                             '  \'' + JSON.stringify(lxUseChatRoomConstantsService.mediaConstraints) + '\'');
@@ -617,7 +624,11 @@ webRtcServices.factory('lxCallService',
             hasAudioOrVideoMediaConstraints : false,
 
 
-            maybeStart : function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
+            maybeStart : function(scope) {
+
+                var localVideoObject = scope.localVideoObject;
+                var remoteVideoObject = scope.remoteVideoObject;
+                var videoTypeSignalingObject = scope.videoTypeSignalingObject;
 
                 // Only transmit HD video if the local user has authorized it by selecting the HD Video button,
                 // or by leaving the default as HD Video.

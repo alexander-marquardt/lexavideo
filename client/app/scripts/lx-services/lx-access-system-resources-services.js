@@ -27,13 +27,13 @@ angular.module('lxAccessSystemResources.services', [])
             watchWhichModalIsOpen = null;
 
 
-        var askForPermissionToCameraAndMicrophone = function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
+        var askForPermissionToCameraAndMicrophone = function(scope) {
             if (lxUseChatRoomConstantsService.mediaConstraints.audio === false &&
                 lxUseChatRoomConstantsService.mediaConstraints.video === false) {
                 lxCallService.hasAudioOrVideoMediaConstraints = false;
             } else {
                 lxCallService.hasAudioOrVideoMediaConstraints = true;
-                lxMediaService.doGetUserMedia(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
+                lxMediaService.doGetUserMedia(scope);
             }
         };
 
@@ -299,8 +299,6 @@ angular.module('lxAccessSystemResources.services', [])
         return {
             showModalsAndArrowsForGrantingCameraAndMicrophoneAccess: function(scope) {
                 var videoTypeSignalingObject = scope.videoTypeSignalingObject;
-                var localVideoObject = scope.localVideoObject;
-                var remoteVideoObject = scope.remoteVideoObject;
 
                 removeModalWatcher();
 
@@ -311,7 +309,7 @@ angular.module('lxAccessSystemResources.services', [])
 
                     var arrowElem = null;
 
-                    askForPermissionToCameraAndMicrophone(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
+                    askForPermissionToCameraAndMicrophone(scope);
 
                     watchWhichModalIsOpen =
                         scope.$watch(getWhichModalIsShown(scope), function (whichModalIsOpen) {

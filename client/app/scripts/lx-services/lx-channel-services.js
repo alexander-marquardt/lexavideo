@@ -92,7 +92,7 @@ angular.module('lxChannel.services', [])
 
                                     // We may have been waiting for signalingReady to be true to attempt to start the peer-to-peer video
                                     // call because this user is not the rtcInitiator.
-                                    lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
+                                    lxCallService.maybeStart(scope);
 
                                 } else {
                                     lxChannelMessageService.push(sdpObject);
@@ -193,7 +193,7 @@ angular.module('lxChannel.services', [])
                                 // are required for a new peer session.
                                 lxWebRtcSessionService.started = false;
 
-                                lxCallService.maybeStart(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
+                                lxCallService.maybeStart(scope);
 
                             }
                             break;
