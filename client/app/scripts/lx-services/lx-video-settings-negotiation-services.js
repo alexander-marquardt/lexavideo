@@ -223,7 +223,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             // their video elements and requested access to their camera.
             scope.$watch('videoCameraStatusObject.remoteVideoActivationStatus', function(remoteVideoActivationStatus) {
 
-                if (remoteVideoActivationStatus === 'waitingForActivateVideo') {
+                if (remoteVideoActivationStatus !== 'activateVideo') {
 
 
                     // remote user has not enabled their video elements, so set the signaling status to null
