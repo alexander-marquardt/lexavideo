@@ -38,6 +38,8 @@ angular.module('lxChatbox.controllers', [])
         // clicked in the chat panel input.
         $scope.userHasAlreadyClickedInChatPanel = false;
 
+        $scope.sendMessagePayload = {};
+
         $scope.sendChatMessageFn = function() {
 
             var messageType = 'chatDataMsg';
