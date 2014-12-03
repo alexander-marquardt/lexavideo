@@ -91,9 +91,12 @@ angular.module('lxUseChatRoom.controllers', [])
             // If this has been called with localVideoElementsEnabled !== 'activateVideo', then the user has either
             // (1) hung-up/stopped the call, or (2) denied to setup video elements. In the case 1, the
             // call must be hung up. In case 2, the call does not need to be hung up, but for simplicity
-            // and because it shouldn't hurt anything to do so, we also hangup the cal for this case.
+            // we also hangup the call for this case.
             if (localVideoActivationStatus !== 'activateVideo') {
                 lxCallService.doHangup();
+                $scope.videoTypeSignalingObject.localHasSelectedVideoType = 'HD Video';
+                $scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = null;
+                $scope.videoTypeSignalingObject.localIsSendingVideoType = null;
             }
         };
 
