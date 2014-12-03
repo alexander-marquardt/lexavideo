@@ -67,11 +67,13 @@ def handle_message(room_obj, from_user_id, message):
 
         # We expect 'acceptVideoType' message to be received if the user is alone in the room, since they
         # can change the default videoType on the room before another user joins them.
-        if message_payload['requestAcceptOrDenyVideoType'] != 'acceptVideoType':
+        if message_type == 'videoSettingsMsg' and message_payload['requestAcceptOrDenyVideoType'] != 'acceptVideoType':
             logging.warning('Cannot deliver message type: %s from user: %s to other_user: %s since they are not in the room: %s' % (
                 message_type, from_user_id, to_user_id, room_name))
             raise Exception('otherUserNotInRoom')
 
+        else:
+            logging.warn('Unexpected message received in a room with just one user in it: ' + repr(message_payload));
 
 
 # def delete_saved_messages(client_id):

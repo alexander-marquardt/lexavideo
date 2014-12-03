@@ -630,11 +630,15 @@ webRtcServices.factory('lxCallService',
                 var remoteVideoObject = scope.remoteVideoObject;
                 var videoTypeSignalingObject = scope.videoTypeSignalingObject;
 
+                var localVideoActivationStatus = scope.videoCameraStatusObject.localVideoActivationStatus;
+                var remoteVideoActivationStatus = scope.videoCameraStatusObject.remoteVideoActivationStatus;
+
                 // Only transmit HD video if the local user has authorized it by selecting the HD Video button,
                 // or by leaving the default as HD Video.
                 if (videoTypeSignalingObject.localHasSelectedVideoType === 'HD Video') {
 
                     if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
+                        localVideoActivationStatus === 'activateVideo' && remoteVideoActivationStatus === 'activateVideo' &&
                         lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
                         $log.debug('Starting webRtc services!!');
@@ -671,6 +675,12 @@ webRtcServices.factory('lxCallService',
                         }
                         if (!lxChannelSupportService.channelReady) {
                             $log.debug('Because lxChannelSupportService.channelReady is false');
+                        }
+                        if (localVideoActivationStatus !== 'activateVideo') {
+                            $log.debug('Because localVideoActivationStatus !== activateVideo')
+                        }
+                        if (remoteVideoActivationStatus !== 'activateVideo') {
+                            $log.debug('Because remoteVideoActivationStatus !== activateVideo')
                         }
                         if (!lxTurnSupportService.turnDone) {
                             $log.debug('Because lxTurnSupportService.turnDone is false');
