@@ -14,10 +14,11 @@ angular.module('lxUseChatRoom.controllers', [])
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxCallService,
+             lxInitializeRoomService,
              lxMessageService,
              lxUseChatRoomConstantsService,
              lxUseChatRoomVarsService,
-             lxInitializeRoomService) {
+             lxWebRtcSessionService) {
 
         // Copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService.
         // Do this before everything else, as many other functions require that this structure be setup!!
@@ -93,7 +94,8 @@ angular.module('lxUseChatRoom.controllers', [])
             // call must be hung up. In case 2, the call does not need to be hung up, but for simplicity
             // we also hangup the call for this case.
             if (localVideoActivationStatus === 'doNotActivateVideo' || localVideoActivationStatus === 'waitingForActivateVideo') {
-                lxCallService.doHangup();
+//                lxCallService.doHangup();
+                lxWebRtcSessionService.stop();
                 $scope.videoTypeSignalingObject.localHasSelectedVideoType = 'HD Video';
                 $scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = null;
                 $scope.videoTypeSignalingObject.localIsSendingVideoType = null;
@@ -177,7 +179,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // The following is a flag that is used for debugging - will over-ride ng-show directives on the video
             // windows to show any window that has this flag on it when it is set to true.
-            debugShowAllVideoWindows: false
+            debugShowAllVideoWindows: true
         };
 
         $scope.remoteVideoObject = {

@@ -410,7 +410,10 @@ webRtcServices.factory('lxPeerService',
         var onRemoteStreamAdded = function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
             return function(mediaStreamEvent) {
                 $log.log('Remote stream added.');
+                $log.log('* remoteVideoObject.remoteHdVideoElem.src before: ' + remoteVideoObject.remoteHdVideoElem.src)
                 lxAdapterService.attachMediaStream(remoteVideoObject.remoteHdVideoElem, mediaStreamEvent.stream);
+                $log.log('* remoteVideoObject.remoteHdVideoElem.src after: ' + remoteVideoObject.remoteHdVideoElem.src)
+
                 self.remoteStream = mediaStreamEvent.stream;
 
                 videoTypeSignalingObject.videoSignalingStatusForUserFeedback = null; // clear feedback messages
@@ -443,6 +446,8 @@ webRtcServices.factory('lxPeerService',
             pc : null,
             remoteStream : null,
             createPeerConnection : function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
+
+                $log.log('**************** createPeerConnection ************')
                 try {
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
                     self.pc = new lxAdapterService.RTCPeerConnection(lxUseChatRoomVarsService.pcConfig, lxUseChatRoomConstantsService.pcConstraints);
@@ -625,6 +630,8 @@ webRtcServices.factory('lxCallService',
 
 
             maybeStart : function(scope) {
+
+                $log.log('************ Entering maybeStart *************');
 
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteVideoObject;
