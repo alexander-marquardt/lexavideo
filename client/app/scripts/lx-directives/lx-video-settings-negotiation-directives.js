@@ -12,9 +12,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         $animate,
         $compile,
         $log,
-        $timeout,
-        lxCallService,
-        lxSelectAndNegotiateVideoTypeService) {
+        $timeout
+    ) {
 
 
     var messageFadeTimerId = null;
@@ -52,71 +51,6 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
     };
 
 
-    var showRequestForChangeVideoType = function(scope, elem, videoType) {
-        // if the other user has requested an hdVideo session, the local user must accept before we will
-        // send and receive HD video.
-
-
-        // make sure that there are no timers set that would fade-away the request/information displayed that is
-        // prompting the user to accept/deny a change to the video format.
-        cancelFadeTimer();
-
-        $animate.removeClass(elem, 'ng-hide');
-        elem.html('');
-        var el = angular.element('<p class="cl-video-overlay-text"/>');
-        el.html('Stranger has requested to exchange ' + videoType + '. Do you accept? ');
-        var buttonGroup = angular.element('<div class="btn-group"></div>');
-        var yesButton = angular.element('<button type="button" class="btn btn-default btn-sm navbar-btn">Yes</button>');
-        var noButton = angular.element('<button type="button" class="btn btn-default btn-sm navbar-btn">No</button>');
-        buttonGroup.append(yesButton, noButton );
-        elem.append(el, buttonGroup);
-
-        yesButton.on('click', function() {
-            $log.debug('Change video type accepted');
-
-            var message;
-
-            scope.$apply(function() {
-                lxSelectAndNegotiateVideoTypeService.negotiateVideoType.sendAcceptanceOfVideoType(videoType);
-                $animate.addClass(elem, 'ng-hide'); // this class is added so that when we show the element, it will fade in.
-
-                // Other user has requested videoType video, and this user has agreed to send it.
-                message = 'We are now setting up the communications for transmitting ' + videoType;
-                showMessageInVideoWindow(scope, elem, message);
-
-                // by changing localHasSelectedVideoType, we will change the video selection button to the new
-                // videoType
-                scope.videoTypeSignalingObject.localHasSelectedVideoType = videoType;
-
-                // The local user has not actually requested any videoType - he is only responding to the remote request.
-                // We do not want to execute watchers or change user feedback messages based on the new videoType.
-                scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = null;
-
-                lxSelectAndNegotiateVideoTypeService.startVideoType(scope, videoType);
-
-            });
-        });
-
-        noButton.on('click', function() {
-            $log.debug('Change video type denied');
-
-            scope.$apply(function() {
-                lxSelectAndNegotiateVideoTypeService.negotiateVideoType.sendDenyOfVideoType(videoType);
-                $animate.addClass(elem, 'ng-hide');
-
-                // Set the remoteSignalingStatus properties to null, in case the remote user tries to make the same request again.
-                // Note: if we do not reset these values , then future requests that are the same as the most recent request
-                // will not trigger execution in the watch function.
-                scope.videoTypeSignalingObject.remoteVideoSignalingStatus.requestAcceptOrDenyVideoType = null;
-                scope.videoTypeSignalingObject.remoteVideoSignalingStatus.videoType = null;
-
-                // Also set the videoSignalingStatusForUserFeedback so that the user will be shown the prompt if
-                // the same (denied) request is made again.
-                scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = null;
-            });
-        });
-    };
-
     var getVideoSignalingStatusForUserFeedback = function(scope) {
         return function(){
             //$log.debug('videoSignalingStatusForUserFeedback is: ' + scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback);
@@ -134,22 +68,12 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
             scope.$watch(getVideoSignalingStatusForUserFeedback(scope), function(newValue) {
 
-                var remoteSignalingStatus = scope.videoTypeSignalingObject.remoteVideoSignalingStatus;
-                var localIsNegotiatingForVideoType = scope.videoTypeSignalingObject.localIsNegotiatingForVideoType;
-
                 switch(newValue) {
 
                     case 'localUserIsAlone':
                         message = 'There is no one else in this chat room right now';
                         showMessageInVideoWindow(scope, overlayElem, message);
                         break;
-
-                    case 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType:
-                        // message here is just for  $log.debug called after the end of this switch block
-                        message = 'received remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
-                        showRequestForChangeVideoType(scope, overlayElem, remoteSignalingStatus.videoType);
-                        break;
-
 
                     case 'waitingForRemoteToAgreeToExchangeVideo':
                         message = 'We are waiting for the remote user to agree to exchange video';
@@ -161,33 +85,6 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
                         showMessageInVideoWindow(scope, overlayElem, message);
                         break;
 
-                    case 'waitingForRemoteToAcceptVideoType: ' +  localIsNegotiatingForVideoType:
-                        message = 'We are waiting for remote user to accept your request to exchange ' + localIsNegotiatingForVideoType;
-                        showMessageInVideoWindow(scope, overlayElem, message, 8000);
-                        break;
-
-                    case 'remoteHasSetVideoToAscii':
-                        message = 'Remote user has switched to ASCII Video mode';
-                        showMessageInVideoWindow(scope, overlayElem, message, 6000);
-                        break;
-
-                    case 'remoteHasDeniedRequestToExchangeFormat: ' + remoteSignalingStatus.videoType:
-                        message = 'Remote user has denied your request to exchange ' + remoteSignalingStatus.videoType;
-                        showMessageInVideoWindow(scope, overlayElem, message, 4000);
-                        break;
-
-                    case 'remoteUserHasAcceptedYourRequestToTransmit: ' + remoteSignalingStatus.videoType:
-                        message = 'Remote user has accepted your request to transmit ' + remoteSignalingStatus.videoType +
-                                ' . Please wait a moment for the new video format to begin transmission.';
-                        showMessageInVideoWindow(scope, overlayElem, message);
-                        break;
-
-                    case 'conflictingVideoTypes':
-                        message = 'It appears that you have requested to use ' + localIsNegotiatingForVideoType +
-                                                    ' but the remote user has accepted ' + remoteSignalingStatus.videoType +
-                                                    '. We were unable to change the video format.';
-                        showMessageInVideoWindow(scope, overlayElem, message);
-                        break;
 
                     case 'mustEnableVideoToStartTransmission':
                         message = 'You must give access to your camera before we can setup a video conversation. ' +
