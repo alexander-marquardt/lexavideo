@@ -131,17 +131,6 @@ video {
   @include generate-ascii-mini-span();
 }
 
-.cl-text-outline
-{
-  color: white;
-  text-shadow:
-  -1px -1px 0 #000,
-  1px -1px 0 #000,
-  -1px 1px 0 #000,
-  1px 1px 0 #000;
-  font-weight: 250;
-  letter-spacing: 2px;
-}
 
 .cl-abs-bottom-of-video-wrapper {
   position: absolute;
@@ -149,4 +138,39 @@ video {
   left: 10px;
   text-align: left;
   z-index: 5;
+}
+
+
+.cl-video-overlay {
+  background: black;
+  box-sizing: border-box;
+  position: absolute;
+  font-size: 1.5em;
+  border-left: 1px solid $standard-border-color;
+  border-right: 1px solid $standard-border-color;
+  padding: 10px;
+  z-index: 10;
+  opacity: 0.7;
+}
+
+@mixin generate-video-overlay-text-mixin {
+  @for $idx from 2 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
+      font-size: nth($video-text-overlay-font-size-list, $idx);
+    }
+  }
+}
+
+.cl-video-overlay-text {
+  color: white;
+  font-size: nth($video-text-overlay-font-size-list, 1);
+  @include generate-video-overlay-text-mixin();
+}
+
+
+$lighten-link-color: lighten($link-color, 15%) !default;
+
+.cl-video-overlay-text a:hover {
+  text-decoration: none;
+  color:  $lighten-link-color;
 }

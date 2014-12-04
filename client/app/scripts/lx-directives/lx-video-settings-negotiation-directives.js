@@ -29,10 +29,9 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
     };
 
     var  showMessageInVideoWindow = function(scope, elem, message, fadeAwayTime) {
-        elem.find('.navbar-text').remove(); // just in case there is already text there, remove the previous element
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
-        var el = angular.element('<p class="navbar-text cl-navbar-text-size "/>');
+        var el = angular.element('<p class="cl-video-overlay-text"/>');
         el.html(message);
         var compiledEl = $compile(el)(scope);
         elem.append(compiledEl);
@@ -50,7 +49,6 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
     var removeMessageInVideoWindow = function(scope, elem) {
         $animate.addClass(elem, 'ng-hide');
-        elem.find('.navbar-text').remove();
     };
 
 
@@ -65,7 +63,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
-        var el = angular.element('<p class="navbar-text cl-navbar-text-size"/>');
+        var el = angular.element('<p class="cl-video-overlay-text"/>');
         el.html('Stranger has requested to exchange ' + videoType + '. Do you accept? ');
         var buttonGroup = angular.element('<div class="btn-group"></div>');
         var yesButton = angular.element('<button type="button" class="btn btn-default btn-sm navbar-btn">Yes</button>');
@@ -129,10 +127,10 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
     return {
         restrict: 'A',
-        template: '<nav class="navbar navbar-inverse navbar-fixed-top cl-navbar-video-overlay cl-show-hide-fade ng-hide" ></nav>',
+        template: '<div class="cl-video-overlay cl-show-hide-fade ng-hide" ></nav>',
         link : function(scope, elem) {
             var message;
-            var navelem = angular.element(elem).find('nav.navbar');
+            var overlayElem = angular.element(elem).find('div.cl-video-overlay');
 
             scope.$watch(getVideoSignalingStatusForUserFeedback(scope), function(newValue) {
 
@@ -143,68 +141,68 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
                     case 'localUserIsAlone':
                         message = 'There is no one else in this chat room right now';
-                        showMessageInVideoWindow(scope, navelem, message);
+                        showMessageInVideoWindow(scope, overlayElem, message);
                         break;
 
                     case 'remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType:
                         // message here is just for  $log.debug called after the end of this switch block
                         message = 'received remoteHasRequestedVideoType: ' + remoteSignalingStatus.videoType;
-                        showRequestForChangeVideoType(scope, navelem, remoteSignalingStatus.videoType);
+                        showRequestForChangeVideoType(scope, overlayElem, remoteSignalingStatus.videoType);
                         break;
 
 
                     case 'waitingForRemoteToAgreeToExchangeVideo':
                         message = 'We are waiting for the remote user to agree to exchange video';
-                        showMessageInVideoWindow(scope, navelem, message);
+                        showMessageInVideoWindow(scope, overlayElem, message);
                         break;
 
                     case 'remoteHasDeniedToExchangeVideo':
                         message = 'Remote user has denied your request to exchange video';
-                        showMessageInVideoWindow(scope, navelem, message);
+                        showMessageInVideoWindow(scope, overlayElem, message);
                         break;
 
                     case 'waitingForRemoteToAcceptVideoType: ' +  localIsNegotiatingForVideoType:
                         message = 'We are waiting for remote user to accept your request to exchange ' + localIsNegotiatingForVideoType;
-                        showMessageInVideoWindow(scope, navelem, message, 8000);
+                        showMessageInVideoWindow(scope, overlayElem, message, 8000);
                         break;
 
                     case 'remoteHasSetVideoToAscii':
                         message = 'Remote user has switched to ASCII Video mode';
-                        showMessageInVideoWindow(scope, navelem, message, 6000);
+                        showMessageInVideoWindow(scope, overlayElem, message, 6000);
                         break;
 
                     case 'remoteHasDeniedRequestToExchangeFormat: ' + remoteSignalingStatus.videoType:
                         message = 'Remote user has denied your request to exchange ' + remoteSignalingStatus.videoType;
-                        showMessageInVideoWindow(scope, navelem, message, 4000);
+                        showMessageInVideoWindow(scope, overlayElem, message, 4000);
                         break;
 
                     case 'remoteUserHasAcceptedYourRequestToTransmit: ' + remoteSignalingStatus.videoType:
                         message = 'Remote user has accepted your request to transmit ' + remoteSignalingStatus.videoType +
                                 ' . Please wait a moment for the new video format to begin transmission.';
-                        showMessageInVideoWindow(scope, navelem, message);
+                        showMessageInVideoWindow(scope, overlayElem, message);
                         break;
 
                     case 'conflictingVideoTypes':
                         message = 'It appears that you have requested to use ' + localIsNegotiatingForVideoType +
                                                     ' but the remote user has accepted ' + remoteSignalingStatus.videoType +
                                                     '. We were unable to change the video format.';
-                        showMessageInVideoWindow(scope, navelem, message);
+                        showMessageInVideoWindow(scope, overlayElem, message);
                         break;
 
                     case 'mustEnableVideoToStartTransmission':
                         message = 'You must give access to your camera before we can setup a video conversation. ' +
                         'Click <a href="#" ng-click="showCameraAndMicrophoneInstructions()">here</a> for more details';
-                        showMessageInVideoWindow(scope, navelem, message);
+                        showMessageInVideoWindow(scope, overlayElem, message);
                         break;
 
                     case 'remoteHasNotEnabledVideoYet':
                         message = 'We are waiting for remote user to give access to their camera and microphone';
-                        showMessageInVideoWindow(scope, navelem, message);
+                        showMessageInVideoWindow(scope, overlayElem, message);
                         break;
 
                     case null:
                         message = 'null videoSignalingStatusForUserFeedback received - removing message in video window';
-                        removeMessageInVideoWindow(scope, navelem);
+                        removeMessageInVideoWindow(scope, overlayElem);
                         break;
 
                     default:
