@@ -87,12 +87,11 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
 
             // Monitor remoteVideoActivationStatus to track if the remote user has activated
             // their video elements and requested access to their camera.
-            scope.$watch('videoCameraStatusObject.remoteVideoActivationStatus', function(remoteVideoActivationStatus) {
+            scope.$watch('videoCameraStatusObject.remoteVideoActivationStatus', function() {
 
-                if (remoteVideoActivationStatus == 'activateVideo') {
-                    // clear feedback messages
-                    setVideoSignalingStatusForUserFeedback(scope, null);
-                }
+                // any change on the remoteVideoActivationStatus should trigger a reloading of the notification.
+                setVideoSignalingStatusForUserFeedback(scope, null);
+
             });
         }
     };
