@@ -95,18 +95,6 @@ angular.module('lxUseChatRoom.controllers', [])
             // we also hangup the call for this case.
             if (localVideoActivationStatus === 'doNotActivateVideo' || localVideoActivationStatus === 'waitingForActivateVideo') {
                 lxCallService.doHangup();
-//                lxWebRtcSessionService.stop();
-                $scope.videoTypeSignalingObject.localHasSelectedVideoType = 'HD Video';
-                $scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = null;
-                $scope.videoTypeSignalingObject.localIsSendingVideoType = null;
-            }
-
-            else if (localVideoActivationStatus === 'activateVideo') {
-                $scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = $scope.videoTypeSignalingObject.localHasSelectedVideoType;
-            }
-
-            else {
-                $log.error('Unknown localVideoActivationStatus: ' + localVideoActivationStatus);
             }
         };
 
@@ -143,7 +131,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.remoteVideoObject = {
             remoteHdVideoElem: undefined, // set in lxVideoElementDirective
-            remoteVideoWrapper: undefined, // set in lxHdVideoWrapperDirective
+            remoteVideoWrapper: undefined // set in lxHdVideoWrapperDirective
         };
 
         $scope.localVideoObject = {

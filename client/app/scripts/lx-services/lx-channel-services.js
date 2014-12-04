@@ -102,25 +102,7 @@ angular.module('lxChannel.services', [])
                             }
                             break;
 
-                        case 'videoStreamData':
-                            if (messageObject.messagePayload.streamType === 'ASCII Video') {
-                                self.asciiVideoObject.videoFrameUpdated = true;
-                                self.asciiVideoObject.compressedVideoFrame = messageObject.messagePayload.compressedVideoString;
 
-
-                                // Only update the remoteIsSendingVideoType if the local user has selected/accepted this type.
-                                // This check is necessary because an ASCII Video frame may be received after the
-                                // remote user has already started transmitting HD Video. If we do not include this
-                                // check, then the act of receiving an ASCII video frame would incorrectly switch the
-                                // remoteIsSendingVideoType to ASCII Video.
-                                if (videoTypeSignalingObject.localHasSelectedVideoType === 'ASCII Video') {
-                                    videoTypeSignalingObject.remoteIsSendingVideoType = 'ASCII Video';
-                                }
-                            }
-                            else {
-                                $log.log('Error: unknown video type received: ' + messageObject.messagePayload.streamType);
-                            }
-                            break;
 
 
                         case 'roomOccupancyMsg':
@@ -151,12 +133,6 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'roomInitialVideoSettingsMsg':
-
-                            // roomInitialVideoSettingsMsg can force the local user into a videoType selection - this is intended for when
-                            // the user joins an existing room that the other user has already set to a particular
-                            // videoType.
-                            videoTypeSignalingObject.localHasSelectedVideoType = messageObject.messagePayload.roomVideoType;
-                            videoTypeSignalingObject.localIsNegotiatingForVideoType =  messageObject.messagePayload.roomVideoType;
 
                             // See server-side code for more info on rtcInitiator. Basically, if rtcInitiator is sent to the
                             // client, it means that we should attempt to initiate a new rtc connection from scratch once
@@ -277,15 +253,6 @@ angular.module('lxChannel.services', [])
                     e.message = '\n\tError in openChannel\n\t' + e.message;
                     $log.error(e);
                 }
-            },
-            asciiVideoObject : {
-                compressedVideoFrame : null,
-                videoFrameUpdated : false
-            },
-            getAsciiVideoFrameUpdated : function(self) {
-                return function() {
-                    return self.asciiVideoObject.videoFrameUpdated;
-                };
             }
         };
     });
