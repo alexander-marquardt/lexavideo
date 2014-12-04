@@ -94,8 +94,8 @@ angular.module('lxUseChatRoom.controllers', [])
             // call must be hung up. In case 2, the call does not need to be hung up, but for simplicity
             // we also hangup the call for this case.
             if (localVideoActivationStatus === 'doNotActivateVideo' || localVideoActivationStatus === 'waitingForActivateVideo') {
-//                lxCallService.doHangup();
-                lxWebRtcSessionService.stop();
+                lxCallService.doHangup();
+//                lxWebRtcSessionService.stop();
                 $scope.videoTypeSignalingObject.localHasSelectedVideoType = 'HD Video';
                 $scope.videoTypeSignalingObject.localIsNegotiatingForVideoType = null;
                 $scope.videoTypeSignalingObject.localIsSendingVideoType = null;

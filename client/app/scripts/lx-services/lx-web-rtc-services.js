@@ -701,7 +701,10 @@ webRtcServices.factory('lxCallService',
 
             doHangup : function() {
                 $log.log('Hanging up');
-                if (lxStreamService.localStream) {lxStreamService.localStream.stop();}
+                if (lxStreamService.localStream) {
+                    lxStreamService.localStream.stop();
+                    lxStreamService.localStream = null;
+                }
                 lxWebRtcSessionService.stop();
 
             },
