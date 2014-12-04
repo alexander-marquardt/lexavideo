@@ -417,8 +417,6 @@ webRtcServices.factory('lxPeerService',
                 self.remoteStream = mediaStreamEvent.stream;
 
                 videoTypeSignalingObject.videoSignalingStatusForUserFeedback = null; // clear feedback messages
-                videoTypeSignalingObject.localIsSendingVideoType = 'HD Video';
-                videoTypeSignalingObject.remoteIsSendingVideoType = 'HD Video';
             };
         };
 
@@ -618,7 +616,7 @@ webRtcServices.factory('lxCallService',
 
         var calleeStart = function(localVideoObject, remoteVideoObject, videoTypeSignalingObject) {
             // Callee starts to process cached offer and other messages.
-            while (lxChannelMessageService.getQueueLength() > 0 && videoTypeSignalingObject.localHasSelectedVideoType === 'HD Video') {
+            while (lxChannelMessageService.getQueueLength() > 0 ) {
                 lxWebRtcSessionService.processSignalingMessage(lxChannelMessageService.shift(), localVideoObject, remoteVideoObject);
             }
         };
@@ -640,63 +638,59 @@ webRtcServices.factory('lxCallService',
                 var localVideoActivationStatus = scope.videoCameraStatusObject.localVideoActivationStatus;
                 var remoteVideoActivationStatus = scope.videoCameraStatusObject.remoteVideoActivationStatus;
 
-                // Only transmit HD video if the local user has authorized it by selecting the HD Video button,
-                // or by leaving the default as HD Video.
-                if (videoTypeSignalingObject.localHasSelectedVideoType === 'HD Video') {
+                if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
+                    localVideoActivationStatus === 'activateVideo' && remoteVideoActivationStatus === 'activateVideo' &&
+                    lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
-                    if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
-                        localVideoActivationStatus === 'activateVideo' && remoteVideoActivationStatus === 'activateVideo' &&
-                        lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
+                    $log.debug('Starting webRtc services!!');
 
-                        $log.debug('Starting webRtc services!!');
+                    lxPeerService.createPeerConnection(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
 
-                        lxPeerService.createPeerConnection(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
-
-                        if (self.hasAudioOrVideoMediaConstraints) {
-                            $log.log('Adding local stream.');
-                            lxPeerService.addLocalVideoStream(lxStreamService.localStream);
-                        } else {
-                            $log.log('Not sending any stream.');
-                        }
-
-                        lxWebRtcSessionService.started = true;
-
-                        if (lxChannelSupportService.rtcInitiator) {
-                            $log.log('Executing doCall()');
-                            lxSessionDescriptionService.doCall();
-                        }
-                        else {
-                            $log.log('Executing calleeStart()');
-                            calleeStart(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
-                        }
-
+                    if (self.hasAudioOrVideoMediaConstraints) {
+                        $log.log('Adding local stream.');
+                        lxPeerService.addLocalVideoStream(lxStreamService.localStream);
                     } else {
-                        // By construction, this branch should not be executed since all of the pre-requisites for setting
-                        // up a call should have been previously met.
-                        $log.debug('Not ready to start webRtc services.');
-                        if (lxWebRtcSessionService.started) {
-                            $log.debug('Because lxWebRtcSessionService.started is true');
-                        }
-                        if (!lxWebRtcSessionService.signalingReady) {
-                            $log.debug('Because lxWebRtcSessionService.signalingReady is false');
-                        }
-                        if (!lxChannelSupportService.channelReady) {
-                            $log.debug('Because lxChannelSupportService.channelReady is false');
-                        }
-                        if (localVideoActivationStatus !== 'activateVideo') {
-                            $log.debug('Because localVideoActivationStatus !== activateVideo')
-                        }
-                        if (remoteVideoActivationStatus !== 'activateVideo') {
-                            $log.debug('Because remoteVideoActivationStatus !== activateVideo')
-                        }
-                        if (!lxTurnSupportService.turnDone) {
-                            $log.debug('Because lxTurnSupportService.turnDone is false');
-                        }
-                        if (!lxStreamService.localStream) {
-                            $log.debug('Because lxStreamService.localStream is false');
-                        }
+                        $log.log('Not sending any stream.');
+                    }
+
+                    lxWebRtcSessionService.started = true;
+
+                    if (lxChannelSupportService.rtcInitiator) {
+                        $log.log('Executing doCall()');
+                        lxSessionDescriptionService.doCall();
+                    }
+                    else {
+                        $log.log('Executing calleeStart()');
+                        calleeStart(localVideoObject, remoteVideoObject, videoTypeSignalingObject);
+                    }
+
+                } else {
+                    // By construction, this branch should not be executed since all of the pre-requisites for setting
+                    // up a call should have been previously met.
+                    $log.debug('Not ready to start webRtc services.');
+                    if (lxWebRtcSessionService.started) {
+                        $log.debug('Because lxWebRtcSessionService.started is true');
+                    }
+                    if (!lxWebRtcSessionService.signalingReady) {
+                        $log.debug('Because lxWebRtcSessionService.signalingReady is false');
+                    }
+                    if (!lxChannelSupportService.channelReady) {
+                        $log.debug('Because lxChannelSupportService.channelReady is false');
+                    }
+                    if (localVideoActivationStatus !== 'activateVideo') {
+                        $log.debug('Because localVideoActivationStatus !== activateVideo')
+                    }
+                    if (remoteVideoActivationStatus !== 'activateVideo') {
+                        $log.debug('Because remoteVideoActivationStatus !== activateVideo')
+                    }
+                    if (!lxTurnSupportService.turnDone) {
+                        $log.debug('Because lxTurnSupportService.turnDone is false');
+                    }
+                    if (!lxStreamService.localStream) {
+                        $log.debug('Because lxStreamService.localStream is false');
                     }
                 }
+
             },
 
             doHangup : function() {
