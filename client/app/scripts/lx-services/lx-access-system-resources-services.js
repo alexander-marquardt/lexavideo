@@ -37,7 +37,7 @@ angular.module('lxAccessSystemResources.services', [])
             }
         };
 
-        var showArrowPointingToWhereUserShouldLook = function(scope, videoTypeSignalingObject) {
+        var showArrowPointingToWhereUserShouldLook = function(scope, videoSignalingObject) {
             var arrowClass = '';
             var timeoutInMilliseconds = 0;
             var arrowElem = null;
@@ -55,7 +55,7 @@ angular.module('lxAccessSystemResources.services', [])
                 if ($.browser.desktop) {
                     // only show the arrow on desktops, since it appears that on mobile devices there is no
                     // camera symbol in the URL to point the user to.
-                    if (videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'waitingForResponse') {
+                    if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'waitingForResponse') {
                         // Only show the arrow if we are waiting for a response. If the camera was previously denied
                         // then firefox does not show the camera icon and therefore there is nothing to point to.
                         arrowClass = 'cl-arrow-mozilla';
@@ -65,7 +65,7 @@ angular.module('lxAccessSystemResources.services', [])
 
             if ($.browser.name === 'opera') {
                 if ($.browser.desktop) {
-                    if (videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
+                    if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
                         // point the arrow to the camera symbol.
                         arrowClass = 'cl-arrow-opera';
                     }
@@ -80,11 +80,11 @@ angular.module('lxAccessSystemResources.services', [])
                 $('body').append(arrowElem);
                 arrowElem.addClass(arrowClass);
 
-                if (videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
+                if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
                     arrowElem.addClass('camera-access-was-denied');
                 }
 
-                if (videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'allowAccess') {
+                if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'allowAccess') {
 
 
                     if (showArrowTimerId) {
@@ -234,9 +234,9 @@ angular.module('lxAccessSystemResources.services', [])
         };
 
 
-        var showModalInstructionsForCameraAndMicrophone = function(scope, videoTypeSignalingObject) {
+        var showModalInstructionsForCameraAndMicrophone = function(scope, videoSignalingObject) {
 
-            var  cameraAccessStatus = videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus;
+            var  cameraAccessStatus = videoSignalingObject.localUserAccessCameraAndMicrophoneStatus;
 
 
             if ($.browser.name === 'chrome') {
@@ -292,13 +292,13 @@ angular.module('lxAccessSystemResources.services', [])
 
         var watchCameraStatus = function(scope) {
             return function () {
-                return scope.videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus;
+                return scope.videoSignalingObject.localUserAccessCameraAndMicrophoneStatus;
             };
         };
 
         return {
             showModalsAndArrowsForGrantingCameraAndMicrophoneAccess: function(scope) {
-                var videoTypeSignalingObject = scope.videoTypeSignalingObject;
+                var videoSignalingObject = scope.videoSignalingObject;
 
                 removeModalWatcher();
 
@@ -319,7 +319,7 @@ angular.module('lxAccessSystemResources.services', [])
 
                             if (whichModalIsOpen !== null) {
                                 $log.log('showing arrow pointing to accept button. whichModalIsOpen is: ' + whichModalIsOpen);
-                                arrowElem = showArrowPointingToWhereUserShouldLook(scope, videoTypeSignalingObject);
+                                arrowElem = showArrowPointingToWhereUserShouldLook(scope, videoSignalingObject);
                             } else {
                                 // no dialog is shown, so no arrow needs to be shown either.
                                 removeArrowAndAssociatedWatchers(arrowElem);
@@ -331,7 +331,7 @@ angular.module('lxAccessSystemResources.services', [])
                             $log.info('cameraStatus is: ' + cameraStatus + ' previousCameraStatus: ' + previousCameraStatus);
                             removeArrowAndAssociatedWatchers(arrowElem);
 
-                            if (videoTypeSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
+                            if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
                                 removeModalWatcher();
                                 arrowElem.remove(); // take the arrow out of the dom completely
                                 lxModalSupportService.closeModal(currentModalInstance); // remove most recent modal box
@@ -339,7 +339,7 @@ angular.module('lxAccessSystemResources.services', [])
                             else {
                                 // We are waiting for camera access. Since the cameraStatus has changed, we need to show a new modal.
                                 showModalInstructionsForCameraAndMicrophone(scope,
-                                    videoTypeSignalingObject);
+                                    videoSignalingObject);
                             }
                         });
                 }

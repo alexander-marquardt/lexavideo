@@ -15,8 +15,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
         $log,
         lxCallService,
         lxMessageService,
-        lxStreamService,
-        lxWebRtcSessionService)
+        lxStreamService)
     {
 
     var setVideoSignalingStatusForUserFeedback = function(scope, newValue) {
@@ -24,32 +23,32 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
         // if the user has not yet given access to their local stream, then this is the feedback message
         // that they will be shown.
         if (!lxStreamService.localStream) {
-            scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'mustEnableVideoToStartTransmission';
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'mustEnableVideoToStartTransmission';
         }
 
         // if there is no remote user in the room, then indicate that they are not connected to anyone right now
         else if (!scope.roomOccupancyObject.remoteUserId) {
-            scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
         }
 
         else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'waitingForActivateVideo') {
-            scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
         }
 
         else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'doNotActivateVideo') {
-            scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedToExchangeVideo';
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedToExchangeVideo';
         }
 
         // else if the remote user has not yet given access to their camera and microphone, we show the local
         // user a message indicating that we are still waiting for the remote user to permit access.
-        else if (!scope.videoTypeSignalingObject.remoteIsSendingVideoType ) {
-            scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
+        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus !== 'activateVideo' ) {
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
         }
 
         // if the user has already given access to their local stream, then we can show them the
         // feedback that has been requested.
         else {
-            scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback = newValue;
+            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = newValue;
         }
     };
 
@@ -64,7 +63,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
         watchForVideoSettingsChanges : function(scope) {
 
             // Watch to see if the user has given access to their camera/microphone (localStream), and if so
-            // make sure that the user feedback is correct, and that the videoTypeSignalingObject is updated to
+            // make sure that the user feedback is correct, and that the videoSignalingObject is updated to
             // reflect the new value.
             scope.$watch(lxStreamService.getLocalStream, function(localStream) {
 
@@ -72,7 +71,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
 
                     // If the user was being shown a message telling them to enable their video, then we can now remove
                     // this message.
-                    if (scope.videoTypeSignalingObject.videoSignalingStatusForUserFeedback === 'mustEnableVideoToStartTransmission') {
+                    if (scope.videoSignalingObject.videoSignalingStatusForUserFeedback === 'mustEnableVideoToStartTransmission') {
                         setVideoSignalingStatusForUserFeedback(scope, null);
                     }
                 }

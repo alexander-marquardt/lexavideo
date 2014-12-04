@@ -116,7 +116,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
         // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
         // here because information received on the channel needs to be written into these objects.
-        $scope.videoTypeSignalingObject = {
+        $scope.videoSignalingObject = {
 
             localUserAccessCameraAndMicrophoneStatus: 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
 

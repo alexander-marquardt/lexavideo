@@ -65,7 +65,7 @@ angular.module('lxChannel.services', [])
 
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteVideoObject;
-                var videoTypeSignalingObject = scope.videoTypeSignalingObject;
+                var videoSignalingObject = scope.videoSignalingObject;
 
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
