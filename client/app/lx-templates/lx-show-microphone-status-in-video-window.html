@@ -1,10 +1,10 @@
 {% raw %}
 
-<div ng-show="localVideoObject.isMicrophoneMuted || videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video'"
+<div ng-show="localVideoObject.isMicrophoneMuted"
         class="cl-text-outline">
     Microphone is muted</div>
 
-<div ng-show="remoteVideoObject.remoteHdVideoElem.muted || videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video'"
+<div ng-show="remoteVideoObject.remoteHdVideoElem.muted"
         class="cl-text-outline">
     Sound is muted</div>
 

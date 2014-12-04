@@ -40,18 +40,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div lx-generate-ascii-video-directive id="id-local-ascii-video-wrapper-div"
-                             ng-show="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') || videoTypeSignalingObject.debugShowAllVideoWindows" >
-                            <div class="cl-my-well" >
-                                <div style="position: relative">
-                                    <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
-                                    <pre class="cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
-                                    </span></pre>
-
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -82,18 +70,6 @@
                             </div>
                         </div>
 
-                        <div lx-draw-remote-ascii-video-directive id="id-remote-ascii-video-wrapper-div"
-                             ng-show="(videoTypeSignalingObject.remoteIsSendingVideoType == 'ASCII Video') ||
-                             (!videoTypeSignalingObject.remoteIsSendingVideoType && videoTypeSignalingObject.localHasSelectedVideoType == 'ASCII Video') ||
-                             videoTypeSignalingObject.debugShowAllVideoWindows">
-                            <div class="cl-my-well">
-                                <div style="position: relative">
-                                    <!-- Do not move the span to a different line than the pre - the formatting will change if this is done since a blank will be added before the span. -->
-                                    <pre class = "cl-ascii-container cl-video-sizing"><span class="cl-ascii-drawing-text cl-ascii-normal-span">
-                                    </span></pre>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -105,7 +81,7 @@
 
         <div class="col-xs-12 text-center cl-col-no-xs-padding">
             <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
-            <button ng-show="!localVideoObject.isMicrophoneMuted && videoTypeSignalingObject.localIsSendingVideoType != 'ASCII Video'"
+            <button ng-show="!localVideoObject.isMicrophoneMuted"
                     type="button" class="btn btn-sm btn-primary"
                     ng-click="toggleMicrophoneMute()">
 
@@ -115,9 +91,8 @@
                 </span>
             </button>
 
-            <button ng-show="localVideoObject.isMicrophoneMuted || videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video'"
+            <button ng-show="localVideoObject.isMicrophoneMuted"
                     type="button" class="btn btn-sm btn-default"
-                    ng-class="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled btn-gray' : ''"
                     ng-click="toggleMicrophoneMute()">
                 <span class="cl-lx-call-control-wrapper-cfg">
                     <span class="icon-lx-microphone-cfg"></span>
@@ -129,7 +104,7 @@
 
 
             <!-- enable/disable remote audio -->
-            <button ng-show="!remoteVideoObject.remoteHdVideoElem.muted && videoTypeSignalingObject.localIsSendingVideoType != 'ASCII Video'"
+            <button ng-show="!remoteVideoObject.remoteHdVideoElem.muted"
                     type="button" class="btn btn-sm btn-primary"
                     ng-click="toggleAudioMute()">
 
@@ -139,9 +114,8 @@
                 </span>
             </button>
 
-            <button ng-show="remoteVideoObject.remoteHdVideoElem.muted || videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video'"
+            <button ng-show="remoteVideoObject.remoteHdVideoElem.muted"
                     type="button" class="btn btn-sm btn-default"
-                    ng-class="(videoTypeSignalingObject.localIsSendingVideoType == 'ASCII Video') ? 'disabled btn-gray' : ''"
                     ng-click="toggleAudioMute()">
                 <span class="cl-lx-call-control-wrapper-cfg">
                     <span class="icon-lx-volume-high-cfg"></span>
@@ -173,23 +147,6 @@
                 </span>
 
             </button>
-
-
-            <!-- hangup button -->
-            <!--<button type="button" class="btn btn-sm btn-default"-->
-                    <!--ng-click="doHangup()">-->
-                <!--<span class="cl-lx-call-control-wrapper-cfg">-->
-                    <!--<span class="icon-lx-phone-hang-up-cfg"></span>-->
-                <!--</span>-->
-            <!--</button>-->
-
-            <button type="button" class="btn btn-sm"
-                    ng-class="(videoTypeSignalingObject.localHasSelectedVideoType == 'HD Video') ? 'btn-primary disabled' : 'btn-default'"
-                    ng-click="setLocalVideoType('HD Video')">HD Video</button>
-            <button type="button" class="btn btn-sm"
-                    ng-class="(videoTypeSignalingObject.localHasSelectedVideoType == 'ASCII Video') ? 'btn-primary disabled' : 'btn-default'"
-                    ng-click="setLocalVideoType('ASCII Video')">ASCII Video</button>
-
         </div>
     </div>
 
