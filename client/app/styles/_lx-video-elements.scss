@@ -25,7 +25,7 @@ $characters-per-row : 80;
   box-sizing: border-box;
   width: nth($video-widths-list, 1);
   height: nth($video-widths-list, 1) * $video-aspect-ratio;
-
+  border: 1px solid $standard-border-color;
   @include generate-video-sizing();
 }
 
@@ -62,7 +62,6 @@ video {
   display: table-cell;
   vertical-align: middle;
   text-align: center;
-  border: none;
   border-radius: 0px;
 }
 

@@ -33,12 +33,9 @@
 
 .cl-my-well {
   background-color: #000; // previously #f5f5f5;
-  border: 1px solid $my-well-border;
   display:inline-block;
   vertical-align: top;
-  @media(max-width: $screen-xs-max) {
-      margin-bottom: 5px;
-  }
+
 }
 
 .cl-mini-well {
@@ -57,8 +54,8 @@
   position: absolute;
   font-size: 1.5em;
   opacity: 0.7;
-  border-left: 1px solid $my-well-border;
-  border-right: 1px solid $my-well-border;
+  border-left: 1px solid $standard-border-color;
+  border-right: 1px solid $standard-border-color;
   border-bottom: 0px;
   border-top: 0px;
 }
