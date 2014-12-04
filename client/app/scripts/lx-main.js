@@ -11,7 +11,6 @@ var videoApp = angular.module('videoApp', [
     'lxMainView.controllers',
 
     // proprietary directives
-    'lxAsciiVideo.directives',
     'lxChatbox.directives',
     'lxChatRoom.directives',
     'lxCheckCompatibility.directives',
