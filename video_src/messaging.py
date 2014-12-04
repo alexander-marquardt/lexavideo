@@ -39,17 +39,6 @@ def handle_message(room_obj, from_user_id, message):
             logging.info('User %d ' % from_user_id + ' quit from room ' + room_name)
             logging.info('Room ' + room_name + ' has state ' + repr(room_obj))
 
-    if message_type == 'videoSettingsMsg':
-        if message_payload['requestAcceptOrDenyVideoType'] == 'acceptVideoType':
-            # If the user is sending an 'acceptVideoType' message, then both parties have agreed to the new video
-            # format, and this is now the new default format for the current room.
-            room_obj.room_video_type = message_payload['videoType']
-            room_obj.put()
-
-        logging.info('videoSettings message received: ' + repr(message_payload))
-
-
-
 
     if to_user_id and room_obj.has_user(to_user_id):
         if message_type == 'sdp' and message_payload['type'] == 'offer':
@@ -64,16 +53,8 @@ def handle_message(room_obj, from_user_id, message):
         on_message(room_obj, to_user_id, message)
 
     else:
+        raise Exception('otherUserNotInRoom')
 
-        # We expect 'acceptVideoType' message to be received if the user is alone in the room, since they
-        # can change the default videoType on the room before another user joins them.
-        if message_type == 'videoSettingsMsg' and message_payload['requestAcceptOrDenyVideoType'] != 'acceptVideoType':
-            logging.warning('Cannot deliver message type: %s from user: %s to other_user: %s since they are not in the room: %s' % (
-                message_type, from_user_id, to_user_id, room_name))
-            raise Exception('otherUserNotInRoom')
-
-        else:
-            logging.warn('Unexpected message received in a room with just one user in it: ' + repr(message_payload));
 
 
 # def delete_saved_messages(client_id):
