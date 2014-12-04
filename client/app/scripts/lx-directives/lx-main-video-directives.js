@@ -85,8 +85,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                     if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
 
                         // If this is an active HD session on a small screen, then we display the remote video with a local
-                        // video embedded inside of a mini-video element. Alternatively, if the remote user is sending
-                        // ASCII video, then we show the local video embedded inside of the ASCII video element.
+                        // video embedded inside of a mini-video element.
                         if ( videoTypeSignalingObject.remoteIsSendingVideoType !== null) {
                             showMiniVideoElems();
                             localVideoObject.localVideoWrapper.style.display = 'none';
@@ -94,15 +93,8 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
 //                            // attach the mini-video window to the HD Video wrapper
                             var miniVideoDiv = $miniVideoDiv.detach();
-                            if ( videoTypeSignalingObject.remoteIsSendingVideoType === 'HD Video') {
-                                angular.element(remoteVideoObject.remoteHdVideoElem).parent().prepend(miniVideoDiv);
-                            }
-                            else if (videoTypeSignalingObject.remoteIsSendingVideoType === 'ASCII Video') {
-                                angular.element(remoteVideoObject.remoteAsciiVideoElem).parent().prepend(miniVideoDiv);
-                            }
-                            else {
-                                throw new Error('Unknown videoype: ' + videoTypeSignalingObject.remoteIsSendingVideoType);
-                            }
+                            angular.element(remoteVideoObject.remoteHdVideoElem).parent().prepend(miniVideoDiv);
+
                             // The following line is necessary or else Firefox video will freeze after detaching the
                             // and re-attaching the video element.
                             reattachMediaStreamToMiniVideoElems();
