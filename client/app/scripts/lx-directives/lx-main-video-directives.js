@@ -22,6 +22,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
             var remoteVideoObject = scope.remoteVideoObject;
             var localVideoObject = scope.localVideoObject;
             var videoTypeSignalingObject = scope.videoTypeSignalingObject;
+            var videoCameraStatusObject = scope.videoCameraStatusObject;
 
             var $miniVideoDiv = angular.element(elem).find('#id-mini-video-div');
 
@@ -60,12 +61,8 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                 if (!localVideoObject.miniVideoElemInsideRemoteVideoWindow) {
                     $log.error('Error: miniVideoElements not set');
                 } else {
-                    if (videoTypeSignalingObject.remoteIsSendingVideoType !== null) {
+                    if (videoCameraStatusObject.remoteVideoActivationStatus === 'activateVideo') {
                         lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteVideoWindow, localVideoObject.localHdVideoElem);
-                    }
-
-                    else  {
-                        $log.warn('Warning: cannot attach media stream when remoteIsSendingVideoType is null');
                     }
                 }
             };
@@ -86,7 +83,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
                         // If this is an active HD session on a small screen, then we display the remote video with a local
                         // video embedded inside of a mini-video element.
-                        if ( videoTypeSignalingObject.remoteIsSendingVideoType !== null) {
+                        if ( videoCameraStatusObject.remoteVideoActivationStatus === 'activateVideo') {
                             showMiniVideoElems();
                             localVideoObject.localVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'inline-block';
@@ -123,10 +120,10 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
 
 
-            scope.$watch('videoTypeSignalingObject.remoteIsSendingVideoType', function(newRemoteIsSendingVideoType, oldRemoteIsSendingVideoType) {
+            scope.$watch('videoCameraStatusObject.remoteVideoActivationStatus', function(newRemoteActivationStatus, oldRemoteActivationStatus) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // We need to make sure that correct windows aer enabled for the current videoType..
-                $log.info('Remote remoteIsSendingVideoType is now: ' + newRemoteIsSendingVideoType + ' Old value was: ' + oldRemoteIsSendingVideoType);
+                $log.info('Remote remoteVideoActivationStatus is now: ' + newRemoteActivationStatus + ' Old value was: ' + oldRemoteActivationStatus);
                 setupForCurrentDisplaySize();
             });
 
@@ -160,8 +157,8 @@ videoAppDirectives.directive('lxVideoElementDirective',
                     // Watch to see if the remote video is not transmitting, and if it stops then hide the video element.
                     // This is done so that the user will not see a frozen image from the last frame tha the remote user
                     // transmitted.
-                    scope.$watch('videoTypeSignalingObject.remoteIsSendingVideoType', function(remoteIsSendingVideoType) {
-                        if (remoteIsSendingVideoType === null) {
+                    scope.$watch('videoCameraStatusObject.remoteVideoActivationStatus', function(remoteVideoActivationStatus) {
+                        if (remoteVideoActivationStatus !== 'activateVideo') {
                             // remote is not transmitting, so hide the video element
                             e.addClass('cl-transparent');
                         } else {

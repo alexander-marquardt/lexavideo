@@ -31,15 +31,12 @@
                         {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
                     </div>
 
-
                     <div class="text-center">
-                        <div ng-show="(videoTypeSignalingObject.localIsSendingVideoType == 'HD Video' ||  !videoTypeSignalingObject.localIsSendingVideoType) || videoTypeSignalingObject.debugShowAllVideoWindows" >
                             <div class="cl-my-well" >
                                 <div style="position: relative">
                                     <div lx-video-element-directive video-window='local'></div>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -58,10 +55,7 @@
                     <div lx-mini-video-template-directive></div>
                     <div class="text-center" >
                         <div id="id-remote-hd-video-wrapper-div"
-                             ng-show="videoTypeSignalingObject.remoteIsSendingVideoType == 'HD Video' ||
-                             (!videoTypeSignalingObject.remoteIsSendingVideoType && videoTypeSignalingObject.localHasSelectedVideoType == 'HD Video') ||
-                             (!videoTypeSignalingObject.remoteIsSendingVideoType && videoTypeSignalingObject.localHasSelectedVideoType == null) ||
-                             videoTypeSignalingObject.debugShowAllVideoWindows">
+                             ng-show="videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' || videoTypeSignalingObject.debugShowAllVideoWindows">
 
                             <div class="cl-my-well">
                                 <div style="position: relative">
@@ -155,3 +149,17 @@
 {% endraw %}
 
 </div> <!-- lxMainVideoController -->
+
+
+<!-- This template is used for placing a "mini" video element inside of a larger video element. This is required for
+     example when there is not enough space to show the sending and receiving video windows side-by-side -->
+<script type="text/ng-template" id="lx-template-cache/mini-video-template.html">
+    <div id="id-mini-video-div">
+
+        <div class="cl-local-hd-mini-video-wrapper-div">
+            <div  style="display:inline-block" class="cl-mini-well">
+                <video class="cl-mini-video-element" autoplay="autoplay" muted="true"/>
+            </div>
+        </div>
+    </div>
+</script>
