@@ -20,7 +20,7 @@ $arrow-stem-height : 50px;
   /* The cl-arrow class is initially hidden with an opacity of 0, until cl-show-arrow class is added to the element
    * at which point the arrow becomes visible */
   position: fixed;
-  z-index: 1050; // this should place it above the modal window and it's background
+  z-index: $zindex-modal;
   opacity: 0; // start out transparent
   color: $brand-danger;
   text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);

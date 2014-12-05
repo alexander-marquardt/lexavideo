@@ -6,6 +6,8 @@ $tall-chat-panel-height: 400px;
 // message to the bottom of the chat panel.
 $estimated-bubble-height: 30px;
 
+$chat-bubble-zindex: 10;
+
 .cl-chat-row {
   color: #777777;
 }
@@ -50,7 +52,7 @@ $estimated-bubble-height: 30px;
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
-  z-index: 0;
+  z-index: $chat-bubble-zindex;
 }
 
 .bubble.bubble-left {
@@ -92,7 +94,7 @@ $estimated-bubble-height: 30px;
   left: -10px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-light transparent transparent;
-  z-index: 1;
+  z-index: $chat-bubble-zindex + 1;
   @extend %bubble-arrow-common;
 }
 
@@ -101,7 +103,7 @@ $estimated-bubble-height: 30px;
   left: 100%;
   border-width: 5px 0px 5px 10px;
   border-color: transparent transparent transparent $gray-light;
-  z-index: 1;
+  z-index: $chat-bubble-zindex + 1;
   @extend %bubble-arrow-common;
 }
 
@@ -127,7 +129,7 @@ $estimated-bubble-height: 30px;
   left: 2px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-lighter transparent transparent;
-  z-index: 2;
+  z-index: $chat-bubble-zindex + 2;
   @extend %arrow-overlay-common;
 }
 
@@ -137,7 +139,7 @@ $estimated-bubble-height: 30px;
   left: -12px;
   border-width: 5px 0px 5px 10px;
   border-color: transparent  transparent transparent $brand-primary-lighter;
-  z-index: 2;
+  z-index: $chat-bubble-zindex + 2;
   @extend %arrow-overlay-common;
 }
 

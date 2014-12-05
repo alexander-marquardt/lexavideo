@@ -5,11 +5,13 @@ $mini-video-width-percentage : 30%;
 
 $video-aspect-ratio : 3/4;
 $characters-per-row : 80;
+$video-wrapper-zindex: 10;
 
 .cl-video-wrapper-div {
   margin-bottom: 10px;
   display: inline-block;
   position: relative;
+  z-index: $video-wrapper-zindex;
 }
 
 @mixin generate-video-sizing() {
@@ -44,7 +46,7 @@ video {
   top: 0px;
   left: 0px;
   opacity: 1.0;
-  z-index: 8;
+  z-index: $video-wrapper-zindex + 1;
 
   // only show on devices with xs screens
   @extend .cl-hide-on-larger-than-xs;
@@ -138,7 +140,7 @@ video {
   bottom: 10px;
   left: 10px;
   text-align: left;
-  z-index: 5;
+  z-index: $video-wrapper-zindex + 3;
 }
 
 
@@ -150,7 +152,7 @@ video {
   border-left: 1px solid $standard-border-color;
   border-right: 1px solid $standard-border-color;
   padding: 10px;
-  z-index: 10;
+  z-index: $video-wrapper-zindex + 2;
   opacity: 0.7;
 }
 
