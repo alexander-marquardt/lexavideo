@@ -132,7 +132,8 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
 videoAppDirectives.directive('lxVideoElementDirective',
     function(
-        $log
+        $log,
+        lxCallService
         )
     {
         return {
@@ -147,6 +148,10 @@ videoAppDirectives.directive('lxVideoElementDirective',
                 else if (attrs.videoWindow === 'remote' ) {
                     e = angular.element('<video class="cl-video-sizing" autoplay="autoplay"></video>');
                     scope.remoteVideoObject.remoteHdVideoElem = e[0];
+
+                    // each time that this function is executed, a new pointer to the remoteHdVideoElem is obtained,
+                    // and the previous "muted" value is lost - therefore we reset it here.
+                    lxCallService.setAudioMute(scope.remoteVideoObject, scope.remoteVideoObject.isAudioMuted);
 
                     // Watch to see if the remote video is not transmitting, and if it stops then hide the video element.
                     // This is done so that the user will not see a frozen image from the last frame tha the remote user

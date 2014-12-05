@@ -779,11 +779,12 @@ webRtcServices.factory('lxCallService',
             },
 
             setAudioMute: function(remoteVideoObject, newIsMutedValue) {
-                remoteVideoObject.remoteHdVideoElem.muted = newIsMutedValue;
+                remoteVideoObject.isAudioMuted = newIsMutedValue;
+                remoteVideoObject.remoteHdVideoElem.muted = remoteVideoObject.isAudioMuted;
             },
 
             toggleAudioMute: function(remoteVideoObject) {
-                self.setAudioMute(remoteVideoObject, !remoteVideoObject.remoteHdVideoElem.muted);
+                self.setAudioMute(remoteVideoObject, !remoteVideoObject.isAudioMuted);
             }
         };
         return self;
