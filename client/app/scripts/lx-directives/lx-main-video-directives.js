@@ -61,9 +61,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                 if (!localVideoObject.miniVideoElemInsideRemoteVideoWindow) {
                     $log.error('Error: miniVideoElements not set');
                 } else {
-                    if (videoCameraStatusObject.remoteVideoActivationStatus === 'activateVideo') {
-                        lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteVideoWindow, localVideoObject.localHdVideoElem);
-                    }
+                    lxAdapterService.reattachMediaStream(localVideoObject.miniVideoElemInsideRemoteVideoWindow, localVideoObject.localHdVideoElem);
                 }
             };
 
@@ -87,10 +85,6 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                             showMiniVideoElems();
                             localVideoObject.localVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'inline-block';
-
-//                            // attach the mini-video window to the HD Video wrapper
-                            var miniVideoDiv = $miniVideoDiv.detach();
-                            angular.element(remoteVideoObject.remoteHdVideoElem).parent().prepend(miniVideoDiv);
 
                             // The following line is necessary or else Firefox video will freeze after detaching the
                             // and re-attaching the video element.
@@ -184,6 +178,10 @@ videoAppDirectives.directive('lxVideoWrapperDirective', function($log) {
             }
             else if (attrs.videoWindow === 'remote' ) {
                 scope.remoteVideoObject.remoteVideoWrapper = elem[0];
+
+                var clMiniVideoElem = angular.element(elem).find('.cl-mini-video-element');
+                scope.localVideoObject.miniVideoElemInsideRemoteVideoWindow = clMiniVideoElem[0];
+
             }
             else {
                 $log.error('Attribute must be "local" or "remote"');
@@ -191,15 +189,3 @@ videoAppDirectives.directive('lxVideoWrapperDirective', function($log) {
         }
     };
 });
-
-videoAppDirectives.directive('lxMiniVideoTemplateDirective',
-    function() {
-        return {
-            restrict : 'A',
-            templateUrl: 'lx-template-cache/mini-video-template.html',
-            link: function(scope, elem) {
-                scope.localVideoObject.miniVideoElemInsideRemoteVideoWindow = angular.element(elem).find('.cl-mini-video-element')[0];
-            }
-        };
-    });
-

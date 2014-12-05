@@ -52,7 +52,14 @@
                         {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
                     </div>
 
-                    <div lx-mini-video-template-directive></div>
+                    <div id="id-mini-video-div">
+
+                        <div class="cl-local-hd-mini-video-wrapper-div">
+                            <div  style="display:inline-block" class="cl-mini-well">
+                                <video class="cl-mini-video-element" autoplay="autoplay" muted="true"/>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="text-center" >
                         <div id="id-remote-hd-video-wrapper-div">
@@ -150,16 +157,3 @@
 
 </div> <!-- lxMainVideoController -->
 
-
-<!-- This template is used for placing a "mini" video element inside of a larger video element. This is required for
-     example when there is not enough space to show the sending and receiving video windows side-by-side -->
-<script type="text/ng-template" id="lx-template-cache/mini-video-template.html">
-    <div id="id-mini-video-div">
-
-        <div class="cl-local-hd-mini-video-wrapper-div">
-            <div  style="display:inline-block" class="cl-mini-well">
-                <video class="cl-mini-video-element" autoplay="autoplay" muted="true"/>
-            </div>
-        </div>
-    </div>
-</script>
