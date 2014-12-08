@@ -27,23 +27,13 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
         }
     };
 
-    var  showMessageInVideoWindow = function(scope, elem, message, fadeAwayTime) {
+    var  showMessageInVideoWindow = function(scope, elem, message) {
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
         var el = angular.element('<p class="cl-video-overlay-text"/>');
         el.html(message);
         var compiledEl = $compile(el)(scope);
         elem.append(compiledEl);
-
-        cancelFadeTimer();
-
-        if (fadeAwayTime !== undefined) {
-            // Make the message disappear after a certain amount of time in ms. Otherwise it will
-            // stay until it is removed.
-            messageFadeTimerId = $timeout(function() {
-                $animate.addClass(elem, 'ng-hide');
-            }, fadeAwayTime);
-        }
     };
 
     var removeMessageInVideoWindow = function(scope, elem) {
