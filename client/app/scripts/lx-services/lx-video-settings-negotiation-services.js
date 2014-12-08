@@ -122,6 +122,6 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
                     );
                 }
             }
-        }
+        };
     }
 );

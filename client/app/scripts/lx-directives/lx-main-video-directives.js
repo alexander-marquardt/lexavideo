@@ -17,14 +17,12 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
     return {
         restrict : 'A',
-        link: function(scope, elem) {
+        link: function(scope) {
 
             var remoteVideoObject = scope.remoteVideoObject;
             var localVideoObject = scope.localVideoObject;
-            var videoSignalingObject = scope.videoSignalingObject;
             var videoCameraStatusObject = scope.videoCameraStatusObject;
 
-            var $miniVideoDiv = angular.element(elem).find('#id-mini-video-div');
 
             var removeMiniVideoElemsSrc = function() {
                 $log.debug('removeMiniVideoElemsSrc');

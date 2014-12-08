@@ -410,9 +410,9 @@ webRtcServices.factory('lxPeerService',
         var onRemoteStreamAdded = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
             return function(mediaStreamEvent) {
                 $log.log('Remote stream added.');
-                $log.log('* remoteVideoObject.remoteHdVideoElem.src before: ' + remoteVideoObject.remoteHdVideoElem.src)
+                $log.log('* remoteVideoObject.remoteHdVideoElem.src before: ' + remoteVideoObject.remoteHdVideoElem.src);
                 lxAdapterService.attachMediaStream(remoteVideoObject.remoteHdVideoElem, mediaStreamEvent.stream);
-                $log.log('* remoteVideoObject.remoteHdVideoElem.src after: ' + remoteVideoObject.remoteHdVideoElem.src)
+                $log.log('* remoteVideoObject.remoteHdVideoElem.src after: ' + remoteVideoObject.remoteHdVideoElem.src);
 
                 self.remoteStream = mediaStreamEvent.stream;
 
@@ -614,7 +614,7 @@ webRtcServices.factory('lxCallService',
 
 
 
-        var calleeStart = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+        var calleeStart = function(localVideoObject, remoteVideoObject) {
             // Callee starts to process cached offer and other messages.
             while (lxChannelMessageService.getQueueLength() > 0 ) {
                 lxWebRtcSessionService.processSignalingMessage(lxChannelMessageService.shift(), localVideoObject, remoteVideoObject);
@@ -635,11 +635,8 @@ webRtcServices.factory('lxCallService',
                 var remoteVideoObject = scope.remoteVideoObject;
                 var videoSignalingObject = scope.videoSignalingObject;
 
-                var localVideoActivationStatus = scope.videoCameraStatusObject.localVideoActivationStatus;
-                var remoteVideoActivationStatus = scope.videoCameraStatusObject.remoteVideoActivationStatus;
 
                 if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
-//                    localVideoActivationStatus === 'activateVideo' && remoteVideoActivationStatus === 'activateVideo' &&
                     lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
                     $log.debug('Starting webRtc services!!');
@@ -677,12 +674,7 @@ webRtcServices.factory('lxCallService',
                     if (!lxChannelSupportService.channelReady) {
                         $log.debug('Because lxChannelSupportService.channelReady is false');
                     }
-//                    if (localVideoActivationStatus !== 'activateVideo') {
-//                        $log.debug('Because localVideoActivationStatus !== activateVideo')
-//                    }
-//                    if (remoteVideoActivationStatus !== 'activateVideo') {
-//                        $log.debug('Because remoteVideoActivationStatus !== activateVideo')
-//                    }
+
                     if (!lxTurnSupportService.turnDone) {
                         $log.debug('Because lxTurnSupportService.turnDone is false');
                     }

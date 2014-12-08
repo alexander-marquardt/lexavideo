@@ -65,7 +65,6 @@ angular.module('lxChannel.services', [])
 
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteVideoObject;
-                var videoSignalingObject = scope.videoSignalingObject;
 
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
@@ -75,18 +74,17 @@ angular.module('lxChannel.services', [])
                             //$log.debug('S->C: ' + message.data);
 
                             var sdpObject = messageObject.messagePayload;
-                            // Since the turn response is async and also GAE might disorder the
-                            // Message delivery due to possible datastore query at server side,
-                            // So callee needs to cache messages before peerConnection is created.
+
                             if (!lxChannelSupportService.rtcInitiator && !lxWebRtcSessionService.started) {
+                                // Callee is the client that is *not* the rtcInitiator (the rtcInitiator calls
+                                // the callee). The callee will only start negotiating video connection if they
+                                // receive an "offer" from the caller.
+
                                 if (sdpObject.type === 'offer') {
                                     // Add offer to the beginning of msgQueue, since we can't handle
                                     // Early candidates before offer at present.
                                     lxChannelMessageService.unshift(sdpObject);
-                                    // Callee creates PeerConnection
-                                    // Note: Callee is the person who created the chatroom and is waiting for someone to join
-                                    // On the other hand, caller is the person who calls the callee, and is currently the second
-                                    // person to join the chatroom.
+
                                     lxWebRtcSessionService.signalingReady = true;
                                     $log.debug('lxWebRtcSessionService.signalingReady = true');
 
@@ -94,7 +92,12 @@ angular.module('lxChannel.services', [])
                                     // call because this user is not the rtcInitiator.
                                     lxCallService.maybeStart(scope);
 
-                                } else {
+                                }
+
+                                // Since the turn response is async and also GAE might disorder the
+                                // Message delivery due to possible datastore query at server side,
+                                // So callee needs to cache messages before peerConnection is created.
+                                else {
                                     lxChannelMessageService.push(sdpObject);
                                 }
                             } else {
@@ -192,12 +195,13 @@ angular.module('lxChannel.services', [])
                             if ('queryVideoElementsEnabledAndCameraAccessRequested' in messageObject.messagePayload &&
                                 messageObject.messagePayload.queryVideoElementsEnabledAndCameraAccessRequested) {
 
+                                    /* queryForRemoteVideoElementsEnabled is false to prevent endless queries back and forth */
+                                    var queryForRemoteVideoElementsEnabled = false;
                                     lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                                         scope,
                                         scope.videoCameraStatusObject.localVideoActivationStatus,
-                                        /* queryForRemoteVideoElementsEnabled is false to prevent endless queries back and forth */
-                                        false
-                                    )
+                                        queryForRemoteVideoElementsEnabled
+                                    );
                             }
 
                             // If the local user has denied video activation (as indicated by 'doNotActivateVideo'),

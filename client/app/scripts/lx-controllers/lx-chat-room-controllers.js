@@ -17,8 +17,7 @@ angular.module('lxUseChatRoom.controllers', [])
              lxInitializeRoomService,
              lxMessageService,
              lxUseChatRoomConstantsService,
-             lxUseChatRoomVarsService,
-             lxWebRtcSessionService) {
+             lxUseChatRoomVarsService) {
 
         // Copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService.
         // Do this before everything else, as many other functions require that this structure be setup!!
