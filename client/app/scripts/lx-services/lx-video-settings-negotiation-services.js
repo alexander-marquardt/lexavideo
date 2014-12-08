@@ -56,7 +56,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
     };
 
 
-    var self =  {
+    return  {
 
 
         /*
@@ -98,7 +98,6 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             });
         }
     };
-    return self;
 });
 
 lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCameraService',
