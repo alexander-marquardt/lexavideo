@@ -26,9 +26,15 @@ def handle_message(room_obj, from_user_id, message):
 
     if message_type == 'videoCameraStatusMsg':
 
+        logging.info('user %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
+                     (from_user_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))
+
         if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'activateVideo':
+
             room_obj = room_module.txn_add_user_id_to_video_elements_enabled_user_ids(room_obj.key.id(), from_user_id)
             send_room_video_settings_to_room_members(room_obj)
+        else:
+            room_obj = room_module.txn_remove_user_id_from_video_elements_enabled_user_ids(room_obj.key.id(), from_user_id)
 
 
     if message_type == 'sdp':
@@ -85,7 +91,7 @@ def on_message(room_obj, to_user_id, message):
         raise Exception('otherUserChannelNotConnected')
 
 
-# Sends information about who is in the room, and which client should be designated as the 'rtcInitiator'
+# Sends information about who is in the room
 @handle_exceptions
 def send_room_occupancy_to_room_members(room_obj, user_id):
     # This is called when a user either connects or disconnects from a room. It sends information
@@ -121,6 +127,7 @@ def send_room_occupancy_to_room_members(room_obj, user_id):
 
 
 
+# Sends information about video settings, and which client should be designated as the 'rtcInitiator'
 @handle_exceptions
 def send_room_video_settings_to_room_members(room_obj):
 
@@ -137,21 +144,15 @@ def send_room_video_settings_to_room_members(room_obj):
         logging.info('Sending room video settings for room %s' % room_obj)
 
         for user_id in video_elements_enabled_user_ids:
-            message_obj = {'messageType': 'roomInitialVideoSettingsMsg',
-                   'messagePayload': {
-                       'roomVideoType': room_obj.room_video_type,
-                       },
-                   }
-
-
-            # send a message to the other user (the client already in the room) that someone has just joined the room
-            logging.debug('Sending message to other_user: %s' % repr(message_obj))
 
             # The second person to connect will be the 'rtcInitiator'.
             # By sending this 'rtcInitiator' value to the clients, this will re-initiate
             # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
             # once per session, unless the users become disconnected and need to re-connect.
-            message_obj['messagePayload']['rtcInitiator'] = is_initiator
+            message_obj = {'messageType': 'roomInitialVideoSettingsMsg',
+                           'messagePayload': {'rtcInitiator': is_initiator},
+                           }
+
             logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
             on_message(room_obj, user_id, json.dumps(message_obj))
             is_initiator = not is_initiator

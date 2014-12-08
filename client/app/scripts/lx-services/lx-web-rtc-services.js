@@ -445,7 +445,7 @@ webRtcServices.factory('lxPeerService',
             remoteStream : null,
             createPeerConnection : function(localVideoObject, remoteVideoObject, videoSignalingObject) {
 
-                $log.log('**************** createPeerConnection ************')
+                $log.log('**************** createPeerConnection ************');
                 try {
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
                     self.pc = new lxAdapterService.RTCPeerConnection(lxUseChatRoomVarsService.pcConfig, lxUseChatRoomConstantsService.pcConstraints);
@@ -639,7 +639,7 @@ webRtcServices.factory('lxCallService',
                 var remoteVideoActivationStatus = scope.videoCameraStatusObject.remoteVideoActivationStatus;
 
                 if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
-                    localVideoActivationStatus === 'activateVideo' && remoteVideoActivationStatus === 'activateVideo' &&
+//                    localVideoActivationStatus === 'activateVideo' && remoteVideoActivationStatus === 'activateVideo' &&
                     lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
                     $log.debug('Starting webRtc services!!');
@@ -677,12 +677,12 @@ webRtcServices.factory('lxCallService',
                     if (!lxChannelSupportService.channelReady) {
                         $log.debug('Because lxChannelSupportService.channelReady is false');
                     }
-                    if (localVideoActivationStatus !== 'activateVideo') {
-                        $log.debug('Because localVideoActivationStatus !== activateVideo')
-                    }
-                    if (remoteVideoActivationStatus !== 'activateVideo') {
-                        $log.debug('Because remoteVideoActivationStatus !== activateVideo')
-                    }
+//                    if (localVideoActivationStatus !== 'activateVideo') {
+//                        $log.debug('Because localVideoActivationStatus !== activateVideo')
+//                    }
+//                    if (remoteVideoActivationStatus !== 'activateVideo') {
+//                        $log.debug('Because remoteVideoActivationStatus !== activateVideo')
+//                    }
                     if (!lxTurnSupportService.turnDone) {
                         $log.debug('Because lxTurnSupportService.turnDone is false');
                     }

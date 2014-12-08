@@ -28,12 +28,7 @@ class RoomInfo(ndb.Model):
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
-    # When a user first joins the room, this will be the type of video that they will display. If a user is alone
-    # in a room and changes their video type, then the next person to join will automatically have that video type
-    # selected as well.
-    room_video_type = ndb.StringProperty(default = 'HD Video')
-
-        # As each user enables video, their user ID will be added to this array (which should never have more
+    # As each user enables video, their user ID will be added to this array (which should never have more
     # than two ids given the current video standard). If a user stops their video or leaves a room, then
     # their id will be removed from this array.
     # When the second user activates their video, then the WebRTC signalling will start between the two users.
@@ -109,7 +104,7 @@ def txn_add_user_id_to_video_elements_enabled_user_ids(room_id, user_id):
     return room_obj
 
 @ndb.transactional
-def remove_user_id_from_video_elements_enabled_user_ids(room_id, user_id):
+def txn_remove_user_id_from_video_elements_enabled_user_ids(room_id, user_id):
 
     room_obj = get_room_by_id(room_id)
 

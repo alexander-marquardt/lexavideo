@@ -152,7 +152,7 @@ angular.module('lxChannel.services', [])
                                 // signalingReady will initially be set to be true if this is
                                 // the rtcInitiator, or false otherwise. In the case that this value is initially false, it will be set to
                                 // true once this client has received an sdp 'offer' from the other client.
-                                // Note: rtcInitiator is the 2nd person to join the chat room, not the creator of the chat room
+                                // Note: rtcInitiator is the 2nd person to start their video
                                 lxWebRtcSessionService.signalingReady = lxChannelSupportService.rtcInitiator;
 
                                 // when the server sends an rtcInitiator setting, this means that we are re-starting
