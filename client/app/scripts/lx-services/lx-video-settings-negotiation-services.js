@@ -39,9 +39,12 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedToExchangeVideo';
         }
 
-        // else if the remote user has not yet given access to their camera and microphone, we show the local
-        // user a message indicating that we are still waiting for the remote user to permit access.
-        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus !== 'activateVideo' ) {
+        // If remote user has activated their video elements then show the message that indicates that we are waiting
+        // for access to their camera and microphone. This message will be removed when the onRemoteStreamAdded
+        // call back is executed. Note: checking activateWindow just lets us know that the user has already
+        // agreed to enable their video elements, and we infer that since we don't have a video stream yet, that the user has not
+        // yet given access to their camera and microphone - this may have to be revisited in the future.
+        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'activateVideo' ) {
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
         }
 
