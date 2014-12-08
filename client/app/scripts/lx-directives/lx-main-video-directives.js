@@ -144,7 +144,7 @@ videoAppDirectives.directive('lxVideoElementDirective',
                     scope.localVideoObject.localHdVideoElem = e[0];
                 }
                 else if (attrs.videoWindow === 'remote' ) {
-                    e = angular.element('<video class="cl-video-sizing" autoplay="autoplay"></video>');
+                    e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay"></video>');
                     scope.remoteVideoObject.remoteHdVideoElem = e[0];
 
                     // each time that this function is executed, a new pointer to the remoteHdVideoElem is obtained,
@@ -154,12 +154,14 @@ videoAppDirectives.directive('lxVideoElementDirective',
                     // Watch to see if the remote video is not transmitting, and if it stops then hide the video element.
                     // This is done so that the user will not see a frozen image from the last frame tha the remote user
                     // transmitted.
-                    scope.$watch('videoCameraStatusObject.remoteVideoActivationStatus', function(remoteVideoActivationStatus) {
-                        if (remoteVideoActivationStatus !== 'activateVideo') {
+                    // Note, we check videoSignalingStatusForUserFeedback because it will only be null when
+                    // video transmission has begun.
+                    scope.$watch('videoSignalingObject.videoSignalingStatusForUserFeedback', function(videoSignalingStatusForUserFeedback) {
+                        if (videoSignalingStatusForUserFeedback !== null) {
                             // remote is not transmitting, so hide the video element
-                            e.addClass('cl-transparent');
+                            e.addClass('cl-hide');
                         } else {
-                            e.removeClass('cl-transparent');
+                            e.removeClass('cl-hide');
                         }
                     });
                 }

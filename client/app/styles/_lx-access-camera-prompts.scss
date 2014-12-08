@@ -12,6 +12,7 @@ $arrow-stem-height : 50px;
   /* These definitions are used from animating the addition and/or removal of css classes to an element */
   -webkit-transition:all linear 3s;
   -moz-transition: linear all 3s;
+  -o-transition: linear all 3s;
   transition:all linear 3s;
 }
 

@@ -53,6 +53,7 @@
 .cl-show-hide-fade {
   -webkit-transition:all linear 0.5s;
   -moz-transition: linear all 0.5s;
+  -o-transition: linear all 0.5s;
   transition:all linear 0.5s;
 }
 
@@ -60,7 +61,7 @@
   display: block!important;
 }
 
-.cl-show-hide-fade.ng-hide {
+.cl-show-hide-fade.ng-hide, .cl-show-hide-fade.cl-hide {
   opacity:0;
 }
 
