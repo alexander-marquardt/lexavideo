@@ -10,8 +10,13 @@ angular.module('lxMainView.controllers', [])
     function(
         $rootScope,
         $log,
+        $scope,
         lxAppWideConstantsService) {
 
+        $scope.mainGlobalControllerObj = {
+             // if the user is rejected from a room, then this will contain a message indicating the reason.
+            errorEnteringIntoRoomMessage: null
+        };
 
         // Copy information embedded in the Html into an angular service.
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);

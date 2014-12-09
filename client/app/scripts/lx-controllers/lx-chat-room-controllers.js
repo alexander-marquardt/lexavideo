@@ -54,10 +54,14 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.roomOccupancyObject.roomId = lxUseChatRoomVarsService.roomId = data.roomId;
 
         }, function(reason) {
-            // This message should never be seen by the user since if the promise is rejected, they should already
-            // have been redirected back to the landing page. However, it may be useful for future debugging, and
-            // so we leave it.
-            $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = reason;
+
+            $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = false;
+
+            // The following sets an error on a global object that will be picked up by the javascript
+            // when the user is sent back to the main landing page, at which point the user will
+            // be shown a message indicating that there was an error, and another chance to go into
+            // a different room.
+            $scope.mainGlobalControllerObj.errorEnteringIntoRoomMessage = reason;
         });
 
         $scope.videoCameraStatusObject = {
