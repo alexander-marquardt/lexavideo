@@ -37,9 +37,9 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $scope.roomObj.userName = lxAppWideConstantsService.userName;
 
         // enterIntoRoom is the function that will be executed when the user clicks the submit button
-        $scope.enterIntoRoomFromLandingPage = function() {
+        $scope.goToRoomUrl = function(roomName) {
             // Just redirect to the room, where the user will be added when the room page is opened.
-             $location.path('/' +  $scope.roomObj.roomName);
+             $location.path('/' +  roomName);
         };
 
         // roomStatus.roomStatus.triggerGetNewRoom is placed on the scope and will be watched for changes by the

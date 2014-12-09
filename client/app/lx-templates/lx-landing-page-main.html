@@ -38,7 +38,7 @@
                                                    required
                                                     />
                                                 <span class="input-group-btn">
-                                                    <button ng-click="enterIntoRoomFromLandingPage(roomObj, roomStatus)" class="btn btn-primary"
+                                                    <button ng-click="goToRoomUrl(roomObj.roomName)" class="btn btn-primary"
                                                             ng-disabled="createRoomForm.$invalid || createRoomForm.roomNameInputElem.userIsWaitingForRoomStatus">
                                                         {{ createRoomForm.roomNameInputElem.submitButtonText }}</button>
                                                 </span>
