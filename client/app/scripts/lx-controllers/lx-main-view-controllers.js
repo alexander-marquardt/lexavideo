@@ -16,10 +16,9 @@ angular.module('lxMainView.controllers', [])
         // Copy information embedded in the Html into an angular service.
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
-        $scope.roomObj = {};
-        $scope.roomObj.userIsInRoom = false;
-        $scope.roomObj.userName = lxAppWideConstantsService.userName;
-        $scope.roomObj.userId = lxAppWideConstantsService.userId;
+        $scope.roomLandingObj = {};
+        $scope.roomLandingObj.userIsInRoom = false;
+
 
 //
 //        // handle case when a route change promise is not resolved

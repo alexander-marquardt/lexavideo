@@ -22,7 +22,7 @@
                                             <input class=" form-control"
                                                    placeholder="chat name"
                                                    name="roomNameInputElem"
-                                                   ng-model="roomObj.inputRoomName"
+                                                   ng-model="roomLandingObj.inputRoomName"
                                                    ng-minlength="{{ minInputLength }}"
                                                    maxlength = "{{ maxInputLength }}"
                                                    ng-class="highlightInput(createRoomForm.roomNameInputElem)"
@@ -32,7 +32,7 @@
                                                    required
                                                     />
                                                 <span class="input-group-btn">
-                                                    <button ng-click="enterIntoRoomFromLandingPage(roomObj, roomStatus)" class="btn btn-primary"
+                                                    <button ng-click="roomLandingObj.userIsInRoom = true" class="btn btn-primary"
                                                             ng-disabled="createRoomForm.$invalid || createRoomForm.roomNameInputElem.userIsWaitingForRoomStatus">
                                                         {{ createRoomForm.roomNameInputElem.submitButtonText }}</button>
                                                 </span>

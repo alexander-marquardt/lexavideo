@@ -46,11 +46,11 @@
 
         <div ng-controller="lxVideoChatAppViewCtrl">
 
-            <div ng-if="roomObj.userIsInRoom == false" ng-cloak class="ng-cloak">
+            <div ng-if="roomLandingObj.userIsInRoom == false" ng-cloak class="ng-cloak">
                 {% include "lx-templates/lx-landing-page-main.html" %}
             </div>
 
-            <div ng-if="roomObj.userIsInRoom == true" ng-cloak class="ng-cloak">
+            <div ng-if="roomLandingObj.userIsInRoom == true" ng-cloak class="ng-cloak">
                 {% include "lx-templates/lx-chat-room-main.html" %}
             </div>
 

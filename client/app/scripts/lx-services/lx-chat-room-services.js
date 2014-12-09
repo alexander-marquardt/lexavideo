@@ -29,27 +29,32 @@ angular.module('lxChatRoom.services', [])
 
         return {
 
-            addUserToRoomAndSetupChannel : function(roomObj) {
+            addUserToRoomAndSetupChannel : function(roomLandingObj) {
 
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();
 
                 $log.log('Initializing; room=' + lxUseChatRoomConstantsService.roomName + '.');
 
-                lxHttpHandleRoomService.enterIntoRoom(roomObj).then(
+                var newRoomObj = {};
+                newRoomObj.roomName = roomLandingObj.inputRoomName;
+                newRoomObj.userId = lxAppWideConstantsService.userId;
+
+                lxHttpHandleRoomService.enterIntoRoom(newRoomObj).then(
                     function(data){
                         if (data.statusString === 'roomCreated' || data.statusString === 'roomJoined') {
                             // everything OK
                             deferredUserSuccessfullyEnteredRoom.resolve(data);
                         }
                         else {
-                            // something went wrong - redirect back to login with an appropriate errorString
-                            failedToEnterRoom($log.warn, roomObj.inputRoomName, data.statusString, deferredUserSuccessfullyEnteredRoom);
+                            // something went wrong
+                            failedToEnterRoom($log.warn, newRoomObj.roomName, data.statusString, deferredUserSuccessfullyEnteredRoom);
                         }
                     },
                     function(data) {
-                        // Failed to enter into the room. The 'data' returned from the reject is actually an object
+                        // Failed to enter into the room. T
+                        // Note: The 'data' returned from the reject is actually an object
                         // containing another object called 'data'.
-                        failedToEnterRoom($log.error, roomObj.inputRoomName, data.data.statusString, deferredUserSuccessfullyEnteredRoom);
+                        failedToEnterRoom($log.error, newRoomObj.roomName, data.data.statusString, deferredUserSuccessfullyEnteredRoom);
                     }
                 );
 

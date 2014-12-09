@@ -9,7 +9,7 @@ angular.module('lxHttp.services', [])
         ) {
 
         var handleRoomUrl = '/_lx/handle_room/';
-        var RoomResource = $resource(handleRoomUrl + ':inputRoomName', {inputRoomName: '@inputRoomName'});
+        var RoomResource = $resource(handleRoomUrl + ':roomName', {roomName: '@roomName'});
 
         return {
             enterIntoRoom : function(roomObj) {
@@ -21,11 +21,11 @@ angular.module('lxHttp.services', [])
             },
 
 
-            getRoom : function(inputRoomName) {
+            getRoom : function(roomName) {
 
                 var roomObj = null;
-                if (inputRoomName) {
-                    roomObj = RoomResource.get({inputRoomName:inputRoomName});
+                if (roomName) {
+                    roomObj = RoomResource.get({roomName:roomName});
                 }
                 return roomObj;
             }

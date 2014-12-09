@@ -44,7 +44,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                     'roomIsRegistered' : False,
                     'numInRoom': 0
                 }
-                logging.info('Room name is available: ' + repr(room_obj))
+                logging.info('Room name %s is available: ' % room_name)
 
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
@@ -68,10 +68,10 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
         room_name_from_url = room_name_from_url.decode('utf8')
         room_dict = utils.convert_dict(room_dict, utils.camel_to_underscore)
 
-        assert (room_dict['input_room_name'] == room_name_from_url)
-        input_room_name = room_dict['input_room_name']
-        room_dict['room_name_as_written'] = input_room_name
-        room_name = input_room_name.lower()
+        assert (room_dict['room_name'] == room_name_from_url)
+        room_name_as_written = room_dict['room_name']
+        room_dict['room_name_as_written'] = room_name_as_written
+        room_name = room_name_as_written.lower()
         room_dict['room_name'] = room_name
 
 
@@ -125,9 +125,6 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             def create_room_transaction(room_dict):
                 # remove keys from the room_dict that are not stored on the room_obj
                 del room_dict['user_id']
-                del room_dict['user_name']
-                del room_dict['input_room_name']
-                del room_dict['user_is_in_room']
 
                 room_obj = room_module.RoomInfo(**room_dict)
                 room_obj.put()
