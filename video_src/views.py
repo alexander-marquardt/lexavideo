@@ -42,51 +42,50 @@ class GetView(webapp2.RequestHandler):
         write_response(self.response, response_type, target_page, params)
 
 
-class UserChatRoomMain(webapp2.RequestHandler):
-    
-    @handle_exceptions
-    def get(self, current_template, room_name_from_url):
-        room_name = room_name_from_url.decode('utf8')
-        user_agent = self.request.headers['User-Agent']
-        
-        # copy the json parameters into a jinja variable
-        server_video_params_json = webrtc_setup.get_video_params_json(room_name, user_agent)
-        params = {
-            # Note: pass jinja variables using snake_case, and javascript variables using camelCase
-            'site_name_dot_com': constants.site_name_dot_com,
-            'videoConstantsEmbeddedInHtmlJson': server_video_params_json}
-        
-        # update the self.response with the current view
-        template = jinja_environment.get_template(current_template)
-        content = template.render(params)
-        self.response.out.write(content)
+# class UserChatRoomMain(webapp2.RequestHandler):
+#
+#     @handle_exceptions
+#     def get(self, current_template, room_name_from_url):
+#         room_name = room_name_from_url.decode('utf8')
+#         user_agent = self.request.headers['User-Agent']
+#
+#         # copy the json parameters into a jinja variable
+#         server_video_params_json = webrtc_setup.get_video_params_json(room_name, user_agent)
+#         params = {
+#             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
+#             'site_name_dot_com': constants.site_name_dot_com,
+#             'videoConstantsEmbeddedInHtmlJson': server_video_params_json}
+#
+#         # update the self.response with the current view
+#         template = jinja_environment.get_template(current_template)
+#         content = template.render(params)
+#         self.response.out.write(content)
 
 
-class LandingPageMain(webapp2.RequestHandler):
-    """ Render whatever template the client has requested """
-    
-    @handle_exceptions
-    def get(self, current_template, redirect_after_error=None, bad_room_name=None, error_string=None):
-        response_type = 'jinja'
-
-        params = {
-            # Note: pass jinja variables using snake_case, and javascript variables using camelCase
-            'site_name_dot_com': constants.site_name_dot_com,
-            'redirect_after_error': redirect_after_error,
-            'bad_room_name': bad_room_name,
-            'error_string': error_string,
-
-            # The following is an object that passes variables to the javascript code.
-            'serverLandingPageParamsJson': json.dumps(
-                {'minRoomChars': constants.room_min_chars,
-                 'maxRoomChars': constants.room_max_chars,
-                 'maxRoomOccupancy': constants.room_max_occupancy,
-                 'roomNameInvalidCharsForRegex': constants.room_name_invalid_chars_regex,
-                 })
-            }
-
-        target_page = current_template
-        write_response(self.response, response_type, target_page, params)
+# class LandingPageMain(webapp2.RequestHandler):
+#     """ Render whatever template the client has requested """
+#
+#     @handle_exceptions
+#     def get(self, current_template):
+#         response_type = 'jinja'
+#
+#         params = {
+#             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
+#             'site_name_dot_com': constants.site_name_dot_com,
+#
+#             'error_string': error_string,
+#
+#             # The following is an object that passes variables to the javascript code.
+#             'serverLandingPageParamsJson': json.dumps(
+#                 {'minRoomChars': constants.room_min_chars,
+#                  'maxRoomChars': constants.room_max_chars,
+#                  'maxRoomOccupancy': constants.room_max_occupancy,
+#                  'roomNameInvalidCharsForRegex': constants.room_name_invalid_chars_regex,
+#                  })
+#             }
+#
+#         target_page = current_template
+#         write_response(self.response, response_type, target_page, params)
 
 
 class MainPage(webapp2.RequestHandler):
@@ -98,10 +97,15 @@ class MainPage(webapp2.RequestHandler):
         # When a user first enters into our website, we will assign them a unique user id.
         user_obj = users.create_new_user()
 
+        user_agent = self.request.headers['User-Agent']
+        server_video_params_json = webrtc_setup.get_video_params_json(user_agent)
+
         target_page = 'index.html'
         response_type = 'jinja'
         params = {
+            'site_name_dot_com': constants.site_name_dot_com,
             'site_name_for_display': constants.site_name_for_display,
+
             'userInfoEmbeddedInHtmlJson': json.dumps(
                 {
                     'userName': user_obj.user_name,
@@ -109,6 +113,17 @@ class MainPage(webapp2.RequestHandler):
                     'debugBuildEnabled': vidsetup.DEBUG_BUILD,
                     }
             ),
+
+            # The following is an object that passes variables to the javascript code.
+            'serverLandingPageParamsJson': json.dumps(
+                {'minRoomChars': constants.room_min_chars,
+                 'maxRoomChars': constants.room_max_chars,
+                 'maxRoomOccupancy': constants.room_max_occupancy,
+                 'roomNameInvalidCharsForRegex': constants.room_name_invalid_chars_regex,
+                 }),
+
+            'videoConstantsEmbeddedInHtmlJson': server_video_params_json,
+
             'enable_live_reload': vidsetup.ENABLE_LIVE_RELOAD,
             }
 

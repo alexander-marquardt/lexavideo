@@ -44,10 +44,16 @@
             </div>
         </div>
 
-
         <div ng-controller="lxVideoChatAppViewCtrl">
-            <!-- ng-view will call in the appropriate template for the current URL location -->
-            <div ng-view></div>
+
+            <div ng-if="!roomObj.userIsInRoom">
+                {% include "lx-templates/lx-landing-page-main.html" %}
+            </div>
+
+            <div ng-if="roomObj.userIsInRoom">
+                {% include "lx-templates/lx-chat-room-main.html" %}
+            </div>
+
         </div>
 
     </div>

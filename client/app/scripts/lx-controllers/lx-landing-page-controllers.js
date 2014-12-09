@@ -33,13 +33,10 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $scope.minInputLength = lxLandingPageConstantsService.minRoomChars;
         $scope.maxInputLength = lxLandingPageConstantsService.maxRoomChars;
 
-        $scope.roomObj = {};
-        $scope.roomObj.userName = lxAppWideConstantsService.userName;
-
         // enterIntoRoom is the function that will be executed when the user clicks the submit button
         $scope.enterIntoRoomFromLandingPage = function() {
             // Just redirect to the room, where the user will be added when the room page is opened.
-             $location.path('/' +  $scope.roomObj.roomName);
+             $scope.roomObj.userIsInRoom = true;
         };
 
         // roomStatus.roomStatus.triggerGetNewRoom is placed on the scope and will be watched for changes by the

@@ -101,7 +101,7 @@ def append_url_arguments(request, link):
 
 
 
-def get_video_params_json(room_name, user_agent):
+def get_video_params_json(user_agent):
     """ Returns a json object that contains the video parameters that will be used for setting up the webRtc communications and display"""
     
     
@@ -182,7 +182,6 @@ def get_video_params_json(room_name, user_agent):
         offer_constraints = make_offer_constraints()
 
         server_video_params = {
-            'roomName': room_name,
             'pcConfig': pc_config,
             'pcConstraints': pc_constraints,
             'offerConstraints': offer_constraints,

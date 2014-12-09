@@ -4,12 +4,6 @@
     var lxLandingPageConstantsEmbeddedInHtml = {{ serverLandingPageParamsJson }}
 </script>
 
-{% if redirect_after_error %}
-<h2 class="cl-xs-max-width">
-    We have not been able to give you access to the "{{ bad_room_name }}" room. Please try another room name.
-</h2>
-{% endif %}
-
 {% raw %}
 
 
@@ -28,7 +22,7 @@
                                             <input class=" form-control"
                                                    placeholder="chat name"
                                                    name="roomNameInputElem"
-                                                   ng-model="roomObj.roomName"
+                                                   ng-model="roomObj.inputRoomName"
                                                    ng-minlength="{{ minInputLength }}"
                                                    maxlength = "{{ maxInputLength }}"
                                                    ng-class="highlightInput(createRoomForm.roomNameInputElem)"

@@ -45,7 +45,7 @@ angular.module('lxUseChatRoom.controllers', [])
             roomName: lxUseChatRoomConstantsService.roomName
         };
 
-        lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {
+        lxInitializeRoomService.addUserToRoomAndSetupChannel($scope.roomObj).then(function(data) {
 
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
             $scope.lxChatRoomOuterCtrl.channelToken = data.channelToken;

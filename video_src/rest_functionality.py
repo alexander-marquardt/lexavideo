@@ -12,7 +12,6 @@ from google.appengine.api import channel
 
 from video_src import constants
 from video_src import http_helpers
-from video_src import models
 from video_src import room_module
 from video_src import status_reporting
 from video_src import utils
@@ -69,9 +68,10 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
         room_name_from_url = room_name_from_url.decode('utf8')
         room_dict = utils.convert_dict(room_dict, utils.camel_to_underscore)
 
-        assert (room_dict['room_name'] == room_name_from_url)
-        room_dict['room_name_as_written'] = room_dict['room_name']
-        room_name = room_name_from_url.lower()
+        assert (room_dict['input_room_name'] == room_name_from_url)
+        input_room_name = room_dict['input_room_name']
+        room_dict['room_name_as_written'] = input_room_name
+        room_name = input_room_name.lower()
         room_dict['room_name'] = room_name
 
 
@@ -123,8 +123,12 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # for the new room.
             @ndb.transactional
             def create_room_transaction(room_dict):
-                # remove 'user_id' from the room_dict since it will not be stored on the room_obj
+                # remove keys from the room_dict that are not stored on the room_obj
                 del room_dict['user_id']
+                del room_dict['user_name']
+                del room_dict['input_room_name']
+                del room_dict['user_is_in_room']
+
                 room_obj = room_module.RoomInfo(**room_dict)
                 room_obj.put()
                 return room_obj
@@ -133,7 +137,9 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 room_obj = create_room_transaction(room_dict)
                 response_dict['statusString'] = 'roomCreated'
             except:
-                response_dict['statusString'] = 'serverError'
+                error_status = 'serverError'
+                status_reporting.log_call_stack_and_traceback(logging.error, extra_info = error_status)
+                response_dict['statusString'] = error_status
 
 
         token_timeout =  240 # minutes
