@@ -7,8 +7,6 @@ var webRtcServices = angular.module('lxVideoSetup.services', []);
 /* The following globally defined functions come from adapter.js, which is a "shim" to make sure that
    webRTC works in both Chrome and Firefox. */
 /* global webrtcDetectedBrowser */
-/* global webrtcDetectedVersion */
-/* global createIceServers */
 /* global getUserMedia */
 /* global RTCPeerConnection */
 /* global RTCSessionDescription */
@@ -30,14 +28,18 @@ webRtcServices.service('lxAdapterService', function ($log) {
         // If webrtcDetectedBrowser is null, then many of the following variables have not been initialized
         // and should not be accessed.
         if (webrtcDetectedBrowser) {
-            this.webrtcDetectedVersion = webrtcDetectedVersion;
-            this.createIceServers = createIceServers;
+            this.createIceServers = window.createIceServers;
             this.RTCPeerConnection = RTCPeerConnection;
             this.RTCSessionDescription = RTCSessionDescription;
             this.getUserMedia = getUserMedia;
             this.attachMediaStream = attachMediaStream;
             this.reattachMediaStream = reattachMediaStream;
             this.RTCIceCandidate = RTCIceCandidate;
+        }
+        else {
+            this.reattachMediaStream = function() {
+                $log.warn('reattachMediaStream called on an unsupported browser');
+            };
         }
     }
     catch(e) {
