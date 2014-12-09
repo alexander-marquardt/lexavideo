@@ -16,7 +16,7 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/:roomName', {
         templateUrl: function(params) {
-            return '/_lx/lx-templates/lx-use-chat-room-main.html/' + params.roomName;
+            return '/_lx/lx-templates/lx-chat-room-main.html/' + params.roomName;
         }
     });
 
