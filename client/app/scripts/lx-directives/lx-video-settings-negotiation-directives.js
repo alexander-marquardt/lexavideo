@@ -11,12 +11,9 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
     function(
         $animate,
         $compile,
-        $log,
-        $timeout
+        $log
     ) {
 
-
-    var messageFadeTimerId = null;
 
     var  showMessageInVideoWindow = function(scope, elem, message) {
         $animate.removeClass(elem, 'ng-hide');
