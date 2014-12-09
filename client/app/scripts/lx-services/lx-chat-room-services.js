@@ -24,7 +24,9 @@ angular.module('lxChatRoom.services', [])
                 roomName + ' due to server status: ' + statusString;
             deferredUserSuccessfullyEnteredRoom.reject(errorMsg);
             errorLogFn(errorMsg);
-            $location.path('/' + roomName + '/error/' + statusString);
+
+
+//            $location.path('/' + roomName + '/error/' + statusString);
         };
 
         return {

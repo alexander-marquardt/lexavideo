@@ -66,15 +66,12 @@ class LandingPageMain(webapp2.RequestHandler):
     """ Render whatever template the client has requested """
     
     @handle_exceptions
-    def get(self, current_template, redirect_after_error=None, bad_room_name=None, error_string=None):
+    def get(self, current_template):
         response_type = 'jinja'
 
         params = {
             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
             'site_name_dot_com': constants.site_name_dot_com,
-            'redirect_after_error': redirect_after_error,
-            'bad_room_name': bad_room_name,
-            'error_string': error_string,
 
             # The following is an object that passes variables to the javascript code.
             'serverLandingPageParamsJson': json.dumps(
