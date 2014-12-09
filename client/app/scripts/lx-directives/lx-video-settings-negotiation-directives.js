@@ -18,15 +18,6 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
     var messageFadeTimerId = null;
 
-
-    var cancelFadeTimer = function() {
-        // Cancel any existing timers to prevent messages from fading away when they should not
-        if (messageFadeTimerId) {
-            $timeout.cancel(messageFadeTimerId);
-            messageFadeTimerId = null;
-        }
-    };
-
     var  showMessageInVideoWindow = function(scope, elem, message) {
         $animate.removeClass(elem, 'ng-hide');
         elem.html('');
