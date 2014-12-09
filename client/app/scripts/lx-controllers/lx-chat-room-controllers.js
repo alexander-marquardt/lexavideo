@@ -41,8 +41,7 @@ angular.module('lxUseChatRoom.controllers', [])
             remoteUserName: null,
 
             userName: lxAppWideConstantsService.userName,
-            userId: lxAppWideConstantsService.userId,
-            roomName: lxUseChatRoomConstantsService.roomName
+            userId: lxAppWideConstantsService.userId
         };
 
         lxInitializeRoomService.addUserToRoomAndSetupChannel($scope.roomLandingObj).then(function(data) {
@@ -51,6 +50,7 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomOuterCtrl.channelToken = data.channelToken;
             $scope.lxChatRoomOuterCtrl.clientId = data.clientId;
 
+            $scope.roomOccupancyObject.roomName = $scope.roomLandingObj.inputRoomName;
             $scope.roomOccupancyObject.roomId = lxUseChatRoomVarsService.roomId = data.roomId;
 
         }, function(reason) {

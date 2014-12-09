@@ -18,7 +18,7 @@ angular.module('lxMainView.controllers', [])
 
         $scope.roomLandingObj = {};
         $scope.roomLandingObj.userIsInRoom = false;
-
+        $scope.roomLandingObj.inputRoomName = null;
 
 //
 //        // handle case when a route change promise is not resolved
