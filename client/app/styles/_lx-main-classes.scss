@@ -170,15 +170,3 @@ $transition-border: border $fast-easing-delay ease;
   font-size: 2em;
 }
 
-.cl-text-outline
-{
-  color: white;
-  text-shadow:
-  -1px -1px 0  #000,
-  1px -1px 0  #000,
-  -1px 1px 0  #000,
-  1px 1px 0  #000;
-  font-weight: 300;
-  letter-spacing: .2em;
-}
-
