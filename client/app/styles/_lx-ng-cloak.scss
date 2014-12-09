@@ -1,0 +1,21 @@
+/*
+The ng-cloak directive was added to Angular in order to prevent the flickering of elements
+before your application has fully loaded. Angular will remove ng-cloak from each element once it has had a chance
+to compile your views.
+
+However, using just the built-in ng-cloak, there is still a flicker issue that occurs between when the
+view is first loaded and before Angular has had a chance to run. This occurs because Angular
+sets the ng-cloak css with javascript as opposed to in a .css file.
+
+By explicitly setting ng-cloak in css, we are able to cloak any html elements immediately and before
+Angular has had a chance to run. This prevents the above mentioned flickering.
+*/
+
+[ng\:cloak],
+[ng-cloak],   
+[data-ng-cloak],   
+[x-ng-cloak],   
+.ng-cloak,   
+.x-ng-cloak {  
+  display: none !important;  
+}  

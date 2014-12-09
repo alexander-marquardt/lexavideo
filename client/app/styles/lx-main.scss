@@ -1,5 +1,7 @@
 // the following call will override conflicting variable declarations in the bootstrap definitions.
-@import "./lx-override-bootstrap.scss";
+@import "./lx-ng-cloak";
+
+@import "./lx-override-bootstrap";
 
 // bower:scss
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
