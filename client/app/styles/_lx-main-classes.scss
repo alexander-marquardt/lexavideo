@@ -51,10 +51,10 @@
 
 
 .cl-show-hide-fade {
-  -webkit-transition:all linear 0.5s;
-  -moz-transition: linear all 0.5s;
-  -o-transition: linear all 0.5s;
-  transition:all linear 0.5s;
+  -webkit-transition:opacity linear 0.5s;
+  -moz-transition: opacity linear 0.5s;
+  -o-transition: opacity linear 0.5s;
+  transition:opacity linear 0.5s;
 }
 
 .cl-show-hide-fade.ng-hide-add, .cl-show-hide-fade.ng-hide-remove {

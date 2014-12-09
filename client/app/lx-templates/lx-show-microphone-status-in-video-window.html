@@ -1,13 +1,24 @@
 {% raw %}
 
 <div ng-show="localVideoObject.isMicrophoneMuted"
-        class="cl-text-outline">
-    Microphone is muted</div>
+     class="cl-show-hide-fade">
+    <div class="cl-text-outline ">
+        Microphone is muted
+    </div>
+</div>
 
 <div ng-show="remoteVideoObject.isAudioMuted"
-        class="cl-text-outline">
-    Sound is muted</div>
+     class="cl-show-hide-fade">
+    <div class="cl-text-outline ">
+        Sound is muted
+    </div>
+</div>
 
-<div ng-show="localVideoObject.isWebcamMuted" class="cl-text-outline">Webcam is muted</div>
+<div ng-show="localVideoObject.isWebcamMuted"
+     class="cl-show-hide-fade">
+    <div class="cl-text-outline ">
+        Webcam is muted
+    </div>
+</div>
 
 {% endraw %}

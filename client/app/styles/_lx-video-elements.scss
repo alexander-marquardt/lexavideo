@@ -64,25 +64,22 @@ video {
 {
   font-size: 1.5em;
   color: white;
-  text-shadow:
-  -1px -1px 0  #000,
-  1px -1px 0  #000,
-  -1px 1px 0  #000,
-  1px 1px 0  #000;
-  letter-spacing: .2em;
+  background: black;
+  display: inline-block;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }
 
 
-.cl-abs-bottom-of-video-wrapper {
+.cl-user-feedback-inside-video-wrapper {
   box-sizing: border-box;
   position: absolute;
   width: 100%;
-  padding-right: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
   bottom: 0px;
   text-align: right;
   z-index: $video-wrapper-zindex + 3;
-  opacity: 0.85;
+  opacity: 0.6;
 }
 
 

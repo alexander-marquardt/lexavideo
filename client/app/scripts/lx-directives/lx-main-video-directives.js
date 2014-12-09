@@ -140,7 +140,7 @@ videoAppDirectives.directive('lxVideoElementDirective',
                 var e;
 
                 if (attrs.videoWindow === 'local' ) {
-                    e = angular.element('<video class="cl-video-sizing" autoplay="autoplay" muted="true"></video>');
+                    e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay" muted="true"></video>');
                     scope.localVideoObject.localHdVideoElem = e[0];
                 }
                 else if (attrs.videoWindow === 'remote' ) {
