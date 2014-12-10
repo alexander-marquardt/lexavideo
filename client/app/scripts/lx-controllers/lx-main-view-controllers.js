@@ -15,24 +15,35 @@ angular.module('lxMainView.controllers', [])
         lxModalSupportService) {
 
         $scope.mainGlobalControllerObj = {
-             // if the user is rejected from a room, then this will contain a message indicating the reason.
-            errorEnteringIntoRoomMessage: null
+             // if the user is rejected from a room, then this will contain a information about what went wrong.
+             /*
+             errorEnteringIntoRoomInfoObj = {
+                statusString: null,
+                pageNameThatCausedError: null,
+                pageUrlThatCausedError: null
+             }
+             We set errorEnteringIntoRoomInfoObj to null to indicate that there are no currently un reported errors.*/
+            errorEnteringIntoRoomInfoObj: null
         };
 
-        $scope.$watch('mainGlobalControllerObj.errorEnteringIntoRoomMessage', function(errorMsg) {
+        $scope.$watch('mainGlobalControllerObj.errorEnteringIntoRoomInfoObj', function(errorEnteringIntoRoomInfoObj) {
 
-            if (errorMsg) {
+
+            if (errorEnteringIntoRoomInfoObj !== null) {
                 lxModalSupportService.showStandardModalWindowFromTemplate(
                         '<div class="modal-header">' +
-                        '<h3 class="modal-title">Title Goes Here(</h3>' +
+                        '<h3 class="modal-title">Error entering into room ' + errorEnteringIntoRoomInfoObj.pageNameThatCausedError + '</h3>' +
                         '<div class="modal-body">' +
-                        'Content goes here!!! ' +
+                            'Unable to enter into room: <a ng-click="modalOkFn()" href=' +
+                            errorEnteringIntoRoomInfoObj.pageUrlThatCausedError + '>' +
+                            errorEnteringIntoRoomInfoObj.pageNameThatCausedError + '</a> ' +
+                            'due to error code: ' + errorEnteringIntoRoomInfoObj.statusString  +
                         '</div>' +
                         '<div class="modal-footer">' +
-                        '<button class="btn btn-primary" ng-click="ok()">OK</button>' +
+                        '<button class="btn btn-primary" ng-click="modalOkFn()">OK</button>' +
                         '</div>' +
                         '</div>');
-                $scope.mainGlobalControllerObj.errorEnteringIntoRoomMessage = null;
+                $scope.mainGlobalControllerObj.errorEnteringIntoRoomInfoObj = null;
 
             }
 

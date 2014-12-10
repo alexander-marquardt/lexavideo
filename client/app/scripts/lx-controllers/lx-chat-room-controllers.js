@@ -54,7 +54,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             $scope.roomOccupancyObject.roomId = lxUseChatRoomVarsService.roomId = data.roomId;
 
-        }, function(reason) {
+        }, function(errorEnteringIntoRoomInfoObj) {
 
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = false;
 
@@ -62,7 +62,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // when the user is sent back to the main landing page, at which point the user will
             // be shown a message indicating that there was an error, and another chance to go into
             // a different room.
-            $scope.mainGlobalControllerObj.errorEnteringIntoRoomMessage = reason;
+            $scope.mainGlobalControllerObj.errorEnteringIntoRoomInfoObj = errorEnteringIntoRoomInfoObj;
             $location.path('/');
         });
 

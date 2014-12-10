@@ -11,10 +11,10 @@ lxModalSupportServices.controller('modalInstanceCtrl', function($scope, $log, $m
     /* This 'controller' is used only by lxModalSupportService, and therefore is contained in this service module as opposed
        to appearing in a controller module.
      */
-    $scope.ok = function () {
+    $scope.modalOkFn = function () {
         $modalInstance.close();
     };
-    $scope.cancel = function () {
+    $scope.modalCancelFn = function () {
         $modalInstance.close();
     };
 });
@@ -96,9 +96,10 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
         }
     };
 
-    this.showStandardModalWindow = function(htmlTemplate) {
+
+    this.showStandardModalWindowFromTemplateUrl = function(htmlTemplateUrl) {
         var modalInstance = $modal.open({
-            templateUrl: htmlTemplate,
+            templateUrl: htmlTemplateUrl,
             controller: 'modalInstanceCtrl'
         });
 

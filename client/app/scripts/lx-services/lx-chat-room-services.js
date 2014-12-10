@@ -20,10 +20,14 @@ angular.module('lxChatRoom.services', [])
         ) {
 
         var failedToEnterRoom = function(errorLogFn, roomName, statusString, deferredUserSuccessfullyEnteredRoom) {
-            var errorMsg = 'User was not able to enter into the room ' +
-                roomName + ' due to server status: ' + statusString;
-            deferredUserSuccessfullyEnteredRoom.reject(errorMsg);
-            errorLogFn(errorMsg);
+            var errorObject = {
+                statusString: statusString,
+                pageNameThatCausedError: roomName,
+                pageUrlThatCausedError: $location.path()
+            };
+
+            deferredUserSuccessfullyEnteredRoom.reject(errorObject);
+            errorLogFn(errorObject);
         };
 
         return {

@@ -361,15 +361,15 @@ angular.module('lxAccessSystemResources.services', [])
                 var isSupported = true;
 
                 if (lxCheckCompatibilityService.isIosDevice) {
-                    lxModalSupportService.showStandardModalWindow('lx-template-cache/ios-is-not-supported-modal.html');
+                    lxModalSupportService.showStandardModalWindowFromTemplateUrl('lx-template-cache/ios-is-not-supported-modal.html');
                     isSupported = false;
                 }
                 else if (!lxCheckCompatibilityService.isSupportedBrowser) {
-                    lxModalSupportService.showStandardModalWindow('lx-template-cache/browser-is-not-supported-modal.html');
+                    lxModalSupportService.showStandardModalWindowFromTemplateUrl('lx-template-cache/browser-is-not-supported-modal.html');
                     isSupported = false;
                 }
                 else if (!lxCheckCompatibilityService.browserVersionIsSupported) {
-                    lxModalSupportService.showStandardModalWindow('lx-template-cache/browser-version-is-not-supported-modal.html');
+                    lxModalSupportService.showStandardModalWindowFromTemplateUrl('lx-template-cache/browser-version-is-not-supported-modal.html');
                     isSupported = false;
                 }
                 return isSupported;
