@@ -11,6 +11,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
     .controller('lxChatRoomOuterCtrl',
     function($scope,
+             $location,
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxCallService,
@@ -62,6 +63,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // be shown a message indicating that there was an error, and another chance to go into
             // a different room.
             $scope.mainGlobalControllerObj.errorEnteringIntoRoomMessage = reason;
+            $location.path('/');
         });
 
         $scope.videoCameraStatusObject = {

@@ -113,4 +113,22 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
                 $log.log('Closed the modal box for '+ htmlTemplate);
             });
     };
+
+    this.showStandardModalWindowFromTemplate = function(htmlTemplate) {
+        var modalInstance = $modal.open({
+            template: htmlTemplate,
+            controller: 'modalInstanceCtrl'
+        });
+
+        modalInstance.result.then(
+            function() {
+                $log.log('modal closed ' + htmlTemplate);
+            },
+            function() {
+                $log.log('modal dismissed ' + htmlTemplate);
+            })
+            ['finally'](function () {
+                $log.log('Closed the modal box for '+ htmlTemplate);
+            });
+    };
 });
