@@ -34,13 +34,14 @@ angular.module('lxMainView.controllers', [])
                         '<div class="modal-header">' +
                         '<h3 class="modal-title">Error entering into room ' + errorEnteringIntoRoomInfoObj.pageNameThatCausedError + '</h3>' +
                         '<div class="modal-body">' +
-                            'Unable to enter into room: <a ng-click="modalOkFn()" href=' +
-                            errorEnteringIntoRoomInfoObj.pageUrlThatCausedError + '>' +
-                            errorEnteringIntoRoomInfoObj.pageNameThatCausedError + '</a> ' +
-                            'due to error code: ' + errorEnteringIntoRoomInfoObj.statusString  +
+                            'Unable to enter into room: <strong>' +
+                            errorEnteringIntoRoomInfoObj.pageNameThatCausedError + '</strong>' +
+                            ' due to error code: ' + errorEnteringIntoRoomInfoObj.statusString  + '<br>' +
+                            '<a ng-click="modalOkFn()" href=' +
+                            errorEnteringIntoRoomInfoObj.pageUrlThatCausedError + '>Try Again </a>' +
                         '</div>' +
                         '<div class="modal-footer">' +
-                        '<button class="btn btn-primary" ng-click="modalOkFn()">OK</button>' +
+                        '<button class="btn btn-primary" ng-click="modalOkFn()">Close</button>' +
                         '</div>' +
                         '</div>');
                 $scope.mainGlobalControllerObj.errorEnteringIntoRoomInfoObj = null;
