@@ -59,6 +59,10 @@
   margin-top: -0.60em;
 }
 
+.cl-add-left-and-right-margins-to-hangup {
+  margin: 0px 15px 0px 15px;
+}
+
 .icon-lx-microphone-cfg {
   @extend %call-control-icon-common;
   margin-left: -0.3em; //relative to the new font-size of 3em

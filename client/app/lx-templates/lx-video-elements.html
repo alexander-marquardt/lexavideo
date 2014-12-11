@@ -148,6 +148,18 @@
                 </span>
 
             </button>
+
+            <!-- "Stop" video button -->
+            <button type="button" class="btn btn-sm cl-add-left-and-right-margins-to-hangup"
+                    ng-show="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo'"
+                    ng-click="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
+                    ng-dblclick="showVideoElementsAndStartVideoFn('waitingForActivateVideo', true)"
+                    ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                <span class="icon-lx-start-video-camera-wrapper-cfg">
+                    <span class="icon-lx-phone-hang-up-cfg"></span>
+                </span>
+                    Hangup
+            </button>
         </div>
     </div>
 
