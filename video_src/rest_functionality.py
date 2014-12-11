@@ -89,10 +89,10 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
         @ndb.transactional
         def create_room_name_transaction(room_name):
 
-            room_name_obj = room_module.RoomName.get_by_id(room_name)
+            room_name_obj = room_module.ChatRoomName.get_by_id(room_name)
             if not room_name_obj:
                 # This is a new room name
-                room_name_obj = room_module.RoomName(id=room_name)
+                room_name_obj = room_module.ChatRoomName(id=room_name)
                 room_name_obj.put()
 
         try:
@@ -119,7 +119,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # This is a newly created room. Therefore we should add the current user to room_members_ids.
             room_dict['room_members_ids'] = [user_id,]
 
-            # The RoomName has been added to the roomName structure. Now create a new Room object
+            # The ChatRoomName has been added to the roomName structure. Now create a new Room object
             # for the new room.
             @ndb.transactional
             def create_room_transaction(room_dict):
