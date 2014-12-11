@@ -8,7 +8,7 @@
                     <div class="col-md-10 col-lg-8 cl-col-no-xs-padding">
 
                         <div class="panel  cl-panel-xs-margin cl-transition-border"
-                             ng-class="roomOccupancyObject.remoteUserId ? 'panel-primary' : 'panel-waiting'"
+                             ng-class="roomOccupancyObject.listOfUserObjects.length > 1 ? 'panel-primary' : 'panel-waiting'"
                              ng-click="userHasAlreadyClickedInChatPanel = true">
 
                             <div class="panel-heading  cl-transition-opacity-and-background-color">
@@ -17,9 +17,8 @@
                                     &nbsp;{{ roomOccupancyObject.roomName }}&nbsp;
                                 </span>
 
-                                <span ng-show="!roomOccupancyObject.remoteUserId">Waiting for someone to join</span>
-                                <span ng-show="roomOccupancyObject.remoteUserName!=roomOccupancyObject.remoteUserId">{{ roomOccupancyObject.remoteUserName }} has joined</span>
-                                <span ng-show="roomOccupancyObject.remoteUserId && roomOccupancyObject.remoteUserName==roomOccupancyObject.remoteUserId">Guest has joined</span>
+                                <span ng-show="!roomOccupancyObject.listOfUserObjects.length <= 1">Waiting for someone to join</span>
+                                <span ng-show="roomOccupancyObject.listOfUserObjects.length > 1">Guest has joined</span>
 
                             </div>
 
@@ -49,7 +48,7 @@
                                                     class="btn btn-sm "
                                                     ng-click="showVideoElementsAndStartVideoFn('activateVideo', false)"
                                                     ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', false)"
-                                                    ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                                    ng-class="roomOccupancyObject.listOfUserObjects.length > 1 ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
                                             </span>
@@ -59,7 +58,7 @@
                                                     class="btn btn-sm "
                                                     ng-click="showVideoElementsAndStartVideoFn('doNotActivateVideo', false)"
                                                     ng-dblclick="showVideoElementsAndStartVideoFn('doNotActivateVideo', false)"
-                                                    ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                                    ng-class="roomOccupancyObject.listOfUserObjects.length > 1 ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
                                                 <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
@@ -79,7 +78,7 @@
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
-                                                       ng-class="roomOccupancyObject.remoteUserId ? '' : 'cl-invalid-input-glow'"
+                                                       ng-class="roomOccupancyObject.listOfUserObjects.length > 1 ? '' : 'cl-invalid-input-glow'"
                                                        name="messageInputElem"
                                                        placeholder="Type your message here..."
                                                        ng-model="inputMessageString"
@@ -93,7 +92,7 @@
                                                 <span class="input-group-btn">
                                                     <button ng-click="sendChatMessageFn()"
                                                             class="btn  btn-sm pull-right"
-                                                            ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'"
+                                                            ng-class="roomOccupancyObject.listOfUserObjects.length > 1 ? 'btn-primary' : 'btn-danger'"
                                                             ng-disabled="sendMessageForm.$invalid">
                                                         Send
                                                     </button>
@@ -117,7 +116,7 @@
                                                     ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
                                                     ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
                                                     class="btn btn-sm pull-right"
-                                                    ng-class="roomOccupancyObject.remoteUserId ? 'btn-primary' : 'btn-danger'">
+                                                    ng-class="roomOccupancyObject.listOfUserObjects.length > 1 ? 'btn-primary' : 'btn-danger'">
                                                 <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                     <span class="icon-lx-start-video-camera-cfg"></span>
                                                 </span>

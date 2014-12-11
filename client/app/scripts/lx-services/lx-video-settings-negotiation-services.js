@@ -27,7 +27,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
         }
 
         // if there is no remote user in the room, then indicate that they are not connected to anyone right now
-        else if (!scope.roomOccupancyObject.remoteUserId) {
+        else if (scope.roomOccupancyObject.listOfUserObjects.length <= 1) {
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
         }
 
@@ -81,7 +81,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             });
 
             // remote user has either entered or left the room.
-            scope.$watch('roomOccupancyObject.remoteUserId', function() {
+            scope.$watch('roomOccupancyObject.listOfUserObjects.length', function() {
                 // call code to generate feedback messages with a null value - this will result in the feedback
                 // being updated with one of the message override values defined in setVideoSignalingStatusForUserFeedback,
                 // or possibly by clearing the feedback in the case that none of the overrides are triggered.
@@ -109,7 +109,7 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
             sendStatusOfVideoElementsEnabled: function(scope, localVideoElementsEnabled, queryForRemoteVideoElementsEnabled) {
 
                 // Only attempt to send a message if there is another user in the room
-                if (scope.roomOccupancyObject.remoteUserId) {
+                if (scope.roomOccupancyObject.listOfUserObjects.length > 1) {
                     lxMessageService.sendMessage('videoCameraStatusMsg',
                         {
                             videoElementsEnabledAndCameraAccessRequested: localVideoElementsEnabled,
