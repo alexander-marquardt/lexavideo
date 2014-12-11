@@ -1,3 +1,5 @@
+$chat-panel-heading-height: 50px;
+$chat-groups-members-margin: 5px;
 
 $short-chat-panel-height: 200px;
 $tall-chat-panel-height: 400px;
@@ -7,6 +9,8 @@ $tall-chat-panel-height: 400px;
 $estimated-bubble-height: 30px;
 
 $chat-bubble-zindex: 10;
+$chat-group-members-zindex: 20;
+$group-members-panel-header-height: 30px;
 
 .cl-chat-row {
   color: #777777;
@@ -23,11 +27,18 @@ $chat-bubble-zindex: 10;
   height: $tall-chat-panel-height - $estimated-bubble-height;
 }
 
+.cl-chat-panel {
+  position: relative; // needed so that we can absolute position the chat members box
+}
+
+.cl-chat-panel-heading {
+  height: $chat-panel-heading-height;
+}
+
 .cl-chat-panel-body
 {
   padding: 0px 15px 0px 15px;
   overflow-y: scroll;
-  position: relative; // needed so that we can absolute position the chat members box
 }
 
 .cl-chat-panel-body-short {
@@ -36,6 +47,50 @@ $chat-bubble-zindex: 10;
 
 .cl-chat-panel-body-tall {
   height: $tall-chat-panel-height;
+}
+
+
+@mixin generate-match-chat-group-members-element-to-half-video-sizing() {
+  @for $idx from 2 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
+      width: nth($video-column-width-list, $idx) / 2 - 2 * $chat-groups-members-margin;
+    }
+  }
+}
+
+.cl-match-chat-group-members-element-to-half-video-sizing {
+  box-sizing: border-box;
+  width: nth($video-column-width-list, 1) / 2 - 2 * $chat-groups-members-margin; // -30px for
+
+  @include generate-match-chat-group-members-element-to-half-video-sizing();
+}
+
+
+.cl-chat-group-members-panel {
+  position: absolute;
+  top: $chat-panel-heading-height + $chat-groups-members-margin;
+  left: $chat-groups-members-margin;
+  max-width: $screen-xs-max/2;
+  z-index: $chat-group-members-zindex;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.cl-chat-group-members-panel-header {
+  height: $group-members-panel-header-height;
+  padding: 5px;
+}
+.cl-chat-group-members-panel-body
+{
+  padding: 0px 5px 0px 5px;
+  overflow-y: scroll;
+}
+
+.cl-chat-panel-body-short .cl-chat-group-members-panel-body {
+  height: $short-chat-panel-height / 2 - $group-members-panel-header-height;
+}
+
+.cl-chat-panel-body-tall .cl-chat-group-members-panel-body{
+  height: $tall-chat-panel-height / 2 - $group-members-panel-header-height;
 }
 
 

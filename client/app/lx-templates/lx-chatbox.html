@@ -7,11 +7,11 @@
                 <div class="row cl-row-no-xs-margins">
                     <div class="col-md-10 col-lg-8 cl-col-no-xs-padding">
 
-                        <div class="panel  cl-panel-xs-margin cl-transition-border"
+                        <div class="panel  cl-panel-xs-margin cl-transition-border cl-chat-panel"
                              ng-class="roomOccupancyObject.listOfUserObjects.length > 1 ? 'panel-primary' : 'panel-waiting'"
                              ng-click="userHasAlreadyClickedInChatPanel = true">
 
-                            <div class="panel-heading  cl-transition-opacity-and-background-color">
+                            <div class="panel-heading  cl-transition-opacity-and-background-color cl-chat-panel-heading">
                                 <span class="cl-text-size-2_0em" style="display:inline-block;line-height:1em;">
                                     <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
                                     &nbsp;{{ roomOccupancyObject.roomName }}&nbsp;
@@ -29,7 +29,20 @@
                                     'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">
                                 <div ng-class="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ?
                                     'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>
-                                <div lx-show-chat-group-members-directive></div>
+
+                                <div class="panel cl-chat-group-members-panel cl-match-chat-group-members-element-to-half-video-sizing"
+                                     ng-class="roomOccupancyObject.listOfUserObjects.length > 1 ? 'panel-primary' : 'panel-waiting'">
+                                    <div class="panel-heading  cl-transition-opacity-and-background-color cl-chat-group-members-panel-header">
+                                        Group Members
+                                    </div>
+                                    <div class="panel-body cl-chat-group-members-panel-body">
+                                        Member 1 adsf das asf asfadsf dsaf adsf adsf adfs fadsd safdas dfsa fdsaf adsf dfas fadsfdas dfasf dasfdas  afdsfadsfdsaafdafdfd s
+                                        Member 1 adsf das asf asfadsf dsaf adsf adsf adfs fadsd safdas dfsa fdsaf adsf dfas fadsfdas dfasf dasfdas  afdsfadsfdsaafdafdfd s
+                                        Member 1 adsf das asf asfadsf dsaf adsf adsf adfs fadsd safdas dfsa fdsaf adsf dfas fadsfdas dfasf dasfdas  afdsfadsfdsaafdafdfd s
+                                        <div lx-show-chat-group-members-directive></div>
+                                    </div>
+                                </div>
+
                                 <div lx-show-chat-messages-directive></div>
 
 
