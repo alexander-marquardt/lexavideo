@@ -37,9 +37,8 @@ angular.module('lxUseChatRoom.controllers', [])
 
 
         $scope.roomOccupancyObject = {
-            // Once the remote user has joined the room, this will be modified to reflect their userId
-            remoteUserId: null,
-            remoteUserName: null,
+            // This will be updated to reflect the status sent from the server.
+            listOfUserObjects: null,
 
             userName: lxAppWideConstantsService.userName,
             userId: lxAppWideConstantsService.userId,

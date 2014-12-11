@@ -9,11 +9,11 @@
                 </tr>
                 <tr>
                     <td>User Name: {{ roomOccupancyObject.userName }}</td>
-                    <td>Remote User Name: {{ roomOccupancyObject.remoteUserName }}</td>
-                </tr>
-                <tr>
                     <td>User Id: {{ roomOccupancyObject.userId }}</td>
-                    <td>Remote User Id: {{ roomOccupancyObject.remoteUserId }}</td>
+                </tr>
+                <tr ng-repeat="user in roomOccupancyObject.listOfUserObjects | filter:{userId: '!'+ roomOccupancyObject.userId}">
+                    <td>Remote User Name: {{ user.userName }}</td>
+                    <td>Remote User Id: {{ user.userId }}</td>
                 </tr>
                 </tr>
                     <td>
