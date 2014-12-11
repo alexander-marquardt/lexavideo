@@ -13,14 +13,18 @@
             <div class="col-xs-12  text-center cl-col-no-xs-padding">
                 <div class="cl-match-element-to-video-sizing" style="display:inline-block">
                     <div class="row cl-row-no-xs-margins">
-                        <div class="well col-md-10 col-lg-8">
-                            <h3>Enter into a private chat (one-on-one)</h3>
+                        <div class="well col-md-10 col-lg-8 text-left">
+                            <h3>Enter into a chat room</h3>
                             <div class="clearfix">
                                 <form name="createRoomForm" role="form" novalidate>
-                                    <div class="form-group">
-                                        <div class="cl-room-name-input input-group">
+                                    <div class="cl-room-name-input">
+                                        <div class="form-group">
+
+
+                                            <label for="id-inputRoomName">Chat room name</label>
                                             <input class=" form-control"
-                                                   placeholder="chat name"
+                                                   id="id-inputRoomName"
+                                                   placeholder="Name of chat room to create and/or join"
                                                    name="roomNameInputElem"
                                                    ng-model="roomObj.roomName"
                                                    ng-minlength="{{ minInputLength }}"
@@ -31,31 +35,37 @@
                                                    check-for-room-occupancy-directive
                                                    required
                                                     />
-                                                <span class="input-group-btn">
-                                                    <button ng-click="goToRoomUrl(roomObj.roomName)" class="btn btn-primary"
-                                                            ng-disabled="createRoomForm.$invalid || createRoomForm.roomNameInputElem.userIsWaitingForRoomStatus">
-                                                        {{ createRoomForm.roomNameInputElem.submitButtonText }}</button>
-                                                </span>
-                                        </div>
-                                        <div class="cl-feedback-on-input-validity-div">
-                                            <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
-                                            added and removed from the DOM -->
-                                            <div class="text-danger" ng-show="createRoomForm.roomNameInputElem.$dirty">
-                                                <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a chat name</small>
-                                                <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
-                                                <!--<small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
-                                                <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern">
-                                                    {{ invalidCharacterFeedback }}</small>
-                                                <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Chat is full</small>
-                                                <small  ng-show="createRoomForm.roomNameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
-                                            </div>
-                                            <div  ng-show="createRoomForm.$valid">
-                                                <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
-                                                    {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
-                                                <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
-                                                    {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
+                                            <div class="cl-feedback-on-input-validity-div"
+                                                  ng-show="createRoomForm.roomNameInputElem.$dirty || createRoomForm.$valid">
+                                                <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
+                                                added and removed from the DOM -->
+                                                <div class="text-danger" ng-show="createRoomForm.roomNameInputElem.$dirty">
+                                                    <small  ng-show="createRoomForm.roomNameInputElem.$error.required">Please input a chat name</small>
+                                                    <small  ng-show="createRoomForm.roomNameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
+                                                    <!--<small  ng-show="createRoomForm.roomNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
+                                                    <small  ng-show="createRoomForm.roomNameInputElem.$error.pattern">
+                                                        {{ invalidCharacterFeedback }}</small>
+                                                    <small  ng-show="createRoomForm.roomNameInputElem.$error.roomIsFull">Chat is full</small>
+                                                    <small  ng-show="createRoomForm.roomNameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
+                                                </div>
+                                                <div  ng-show="createRoomForm.$valid">
+                                                    <small ng-show="createRoomForm.roomNameInputElem.roomNotFullMessage">
+                                                        {{ createRoomForm.roomNameInputElem.roomNotFullMessage }}</small>
+                                                    <small ng-show="createRoomForm.roomNameInputElem.roomIsEmptyMessage">
+                                                        {{ createRoomForm.roomNameInputElem.roomIsEmptyMessage }} </small>
+                                                </div>
                                             </div>
                                         </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div>
+                                            <button ng-click="goToRoomUrl(roomObj.roomName)" class="btn btn-primary"
+                                                    ng-disabled="createRoomForm.$invalid || createRoomForm.roomNameInputElem.userIsWaitingForRoomStatus">
+                                                {{ createRoomForm.roomNameInputElem.submitButtonText }}</button>
+                                        </div>
+
                                     </div>
                                 </form>
                             </div>
