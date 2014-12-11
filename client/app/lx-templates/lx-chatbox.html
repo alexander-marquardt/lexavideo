@@ -33,13 +33,11 @@
                                 <div class="panel cl-chat-group-members-panel cl-match-chat-group-members-element-to-half-video-sizing"
                                      ng-class="roomOccupancyObject.listOfUserObjects.length > 1 ? 'panel-primary' : 'panel-waiting'">
                                     <div class="panel-heading  cl-transition-opacity-and-background-color cl-chat-group-members-panel-header">
-                                        Group Members
+                                        Group participants
                                     </div>
                                     <div class="panel-body cl-chat-group-members-panel-body">
-                                        Member 1 adsf das asf asfadsf dsaf adsf adsf adfs fadsd safdas dfsa fdsaf adsf dfas fadsfdas dfasf dasfdas  afdsfadsfdsaafdafdfd s
-                                        Member 1 adsf das asf asfadsf dsaf adsf adsf adfs fadsd safdas dfsa fdsaf adsf dfas fadsfdas dfasf dasfdas  afdsfadsfdsaafdafdfd s
-                                        Member 1 adsf das asf asfadsf dsaf adsf adsf adfs fadsd safdas dfsa fdsaf adsf dfas fadsfdas dfasf dasfdas  afdsfadsfdsaafdafdfd s
-                                        <div lx-show-chat-group-members-directive></div>
+                                        <span ng-repeat="user in roomOccupancyObject.listOfUserObjects | orderBy: 'userName'">
+                                            {{ user.userName }}<br></span>
                                     </div>
                                 </div>
 

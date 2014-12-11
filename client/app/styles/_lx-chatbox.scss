@@ -53,14 +53,14 @@ $group-members-panel-header-height: 30px;
 @mixin generate-match-chat-group-members-element-to-half-video-sizing() {
   @for $idx from 2 through length($viewport-widths-list) {
     @media (min-width: nth($viewport-widths-list, $idx)) {
-      width: nth($video-column-width-list, $idx) / 2 - 2 * $chat-groups-members-margin;
+      max-width: nth($video-column-width-list, $idx) / 2 - 2 * $chat-groups-members-margin;
     }
   }
 }
 
 .cl-match-chat-group-members-element-to-half-video-sizing {
   box-sizing: border-box;
-  width: nth($video-column-width-list, 1) / 2 - 2 * $chat-groups-members-margin; // -30px for
+  max-width: nth($video-column-width-list, 1) / 2 - 2 * $chat-groups-members-margin; // -30px for
 
   @include generate-match-chat-group-members-element-to-half-video-sizing();
 }
@@ -81,16 +81,17 @@ $group-members-panel-header-height: 30px;
 }
 .cl-chat-group-members-panel-body
 {
+  text-align: left;
   padding: 0px 5px 0px 5px;
   overflow-y: scroll;
 }
 
 .cl-chat-panel-body-short .cl-chat-group-members-panel-body {
-  height: $short-chat-panel-height / 2 - $group-members-panel-header-height;
+  max-height: $short-chat-panel-height / 2 - $group-members-panel-header-height;
 }
 
 .cl-chat-panel-body-tall .cl-chat-group-members-panel-body{
-  height: $tall-chat-panel-height / 2 - $group-members-panel-header-height;
+  max-height: $tall-chat-panel-height / 2 - $group-members-panel-header-height;
 }
 
 

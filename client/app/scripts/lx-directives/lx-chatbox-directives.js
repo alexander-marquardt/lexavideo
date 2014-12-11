@@ -215,20 +215,4 @@ angular.module('lxChatbox.directives', [])
             }
         };
     }
-)
-
-.directive('lxShowChatGroupMembersDirective',
-
-    function(
-
-        ) {
-
-        return {
-            restrict: 'A',
-            link: function (scope, elem) {
-
-
-            }
-        }
-    }
 );
