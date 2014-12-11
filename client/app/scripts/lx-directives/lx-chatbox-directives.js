@@ -7,7 +7,7 @@
 
 angular.module('lxChatbox.directives', [])
 
-    .directive('lxShowChatMessagesDirective',
+.directive('lxShowChatMessagesDirective',
 
     function(
         $compile,
@@ -214,5 +214,21 @@ angular.module('lxChatbox.directives', [])
                 });
             }
         };
+    }
+)
+
+.directive('lxShowChatGroupMembersDirective',
+
+    function(
+
+        ) {
+
+        return {
+            restrict: 'A',
+            link: function (scope, elem) {
+
+
+            }
+        }
     }
 );

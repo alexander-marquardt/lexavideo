@@ -27,6 +27,7 @@ $chat-bubble-zindex: 10;
 {
   padding: 0px 15px 0px 15px;
   overflow-y: scroll;
+  position: relative; // needed so that we can absolute position the chat members box
 }
 
 .cl-chat-panel-body-short {
