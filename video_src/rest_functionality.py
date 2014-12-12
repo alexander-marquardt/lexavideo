@@ -45,7 +45,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                     'roomIsRegistered' : False,
                     'numInRoom': 0
                 }
-                logging.info('Room name is available: ' + repr(room_obj))
+                logging.info('Room name is available: ' + room_name)
 
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
