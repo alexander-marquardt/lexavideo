@@ -38,7 +38,10 @@ angular.module('lxUserInputFeedback.directives', [])
                  We also watch triggerGetNewRoom which will be toggled if we need to trigger the function
                  associated with this watcher.
                  */
-                scope.$watch(function() {
+                scope.$watch(
+
+                    // Define the function that returns the value that is being watched for changes
+                    function() {
 
                         return inputElement.value + scope.roomStatus.triggerGetNewRoom.toString();
                     },
