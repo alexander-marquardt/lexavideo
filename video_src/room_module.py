@@ -1,20 +1,53 @@
 
+import copy
 import logging
 
 from google.appengine.ext import ndb
 from video_src import models
 
+class RoomAlreadyExistsException(Exception): pass
 
 class ChatRoomName(ndb.Model):
     # This is a class that will be keyed by the room name, and that we use for guaranteeing
     # that each room name is unique. Once a room name has been determined to be unique, then
     # we will write the Room object (below)
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
-    pass
 
-# RoomInfo will contain data about which users are currently communicating with each other.
-class RoomInfo(ndb.Model):
+    # Each ChatRoomName object is tightly associated with a ChatRoomInfo object.
+    # room_info_key keeps track of which object is associated with this name.
+    room_info_key = ndb.KeyProperty(kind='ChatRoomInfo')
+
+    # creates an object that is keyed by the room_name.
+    # This is used for guaranteeing uniqueness of each room name. If a room matching room_name has already
+    # been created then an exception will be raised, and the client will be notified that they have to select
+    # a different room name. This should be rare since the name that they submit has already been "pre-checked"
+    # while they were typing it into the input box.
+    @classmethod
+    @ndb.transactional(xg=True)
+    def txn_create_room_by_name(cls, room_name, room_dict, room_creator_user_key):
+
+        room_name_obj_key = ndb.Key('ChatRoomName', room_name)
+        room_name_obj = room_name_obj_key.get()
+        if room_name_obj:
+            raise RoomAlreadyExistsException('Room %s already exists.' % room_name)
+
+        # No exception - this is a new room name
+        room_name_obj = cls(id=room_name)
+        room_info_obj = ChatRoomInfo.txn_create_room(room_dict, room_name_obj.key, room_creator_user_key)
+        room_name_obj.room_info_key = room_info_obj.key
+        room_name_obj.put()
+
+        return room_name_obj, room_info_obj
+
+
+# ChatRoomInfo will contain data about which users are currently in a given chat room
+class ChatRoomInfo(ndb.Model):
     """All the data necessary for keeping track of room names and occupancy etc. """
+    
+    room_creator_user_key = ndb.KeyProperty(kind='UserModel')
+
+    # For convenience, provide a link back to the ChatRoomName object that is associated with the current object.
+    room_name_obj_key = ndb.KeyProperty(kind='ChatRoomName')
 
     # This is the lower case room name - ie. user wrote 'Alex', but it will be stored as 'alex'
     room_name = ndb.StringProperty(default = None)
@@ -34,6 +67,24 @@ class RoomInfo(ndb.Model):
     # When the second user activates their video, then the WebRTC signalling will start between the two users.
     video_elements_enabled_user_ids = ndb.IntegerProperty(repeated=True)
 
+
+    # The ChatRoomName has been added to the roomName structure. Now create a new Room object
+    # for the new room.
+    @classmethod
+    @ndb.transactional
+    def txn_create_room(cls, room_dict, room_name_obj_key, room_creator_user_key):
+
+        # make a copy of room_dict, so that our modifications don't accidentally change it for other functions
+        room_obj_dict = copy.copy(room_dict)
+
+        # remove 'user_id' from the room_dict since it will not be stored on the room_obj as 'user_id'
+        del room_obj_dict['user_id']
+
+        room_obj_dict['room_name_obj_key'] = room_name_obj_key
+        room_obj_dict['room_creator_user_key'] = room_creator_user_key
+        room_obj = cls(**room_obj_dict)
+        room_obj.put()
+        return room_obj
 
     def __str__(self):
         result = '['
@@ -83,7 +134,7 @@ class RoomInfo(ndb.Model):
 
 def get_room_by_id(room_id):
 
-    room_obj = RoomInfo.get_by_id(room_id)
+    room_obj = ChatRoomInfo.get_by_id(room_id)
     if not room_obj:
         logging.error('Attempt to get room by id failed. Room %d does not exist.' % room_id)
 

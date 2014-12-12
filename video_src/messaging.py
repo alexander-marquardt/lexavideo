@@ -173,7 +173,7 @@ class MessagePage(webapp2.RequestHandler):
         message = self.request.body
         room_id = int(self.request.get('r'))
         user_id = int(self.request.get('u'))
-        room_obj = room_module.RoomInfo.get_by_id(room_id)
+        room_obj = room_module.ChatRoomInfo.get_by_id(room_id)
 
         try:
             try:
