@@ -100,7 +100,7 @@ angular.module('lxUserInputFeedback.directives', [])
                                         // typed roomName. This guards against a slow server response that could be
                                         // out-of-date if the user has typed in a new roomName before receiving the
                                         // response.
-                                        if (data.roomName === inputElement.value) {
+                                        if (data.roomName === inputElement.value.toLowerCase()) {
 
                                             if (data.numInRoom >= maxOccupancy) {
                                                 ctrl.$setValidity('roomIsFull', false);
