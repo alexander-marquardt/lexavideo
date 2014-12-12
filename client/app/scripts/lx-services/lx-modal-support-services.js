@@ -105,13 +105,13 @@ lxModalSupportServices.service('lxModalSupportService', function ($modal, $log, 
 
         modalInstance.result.then(
             function() {
-                $log.log('modal closed ' + htmlTemplate);
+                $log.log('modal closed ' + htmlTemplateUrl);
             },
             function() {
-                $log.log('modal dismissed ' + htmlTemplate);
+                $log.log('modal dismissed ' + htmlTemplateUrl);
             })
             ['finally'](function () {
-                $log.log('Closed the modal box for '+ htmlTemplate);
+                $log.log('Closed the modal box for '+ htmlTemplateUrl);
             });
     };
 
