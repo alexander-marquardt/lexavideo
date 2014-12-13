@@ -17,6 +17,12 @@ class ChatRoomName(ndb.Model):
     # room_info_key keeps track of which object is associated with this name.
     room_info_key = ndb.KeyProperty(kind='ChatRoomInfo')
 
+    @classmethod
+    def get_room_by_name(cls, room_name):
+        room_name_obj_key = ndb.Key('ChatRoomName', room_name)
+        room_name_obj = room_name_obj_key.get()
+        return room_name_obj
+
     # creates an object that is keyed by the room_name.
     # This is used for guaranteeing uniqueness of each room name. If a room matching room_name has already
     # been created then an exception will be raised, and the client will be notified that they have to select
@@ -26,8 +32,7 @@ class ChatRoomName(ndb.Model):
     @ndb.transactional(xg=True)
     def txn_create_room_by_name(cls, room_name, room_dict, room_creator_user_key):
 
-        room_name_obj_key = ndb.Key('ChatRoomName', room_name)
-        room_name_obj = room_name_obj_key.get()
+        room_name_obj = cls.get_room_by_name(room_name)
         if room_name_obj:
             raise RoomAlreadyExistsException('Room %s already exists.' % room_name)
 
@@ -38,6 +43,7 @@ class ChatRoomName(ndb.Model):
         room_name_obj.put()
 
         return room_name_obj, room_info_obj
+
 
 
 # ChatRoomInfo will contain data about which users are currently in a given chat room
@@ -75,16 +81,16 @@ class ChatRoomInfo(ndb.Model):
     def txn_create_room(cls, room_dict, room_name_obj_key, room_creator_user_key):
 
         # make a copy of room_dict, so that our modifications don't accidentally change it for other functions
-        room_obj_dict = copy.copy(room_dict)
+        room_info_obj_dict = copy.copy(room_dict)
 
-        # remove 'user_id' from the room_dict since it will not be stored on the room_obj as 'user_id'
-        del room_obj_dict['user_id']
+        # remove 'user_id' from the room_dict since it will not be stored on the room_info_obj as 'user_id'
+        del room_info_obj_dict['user_id']
 
-        room_obj_dict['room_name_obj_key'] = room_name_obj_key
-        room_obj_dict['room_creator_user_key'] = room_creator_user_key
-        room_obj = cls(**room_obj_dict)
-        room_obj.put()
-        return room_obj
+        room_info_obj_dict['room_name_obj_key'] = room_name_obj_key
+        room_info_obj_dict['room_creator_user_key'] = room_creator_user_key
+        room_info_obj = cls(**room_info_obj_dict)
+        room_info_obj.put()
+        return room_info_obj
 
     def __str__(self):
         result = '['
@@ -125,8 +131,8 @@ class ChatRoomInfo(ndb.Model):
         else: # occupancy > 2:
             raise Exception('Room should not have more than two people in it')
 
-    def has_user(room_obj, user_id):
-        if user_id in room_obj.room_members_ids:
+    def has_user(room_info_obj, user_id):
+        if user_id in room_info_obj.room_members_ids:
             return True
         else:
             return False
@@ -134,54 +140,54 @@ class ChatRoomInfo(ndb.Model):
 
 def get_room_by_id(room_id):
 
-    room_obj = ChatRoomInfo.get_by_id(room_id)
-    if not room_obj:
+    room_info_obj = ChatRoomInfo.get_by_id(room_id)
+    if not room_info_obj:
         logging.error('Attempt to get room by id failed. Room %d does not exist.' % room_id)
 
-    return room_obj
+    return room_info_obj
 
 @ndb.transactional
 def txn_add_user_id_to_video_elements_enabled_user_ids(room_id, user_id):
 
-    room_obj =  get_room_by_id(room_id)
+    room_info_obj =  get_room_by_id(room_id)
 
-    if user_id in room_obj.video_elements_enabled_user_ids:
-        logging.info('Not added to video_enalbed_ids. user %d to %s' %(user_id, room_obj))
+    if user_id in room_info_obj.video_elements_enabled_user_ids:
+        logging.info('Not added to video_enalbed_ids. user %d to %s' %(user_id, room_info_obj))
     else:
-        logging.info('Adding video_enalbed_ids. user %d to %s' %(user_id, room_obj))
-        room_obj.video_elements_enabled_user_ids.append(user_id)
-        room_obj.put()
+        logging.info('Adding video_enalbed_ids. user %d to %s' %(user_id, room_info_obj))
+        room_info_obj.video_elements_enabled_user_ids.append(user_id)
+        room_info_obj.put()
 
-    return room_obj
+    return room_info_obj
 
 @ndb.transactional
 def txn_remove_user_id_from_video_elements_enabled_user_ids(room_id, user_id):
 
-    room_obj = get_room_by_id(room_id)
+    room_info_obj = get_room_by_id(room_id)
 
-    if user_id in room_obj.video_elements_enabled_user_ids:
-        room_obj.video_elements_enabled_user_ids.remove(user_id)
-        room_obj.put()
+    if user_id in room_info_obj.video_elements_enabled_user_ids:
+        room_info_obj.video_elements_enabled_user_ids.remove(user_id)
+        room_info_obj.put()
 
-    return room_obj
+    return room_info_obj
 
 @ndb.transactional
 def txn_remove_user_from_room(room_id, user_id):
 
     logging.info('Removing user %d from room %d ' % (user_id, room_id))
 
-    room_obj = get_room_by_id(room_id)
+    room_info_obj = get_room_by_id(room_id)
     try:
         # if the user_id is not in the list, an exception will be raised
-        room_obj.room_members_ids.remove(user_id)
+        room_info_obj.room_members_ids.remove(user_id)
     except:
         logging.error("user_id %d not found in room - why is it being removed?" % user_id)
 
-    if user_id in room_obj.video_elements_enabled_user_ids:
-        room_obj.video_elements_enabled_user_ids.remove(user_id)
+    if user_id in room_info_obj.video_elements_enabled_user_ids:
+        room_info_obj.video_elements_enabled_user_ids.remove(user_id)
 
-    room_obj.put()
-    return room_obj
+    room_info_obj.put()
+    return room_info_obj
 
 
 # The following function adds a given user to a chat room.
@@ -191,15 +197,15 @@ def txn_remove_user_from_room(room_id, user_id):
 def txn_add_user_to_room(room_id, user_id):
 
     logging.info('Attempting to add user %d to room %d ' % (user_id, room_id))
-    room_obj = get_room_by_id(room_id)
+    room_info_obj = get_room_by_id(room_id)
     status_string = None
 
-    if room_obj:
+    if room_info_obj:
 
-        occupancy = room_obj.get_occupancy()
+        occupancy = room_info_obj.get_occupancy()
 
 
-        if room_obj.has_user(user_id):
+        if room_info_obj.has_user(user_id):
             # do nothing as this user is already in the room - report status as "roomJoined"
             # so javascript does not have to deal with a special case.
             status_string = 'roomJoined'
@@ -207,7 +213,7 @@ def txn_add_user_to_room(room_id, user_id):
 
         # Room is full - return a roomIsFull status
         elif occupancy >= 2:
-            logging.warning('Room ' + room_obj.room_name + ' is full')
+            logging.warning('Room ' + room_info_obj.room_name + ' is full')
             status_string = 'roomIsFull'
 
         # This is a new user joining the room
@@ -215,9 +221,9 @@ def txn_add_user_to_room(room_id, user_id):
 
             try:
                 # If user is not already in the room, then add them
-                if not user_id in room_obj.room_members_ids:
-                    room_obj.room_members_ids.append(user_id)
-                    room_obj.put()
+                if not user_id in room_info_obj.room_members_ids:
+                    room_info_obj.room_members_ids.append(user_id)
+                    room_info_obj.put()
 
                 status_string = 'roomJoined'
 
@@ -230,6 +236,8 @@ def txn_add_user_to_room(room_id, user_id):
     else:
          logging.error('Invalid room id: %d' % room_id)
 
-    return (room_obj, status_string)
+    # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
+    # the database and may have updated it. We want any enclosing functions to use the updated version.
+    return room_info_obj, status_string
 
 

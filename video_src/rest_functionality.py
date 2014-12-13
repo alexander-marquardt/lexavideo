@@ -12,7 +12,6 @@ from google.appengine.api import channel
 
 from video_src import constants
 from video_src import http_helpers
-from video_src import models
 from video_src import room_module
 from video_src import status_reporting
 from video_src import utils
@@ -29,15 +28,15 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
         if room_name:
             logging.info('Query for room name: ' + room_name)
-            room_obj = room_module.ChatRoomInfo.query(room_module.ChatRoomInfo.room_name == room_name).get()
+            room_info_obj = room_module.ChatRoomInfo.query(room_module.ChatRoomInfo.room_name == room_name).get()
 
-            if room_obj:
+            if room_info_obj:
                 response_dict = {
                     'roomName': room_name,
-                    'roomIsRegistered' : True,
-                    'numInRoom': room_obj.get_occupancy(),
+                    'roomIsRegistered': True,
+                    'numInRoom': room_info_obj.get_occupancy(),
                 }
-                logging.info('Found room: ' + repr(room_obj))
+                logging.info('Found room: ' + repr(room_info_obj))
 
             else:
                 response_dict = {
@@ -94,14 +93,15 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 # will be raised, and execution will be transferred to the exception handling block which
                 # deals with the case that the room already exists.
                 room_creator_user_key = ndb.Key('UserModel', user_id)
-                (room_name_obj, room_info_obj) = room_module.ChatRoomName.txn_create_room_by_name(room_name, room_dict, room_creator_user_key)
+                (room_name_obj, room_info_obj) = room_module.ChatRoomName.txn_create_room_by_name(room_name, room_dict,
+                                                                                                  room_creator_user_key)
 
                 # If no exception was raised, then this is a newly created room.
                 response_dict['statusString'] = 'roomCreated'
 
             except room_module.RoomAlreadyExistsException:
                 # This room has previously been created - look it up and get it (if it doesn't exist this is
-                # a fairly serious error as a room should be created every time that a new ChatRoomName object is
+                # a serious error as ChatRoomInfo object should be created every time that a new ChatRoomName object is
                 # created)
                 room_info_obj = room_module.ChatRoomInfo.query(room_module.ChatRoomInfo.room_name == room_name).get()
                 if not room_info_obj:
@@ -110,7 +110,9 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             except:
                 raise
 
-            # Now add the user to the room (even if they created the room, they have not yet been added)
+            # Now add the user to the room (even if they created the room, they have not yet been added). Notice
+            # that we intentionally overwrite room_info_obj with the value returned from this function call, as
+            # room_info_obj may be modified by the transaction, and we must have the most up-to-date data.
             (room_info_obj, response_dict['statusString']) = room_module.txn_add_user_to_room(room_info_obj.key.id(), user_id)
 
             token_timeout =  240 # minutes
