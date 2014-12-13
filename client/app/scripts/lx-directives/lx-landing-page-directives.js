@@ -109,7 +109,7 @@ angular.module('lxLandingPage.directives', [])
                                                 ctrl.$setValidity('roomIsFull', true);
 
                                                 if (data.roomIsRegistered === false || data.numInRoom === 0) {
-                                                    ctrl.roomIsEmptyMessage = 'Private chat name is available!';
+                                                    ctrl.roomIsEmptyMessage = 'Chat room name is available!';
                                                     ctrl.submitButtonText = 'Create!';
                                                 }
                                                 else {
@@ -124,7 +124,7 @@ angular.module('lxLandingPage.directives', [])
                                             // This will likely occasionally happen, but if it happens too often then it is likely an indication
                                             // that something is going wrong. This can occur because of server delay in responding
                                             // to recent requests. It is not serious and can be ignored.
-                                            $log.warn('Warning: private chat name ' + data.chatRoomName +
+                                            $log.warn('Warning: chat room name ' + data.chatRoomName +
                                                 ' returned from server does not match most recently typed room name ' + inputElement.value);
                                         }
 
