@@ -1,7 +1,7 @@
 
 'use strict';
 
-angular.module('lxUserInputFeedback.directives', [])
+angular.module('lxLandingPage.directives', [])
 
     .directive('checkForRoomOccupancyDirective',
     function(
