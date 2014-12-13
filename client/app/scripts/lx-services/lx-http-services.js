@@ -9,23 +9,23 @@ angular.module('lxHttp.services', [])
         ) {
 
         var handleRoomUrl = '/_lx/handle_room/';
-        var RoomResource = $resource(handleRoomUrl + ':roomName', {roomName: '@roomName'});
+        var RoomResource = $resource(handleRoomUrl + ':chatRoomName', {chatRoomName: '@chatRoomName'});
 
         return {
             enterIntoRoom : function(roomObj) {
                 // this will either create a room object on the server, or enter into an existing room corresponding
-                // to roomName.
+                // to chatRoomName.
                 // Note: the returned value is a promise that will be fulfilled once the resource
                 // has been created on the server.
                 return new RoomResource(roomObj).$save();
             },
 
 
-            getRoom : function(roomName) {
+            getRoom : function(chatRoomName) {
 
                 var roomObj = null;
-                if (roomName) {
-                    roomObj = RoomResource.get({roomName:roomName});
+                if (chatRoomName) {
+                    roomObj = RoomResource.get({chatRoomName:chatRoomName});
                 }
                 return roomObj;
             }

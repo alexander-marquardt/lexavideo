@@ -19,10 +19,10 @@ angular.module('lxChatRoom.services', [])
         lxUseChatRoomConstantsService
         ) {
 
-        var failedToEnterRoom = function(errorLogFn, roomName, statusString, deferredUserSuccessfullyEnteredRoom) {
+        var failedToEnterRoom = function(errorLogFn, chatRoomName, statusString, deferredUserSuccessfullyEnteredRoom) {
             var errorObject = {
                 statusString: statusString,
-                pageNameThatCausedError: roomName,
+                pageNameThatCausedError: chatRoomName,
                 pageUrlThatCausedError: $location.path()
             };
 
@@ -36,11 +36,11 @@ angular.module('lxChatRoom.services', [])
 
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();
 
-                $log.log('Initializing; room=' + lxUseChatRoomConstantsService.roomName + '.');
+                $log.log('Initializing; room=' + lxUseChatRoomConstantsService.chatRoomName + '.');
 
 
                 var roomObj = {};
-                roomObj.roomName = lxUseChatRoomConstantsService.roomName;
+                roomObj.chatRoomName = lxUseChatRoomConstantsService.chatRoomName;
                 roomObj.userId = lxAppWideConstantsService.userId;
 
                 lxHttpHandleRoomService.enterIntoRoom(roomObj).then(
@@ -51,13 +51,13 @@ angular.module('lxChatRoom.services', [])
                         }
                         else {
                             // something went wrong - redirect back to login with an appropriate errorString
-                            failedToEnterRoom($log.warn, roomObj.roomName, data.statusString, deferredUserSuccessfullyEnteredRoom);
+                            failedToEnterRoom($log.warn, roomObj.chatRoomName, data.statusString, deferredUserSuccessfullyEnteredRoom);
                         }
                     },
                     function(data) {
                         // Failed to enter into the room. The 'data' returned from the reject is actually an object
                         // containing another object called 'data'.
-                        failedToEnterRoom($log.error, roomObj.roomName, data.data.statusString, deferredUserSuccessfullyEnteredRoom);
+                        failedToEnterRoom($log.error, roomObj.chatRoomName, data.data.statusString, deferredUserSuccessfullyEnteredRoom);
                     }
                 );
 

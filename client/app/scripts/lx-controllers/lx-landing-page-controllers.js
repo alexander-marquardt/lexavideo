@@ -26,8 +26,8 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
          input box. These values are passed from the server so that the server and client are guaranteed to always be
          evaluating the same regex for validity.
          */
-        var invalidRoomNamesPattern = new RegExp('[' + lxLandingPageConstantsService.roomNameInvalidCharsForRegex + ']', 'g');
-        $scope.validRoomNamesPattern  = new RegExp('^[^' + lxLandingPageConstantsService.roomNameInvalidCharsForRegex + ']+$');
+        var invalidRoomNamesPattern = new RegExp('[' + lxLandingPageConstantsService.chatRoomNameInvalidCharsForRegex + ']', 'g');
+        $scope.validRoomNamesPattern  = new RegExp('^[^' + lxLandingPageConstantsService.chatRoomNameInvalidCharsForRegex + ']+$');
 
         // The following values are passed from the server and are validated both on the client and on the server.
         $scope.minInputLength = lxLandingPageConstantsService.minRoomChars;
@@ -37,9 +37,9 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $scope.roomObj.userName = lxAppWideConstantsService.userName;
 
         // enterIntoRoom is the function that will be executed when the user clicks the submit button
-        $scope.goToRoomUrl = function(roomName) {
+        $scope.goToRoomUrl = function(chatRoomName) {
             // Just redirect to the room, where the user will be added when the room page is opened.
-             $location.path('/' +  roomName);
+             $location.path('/' +  chatRoomName);
         };
 
         // roomStatus.roomStatus.triggerGetNewRoom is placed on the scope and will be watched for changes by the
@@ -76,12 +76,12 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
                 return cssClass;
             };
 
-        $scope.$watch('createRoomForm.roomNameInputElem.$viewValue',
+        $scope.$watch('createRoomForm.chatRoomNameInputElem.$viewValue',
             function(inputValue) {
 
                 // Get the last character that was entered when $error.pattern changed to true.
                 // The will set invalidCharacter to the first invalid character in the sequence.
-                if ($scope.createRoomForm.roomNameInputElem.$error.pattern) {
+                if ($scope.createRoomForm.chatRoomNameInputElem.$error.pattern) {
 
                     var invalidCharacterFeedbackArray = [];
                     var invalidCharacterSet = {}; // used to ensure that we report each character only once

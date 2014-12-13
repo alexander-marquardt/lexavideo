@@ -60,7 +60,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             /* This object will be loaded with a bunch of variables from server once the lxChatRoomOuterCtrl is loaded.
 
             eg will contain:
-            roomName: ..,
+            chatRoomName: ..,
             pcConfig: ...
             etc.
             (Look at the server code to see which variables will be embedded - these are currently passed in through videoConstantsEmbeddedInHtml)

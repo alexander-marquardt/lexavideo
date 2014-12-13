@@ -19,7 +19,7 @@ def handle_message(room_obj, from_user_id, message):
     message_obj = json.loads(message)
     message = message.decode("utf-8")
     to_user_id = room_obj.get_other_user_id(from_user_id)
-    room_name = room_obj.room_name
+    chat_room_name = room_obj.chat_room_name
 
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
@@ -42,8 +42,8 @@ def handle_message(room_obj, from_user_id, message):
             # This would remove the other_user in loopback test too.
             # So check its availability before forwarding Bye message.
             room_obj.remove_user(from_user_id)
-            logging.info('User %d ' % from_user_id + ' quit from room ' + room_name)
-            logging.info('Room ' + room_name + ' has state ' + repr(room_obj))
+            logging.info('User %d ' % from_user_id + ' quit from room ' + chat_room_name)
+            logging.info('Room ' + chat_room_name + ' has state ' + repr(room_obj))
 
 
     if to_user_id and room_obj.has_user(to_user_id):
@@ -255,7 +255,7 @@ class DisconnectPage(webapp2.RequestHandler):
                     send_room_occupancy_to_room_members(room_obj, other_user_id)
 
             else:
-                logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_obj.room_name, room_id, user_id))
+                logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_obj.chat_room_name, room_id, user_id))
 
         else:
             logging.error('Room %d' % room_id + ' does not exist. Cannot disconnect user %d' % user_id)

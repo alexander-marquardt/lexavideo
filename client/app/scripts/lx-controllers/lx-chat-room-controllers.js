@@ -42,7 +42,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             userName: lxAppWideConstantsService.userName,
             userId: lxAppWideConstantsService.userId,
-            roomName: lxUseChatRoomConstantsService.roomName
+            chatRoomName: lxUseChatRoomConstantsService.chatRoomName
         };
 
         lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {

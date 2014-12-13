@@ -24,9 +24,9 @@ We also forbid the following characters, just in case we want to use them for in
 
 (note that in the regexp below, that '\', '[', ']', '/', '*', and ''' are escaped with '\')
 """     
-room_name_invalid_chars_regex = r'$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s\*\''
-valid_room_name_regex = r'^[^' + room_name_invalid_chars_regex + r']+$'
-valid_room_name_regex_compiled = re.compile(valid_room_name_regex)
+chat_room_name_invalid_chars_regex = r'$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s\*\''
+valid_chat_room_name_regex = r'^[^' + chat_room_name_invalid_chars_regex + r']+$'
+valid_chat_room_name_regex_compiled = re.compile(valid_chat_room_name_regex)
 
 star_separator = '*'*20
 long_star_separator = '*'*80

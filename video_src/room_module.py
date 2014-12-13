@@ -18,31 +18,31 @@ class ChatRoomName(ndb.Model):
     room_info_key = ndb.KeyProperty(kind='ChatRoomInfo')
 
     @classmethod
-    def get_room_by_name(cls, room_name):
-        room_name_obj_key = ndb.Key('ChatRoomName', room_name)
-        room_name_obj = room_name_obj_key.get()
-        return room_name_obj
+    def get_room_by_name(cls, chat_room_name):
+        chat_room_name_obj_key = ndb.Key('ChatRoomName', chat_room_name)
+        chat_room_name_obj = chat_room_name_obj_key.get()
+        return chat_room_name_obj
 
-    # creates an object that is keyed by the room_name.
-    # This is used for guaranteeing uniqueness of each room name. If a room matching room_name has already
+    # creates an object that is keyed by the chat_room_name.
+    # This is used for guaranteeing uniqueness of each room name. If a room matching chat_room_name has already
     # been created then an exception will be raised, and the client will be notified that they have to select
     # a different room name. This should be rare since the name that they submit has already been "pre-checked"
     # while they were typing it into the input box.
     @classmethod
     @ndb.transactional(xg=True)
-    def txn_create_room_by_name(cls, room_name, room_dict, room_creator_user_key):
+    def txn_create_room_by_name(cls, chat_room_name, room_dict, room_creator_user_key):
 
-        room_name_obj = cls.get_room_by_name(room_name)
-        if room_name_obj:
-            raise RoomAlreadyExistsException('Room %s already exists.' % room_name)
+        chat_room_name_obj = cls.get_room_by_name(chat_room_name)
+        if chat_room_name_obj:
+            raise RoomAlreadyExistsException('Room %s already exists.' % chat_room_name)
 
         # No exception - this is a new room name
-        room_name_obj = cls(id=room_name)
-        room_info_obj = ChatRoomInfo.txn_create_room(room_dict, room_name_obj.key, room_creator_user_key)
-        room_name_obj.room_info_key = room_info_obj.key
-        room_name_obj.put()
+        chat_room_name_obj = cls(id=chat_room_name)
+        room_info_obj = ChatRoomInfo.txn_create_room(room_dict, chat_room_name_obj.key, room_creator_user_key)
+        chat_room_name_obj.room_info_key = room_info_obj.key
+        chat_room_name_obj.put()
 
-        return room_name_obj, room_info_obj
+        return chat_room_name_obj, room_info_obj
 
 
 
@@ -53,14 +53,14 @@ class ChatRoomInfo(ndb.Model):
     room_creator_user_key = ndb.KeyProperty(kind='UserModel')
 
     # For convenience, provide a link back to the ChatRoomName object that is associated with the current object.
-    room_name_obj_key = ndb.KeyProperty(kind='ChatRoomName')
+    chat_room_name_obj_key = ndb.KeyProperty(kind='ChatRoomName')
 
     # This is the lower case room name - ie. user wrote 'Alex', but it will be stored as 'alex'
-    room_name = ndb.StringProperty(default = None)
+    chat_room_name = ndb.StringProperty(default = None)
 
     # The following is used for showing/remembering the room nam as it was written i.e.
     # if the user wrote 'aLeX', it will be stored here as 'aLeX'
-    room_name_as_written = ndb.StringProperty(default = None)
+    chat_room_name_as_written = ndb.StringProperty(default = None)
 
     # room_members_ids contains ids of all users currently in a chat room.
     room_members_ids = ndb.IntegerProperty(repeated=True)
@@ -74,11 +74,11 @@ class ChatRoomInfo(ndb.Model):
     video_elements_enabled_user_ids = ndb.IntegerProperty(repeated=True)
 
 
-    # The ChatRoomName has been added to the roomName structure. Now create a new Room object
+    # The ChatRoomName has been added to the chatRoomName structure. Now create a new Room object
     # for the new room.
     @classmethod
     @ndb.transactional
-    def txn_create_room(cls, room_dict, room_name_obj_key, room_creator_user_key):
+    def txn_create_room(cls, room_dict, chat_room_name_obj_key, room_creator_user_key):
 
         # make a copy of room_dict, so that our modifications don't accidentally change it for other functions
         room_info_obj_dict = copy.copy(room_dict)
@@ -86,7 +86,7 @@ class ChatRoomInfo(ndb.Model):
         # remove 'user_id' from the room_dict since it will not be stored on the room_info_obj as 'user_id'
         del room_info_obj_dict['user_id']
 
-        room_info_obj_dict['room_name_obj_key'] = room_name_obj_key
+        room_info_obj_dict['chat_room_name_obj_key'] = chat_room_name_obj_key
         room_info_obj_dict['room_creator_user_key'] = room_creator_user_key
         room_info_obj = cls(**room_info_obj_dict)
         room_info_obj.put()
@@ -213,7 +213,7 @@ def txn_add_user_to_room(room_id, user_id):
 
         # Room is full - return a roomIsFull status
         elif occupancy >= 2:
-            logging.warning('Room ' + room_info_obj.room_name + ' is full')
+            logging.warning('Room ' + room_info_obj.chat_room_name + ' is full')
             status_string = 'roomIsFull'
 
         # This is a new user joining the room

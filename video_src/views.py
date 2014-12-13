@@ -45,12 +45,12 @@ class GetView(webapp2.RequestHandler):
 class UserChatRoomMain(webapp2.RequestHandler):
     
     @handle_exceptions
-    def get(self, current_template, room_name_from_url):
-        room_name = room_name_from_url.decode('utf8')
+    def get(self, current_template, chat_room_name_from_url):
+        chat_room_name = chat_room_name_from_url.decode('utf8')
         user_agent = self.request.headers['User-Agent']
         
         # copy the json parameters into a jinja variable
-        server_video_params_json = webrtc_setup.get_video_params_json(room_name, user_agent)
+        server_video_params_json = webrtc_setup.get_video_params_json(chat_room_name, user_agent)
         params = {
             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
             'site_name_dot_com': constants.site_name_dot_com,
@@ -78,7 +78,7 @@ class LandingPageMain(webapp2.RequestHandler):
                 {'minRoomChars': constants.room_min_chars,
                  'maxRoomChars': constants.room_max_chars,
                  'maxRoomOccupancy': constants.room_max_occupancy,
-                 'roomNameInvalidCharsForRegex': constants.room_name_invalid_chars_regex,
+                 'chatRoomNameInvalidCharsForRegex': constants.chat_room_name_invalid_chars_regex,
                  })
             }
 

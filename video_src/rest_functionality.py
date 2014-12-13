@@ -22,17 +22,17 @@ from video_src.error_handling import handle_exceptions
 
 class HandleEnterIntoRoom(webapp2.RequestHandler):
     @handle_exceptions
-    def get(self, room_name_from_url=None):
-        room_name_from_url = room_name_from_url.decode('utf8')
-        room_name = room_name_from_url.lower()
+    def get(self, chat_room_name_from_url=None):
+        chat_room_name_from_url = chat_room_name_from_url.decode('utf8')
+        chat_room_name = chat_room_name_from_url.lower()
 
-        if room_name:
-            logging.info('Query for room name: ' + room_name)
-            room_info_obj = room_module.ChatRoomInfo.query(room_module.ChatRoomInfo.room_name == room_name).get()
+        if chat_room_name:
+            logging.info('Query for room name: ' + chat_room_name)
+            room_info_obj = room_module.ChatRoomInfo.query(room_module.ChatRoomInfo.chat_room_name == chat_room_name).get()
 
             if room_info_obj:
                 response_dict = {
-                    'roomName': room_name,
+                    'chatRoomName': chat_room_name,
                     'roomIsRegistered': True,
                     'numInRoom': room_info_obj.get_occupancy(),
                 }
@@ -40,11 +40,11 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             else:
                 response_dict = {
-                    'roomName': room_name,
+                    'chatRoomName': chat_room_name,
                     'roomIsRegistered' : False,
                     'numInRoom': 0
                 }
-                logging.info('Room name is available: ' + room_name)
+                logging.info('Room name is available: ' + chat_room_name)
 
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
@@ -54,24 +54,24 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             for room_obj in room_query:
                 room_dict = room_obj.to_dict()
-                room_dict['roomName'] = room_obj.key.id()
+                room_dict['chatRoomName'] = room_obj.key.id()
                 rooms_list.append(room_dict)
 
             http_helpers.set_http_ok_json_response(self.response, rooms_list)
 
 
-    def post(self, room_name_from_url):
+    def post(self, chat_room_name_from_url):
         try:
             room_dict = json.loads(self.request.body)
 
             # Need to get the URL encoded data from utf8. Note that json encoded data appears to already be decoded.
-            room_name_from_url = room_name_from_url.decode('utf8')
+            chat_room_name_from_url = chat_room_name_from_url.decode('utf8')
             room_dict = utils.convert_dict(room_dict, utils.camel_to_underscore)
 
-            assert (room_dict['room_name'] == room_name_from_url)
-            room_dict['room_name_as_written'] = room_dict['room_name']
-            room_name = room_name_from_url.lower()
-            room_dict['room_name'] = room_name
+            assert (room_dict['chat_room_name'] == chat_room_name_from_url)
+            room_dict['chat_room_name_as_written'] = room_dict['chat_room_name']
+            chat_room_name = chat_room_name_from_url.lower()
+            room_dict['chat_room_name'] = chat_room_name
 
 
             # Make sure that the room name is valid before continuing.
@@ -79,21 +79,21 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # already formatted to be within bounds and characters checked by the client-side javascript.
             # Only if the user has somehow bypassed the javascript checks should we receive values that don't
             # conform to the constraints that we have placed.
-            if not constants.valid_room_name_regex_compiled.match(room_name):
+            if not constants.valid_chat_room_name_regex_compiled.match(chat_room_name):
                 raise Exception('Room name regexp did not match')
-            if len(room_name) > constants.room_max_chars or len(room_name) < constants.room_min_chars:
-                raise Exception('Room name length of %s is out of range' % len(room_name))
+            if len(chat_room_name) > constants.room_max_chars or len(chat_room_name) < constants.room_min_chars:
+                raise Exception('Room name length of %s is out of range' % len(chat_room_name))
 
             response_dict = {}
             user_id = long(room_dict['user_id'])
 
 
             try:
-                # if the ChatRoomName keyed by room_name cannot be created, then a RoomAlreadyExistsException
+                # if the ChatRoomName keyed by chat_room_name cannot be created, then a RoomAlreadyExistsException
                 # will be raised, and execution will be transferred to the exception handling block which
                 # deals with the case that the room already exists.
                 room_creator_user_key = ndb.Key('UserModel', user_id)
-                (room_name_obj, room_info_obj) = room_module.ChatRoomName.txn_create_room_by_name(room_name, room_dict,
+                (chat_room_name_obj, room_info_obj) = room_module.ChatRoomName.txn_create_room_by_name(chat_room_name, room_dict,
                                                                                                   room_creator_user_key)
 
                 # If no exception was raised, then this is a newly created room.
@@ -103,9 +103,9 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 # This room has previously been created - look it up and get it (if it doesn't exist this is
                 # a serious error as ChatRoomInfo object should be created every time that a new ChatRoomName object is
                 # created)
-                room_info_obj = room_module.ChatRoomInfo.query(room_module.ChatRoomInfo.room_name == room_name).get()
+                room_info_obj = room_module.ChatRoomInfo.query(room_module.ChatRoomInfo.chat_room_name == chat_room_name).get()
                 if not room_info_obj:
-                    raise Exception('room_name %s does not exist in the ChatRoomInfo data structure' % room_name)
+                    raise Exception('chat_room_name %s does not exist in the ChatRoomInfo data structure' % chat_room_name)
 
             except:
                 raise

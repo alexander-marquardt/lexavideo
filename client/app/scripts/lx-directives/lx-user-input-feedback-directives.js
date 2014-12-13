@@ -97,10 +97,10 @@ angular.module('lxUserInputFeedback.directives', [])
                                     roomObj && roomObj.$promise.then(function(data) {
 
                                         // Modify validity and feedback only if this is a response to the most recently
-                                        // typed roomName. This guards against a slow server response that could be
-                                        // out-of-date if the user has typed in a new roomName before receiving the
+                                        // typed chatRoomName. This guards against a slow server response that could be
+                                        // out-of-date if the user has typed in a new chatRoomName before receiving the
                                         // response.
-                                        if (data.roomName === inputElement.value.toLowerCase()) {
+                                        if (data.chatRoomName === inputElement.value.toLowerCase()) {
 
                                             if (data.numInRoom >= maxOccupancy) {
                                                 ctrl.$setValidity('roomIsFull', false);
@@ -113,7 +113,7 @@ angular.module('lxUserInputFeedback.directives', [])
                                                     ctrl.submitButtonText = 'Create!';
                                                 }
                                                 else {
-                                                    var msg = 'Chat ' + data.roomName + ' has ' + data.numInRoom + ' occupant';
+                                                    var msg = 'Chat ' + data.chatRoomName + ' has ' + data.numInRoom + ' occupant';
                                                     var plural = msg + 's';
                                                     ctrl.roomNotFullMessage = data.numInRoom === 1 ? msg : plural;
                                                     ctrl.submitButtonText = 'Join!';
@@ -124,7 +124,7 @@ angular.module('lxUserInputFeedback.directives', [])
                                             // This will likely occasionally happen, but if it happens too often then it is likely an indication
                                             // that something is going wrong. This can occur because of server delay in responding
                                             // to recent requests. It is not serious and can be ignored.
-                                            $log.warn('Warning: private chat name ' + data.roomName +
+                                            $log.warn('Warning: private chat name ' + data.chatRoomName +
                                                 ' returned from server does not match most recently typed room name ' + inputElement.value);
                                         }
 

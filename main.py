@@ -15,10 +15,10 @@ from video_src import views
 
 
 app = webapp2.WSGIApplication([
-    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-chat-room-main.html>/<room_name_from_url:.+>', views.UserChatRoomMain),
+    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-chat-room-main.html>/<chat_room_name_from_url:.+>', views.UserChatRoomMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-landing-page-main.html>', views.LandingPageMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
-    webapp2.Route(r'/_lx/handle_room/<room_name_from_url:.+>', rest_functionality.HandleEnterIntoRoom),
+    webapp2.Route(r'/_lx/handle_room/<chat_room_name_from_url:.+>', rest_functionality.HandleEnterIntoRoom),
     (r'/_lx/message', messaging.MessagePage),
     (r'/_lx/log_error', error_reporting_from_client.LogClientError),
     (r'/_lx/channel/manual_disconnect/', messaging.DisconnectPage),
