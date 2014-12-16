@@ -29,9 +29,8 @@ app = webapp2.WSGIApplication([
     (r'/_ah/channel/disconnected/',  messaging.DisconnectPage),
     webapp2.Route('/temp-login', login_and_sessions.CreateTemporaryUserHandler, name='temp-login'),
 
-    webapp2.Route(r'/.*', views.MainPage, name='main'),
-    (r'/', views.MainPage),
-
+    webapp2.Route(r'/', views.MainPage, name='main'),
+    (r'/.*', views.MainPage),
     ], debug=vidsetup.DEBUG_BUILD, config=login_and_sessions.config)
 
 if vidsetup.DEBUG_BUILD:
