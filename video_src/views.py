@@ -93,6 +93,8 @@ class MainPage(login_and_sessions.BaseHandler):
     @handle_exceptions
     def get(self):
 
+        existing_user = self.user_info()
+
         # When a user first enters into our website, we will assign them a unique user id.
         user_obj = users.create_new_user()
 

@@ -243,15 +243,52 @@ class LoginHandler(BaseHandler):
         self._serve_page()
 
     def post(self):
-        user_name = self.request.get('user_name')
+        username = self.request.get('username')
         password = self.request.get('password')
         try:
-            u = self.auth.get_user_by_password(user_name, password, remember=True,
+            u = self.auth.get_user_by_password(username, password, remember=True,
                                                save_session=True)
             self.redirect(self.uri_for('home'))
         except (InvalidAuthIdError, InvalidPasswordError) as e:
-            logging.info('Login failed for user %s because of %s', user_name, type(e))
+            logging.info('Login failed for user %s because of %s', username, type(e))
             self._serve_page(True)
+
+    def _serve_page(self, failed=False):
+        username = self.request.get('username')
+        params = {
+            'username': username,
+            'failed': failed
+        }
+        self.render_template('login.html', params)
+
+
+
+class CreateTemporaryUserHandler(BaseHandler):
+    def get(self):
+        self._serve_page()
+
+    def post(self):
+        user_name = self.request.get('user_name')
+        user_model = self.user_model
+
+        # The following line creates the user object and the first parameter will be stored as
+        # an auth_id (we currently pass in user_name as auth_id), and we also pass in user_name so that we can easily
+        # display the user_name that will be displayed to other users (we can't rely on auth_id because it is a list
+        # containing various logins that the user may wish to use - such as email address, user name, perhaps
+        # a facebook login token, etc.
+
+        # Not necessary to include user_name in the unique_properties, since it will be included
+        # in the "auth_id" in the create_user function, which will ensure that it is unique.
+        unique_properties = []
+        user_created_bool, user_obj = user_model.create_user(user_name, unique_properties, user_name=user_name)
+
+        if user_created_bool:
+            self.redirect(self.uri_for('main'))
+            self.auth.set_session(self.auth.store.user_to_dict(user_obj), remember=True)
+
+        else:
+            logging.info('Failed to create user_name %s', user_name)
+            self._serve_page(failed=True)
 
     def _serve_page(self, failed=False):
         user_name = self.request.get('user_name')
@@ -260,9 +297,10 @@ class LoginHandler(BaseHandler):
             'failed': failed
         }
 
-        template = jinja_environment.get_template('/lx-templates/login.html')
+        template = jinja_environment.get_template('/lx-templates/temp-login.html')
         content = template.render(params)
         self.response.out.write(content)
+
 
 class LogoutHandler(BaseHandler):
     def get(self):
@@ -276,11 +314,12 @@ class AuthenticatedHandler(BaseHandler):
 
 config = {
     'webapp2_extras.auth': {
-        'user_model': 'models.User',
-        'user_attributes': ['name']
+        'user_model': 'video_src.models.UserModel',
+        'user_attributes': ['user_name']
     },
     'webapp2_extras.sessions': {
-        'secret_key': 'YOUR_SECRET_KEY'
+        'secret_key': 'FooBar123$%^%%%QQQQQQ',
+        'cookie_name': 'ChatSurfing'
     }
 }
 
