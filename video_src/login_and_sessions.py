@@ -319,7 +319,11 @@ config = {
     },
     'webapp2_extras.sessions': {
         'secret_key': 'FooBar123$%^%%%QQQQQQ',
-        'cookie_name': 'ChatSurfing'
+        'cookie_name': 'ChatSurfing',
+        'session_max_age': 60, # set to 60 seconds for testing - change later
+        'cookie_args': {
+            'max_age': 60,
+        }
     }
 }
 
