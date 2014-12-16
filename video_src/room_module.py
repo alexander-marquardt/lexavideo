@@ -3,7 +3,6 @@ import copy
 import logging
 
 from google.appengine.ext import ndb
-from video_src import models
 
 class RoomAlreadyExistsException(Exception): pass
 

@@ -6,10 +6,13 @@
 Main URL hander for Videochat Applications written by Alexander Marquardt - code started in summer of 2014. 
 """
 
+import logging
 import webapp2
+import vidsetup
 
 from video_src import error_reporting_from_client
 from video_src import rest_functionality
+from video_src import login_and_sessions
 from video_src import messaging
 from video_src import views
 
@@ -24,14 +27,14 @@ app = webapp2.WSGIApplication([
     (r'/_lx/channel/manual_disconnect/', messaging.DisconnectPage),
     (r'/_ah/channel/connected/',  messaging.ConnectPage),
     (r'/_ah/channel/disconnected/',  messaging.DisconnectPage),
+    webapp2.Route('/login', login_and_sessions.LoginHandler, name='login'),
+
     (r'/.*', views.MainPage),
     (r'/', views.MainPage),
-    ], debug=True)
+    ], debug=vidsetup.DEBUG_BUILD, config=login_and_sessions.config)
 
-
-
-
-
+if vidsetup.DEBUG_BUILD:
+    logging.getLogger().setLevel(logging.DEBUG)
 
 from video_src import http_helpers
 app.error_handlers[404] = http_helpers.handle_404

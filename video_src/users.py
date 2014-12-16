@@ -7,7 +7,7 @@ def create_new_user():
     new_user_obj = models.UserModel()
     new_user_obj.put()
 
-    # use the key as the username until they decide to create their own username.
+    # use the key as the user_name until they decide to create their own user_name.
     new_user_name = new_user_obj.key.id()
     new_user_obj.user_name = str(new_user_name)
     new_user_obj.put()
