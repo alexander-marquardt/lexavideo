@@ -10,12 +10,13 @@ import os.path
 import webapp2
 
 from webapp2_extras import auth
-from webapp2_extras import sessions
 
 from webapp2_extras.auth import InvalidAuthIdError
 from webapp2_extras.auth import InvalidPasswordError
 
 import vidsetup
+
+from gaesessions import get_current_session
 
 
 jinja_environment = jinja2.Environment(
@@ -95,17 +96,17 @@ class BaseHandler(webapp2.RequestHandler):
         }
         self.render_template('message.html', params)
 
-    # this is needed for webapp2 sessions to work
-    def dispatch(self):
-        # Get a session store for this request.
-        self.session_store = sessions.get_store(request=self.request)
-
-        try:
-            # Dispatch the request.
-            webapp2.RequestHandler.dispatch(self)
-        finally:
-            # Save all sessions.
-            self.session_store.save_sessions(self.response)
+    # # this is needed for webapp2 sessions to work
+    # def dispatch(self):
+    #     # Get a session store for this request.
+    #     self.session_store = sessions.get_store(request=self.request)
+    #
+    #     try:
+    #         # Dispatch the request.
+    #         webapp2.RequestHandler.dispatch(self)
+    #     finally:
+    #         # Save all sessions.
+    #         self.session_store.save_sessions(self.response)
 
 
 class SignupHandler(BaseHandler):
@@ -283,8 +284,13 @@ class CreateTemporaryUserHandler(BaseHandler):
         user_created_bool, user_obj = user_model.create_user(user_name, unique_properties, user_name=user_name)
 
         if user_created_bool:
-            # self.auth.set_session(self.auth.store.user_to_dict(user_obj), remember=True)
-            self.session['user'] = self.auth.store.user_to_dict(user_obj)
+            # close any active session the user has since he is trying to login
+            session = get_current_session()
+            if session.is_active():
+                session.terminate()
+
+            session['user_id'] = 'FOOBAR' #user_obj.key.id()
+
             self.redirect(self.uri_for('main'))
 
         else:

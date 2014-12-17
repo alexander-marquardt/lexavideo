@@ -2,6 +2,7 @@
 
 import jinja2
 import json
+import logging
 import vidsetup
 import webapp2
 
@@ -11,6 +12,8 @@ from video_src import users
 from video_src import webrtc_setup
 
 from video_src.error_handling import handle_exceptions
+
+from gaesessions import get_current_session
 
 # We "hack" the directory that jinja looks for the template files so that it is always pointing to
 # the correct location, irregardless of if we are in the debug or production build. 
@@ -93,7 +96,9 @@ class MainPage(login_and_sessions.BaseHandler):
     @handle_exceptions
     def get(self):
 
-        existing_user = self.user_info
+        session = get_current_session()
+        user_id = session['user_id']
+        logging.info('************* user_id is %s'  % user_id)
 
         # When a user first enters into our website, we will assign them a unique user id.
         user_obj = users.create_new_user()
