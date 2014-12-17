@@ -283,8 +283,8 @@ class CreateTemporaryUserHandler(BaseHandler):
         user_created_bool, user_obj = user_model.create_user(user_name, unique_properties, user_name=user_name)
 
         if user_created_bool:
-            self.redirect(self.uri_for('main'))
             self.auth.set_session(self.auth.store.user_to_dict(user_obj), remember=True)
+            self.redirect(self.uri_for('main'))
 
         else:
             logging.info('Failed to create user_name %s', user_name)
@@ -320,7 +320,7 @@ config = {
     'webapp2_extras.sessions': {
         'secret_key': 'FooBar123$%^%%%QQQQQQ',
         'cookie_name': 'ChatSurfing',
-        'session_max_age': 60, # set to 60 seconds for testing - change later
+        'session_max_age': 60,
         'cookie_args': {
             'max_age': 60,
         }
