@@ -283,7 +283,8 @@ class CreateTemporaryUserHandler(BaseHandler):
         user_created_bool, user_obj = user_model.create_user(user_name, unique_properties, user_name=user_name)
 
         if user_created_bool:
-            self.auth.set_session(self.auth.store.user_to_dict(user_obj), remember=True)
+            # self.auth.set_session(self.auth.store.user_to_dict(user_obj), remember=True)
+            self.session['user'] = self.auth.store.user_to_dict(user_obj)
             self.redirect(self.uri_for('main'))
 
         else:
@@ -315,14 +316,13 @@ class AuthenticatedHandler(BaseHandler):
 config = {
     'webapp2_extras.auth': {
         'user_model': 'video_src.models.UserModel',
-        'user_attributes': ['user_name']
     },
     'webapp2_extras.sessions': {
         'secret_key': 'FooBar123$%^%%%QQQQQQ',
         'cookie_name': 'ChatSurfing',
-        'session_max_age': 60,
+        'session_max_age': 600,
         'cookie_args': {
-            'max_age': 60,
+            'max_age': 600,
         }
     }
 }
