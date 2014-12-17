@@ -96,8 +96,7 @@ class MainPage(login_and_sessions.BaseHandler):
     @handle_exceptions
     def get(self):
 
-        session = get_current_session()
-        user_id = session['user_id']
+        user_id = self.session['user_id']
         logging.info('************* user_id is %s'  % user_id)
 
         # When a user first enters into our website, we will assign them a unique user id.

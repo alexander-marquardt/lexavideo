@@ -96,14 +96,14 @@ class BaseHandler(webapp2.RequestHandler):
         }
         self.render_template('message.html', params)
 
-    # # this is needed for webapp2 sessions to work
-    # def dispatch(self):
-    #     # Get a session store for this request.
-    #     self.session_store = sessions.get_store(request=self.request)
-    #
-    #     try:
-    #         # Dispatch the request.
-    #         webapp2.RequestHandler.dispatch(self)
+    # this is needed for webapp2 sessions to work
+    def dispatch(self):
+        # Get a session for this request.
+        self.session = get_current_session()
+
+        # try:
+        # Dispatch the request.
+        webapp2.RequestHandler.dispatch(self)
     #     finally:
     #         # Save all sessions.
     #         self.session_store.save_sessions(self.response)
@@ -285,11 +285,10 @@ class CreateTemporaryUserHandler(BaseHandler):
 
         if user_created_bool:
             # close any active session the user has since he is trying to login
-            session = get_current_session()
-            if session.is_active():
-                session.terminate()
+            if self.session.is_active():
+                self.session.terminate()
 
-            session['user_id'] = 'FOOBAR' #user_obj.key.id()
+            self.session['user_id'] = 'FOOBAR' #user_obj.key.id()
 
             self.redirect(self.uri_for('main'))
 
