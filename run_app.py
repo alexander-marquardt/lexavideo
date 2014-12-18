@@ -12,10 +12,14 @@ prepare_build.customize_files(version_id)
 
 if __name__ == "__main__":
     sys.path.append("/usr/local/google_appengine")    
-    
+
+    # Show debug logs when we are working on the local server
+    sys.argv.append('--log_level')
+    sys.argv.append('debug')
+
     # The following hack makes it appear that we are running the dev_appserver from the /usr/local/google_appengine directory,
     # which is required for the script to run properly.
-    
+
     if '--use_old_dev_appserver' in sys.argv:
         # remove this option from sys.argv so that it doesn't cause problems in other parts of the code
         sys.argv = filter(lambda a: a != "--use_old_dev_appserver", sys.argv)
