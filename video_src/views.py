@@ -13,7 +13,6 @@ from video_src import webrtc_setup
 
 from video_src.error_handling import handle_exceptions
 
-from gaesessions import get_current_session
 
 # We "hack" the directory that jinja looks for the template files so that it is always pointing to
 # the correct location, irregardless of if we are in the debug or production build. 

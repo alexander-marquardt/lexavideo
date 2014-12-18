@@ -6,7 +6,6 @@
 Main URL hander for Videochat Applications written by Alexander Marquardt - code started in summer of 2014. 
 """
 
-import logging
 import webapp2
 import vidsetup
 
@@ -16,20 +15,24 @@ from video_src import login_and_sessions
 from video_src import messaging
 from video_src import views
 
+import gaesessions
+
 app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-chat-room-main.html>/<chat_room_name_from_url:.+>', views.UserChatRoomMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-landing-page-main.html>', views.LandingPageMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
     webapp2.Route(r'/_lx/handle_room/<chat_room_name_from_url:.+>', rest_functionality.HandleEnterIntoRoom),
-    (r'/_lx/message', messaging.MessagePage),
-    (r'/_lx/log_error', error_reporting_from_client.LogClientError),
-    (r'/_lx/channel/manual_disconnect/', messaging.DisconnectPage),
-    (r'/_ah/channel/connected/',  messaging.ConnectPage),
-    (r'/_ah/channel/disconnected/',  messaging.DisconnectPage),
-    webapp2.Route('/temp-login', login_and_sessions.CreateTemporaryUserHandler, name='temp-login'),
+    webapp2.Route(r'/_lx/message', messaging.MessagePage),
+    webapp2.Route(r'/_lx/log_error', error_reporting_from_client.LogClientError),
+    webapp2.Route(r'/_lx/channel/manual_disconnect/', messaging.DisconnectPage),
+    webapp2.Route(r'/_lx/admin/cleanup_sessions', gaesessions.SessionAdmin, handler_method='cleanup_sessions'),
+    webapp2.Route(r'/_ah/channel/connected/',  messaging.ConnectPage),
+    webapp2.Route(r'/_ah/channel/disconnected/',  messaging.DisconnectPage),
+
+    webapp2.Route(r'/temp-login', login_and_sessions.CreateTemporaryUserHandler, name='temp-login'),
 
     webapp2.Route(r'/', views.MainPage, name='main'),
-    (r'/.*', views.MainPage),
+    webapp2.Route(r'/.*', views.MainPage),
     ], debug=vidsetup.DEBUG_BUILD, config=login_and_sessions.config)
 
 
