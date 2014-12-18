@@ -12,7 +12,6 @@ import webapp2
 
 from google.appengine.api import memcache
 from google.appengine.ext import ndb
-from google.appengine.ext.db import model_to_protobuf, model_from_protobuf
 from google.appengine.api import taskqueue
 
 from video_src import status_reporting
@@ -204,7 +203,7 @@ class Session(object):
         eO = {}  # for everything else
         for k, v in d.iteritems():
             if isinstance(v, ndb.Model):
-                eP[k] = model_to_protobuf(v)
+                eP[k] = ndb.ModelAdapter().entity_to_pb(v)
             else:
                 eO[k] = v
         return pickle.dumps((eP, eO), 2)
@@ -215,7 +214,7 @@ class Session(object):
         try:
             eP, eO = pickle.loads(pdump)
             for k, v in eP.iteritems():
-                eO[k] = model_from_protobuf(v)
+                eO[k] = ndb.ModelAdapter().pb_to_entity(v)
         except Exception, e:
             logging.warn("failed to decode session data: %s" % e)
             eO = {}
