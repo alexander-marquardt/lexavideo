@@ -96,8 +96,13 @@ class BaseHandler(webapp2.RequestHandler):
 
     # this is needed for webapp2 sessions to work
     def dispatch(self):
-        # Get a session for this request.
         lifetime = datetime.timedelta(minutes=60)
+
+        # Get a session for this request
+        # Since we are not passing an "sid" to Session, the session will be read from a cookie.
+        # If there is no session associated with the cookie, then the session will remain unset until
+        # it is written (eg. by executing "self.session['user_id'] = user_id"), at which point
+        # a new session id will be assigned and the session is created.
         self.session = gaesessions.Session(lifetime=lifetime,
                                            no_datastore=False,
                                            cookie_only_threshold=gaesessions.DEFAULT_COOKIE_ONLY_THRESH,
@@ -107,7 +112,7 @@ class BaseHandler(webapp2.RequestHandler):
             # Dispatch the request.
             webapp2.RequestHandler.dispatch(self)
         finally:
-            # Save all sessions.
+            # Save the session
             self.session.save()
 
             # update the response to contain the cookie
