@@ -4,6 +4,7 @@
 
 from google.appengine.ext.webapp import template
 
+import datetime
 import jinja2
 import logging
 import os.path
@@ -77,10 +78,6 @@ class BaseHandler(webapp2.RequestHandler):
         """
         return self.auth.store.user_model
 
-    @webapp2.cached_property
-    def session(self):
-        """Shortcut to access the current session."""
-        return self.session_store.get_session(backend="datastore")
 
     def render_template(self, view_filename, params=None):
         if not params:
@@ -100,7 +97,8 @@ class BaseHandler(webapp2.RequestHandler):
     # this is needed for webapp2 sessions to work
     def dispatch(self):
         # Get a session for this request.
-        self.session = gaesessions.Session(lifetime=gaesessions.DEFAULT_LIFETIME,
+        lifetime = datetime.timedelta(minutes=60)
+        self.session = gaesessions.Session(lifetime=lifetime,
                                            no_datastore=False,
                                            cookie_only_threshold=gaesessions.DEFAULT_COOKIE_ONLY_THRESH,
                                            cookie_key=COOKIE_KEY)
@@ -296,7 +294,8 @@ class CreateTemporaryUserHandler(BaseHandler):
             if self.session.is_active():
                 self.session.terminate()
 
-            self.session['user_id'] = 'FOOBAR' #user_obj.key.id()
+            # Writing a value to the session causes a new session to be created.
+            self.session['user_id'] = user_obj.key.id()
 
             self.redirect(self.uri_for('main'))
 
