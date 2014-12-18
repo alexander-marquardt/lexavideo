@@ -104,7 +104,6 @@ class BaseHandler(webapp2.RequestHandler):
         # it is written (eg. by executing "self.session['user_id'] = user_id"), at which point
         # a new session id will be assigned and the session is created.
         self.session = gaesessions.Session(lifetime=lifetime,
-                                           no_datastore=False,
                                            cookie_only_threshold=gaesessions.DEFAULT_COOKIE_ONLY_THRESH,
                                            cookie_key=COOKIE_KEY)
 
