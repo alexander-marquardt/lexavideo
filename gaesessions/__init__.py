@@ -11,7 +11,7 @@ import time
 import webapp2
 
 from google.appengine.api import memcache
-from google.appengine.ext import db
+from google.appengine.ext import ndb, db
 from google.appengine.api import taskqueue
 
 from video_src import status_reporting
@@ -47,10 +47,10 @@ def is_gaesessions_key(k):
     return k.startswith(COOKIE_NAME_PREFIX)
 
 
-class SessionModel(db.Model):
-    """Contains session data.  key_name is the session ID and pdump contains a
+class SessionModel(ndb.Model):
+    """Contains session data.  id is the session ID and pdump contains a
     pickled dictionary which maps session variables to their values."""
-    pdump = db.BlobProperty()
+    pdump = ndb.BlobProperty()
 
 
 class Session(object):
@@ -196,13 +196,13 @@ class Session(object):
 
     @staticmethod
     def __encode_data(d):
-        """Returns a "pickled+" encoding of d.  d values of type db.Model are
+        """Returns a "pickled+" encoding of d.  d values of type ndb.Model are
         protobuf encoded before pickling to minimize CPU usage & data size."""
         # separate protobufs so we'll know how to decode (they are just strings)
         eP = {}  # for models encoded as protobufs
         eO = {}  # for everything else
         for k, v in d.iteritems():
-            if isinstance(v, db.Model):
+            if isinstance(v, ndb.Model):
                 eP[k] = db.model_to_protobuf(v)
             else:
                 eO[k] = v
@@ -272,7 +272,7 @@ class Session(object):
         if self.sid:
             self.__clear_data()
         self.sid = sid
-        self.db_key = db.Key.from_path(SessionModel.kind(), sid, namespace='')
+        self.ndb_key = ndb.Key(SessionModel._get_kind(), sid, namespace='')
 
         # set the cookie if requested
         if make_cookie:
@@ -284,7 +284,7 @@ class Session(object):
         if self.sid:
             memcache.delete(self.sid, namespace='')  # not really needed; it'll go away on its own
             try:
-                db.delete(self.db_key)
+                self.ndb_key.delete()
             except:
                 pass  # either it wasn't in the db (maybe cookie/memcache-only) or db is down => cron will expire it
 
@@ -299,14 +299,14 @@ class Session(object):
                 logging.warning("can't find session data in memcache for sid=%s (using memcache only sessions)" % self.sid)
                 self.terminate(False)  # we lost it; just kill the session
                 return
-            session_model_instance = db.get(self.db_key)
+            session_model_instance = self.ndb_key.get()
             if session_model_instance:
                 pdump = session_model_instance.pdump
             else:
                 expiry_datetime = self.get_expiration_datetime()
                 # This can happen if the user has multiple windows open, and logs out in one of the windows but 
                 # the other windows continue to request information.   
-                logging.warning("can't find session data in the datastore for sid=%s key = %s expiry: %s" % (self.sid, self.db_key, expiry_datetime))
+                logging.warning("can't find session data in the datastore for sid=%s key = %s expiry: %s" % (self.sid, self.ndb_key, expiry_datetime))
                 self.terminate(False)  # we lost it; just kill the session
                 return
         self.data = self.__decode_data(pdump)
@@ -355,7 +355,7 @@ class Session(object):
             
         # persist the session to the datastore            
         try:
-            SessionModel(key_name=self.sid, pdump=pdump).put()
+            SessionModel(id=self.sid, pdump=pdump).put()
         except Exception, e:
             logging.error("unable to persist session to datastore for sid=%s (%s)" % (self.sid, e))
 
@@ -446,12 +446,12 @@ class SessionAdmin(webapp2.RequestHandler):
         If there are more than 500 expired sessions, only 500 will be removed.
         """
         now_str = unicode(int(time.time()))
-        q = db.Query(SessionModel, keys_only=True, namespace='')
-        key = db.Key.from_path('SessionModel', now_str + u'\ufffd', namespace='')
+        q = SessionModel.query(keys_only=True, namespace='')
+        key = ndb.Key('SessionModel', now_str + u'\ufffd', namespace='')
         q.filter('__key__ < ', key)
         results = q.fetch(500)
         num_results = len(results)
-        db.delete(results)
+        ndb.delete_multi([m.key for m in results])
         return num_results
 
     def cleanup_sessions(self):
