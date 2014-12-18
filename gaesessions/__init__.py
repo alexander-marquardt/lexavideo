@@ -7,17 +7,29 @@ import hmac
 import logging
 import pickle
 import os
-import threading
 import time
+import webapp2
 
 from google.appengine.api import memcache
 from google.appengine.ext import db
+from google.appengine.api import taskqueue
+
+from video_src import status_reporting
+
+# ARM Note: We do not allow cookie-only session so that if we need to eliminate a user from the system and immediately
+# revoke their website access, this can be achieved by just removing their session from the datastore.
+# This should be revisited in the future to see if there are other methods of achieving this functionality
+# while using cookie-only sessions, as cookie-only sessions would likely be better since we are passing a small
+# amount of data between the client and the server.
 
 # Configurable cookie options
-COOKIE_NAME_PREFIX = "lx-"  # identifies a cookie as being one used by gae-sessions (so you can set cookies too)
+COOKIE_NAME_PREFIX = "GAE-Session"  # identifies a cookie as being one used by gae-sessions (so you can set cookies too)
 COOKIE_PATH = "/"
-DEFAULT_COOKIE_ONLY_THRESH = 10240  # 10KB: GAE only allows ~16000B in HTTP header - leave ~6KB for other info
-DEFAULT_LIFETIME = datetime.timedelta(days=7)
+# Original DEFAULT_COOKIE_ONLY_THRESH was 10240 10KB: GAE only allows ~16000B in HTTP header - leave ~6KB for other info
+# However, we set to 0 because we don't want cookie-only sessions - we need to be able to remotely kills sessions 
+# which requires that all sessions are in the database.
+DEFAULT_COOKIE_ONLY_THRESH = 0 
+DEFAULT_LIFETIME = datetime.timedelta(hours=24)
 
 # constants
 SID_LEN = 43  # timestamp (10 chars) + underscore + md5 (32 hex chars)
@@ -29,18 +41,6 @@ COOKIE_FMT_SECURE = COOKIE_FMT + '; Secure'
 COOKIE_DATE_FMT = '%a, %d-%b-%Y %H:%M:%S GMT'
 COOKIE_OVERHEAD = len(COOKIE_FMT % (0, '', '')) + len('expires=Xxx, xx XXX XXXX XX:XX:XX GMT; ') + 150  # 150=safety margin (e.g., in case browser uses 4000 instead of 4096)
 MAX_DATA_PER_COOKIE = MAX_COOKIE_LEN - COOKIE_OVERHEAD
-
-_tls = threading.local()
-
-
-def get_current_session():
-    """Returns the session associated with the current request."""
-    return _tls.current_session
-
-
-def set_current_session(session):
-    """Sets the session associated with the current request."""
-    _tls.current_session = session
 
 
 def is_gaesessions_key(k):
@@ -59,7 +59,7 @@ class Session(object):
     ``sid`` - if set, then the session for that sid (if any) is loaded. Otherwise,
     sid will be loaded from the HTTP_COOKIE (if any).
     """
-    DIRTY_BUT_DONT_PERSIST_TO_DB = 1
+    DIRTY_BUT_DONT_PERSIST_TO_DB = 0
 
     def __init__(self, sid=None, lifetime=DEFAULT_LIFETIME, no_datastore=False,
                  cookie_only_threshold=DEFAULT_COOKIE_ONLY_THRESH, cookie_key=None):
@@ -175,7 +175,11 @@ class Session(object):
             return int(self.sid[:-33])
         except:
             return 0
-
+        
+    def get_expiration_datetime(self):
+        expiry_timestamp = self.get_expiration()
+        return datetime.datetime.fromtimestamp(expiry_timestamp)   
+    
     def __make_sid(self, expire_ts=None, ssl_only=False):
         """Returns a new session ID."""
         # make a random ID (random.randrange() is 10x faster but less secure?)
@@ -276,6 +280,7 @@ class Session(object):
 
     def __clear_data(self):
         """Deletes this session from memcache and the datastore."""
+        logging.info("erasing session from database and memcache %s" % self.sid) 
         if self.sid:
             memcache.delete(self.sid, namespace='')  # not really needed; it'll go away on its own
             try:
@@ -291,19 +296,22 @@ class Session(object):
         if pdump is None:
             # memcache lost it, go to the datastore
             if self.no_datastore:
-                logging.info("can't find session data in memcache for sid=%s (using memcache only sessions)" % self.sid)
+                logging.warning("can't find session data in memcache for sid=%s (using memcache only sessions)" % self.sid)
                 self.terminate(False)  # we lost it; just kill the session
                 return
             session_model_instance = db.get(self.db_key)
             if session_model_instance:
                 pdump = session_model_instance.pdump
             else:
-                logging.error("can't find session data in the datastore for sid=%s" % self.sid)
+                expiry_datetime = self.get_expiration_datetime()
+                # This can happen if the user has multiple windows open, and logs out in one of the windows but 
+                # the other windows continue to request information.   
+                logging.warning("can't find session data in the datastore for sid=%s key = %s expiry: %s" % (self.sid, self.db_key, expiry_datetime))
                 self.terminate(False)  # we lost it; just kill the session
                 return
         self.data = self.__decode_data(pdump)
 
-    def save(self, persist_even_if_using_cookie=False):
+    def save(self, persist_even_if_using_cookie=True):
         """Saves the data associated with this session IF any changes have been
         made (specifically, if any mutator methods like __setitem__ or the like
         is called).
@@ -326,24 +334,30 @@ class Session(object):
         # do the pickling ourselves b/c we need it for the datastore anyway
         pdump = self.__encode_data(self.data)
 
+        # Commented out by ARM - we do not allow cookie-only sessions, so don't waste resources computing
+        # the length. 
         # persist via cookies if it is reasonably small
-        if len(pdump) * 4 / 3 <= self.cookie_only_thresh:  # 4/3 b/c base64 is ~33% bigger
-            self.cookie_data = pdump
-            if not persist_even_if_using_cookie:
-                return
-        elif self.cookie_keys:
-            # latest data will only be in the backend, so expire data cookies we set
+        #if len(pdump) * 4 / 3 <= self.cookie_only_thresh:  # 4/3 b/c base64 is ~33% bigger
+            #self.cookie_data = pdump
+            #if not persist_even_if_using_cookie:
+                #return
+        #elif self.cookie_keys:
+            ## latest data will only be in the backend, so expire data cookies we set
+            #self.cookie_data = ''
+        if self.cookie_keys:
+            # latest data will only be in the backend, so expire data cookies we set            
             self.cookie_data = ''
 
         memcache.set(self.sid, pdump, namespace='', time=self.get_expiration())  # may fail if memcache is down
 
-        # persist the session to the datastore
-        if dirty is Session.DIRTY_BUT_DONT_PERSIST_TO_DB or self.no_datastore:
-            return
+        #if dirty is Session.DIRTY_BUT_DONT_PERSIST_TO_DB or self.no_datastore:
+            #return
+            
+        # persist the session to the datastore            
         try:
             SessionModel(key_name=self.sid, pdump=pdump).put()
         except Exception, e:
-            logging.warning("unable to persist session to datastore for sid=%s (%s)" % (self.sid, e))
+            logging.error("unable to persist session to datastore for sid=%s (%s)" % (self.sid, e))
 
     # Users may interact with the session through a dictionary-like interface.
     def clear(self):
@@ -425,17 +439,38 @@ class Session(object):
             return "uninitialized session"
 
 
+class SessionAdmin(webapp2.RequestHandler):
 
-def delete_expired_sessions():
-    """Deletes expired sessions from the datastore.
-    If there are more than 500 expired sessions, only 500 will be removed.
-    Returns True if all expired sessions have been removed.
-    """
-    now_str = unicode(int(time.time()))
-    q = db.Query(SessionModel, keys_only=True, namespace='')
-    key = db.Key.from_path('SessionModel', now_str + u'\ufffd', namespace='')
-    q.filter('__key__ < ', key)
-    results = q.fetch(500)
-    db.delete(results)
-    logging.info('gae-sessions: deleted %d expired sessions from the datastore' % len(results))
-    return len(results) < 500
+    def delete_expired_sessions(self):
+        """Deletes expired sessions from the datastore.
+        If there are more than 500 expired sessions, only 500 will be removed.
+        """
+        now_str = unicode(int(time.time()))
+        q = db.Query(SessionModel, keys_only=True, namespace='')
+        key = db.Key.from_path('SessionModel', now_str + u'\ufffd', namespace='')
+        q.filter('__key__ < ', key)
+        results = q.fetch(500)
+        num_results = len(results)
+        db.delete(results)
+        return num_results
+
+    def cleanup_sessions(self):
+
+        # wrapper for delete_expired_sessions that calls it multiple times if additional sessions need to be
+        # removed.  (You must add the appropriate URL to urls.py as well as to the taskqueue.add function call
+        # below for this to work correctly).
+
+        try:
+            num_cleaned_up = self.delete_expired_sessions()
+            msg = "gae-sessions:cleanup_sessions(): deleted %d expired sessions from the datastore" % num_cleaned_up
+            logging.info(msg)
+            if num_cleaned_up >= 500:
+                # re-schedule to cleanup remaining sessions immideately, since we didn't get them all in the previous cleanup
+                logging.info("Re-launching session cleanup since we did not get all in the previous")
+                time.sleep(1.0) # just in case it takes a few milliseconds for the DB to get updated
+                taskqueue.add(queue_name = 'cleanup-sessions-queue', url='/rs/admin/cleanup_sessions/')
+
+            self.response.write("OK")
+        except:
+            status_reporting.log_call_stack_and_traceback(logging.critical)
+            self.response.write("Fail")
