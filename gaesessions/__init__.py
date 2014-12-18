@@ -12,6 +12,7 @@ import webapp2
 
 from google.appengine.ext import ndb
 from google.appengine.api import taskqueue
+from google.appengine.api.datastore import entity_pb
 
 from video_src import status_reporting
 
@@ -201,7 +202,7 @@ class Session(object):
         eO = {}  # for everything else
         for k, v in d.iteritems():
             if isinstance(v, ndb.Model):
-                eP[k] = ndb.ModelAdapter().entity_to_pb(v)
+                eP[k] = ndb.ModelAdapter().entity_to_pb(v).Encode()
             else:
                 eO[k] = v
         return pickle.dumps((eP, eO), 2)
@@ -212,11 +213,12 @@ class Session(object):
         try:
             eP, eO = pickle.loads(pdump)
             for k, v in eP.iteritems():
-                eO[k] = ndb.ModelAdapter().pb_to_entity(v)
+                eO[k] = ndb.ModelAdapter().pb_to_entity(entity_pb.EntityProto(v))
         except Exception, e:
             logging.warn("failed to decode session data: %s" % e)
             eO = {}
         return eO
+
 
     def regenerate_id(self, expiration_ts=None):
         """Assigns the session a new session ID (data carries over).  This
