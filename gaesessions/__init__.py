@@ -14,7 +14,7 @@ from google.appengine.api import memcache
 from google.appengine.ext import db
 
 # Configurable cookie options
-COOKIE_NAME_PREFIX = "DgU"  # identifies a cookie as being one used by gae-sessions (so you can set cookies too)
+COOKIE_NAME_PREFIX = "lx-"  # identifies a cookie as being one used by gae-sessions (so you can set cookies too)
 COOKIE_PATH = "/"
 DEFAULT_COOKIE_ONLY_THRESH = 10240  # 10KB: GAE only allows ~16000B in HTTP header - leave ~6KB for other info
 DEFAULT_LIFETIME = datetime.timedelta(days=7)

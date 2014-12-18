@@ -16,8 +16,9 @@ from webapp2_extras.auth import InvalidPasswordError
 
 import vidsetup
 
-from gaesessions import get_current_session
 
+import gaesessions
+COOKIE_KEY = '13f2xi^7170a0a564fc2a26b8ffae123-5a17'
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(vidsetup.BASE_STATIC_DIR),
@@ -99,14 +100,21 @@ class BaseHandler(webapp2.RequestHandler):
     # this is needed for webapp2 sessions to work
     def dispatch(self):
         # Get a session for this request.
-        self.session = get_current_session()
+        self.session = gaesessions.Session(lifetime=gaesessions.DEFAULT_LIFETIME,
+                                           no_datastore=False,
+                                           cookie_only_threshold=gaesessions.DEFAULT_COOKIE_ONLY_THRESH,
+                                           cookie_key=COOKIE_KEY)
 
-        # try:
-        # Dispatch the request.
-        webapp2.RequestHandler.dispatch(self)
-    #     finally:
-    #         # Save all sessions.
-    #         self.session_store.save_sessions(self.response)
+        try:
+            # Dispatch the request.
+            webapp2.RequestHandler.dispatch(self)
+        finally:
+            # Save all sessions.
+            self.session.save()
+
+            # update the response to contain the cookie
+            for ch in self.session.make_cookie_headers():
+                self.response.headers.add('Set-Cookie', ch)
 
 
 class SignupHandler(BaseHandler):
