@@ -16,7 +16,6 @@ from video_src import login_and_sessions
 from video_src import messaging
 from video_src import views
 
-
 app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-chat-room-main.html>/<chat_room_name_from_url:.+>', views.UserChatRoomMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-landing-page-main.html>', views.LandingPageMain),
@@ -33,8 +32,6 @@ app = webapp2.WSGIApplication([
     (r'/.*', views.MainPage),
     ], debug=vidsetup.DEBUG_BUILD, config=login_and_sessions.config)
 
-if vidsetup.DEBUG_BUILD:
-    logging.getLogger().setLevel(logging.DEBUG)
 
 from video_src import http_helpers
 app.error_handlers[404] = http_helpers.handle_404
