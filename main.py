@@ -32,7 +32,9 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/temp-login', login_and_sessions.CreateTemporaryUserHandler, name='temp-login'),
 
     webapp2.Route(r'/', views.MainPage, name='main'),
-    webapp2.Route(r'/.*', views.MainPage),
+
+    # Don't use webapp2.Route for the following "catch-all" -- for some reason it doesn't work correctly if used
+    (r'/.*', views.MainPage),
     ], debug=vidsetup.DEBUG_BUILD, config=login_and_sessions.config)
 
 
