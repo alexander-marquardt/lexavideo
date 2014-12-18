@@ -10,7 +10,6 @@ import os
 import time
 import webapp2
 
-from google.appengine.api import memcache
 from google.appengine.ext import ndb
 from google.appengine.api import taskqueue
 
@@ -61,7 +60,7 @@ class Session(object):
     """
     DIRTY_BUT_DONT_PERSIST_TO_DB = 0
 
-    def __init__(self, sid=None, lifetime=DEFAULT_LIFETIME, no_datastore=False,
+    def __init__(self, sid=None, lifetime=DEFAULT_LIFETIME,
                  cookie_only_threshold=DEFAULT_COOKIE_ONLY_THRESH, cookie_key=None):
         self._accessed = False
         self.sid = None
@@ -71,7 +70,6 @@ class Session(object):
         self.dirty = False  # has the session been changed?
 
         self.lifetime = lifetime
-        self.no_datastore = no_datastore
         self.cookie_only_thresh = cookie_only_threshold
         self.base_key = cookie_key
 
@@ -110,7 +108,7 @@ class Session(object):
                 if pdump:
                     self.data = self.__decode_data(pdump)
                 else:
-                    self.data = None  # data is in memcache/db: load it on-demand
+                    self.data = None  # data is in db: load it on-demand
             else:
                 logging.warn('cookie with invalid sig received from %s: %s' % (os.environ.get('REMOTE_ADDR'), b64pdump))
         except (CookieError, KeyError, IndexError, TypeError):
@@ -279,36 +277,30 @@ class Session(object):
             self.cookie_data = ''  # trigger the cookie to be sent
 
     def __clear_data(self):
-        """Deletes this session from memcache and the datastore."""
-        logging.info("erasing session from database and memcache %s" % self.sid) 
+        """Deletes this session from the datastore."""
+        logging.info("erasing session from database  %s" % self.sid)
         if self.sid:
-            memcache.delete(self.sid, namespace='')  # not really needed; it'll go away on its own
             try:
                 self.ndb_key.delete()
             except:
-                pass  # either it wasn't in the db (maybe cookie/memcache-only) or db is down => cron will expire it
+                pass  # it wasn't in the db (maybe cookie only or db is down) => cron will expire it
 
     def __retrieve_data(self):
         """Sets the data associated with this session after retrieving it from
-        memcache or the datastore.  Assumes self.sid is set.  Checks for session
+        the datastore.  Assumes self.sid is set.  Checks for session
         expiration after getting the data."""
-        pdump = memcache.get(self.sid, namespace='')
-        if pdump is None:
-            # memcache lost it, go to the datastore
-            if self.no_datastore:
-                logging.warning("can't find session data in memcache for sid=%s (using memcache only sessions)" % self.sid)
-                self.terminate(False)  # we lost it; just kill the session
-                return
-            session_model_instance = self.ndb_key.get()
-            if session_model_instance:
-                pdump = session_model_instance.pdump
-            else:
-                expiry_datetime = self.get_expiration_datetime()
-                # This can happen if the user has multiple windows open, and logs out in one of the windows but 
-                # the other windows continue to request information.   
-                logging.warning("can't find session data in the datastore for sid=%s key = %s expiry: %s" % (self.sid, self.ndb_key, expiry_datetime))
-                self.terminate(False)  # we lost it; just kill the session
-                return
+
+        session_model_instance = self.ndb_key.get()
+        if session_model_instance:
+            pdump = session_model_instance.pdump
+        else:
+            expiry_datetime = self.get_expiration_datetime()
+            # This can happen if the user has multiple windows open, and logs out in one of the windows but
+            # the other windows continue to request information.
+            logging.warning("can't find session data in the datastore for sid=%s key = %s expiry: %s" % (self.sid, self.ndb_key, expiry_datetime))
+            self.terminate(False)  # we lost it; just kill the session
+            return
+
         self.data = self.__decode_data(pdump)
 
     def save(self, persist_even_if_using_cookie=True):
@@ -317,9 +309,8 @@ class Session(object):
         is called).
 
         If the data is small enough it will be sent back to the user in a cookie
-        instead of using memcache and the datastore.  If `persist_even_if_using_cookie`
-        evaluates to True, memcache and the datastore will also be used.  If the
-        no_datastore option is set, then the datastore will never be used.
+        instead of using the datastore.  If `persist_even_if_using_cookie`
+        evaluates to True, the datastore will also be used.
 
         Normally this method does not need to be called directly - a session is
         automatically saved at the end of the request if any changes were made.
@@ -348,11 +339,7 @@ class Session(object):
             # latest data will only be in the backend, so expire data cookies we set            
             self.cookie_data = ''
 
-        memcache.set(self.sid, pdump, namespace='', time=self.get_expiration())  # may fail if memcache is down
 
-        #if dirty is Session.DIRTY_BUT_DONT_PERSIST_TO_DB or self.no_datastore:
-            #return
-            
         # persist the session to the datastore            
         try:
             SessionModel(id=self.sid, pdump=pdump).put()
@@ -382,23 +369,6 @@ class Session(object):
         self.dirty = True
         return self.data.pop(key, default)
 
-    def pop_quick(self, key, default=None):
-        """Removes key and returns its value, or default if key is not present.
-        The change will only be persisted to memcache until another change
-        necessitates a write to the datastore."""
-        self.ensure_data_loaded()
-        if self.dirty is False:
-            self.dirty = Session.DIRTY_BUT_DONT_PERSIST_TO_DB
-        return self.data.pop(key, default)
-
-    def set_quick(self, key, value):
-        """Set a value named key on this session.  The change will only be
-        persisted to memcache until another change necessitates a write to the
-        datastore.  This will start a session if one is not already active."""
-        dirty = self.dirty
-        self[key] = value
-        if dirty is False or dirty is Session.DIRTY_BUT_DONT_PERSIST_TO_DB:
-            self.dirty = Session.DIRTY_BUT_DONT_PERSIST_TO_DB
 
     def __getitem__(self, key):
         """Returns the value associated with key on this session."""
@@ -446,22 +416,22 @@ class SessionAdmin(webapp2.RequestHandler):
         If there are more than 500 expired sessions, only 500 will be removed.
         """
         now_str = unicode(int(time.time()))
-        q = SessionModel.query(keys_only=True, namespace='')
-        key = ndb.Key('SessionModel', now_str + u'\ufffd', namespace='')
-        q.filter('__key__ < ', key)
-        results = q.fetch(500)
+        q = SessionModel.query()
+        k = ndb.Key('SessionModel', now_str + u'\ufffd')
+        q.filter(SessionModel._key < k)
+        results = q.fetch(500, keys_only=True,)
         num_results = len(results)
-        ndb.delete_multi([m.key for m in results])
+        ndb.delete_multi([k for k in results])
         return num_results
 
-    def cleanup_sessions(self):
 
+    def cleanup_sessions(self):
         # wrapper for delete_expired_sessions that calls it multiple times if additional sessions need to be
         # removed.  (You must add the appropriate URL to urls.py as well as to the taskqueue.add function call
         # below for this to work correctly).
 
         try:
-            num_cleaned_up = self.delete_expired_sessions()
+            num_cleaned_up = self.delete_expired_sessions
             msg = "gae-sessions:cleanup_sessions(): deleted %d expired sessions from the datastore" % num_cleaned_up
             logging.info(msg)
             if num_cleaned_up >= 500:
