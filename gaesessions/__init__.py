@@ -23,7 +23,7 @@ from video_src import status_reporting
 # amount of data between the client and the server.
 
 # Configurable cookie options
-COOKIE_NAME_PREFIX = "GAE-Session"  # identifies a cookie as being one used by gae-sessions (so you can set cookies too)
+COOKIE_NAME_PREFIX = "lx-session-"  # identifies a cookie as being one used by gae-sessions (so you can set cookies too)
 COOKIE_PATH = "/"
 # Original DEFAULT_COOKIE_ONLY_THRESH was 10240 10KB: GAE only allows ~16000B in HTTP header - leave ~6KB for other info
 # However, we set to 0 because we don't want cookie-only sessions - we need to be able to remotely kills sessions 
