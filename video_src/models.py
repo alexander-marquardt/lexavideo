@@ -13,6 +13,12 @@ from google.appengine.ext import ndb
 class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique):
     pass
 
+
+# UserModel is accessed from the webapp2 auth module, and is accessed/included with the following
+# statements that appear inside the config object that is passed to the wsgi application handler.
+#     'webapp2_extras.auth': {
+#        'user_model': 'video_src.models.UserModel',
+#    },
 class UserModel(webapp2_extras.appengine.auth.models.User):
     # This model inherits from the webapp2 models.User and so has additional properties and methods that are
     # not shown here.
