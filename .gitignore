@@ -39,3 +39,4 @@ client/build_settings.json
 # PyCharm related files
 .idea/*
 client/app/.idea/*
+client/.idea/*
