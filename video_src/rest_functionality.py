@@ -93,8 +93,8 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 # will be raised, and execution will be transferred to the exception handling block which
                 # deals with the case that the room already exists.
                 room_creator_user_key = ndb.Key('UserModel', user_id)
-                (chat_room_name_obj, room_info_obj) = room_module.ChatRoomName.txn_create_room_by_name(chat_room_name, room_dict,
-                                                                                                  room_creator_user_key)
+                room_info_obj = room_module.ChatRoomInfo.create_room(chat_room_name, room_dict,
+                                                                                           room_creator_user_key)
 
                 # If no exception was raised, then this is a newly created room.
                 response_dict['statusString'] = 'roomCreated'
@@ -106,6 +106,8 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 room_info_obj = room_module.ChatRoomInfo.query(room_module.ChatRoomInfo.chat_room_name == chat_room_name).get()
                 if not room_info_obj:
                     raise Exception('chat_room_name %s does not exist in the ChatRoomInfo data structure' % chat_room_name)
+
+                response_dict['statusString'] = 'roomJoined'
 
             except:
                 raise

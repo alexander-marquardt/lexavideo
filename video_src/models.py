@@ -19,9 +19,11 @@ class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique):
 #     'webapp2_extras.auth': {
 #        'user_model': 'video_src.models.UserModel',
 #    },
+#
+# This model inherits from the webapp2 models.User and so has additional properties and methods that are
+# not shown here.
 class UserModel(webapp2_extras.appengine.auth.models.User):
-    # This model inherits from the webapp2 models.User and so has additional properties and methods that are
-    # not shown here.
+
 
     unique_model = UniqueUserModel
 
