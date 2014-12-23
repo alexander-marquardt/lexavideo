@@ -6,8 +6,8 @@ import webapp2
 from google.appengine.api import channel
 
 from video_src import room_module
-from video_src import models
 from video_src import http_helpers
+from video_src import users
 from error_handling import handle_exceptions
 
 # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
@@ -109,7 +109,7 @@ def send_room_occupancy_to_room_members(room_info_obj, user_id):
     list_of_js_user_objects = []
     for i in range(len(room_info_obj.room_members_ids)):
         user_id = room_info_obj.room_members_ids[i]
-        user_obj = models.UserModel.get_by_id(user_id)
+        user_obj = users.UserModel.get_by_id(user_id)
         user_name = user_obj.user_name
 
     # We only send relevant data to the client,

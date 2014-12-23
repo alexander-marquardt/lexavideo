@@ -329,7 +329,7 @@ class AuthenticatedHandler(BaseHandler):
 
 config = {
     'webapp2_extras.auth': {
-        'user_model': 'video_src.models.UserModel',
+        'user_model': 'video_src.users.UserModel',
     },
     'webapp2_extras.sessions': {
         'secret_key': 'FooBar123$%^%%%QQQQQQ',
