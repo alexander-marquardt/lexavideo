@@ -7,7 +7,7 @@ import vidsetup
 import webapp2
 
 from video_src import constants
-from video_src import login_and_sessions
+from video_src import registration_and_login
 from video_src import users
 from video_src import webrtc_setup
 
@@ -89,7 +89,7 @@ class LandingPageMain(webapp2.RequestHandler):
         write_response(self.response, response_type, target_page, params)
 
 
-class MainPage(login_and_sessions.BaseHandler):
+class MainPage(registration_and_login.BaseHandler):
     """The main UI page, renders the 'index.html' template."""
     
     @handle_exceptions

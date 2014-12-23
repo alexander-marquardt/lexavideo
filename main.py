@@ -11,7 +11,7 @@ import vidsetup
 
 from video_src import error_reporting_from_client
 from video_src import room_module
-from video_src import login_and_sessions
+from video_src import registration_and_login
 from video_src import messaging
 from video_src import views
 
@@ -29,13 +29,13 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_ah/channel/connected/',  messaging.ConnectPage),
     webapp2.Route(r'/_ah/channel/disconnected/',  messaging.DisconnectPage),
 
-    webapp2.Route(r'/temp-login', login_and_sessions.CreateTemporaryUserHandler, name='temp-login'),
+    webapp2.Route(r'/temp-login', registration_and_login.CreateTemporaryUserHandler, name='temp-login'),
 
     webapp2.Route(r'/', views.MainPage, name='main'),
 
     # Don't use webapp2.Route for the following "catch-all" -- for some reason it doesn't work correctly if used
     (r'/.*', views.MainPage),
-    ], debug=vidsetup.DEBUG_BUILD, config=login_and_sessions.config)
+    ], debug=vidsetup.DEBUG_BUILD, config=registration_and_login.config)
 
 
 from video_src import http_helpers
