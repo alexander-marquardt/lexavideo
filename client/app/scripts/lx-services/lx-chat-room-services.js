@@ -45,7 +45,7 @@ angular.module('lxChatRoom.services', [])
 
                 lxHttpHandleRoomService.enterIntoRoom(roomObj).then(
                     function(data){
-                        if (data.statusString === 'roomCreated' || data.statusString === 'roomJoined') {
+                        if (data.statusString === 'roomJoined') {
                             // everything OK
                             deferredUserSuccessfullyEnteredRoom.resolve(data);
                         }

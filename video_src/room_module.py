@@ -5,7 +5,6 @@ import webapp2_extras.appengine.auth.models
 
 from google.appengine.ext import ndb
 
-class RoomAlreadyExistsException(Exception): pass
 class UniqueChatRoomName(webapp2_extras.appengine.auth.models.Unique):pass
 
 
@@ -51,7 +50,7 @@ class ChatRoomInfo(ndb.Model):
     # The ChatRoomName has been added to the chatRoomName structure. Now create a new Room object
     # for the new room.
     @classmethod
-    def create_room(cls, chat_room_name, room_dict, room_creator_user_key):
+    def create_or_get_room(cls, chat_room_name, room_dict, room_creator_user_key):
 
         # make a copy of room_dict, so that our modifications don't accidentally change it for other functions
         room_info_obj_dict = copy.copy(room_dict)
@@ -66,9 +65,12 @@ class ChatRoomInfo(ndb.Model):
             room_info_obj_dict['room_creator_user_key'] = room_creator_user_key
             room_info_obj = cls(**room_info_obj_dict)
             room_info_obj.put()
-            return room_info_obj
         else:
-            raise RoomAlreadyExistsException('Room %s already exists.' % chat_room_name)
+            room_info_obj = cls.query(cls.chat_room_name == chat_room_name).get()
+            if not room_info_obj:
+                raise Exception('chat_room_name %s does not exist in the ChatRoomInfo data structure' % chat_room_name)
+
+        return room_info_obj
 
     def __str__(self):
         result = '['
