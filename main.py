@@ -10,7 +10,7 @@ import webapp2
 import vidsetup
 
 from video_src import error_reporting_from_client
-from video_src import rest_functionality
+from video_src import room_module
 from video_src import login_and_sessions
 from video_src import messaging
 from video_src import views
@@ -21,7 +21,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-chat-room-main.html>/<chat_room_name_from_url:.+>', views.UserChatRoomMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-landing-page-main.html>', views.LandingPageMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
-    webapp2.Route(r'/_lx/handle_room/<chat_room_name_from_url:.+>', rest_functionality.HandleEnterIntoRoom),
+    webapp2.Route(r'/_lx/handle_room/<chat_room_name_from_url:.+>', room_module.HandleEnterIntoRoom),
     webapp2.Route(r'/_lx/message', messaging.MessagePage),
     webapp2.Route(r'/_lx/log_error', error_reporting_from_client.LogClientError),
     webapp2.Route(r'/_lx/channel/manual_disconnect/', messaging.DisconnectPage),
