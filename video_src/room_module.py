@@ -156,84 +156,91 @@ class ChatRoomInfo(ndb.Model):
 
         return room_info_obj
 
-def get_room_by_id(room_id):
-
-    room_info_obj = ChatRoomInfo.get_by_id(room_id)
-    if not room_info_obj:
-        logging.error('Attempt to get room by id failed. Room %d does not exist.' % room_id)
-
-    return room_info_obj
 
 
+    @classmethod
+    @ndb.transactional
+    def txn_remove_user_from_room(cls, room_key, user_id):
 
-@ndb.transactional
-def txn_remove_user_from_room(room_id, user_id):
+        logging.info('Removing user %d from room %s ' % (user_id, room_key))
 
-    logging.info('Removing user %d from room %d ' % (user_id, room_id))
+        room_info_obj = room_key.get()
+        try:
+            # if the user_id is not in the list, an exception will be raised
+            room_info_obj.room_members_ids.remove(user_id)
+        except:
+            logging.error("user_id %d not found in room - why is it being removed?" % user_id)
 
-    room_info_obj = get_room_by_id(room_id)
-    try:
-        # if the user_id is not in the list, an exception will be raised
-        room_info_obj.room_members_ids.remove(user_id)
-    except:
-        logging.error("user_id %d not found in room - why is it being removed?" % user_id)
+        if user_id in room_info_obj.video_elements_enabled_user_ids:
+            room_info_obj.video_elements_enabled_user_ids.remove(user_id)
 
-    if user_id in room_info_obj.video_elements_enabled_user_ids:
-        room_info_obj.video_elements_enabled_user_ids.remove(user_id)
-
-    room_info_obj.put()
-    return room_info_obj
-
-
-# The following function adds a given user to a chat room.
-# This is done in a transaction to ensure that after two users are in a room, that no
-# more users will be added.
-@ndb.transactional
-def txn_add_user_to_room(room_id, user_id):
-
-    logging.info('Attempting to add user %d to room %d ' % (user_id, room_id))
-    room_info_obj = get_room_by_id(room_id)
-    status_string = None
-
-    if room_info_obj:
-
-        occupancy = room_info_obj.get_occupancy()
+        room_info_obj.put()
+        return room_info_obj
 
 
-        if room_info_obj.has_user(user_id):
-            # do nothing as this user is already in the room - report status as "roomJoined"
-            # so javascript does not have to deal with a special case.
-            status_string = 'roomJoined'
-            logging.info('Room already has user %d - not added' % user_id)
+    @classmethod
+    def get_room_by_id(cls, room_id):
 
-        # Room is full - return a roomIsFull status
-        elif occupancy >= 2:
-            logging.warning('Room ' + room_info_obj.chat_room_name + ' is full')
-            status_string = 'roomIsFull'
+        room_info_obj = ChatRoomInfo.get_by_id(room_id)
+        if not room_info_obj:
+            logging.error('Attempt to get room by id failed. Room %d does not exist.' % room_id)
 
-        # This is a new user joining the room
-        else:
+        return room_info_obj
 
-            try:
-                # If user is not already in the room, then add them
-                if not user_id in room_info_obj.room_members_ids:
-                    room_info_obj.room_members_ids.append(user_id)
-                    room_info_obj.put()
 
+
+    # The following function adds a given user to a chat room.
+    # This is done in a transaction to ensure that after two users are in a room, that no
+    # more users will be added.
+    @classmethod
+    @ndb.transactional
+    def txn_add_user_to_room(cls, room_id, user_id):
+
+        logging.info('Attempting to add user %d to room %d ' % (user_id, room_id))
+        room_info_obj = cls.get_room_by_id(room_id)
+        status_string = None
+
+        if room_info_obj:
+
+            occupancy = room_info_obj.get_occupancy()
+
+
+            if room_info_obj.has_user(user_id):
+                # do nothing as this user is already in the room - report status as "roomJoined"
+                # so javascript does not have to deal with a special case.
                 status_string = 'roomJoined'
+                logging.info('Room already has user %d - not added' % user_id)
+
+            # Room is full - return a roomIsFull status
+            elif occupancy >= 2:
+                logging.warning('Room ' + room_info_obj.chat_room_name + ' is full')
+                status_string = 'roomIsFull'
+
+            # This is a new user joining the room
+            else:
+
+                try:
+                    # If user is not already in the room, then add them
+                    if not user_id in room_info_obj.room_members_ids:
+                        room_info_obj.room_members_ids.append(user_id)
+                        room_info_obj.put()
+
+                    status_string = 'roomJoined'
 
 
-            # If the user cannot be added to the room, then an exception will be generated - let the client
-            # know that the server had a problem.
-            except:
-               status_string = 'serverError'
+                # If the user cannot be added to the room, then an exception will be generated - let the client
+                # know that the server had a problem.
+                except:
+                   status_string = 'serverError'
 
-    else:
-         logging.error('Invalid room id: %d' % room_id)
+        else:
+             logging.error('Invalid room id: %d' % room_id)
 
-    # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
-    # the database and may have updated it. We want any enclosing functions to use the updated version.
-    return room_info_obj, status_string
+        # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
+        # the database and may have updated it. We want any enclosing functions to use the updated version.
+        return room_info_obj, status_string
+
+
 
 
 
@@ -310,7 +317,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # Now add the user to the room (even if they created the room, they have not yet been added). Notice
             # that we intentionally overwrite room_info_obj with the value returned from this function call, as
             # room_info_obj may be modified by the transaction, and we must have the most up-to-date data.
-            (room_info_obj, response_dict['statusString']) = txn_add_user_to_room(room_info_obj.key.id(), user_id)
+            (room_info_obj, response_dict['statusString']) = ChatRoomInfo.txn_add_user_to_room(room_info_obj.key.id(), user_id)
 
             token_timeout = 240  # minutes
             client_id = room_info_obj.make_client_id(user_id)

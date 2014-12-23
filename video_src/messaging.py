@@ -222,7 +222,7 @@ class ConnectPage(webapp2.RequestHandler):
         # This is necessary for the dev server, since the channel disconnects each time that the
         # client-side javascript is paused. Therefore, it is quite helpful to automatically put the user back in the
         # room if the user still has a channel open and wishes to connect to the current room.
-        (room_obj, dummy_status_string) = room_module.txn_add_user_to_room(room_id, user_id)
+        (room_obj, dummy_status_string) = room_module.ChatRoomInfo.txn_add_user_to_room(room_id, user_id)
 
         send_room_occupancy_to_room_members(room_obj, user_id)
 
@@ -237,14 +237,14 @@ class DisconnectPage(webapp2.RequestHandler):
         client_id = self.request.get('from')
         room_id, user_id = [int(n) for n in client_id.split('/')]
 
-        room_obj = room_module.get_room_by_id(room_id)
+        room_obj = room_module.ChatRoomInfo.get_room_by_id(room_id)
         if room_obj:
             if room_obj.has_user(user_id):
 
                 # Get the other_user_id before removing the user_id from the room
                 other_user_id = room_obj.get_other_user_id(user_id)
 
-                room_obj = room_module.txn_remove_user_from_room(room_id, user_id)
+                room_obj = room_module.ChatRoomInfo.txn_remove_user_from_room(room_obj.key, user_id)
 
 
                 logging.info('User %d' % user_id + ' removed from room %d state: %s' % (room_id, str(room_obj)))
