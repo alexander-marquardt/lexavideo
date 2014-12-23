@@ -6,9 +6,10 @@ from google.appengine.ext import ndb
 
 # UniqueUserModel is used for ensuring that UserModel "auth_id" is unique. It also
 # keeps track of any other properties that are specified as requiring a unique value
-# (perhaps email address or something like that).
-# We have overloaded the webapp2 version of Unique so that UserModel will be given it's own kind in the
-# datastore.
+# (perhaps email address or something like that) -- see auth.models.create_user to understand
+# how to pass in additional properties that must have unique values.
+# Note: we have overloaded the webapp2 version of Unique so that UserModel will be given it's own kind in the
+# datastore. 
 class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique): pass
 
 # UserModel is accessed from the webapp2 auth module, and is accessed/included with the following
