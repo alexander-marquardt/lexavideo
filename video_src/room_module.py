@@ -129,6 +129,33 @@ class ChatRoomInfo(ndb.Model):
             return False
 
 
+    @classmethod
+    @ndb.transactional
+    def txn_add_user_id_to_video_elements_enabled_user_ids(cls, room_obj_key, user_id):
+
+        room_info_obj = room_obj_key.get()
+
+        if user_id in room_info_obj.video_elements_enabled_user_ids:
+            logging.info('Not added to video_enalbed_ids. user %d to %s' %(user_id, room_info_obj))
+        else:
+            logging.info('Adding video_enalbed_ids. user %d to %s' %(user_id, room_info_obj))
+            room_info_obj.video_elements_enabled_user_ids.append(user_id)
+            room_info_obj.put()
+
+        return room_info_obj
+
+    @classmethod
+    @ndb.transactional
+    def txn_remove_user_id_from_video_elements_enabled_user_ids(cls, room_obj_key, user_id):
+
+        room_info_obj = room_obj_key.get()
+
+        if user_id in room_info_obj.video_elements_enabled_user_ids:
+            room_info_obj.video_elements_enabled_user_ids.remove(user_id)
+            room_info_obj.put()
+
+        return room_info_obj
+
 def get_room_by_id(room_id):
 
     room_info_obj = ChatRoomInfo.get_by_id(room_id)
@@ -137,30 +164,7 @@ def get_room_by_id(room_id):
 
     return room_info_obj
 
-@ndb.transactional
-def txn_add_user_id_to_video_elements_enabled_user_ids(room_id, user_id):
 
-    room_info_obj =  get_room_by_id(room_id)
-
-    if user_id in room_info_obj.video_elements_enabled_user_ids:
-        logging.info('Not added to video_enalbed_ids. user %d to %s' %(user_id, room_info_obj))
-    else:
-        logging.info('Adding video_enalbed_ids. user %d to %s' %(user_id, room_info_obj))
-        room_info_obj.video_elements_enabled_user_ids.append(user_id)
-        room_info_obj.put()
-
-    return room_info_obj
-
-@ndb.transactional
-def txn_remove_user_id_from_video_elements_enabled_user_ids(room_id, user_id):
-
-    room_info_obj = get_room_by_id(room_id)
-
-    if user_id in room_info_obj.video_elements_enabled_user_ids:
-        room_info_obj.video_elements_enabled_user_ids.remove(user_id)
-        room_info_obj.put()
-
-    return room_info_obj
 
 @ndb.transactional
 def txn_remove_user_from_room(room_id, user_id):
