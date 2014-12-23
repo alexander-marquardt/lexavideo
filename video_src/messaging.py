@@ -11,15 +11,15 @@ from video_src import http_helpers
 from error_handling import handle_exceptions
 
 # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
-def handle_message(room_obj, from_user_id, message):
+def handle_message(room_info_obj, from_user_id, message):
     # This function passes a message from one user in a given "room" to the other user in the same room.
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
     # as for passing video and other information from one user to the other. 
 
     message_obj = json.loads(message)
     message = message.decode("utf-8")
-    to_user_id = room_obj.get_other_user_id(from_user_id)
-    chat_room_name = room_obj.chat_room_name
+    to_user_id = room_info_obj.get_other_user_id(from_user_id)
+    chat_room_name = room_info_obj.chat_room_name
 
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
@@ -31,22 +31,22 @@ def handle_message(room_obj, from_user_id, message):
 
         if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'activateVideo':
 
-            room_obj = room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_user_ids(room_obj.key, from_user_id)
-            send_room_video_settings_to_room_members(room_obj)
+            room_info_obj = room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_user_ids(room_info_obj.key, from_user_id)
+            send_room_video_settings_to_room_members(room_info_obj)
         else:
-            room_obj = room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_user_ids(room_obj.key, from_user_id)
+            room_info_obj = room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_user_ids(room_info_obj.key, from_user_id)
 
 
     if message_type == 'sdp':
         if message_payload['type'] == 'bye':
             # This would remove the other_user in loopback test too.
             # So check its availability before forwarding Bye message.
-            room_obj.remove_user(from_user_id)
+            room_info_obj.remove_user(from_user_id)
             logging.info('User %d ' % from_user_id + ' quit from room ' + chat_room_name)
-            logging.info('Room ' + chat_room_name + ' has state ' + repr(room_obj))
+            logging.info('Room ' + chat_room_name + ' has state ' + repr(room_info_obj))
 
 
-    if to_user_id and room_obj.has_user(to_user_id):
+    if to_user_id and room_info_obj.has_user(to_user_id):
         if message_type == 'sdp' and message_payload['type'] == 'offer':
             # This is just for debugging
             logging.info('sdp offer. Payload: %s' % repr(message_payload))
@@ -56,7 +56,7 @@ def handle_message(room_obj, from_user_id, message):
             #message = make_loopback_answer(message)
             pass
 
-        on_message(room_obj, to_user_id, message)
+        on_message(room_info_obj, to_user_id, message)
 
     else:
         raise Exception('otherUserNotInRoom')
@@ -78,10 +78,10 @@ def handle_message(room_obj, from_user_id, message):
 #         message.key.delete()
 
 @handle_exceptions
-def on_message(room_obj, to_user_id, message):
-    to_client_id = room_obj.make_client_id(to_user_id)
+def on_message(room_info_obj, to_user_id, message):
+    to_client_id = room_info_obj.make_client_id(to_user_id)
 
-    if room_obj.has_user(to_user_id):
+    if room_info_obj.has_user(to_user_id):
         channel.send_message(to_client_id, message)
         #logging.info('Delivered message to user %d' % to_user_id)
     else:
@@ -93,11 +93,11 @@ def on_message(room_obj, to_user_id, message):
 
 # Sends information about who is in the room
 @handle_exceptions
-def send_room_occupancy_to_room_members(room_obj, user_id):
+def send_room_occupancy_to_room_members(room_info_obj, user_id):
     # This is called when a user either connects or disconnects from a room. It sends information
     # to room members indicating the status of who is in the room.
 
-    other_user_id = room_obj.get_other_user_id(user_id)
+    other_user_id = room_info_obj.get_other_user_id(user_id)
     other_user_name = None
 
     message_obj = {'messageType': 'roomOccupancyMsg',
@@ -107,8 +107,8 @@ def send_room_occupancy_to_room_members(room_obj, user_id):
     # Javascript needs to know which users are in this room.
     # first we must create a list that contains information of all users that are in the current room.
     list_of_js_user_objects = []
-    for i in range(len(room_obj.room_members_ids)):
-        user_id = room_obj.room_members_ids[i]
+    for i in range(len(room_info_obj.room_members_ids)):
+        user_id = room_info_obj.room_members_ids[i]
         user_obj = models.UserModel.get_by_id(user_id)
         user_name = user_obj.user_name
 
@@ -122,10 +122,10 @@ def send_room_occupancy_to_room_members(room_obj, user_id):
         list_of_js_user_objects.append(js_user_obj)
 
     # send list_of_js_user_objects to every user in the room
-    for i in range(len(room_obj.room_members_ids)):
-        user_id = room_obj.room_members_ids[i]
+    for i in range(len(room_info_obj.room_members_ids)):
+        user_id = room_info_obj.room_members_ids[i]
         message_obj['messagePayload']['listOfUserObjects'] = list_of_js_user_objects
-        on_message(room_obj, user_id, json.dumps(message_obj))
+        on_message(room_info_obj, user_id, json.dumps(message_obj))
 
 
 
@@ -133,10 +133,10 @@ def send_room_occupancy_to_room_members(room_obj, user_id):
 
 # Sends information about video settings, and which client should be designated as the 'rtcInitiator'
 @handle_exceptions
-def send_room_video_settings_to_room_members(room_obj):
+def send_room_video_settings_to_room_members(room_info_obj):
 
 
-    video_elements_enabled_user_ids = room_obj.video_elements_enabled_user_ids
+    video_elements_enabled_user_ids = room_info_obj.video_elements_enabled_user_ids
 
     # Check if there are two people in the room that have enabled video, and if so send
     # a message to each of them to start the webRtc negotiation.
@@ -145,7 +145,7 @@ def send_room_video_settings_to_room_members(room_obj):
 
     is_initiator = False
     if length_of_video_elements_enabled_user_ids == 2:
-        logging.info('Sending room video settings for room %s' % room_obj)
+        logging.info('Sending room video settings for room %s' % room_info_obj)
 
         for user_id in video_elements_enabled_user_ids:
 
@@ -158,11 +158,11 @@ def send_room_video_settings_to_room_members(room_obj):
                            }
 
             logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
-            on_message(room_obj, user_id, json.dumps(message_obj))
+            on_message(room_info_obj, user_id, json.dumps(message_obj))
             is_initiator = not is_initiator
 
     else:
-        logging.warning('Not sending room video settings since only one user has enabled video. Room object: %s' % room_obj)
+        logging.warning('Not sending room video settings since only one user has enabled video. Room object: %s' % room_info_obj)
 
 
 
@@ -173,12 +173,12 @@ class MessagePage(webapp2.RequestHandler):
         message = self.request.body
         room_id = int(self.request.get('r'))
         user_id = int(self.request.get('u'))
-        room_obj = room_module.ChatRoomInfo.get_by_id(room_id)
+        room_info_obj = room_module.ChatRoomInfo.get_by_id(room_id)
 
         try:
             try:
-                if room_obj:
-                    handle_message(room_obj, user_id, message)
+                if room_info_obj:
+                    handle_message(room_info_obj, user_id, message)
                 else:
                     logging.error('Unknown room_id %d' % room_id)
                     raise Exception('unknownRoomId')
@@ -222,9 +222,9 @@ class ConnectPage(webapp2.RequestHandler):
         # This is necessary for the dev server, since the channel disconnects each time that the
         # client-side javascript is paused. Therefore, it is quite helpful to automatically put the user back in the
         # room if the user still has a channel open and wishes to connect to the current room.
-        (room_obj, dummy_status_string) = room_module.ChatRoomInfo.txn_add_user_to_room(room_id, user_id)
+        (room_info_obj, dummy_status_string) = room_module.ChatRoomInfo.txn_add_user_to_room(room_id, user_id)
 
-        send_room_occupancy_to_room_members(room_obj, user_id)
+        send_room_occupancy_to_room_members(room_info_obj, user_id)
 
 
 
@@ -237,25 +237,25 @@ class DisconnectPage(webapp2.RequestHandler):
         client_id = self.request.get('from')
         room_id, user_id = [int(n) for n in client_id.split('/')]
 
-        room_obj = room_module.ChatRoomInfo.get_room_by_id(room_id)
-        if room_obj:
-            if room_obj.has_user(user_id):
+        room_info_obj = room_module.ChatRoomInfo.get_room_by_id(room_id)
+        if room_info_obj:
+            if room_info_obj.has_user(user_id):
 
                 # Get the other_user_id before removing the user_id from the room
-                other_user_id = room_obj.get_other_user_id(user_id)
+                other_user_id = room_info_obj.get_other_user_id(user_id)
 
-                room_obj = room_module.ChatRoomInfo.txn_remove_user_from_room(room_obj.key, user_id)
+                room_info_obj = room_module.ChatRoomInfo.txn_remove_user_from_room(room_info_obj.key, user_id)
 
 
-                logging.info('User %d' % user_id + ' removed from room %d state: %s' % (room_id, str(room_obj)))
+                logging.info('User %d' % user_id + ' removed from room %d state: %s' % (room_id, str(room_info_obj)))
 
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
                 if other_user_id:
-                    send_room_occupancy_to_room_members(room_obj, other_user_id)
+                    send_room_occupancy_to_room_members(room_info_obj, other_user_id)
 
             else:
-                logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_obj.chat_room_name, room_id, user_id))
+                logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_info_obj.chat_room_name, room_id, user_id))
 
         else:
             logging.error('Room %d' % room_id + ' does not exist. Cannot disconnect user %d' % user_id)

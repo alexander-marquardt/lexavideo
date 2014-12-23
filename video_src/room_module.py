@@ -131,9 +131,9 @@ class ChatRoomInfo(ndb.Model):
 
     @classmethod
     @ndb.transactional
-    def txn_add_user_id_to_video_elements_enabled_user_ids(cls, room_obj_key, user_id):
+    def txn_add_user_id_to_video_elements_enabled_user_ids(cls, room_info_obj_key, user_id):
 
-        room_info_obj = room_obj_key.get()
+        room_info_obj = room_info_obj_key.get()
 
         if user_id in room_info_obj.video_elements_enabled_user_ids:
             logging.info('Not added to video_enalbed_ids. user %d to %s' %(user_id, room_info_obj))
@@ -146,9 +146,9 @@ class ChatRoomInfo(ndb.Model):
 
     @classmethod
     @ndb.transactional
-    def txn_remove_user_id_from_video_elements_enabled_user_ids(cls, room_obj_key, user_id):
+    def txn_remove_user_id_from_video_elements_enabled_user_ids(cls, room_info_obj_key, user_id):
 
-        room_info_obj = room_obj_key.get()
+        room_info_obj = room_info_obj_key.get()
 
         if user_id in room_info_obj.video_elements_enabled_user_ids:
             room_info_obj.video_elements_enabled_user_ids.remove(user_id)
