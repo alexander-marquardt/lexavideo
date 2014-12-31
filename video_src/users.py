@@ -4,6 +4,8 @@ import webapp2_extras.appengine.auth.models
 from webapp2_extras import security
 from google.appengine.ext import ndb
 
+from video_src import constants
+
 # UniqueUserModel is used for ensuring that UserModel "auth_id" is unique. It also
 # keeps track of any other properties that are specified as requiring a unique value
 # (perhaps email address or something like that) -- see auth.models.create_user to understand
@@ -31,13 +33,11 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 
     # We will assign new user entities to each person who visits the page, but only some of these users
     # will actually create a permanent account by registering and by creating their own user name.
-    # Other users will be cleared out of the database periodically, and the following flag will allow
-    # us to determine which users to remove.
+    # Other users will be cleared out of the database periodically, and the following flag wehn combined
+    # with the creation_date of the user object will allow us to determine which users to remove.
     user_is_registered = ndb.BooleanProperty(default=False)
 
-
-
-
+    creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
     # Some of this code is from: http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
     def set_password(self, raw_password):
@@ -46,7 +46,7 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
         :param raw_password:
             The raw password which will be hashed and stored
         """
-        self.password = security.generate_password_hash(raw_password, length=12)
+        self.password = security.generate_password_hash(raw_password, method='sha512', pepper=constants.password_pepper)
 
     @classmethod
     def get_by_auth_token(cls, user_id, token, subject='auth'):

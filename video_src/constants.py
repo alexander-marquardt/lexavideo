@@ -30,3 +30,5 @@ valid_chat_room_name_regex_compiled = re.compile(valid_chat_room_name_regex)
 
 star_separator = '*'*20
 long_star_separator = '*'*80
+
+password_pepper = u'Pepper:Iñtërnâtiônàlizætiøn'
