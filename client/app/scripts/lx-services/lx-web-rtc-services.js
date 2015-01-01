@@ -226,7 +226,8 @@ webRtcServices.factory('lxSessionDescriptionService',
         lxMessageService,
         lxPeerService,
         lxUseChatRoomConstantsService,
-        lxUseChatRoomVarsService)
+        lxUseChatRoomVarsService,
+        lxVideoParamsService)
     {
         var onSetSessionDescriptionSuccess = function() {
             $log.log('Set session description success.');
@@ -281,7 +282,7 @@ webRtcServices.factory('lxSessionDescriptionService',
             },
 
             doCall : function() {
-                var constraints = mergeConstraints(lxUseChatRoomConstantsService.offerConstraints, lxUseChatRoomVarsService.sdpConstraints);
+                var constraints = mergeConstraints(lxVideoParamsService.offerConstraints, lxUseChatRoomVarsService.sdpConstraints);
                 $log.log('Sending offer to peer, with constraints: \n' +
                     '  \'' + JSON.stringify(constraints) + '\'.');
                 lxPeerService.pc.createOffer(setLocalAndSendMessage(lxPeerService.pc),

@@ -50,7 +50,8 @@ angular.module('lxGlobalVarsAndConstants.services', [])
 
         return {
             'audioReceiveCodec': 'opus/48000',
-            'audioSendCodec': getPreferredAudioSendCodec()
+            'audioSendCodec': getPreferredAudioSendCodec(),
+            'offerConstraints': { 'mandatory': {}, 'optional': [] }
 
         }
     })

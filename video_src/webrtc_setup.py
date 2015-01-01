@@ -76,9 +76,6 @@ def make_pc_constraints(dtls, dscp, ipv6, opusfec):
 
     return constraints
 
-def make_offer_constraints():
-    constraints = { 'mandatory': {}, 'optional': [] }
-    return constraints
 
 def append_url_arguments(request, link):
     for argument in request.arguments():
@@ -160,12 +157,10 @@ def get_video_params_json(user_agent):
         ice_transports = None
         pc_config = make_pc_config(stun_server, turn_server, ts_pwd, ice_transports)
         pc_constraints = make_pc_constraints(dtls, dscp, ipv6, opusfec)
-        offer_constraints = make_offer_constraints()
 
         server_video_params = {
             'pcConfig': pc_config,
             'pcConstraints': pc_constraints,
-            'offerConstraints': offer_constraints,
         }
         return json.dumps(server_video_params)
     except:
