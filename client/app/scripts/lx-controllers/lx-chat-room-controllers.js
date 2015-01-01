@@ -42,10 +42,10 @@ angular.module('lxUseChatRoom.controllers', [])
 
             userName: lxAppWideConstantsService.userName,
             userId: lxAppWideConstantsService.userId,
-            chatRoomName: lxUseChatRoomConstantsService.chatRoomName
+            chatRoomName: $location.path().replace(/\//, '')
         };
 
-        lxInitializeRoomService.addUserToRoomAndSetupChannel().then(function(data) {
+        lxInitializeRoomService.addUserToRoomAndSetupChannel($scope).then(function(data) {
 
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
             $scope.lxChatRoomOuterCtrl.channelToken = data.channelToken;

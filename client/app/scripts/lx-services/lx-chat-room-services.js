@@ -14,9 +14,7 @@ angular.module('lxChatRoom.services', [])
         $q,
         lxChannelService,
         lxHttpHandleRoomService,
-        lxAppWideConstantsService,
-        lxAppWideVarsService,
-        lxUseChatRoomConstantsService
+        lxAppWideConstantsService
         ) {
 
         var failedToEnterRoom = function(errorLogFn, chatRoomName, statusString, deferredUserSuccessfullyEnteredRoom) {
@@ -32,15 +30,15 @@ angular.module('lxChatRoom.services', [])
 
         return {
 
-            addUserToRoomAndSetupChannel : function() {
+            addUserToRoomAndSetupChannel : function(scope) {
 
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();
 
-                $log.log('Initializing; room=' + lxUseChatRoomConstantsService.chatRoomName + '.');
+                $log.log('Initializing; room=' + scope.roomOccupancyObject.chatRoomName + '.');
 
 
                 var roomObj = {};
-                roomObj.chatRoomName = lxUseChatRoomConstantsService.chatRoomName;
+                roomObj.chatRoomName = scope.roomOccupancyObject.chatRoomName;
                 roomObj.userId = lxAppWideConstantsService.userId;
 
                 lxHttpHandleRoomService.enterIntoRoom(roomObj).then(

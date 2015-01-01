@@ -49,11 +49,18 @@ class UserChatRoomMain(webapp2.RequestHandler):
     
     @handle_exceptions
     def get(self, current_template, chat_room_name_from_url):
-        chat_room_name = chat_room_name_from_url.decode('utf8')
         user_agent = self.request.headers['User-Agent']
-        
+
+
+        # if 'user_id' in self.session:
+        #     user_id = self.session['user_id']
+        #     logging.debug('************* user_id is %s'  % user_id)
+        # else:
+        #     logging.debug('************* Not logged in!!! ')
+
+
         # copy the json parameters into a jinja variable
-        server_video_params_json = webrtc_setup.get_video_params_json(chat_room_name, user_agent)
+        server_video_params_json = webrtc_setup.get_video_params_json(user_agent)
         params = {
             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
             'site_name_dot_com': constants.site_name_dot_com,
@@ -95,11 +102,6 @@ class MainPage(registration_and_login.BaseHandler):
     @handle_exceptions
     def get(self):
 
-        if 'user_id' in self.session:
-            user_id = self.session['user_id']
-            logging.debug('************* user_id is %s'  % user_id)
-        else:
-            logging.debug('************* Not logged in!!! ')
 
 
         # When a user first enters into our website, we will assign them a unique user id.
