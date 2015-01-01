@@ -2,14 +2,12 @@
 
 import jinja2
 import json
-import logging
 import vidsetup
 import webapp2
 
 from video_src import constants
 from video_src import registration_and_login
 from video_src import users
-from video_src import webrtc_setup
 
 from video_src.error_handling import handle_exceptions
 
@@ -58,13 +56,9 @@ class UserChatRoomMain(webapp2.RequestHandler):
         # else:
         #     logging.debug('************* Not logged in!!! ')
 
-
-        # copy the json parameters into a jinja variable
-        server_video_params_json = webrtc_setup.get_video_params_json(user_agent)
         params = {
-            # Note: pass jinja variables using snake_case, and javascript variables using camelCase
-            'site_name_dot_com': constants.site_name_dot_com,
-            'videoConstantsEmbeddedInHtmlJson': server_video_params_json}
+            'site_name_dot_com': constants.site_name_dot_com
+        }
         
         # update the self.response with the current view
         template = jinja_environment.get_template(current_template)
