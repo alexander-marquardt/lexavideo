@@ -18,11 +18,6 @@ def sanitize(key):
     return re.sub('[^a-zA-Z0-9\-]', '-', key)
 
 
-def get_default_stun_server():
-    # others you can try: stun.services.mozilla.com, stunserver.org
-    return 'stun.l.google.com:19302'
-
-
 
 # HD is on by default for desktop Chrome, but not Android or Firefox (yet)
 def get_hd_default(user_agent):
@@ -93,8 +88,6 @@ def get_video_params_json(user_agent):
     
     try:
 
-        # Get the base url without arguments.
-        stun_server = get_default_stun_server()
 
         # Use "audio" and "video" to set the media stream constraints. Defined here:
         # http://goo.gl/V7cZg
@@ -140,26 +133,15 @@ def get_video_params_json(user_agent):
         ipv6 = ''
         opusfec = ''
         
-
-        # Disable pinch-zoom scaling since we manage video real-estate explicitly
-        # (via full-screen) and don't want devicePixelRatios changing dynamically.
-
         debug = vidsetup.DEBUG_BUILD
         if debug == 'loopback':
             # Set dtls to false as DTLS does not work for loopback.
             dtls = 'false'
 
 
-
-        # TODO - look at the original apprtc code to see if these values should be set.
-        turn_server = None
-        ts_pwd = None
-        ice_transports = None
-        pc_config = make_pc_config(stun_server, turn_server, ts_pwd, ice_transports)
         pc_constraints = make_pc_constraints(dtls, dscp, ipv6, opusfec)
 
         server_video_params = {
-            'pcConfig': pc_config,
             'pcConstraints': pc_constraints,
         }
         return json.dumps(server_video_params)

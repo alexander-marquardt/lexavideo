@@ -73,8 +73,7 @@ webRtcServices.factory('lxTurnService',
         lxCheckCompatibilityService,
         lxPeerService,
         lxTurnSupportService,
-        lxUseChatRoomConstantsService,
-        lxUseChatRoomVarsService)
+        lxVideoParamsService)
     {
 
 
@@ -87,9 +86,9 @@ webRtcServices.factory('lxTurnService',
                     turnServer.username,
                     turnServer.password);
                 if (iceServers !== null) {
-                    lxUseChatRoomVarsService.pcConfig.iceServers = lxUseChatRoomVarsService.pcConfig.iceServers.concat(iceServers);
+                    lxVideoParamsService.pcConfig.iceServers = lxVideoParamsService.pcConfig.iceServers.concat(iceServers);
                 }
-                $log.log('Got pcConfig.iceServers:' + lxUseChatRoomVarsService.pcConfig.iceServers + '\n');
+                $log.log('Got pcConfig.iceServers:' + lxVideoParamsService.pcConfig.iceServers + '\n');
             } catch(e) {
                 e.message = '\n\tError in onTurnResult\n\t' + e.message;
                 $log.error(e);
@@ -120,8 +119,8 @@ webRtcServices.factory('lxTurnService',
                         lxAppWideConstantsService.userName + '&key=4080218913';
 
 
-                    for (var i = 0, len = lxUseChatRoomVarsService.pcConfig.iceServers.length; i < len; i++) {
-                        if (lxUseChatRoomVarsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
+                    for (var i = 0, len = lxVideoParamsService.pcConfig.iceServers.length; i < len; i++) {
+                        if (lxVideoParamsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
                             lxTurnSupportService.turnDone = true;
                             return;
                         }
@@ -395,7 +394,8 @@ webRtcServices.factory('lxPeerService',
         lxAdapterService,
         lxIceService,
         lxUseChatRoomVarsService,
-        lxUseChatRoomConstantsService)
+        lxUseChatRoomConstantsService,
+        lxVideoParamsService)
     {
 
 
@@ -451,10 +451,10 @@ webRtcServices.factory('lxPeerService',
                 $log.log('**************** createPeerConnection ************');
                 try {
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
-                    self.pc = new lxAdapterService.RTCPeerConnection(lxUseChatRoomVarsService.pcConfig, lxUseChatRoomConstantsService.pcConstraints);
+                    self.pc = new lxAdapterService.RTCPeerConnection(lxVideoParamsService.pcConfig, lxUseChatRoomConstantsService.pcConstraints);
                     self.pc.onicecandidate = lxIceService.onIceCandidate;
                     $log.log('Created RTCPeerConnnection with:\n' +
-                        '  config: \'' + JSON.stringify(lxUseChatRoomVarsService.pcConfig) + '\';\n' +
+                        '  config: \'' + JSON.stringify(lxVideoParamsService.pcConfig) + '\';\n' +
                         '  constraints: \'' + JSON.stringify(lxUseChatRoomConstantsService.pcConstraints) + '\'.');
                 } catch (e) {
                     e.message = '\n\tFailed to create PeerConnection\n\t' + e.message;

@@ -23,8 +23,6 @@ angular.module('lxUseChatRoom.controllers', [])
         // Copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService.
         // Do this before everything else, as many other functions require that this structure be setup!!
         angular.extend(lxUseChatRoomConstantsService, videoConstantsEmbeddedInHtml);
-        // update the global vars that depend on lxUseChatRoomConstantsService
-        lxUseChatRoomVarsService.doUpdate(lxUseChatRoomConstantsService.pcConfig);
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 

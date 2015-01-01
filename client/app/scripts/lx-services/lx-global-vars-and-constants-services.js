@@ -15,8 +15,6 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         var screenXsMax = $('#id-dummy-xs-div').width();
         var self =  {
 
-            pcConfig : null,
-
             // Set up audio and video regardless of what devices are present.
             sdpConstraints : {'mandatory': {
                 'OfferToReceiveAudio': true,
@@ -26,16 +24,17 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             // the following value should match the value defined in bootstrap for $screen-xs-max. This will be
             // used for enabling and disabling the remote/local video windows on small devices for which only one
             // or the other will be shown.
-            screenXsMax : screenXsMax,
+            screenXsMax : screenXsMax
 
-            // Update the globalvars with constants that have been loaded from the server
-            doUpdate: function(pcConfig) {
-                self.pcConfig = pcConfig;
-            }
         };
         return self;
     })
 
+    /*
+    lxVideoParamsService defines settings that are required for setting up the video codecs and connectivity between
+    the peers. Most of these settings are taken from the original apprtc.py file provided by google. Please see that
+    file for a more in-depth description of what is going on.
+     */
     .factory('lxVideoParamsService', function() {
 
         function getPreferredAudioSendCodec() {
@@ -48,10 +47,46 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             return preferredAudioSendCodec;
         }
 
+        function getDefaultStunServer() {
+            // others you can try: stun.services.mozilla.com, stunserver.org
+            return 'stun.l.google.com:19302'
+        }
+
+
+        function makePcConfig(turnServer, tsPwd, iceTransports) {
+
+            var stunServer = getDefaultStunServer();
+            var config = {};
+            var servers = [];
+
+            if (stunServer) {
+                var stunConfig = 'stun:' + stunServer;
+                servers.push({'urls': stunConfig});
+            }
+
+            if (turnServer) {
+                var turnConfig = 'turn:' + turnServer;
+                servers.push({'urls': turnConfig, 'credential': tsPwd});
+            }
+
+            config['iceServers'] = servers;
+
+            if (iceTransports) {
+                config['iceTransports'] = iceTransports;
+            }
+
+            return config;
+        }
+
+        var turnServer = null;
+        var tsPwd = null;
+        var iceTransports = null;
+
         return {
             'audioReceiveCodec': 'opus/48000',
             'audioSendCodec': getPreferredAudioSendCodec(),
-            'offerConstraints': { 'mandatory': {}, 'optional': [] }
+            'offerConstraints': { 'mandatory': {}, 'optional': [] },
+            'pcConfig': makePcConfig(turnServer, tsPwd, iceTransports)
 
         }
     })
@@ -81,7 +116,6 @@ angular.module('lxGlobalVarsAndConstants.services', [])
 
             eg will contain:
             chatRoomName: ..,
-            pcConfig: ...
             etc.
             (Look at the server code to see which variables will be embedded - these are currently passed in through videoConstantsEmbeddedInHtml)
 
