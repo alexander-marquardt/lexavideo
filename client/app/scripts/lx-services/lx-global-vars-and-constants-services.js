@@ -36,6 +36,25 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         return self;
     })
 
+    .factory('lxVideoParamsService', function() {
+
+        function getPreferredAudioSendCodec() {
+            // Empty string means no preference.
+            var preferredAudioSendCodec = '';
+            // Prefer to send ISAC on Chrome for Android.
+            if ($.browser.chrome && $.browser.android) {
+                preferredAudioSendCodec = 'ISAC/16000';
+            }
+            return preferredAudioSendCodec;
+        }
+
+        return {
+            'audioReceiveCodec': 'opus/48000',
+            'audioSendCodec': getPreferredAudioSendCodec()
+
+        }
+    })
+
     .factory('lxAppWideConstantsService', function() {
         // constants that are loaded in the main page, and that will be used by all views.
         return {

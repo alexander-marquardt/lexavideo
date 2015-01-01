@@ -17,23 +17,12 @@ def generate_random(length):
 def sanitize(key):
     return re.sub('[^a-zA-Z0-9\-]', '-', key)
 
-def is_chrome_for_android(user_agent):
-    return 'Android' in user_agent and 'Chrome' in user_agent
 
 def get_default_stun_server():
     # others you can try: stun.services.mozilla.com, stunserver.org
     return 'stun.l.google.com:19302'
 
-def get_preferred_audio_receive_codec():
-    return 'opus/48000'
 
-def get_preferred_audio_send_codec(user_agent):
-    # Empty string means no preference.
-    preferred_audio_send_codec = ''
-    # Prefer to send ISAC on Chrome for Android.
-    if is_chrome_for_android(user_agent):
-        preferred_audio_send_codec = 'ISAC/16000'
-    return preferred_audio_send_codec
 
 # HD is on by default for desktop Chrome, but not Android or Firefox (yet)
 def get_hd_default(user_agent):
@@ -146,8 +135,6 @@ def get_video_params_json(user_agent):
         
         
     
-        audio_send_codec = get_preferred_audio_send_codec(user_agent)    
-        audio_receive_codec = get_preferred_audio_receive_codec()
 
 
         # Options for making pcConstraints
@@ -179,8 +166,6 @@ def get_video_params_json(user_agent):
             'pcConfig': pc_config,
             'pcConstraints': pc_constraints,
             'offerConstraints': offer_constraints,
-            'audioSendCodec': audio_send_codec,
-            'audioReceiveCodec': audio_receive_codec,
         }
         return json.dumps(server_video_params)
     except:

@@ -5,6 +5,7 @@ angular.module('lxCodecs.services', [])
     .factory('lxCodecsService',
     function(
         $log,
+        lxVideoParamsService,
         lxUseChatRoomConstantsService)
     {
 
@@ -241,21 +242,21 @@ angular.module('lxCodecs.services', [])
 
 
             maybePreferAudioSendCodec : function(sdp) {
-                if (lxUseChatRoomConstantsService.audioSendCodec === '') {
+                if (lxVideoParamsService.audioSendCodec === '') {
                     $log.log('No preference on audio send codec.');
                     return sdp;
                 }
-                $log.log('Prefer audio send codec: ' + lxUseChatRoomConstantsService.audioSendCodec);
-                return preferAudioCodec(sdp, lxUseChatRoomConstantsService.audioSendCodec);
+                $log.log('Prefer audio send codec: ' + lxVideoParamsService.audioSendCodec);
+                return preferAudioCodec(sdp, lxVideoParamsService.audioSendCodec);
             },
 
             maybePreferAudioReceiveCodec : function(sdp) {
-                if (lxUseChatRoomConstantsService.audioReceiveCodec === '') {
+                if (lxVideoParamsService.audioReceiveCodec === '') {
                     $log.log('No preference on audio receive codec.');
                     return sdp;
                 }
-                $log.log('Prefer audio receive codec: ' + lxUseChatRoomConstantsService.audioReceiveCodec);
-                return preferAudioCodec(sdp, lxUseChatRoomConstantsService.audioReceiveCodec);
+                $log.log('Prefer audio receive codec: ' + lxVideoParamsService.audioReceiveCodec);
+                return preferAudioCodec(sdp, lxVideoParamsService.audioReceiveCodec);
             },
 
             // Set Opus in stereo if stereo is enabled.
