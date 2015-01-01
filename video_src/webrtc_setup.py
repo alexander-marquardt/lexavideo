@@ -159,11 +159,7 @@ def get_video_params_json(user_agent):
 
         # Disable pinch-zoom scaling since we manage video real-estate explicitly
         # (via full-screen) and don't want devicePixelRatios changing dynamically.
-        meta_viewport = ''
-        if is_chrome_for_android(user_agent):
-            meta_viewport = ('<meta name="viewport" content="width=device-width, ' +
-                             'user-scalable=no, initial-scale=1, maximum-scale=1">')
-        
+
         debug = vidsetup.DEBUG_BUILD
         if debug == 'loopback':
             # Set dtls to false as DTLS does not work for loopback.
@@ -185,7 +181,6 @@ def get_video_params_json(user_agent):
             'offerConstraints': offer_constraints,
             'audioSendCodec': audio_send_codec,
             'audioReceiveCodec': audio_receive_codec,
-            'metaViewport': meta_viewport,
         }
         return json.dumps(server_video_params)
     except:
