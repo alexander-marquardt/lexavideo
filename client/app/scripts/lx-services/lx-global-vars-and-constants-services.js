@@ -81,11 +81,6 @@ angular.module('lxGlobalVarsAndConstants.services', [])
         function makePcConstraints() {
             var constraints = { 'optional': [] };
             constraints['optional'].push({'googImprovedWifiBwe': true});
-            constraints['optional'].push({'DtlsSrtpKeyAgreement': false});
-            constraints['optional'].push({'googDscp': false});
-            constraints['optional'].push({'googIPv6': false});
-            constraints['optional'].push({'googOpusFec': false});
-
             return constraints;
         }
 
