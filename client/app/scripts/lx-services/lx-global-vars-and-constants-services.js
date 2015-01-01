@@ -78,6 +78,17 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             return config;
         }
 
+        function makePcConstraints() {
+            var constraints = { 'optional': [] };
+            constraints['optional'].push({'googImprovedWifiBwe': true});
+            constraints['optional'].push({'DtlsSrtpKeyAgreement': false});
+            constraints['optional'].push({'googDscp': false});
+            constraints['optional'].push({'googIPv6': false});
+            constraints['optional'].push({'googOpusFec': false});
+
+            return constraints;
+        }
+
         var turnServer = null;
         var tsPwd = null;
         var iceTransports = null;
@@ -86,8 +97,8 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             'audioReceiveCodec': 'opus/48000',
             'audioSendCodec': getPreferredAudioSendCodec(),
             'offerConstraints': { 'mandatory': {}, 'optional': [] },
-            'pcConfig': makePcConfig(turnServer, tsPwd, iceTransports)
-
+            'pcConfig': makePcConfig(turnServer, tsPwd, iceTransports),
+            'pcConstraints': makePcConstraints()
         }
     })
 
@@ -117,9 +128,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             eg will contain:
             chatRoomName: ..,
             etc.
-            (Look at the server code to see which variables will be embedded - these are currently passed in through videoConstantsEmbeddedInHtml)
 
-            TODO - Eventually, constants that are still loaded from the server should be moved into this factory.
              */
 
             mediaConstraints: {

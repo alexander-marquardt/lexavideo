@@ -3,9 +3,6 @@
  */
 'use strict';
 
-// define externally defined variables so that jshint doesn't give warnings
-/* global videoConstantsEmbeddedInHtml */
-
 angular.module('lxUseChatRoom.controllers', [])
 
 
@@ -19,10 +16,6 @@ angular.module('lxUseChatRoom.controllers', [])
              lxMessageService,
              lxUseChatRoomConstantsService,
              lxUseChatRoomVarsService) {
-
-        // Copy all of the values that were embedded in the html into the lxUseChatRoomConstantsService.
-        // Do this before everything else, as many other functions require that this structure be setup!!
-        angular.extend(lxUseChatRoomConstantsService, videoConstantsEmbeddedInHtml);
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 

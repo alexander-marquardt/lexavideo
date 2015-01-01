@@ -327,7 +327,6 @@ webRtcServices.service('lxWebRtcSessionService',
         lxCodecsService,
         lxUseChatRoomVarsService,
         lxSessionDescriptionService,
-        lxUseChatRoomConstantsService,
         lxIceService,
         lxPeerService,
         lxChannelMessageService,
@@ -394,7 +393,6 @@ webRtcServices.factory('lxPeerService',
         lxAdapterService,
         lxIceService,
         lxUseChatRoomVarsService,
-        lxUseChatRoomConstantsService,
         lxVideoParamsService)
     {
 
@@ -451,11 +449,11 @@ webRtcServices.factory('lxPeerService',
                 $log.log('**************** createPeerConnection ************');
                 try {
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
-                    self.pc = new lxAdapterService.RTCPeerConnection(lxVideoParamsService.pcConfig, lxUseChatRoomConstantsService.pcConstraints);
+                    self.pc = new lxAdapterService.RTCPeerConnection(lxVideoParamsService.pcConfig, lxVideoParamsService.pcConstraints);
                     self.pc.onicecandidate = lxIceService.onIceCandidate;
                     $log.log('Created RTCPeerConnnection with:\n' +
                         '  config: \'' + JSON.stringify(lxVideoParamsService.pcConfig) + '\';\n' +
-                        '  constraints: \'' + JSON.stringify(lxUseChatRoomConstantsService.pcConstraints) + '\'.');
+                        '  constraints: \'' + JSON.stringify(lxVideoParamsService.pcConstraints) + '\'.');
                 } catch (e) {
                     e.message = '\n\tFailed to create PeerConnection\n\t' + e.message;
                     $log.error(e);
