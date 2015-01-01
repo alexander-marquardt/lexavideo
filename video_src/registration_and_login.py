@@ -16,10 +16,9 @@ from webapp2_extras.auth import InvalidAuthIdError
 from webapp2_extras.auth import InvalidPasswordError
 
 import vidsetup
-
+from video_src import constants
 
 import gaesessions
-COOKIE_KEY = '13f2xi^7170a0a564fc2a26b8ffae123-5a17'
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(vidsetup.BASE_STATIC_DIR),
@@ -103,7 +102,7 @@ class BaseHandler(webapp2.RequestHandler):
         # If there is no session associated with the cookie, then the session will remain unset until
         # it is written (eg. by executing "self.session['user_id'] = user_id"), at which point
         # a new session id will be assigned and the session is created.
-        self.session = gaesessions.Session(lifetime=lifetime, cookie_key=COOKIE_KEY)
+        self.session = gaesessions.Session(lifetime=lifetime, cookie_key=constants.cookie_key)
 
         try:
             # Dispatch the request.
@@ -331,13 +330,6 @@ config = {
     'webapp2_extras.auth': {
         'user_model': 'video_src.users.UserModel',
     },
-    'webapp2_extras.sessions': {
-        'secret_key': 'FooBar123$%^%%%QQQQQQ',
-        'cookie_name': 'ChatSurfing',
-        'session_max_age': 600,
-        'cookie_args': {
-            'max_age': 600,
-        }
-    }
+    'webapp2_extras.sessions': constants.session_settings
 }
 
