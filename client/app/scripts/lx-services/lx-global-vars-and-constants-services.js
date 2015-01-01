@@ -98,40 +98,8 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             'audioSendCodec': getPreferredAudioSendCodec(),
             'offerConstraints': { 'mandatory': {}, 'optional': [] },
             'pcConfig': makePcConfig(turnServer, tsPwd, iceTransports),
-            'pcConstraints': makePcConstraints()
-        }
-    })
-
-    .factory('lxAppWideConstantsService', function() {
-        // constants that are loaded in the main page, and that will be used by all views.
-        return {
-            /* this object will be loaded with variables from server once lxVideoChatAppViewCtrl is executed
-             */
-        };
-    })
-
-    .factory('lxAppWideVarsService', function() {
-        /* Provides variables that will be used across different views.
-         */
-        return {
-
-        };
-    })
-
-    .factory('lxUseChatRoomConstantsService', function() {
-        /* Provides constant values that are sent from the server to the client when the page is loaded.
-         */
-
-        return {
-            /* This object will be loaded with a bunch of variables from server once the lxChatRoomOuterCtrl is loaded.
-
-            eg will contain:
-            chatRoomName: ..,
-            etc.
-
-             */
-
-            mediaConstraints: {
+            'pcConstraints': makePcConstraints(),
+            'mediaConstraints': {
                 'video': {
                     'mandatory': {
 
@@ -156,10 +124,24 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             'videoSendBitrate': '',
             'stereoscopic': '',
             'stereo': false
+        }
+    })
 
+    .factory('lxAppWideConstantsService', function() {
+        // constants that are loaded in the main page, and that will be used by all views.
+        return {
+            /* this object will be loaded with variables from server once lxVideoChatAppViewCtrl is executed
+             */
         };
     })
 
+    .factory('lxAppWideVarsService', function() {
+        /* Provides variables that will be used across different views.
+         */
+        return {
+
+        };
+    })
 
     .factory('lxLandingPageConstantsService', function() {
         /* Provides constant values that are sent from the server to the client when the page is loaded.

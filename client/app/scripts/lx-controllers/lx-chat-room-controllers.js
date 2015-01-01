@@ -14,7 +14,7 @@ angular.module('lxUseChatRoom.controllers', [])
              lxCallService,
              lxInitializeRoomService,
              lxMessageService,
-             lxUseChatRoomConstantsService,
+             lxVideoParamsService,
              lxUseChatRoomVarsService) {
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
@@ -144,7 +144,7 @@ angular.module('lxUseChatRoom.controllers', [])
         lxAccessCameraAndMicrophoneService,
         lxCallService,
         lxCheckIfSystemSupportsWebRtcService,
-        lxUseChatRoomConstantsService) {
+        lxVideoParamsService) {
 
         $scope.accessCameraAndMicrophoneObject = {
             // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
@@ -183,5 +183,5 @@ angular.module('lxUseChatRoom.controllers', [])
             lxCallService.doHangup();
         };
 
-        $scope.myUsername = lxUseChatRoomConstantsService.myUsername;
+        $scope.myUsername = lxVideoParamsService.myUsername;
     });

@@ -12,7 +12,7 @@ angular.module('lxAccessSystemResources.services', [])
              $animate,
              $log,
              $modalStack,
-             lxUseChatRoomConstantsService,
+             lxVideoParamsService,
              lxCallService,
              lxMediaService,
              lxCheckCompatibilityService,
@@ -28,8 +28,8 @@ angular.module('lxAccessSystemResources.services', [])
 
 
         var askForPermissionToCameraAndMicrophone = function(scope) {
-            if (lxUseChatRoomConstantsService.mediaConstraints.audio === false &&
-                lxUseChatRoomConstantsService.mediaConstraints.video === false) {
+            if (lxVideoParamsService.mediaConstraints.audio === false &&
+                lxVideoParamsService.mediaConstraints.video === false) {
                 lxCallService.hasAudioOrVideoMediaConstraints = false;
             } else {
                 lxCallService.hasAudioOrVideoMediaConstraints = true;

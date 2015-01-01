@@ -65,7 +65,6 @@ angular.module('lxHttp.services', [])
         $http,
         $log,
         lxUseChatRoomVarsService,
-        lxUseChatRoomConstantsService,
         lxAppWideConstantsService)
     {
 

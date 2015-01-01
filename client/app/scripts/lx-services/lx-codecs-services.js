@@ -5,8 +5,7 @@ angular.module('lxCodecs.services', [])
     .factory('lxCodecsService',
     function(
         $log,
-        lxVideoParamsService,
-        lxUseChatRoomConstantsService)
+        lxVideoParamsService)
     {
 
         // Strip CN from sdp before CN constraints is ready.
@@ -170,23 +169,23 @@ angular.module('lxCodecs.services', [])
 
         return {
 
-            // Adds an a=fmtp: x-google-min-bitrate=kbps line, if lxUseChatRoomConstantsService.videoSendInitialBitrate
+            // Adds an a=fmtp: x-google-min-bitrate=kbps line, if lxVideoParamsService.videoSendInitialBitrate
             // is specified. We'll also add a x-google-min-bitrate value, since the max
             // must be >= the min.
             maybeSetVideoSendInitialBitRate : function(sdp) {
-                if (!lxUseChatRoomConstantsService.videoSendInitialBitrate) {
+                if (!lxVideoParamsService.videoSendInitialBitrate) {
                     return sdp;
                 }
 
                 // Validate the initial bitrate value.
-                var maxBitrate = lxUseChatRoomConstantsService.videoSendInitialBitrate;
-                if (lxUseChatRoomConstantsService.videoSendBitrate) {
-                    if (lxUseChatRoomConstantsService.videoSendInitialBitrate > lxUseChatRoomConstantsService.videoSendBitrate) {
+                var maxBitrate = lxVideoParamsService.videoSendInitialBitrate;
+                if (lxVideoParamsService.videoSendBitrate) {
+                    if (lxVideoParamsService.videoSendInitialBitrate > lxVideoParamsService.videoSendBitrate) {
                         $log.error('Clamping initial bitrate to max bitrate of ' +
-                            lxUseChatRoomConstantsService.videoSendBitrate + ' kbps.');
-                        lxUseChatRoomConstantsService.videoSendInitialBitrate = lxUseChatRoomConstantsService.videoSendBitrate;
+                            lxVideoParamsService.videoSendBitrate + ' kbps.');
+                        lxVideoParamsService.videoSendInitialBitrate = lxVideoParamsService.videoSendBitrate;
                     }
-                    maxBitrate = lxUseChatRoomConstantsService.videoSendBitrate;
+                    maxBitrate = lxVideoParamsService.videoSendBitrate;
                 }
 
                 var sdpLines = sdp.split('\r\n');
@@ -201,43 +200,43 @@ angular.module('lxCodecs.services', [])
                 var vp8RtpmapIndex = findLine(sdpLines, 'a=rtpmap', 'VP8/90000');
                 var vp8Payload = getCodecPayloadType(sdpLines[vp8RtpmapIndex]);
                 var vp8Fmtp = 'a=fmtp:' + vp8Payload + ' x-google-min-bitrate=' +
-                    lxUseChatRoomConstantsService.videoSendInitialBitrate.toString() + '; x-google-max-bitrate=' +
+                    lxVideoParamsService.videoSendInitialBitrate.toString() + '; x-google-max-bitrate=' +
                     maxBitrate.toString();
                 sdpLines.splice(vp8RtpmapIndex + 1, 0, vp8Fmtp);
                 return sdpLines.join('\r\n');
             },
 
             maybeSetAudioSendBitRate : function(sdp) {
-                if (!lxUseChatRoomConstantsService.audioSendBitrate) {
+                if (!lxVideoParamsService.audioSendBitrate) {
                     return sdp;
                 }
-                $log.log('Prefer audio send bitrate: ' + lxUseChatRoomConstantsService.audioSendBitrate);
-                return preferBitRate(sdp, lxUseChatRoomConstantsService.audioSendBitrate, 'audio');
+                $log.log('Prefer audio send bitrate: ' + lxVideoParamsService.audioSendBitrate);
+                return preferBitRate(sdp, lxVideoParamsService.audioSendBitrate, 'audio');
             },
 
             maybeSetAudioReceiveBitRate : function (sdp) {
-                if (!lxUseChatRoomConstantsService.audioRecvBitrate) {
+                if (!lxVideoParamsService.audioRecvBitrate) {
                     return sdp;
                 }
-                $log.log('Prefer audio receive bitrate: ' + lxUseChatRoomConstantsService.audioRecvBitrate);
-                return preferBitRate(sdp, lxUseChatRoomConstantsService.audioRecvBitrate, 'audio');
+                $log.log('Prefer audio receive bitrate: ' + lxVideoParamsService.audioRecvBitrate);
+                return preferBitRate(sdp, lxVideoParamsService.audioRecvBitrate, 'audio');
             },
 
 
             maybeSetVideoSendBitRate : function (sdp) {
-                if (!lxUseChatRoomConstantsService.videoSendBitrate) {
+                if (!lxVideoParamsService.videoSendBitrate) {
                     return sdp;
                 }
-                $log.log('Prefer video send bitrate: ' + lxUseChatRoomConstantsService.videoSendBitrate);
-                return preferBitRate(sdp, lxUseChatRoomConstantsService.videoSendBitrate, 'video');
+                $log.log('Prefer video send bitrate: ' + lxVideoParamsService.videoSendBitrate);
+                return preferBitRate(sdp, lxVideoParamsService.videoSendBitrate, 'video');
             },
 
             maybeSetVideoReceiveBitRate : function(sdp) {
-                if (!lxUseChatRoomConstantsService.videoRecvBitrate) {
+                if (!lxVideoParamsService.videoRecvBitrate) {
                     return sdp;
                 }
-                $log.log('Prefer video receive bitrate: ' + lxUseChatRoomConstantsService.videoRecvBitrate);
-                return preferBitRate(sdp, lxUseChatRoomConstantsService.videoRecvBitrate, 'video');
+                $log.log('Prefer video receive bitrate: ' + lxVideoParamsService.videoRecvBitrate);
+                return preferBitRate(sdp, lxVideoParamsService.videoRecvBitrate, 'video');
             },
 
 

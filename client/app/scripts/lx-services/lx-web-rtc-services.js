@@ -224,7 +224,6 @@ webRtcServices.factory('lxSessionDescriptionService',
         lxCodecsService,
         lxMessageService,
         lxPeerService,
-        lxUseChatRoomConstantsService,
         lxUseChatRoomVarsService,
         lxVideoParamsService)
     {
@@ -301,7 +300,7 @@ webRtcServices.factory('lxSessionDescriptionService',
                 };
 
                 // Set Opus in Stereo, if stereo enabled.
-                if (lxUseChatRoomConstantsService.stereo) {
+                if (lxVideoParamsService.stereo) {
                     message.sdp = lxCodecsService.addStereo(message.sdp);
                 }
                 message.sdp = lxCodecsService.maybePreferAudioSendCodec(message.sdp);
@@ -504,7 +503,7 @@ webRtcServices.factory('lxMediaService',
 
         lxAdapterService,
         lxCallService,
-        lxUseChatRoomConstantsService,
+        lxVideoParamsService,
         lxStreamService)
     {
 
@@ -577,11 +576,11 @@ webRtcServices.factory('lxMediaService',
                     // still waiting for the response -- this would cause multiple "Allow" buttons to be stacked on each
                     // other in the containing browser.
                     if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'waitingForResponse') {
-                        lxAdapterService.getUserMedia(lxUseChatRoomConstantsService.mediaConstraints,
+                        lxAdapterService.getUserMedia(lxVideoParamsService.mediaConstraints,
                             onUserMediaSuccess(scope),
                             onUserMediaError(videoSignalingObject));
                         $log.debug('Requested access to local media with mediaConstraints:\n' +
-                            '  \'' + JSON.stringify(lxUseChatRoomConstantsService.mediaConstraints) + '\'');
+                            '  \'' + JSON.stringify(lxVideoParamsService.mediaConstraints) + '\'');
                         videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'waitingForResponse';
                     } 
 
@@ -606,7 +605,7 @@ webRtcServices.factory('lxCallService',
         lxPeerService,
         lxWebRtcSessionService,
         lxChannelSupportService,
-        lxUseChatRoomConstantsService,
+        lxVideoParamsService,
         lxUseChatRoomVarsService,
         lxChannelMessageService,
         lxStreamService,
