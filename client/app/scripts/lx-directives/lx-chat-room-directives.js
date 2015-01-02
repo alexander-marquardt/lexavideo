@@ -25,7 +25,7 @@ angular.module('lxChatRoom.directives', [])
 
                     $window.onbeforeunload = function () {
                         $log.debug('Manually disconnecting channel on window unload event.');
-                        lxHttpChannelService.manuallyDisconnectChannel(scope.lxChatRoomOuterCtrl.clientId);
+                        lxHttpChannelService.manuallyDisconnectChannel(scope.roomOccupancyObject.userId);
                     };
 
 

@@ -99,29 +99,14 @@ class ChatRoomInfo(ndb.Model):
         return result
 
 
-    def make_client_id(self, user_id):
-        # client id is the room id + / + user id
-        return str(self.key.id()) + '/' + str(user_id)
-
-
     def get_occupancy(self):
         return len(self.room_members_ids)
 
-    def get_other_user_id(self, user_id):
-        # Currently this function is written based on the assumption that there is a maximum of two users in a room.
-        # If this assumption is not true in the future, then we would have to pass back a list of "other users"
-        occupancy = self.get_occupancy()
-        if occupancy == 0:
-            raise Exception('This function should not be called on an empty room')
-        elif occupancy == 1:
-            # only one user in the room means that there is no "other user"
-            return None
-        elif occupancy == 2:
-            for i in range(len(self.room_members_ids)):
-                if self.room_members_ids[i] !=  user_id:
-                    return self.room_members_ids[i]
-        else: # occupancy > 2:
-            raise Exception('Room should not have more than two people in it')
+    def get_other_user_ids(self, user_id):
+        # returns a list of all *other* user ids in the current room
+        user_ids_list = list(self.room_members_ids)
+        user_ids_list.remove(user_id)
+        return user_ids_list
 
     def has_user(self, user_id):
         if user_id in self.room_members_ids:
@@ -223,11 +208,6 @@ class ChatRoomInfo(ndb.Model):
                 status_string = 'roomJoined'
                 logging.info('Room already has user %d - not added' % user_id)
 
-            # Room is full - return a roomIsFull status
-            elif occupancy >= 2:
-                logging.warning('Room ' + room_info_obj.chat_room_name + ' is full')
-                status_string = 'roomIsFull'
-
             # This is a new user joining the room
             else:
 
@@ -236,6 +216,7 @@ class ChatRoomInfo(ndb.Model):
                     if not user_id in room_info_obj.room_members_ids:
                         room_info_obj.room_members_ids.append(user_id)
                         room_info_obj.put()
+                        logging.info('User %d added to room.' % user_id)
 
                     status_string = 'roomJoined'
 
@@ -250,11 +231,14 @@ class ChatRoomInfo(ndb.Model):
 
         # Now we need to add the room to the user (ie. track which rooms the user is currently in)
         user_obj = users.get_user_by_id(user_id)
-        rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
+        if user_obj:
+            rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
 
-        if (room_info_obj.key not in rooms_currently_open_object.list_of_open_rooms_keys):
-            rooms_currently_open_object.list_of_open_rooms_keys.append(room_info_obj.key)
-            rooms_currently_open_object.put()
+            if (room_info_obj.key not in rooms_currently_open_object.list_of_open_rooms_keys):
+                rooms_currently_open_object.list_of_open_rooms_keys.append(room_info_obj.key)
+                rooms_currently_open_object.put()
+        else:
+            logging.error('User object not found for user id %d' % user_id)
 
         # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
         # the database and may have updated it. We want any enclosing functions to use the updated version.
@@ -334,9 +318,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             room_info_obj = ChatRoomInfo.create_or_get_room(chat_room_name, room_dict,
                                                                         room_creator_user_key)
             token_timeout = 240  # minutes
-            client_id = room_info_obj.make_client_id(user_id)
-            channel_token = channel.create_channel(client_id, token_timeout)
-            response_dict['clientId'] = client_id
+            channel_token = channel.create_channel(str(user_id), token_timeout)
             response_dict['channelToken'] = channel_token
             response_dict['roomId'] = room_info_obj.key.id()
             response_dict['statusString'] = 'roomJoined'

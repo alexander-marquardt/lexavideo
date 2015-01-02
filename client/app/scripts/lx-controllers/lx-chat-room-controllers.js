@@ -27,7 +27,6 @@ angular.module('lxUseChatRoom.controllers', [])
 
             userSuccessfullyEnteredRoom: false,
             channelToken: null,
-            clientId: null
         };
 
 
@@ -51,7 +50,6 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomOuterCtrl.channelToken = 'Failed to get channelToken';
         })
         ['finally'](function() {
-            $scope.lxChatRoomOuterCtrl.clientId = lxAppWideConstantsService.userId;
         });
 
         var addUserToRoomWhenChannelReady = function(roomOccupancyObject) {
@@ -73,7 +71,6 @@ angular.module('lxUseChatRoom.controllers', [])
             // The following two lines need to be removed once we have the channelToken passed through the
             // "requestChannelToken" function above
             $scope.lxChatRoomOuterCtrl.channelToken = data.channelToken;
-            $scope.lxChatRoomOuterCtrl.clientId = data.clientId;
 
             $scope.roomOccupancyObject.roomId = lxChatRoomVarsService.roomId = data.roomId;
 

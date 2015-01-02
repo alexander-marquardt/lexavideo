@@ -19,7 +19,7 @@ def handle_message(room_info_obj, from_user_id, message):
 
     message_obj = json.loads(message)
     message = message.decode("utf-8")
-    to_user_id = room_info_obj.get_other_user_id(from_user_id)
+    to_user_ids = room_info_obj.get_other_user_ids(from_user_id)
     chat_room_name = room_info_obj.chat_room_name
 
     message_type = message_obj['messageType']
@@ -47,7 +47,10 @@ def handle_message(room_info_obj, from_user_id, message):
             logging.info('Room ' + chat_room_name + ' has state ' + repr(room_info_obj))
 
 
-    if to_user_id and room_info_obj.has_user(to_user_id):
+    # TODO - THIS WILL BREAK WHEN THERE ARE MORE THAN 2 USERS IN A ROOM - NEEDS URGENT FIX - FOR SDP MESSAGES
+    # PASS IN THE SPECIFIC "to_user" that the message is intended for.
+    logging.error('Fix the code - it is broken')
+    for to_user_id in to_user_ids:
         if message_type == 'sdp' and message_payload['type'] == 'offer':
             # This is just for debugging
             logging.info('sdp offer. Payload: %s' % repr(message_payload))
@@ -64,31 +67,17 @@ def handle_message(room_info_obj, from_user_id, message):
 
 
 
-# def delete_saved_messages(client_id):
-#     messages =models.Message.get_saved_messages(client_id)
-#     for message in messages:
-#         message.key.delete()
-#         logging.info('Deleted the saved message for ' + client_id)
 
-
-# def send_saved_messages(client_id):
-#     messages = models.Message.get_saved_messages(client_id)
-#     for message in messages:
-#         channel.send_message(client_id, message.msg)
-#         logging.info('Delivered saved message to ' + client_id)
-#         message.key.delete()
 
 @handle_exceptions
 def on_message(room_info_obj, to_user_id, message):
-    to_client_id = room_info_obj.make_client_id(to_user_id)
 
     if room_info_obj.has_user(to_user_id):
-        channel.send_message(to_client_id, message)
+        channel.send_message(str(to_user_id), message)
         #logging.info('Delivered message to user %d' % to_user_id)
     else:
-        # new_message = models.Message(client_id = to_client_id, msg = message)
         # new_message.put()
-        logging.error('Unable to deliver message to user ' + to_client_id + ' since they are not connected to the room.')
+        logging.error('Unable to deliver message to user ' + to_user_id + ' since they are not connected to the room.')
         raise Exception('otherUserChannelNotConnected')
 
 
@@ -97,9 +86,6 @@ def on_message(room_info_obj, to_user_id, message):
 def send_room_occupancy_to_room_members(room_info_obj, user_id):
     # This is called when a user either connects or disconnects from a room. It sends information
     # to room members indicating the status of who is in the room.
-
-    other_user_id = room_info_obj.get_other_user_id(user_id)
-    other_user_name = None
 
     message_obj = {'messageType': 'roomOccupancyMsg',
                    'messagePayload': {},
@@ -269,30 +255,34 @@ class DisconnectPage(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
 
-        client_id = self.request.get('from')
-        room_id, user_id = [int(n) for n in client_id.split('/')]
+        user_id = int(self.request.get('from'))
 
         # Remove the room from the user object
         user_obj = users.get_user_by_id(user_id)
-        rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
 
-        for room_info_obj_key in rooms_currently_open_object.list_of_open_rooms_keys:
-            room_info_obj = room_info_obj_key.get()
+        if user_obj:
+            rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
 
-            if room_info_obj.has_user(user_id):
+            for room_info_obj_key in rooms_currently_open_object.list_of_open_rooms_keys:
+                room_info_obj = room_info_obj_key.get()
 
-                # Get the other_user_id before removing the user_id from the room
-                other_user_id = room_info_obj.get_other_user_id(user_id)
+                if room_info_obj.has_user(user_id):
 
-                room_info_obj = room_module.ChatRoomInfo.txn_remove_user_from_room(room_info_obj.key, user_id)
+                    # Get the other_user_id before removing the user_id from the room
+                    other_user_ids = room_info_obj.get_other_user_ids(user_id)
 
-                logging.info('User %d' % user_id + ' removed from room %d state: %s' % (room_id, str(room_info_obj)))
+                    room_info_obj = room_module.ChatRoomInfo.txn_remove_user_from_room(room_info_obj.key, user_id)
 
-                # The 'active' user has disconnected from the room, so we want to send an update to the remote
-                # user informing them of the new status.
-                if other_user_id:
-                    send_room_occupancy_to_room_members(room_info_obj, other_user_id)
+                    logging.info('User %d' % user_id + ' removed from room  %s' % (str(room_info_obj)))
 
-            else:
-                logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_info_obj.chat_room_name, room_id, user_id))
+                    # The 'active' user has disconnected from the room, so we want to send an update to the remote
+                    # user informing them of the new status.
+                    for other_user_id in other_user_ids:
+                        send_room_occupancy_to_room_members(room_info_obj, other_user_id)
+
+                else:
+                    logging.error('Room %s does not have user %d - disconnect failed' % (room_info_obj.chat_room_name, user_id))
+
+        else:
+            logging.error('User associated with id %s not found.' % user_id)
 
