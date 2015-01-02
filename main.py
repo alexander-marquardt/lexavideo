@@ -6,6 +6,11 @@
 Main URL hander for Videochat Applications written by Alexander Marquardt - code started in summer of 2014. 
 """
 
+# Important Note: you must concurrently run "grunt serve" in the "client" directory in order to ensure that css
+# and other files are correctly built - *even* on the development server, since we are using sass which requires
+# a pre-compilation step.
+
+
 import webapp2
 import vidsetup
 
