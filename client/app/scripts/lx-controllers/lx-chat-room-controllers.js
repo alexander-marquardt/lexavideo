@@ -12,10 +12,9 @@ angular.module('lxUseChatRoom.controllers', [])
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxCallService,
-             lxInitializeRoomService,
-             lxMessageService,
-             lxVideoParamsService,
-             lxUseChatRoomVarsService) {
+             lxChatRoomVarsService,
+             lxInitializeRoomService
+             ) {
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
@@ -42,7 +41,7 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomOuterCtrl.channelToken = data.channelToken;
             $scope.lxChatRoomOuterCtrl.clientId = data.clientId;
 
-            $scope.roomOccupancyObject.roomId = lxUseChatRoomVarsService.roomId = data.roomId;
+            $scope.roomOccupancyObject.roomId = lxChatRoomVarsService.roomId = data.roomId;
 
         }, function(errorEnteringIntoRoomInfoObj) {
 

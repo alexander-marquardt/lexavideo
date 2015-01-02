@@ -224,7 +224,7 @@ webRtcServices.factory('lxSessionDescriptionService',
         lxCodecsService,
         lxMessageService,
         lxPeerService,
-        lxUseChatRoomVarsService,
+        lxChatRoomVarsService,
         lxVideoParamsService)
     {
         var onSetSessionDescriptionSuccess = function() {
@@ -276,11 +276,11 @@ webRtcServices.factory('lxSessionDescriptionService',
             doAnswer : function() {
                 $log.log('Sending answer to peer.');
                 lxPeerService.pc.createAnswer(setLocalAndSendMessage(lxPeerService.pc),
-                    onCreateSessionDescriptionError, lxUseChatRoomVarsService.sdpConstraints);
+                    onCreateSessionDescriptionError, lxChatRoomVarsService.sdpConstraints);
             },
 
             doCall : function() {
-                var constraints = mergeConstraints(lxVideoParamsService.offerConstraints, lxUseChatRoomVarsService.sdpConstraints);
+                var constraints = mergeConstraints(lxVideoParamsService.offerConstraints, lxChatRoomVarsService.sdpConstraints);
                 $log.log('Sending offer to peer, with constraints: \n' +
                     '  \'' + JSON.stringify(constraints) + '\'.');
                 lxPeerService.pc.createOffer(setLocalAndSendMessage(lxPeerService.pc),
@@ -324,7 +324,7 @@ webRtcServices.service('lxWebRtcSessionService',
         $timeout,
         lxMessageService,
         lxCodecsService,
-        lxUseChatRoomVarsService,
+        lxChatRoomVarsService,
         lxSessionDescriptionService,
         lxIceService,
         lxPeerService,
@@ -391,7 +391,7 @@ webRtcServices.factory('lxPeerService',
 
         lxAdapterService,
         lxIceService,
-        lxUseChatRoomVarsService,
+        lxChatRoomVarsService,
         lxVideoParamsService)
     {
 
@@ -606,7 +606,7 @@ webRtcServices.factory('lxCallService',
         lxWebRtcSessionService,
         lxChannelSupportService,
         lxVideoParamsService,
-        lxUseChatRoomVarsService,
+        lxChatRoomVarsService,
         lxChannelMessageService,
         lxStreamService,
         lxSessionDescriptionService)

@@ -10,8 +10,7 @@ var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 videoAppDirectives.directive('lxVideoContainerDirective',
     function($window,
              $log,
-             lxUseChatRoomVarsService,
-             lxUseChatRoomConstantsService,
+             lxChatRoomVarsService,
              lxAdapterService) {
 
 
@@ -75,7 +74,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
 
                     // Check if this is a XS device, and if so, then embed local video inside the remote.
-                    if (viewportSize.getWidth() <= lxUseChatRoomVarsService.screenXsMax) {
+                    if (viewportSize.getWidth() <= lxChatRoomVarsService.screenXsMax) {
 
                         // If this is an active HD session on a small screen, then we display the remote video with a local
                         // video embedded inside of a mini-video element.

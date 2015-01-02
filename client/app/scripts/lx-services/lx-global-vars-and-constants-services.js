@@ -10,7 +10,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
      fit easily into any of the currently defined services. These variables may be accessed and
      modified directly from anywhere that is wrapped inside of the lx-use-chatroom-controller.
      */
-    .factory('lxUseChatRoomVarsService', function () {
+    .factory('lxChatRoomVarsService', function () {
 
         var screenXsMax = $('#id-dummy-xs-div').width();
         var self =  {
