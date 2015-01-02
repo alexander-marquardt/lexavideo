@@ -333,18 +333,13 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             room_creator_user_key = ndb.Key('UserModel', user_id)
             room_info_obj = ChatRoomInfo.create_or_get_room(chat_room_name, room_dict,
                                                                         room_creator_user_key)
-
-            # Now add the user to the room (even if they created the room, they have not yet been added). Notice
-            # that we intentionally overwrite room_info_obj with the value returned from this function call, as
-            # room_info_obj may be modified by the transaction, and we must have the most up-to-date data.
-            (room_info_obj, response_dict['statusString']) = ChatRoomInfo.txn_add_user_to_room(room_info_obj.key.id(), user_id)
-
             token_timeout = 240  # minutes
             client_id = room_info_obj.make_client_id(user_id)
             channel_token = channel.create_channel(client_id, token_timeout)
             response_dict['clientId'] = client_id
             response_dict['channelToken'] = channel_token
             response_dict['roomId'] = room_info_obj.key.id()
+            response_dict['statusString'] = 'roomJoined'
 
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 

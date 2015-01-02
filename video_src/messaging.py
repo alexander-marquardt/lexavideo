@@ -8,7 +8,6 @@ from google.appengine.api import channel
 from video_src import room_module
 from video_src import http_helpers
 from video_src import users
-from video_src import utils
 
 from error_handling import handle_exceptions
 
@@ -237,16 +236,17 @@ class ConnectPage(webapp2.RequestHandler):
 
     @handle_exceptions
     def post(self):
-        client_id = self.request.get('from')
-        room_id, user_id = [int(n) for n in client_id.split('/')]
-
-        # Add user to the room. If they have a channel open to the room then they are by definition in the room
-        # This is necessary for the dev server, since the channel disconnects each time that the
-        # client-side javascript is paused. Therefore, it is quite helpful to automatically put the user back in the
-        # room if the user still has a channel open and wishes to connect to the current room.
-        (room_info_obj, dummy_status_string) = room_module.ChatRoomInfo.txn_add_user_to_room(room_id, user_id)
-
-        send_room_occupancy_to_room_members(room_info_obj, user_id)
+        # client_id = self.request.get('from')
+        # room_id, user_id = [int(n) for n in client_id.split('/')]
+        #
+        # # Add user to the room. If they have a channel open to the room then they are by definition in the room
+        # # This is necessary for the dev server, since the channel disconnects each time that the
+        # # client-side javascript is paused. Therefore, it is quite helpful to automatically put the user back in the
+        # # room if the user still has a channel open and wishes to connect to the current room.
+        # (room_info_obj, dummy_status_string) = room_module.ChatRoomInfo.txn_add_user_to_room(room_id, user_id)
+        #
+        # send_room_occupancy_to_room_members(room_info_obj, user_id)
+        pass
 
 
 class OpenChannel(webapp2.RequestHandler):
@@ -263,6 +263,7 @@ class OpenChannel(webapp2.RequestHandler):
 
         http_helpers.set_http_ok_json_response(self.response, response_dict)
 
+
 class DisconnectPage(webapp2.RequestHandler):
 
     @handle_exceptions
@@ -271,15 +272,19 @@ class DisconnectPage(webapp2.RequestHandler):
         client_id = self.request.get('from')
         room_id, user_id = [int(n) for n in client_id.split('/')]
 
-        room_info_obj = room_module.ChatRoomInfo.get_room_by_id(room_id)
-        if room_info_obj:
+        # Remove the room from the user object
+        user_obj = users.get_user_by_id(user_id)
+        rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
+
+        for room_info_obj_key in rooms_currently_open_object.list_of_open_rooms_keys:
+            room_info_obj = room_info_obj_key.get()
+
             if room_info_obj.has_user(user_id):
 
                 # Get the other_user_id before removing the user_id from the room
                 other_user_id = room_info_obj.get_other_user_id(user_id)
 
                 room_info_obj = room_module.ChatRoomInfo.txn_remove_user_from_room(room_info_obj.key, user_id)
-
 
                 logging.info('User %d' % user_id + ' removed from room %d state: %s' % (room_id, str(room_info_obj)))
 
@@ -291,5 +296,3 @@ class DisconnectPage(webapp2.RequestHandler):
             else:
                 logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_info_obj.chat_room_name, room_id, user_id))
 
-        else:
-            logging.error('Room %d' % room_id + ' does not exist. Cannot disconnect user %d' % user_id)

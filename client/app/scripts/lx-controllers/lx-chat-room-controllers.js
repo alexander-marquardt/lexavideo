@@ -10,10 +10,12 @@ angular.module('lxUseChatRoom.controllers', [])
     function($scope,
              $location,
              $log,
+             $timeout,
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxCallService,
              lxChannelService,
+             lxChannelSupportService,
              lxChatRoomVarsService,
              lxHttpChannelService,
              lxInitializeRoomService
@@ -40,7 +42,7 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         // Periodically update the room so that the server knows if the user is currently in the room.
-        lxChannelService.sendUseHeartbeat($scope.roomOccupancyObject);
+        lxChannelService.sendUserHeartbeat($scope.roomOccupancyObject);
 
         lxHttpChannelService.requestChannelToken(lxAppWideConstantsService.userId).then(function(response) {
             //$scope.lxChatRoomOuterCtrl.channelToken = response.data.channelToken;
@@ -52,6 +54,18 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomOuterCtrl.clientId = lxAppWideConstantsService.userId;
         });
 
+        var addUserToRoomWhenChannelReady = function(roomOccupancyObject) {
+            var innerWaitForChannelReady = function() {
+                if (!lxChannelSupportService.channelReady) {
+                    $timeout(innerWaitForChannelReady, 100);
+                } else {
+                    // Add the user to the room, now that the channel is open
+                    lxHttpChannelService.sendRoomStatusHeartbeat(roomOccupancyObject.userId, roomOccupancyObject.roomId);
+                }
+            };
+            innerWaitForChannelReady();
+        };
+
         lxInitializeRoomService.addUserToRoom($scope).then(function(data) {
 
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
@@ -62,6 +76,8 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomOuterCtrl.clientId = data.clientId;
 
             $scope.roomOccupancyObject.roomId = lxChatRoomVarsService.roomId = data.roomId;
+
+            addUserToRoomWhenChannelReady($scope.roomOccupancyObject);
 
         }, function(errorEnteringIntoRoomInfoObj) {
 

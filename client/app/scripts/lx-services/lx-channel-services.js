@@ -246,20 +246,22 @@ angular.module('lxChannel.services', [])
         return {
             openChannel: function(scope) {
 
+                var roomOccupancyObject = scope.roomOccupancyObject;
                 $log.info('*** Opening channel. ***');
                 try {
                     var channel = new goog.appengine.Channel(scope.lxChatRoomOuterCtrl.channelToken);
                     lxChannelSupportService.socket = channel.open(handler(this, scope));
+
                 } catch(e) {
                     e.message = '\n\tError in openChannel\n\t' + e.message;
                     $log.error(e);
                 }
             },
 
-            sendUseHeartbeat: function(roomOccupancyObject) {
+            sendUserHeartbeat: function(roomOccupancyObject) {
                 var timeoutFn = function() {
                     $timeout(function() {
-                        lxHttpChannelService.sendRoomStatusHeartbeat(roomOccupancyObject.userId, roomOccupancyObject.roomId)
+                        lxHttpChannelService.sendRoomStatusHeartbeat(roomOccupancyObject.userId, roomOccupancyObject.roomId);
                         timeoutFn();
                     }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
                 };
