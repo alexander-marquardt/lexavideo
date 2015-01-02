@@ -39,6 +39,14 @@ angular.module('lxHttp.services', [])
         ) {
 
         return {
+
+            // this function will be periodically called so that that room will be up-to-date with the users
+            // that are currently in the room.
+            sendRoomStatusHeartbeat: function(userId, roomId) {
+                var postData = {'userId': userId, 'roomId': roomId};
+                $http.post('/_lx/channel/user_heartbeat/', postData)
+            },
+
             // Function that will initialize the channel and get the token from the server
             requestChannelToken: function(userId) {
                 var postData = {'userId': userId};

@@ -41,9 +41,11 @@ angular.module('lxChannel.services', [])
              $timeout,
              $rootScope,
              lxAccessVideoElementsAndAccessCameraService,
+             lxAppWideConstantsService,
              lxCallService,
              lxChannelMessageService,
              lxChannelSupportService,
+             lxHttpChannelService,
              lxMessageService,
              lxWebRtcSessionService
 
@@ -252,6 +254,16 @@ angular.module('lxChannel.services', [])
                     e.message = '\n\tError in openChannel\n\t' + e.message;
                     $log.error(e);
                 }
+            },
+
+            sendUseHeartbeat: function(roomOccupancyObject) {
+                var timeoutFn = function() {
+                    $timeout(function() {
+                        lxHttpChannelService.sendRoomStatusHeartbeat(roomOccupancyObject.userId, roomOccupancyObject.roomId)
+                        timeoutFn();
+                    }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
+                };
+                timeoutFn();
             }
         };
     });

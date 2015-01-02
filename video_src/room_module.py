@@ -122,8 +122,8 @@ class ChatRoomInfo(ndb.Model):
         else: # occupancy > 2:
             raise Exception('Room should not have more than two people in it')
 
-    def has_user(room_info_obj, user_id):
-        if user_id in room_info_obj.room_members_ids:
+    def has_user(self, user_id):
+        if user_id in self.room_members_ids:
             return True
         else:
             return False

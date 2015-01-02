@@ -43,3 +43,7 @@ session_settings = {
 }
 
 cookie_key = '13f2xi^7170a0a564fc2a26b8ffae123-5a17'
+
+# The client periodically updates that server with their status, and if a heartbeat is missed then we can
+# presume that the user has closed the connection to our website.
+heartbeatIntervalSeconds = 20

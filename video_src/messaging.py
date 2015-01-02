@@ -213,6 +213,26 @@ class MessagePage(webapp2.RequestHandler):
 
 
 
+class UserHeartbeat(webapp2.RequestHandler):
+
+    @handle_exceptions
+    def post(self):
+        data_object = json.loads(self.request.body)
+        user_id = data_object['userId']
+        room_id = data_object['roomId']
+
+        room_info_obj = room_module.ChatRoomInfo.get_room_by_id(room_id)
+
+        # check if the user is already in the room, and add them if they are not in the room. Otherwise,
+        # no action is necessary.
+        if not room_info_obj.has_user(user_id):
+            (room_info_obj, dummy_status_string) = room_module.ChatRoomInfo.txn_add_user_to_room(room_id, user_id)
+
+            # Update the other members of the room so they know that this user has joined the room.
+            send_room_occupancy_to_room_members(room_info_obj, user_id)
+
+
+
 class ConnectPage(webapp2.RequestHandler):
 
     @handle_exceptions

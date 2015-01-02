@@ -13,6 +13,7 @@ angular.module('lxUseChatRoom.controllers', [])
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxCallService,
+             lxChannelService,
              lxChatRoomVarsService,
              lxHttpChannelService,
              lxInitializeRoomService
@@ -34,8 +35,12 @@ angular.module('lxUseChatRoom.controllers', [])
 
             userName: lxAppWideConstantsService.userName,
             userId: lxAppWideConstantsService.userId,
-            chatRoomName: $location.path().replace(/\//, '')
+            chatRoomName: $location.path().replace(/\//, ''),
+            roomId: null
         };
+
+        // Periodically update the room so that the server knows if the user is currently in the room.
+        lxChannelService.sendUseHeartbeat($scope.roomOccupancyObject);
 
         lxHttpChannelService.requestChannelToken(lxAppWideConstantsService.userId).then(function(response) {
             //$scope.lxChatRoomOuterCtrl.channelToken = response.data.channelToken;
