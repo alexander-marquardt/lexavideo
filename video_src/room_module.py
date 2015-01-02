@@ -11,6 +11,7 @@ from google.appengine.api import channel
 from video_src import constants
 from video_src import http_helpers
 from video_src import status_reporting
+from video_src import users
 from video_src import utils
 
 from video_src.error_handling import handle_exceptions
@@ -159,7 +160,7 @@ class ChatRoomInfo(ndb.Model):
 
 
     @classmethod
-    @ndb.transactional
+    @ndb.transactional(xg=True)
     def txn_remove_user_from_room(cls, room_key, user_id):
 
         logging.info('Removing user %d from room %s ' % (user_id, room_key))
@@ -175,6 +176,17 @@ class ChatRoomInfo(ndb.Model):
             room_info_obj.video_elements_enabled_user_ids.remove(user_id)
 
         room_info_obj.put()
+
+
+        # Remove the room from the user object
+        user_obj = users.get_user_by_id(user_id)
+        rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
+
+        if (room_info_obj.key in rooms_currently_open_object.list_of_open_rooms_keys):
+            rooms_currently_open_object.list_of_open_rooms_keys.remove(room_info_obj.key)
+            rooms_currently_open_object.put()
+
+
         return room_info_obj
 
 
@@ -193,17 +205,17 @@ class ChatRoomInfo(ndb.Model):
     # This is done in a transaction to ensure that after two users are in a room, that no
     # more users will be added.
     @classmethod
-    @ndb.transactional
+    @ndb.transactional(xg=True)
     def txn_add_user_to_room(cls, room_id, user_id):
 
         logging.info('Attempting to add user %d to room %d ' % (user_id, room_id))
         room_info_obj = cls.get_room_by_id(room_id)
         status_string = None
 
+
         if room_info_obj:
 
             occupancy = room_info_obj.get_occupancy()
-
 
             if room_info_obj.has_user(user_id):
                 # do nothing as this user is already in the room - report status as "roomJoined"
@@ -235,6 +247,14 @@ class ChatRoomInfo(ndb.Model):
 
         else:
              logging.error('Invalid room id: %d' % room_id)
+
+        # Now we need to add the room to the user (ie. track which rooms the user is currently in)
+        user_obj = users.get_user_by_id(user_id)
+        rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
+
+        if (room_info_obj.key not in rooms_currently_open_object.list_of_open_rooms_keys):
+            rooms_currently_open_object.list_of_open_rooms_keys.append(room_info_obj.key)
+            rooms_currently_open_object.put()
 
         # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
         # the database and may have updated it. We want any enclosing functions to use the updated version.

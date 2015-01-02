@@ -14,6 +14,12 @@ from video_src import constants
 # datastore. 
 class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique): pass
 
+
+# Each user can have multipe rooms open, and this class tracks which rooms they are currently participating in
+class RoomsCurrentlyOpenByUser(ndb.Model):
+    list_of_open_rooms_keys = ndb.KeyProperty(kind='ChatRoomInfo', repeated=True)
+
+
 # UserModel is accessed from the webapp2 auth module, and is accessed/included with the following
 # statements that appear inside the config object that is passed to the wsgi application handler.
 #     'webapp2_extras.auth': {
@@ -38,6 +44,9 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
     user_is_registered = ndb.BooleanProperty(default=False)
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
+
+    # track which rooms the user is currently participating in
+    rooms_currently_open_object_key = ndb.KeyProperty(kind='RoomsCurrentlyOpenByUser')
 
     # Some of this code is from: http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
     def set_password(self, raw_password):
@@ -73,7 +82,11 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 
 def create_new_user():
 
+    rooms_currently_open_object = RoomsCurrentlyOpenByUser()
+    rooms_currently_open_object.put()
+
     new_user_obj = UserModel()
+    new_user_obj.rooms_currently_open_object_key = rooms_currently_open_object.key
     new_user_obj.put()
 
     # use the key as the user_name until they decide to create their own user_name.
