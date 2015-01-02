@@ -4,7 +4,8 @@ from video_src import status_reporting
 
 
 def set_http_json_response(response,  response_dict, http_status_code):
-    response.headers['Content-Type'] = 'application/json'   
+    response.headers['Content-Type'] = 'application/json'
+    response.clear()
     response.write(json.dumps(response_dict))
     response.set_status(http_status_code)    
 
