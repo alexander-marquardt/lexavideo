@@ -8,6 +8,8 @@ from google.appengine.api import channel
 from video_src import room_module
 from video_src import http_helpers
 from video_src import users
+from video_src import utils
+
 from error_handling import handle_exceptions
 
 # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
@@ -227,7 +229,19 @@ class ConnectPage(webapp2.RequestHandler):
         send_room_occupancy_to_room_members(room_info_obj, user_id)
 
 
+class OpenChannel(webapp2.RequestHandler):
 
+    @handle_exceptions
+    def post(self):
+        token_timeout = 300  # minutes
+        data_object = json.loads(self.request.body)
+        channel_token = channel.create_channel(str(data_object['userId']), token_timeout)
+
+        response_dict = {
+            'channelToken': channel_token
+        }
+
+        http_helpers.set_http_ok_json_response(self.response, response_dict)
 
 class DisconnectPage(webapp2.RequestHandler):
 

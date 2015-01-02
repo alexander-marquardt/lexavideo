@@ -13,6 +13,7 @@ angular.module('lxChatRoom.services', [])
         $window,
         $q,
         lxChannelService,
+        lxHttpChannelService,
         lxHttpHandleRoomService,
         lxAppWideConstantsService
         ) {
@@ -30,7 +31,7 @@ angular.module('lxChatRoom.services', [])
 
         return {
 
-            addUserToRoomAndSetupChannel : function(scope) {
+            addUserToRoom : function(scope) {
 
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();
 

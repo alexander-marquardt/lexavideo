@@ -9,10 +9,12 @@ angular.module('lxUseChatRoom.controllers', [])
     .controller('lxChatRoomOuterCtrl',
     function($scope,
              $location,
+             $log,
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxCallService,
              lxChatRoomVarsService,
+             lxHttpChannelService,
              lxInitializeRoomService
              ) {
 
@@ -35,9 +37,22 @@ angular.module('lxUseChatRoom.controllers', [])
             chatRoomName: $location.path().replace(/\//, '')
         };
 
-        lxInitializeRoomService.addUserToRoomAndSetupChannel($scope).then(function(data) {
+        lxHttpChannelService.requestChannelToken(lxAppWideConstantsService.userId).then(function(response) {
+            //$scope.lxChatRoomOuterCtrl.channelToken = response.data.channelToken;
+
+        }, function(response) {
+            $scope.lxChatRoomOuterCtrl.channelToken = 'Failed to get channelToken';
+        })
+        ['finally'](function() {
+            $scope.lxChatRoomOuterCtrl.clientId = lxAppWideConstantsService.userId;
+        });
+
+        lxInitializeRoomService.addUserToRoom($scope).then(function(data) {
 
             $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
+
+            // The following two lines need to be removed once we have the channelToken passed through the
+            // "requestChannelToken" function above
             $scope.lxChatRoomOuterCtrl.channelToken = data.channelToken;
             $scope.lxChatRoomOuterCtrl.clientId = data.clientId;
 

@@ -39,6 +39,20 @@ angular.module('lxHttp.services', [])
         ) {
 
         return {
+            // Function that will initialize the channel and get the token from the server
+            requestChannelToken: function(userId) {
+                var postData = {'userId': userId};
+                var httpPromise = $http.post('/_lx/channel/open_channel/', postData);
+                httpPromise.then(function(response){
+                    $log.info('Got channel data: ' + response.data);
+                }, function(response){
+                    $log.error('Failed to open channel for user id: ' + userId +'\nStatus: ' + response.statusText +
+                    '\ndata: ' + angular.toJson(response.data));
+                });
+
+                return httpPromise;
+            },
+
             manuallyDisconnectChannel: function(clientId) {
                 // If we know that the user is disconnecting from the page, then we may want to send
                 // a message to the server immediately, so that the room will be vacated instantly. This
