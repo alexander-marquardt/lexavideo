@@ -106,7 +106,7 @@ angular.module('lxHttp.services', [])
          Functionality for posting messages to the server.
          */
         return {
-            sendMessage : function(messageType, messagePayload) {
+            sendMessage : function(messageType, messagePayload, clientId) {
                 /*
                  messageType: string indicating if this is a Signaling message or some other kind of message
                  that is being sent over the Appengine Channel API.
@@ -126,7 +126,7 @@ angular.module('lxHttp.services', [])
                 //$log.debug('C->S: ' + angular.toJson(messagePayload));
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
-                var path = '/_lx/message?r=' + lxChatRoomVarsService.roomId + '&c=' + lxAppWideConstantsService.clientId;
+                var path = '/_lx/message?r=' + lxChatRoomVarsService.roomId + '&c=' + clientId;
 
                 var httpPromise = $http.post(path, messageObject);
                 return httpPromise;

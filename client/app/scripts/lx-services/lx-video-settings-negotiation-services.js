@@ -110,7 +110,8 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
 
                 // Only attempt to send a message if there is another user in the room
                 if (scope.roomOccupancyObject.listOfClientObjects.length > 1) {
-                    lxMessageService.sendMessage('videoCameraStatusMsg',
+                    lxMessageService.sendMessage(
+                        'videoCameraStatusMsg',
                         {
                             videoElementsEnabledAndCameraAccessRequested: localVideoElementsEnabled,
 
@@ -120,7 +121,8 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
                             // this is strictly not necessary, but doesn't cost much and provides some redundancy in
                             // the case of un-delivered messages.
                             queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled
-                        }
+                        },
+                        scope.lxChatRoomOuterCtrl.clientId
                     );
                 }
             }

@@ -50,7 +50,7 @@ def handle_message(room_info_obj, from_client_id, message):
 
 
     for to_client_id in to_client_ids_list:
-        if to_client_id and room_info_obj.has_user(to_client_id):
+        if to_client_id and room_info_obj.has_client(to_client_id):
             if message_type == 'sdp' and message_payload['type'] == 'offer':
                 # This is just for debugging
                 logging.info('sdp offer. Payload: %s' % repr(message_payload))
@@ -173,7 +173,7 @@ class MessagePage(webapp2.RequestHandler):
     def post(self):
         message = self.request.body
         room_id = int(self.request.get('r'))
-        client_id = int(self.request.get('c'))
+        client_id = self.request.get('c')
         room_info_obj = room_module.ChatRoomInfo.get_by_id(room_id)
 
         try:

@@ -103,7 +103,8 @@ angular.module('lxChannel.services', [])
                                     lxChannelMessageService.push(sdpObject);
                                 }
                             } else {
-                                lxWebRtcSessionService.processSignalingMessage(sdpObject, localVideoObject, remoteVideoObject);
+                                lxWebRtcSessionService.processSignalingMessage(sdpObject, localVideoObject,
+                                    remoteVideoObject, scope.lxChatRoomOuterCtrl.clientId);
                             }
                             break;
 
@@ -174,7 +175,9 @@ angular.module('lxChannel.services', [])
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
 
                             // acknowledge receipt of the message
-                            lxMessageService.sendMessage('ackChatMessage', {'ackMessageUniqueId': messageObject.messagePayload.messageUniqueId});
+                            lxMessageService.sendMessage('ackChatMessage',
+                                {'ackMessageUniqueId': messageObject.messagePayload.messageUniqueId},
+                                scope.lxChatRoomOuterCtrl.clientId);
                             break;
 
 
