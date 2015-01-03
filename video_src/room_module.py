@@ -180,11 +180,16 @@ class ChatRoomInfo(ndb.Model):
 
         # Remove the room from the user object
         user_obj = users.get_user_by_id(user_id)
-        rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
 
-        if (room_info_obj.key in rooms_currently_open_object.list_of_open_rooms_keys):
-            rooms_currently_open_object.list_of_open_rooms_keys.remove(room_info_obj.key)
-            rooms_currently_open_object.put()
+        # TODO - This code is wrong - it removes the user from the room even if they
+        # may still be in the room in another client/browser. This will be fixed when
+        # we pass in the client id instead of user id.
+        for client_model_key in user_obj.client_models_list_of_keys:
+            client_model_obj = client_model_key.get()
+
+            if (room_info_obj.key in client_model_obj.list_of_open_rooms_keys):
+                client_model_obj.list_of_open_rooms_keys.remove(room_info_obj.key)
+                client_model_obj.put()
 
 
         return room_info_obj
@@ -250,11 +255,18 @@ class ChatRoomInfo(ndb.Model):
 
         # Now we need to add the room to the user (ie. track which rooms the user is currently in)
         user_obj = users.get_user_by_id(user_id)
-        rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
 
-        if (room_info_obj.key not in rooms_currently_open_object.list_of_open_rooms_keys):
-            rooms_currently_open_object.list_of_open_rooms_keys.append(room_info_obj.key)
-            rooms_currently_open_object.put()
+        client_model = users.ClientModel(id=room_info_obj.make_client_id(user_id))
+        client_model.put()
+
+        user_obj.client_models_list_of_keys.append(client_model.key)
+
+        for client_model_key in user_obj.client_models_list_of_keys:
+            client_model_obj = client_model_key.get()
+
+            if room_info_obj.key not in client_model_obj.list_of_open_rooms_keys:
+                client_model_obj.list_of_open_rooms_keys.append(room_info_obj.key)
+                client_model_obj.put()
 
         # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
         # the database and may have updated it. We want any enclosing functions to use the updated version.

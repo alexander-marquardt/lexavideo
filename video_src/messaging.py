@@ -272,11 +272,10 @@ class DisconnectPage(webapp2.RequestHandler):
         client_id = self.request.get('from')
         room_id, user_id = [int(n) for n in client_id.split('/')]
 
-        # Remove the room from the user object
-        user_obj = users.get_user_by_id(user_id)
-        rooms_currently_open_object = user_obj.rooms_currently_open_object_key.get()
+        client_obj = users.ClientModel.get_by_id(client_id)
 
-        for room_info_obj_key in rooms_currently_open_object.list_of_open_rooms_keys:
+        for room_info_obj_key in client_obj.list_of_open_rooms_keys:
+
             room_info_obj = room_info_obj_key.get()
 
             if room_info_obj.has_user(user_id):

@@ -15,10 +15,17 @@ from video_src import constants
 class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique): pass
 
 
-# Each user can have multipe rooms open, and this class tracks which rooms they are currently participating in
-class RoomsCurrentlyOpenByUser(ndb.Model):
+# ClientModel is complementary to UserModel. Each user will only have a single associated UserModel
+# but they will have a unique ClientModel object for each unique browser window/channel that they
+# connect to the website with.
+# Each client model object will be keyed by a unique id that will follow the following format
+# str(user_id) + '/' + str(current_time_in_ms)
+class ClientModel(ndb.Model):
     list_of_open_rooms_keys = ndb.KeyProperty(kind='ChatRoomInfo', repeated=True)
 
+    # These should be periodically cleared out of the database - use creation_date to find and remove
+    # old/expired client models.
+    creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
 # UserModel is accessed from the webapp2 auth module, and is accessed/included with the following
 # statements that appear inside the config object that is passed to the wsgi application handler.
@@ -46,7 +53,7 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
     # track which rooms the user is currently participating in
-    rooms_currently_open_object_key = ndb.KeyProperty(kind='RoomsCurrentlyOpenByUser')
+    client_models_list_of_keys = ndb.KeyProperty(kind='ClientModel', repeated=True)
 
     # Some of this code is from: http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
     def set_password(self, raw_password):
@@ -82,11 +89,7 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 
 def create_new_user():
 
-    rooms_currently_open_object = RoomsCurrentlyOpenByUser()
-    rooms_currently_open_object.put()
-
     new_user_obj = UserModel()
-    new_user_obj.rooms_currently_open_object_key = rooms_currently_open_object.key
     new_user_obj.put()
 
     # use the key as the user_name until they decide to create their own user_name.
