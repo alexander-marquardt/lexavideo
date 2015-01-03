@@ -315,9 +315,9 @@ class DisconnectPage(webapp2.RequestHandler):
                     # Get the other_user_id before removing the user_id from the room
                     other_user_id = room_info_obj.get_other_user_id(user_id)
 
-                    room_info_obj = room_module.ChatRoomInfo.txn_remove_user_from_room(room_info_obj.key, user_id)
+                    room_info_obj = room_module.ChatRoomInfo.txn_remove_client_from_room(room_info_obj.key, client_id)
 
-                    logging.info('User %d' % user_id + ' removed from room %d state: %s' % (room_info_obj.key.id(), str(room_info_obj)))
+                    logging.info('Client %s' % client_id + ' removed from room %d state: %s' % (room_info_obj.key.id(), str(room_info_obj)))
 
                     # The 'active' user has disconnected from the room, so we want to send an update to the remote
                     # user informing them of the new status.
@@ -325,7 +325,7 @@ class DisconnectPage(webapp2.RequestHandler):
                         send_room_occupancy_to_room_members(room_info_obj, other_user_id)
 
                 else:
-                    logging.error('Room %s (%d) does not have user %d - disconnect failed' % (room_info_obj.chat_room_name, room_info_obj.key.id(), user_id))
+                    logging.error('Room %s (%d) does not have client %s - disconnect failed' % (room_info_obj.chat_room_name, room_info_obj.key.id(), client_id))
 
         else:
             logging.error('client_id: %s does not have an associated ClientModel object' % client_id)

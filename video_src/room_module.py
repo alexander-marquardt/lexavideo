@@ -44,7 +44,7 @@ class ChatRoomInfo(ndb.Model):
     # than two ids given the current video standard). If a user stops their video or leaves a room, then
     # their id will be removed from this array.
     # When the second user activates their video, then the WebRTC signalling will start between the two users.
-    video_elements_enables_client_ids = ndb.IntegerProperty(repeated=True)
+    video_elements_enables_client_ids = ndb.StringProperty(repeated=True)
 
     @classmethod
     def get_unique_chat_room_name_model_key_string(cls, chat_room_name):
@@ -88,11 +88,11 @@ class ChatRoomInfo(ndb.Model):
         if self.room_members_client_ids:
             result += "room_members_client_ids: "
             for i in range(len(self.room_members_client_ids)):
-                result += "%d " % (self.room_members_client_ids[i])
+                result += "%s " % (self.room_members_client_ids[i])
 
             result += " video_elements_enables_client_ids: "
             for i in range(len(self.video_elements_enables_client_ids)):
-                result += "%d " % (self.video_elements_enables_client_ids[i])
+                result += "%s " % (self.video_elements_enables_client_ids[i])
 
         result += ']'
         return result
@@ -225,7 +225,8 @@ class ChatRoomInfo(ndb.Model):
             # If the user cannot be added to the room, then an exception will be generated - let the client
             # know that the server had a problem.
             except:
-               status_string = 'serverError'
+                status_string = 'serverError'
+                status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
 
         else:
              logging.error('Invalid room id: %d' % room_id)
