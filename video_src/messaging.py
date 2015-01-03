@@ -297,11 +297,7 @@ class DisconnectPage(webapp2.RequestHandler):
     def post(self):
 
         client_id = self.request.get('from')
-        try:
-            user_id, unique_browser_id = [int(n) for n in client_id.split('/')]
-        except:
-            logging.error('Unable to unpack client_id: %s' % client_id)
-            client_id = 'NotValid'
+        user_id, unique_browser_id = [int(n) for n in client_id.split('/')]
 
         client_obj = users.ClientModel.get_by_id(client_id)
 
