@@ -98,8 +98,7 @@ angular.module('lxHttp.services', [])
     function(
         $http,
         $log,
-        lxChatRoomVarsService,
-        lxAppWideConstantsService)
+        lxChatRoomVarsService)
     {
 
         /*
@@ -117,6 +116,12 @@ angular.module('lxHttp.services', [])
                  messagePayload: an object containing data that will be send from one peer to another through the server.
                  Note: this data will be serialized automatically by AngularJS into a JSON object/string.
                  */
+
+                // make sure that the clientId is in the correct format
+                var split_string_array = clientId.split('/');
+                if (split_string_array[0] != parseInt(split_string_array[0], 10)) {
+                    $log.error("Not an integer value!!");
+                }
 
                 var messageObject = {
                     'messageType': messageType,

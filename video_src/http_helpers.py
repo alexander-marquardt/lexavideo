@@ -21,8 +21,8 @@ def set_http_error_json_response(response, status_string, http_status_code):
     set_http_json_response(response, response_content, http_status_code)
     
 
-def set_error_json_response_and_write_log(response, status_string, logging_function, http_status_code):
-    status_reporting.log_call_stack_and_traceback(logging_function, extra_info = status_string)
+def set_error_json_response_and_write_log(response, status_string, logging_function, http_status_code, request=None):
+    status_reporting.log_call_stack_and_traceback(logging_function, extra_info = status_string, request=request)
     set_http_error_json_response(response, status_string , http_status_code)
 
 

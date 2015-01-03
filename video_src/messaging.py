@@ -34,10 +34,10 @@ def handle_message(room_info_obj, from_client_id, message):
 
         if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'activateVideo':
 
-            room_info_obj = room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enables_client_ids(room_info_obj.key, from_client_id)
+            room_info_obj = room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(room_info_obj.key, from_client_id)
             send_room_video_settings_to_room_members(room_info_obj)
         else:
-            room_info_obj = room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enables_client_ids(room_info_obj.key, from_client_id)
+            room_info_obj = room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_client_ids(room_info_obj.key, from_client_id)
 
 
     if message_type == 'sdp':
@@ -137,33 +137,30 @@ def send_room_occupancy_to_room_members(room_info_obj, client_id):
 def send_room_video_settings_to_room_members(room_info_obj):
 
 
-    video_elements_enables_client_ids = room_info_obj.video_elements_enables_client_ids
+    video_elements_enabled_client_ids = room_info_obj.video_elements_enabled_client_ids
 
     # Check if there are two people in the room that have enabled video, and if so send
     # a message to each of them to start the webRtc negotiation.
-    length_of_video_elements_enables_client_ids = len(video_elements_enables_client_ids)
-    assert(length_of_video_elements_enables_client_ids <= 2)
+    length_of_video_elements_enabled_client_ids = len(video_elements_enabled_client_ids)
 
     is_initiator = False
-    if length_of_video_elements_enables_client_ids == 2:
-        logging.info('Sending room video settings for room %s' % room_info_obj)
 
-        for user_id in video_elements_enables_client_ids:
+    logging.info('Sending room video settings for room %s' % room_info_obj)
 
-            # The second person to connect will be the 'rtcInitiator'.
-            # By sending this 'rtcInitiator' value to the clients, this will re-initiate
-            # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
-            # once per session, unless the users become disconnected and need to re-connect.
-            message_obj = {'messageType': 'roomInitialVideoSettingsMsg',
-                           'messagePayload': {'rtcInitiator': is_initiator},
-                           }
+    for client_id in video_elements_enabled_client_ids:
 
-            logging.info('Sending user %d room status %s' % (user_id, json.dumps(message_obj)))
-            on_message(room_info_obj, user_id, json.dumps(message_obj))
-            is_initiator = not is_initiator
+        # The second person to connect will be the 'rtcInitiator'.
+        # By sending this 'rtcInitiator' value to the clients, this will re-initiate
+        # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
+        # once per session, unless the users become disconnected and need to re-connect.
+        message_obj = {'messageType': 'roomInitialVideoSettingsMsg',
+                       'messagePayload': {'rtcInitiator': is_initiator},
+                       }
 
-    else:
-        logging.warning('Not sending room video settings since only one user has enabled video. Room object: %s' % room_info_obj)
+        logging.info('Sending client %s room status %s' % (client_id, json.dumps(message_obj)))
+        on_message(room_info_obj, client_id, json.dumps(message_obj))
+        is_initiator = not is_initiator
+
 
 
 
@@ -208,7 +205,8 @@ class MessagePage(webapp2.RequestHandler):
             http_status_code = 500
             logging_function = logging.error
 
-            http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function, http_status_code)
+            http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function,
+                                                               http_status_code, self.request)
 
 
 

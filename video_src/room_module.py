@@ -44,7 +44,7 @@ class ChatRoomInfo(ndb.Model):
     # than two ids given the current video standard). If a user stops their video or leaves a room, then
     # their id will be removed from this array.
     # When the second user activates their video, then the WebRTC signalling will start between the two users.
-    video_elements_enables_client_ids = ndb.StringProperty(repeated=True)
+    video_elements_enabled_client_ids = ndb.StringProperty(repeated=True)
 
     @classmethod
     def get_unique_chat_room_name_model_key_string(cls, chat_room_name):
@@ -90,9 +90,9 @@ class ChatRoomInfo(ndb.Model):
             for i in range(len(self.room_members_client_ids)):
                 result += "%s " % (self.room_members_client_ids[i])
 
-            result += " video_elements_enables_client_ids: "
-            for i in range(len(self.video_elements_enables_client_ids)):
-                result += "%s " % (self.video_elements_enables_client_ids[i])
+            result += " video_elements_enabled_client_ids: "
+            for i in range(len(self.video_elements_enabled_client_ids)):
+                result += "%s " % (self.video_elements_enabled_client_ids[i])
 
         result += ']'
         return result
@@ -121,27 +121,27 @@ class ChatRoomInfo(ndb.Model):
 
     @classmethod
     @ndb.transactional
-    def txn_add_user_id_to_video_elements_enables_client_ids(cls, room_info_obj_key, client_id):
+    def txn_add_user_id_to_video_elements_enabled_client_ids(cls, room_info_obj_key, client_id):
 
         room_info_obj = room_info_obj_key.get()
 
-        if client_id in room_info_obj.video_elements_enables_client_ids:
+        if client_id in room_info_obj.video_elements_enabled_client_ids:
             logging.info('Not added to video_enalbed_ids. client %s to %s' %(client_id, room_info_obj))
         else:
-            logging.info('Adding video_enalbed_ids. client %d to %s' %(client_id, room_info_obj))
-            room_info_obj.video_elements_enables_client_ids.append(client_id)
+            logging.info('Adding video_enabled_ids. client %s to %s' %(client_id, room_info_obj))
+            room_info_obj.video_elements_enabled_client_ids.append(client_id)
             room_info_obj.put()
 
         return room_info_obj
 
     @classmethod
     @ndb.transactional
-    def txn_remove_user_id_from_video_elements_enables_client_ids(cls, room_info_obj_key, client_id):
+    def txn_remove_user_id_from_video_elements_enabled_client_ids(cls, room_info_obj_key, client_id):
 
         room_info_obj = room_info_obj_key.get()
 
-        if client_id in room_info_obj.video_elements_enables_client_ids:
-            room_info_obj.video_elements_enables_client_ids.remove(client_id)
+        if client_id in room_info_obj.video_elements_enabled_client_ids:
+            room_info_obj.video_elements_enabled_client_ids.remove(client_id)
             room_info_obj.put()
 
         return room_info_obj
@@ -159,10 +159,10 @@ class ChatRoomInfo(ndb.Model):
             # if the user_id is not in the list, an exception will be raised
             room_info_obj.room_members_client_ids.remove(client_id)
         except:
-            logging.error("client_id %d not found in room - why is it being removed?" % client_id)
+            logging.error("client_id %s not found in room - why is it being removed?" % client_id)
 
-        if client_id in room_info_obj.video_elements_enables_client_ids:
-            room_info_obj.video_elements_enables_client_ids.remove(client_id)
+        if client_id in room_info_obj.video_elements_enabled_client_ids:
+            room_info_obj.video_elements_enabled_client_ids.remove(client_id)
 
         room_info_obj.put()
 

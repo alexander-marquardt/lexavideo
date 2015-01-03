@@ -276,7 +276,7 @@ webRtcServices.factory('lxSessionDescriptionService',
 
         var self =  {
 
-            doAnswer : function() {
+            doAnswer : function(clientId) {
                 $log.log('Sending answer to peer.');
                 lxPeerService.pc.createAnswer(setLocalAndSendMessage(lxPeerService.pc, clientId),
                     onCreateSessionDescriptionError, lxChatRoomVarsService.sdpConstraints);
@@ -361,7 +361,7 @@ webRtcServices.service('lxWebRtcSessionService',
             lxChannelMessageService.clearQueue();
         },
 
-        processSignalingMessage: function( message, localVideoObject, remoteVideoObject) {
+        processSignalingMessage: function( message, localVideoObject, remoteVideoObject, clientId) {
             if (!self.started) {
                 $log.warn('peerConnection has not been created yet!');
                 return;
@@ -369,7 +369,7 @@ webRtcServices.service('lxWebRtcSessionService',
 
             if (message.type === 'offer') {
                 lxSessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject);
-                lxSessionDescriptionService.doAnswer();
+                lxSessionDescriptionService.doAnswer(clientId);
 
             } else if (message.type === 'answer') {
                 lxSessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject);
@@ -663,7 +663,7 @@ webRtcServices.factory('lxCallService',
                     }
                     else {
                         $log.log('Executing calleeStart()');
-                        calleeStart(localVideoObject, remoteVideoObject, videoSignalingObject, clientId);
+                        calleeStart(localVideoObject, remoteVideoObject, clientId);
                     }
 
                 } else {
