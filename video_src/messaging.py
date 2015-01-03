@@ -42,9 +42,7 @@ def handle_message(room_info_obj, from_client_id, message):
 
     if message_type == 'sdp':
         if message_payload['type'] == 'bye':
-            # This would remove the other_user in loopback test too.
-            # So check its availability before forwarding Bye message.
-            room_info_obj.txn_remove_client_from_room(room_info_obj.key, from_client_id)
+            room_info_obj.txn_remove_user_id_from_video_elements_enabled_client_ids(room_info_obj.key, from_client_id)
             logging.info('Client %s ' % from_client_id + ' quit from room ' + chat_room_name)
             logging.info('Room ' + chat_room_name + ' has state ' + repr(room_info_obj))
 
