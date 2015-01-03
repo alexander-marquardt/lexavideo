@@ -6,7 +6,6 @@ import webapp2
 import webapp2_extras.appengine.auth.models
 
 from google.appengine.ext import ndb
-from google.appengine.api import channel
 
 from video_src import constants
 from video_src import http_helpers
@@ -36,8 +35,8 @@ class ChatRoomInfo(ndb.Model):
     # if the user wrote 'aLeX', it will be stored here as 'aLeX'
     chat_room_name_as_written = ndb.StringProperty(default = None)
 
-    # room_members_ids contains ids of all users currently in a chat room.
-    room_members_ids = ndb.IntegerProperty(repeated=True)
+    # room_members_client_ids contains ids of all users currently in a chat room.
+    room_members_client_ids = ndb.StringProperty(repeated=True)
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -45,7 +44,7 @@ class ChatRoomInfo(ndb.Model):
     # than two ids given the current video standard). If a user stops their video or leaves a room, then
     # their id will be removed from this array.
     # When the second user activates their video, then the WebRTC signalling will start between the two users.
-    video_elements_enabled_user_ids = ndb.IntegerProperty(repeated=True)
+    video_elements_enables_client_ids = ndb.IntegerProperty(repeated=True)
 
     @classmethod
     def get_unique_chat_room_name_model_key_string(cls, chat_room_name):
@@ -86,14 +85,14 @@ class ChatRoomInfo(ndb.Model):
 
     def __str__(self):
         result = '['
-        if self.room_members_ids:
-            result += "room_members_ids: "
-            for i in range(len(self.room_members_ids)):
-                result += "%d " % (self.room_members_ids[i])
+        if self.room_members_client_ids:
+            result += "room_members_client_ids: "
+            for i in range(len(self.room_members_client_ids)):
+                result += "%d " % (self.room_members_client_ids[i])
 
-            result += " video_elements_enabled_user_ids: "
-            for i in range(len(self.video_elements_enabled_user_ids)):
-                result += "%d " % (self.video_elements_enabled_user_ids[i])
+            result += " video_elements_enables_client_ids: "
+            for i in range(len(self.video_elements_enables_client_ids)):
+                result += "%d " % (self.video_elements_enables_client_ids[i])
 
         result += ']'
         return result
@@ -105,26 +104,16 @@ class ChatRoomInfo(ndb.Model):
 
 
     def get_occupancy(self):
-        return len(self.room_members_ids)
+        return len(self.room_members_client_ids)
 
-    def get_other_user_id(self, user_id):
-        # Currently this function is written based on the assumption that there is a maximum of two users in a room.
-        # If this assumption is not true in the future, then we would have to pass back a list of "other users"
-        occupancy = self.get_occupancy()
-        if occupancy == 0:
-            raise Exception('This function should not be called on an empty room')
-        elif occupancy == 1:
-            # only one user in the room means that there is no "other user"
-            return None
-        elif occupancy == 2:
-            for i in range(len(self.room_members_ids)):
-                if self.room_members_ids[i] !=  user_id:
-                    return self.room_members_ids[i]
-        else: # occupancy > 2:
-            raise Exception('Room should not have more than two people in it')
+    def get_list_of_other_client_ids(self, client_id):
+        list_of_client_ids = list(self.room_members_client_ids)
+        list_of_client_ids.remove(client_id)
+        return list_of_client_ids
 
-    def has_user(self, user_id):
-        if user_id in self.room_members_ids:
+
+    def has_client(self, client_id):
+        if client_id in self.room_members_client_ids:
             return True
         else:
             return False
@@ -132,27 +121,27 @@ class ChatRoomInfo(ndb.Model):
 
     @classmethod
     @ndb.transactional
-    def txn_add_user_id_to_video_elements_enabled_user_ids(cls, room_info_obj_key, user_id):
+    def txn_add_user_id_to_video_elements_enables_client_ids(cls, room_info_obj_key, client_id):
 
         room_info_obj = room_info_obj_key.get()
 
-        if user_id in room_info_obj.video_elements_enabled_user_ids:
-            logging.info('Not added to video_enalbed_ids. user %d to %s' %(user_id, room_info_obj))
+        if client_id in room_info_obj.video_elements_enables_client_ids:
+            logging.info('Not added to video_enalbed_ids. client %s to %s' %(client_id, room_info_obj))
         else:
-            logging.info('Adding video_enalbed_ids. user %d to %s' %(user_id, room_info_obj))
-            room_info_obj.video_elements_enabled_user_ids.append(user_id)
+            logging.info('Adding video_enalbed_ids. client %d to %s' %(client_id, room_info_obj))
+            room_info_obj.video_elements_enables_client_ids.append(client_id)
             room_info_obj.put()
 
         return room_info_obj
 
     @classmethod
     @ndb.transactional
-    def txn_remove_user_id_from_video_elements_enabled_user_ids(cls, room_info_obj_key, user_id):
+    def txn_remove_user_id_from_video_elements_enables_client_ids(cls, room_info_obj_key, client_id):
 
         room_info_obj = room_info_obj_key.get()
 
-        if user_id in room_info_obj.video_elements_enabled_user_ids:
-            room_info_obj.video_elements_enabled_user_ids.remove(user_id)
+        if client_id in room_info_obj.video_elements_enables_client_ids:
+            room_info_obj.video_elements_enables_client_ids.remove(client_id)
             room_info_obj.put()
 
         return room_info_obj
@@ -161,25 +150,25 @@ class ChatRoomInfo(ndb.Model):
 
     @classmethod
     @ndb.transactional(xg=True)
-    def txn_remove_user_from_room(cls, room_key, user_id):
+    def txn_remove_client_from_room(cls, room_key, client_id):
 
-        logging.info('Removing user %d from room %s ' % (user_id, room_key))
+        logging.info('Removing user %d from room %s ' % (client_id, room_key))
 
         room_info_obj = room_key.get()
         try:
             # if the user_id is not in the list, an exception will be raised
-            room_info_obj.room_members_ids.remove(user_id)
+            room_info_obj.room_members_client_ids.remove(client_id)
         except:
-            logging.error("user_id %d not found in room - why is it being removed?" % user_id)
+            logging.error("client_id %d not found in room - why is it being removed?" % client_id)
 
-        if user_id in room_info_obj.video_elements_enabled_user_ids:
-            room_info_obj.video_elements_enabled_user_ids.remove(user_id)
+        if client_id in room_info_obj.video_elements_enables_client_ids:
+            room_info_obj.video_elements_enables_client_ids.remove(client_id)
 
         room_info_obj.put()
 
 
         # Remove the room from the user object
-        user_obj = users.get_user_by_id(user_id)
+        user_obj = users.get_user_by_id(client_id)
 
         # TODO - This code is wrong - it removes the user from the room even if they
         # may still be in the room in another client/browser. This will be fixed when
@@ -211,55 +200,38 @@ class ChatRoomInfo(ndb.Model):
     # more users will be added.
     @classmethod
     @ndb.transactional(xg=True)
-    def txn_add_user_to_room(cls, room_id, user_id):
+    def txn_add_client_to_room(cls, room_id, client_id, user_id):
 
-        logging.info('Attempting to add user %d to room %d ' % (user_id, room_id))
+        logging.info('Attempting to add client %s to room %d ' % (client_id, room_id))
         room_info_obj = cls.get_room_by_id(room_id)
         status_string = None
 
 
         if room_info_obj:
 
-            occupancy = room_info_obj.get_occupancy()
+            try:
+                # If user is not already in the room, then add them
+                if not client_id in room_info_obj.room_members_client_ids:
+                    room_info_obj.room_members_client_ids.append(client_id)
+                    room_info_obj.put()
+                    logging.info('Client %s has joined room %d ' % (client_id, room_id))
 
-            if room_info_obj.has_user(user_id):
-                # do nothing as this user is already in the room - report status as "roomJoined"
-                # so javascript does not have to deal with a special case.
+                else:
+                    logging.info('Client %s was already in room %d ' % (client_id, room_id))
+
                 status_string = 'roomJoined'
-                logging.info('Room already has user %d - not added' % user_id)
-
-            # Room is full - return a roomIsFull status
-            elif occupancy >= 2:
-                logging.warning('Room ' + room_info_obj.chat_room_name + ' is full')
-                status_string = 'roomIsFull'
-
-            # This is a new user joining the room
-            else:
-
-                try:
-                    # If user is not already in the room, then add them
-                    if not user_id in room_info_obj.room_members_ids:
-                        room_info_obj.room_members_ids.append(user_id)
-                        room_info_obj.put()
-
-                    status_string = 'roomJoined'
 
 
-                # If the user cannot be added to the room, then an exception will be generated - let the client
-                # know that the server had a problem.
-                except:
-                   status_string = 'serverError'
+            # If the user cannot be added to the room, then an exception will be generated - let the client
+            # know that the server had a problem.
+            except:
+               status_string = 'serverError'
 
         else:
              logging.error('Invalid room id: %d' % room_id)
 
         # Now we need to add the room to the user (ie. track which rooms the user is currently in)
         user_obj = users.get_user_by_id(user_id)
-
-        client_model = users.ClientModel(id=room_info_obj.make_client_id(user_id))
-        client_model.put()
-
-        user_obj.client_models_list_of_keys.append(client_model.key)
 
         for client_model_key in user_obj.client_models_list_of_keys:
             client_model_obj = client_model_key.get()
@@ -268,11 +240,10 @@ class ChatRoomInfo(ndb.Model):
                 client_model_obj.list_of_open_rooms_keys.append(room_info_obj.key)
                 client_model_obj.put()
 
+
         # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
         # the database and may have updated it. We want any enclosing functions to use the updated version.
         return room_info_obj, status_string
-
-
 
 
 
@@ -315,6 +286,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             http_helpers.set_http_ok_json_response(self.response, rooms_list)
 
+    @handle_exceptions
     def post(self, chat_room_name_from_url):
         try:
             room_dict = json.loads(self.request.body)
@@ -345,11 +317,12 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             room_creator_user_key = ndb.Key('UserModel', user_id)
             room_info_obj = ChatRoomInfo.create_or_get_room(chat_room_name, room_dict,
                                                                         room_creator_user_key)
+
             token_timeout = 240  # minutes
-            client_id = room_info_obj.make_client_id(user_id)
-            channel_token = channel.create_channel(client_id, token_timeout)
-            response_dict['clientId'] = client_id
-            response_dict['channelToken'] = channel_token
+            # client_id = room_info_obj.make_client_id(user_id)
+            # channel_token = channel.create_channel(client_id, token_timeout)
+            # response_dict['clientId'] = client_id
+            # response_dict['channelToken'] = channel_token
             response_dict['roomId'] = room_info_obj.key.id()
             response_dict['statusString'] = 'roomJoined'
 

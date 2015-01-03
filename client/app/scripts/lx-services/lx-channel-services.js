@@ -118,7 +118,7 @@ angular.module('lxChannel.services', [])
 
                             // Get the remoteUserId from the message payload - note that if there is no remote
                             // user currently in the room, then this value will be null.
-                            roomOccupancyObject.listOfUserObjects = messageObject.messagePayload.listOfUserObjects;
+                            roomOccupancyObject.listOfClientObjects = messageObject.messagePayload.listOfClientObjects;
 
 //                                if (roomOccupancyObject.remoteUserId) {
 //                                    // The following function is executed when remote user joins the room - and makes sure that they
@@ -258,10 +258,11 @@ angular.module('lxChannel.services', [])
                 }
             },
 
-            sendUserHeartbeat: function(roomOccupancyObject) {
+            startClientHeartbeat: function(clientId) {
+                lxHttpChannelService.sendClientHeartbeat(clientId);
                 var timeoutFn = function() {
                     $timeout(function() {
-                        lxHttpChannelService.sendRoomStatusHeartbeat(roomOccupancyObject.userId, roomOccupancyObject.roomId);
+                        lxHttpChannelService.sendClientHeartbeat(clientId);
                         timeoutFn();
                     }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
                 };

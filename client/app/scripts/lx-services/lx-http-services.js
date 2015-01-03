@@ -42,19 +42,31 @@ angular.module('lxHttp.services', [])
 
             // this function will be periodically called so that that room will be up-to-date with the users
             // that are currently in the room.
-            sendRoomStatusHeartbeat: function(userId, roomId) {
-                var postData = {'userId': userId, 'roomId': roomId};
+            sendClientHeartbeat: function(clientId) {
+                var postData = {'clientId': clientId};
                 $http.post('/_lx/channel/user_heartbeat/', postData)
             },
 
+            addClientToRoom: function(clientId, userId, roomId) {
+                var postData = {
+                    'clientId': clientId,
+                    'userId': userId,
+                    'roomId': roomId
+                };
+                $http.post('/_lx/add_client_to_room/', postData)
+            },
+
             // Function that will initialize the channel and get the token from the server
-            requestChannelToken: function(userId) {
-                var postData = {'userId': userId};
+            requestChannelToken: function(clientId, userId) {
+                var postData = {
+                    'clientId': clientId,
+                    'userId': userId
+                };
                 var httpPromise = $http.post('/_lx/channel/open_channel/', postData);
                 httpPromise.then(function(response){
                     $log.info('Got channel data: ' + response.data);
                 }, function(response){
-                    $log.error('Failed to open channel for user id: ' + userId +'\nStatus: ' + response.statusText +
+                    $log.error('Failed to open channel for client id: ' + clientId +'\nStatus: ' + response.statusText +
                     '\ndata: ' + angular.toJson(response.data));
                 });
 
@@ -114,7 +126,7 @@ angular.module('lxHttp.services', [])
                 //$log.debug('C->S: ' + angular.toJson(messagePayload));
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
-                var path = '/_lx/message?r=' + lxChatRoomVarsService.roomId + '&u=' + lxAppWideConstantsService.userId;
+                var path = '/_lx/message?r=' + lxChatRoomVarsService.roomId + '&c=' + lxAppWideConstantsService.clientId;
 
                 var httpPromise = $http.post(path, messageObject);
                 return httpPromise;
