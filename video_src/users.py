@@ -22,9 +22,9 @@ class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique): pass
 # str(user_id) + '/' + str(current_time_in_ms)
 class ClientModel(ndb.Model):
     list_of_open_rooms_keys = ndb.KeyProperty(kind='ChatRoomInfo', repeated=True)
-
     # These should be periodically cleared out of the database - use creation_date to find and remove
     # old/expired client models.
+    # Note: if these are cleared out, they should also be removed from UserModel's client_models_list_of_keys.
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
 # UserModel is accessed from the webapp2 auth module, and is accessed/included with the following
@@ -52,30 +52,56 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
-    # track which rooms the user is currently participating in
-    client_models_list_of_keys = ndb.KeyProperty(kind='ClientModel', repeated=True)
+    # track each "client" (unique browser window) that the user currently has open
+    list_of_client_model_keys = ndb.KeyProperty(kind='ClientModel', repeated=True)
+
+
+
+    """
+    Each user can have multiple "clients" (one for each browser/window), and each client can (in the future) have
+    multiple rooms open at once. This structure will track which rooms are open by which client, and should
+    be removed when the user closes the "client window" or alternatively should be periodically cleared out of the
+    database.
+    """
+    @classmethod
+    @ndb.transactional(xg=True)
+    def txn_delete_client_model_and_remove_from_user(cls, user_id, client_id):
+
+        client_obj = ClientModel.get_by_id(client_id)
+        client_key = client_obj.key
+
+        user_obj = cls.get_by_id(user_id)
+        user_obj.list_of_client_model_keys.remove(client_key)
+        user_obj.put
+
+        client_obj.key.delete()
+
 
     # Some of this code is from: http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
-    def set_password(self, raw_password):
-        """Sets the password for the current user
+    """
+    Sets the password for the current user
 
-        :param raw_password:
-            The raw password which will be hashed and stored
-        """
+    :param raw_password:
+        The raw password which will be hashed and stored
+    """
+    def set_password(self, raw_password):
         self.password = security.generate_password_hash(raw_password, method='sha512', pepper=constants.password_pepper)
 
+
+    """
+    Return a user object based on a user ID and token.
+
+    :param user_id:
+        The user_id of the requesting user.
+    :param token:
+        The token string to be verified.
+    :returns:
+        A tuple ``(User, timestamp)``, with a user object and
+        the token timestamp, or ``(None, None)`` if both were not found.
+    """
     @classmethod
     def get_by_auth_token(cls, user_id, token, subject='auth'):
-        """Returns a user object based on a user ID and token.
 
-        :param user_id:
-            The user_id of the requesting user.
-        :param token:
-            The token string to be verified.
-        :returns:
-            A tuple ``(User, timestamp)``, with a user object and
-            the token timestamp, or ``(None, None)`` if both were not found.
-        """
         token_key = cls.token_model.get_key(user_id, subject, token)
         user_key = ndb.Key(cls, user_id)
         # Use get_multi() to save a RPC call.

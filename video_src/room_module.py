@@ -152,7 +152,7 @@ class ChatRoomInfo(ndb.Model):
     @ndb.transactional(xg=True)
     def txn_remove_client_from_room(cls, room_key, client_id):
 
-        logging.info('Removing user %d from room %s ' % (client_id, room_key))
+        logging.info('Removing client %s from room %s ' % (client_id, room_key))
 
         room_info_obj = room_key.get()
         try:
@@ -167,18 +167,11 @@ class ChatRoomInfo(ndb.Model):
         room_info_obj.put()
 
 
-        # Remove the room from the user object
-        user_obj = users.get_user_by_id(client_id)
+        client_model_obj = users.ClientModel.get_by_id(client_id)
 
-        # TODO - This code is wrong - it removes the user from the room even if they
-        # may still be in the room in another client/browser. This will be fixed when
-        # we pass in the client id instead of user id.
-        for client_model_key in user_obj.client_models_list_of_keys:
-            client_model_obj = client_model_key.get()
-
-            if (room_info_obj.key in client_model_obj.list_of_open_rooms_keys):
-                client_model_obj.list_of_open_rooms_keys.remove(room_info_obj.key)
-                client_model_obj.put()
+        if (room_info_obj.key in client_model_obj.list_of_open_rooms_keys):
+            client_model_obj.list_of_open_rooms_keys.remove(room_info_obj.key)
+            client_model_obj.put()
 
 
         return room_info_obj
@@ -204,7 +197,6 @@ class ChatRoomInfo(ndb.Model):
 
         logging.info('Attempting to add client %s to room %d ' % (client_id, room_id))
         room_info_obj = cls.get_room_by_id(room_id)
-        status_string = None
 
 
         if room_info_obj:
@@ -229,17 +221,14 @@ class ChatRoomInfo(ndb.Model):
                 status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
 
         else:
-             logging.error('Invalid room id: %d' % room_id)
+            status_string = 'serverError'
+            logging.error('Invalid room id: %d' % room_id)
 
-        # Now we need to add the room to the user (ie. track which rooms the user is currently in)
-        user_obj = users.get_user_by_id(user_id)
-
-        for client_model_key in user_obj.client_models_list_of_keys:
-            client_model_obj = client_model_key.get()
-
-            if room_info_obj.key not in client_model_obj.list_of_open_rooms_keys:
-                client_model_obj.list_of_open_rooms_keys.append(room_info_obj.key)
-                client_model_obj.put()
+        # Now we need to add the room to the client model (ie. track which rooms the user has open in the current
+        # browser "client" window)
+        client_model_obj = users.ClientModel.get_by_id(client_id)
+        client_model_obj.list_of_open_rooms_keys.append(room_info_obj.key)
+        client_model_obj.put()
 
 
         # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from

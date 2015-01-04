@@ -31,7 +31,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/message', messaging.MessagePage),
     webapp2.Route(r'/_lx/log_error', error_reporting_from_client.LogClientError),
     webapp2.Route(r'/_lx/channel/user_heartbeat/', messaging.UserHeartbeat),
-    webapp2.Route(r'/_lx/channel/open_channel/', messaging.OpenChannel),
+    webapp2.Route(r'/_lx/channel/request_channel_token/', messaging.RequestChannelToken),
     webapp2.Route(r'/_lx/channel/manual_disconnect/', messaging.DisconnectPage),
     webapp2.Route(r'/_lx/admin/cleanup_sessions', gaesessions.SessionAdmin, handler_method='cleanup_sessions'),
     webapp2.Route(r'/_ah/channel/connected/',  messaging.ConnectPage),

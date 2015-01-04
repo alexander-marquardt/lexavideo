@@ -24,7 +24,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
 
         var uniqueIdentifier = (new Date()).getTime();
-        var clientId = lxAppWideConstantsService.userId + '/' + uniqueIdentifier;
+        var clientId = lxAppWideConstantsService.userId + '|' + uniqueIdentifier;
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 

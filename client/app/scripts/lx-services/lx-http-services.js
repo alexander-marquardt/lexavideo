@@ -62,7 +62,7 @@ angular.module('lxHttp.services', [])
                     'clientId': clientId,
                     'userId': userId
                 };
-                var httpPromise = $http.post('/_lx/channel/open_channel/', postData);
+                var httpPromise = $http.post('/_lx/channel/request_channel_token/', postData);
                 httpPromise.then(function(response){
                     $log.info('Got channel data: ' + response.data);
                 }, function(response){
