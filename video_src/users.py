@@ -24,8 +24,17 @@ class ClientModel(ndb.Model):
     list_of_open_rooms_keys = ndb.KeyProperty(kind='ChatRoomInfo', repeated=True)
     # These should be periodically cleared out of the database - use creation_date to find and remove
     # old/expired client models.
-    # Note: if these are cleared out, they should also be removed from UserModel's client_models_list_of_keys.
+    # Note: if these are cleared out, they should also be removed from ClientTracker's client_models_list_of_keys.
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
+
+# This model is used for keeping track of which clients (browser window) the user currently has open. Each
+# client will be added to the list_of_client_model_keys when it is opened, and will be removed either when
+# the user disconnects the page or if that fails, it will be cleared out periodically.
+# Note: we have intentionally placed this information outside of the UserModel so that we can modify it
+# with a lower probability of transaction collisions.
+class ClientTracker(ndb.Model):
+    list_of_client_model_keys = ndb.KeyProperty(kind='ClientModel', repeated=True)
+
 
 # UserModel is accessed from the webapp2 auth module, and is accessed/included with the following
 # statements that appear inside the config object that is passed to the wsgi application handler.
@@ -53,7 +62,7 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
     # track each "client" (unique browser window) that the user currently has open
-    list_of_client_model_keys = ndb.KeyProperty(kind='ClientModel', repeated=True)
+    client_tracker_key = ndb.KeyProperty(kind='ClientTracker')
 
 
 
@@ -65,16 +74,17 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
     """
     @classmethod
     @ndb.transactional(xg=True)
-    def txn_delete_client_model_and_remove_from_user(cls, user_id, client_id):
+    def txn_delete_client_model_and_remove_from_client_tracker(cls, user_id, client_id):
 
         client_obj = ClientModel.get_by_id(client_id)
         client_key = client_obj.key
+        client_obj.key.delete()
 
         user_obj = cls.get_by_id(user_id)
-        user_obj.list_of_client_model_keys.remove(client_key)
-        user_obj.put
+        client_tracker_obj = user_obj.client_tracker_key.get()
+        client_tracker_obj.list_of_client_model_keys.remove(client_key)
+        client_tracker_obj.put
 
-        client_obj.key.delete()
 
 
     # Some of this code is from: http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
@@ -112,14 +122,17 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 
         return None, None
 
+@ndb.transactional(xg=True)
+def txn_create_new_user():
 
-def create_new_user():
+    client_tracker = ClientTracker()
+    client_tracker.put()
 
     new_user_obj = UserModel()
-    new_user_obj.put()
+    new_user_obj.client_tracker_key = client_tracker.key
 
     # use the key as the user_name until they decide to create their own user_name.
-    new_user_name = new_user_obj.key.id()
+    new_user_name = "Not set"
     new_user_obj.user_name = str(new_user_name)
     new_user_obj.put()
     return new_user_obj

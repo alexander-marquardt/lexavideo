@@ -99,7 +99,7 @@ class MainPage(registration_and_login.BaseHandler):
 
 
         # When a user first enters into our website, we will assign them a unique user id.
-        user_obj = users.create_new_user()
+        user_obj = users.txn_create_new_user()
 
         target_page = 'index.html'
         response_type = 'jinja'

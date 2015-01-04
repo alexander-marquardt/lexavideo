@@ -271,8 +271,9 @@ class RequestChannelToken(webapp2.RequestHandler):
         client_model = users.ClientModel(id=client_id)
         client_model.put()
 
-        user_obj.list_of_client_model_keys.append(client_model.key)
-        user_obj.put()
+        client_tracker_obj = user_obj.client_tracker_key.get()
+        client_tracker_obj.list_of_client_model_keys.append(client_model.key)
+        client_tracker_obj.put()
 
 
     @handle_exceptions
@@ -333,7 +334,7 @@ class DisconnectPage(webapp2.RequestHandler):
                     # user informing them of the new status.
                     send_room_occupancy_to_room_clients(room_info_obj)
 
-                    users.UserModel.txn_delete_client_model_and_remove_from_user(user_id, client_id)
+                    users.UserModel.txn_delete_client_model_and_remove_from_client_tracker(user_id, client_id)
 
                 else:
                     logging.error('Room %s (%d) does not have client %s - disconnect failed' % (room_info_obj.chat_room_name, room_info_obj.key.id(), client_id))
