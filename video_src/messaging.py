@@ -6,6 +6,7 @@ import webapp2
 from google.appengine.api import channel
 from google.appengine.ext import ndb
 
+from video_src import constants
 from video_src import room_module
 from video_src import http_helpers
 from video_src import status_reporting
@@ -272,6 +273,10 @@ class RequestChannelToken(webapp2.RequestHandler):
         client_model.put()
 
         client_tracker_obj = user_obj.client_tracker_key.get()
+
+        if len(client_tracker_obj.list_of_client_model_keys) > constants.maximum_number_of_client_connections_per_user:
+            raise Exception('User has attempted to exceed the maximum number of clients that are simultaneously allowed per user')
+
         client_tracker_obj.list_of_client_model_keys.append(client_model.key)
         client_tracker_obj.put()
 
