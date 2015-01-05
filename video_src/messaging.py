@@ -134,25 +134,31 @@ def send_room_video_settings_to_room_members(from_client_id, to_client_id):
     vid_setup_id = room_module.VideoSetup.get_vid_setup_id_for_client_id_pair(from_client_id, to_client_id)
     vid_setup_obj = room_module.VideoSetup.get_by_id(vid_setup_id)
 
+    count_of_clients_exchanging_video = len(vid_setup_obj.video_elements_enabled_client_ids)
+
     # Check if there are two people in the room that have enabled video, and if so send
     # a message to each of them to start the webRtc negotiation.
-    assert(len(vid_setup_obj.video_elements_enabled_client_ids) <= 2)
+    assert(count_of_clients_exchanging_video <= 2)
 
-    is_initiator = False
+    # Once both clients have agreed to send video to each other, then we send the signaling to them
+    # to re-start the video setup.
+    if count_of_clients_exchanging_video == 2:
 
-    for client_id in vid_setup_obj.video_elements_enabled_client_ids:
+        is_initiator = False
 
-        # The second person to connect will be the 'rtcInitiator'.
-        # By sending this 'rtcInitiator' value to the clients, this will re-initiate
-        # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
-        # once per session, unless the users become disconnected and need to re-connect.
-        message_obj = {'messageType': 'roomInitialVideoSettingsMsg',
-                       'messagePayload': {'rtcInitiator': is_initiator},
-                       }
+        for client_id in vid_setup_obj.video_elements_enabled_client_ids:
 
-        logging.info('Sending client %s room status %s' % (client_id, json.dumps(message_obj)))
-        channel.send_message(to_client_id, json.dumps(message_obj))
-        is_initiator = not is_initiator
+            # The second person to connect will be the 'rtcInitiator'.
+            # By sending this 'rtcInitiator' value to the clients, this will re-initiate
+            # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
+            # once per session, unless the users become disconnected and need to re-connect.
+            message_obj = {'messageType': 'roomInitialVideoSettingsMsg',
+                           'messagePayload': {'rtcInitiator': is_initiator},
+                           }
+
+            logging.info('Sending client %s room status %s' % (client_id, json.dumps(message_obj)))
+            channel.send_message(to_client_id, json.dumps(message_obj))
+            is_initiator = not is_initiator
 
 
 
