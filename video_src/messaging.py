@@ -157,7 +157,7 @@ def send_room_video_settings_to_room_members(from_client_id, to_client_id):
                            }
 
             logging.info('Sending client %s room status %s' % (client_id, json.dumps(message_obj)))
-            channel.send_message(to_client_id, json.dumps(message_obj))
+            channel.send_message(client_id, json.dumps(message_obj))
             is_initiator = not is_initiator
 
 

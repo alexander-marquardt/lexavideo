@@ -38,11 +38,17 @@ class VideoSetup(ndb.Model):
 
 
     @classmethod
-    def get_vid_setup_id_for_client_id_pair(cls, client_id_1, client_id_2):
+    def get_ordered_client_ids(cls, client_id_1, client_id_2):
         if (client_id_1 < client_id_2):
-            return client_id_1 + '&' + client_id_2
+            return client_id_1, client_id_2
         else:
-            return client_id_2 + '&' + client_id_1
+            return client_id_2, client_id_1
+
+    @classmethod
+    def get_vid_setup_id_for_client_id_pair(cls, client_id_1, client_id_2):
+        lower_id, higher_id = cls.get_ordered_client_ids(client_id_1, client_id_2)
+        return lower_id + '&' + higher_id
+
 
 
 # ChatRoomInfo will contain data about which users are currently in a given chat room
@@ -144,7 +150,16 @@ class ChatRoomInfo(ndb.Model):
             vid_setup_obj = VideoSetup(id=vid_setup_id)
 
         if from_client_id not in vid_setup_obj.video_elements_enabled_client_ids:
-            vid_setup_obj.video_elements_enabled_client_ids.append(from_client_id)
+
+            # we always place the "lower" client ID first in video_elements_enabled_client_ids, and the higher
+            # id second. This is necessary for consistency between calls in the case the the call is hung-up
+            # and then re-started while session initiation is still going on - we want to ensure that the
+            # RTC Initiator is consistent between a single pair of clients.
+            lower_id, higher_id = VideoSetup.get_ordered_client_ids(from_client_id, to_client_id)
+            if from_client_id == lower_id:
+                vid_setup_obj.video_elements_enabled_client_ids.insert(0, from_client_id)
+            else:
+                vid_setup_obj.video_elements_enabled_client_ids.append(from_client_id)
             vid_setup_obj.put()
         else:
             logging.info('Client %s not added to video_enabled_ids %s' %(to_client_id, vid_setup_id))
