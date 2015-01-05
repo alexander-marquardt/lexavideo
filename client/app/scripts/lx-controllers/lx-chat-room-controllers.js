@@ -6,7 +6,7 @@
 angular.module('lxUseChatRoom.controllers', [])
 
 
-    .controller('lxChatRoomOuterCtrl',
+    .controller('lxChatRoomCtrl',
     function($scope,
              $location,
              $log,
@@ -28,7 +28,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
-        $scope.lxChatRoomOuterCtrl = {
+        $scope.lxChatRoomCtrl = {
 
             userSuccessfullyEnteredRoom: false,
             channelToken: null,
@@ -47,22 +47,22 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function(response) {
-            $scope.lxChatRoomOuterCtrl.channelToken = response.data.channelToken;
-            $scope.lxChatRoomOuterCtrl.clientId = clientId;
+            $scope.lxChatRoomCtrl.channelToken = response.data.channelToken;
+            $scope.lxChatRoomCtrl.clientId = clientId;
 
             lxChannelService.openChannel($scope);
 
             $window.onbeforeunload = function () {
                 $log.debug('Manually disconnecting channel on window unload event.');
-                lxHttpChannelService.manuallyDisconnectChannel($scope.lxChatRoomOuterCtrl.clientId);
+                lxHttpChannelService.manuallyDisconnectChannel($scope.lxChatRoomCtrl.clientId);
             };
 
             // Periodically update the room so that the server knows if the user is currently in the room.
-            lxChannelService.startClientHeartbeat($scope.lxChatRoomOuterCtrl.clientId);
+            lxChannelService.startClientHeartbeat($scope.lxChatRoomCtrl.clientId);
 
         }, function(response) {
-            $scope.lxChatRoomOuterCtrl.channelToken = 'Failed to get channelToken';
-            $scope.lxChatRoomOuterCtrl.clientId = 'Failed to get clientId';
+            $scope.lxChatRoomCtrl.channelToken = 'Failed to get channelToken';
+            $scope.lxChatRoomCtrl.clientId = 'Failed to get clientId';
         });
 
         var addUserToRoomWhenChannelReady = function(roomOccupancyObject) {
@@ -71,7 +71,7 @@ angular.module('lxUseChatRoom.controllers', [])
                     $timeout(innerWaitForChannelReady, 100);
                 } else {
                     // Add the user to the room, now that the channel is open
-                    lxHttpChannelService.addClientToRoom($scope.lxChatRoomOuterCtrl.clientId,
+                    lxHttpChannelService.addClientToRoom($scope.lxChatRoomCtrl.clientId,
                         roomOccupancyObject.userId, roomOccupancyObject.roomId);
                 }
             };
@@ -80,12 +80,12 @@ angular.module('lxUseChatRoom.controllers', [])
 
         lxInitializeRoomService.addUserToRoom($scope).then(function(data) {
 
-            $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = true;
+            $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
 
             // The following two lines need to be removed once we have the channelToken passed through the
 //            // "requestChannelToken" function above
-//            $scope.lxChatRoomOuterCtrl.channelToken = data.channelToken;
-//            $scope.lxChatRoomOuterCtrl.clientId = data.clientId;
+//            $scope.lxChatRoomCtrl.channelToken = data.channelToken;
+//            $scope.lxChatRoomCtrl.clientId = data.clientId;
 
             $scope.roomOccupancyObject.roomId = lxChatRoomVarsService.roomId = data.roomId;
 
@@ -93,7 +93,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
         }, function(errorEnteringIntoRoomInfoObj) {
 
-            $scope.lxChatRoomOuterCtrl.userSuccessfullyEnteredRoom  = false;
+            $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = false;
 
             // The following sets an error on a global object that will be picked up by the javascript
             // when the user is sent back to the main landing page, at which point the user will

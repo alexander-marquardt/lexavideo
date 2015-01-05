@@ -53,7 +53,7 @@ angular.module('lxChatbox.controllers', [])
                 transmittedToServer: null
             };
 
-            var sendMessagePromise = lxMessageService.sendMessage(messageType, $scope.sendMessagePayload, $scope.lxChatRoomOuterCtrl.clientId);
+            var sendMessagePromise = lxMessageService.sendMessage(messageType, $scope.sendMessagePayload, $scope.lxChatRoomCtrl.clientId);
             sendMessagePromise.then(
 
                 // message was successfully delivered to the server

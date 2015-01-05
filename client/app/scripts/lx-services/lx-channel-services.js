@@ -104,7 +104,7 @@ angular.module('lxChannel.services', [])
                                 }
                             } else {
                                 lxWebRtcSessionService.processSignalingMessage(sdpObject, localVideoObject,
-                                    remoteVideoObject, scope.lxChatRoomOuterCtrl.clientId);
+                                    remoteVideoObject, scope.lxChatRoomCtrl.clientId);
                             }
                             break;
 
@@ -177,7 +177,7 @@ angular.module('lxChannel.services', [])
                             // acknowledge receipt of the message
                             lxMessageService.sendMessage('ackChatMessage',
                                 {'ackMessageUniqueId': messageObject.messagePayload.messageUniqueId},
-                                scope.lxChatRoomOuterCtrl.clientId);
+                                scope.lxChatRoomCtrl.clientId);
                             break;
 
 
@@ -252,7 +252,7 @@ angular.module('lxChannel.services', [])
                 var roomOccupancyObject = scope.roomOccupancyObject;
                 $log.info('*** Opening channel. ***');
                 try {
-                    var channel = new goog.appengine.Channel(scope.lxChatRoomOuterCtrl.channelToken);
+                    var channel = new goog.appengine.Channel(scope.lxChatRoomCtrl.channelToken);
                     lxChannelSupportService.socket = channel.open(handler(this, scope));
 
                 } catch(e) {

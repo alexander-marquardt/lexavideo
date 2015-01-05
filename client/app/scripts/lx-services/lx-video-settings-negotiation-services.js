@@ -122,7 +122,7 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
                             // the case of un-delivered messages.
                             queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled
                         },
-                        scope.lxChatRoomOuterCtrl.clientId
+                        scope.lxChatRoomCtrl.clientId
                     );
                 }
             }

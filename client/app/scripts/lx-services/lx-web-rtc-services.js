@@ -638,7 +638,7 @@ webRtcServices.factory('lxCallService',
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteVideoObject;
                 var videoSignalingObject = scope.videoSignalingObject;
-                var clientId = scope.lxChatRoomOuterCtrl.clientId;
+                var clientId = scope.lxChatRoomCtrl.clientId;
 
                 if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
                     lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
