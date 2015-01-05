@@ -94,7 +94,14 @@ $group-members-panel-header-height: 30px;
 }
 
 .cl-chat-group-spacing-between-group-members {
-  margin-top: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.cl-chat-group-video-icon-container {
+  display:inline-block;
+  vertical-align: middle;
+  width: 20px;
 }
 
 .cl-chat-panel-body-short .cl-chat-group-members-panel-body {

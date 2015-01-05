@@ -39,18 +39,21 @@
                                          ng-class="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' ?
                                                   'cl-chat-group-spacing-between-group-members' : ''">
                                         <div ng-repeat="user in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
-                                            {{ user.userName }}
 
-                                                <span  style="display:inline-block; vertical-align: middle" ng-show="user.clientId != lxChatRoomCtrl.clientId ">
-                                                    <button type="button"
-                                                        class="btn btn-sm pull-right btn-primary cl-chat-group-video-button-modifier"
-                                                        ng-show="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo'"
-                                                        ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
-                                                        ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
-                                                        >
+                                            <span  ng-class="roomOccupancyObject.listOfClientObjects.length > 1 &&
+                                                             videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' ?
+                                                             'cl-chat-group-video-icon-container' : ''">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
+                                                    ng-show="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' && user.clientId != lxChatRoomCtrl.clientId"
+                                                    ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
+                                                    >
                                                     <span class="icon-lx-video-camera-filled"></span>
                                                 </button>
                                             </span>
+                                            {{ user.userName }}
+
                                         </div>
                                     </div>
                                 </div>
