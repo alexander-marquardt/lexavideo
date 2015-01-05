@@ -36,16 +36,16 @@ def handle_message(room_info_obj, from_client_id, message):
                      (from_client_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))
 
         if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'activateVideo':
-
-            room_info_obj = room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(room_info_obj.key, from_client_id)
-            send_room_video_settings_to_room_members(room_info_obj)
+            # TODO - this is a hack -- need to pass in to_client_id directly - just setup like this for temporary development and testing
+            vid_setup_obj = room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_ids_list[0], )
+            send_room_video_settings_to_room_members(from_client_id, to_client_ids_list[0])
         else:
-            room_info_obj = room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_client_ids(room_info_obj.key, from_client_id)
+            vid_setup_obj = room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_ids_list[0], )
 
 
     if message_type == 'sdp':
         if message_payload['type'] == 'bye':
-            room_info_obj.txn_remove_user_id_from_video_elements_enabled_client_ids(room_info_obj.key, from_client_id)
+            vid_setup_obj = room_info_obj.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_ids_list[0], )
             logging.info('Client %s ' % from_client_id + ' quit from room ' + chat_room_name)
             logging.info('Room ' + chat_room_name + ' has state ' + repr(room_info_obj))
 
@@ -57,8 +57,6 @@ def handle_message(room_info_obj, from_client_id, message):
                 logging.info('sdp offer. Payload: %s' % repr(message_payload))
 
             if message_type == 'sdp' and message_payload['type'] == 'offer' and to_client_id == from_client_id:
-                # Special case the loopback scenario.
-                #message = make_loopback_answer(message)
                 pass
 
             on_message(room_info_obj, to_client_id, message)
@@ -131,20 +129,18 @@ def send_room_occupancy_to_room_clients(room_info_obj):
 
 # Sends information about video settings, and which client should be designated as the 'rtcInitiator'
 @handle_exceptions
-def send_room_video_settings_to_room_members(room_info_obj):
+def send_room_video_settings_to_room_members(from_client_id, to_client_id):
 
-
-    video_elements_enabled_client_ids = room_info_obj.video_elements_enabled_client_ids
+    vid_setup_id = room_module.VideoSetup.get_vid_setup_id_for_client_id_pair(from_client_id, to_client_id)
+    vid_setup_obj = room_module.VideoSetup.get_by_id(vid_setup_id)
 
     # Check if there are two people in the room that have enabled video, and if so send
     # a message to each of them to start the webRtc negotiation.
-    length_of_video_elements_enabled_client_ids = len(video_elements_enabled_client_ids)
+    assert(len(vid_setup_obj.video_elements_enabled_client_ids) <= 2)
 
     is_initiator = False
 
-    logging.info('Sending room video settings for room %s' % room_info_obj)
-
-    for client_id in video_elements_enabled_client_ids:
+    for client_id in vid_setup_obj.video_elements_enabled_client_ids:
 
         # The second person to connect will be the 'rtcInitiator'.
         # By sending this 'rtcInitiator' value to the clients, this will re-initiate
@@ -155,7 +151,7 @@ def send_room_video_settings_to_room_members(room_info_obj):
                        }
 
         logging.info('Sending client %s room status %s' % (client_id, json.dumps(message_obj)))
-        on_message(room_info_obj, client_id, json.dumps(message_obj))
+        channel.send_message(to_client_id, json.dumps(message_obj))
         is_initiator = not is_initiator
 
 
@@ -326,6 +322,8 @@ class DisconnectPage(webapp2.RequestHandler):
 
         if client_obj:
             for room_info_obj_key in client_obj.list_of_open_rooms_keys:
+
+                room_module.ChatRoomInfo.remove_video_setup_objects_containing_client_id(client_id)
 
                 room_info_obj = room_info_obj_key.get()
 
