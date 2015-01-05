@@ -86,6 +86,17 @@ $group-members-panel-header-height: 30px;
   overflow-y: scroll;
 }
 
+.cl-chat-group-video-button-modifier {
+  padding-left: 2.5px;
+  padding-right: 2.5px;
+  padding-top: 1px;
+  padding-bottom: 0px;
+}
+
+.cl-chat-group-spacing-between-group-members {
+  margin-top: 5px;
+}
+
 .cl-chat-panel-body-short .cl-chat-group-members-panel-body {
   max-height: $short-chat-panel-height / 2 - $group-members-panel-header-height;
 }
