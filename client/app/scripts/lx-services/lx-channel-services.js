@@ -249,7 +249,6 @@ angular.module('lxChannel.services', [])
         return {
             openChannel: function(scope) {
 
-                var roomOccupancyObject = scope.roomOccupancyObject;
                 $log.info('*** Opening channel. ***');
                 try {
                     var channel = new goog.appengine.Channel(scope.lxChatRoomCtrl.channelToken);

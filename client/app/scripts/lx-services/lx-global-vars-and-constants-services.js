@@ -49,7 +49,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
 
         function getDefaultStunServer() {
             // others you can try: stun.services.mozilla.com, stunserver.org
-            return 'stun.l.google.com:19302'
+            return 'stun.l.google.com:19302';
         }
 
 
@@ -69,10 +69,10 @@ angular.module('lxGlobalVarsAndConstants.services', [])
                 servers.push({'urls': turnConfig, 'credential': tsPwd});
             }
 
-            config['iceServers'] = servers;
+            config.iceServers = servers;
 
             if (iceTransports) {
-                config['iceTransports'] = iceTransports;
+                config.iceTransports = iceTransports;
             }
 
             return config;
@@ -80,7 +80,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
 
         function makePcConstraints() {
             var constraints = { 'optional': [] };
-            constraints['optional'].push({'googImprovedWifiBwe': true});
+            constraints.optional.push({'googImprovedWifiBwe': true});
             return constraints;
         }
 
@@ -119,7 +119,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             'videoSendBitrate': '',
             'stereoscopic': '',
             'stereo': false
-        }
+        };
     })
 
     .factory('lxAppWideConstantsService', function() {

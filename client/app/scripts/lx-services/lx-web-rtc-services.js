@@ -206,7 +206,7 @@ webRtcServices.service('lxIceService', function($log, lxMessageService) {
             } else {
                 $log.log('End of candidates.');
             }
-        }
+        };
     };
 
     this.onAddIceCandidateSuccess = function() {

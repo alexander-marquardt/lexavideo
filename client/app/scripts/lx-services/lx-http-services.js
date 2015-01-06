@@ -44,7 +44,7 @@ angular.module('lxHttp.services', [])
             // that are currently in the room.
             sendClientHeartbeat: function(clientId) {
                 var postData = {'clientId': clientId};
-                $http.post('/_lx/channel/user_heartbeat/', postData)
+                $http.post('/_lx/channel/user_heartbeat/', postData);
             },
 
             addClientToRoom: function(clientId, userId, roomId) {
@@ -53,7 +53,7 @@ angular.module('lxHttp.services', [])
                     'userId': userId,
                     'roomId': roomId
                 };
-                $http.post('/_lx/add_client_to_room/', postData)
+                $http.post('/_lx/add_client_to_room/', postData);
             },
 
             // Function that will initialize the channel and get the token from the server
