@@ -12,13 +12,11 @@ from video_src import http_helpers
 from error_handling import handle_exceptions
 
 # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
-def handle_message(room_info_obj, from_client_id, message):
+def handle_message(room_info_obj, from_client_id, message_obj):
     # This function passes a message from one user in a given "room" to the other user in the same room.
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
     # as for passing video and other information from one user to the other. 
 
-    message_obj = json.loads(message)
-    message = message.decode("utf-8")
     to_client_ids_list = room_info_obj.get_list_of_other_client_ids(from_client_id)
     chat_room_name = room_info_obj.chat_room_name
 
@@ -56,7 +54,7 @@ def handle_message(room_info_obj, from_client_id, message):
             if message_type == 'sdp' and message_payload['type'] == 'offer' and to_client_id == from_client_id:
                 pass
 
-            on_message(room_info_obj, to_client_id, message)
+            on_message(room_info_obj, to_client_id, json.dumps(message_obj))
 
         else:
             raise Exception('otherUserNotInRoom')
@@ -122,10 +120,6 @@ def send_room_occupancy_to_room_clients(room_info_obj):
         logging.info('Sending roomOccupancy to %s: %s' % (client_id, json.dumps(message_obj)))
         on_message(room_info_obj, client_id, json.dumps(message_obj))
 
-
-
-
-
 # Sends information about video settings, and which client should be designated as the 'rtcInitiator'
 @handle_exceptions
 def send_room_video_settings_to_room_members(from_client_id, to_client_id):
@@ -167,14 +161,16 @@ class MessagePage(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         message = self.request.body
+        message_obj = json.loads(message)
+
         room_id = int(self.request.get('r'))
-        client_id = self.request.get('c')
+        from_client_id = message_obj['fromClientId']
         room_info_obj = room_module.ChatRoomInfo.get_by_id(room_id)
 
         try:
             try:
                 if room_info_obj:
-                    handle_message(room_info_obj, client_id, message)
+                    handle_message(room_info_obj, from_client_id, message_obj)
                 else:
                     logging.error('Unknown room_id %d' % room_id)
                     raise Exception('unknownRoomId')

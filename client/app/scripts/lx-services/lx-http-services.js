@@ -118,6 +118,7 @@ angular.module('lxHttp.services', [])
                  */
 
                 var messageObject = {
+                    'fromClientId': fromClientId,
                     'messageType': messageType,
                     'messagePayload': messagePayload
                 };
@@ -125,7 +126,7 @@ angular.module('lxHttp.services', [])
                 //$log.debug('C->S: ' + angular.toJson(messagePayload));
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
-                var path = '/_lx/message?r=' + lxChatRoomVarsService.roomId + '&c=' + fromClientId;
+                var path = '/_lx/message?r=' + lxChatRoomVarsService.roomId;
 
                 var httpPromise = $http.post(path, messageObject);
                 return httpPromise;
