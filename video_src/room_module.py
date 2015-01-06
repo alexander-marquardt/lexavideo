@@ -151,15 +151,7 @@ class ChatRoomInfo(ndb.Model):
 
         if from_client_id not in vid_setup_obj.video_elements_enabled_client_ids:
 
-            # we always place the "lower" client ID first in video_elements_enabled_client_ids, and the higher
-            # id second. This is necessary for consistency between calls in the case the the call is hung-up
-            # and then re-started while session initiation is still going on - we want to ensure that the
-            # RTC Initiator is consistent between a single pair of clients.
-            lower_id, higher_id = VideoSetup.get_ordered_client_ids(from_client_id, to_client_id)
-            if from_client_id == lower_id:
-                vid_setup_obj.video_elements_enabled_client_ids.insert(0, from_client_id)
-            else:
-                vid_setup_obj.video_elements_enabled_client_ids.append(from_client_id)
+            vid_setup_obj.video_elements_enabled_client_ids.append(from_client_id)
             vid_setup_obj.put()
         else:
             logging.info('Client %s not added to video_enabled_ids %s' %(to_client_id, vid_setup_id))
