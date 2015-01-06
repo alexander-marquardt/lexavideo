@@ -174,18 +174,18 @@ angular.module('lxChannel.services', [])
                             // receivedMessageStringToggle is used for triggering the watcher
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
 
-                            // acknowledge receipt of the message
-                            lxMessageService.sendMessage('ackChatMessage',
-                                {'ackMessageUniqueId': messageObject.messagePayload.messageUniqueId},
-                                scope.lxChatRoomCtrl.clientId);
+//                            // acknowledge receipt of the message
+//                            lxMessageService.sendMessage('ackChatMessage',
+//                                {'ackMessageUniqueId': messageObject.messagePayload.messageUniqueId},
+//                                scope.lxChatRoomCtrl.clientId);
                             break;
 
 
-                        // If client receives ackChatMessage, it means that the message (as indicated by ackMessageUniqueId)
-                        // that was sent to the remote user has been successfully received.
-                        case 'ackChatMessage':
-                            scope.ackChatMessageObject.ackMessageUniqueId = messageObject.messagePayload.ackMessageUniqueId;
-                            break;
+//                        // If client receives ackChatMessage, it means that the message (as indicated by ackMessageUniqueId)
+//                        // that was sent to the remote user has been successfully received.
+//                        case 'ackChatMessage':
+//                            scope.ackChatMessageObject.ackMessageUniqueId = messageObject.messagePayload.ackMessageUniqueId;
+//                            break;
 
                         case 'videoCameraStatusMsg':
                             scope.videoCameraStatusObject.remoteVideoActivationStatus =

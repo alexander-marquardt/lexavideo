@@ -149,11 +149,11 @@ angular.module('lxUseChatRoom.controllers', [])
             receivedMessageTime: 0
         };
 
-        // ackChatMessageObject holds the acknowledgement that the remote client has received a message that
-        // was sent from the local user
-        $scope.ackChatMessageObject = {
-            ackMessageUniqueId: null
-        };
+//        // ackChatMessageObject holds the acknowledgement that the remote client has received a message that
+//        // was sent from the local user
+//        $scope.ackChatMessageObject = {
+//            ackMessageUniqueId: null
+//        };
 
 
         // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
