@@ -118,6 +118,8 @@ def send_room_occupancy_to_room_clients(room_info_obj):
     for i in range(len(room_info_obj.room_members_client_ids)):
         client_id = room_info_obj.room_members_client_ids[i]
         message_obj['messagePayload']['listOfClientObjects'] = list_of_js_client_objects
+
+        logging.info('Sending roomOccupancy to %s: %s' % (client_id, json.dumps(message_obj)))
         on_message(room_info_obj, client_id, json.dumps(message_obj))
 
 
