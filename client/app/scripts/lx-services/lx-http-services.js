@@ -98,7 +98,8 @@ angular.module('lxHttp.services', [])
     function(
         $http,
         $log,
-        lxChatRoomVarsService)
+        lxChatRoomVarsService,
+        lxJs)
     {
 
         /*
@@ -117,9 +118,7 @@ angular.module('lxHttp.services', [])
                  Note: this data will be serialized automatically by AngularJS into a JSON object/string.
                  */
 
-                if (!toClientId) {
-                    $log.error('toClientId is not set!')
-                }
+                lxJs.assert(toClientId);
 
                 var messageObject = {
                     'fromClientId': fromClientId,

@@ -20,6 +20,7 @@ var videoApp = angular.module('videoApp', [
 
     // proprietary services
     'lxAccessSystemResources.services',
+    'lxBasicFunctionality.services',
     'lxChannel.services',
     'lxChatbox.services',
     'lxChatRoom.services',
