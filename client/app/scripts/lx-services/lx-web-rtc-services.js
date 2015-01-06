@@ -194,14 +194,16 @@ webRtcServices.service('lxIceService', function($log, lxMessageService) {
         gatheredIceCandidateTypes[location][type] = 1;
         updateLog();
     };
-    this.onIceCandidate = function(clientId) {
+    this.onIceCandidate = function(clientId, remoteClientId) {
         return function(event) {
             if (event.candidate) {
                 lxMessageService.sendMessage('sdp', {type: 'candidate',
                     label: event.candidate.sdpMLineIndex,
                     id: event.candidate.sdpMid,
                     candidate: event.candidate.candidate},
-                    clientId);
+                    clientId,
+                    remoteClientId);
+
                 self.noteIceCandidate('Local', self.iceCandidateType(event.candidate.candidate));
             } else {
                 $log.log('End of candidates.');
@@ -251,7 +253,7 @@ webRtcServices.factory('lxSessionDescriptionService',
             $log.error('Failed to set session description: ' + error.toString());
         };
 
-        var setLocalAndSendMessage = function(pc, clientId) {
+        var setLocalAndSendMessage = function(pc, clientId, remoteClientId) {
             return function(sessionDescription) {
                 sessionDescription.sdp = lxCodecsService.maybePreferAudioReceiveCodec(sessionDescription.sdp);
                 sessionDescription.sdp = lxCodecsService.maybeSetAudioReceiveBitRate(sessionDescription.sdp);
@@ -259,7 +261,7 @@ webRtcServices.factory('lxSessionDescriptionService',
 
                 pc.setLocalDescription(sessionDescription,
                     onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
-                lxMessageService.sendMessage('sdp', sessionDescription, clientId);
+                lxMessageService.sendMessage('sdp', sessionDescription, clientId, remoteClientId);
             };
         };
 
@@ -276,17 +278,17 @@ webRtcServices.factory('lxSessionDescriptionService',
 
         var self =  {
 
-            doAnswer : function(clientId) {
+            doAnswer : function(clientId, remoteClientId) {
                 $log.log('Sending answer to peer.');
-                lxPeerService.pc.createAnswer(setLocalAndSendMessage(lxPeerService.pc, clientId),
+                lxPeerService.pc.createAnswer(setLocalAndSendMessage(lxPeerService.pc, clientId, remoteClientId),
                     onCreateSessionDescriptionError, lxChatRoomVarsService.sdpConstraints);
             },
 
-            doCall : function(clientId) {
+            doCall : function(clientId, remoteClientId) {
                 var constraints = mergeConstraints(lxVideoParamsService.offerConstraints, lxChatRoomVarsService.sdpConstraints);
                 $log.log('Sending offer to peer, with constraints: \n' +
                     '  \'' + JSON.stringify(constraints) + '\'.');
-                lxPeerService.pc.createOffer(setLocalAndSendMessage(lxPeerService.pc, clientId),
+                lxPeerService.pc.createOffer(setLocalAndSendMessage(lxPeerService.pc, clientId, remoteClientId),
                     onCreateSessionDescriptionError, constraints);
             },
 
@@ -361,7 +363,7 @@ webRtcServices.service('lxWebRtcSessionService',
             lxChannelMessageService.clearQueue();
         },
 
-        processSignalingMessage: function( message, localVideoObject, remoteVideoObject, clientId) {
+        processSignalingMessage: function( message, localVideoObject, remoteVideoObject, clientId, remoteClientId) {
             if (!self.started) {
                 $log.warn('peerConnection has not been created yet!');
                 return;
@@ -369,7 +371,7 @@ webRtcServices.service('lxWebRtcSessionService',
 
             if (message.type === 'offer') {
                 lxSessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject);
-                lxSessionDescriptionService.doAnswer(clientId);
+                lxSessionDescriptionService.doAnswer(clientId, remoteClientId);
 
             } else if (message.type === 'answer') {
                 lxSessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject);
@@ -446,13 +448,13 @@ webRtcServices.factory('lxPeerService',
         var self =  {
             pc : null,
             remoteStream : null,
-            createPeerConnection : function(localVideoObject, remoteVideoObject, videoSignalingObject, clientId) {
+            createPeerConnection : function(localVideoObject, remoteVideoObject, videoSignalingObject, clientId, remoteClientId) {
 
                 $log.log('**************** createPeerConnection ************');
                 try {
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
                     self.pc = new lxAdapterService.RTCPeerConnection(lxVideoParamsService.pcConfig, lxVideoParamsService.pcConstraints);
-                    self.pc.onicecandidate = lxIceService.onIceCandidate(clientId);
+                    self.pc.onicecandidate = lxIceService.onIceCandidate(clientId, remoteClientId);
                     $log.log('Created RTCPeerConnnection with:\n' +
                         '  config: \'' + JSON.stringify(lxVideoParamsService.pcConfig) + '\';\n' +
                         '  constraints: \'' + JSON.stringify(lxVideoParamsService.pcConstraints) + '\'.');
@@ -617,11 +619,11 @@ webRtcServices.factory('lxCallService',
 
 
 
-        var calleeStart = function(localVideoObject, remoteVideoObject, clientId) {
+        var calleeStart = function(localVideoObject, remoteVideoObject, clientId, remoteClientId) {
             // Callee starts to process cached offer and other messages.
             while (lxChannelMessageService.getQueueLength() > 0 ) {
                 lxWebRtcSessionService.processSignalingMessage(lxChannelMessageService.shift(), localVideoObject,
-                    remoteVideoObject, clientId);
+                    remoteVideoObject, clientId, remoteClientId);
             }
         };
 
@@ -639,6 +641,7 @@ webRtcServices.factory('lxCallService',
                 var remoteVideoObject = scope.remoteVideoObject;
                 var videoSignalingObject = scope.videoSignalingObject;
                 var clientId = scope.lxChatRoomCtrl.clientId;
+                var remoteClientId = scope.videoCameraStatusObject.remoteClientId;
 
                 if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
                     lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
@@ -646,7 +649,7 @@ webRtcServices.factory('lxCallService',
                     $log.debug('Starting webRtc services!!');
 
                     lxPeerService.createPeerConnection(localVideoObject, remoteVideoObject,
-                        videoSignalingObject, clientId);
+                        videoSignalingObject, clientId, remoteClientId);
 
                     if (self.hasAudioOrVideoMediaConstraints) {
                         $log.log('Adding local stream.');
@@ -659,11 +662,11 @@ webRtcServices.factory('lxCallService',
 
                     if (lxChannelSupportService.rtcInitiator) {
                         $log.log('Executing doCall()');
-                        lxSessionDescriptionService.doCall(clientId);
+                        lxSessionDescriptionService.doCall(clientId, remoteClientId);
                     }
                     else {
                         $log.log('Executing calleeStart()');
-                        calleeStart(localVideoObject, remoteVideoObject, clientId);
+                        calleeStart(localVideoObject, remoteVideoObject, clientId, remoteClientId);
                     }
 
                 } else {

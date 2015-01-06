@@ -17,30 +17,40 @@ def handle_message(room_info_obj, from_client_id, message_obj):
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
     # as for passing video and other information from one user to the other. 
 
-    to_client_ids_list = room_info_obj.get_list_of_other_client_ids(from_client_id)
+    # If to_client_id is "All", then the message will be sent to all room members, otherwise it will be sent
+    # only to the indicated client.
+    to_client_id = message_obj['toClientId']
+
+    if to_client_id == 'All':
+        to_client_ids_list = room_info_obj.get_list_of_other_client_ids(from_client_id)
+    else:
+        to_client_ids_list = [to_client_id]
+
     chat_room_name = room_info_obj.chat_room_name
 
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
-
-
 
     if message_type == 'videoCameraStatusMsg':
 
         logging.info('user %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
                      (from_client_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))
 
+        assert(to_client_id != 'All')
+
         if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'activateVideo':
             # TODO - this is a hack -- need to pass in to_client_id directly - just setup like this for temporary development and testing
-            vid_setup_obj = room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_ids_list[0], )
-            send_room_video_settings_to_room_members(from_client_id, to_client_ids_list[0])
+            vid_setup_obj = room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
+            send_video_call_settings_to_participants(from_client_id, to_client_ids_list[0])
         else:
-            vid_setup_obj = room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_ids_list[0], )
+            vid_setup_obj = room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
 
 
     if message_type == 'sdp':
+        assert(to_client_id != 'All')
+
         if message_payload['type'] == 'bye':
-            vid_setup_obj = room_info_obj.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_ids_list[0], )
+            vid_setup_obj = room_info_obj.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
             logging.info('Client %s ' % from_client_id + ' quit from room ' + chat_room_name)
             logging.info('Room ' + chat_room_name + ' has state ' + repr(room_info_obj))
 
@@ -50,9 +60,6 @@ def handle_message(room_info_obj, from_client_id, message_obj):
             if message_type == 'sdp' and message_payload['type'] == 'offer':
                 # This is just for debugging
                 logging.info('sdp offer. Payload: %s' % repr(message_payload))
-
-            if message_type == 'sdp' and message_payload['type'] == 'offer' and to_client_id == from_client_id:
-                pass
 
             on_message(room_info_obj, to_client_id, json.dumps(message_obj))
 
@@ -122,7 +129,7 @@ def send_room_occupancy_to_room_clients(room_info_obj):
 
 # Sends information about video settings, and which client should be designated as the 'rtcInitiator'
 @handle_exceptions
-def send_room_video_settings_to_room_members(from_client_id, to_client_id):
+def send_video_call_settings_to_participants(from_client_id, to_client_id):
 
     vid_setup_id = room_module.VideoSetup.get_vid_setup_id_for_client_id_pair(from_client_id, to_client_id)
     vid_setup_obj = room_module.VideoSetup.get_by_id(vid_setup_id)

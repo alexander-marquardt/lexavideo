@@ -38,21 +38,21 @@
                                     <div class="panel-body cl-chat-group-members-panel-body"
                                          ng-class="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' ?
                                                   'cl-chat-group-spacing-between-group-members' : ''">
-                                        <div ng-repeat="user in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
+                                        <div ng-repeat="remoteClient in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
 
                                             <span  ng-class="roomOccupancyObject.listOfClientObjects.length > 1 &&
                                                              videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' ?
                                                              'cl-chat-group-video-icon-container' : ''">
                                                 <button type="button"
                                                     class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
-                                                    ng-show="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' && user.clientId != lxChatRoomCtrl.clientId"
-                                                    ng-click="showVideoElementsAndStartVideoFn('activateVideo', true)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true)"
+                                                    ng-show="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' && remoteClient.clientId != lxChatRoomCtrl.clientId"
+                                                    ng-click="showVideoElementsAndStartVideoFn('activateVideo', true, remoteClient.clientId)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true, remoteClient.clientId)"
                                                     >
                                                     <span class="icon-lx-video-camera-filled"></span>
                                                 </button>
                                             </span>
-                                            {{ user.userName }}
+                                            {{ remoteClient.userName }}
 
                                         </div>
                                     </div>
@@ -74,8 +74,8 @@
 
                                             <button type="button"
                                                     class="btn btn-sm "
-                                                    ng-click="showVideoElementsAndStartVideoFn('activateVideo', false)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', false)"
+                                                    ng-click="showVideoElementsAndStartVideoFn('activateVideo', false, videoCameraStatusObject.remoteClientId)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', false, videoCameraStatusObject.remoteClientId)"
                                                     ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
@@ -84,8 +84,8 @@
                                             </button>
                                             <button type="button"
                                                     class="btn btn-sm "
-                                                    ng-click="showVideoElementsAndStartVideoFn('doNotActivateVideo', false)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn('doNotActivateVideo', false)"
+                                                    ng-click="showVideoElementsAndStartVideoFn('doNotActivateVideo', false, videoCameraStatusObject.remoteClientId)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn('doNotActivateVideo', false, videoCameraStatusObject.remoteClientId)"
                                                     ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
@@ -118,7 +118,7 @@
 
 
                                                 <span class="input-group-btn">
-                                                    <button ng-click="sendChatMessageFn()"
+                                                    <button ng-click="sendChatMessageFn('All')"
                                                             class="btn  btn-sm pull-right"
                                                             ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'btn-primary' : 'btn-danger'"
                                                             ng-disabled="sendMessageForm.$invalid">

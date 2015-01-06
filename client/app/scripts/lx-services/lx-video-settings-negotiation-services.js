@@ -106,7 +106,8 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
     ) {
 
         return {
-            sendStatusOfVideoElementsEnabled: function(scope, localVideoElementsEnabled, queryForRemoteVideoElementsEnabled) {
+            sendStatusOfVideoElementsEnabled: function(scope, localVideoElementsEnabled,
+                                                       queryForRemoteVideoElementsEnabled, toClientId) {
 
                 // Only attempt to send a message if there is another user in the room
                 if (scope.roomOccupancyObject.listOfClientObjects.length > 1) {
@@ -120,9 +121,10 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
                             // we request this information every time that we send the remote user the local status -
                             // this is strictly not necessary, but doesn't cost much and provides some redundancy in
                             // the case of un-delivered messages.
-                            queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled
+                            queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled,
                         },
-                        scope.lxChatRoomCtrl.clientId
+                        scope.lxChatRoomCtrl.clientId,
+                        toClientId
                     );
                 }
             }

@@ -27,13 +27,13 @@ angular.module('lxAccessSystemResources.services', [])
             watchWhichModalIsOpen = null;
 
 
-        var askForPermissionToCameraAndMicrophone = function(scope) {
+        var askForPermissionToCameraAndMicrophone = function(scope, remoteClientId) {
             if (lxVideoParamsService.mediaConstraints.audio === false &&
                 lxVideoParamsService.mediaConstraints.video === false) {
                 lxCallService.hasAudioOrVideoMediaConstraints = false;
             } else {
                 lxCallService.hasAudioOrVideoMediaConstraints = true;
-                lxMediaService.doGetUserMedia(scope);
+                lxMediaService.doGetUserMedia(scope, remoteClientId);
             }
         };
 
@@ -54,7 +54,7 @@ angular.module('lxAccessSystemResources.services', [])
 
                 if ($.browser.desktop) {
                     // only show the arrow on desktops, since it appears that on mobile devices there is no
-                    // camera symbol in the URL to point the user to.
+                    // camera symbol inf the URL to point the user to.
                     if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'waitingForResponse') {
                         // Only show the arrow if we are waiting for a response. If the camera was previously denied
                         // then firefox does not show the camera icon and therefore there is nothing to point to.

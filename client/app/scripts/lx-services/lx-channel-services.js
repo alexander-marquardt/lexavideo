@@ -191,6 +191,8 @@ angular.module('lxChannel.services', [])
                             scope.videoCameraStatusObject.remoteVideoActivationStatus =
                                    messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
 
+                            scope.videoCameraStatusObject.remoteClientId = messageObject.fromClientId;
+
                             // Check if the remote user has requested an update of the local users status
                             if ('queryVideoElementsEnabledAndCameraAccessRequested' in messageObject.messagePayload &&
                                 messageObject.messagePayload.queryVideoElementsEnabledAndCameraAccessRequested) {
@@ -200,8 +202,10 @@ angular.module('lxChannel.services', [])
                                     lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                                         scope,
                                         scope.videoCameraStatusObject.localVideoActivationStatus,
-                                        queryForRemoteVideoElementsEnabled
+                                        queryForRemoteVideoElementsEnabled,
+                                        scope.videoCameraStatusObject.remoteClientId
                                     );
+
                             }
 
                             // If the local user has denied video activation (as indicated by 'doNotActivateVideo'),

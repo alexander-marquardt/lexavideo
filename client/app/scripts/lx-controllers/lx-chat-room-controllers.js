@@ -117,19 +117,25 @@ angular.module('lxUseChatRoom.controllers', [])
             //    'doNotActivateVideo': user has denied activation of video elements
             localVideoActivationStatus: 'waitingForActivateVideo',
 
-            remoteVideoActivationStatus: 'waitingForActivateVideo'
+            remoteVideoActivationStatus: 'waitingForActivateVideo',
+
+            remoteClientId: null
         };
 
 
 
-        $scope.showVideoElementsAndStartVideoFn = function(localVideoActivationStatus, queryForRemoteVideoElementsEnabled) {
+        $scope.showVideoElementsAndStartVideoFn = function(localVideoActivationStatus,
+                                                           queryForRemoteVideoElementsEnabled,
+                                                           remoteClientId) {
 
             $scope.videoCameraStatusObject.localVideoActivationStatus = localVideoActivationStatus;
+
 
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                 $scope,
                 localVideoActivationStatus,
-                queryForRemoteVideoElementsEnabled);
+                queryForRemoteVideoElementsEnabled,
+                remoteClientId);
 
             // If this has been called with localVideoElementsEnabled === 'doNotActivateVideo', then the user has either
             // (1) hung-up/stopped the call, or (2) denied to setup video elements. In the case 1, the

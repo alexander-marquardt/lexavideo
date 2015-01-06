@@ -40,7 +40,14 @@ angular.module('lxChatbox.controllers', [])
 
         $scope.sendMessagePayload = {};
 
-        $scope.sendChatMessageFn = function() {
+        /* sendChatMessageFn:
+         *      Sends a chat message to other users.
+         * toClientId:
+         *      either the specific Id of the client that this message should be sent to, or
+         *      the keyword: "All"
+         */
+        $scope.sendChatMessageFn = function(toClientId) {
+
 
             var messageType = 'chatDataMsg';
 
@@ -53,7 +60,9 @@ angular.module('lxChatbox.controllers', [])
                 transmittedToServer: null
             };
 
-            var sendMessagePromise = lxMessageService.sendMessage(messageType, $scope.sendMessagePayload, $scope.lxChatRoomCtrl.clientId);
+            var sendMessagePromise = lxMessageService.sendMessage(
+                messageType, $scope.sendMessagePayload, $scope.lxChatRoomCtrl.clientId, toClientId);
+
             sendMessagePromise.then(
 
                 // message was successfully delivered to the server

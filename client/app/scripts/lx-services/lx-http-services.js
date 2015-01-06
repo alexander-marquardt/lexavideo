@@ -105,7 +105,7 @@ angular.module('lxHttp.services', [])
          Functionality for posting messages to the server.
          */
         return {
-            sendMessage : function(messageType, messagePayload, fromClientId) {
+            sendMessage : function(messageType, messagePayload, fromClientId, toClientId) {
                 /*
                  messageType: string indicating if this is a Signaling message or some other kind of message
                  that is being sent over the Appengine Channel API.
@@ -117,8 +117,13 @@ angular.module('lxHttp.services', [])
                  Note: this data will be serialized automatically by AngularJS into a JSON object/string.
                  */
 
+                if (!toClientId) {
+                    $log.error('toClientId is not set!')
+                }
+
                 var messageObject = {
                     'fromClientId': fromClientId,
+                    'toClientId': toClientId,
                     'messageType': messageType,
                     'messagePayload': messagePayload
                 };
