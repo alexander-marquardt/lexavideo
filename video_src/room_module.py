@@ -349,15 +349,12 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             response_dict = {}
             user_id = long(room_dict['user_id'])
 
+            # If this is a new room, then the room_creator_user_key will be stored in the room
+            # object as the "creator" of the room
             room_creator_user_key = ndb.Key('UserModel', user_id)
             room_info_obj = ChatRoomInfo.create_or_get_room(chat_room_name, room_dict,
-                                                                        room_creator_user_key)
+                                                            room_creator_user_key)
 
-            token_timeout = 240  # minutes
-            # client_id = room_info_obj.make_client_id(user_id)
-            # channel_token = channel.create_channel(client_id, token_timeout)
-            # response_dict['clientId'] = client_id
-            # response_dict['channelToken'] = channel_token
             response_dict['roomId'] = room_info_obj.key.id()
             response_dict['statusString'] = 'roomJoined'
 

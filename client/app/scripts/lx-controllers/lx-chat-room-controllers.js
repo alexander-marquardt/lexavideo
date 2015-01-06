@@ -65,7 +65,7 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomCtrl.clientId = 'Failed to get clientId';
         });
 
-        var addUserToRoomWhenChannelReady = function(roomOccupancyObject) {
+        var addClientToRoomWhenChannelReady = function(roomOccupancyObject) {
             var innerWaitForChannelReady = function() {
                 if (!lxChannelSupportService.channelReady) {
                     $timeout(innerWaitForChannelReady, 100);
@@ -89,7 +89,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             $scope.roomOccupancyObject.roomId = lxChatRoomVarsService.roomId = data.roomId;
 
-            addUserToRoomWhenChannelReady($scope.roomOccupancyObject);
+            addClientToRoomWhenChannelReady($scope.roomOccupancyObject);
 
         }, function(errorEnteringIntoRoomInfoObj) {
 

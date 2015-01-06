@@ -14,6 +14,7 @@ Main URL hander for Videochat Applications written by Alexander Marquardt - code
 import webapp2
 import vidsetup
 
+from video_src import connectivity
 from video_src import error_reporting_from_client
 from video_src import room_module
 from video_src import registration_and_login
@@ -27,15 +28,15 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-landing-page-main.html>', views.LandingPageMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
     webapp2.Route(r'/_lx/handle_room/<chat_room_name_from_url:.+>', room_module.HandleEnterIntoRoom),
-    webapp2.Route(r'/_lx/add_client_to_room/', messaging.AddClientToRoom),
+    webapp2.Route(r'/_lx/add_client_to_room/', connectivity.AddClientToRoom),
     webapp2.Route(r'/_lx/message', messaging.MessagePage),
     webapp2.Route(r'/_lx/log_error', error_reporting_from_client.LogClientError),
-    webapp2.Route(r'/_lx/channel/user_heartbeat/', messaging.UserHeartbeat),
-    webapp2.Route(r'/_lx/channel/request_channel_token/', messaging.RequestChannelToken),
-    webapp2.Route(r'/_lx/channel/manual_disconnect/', messaging.DisconnectPage),
+    webapp2.Route(r'/_lx/channel/user_heartbeat/', connectivity.ClientHeartbeat),
+    webapp2.Route(r'/_lx/channel/request_channel_token/', connectivity.RequestChannelToken),
+    webapp2.Route(r'/_lx/channel/manual_disconnect/', connectivity.DisconnectClient),
     webapp2.Route(r'/_lx/admin/cleanup_sessions', gaesessions.SessionAdmin, handler_method='cleanup_sessions'),
-    webapp2.Route(r'/_ah/channel/connected/',  messaging.ConnectPage),
-    webapp2.Route(r'/_ah/channel/disconnected/',  messaging.DisconnectPage),
+    webapp2.Route(r'/_ah/channel/connected/',  connectivity.ConnectClient),
+    webapp2.Route(r'/_ah/channel/disconnected/',  connectivity.DisconnectClient),
 
     webapp2.Route(r'/temp-login', registration_and_login.CreateTemporaryUserHandler, name='temp-login'),
 

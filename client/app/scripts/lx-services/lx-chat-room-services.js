@@ -40,6 +40,9 @@ angular.module('lxChatRoom.services', [])
 
                 var roomObj = {};
                 roomObj.chatRoomName = scope.roomOccupancyObject.chatRoomName;
+
+                // Pass userId when creating/entering into the room, because if this is the first user to
+                // enter a given room name, then they will be stored as the "creator" of that room
                 roomObj.userId = lxAppWideConstantsService.userId;
 
                 lxHttpHandleRoomService.enterIntoRoom(roomObj).then(
