@@ -39,18 +39,17 @@ def handle_message(room_info_obj, from_client_id, message_obj):
         assert(to_client_id != 'All')
 
         if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'activateVideo':
-            # TODO - this is a hack -- need to pass in to_client_id directly - just setup like this for temporary development and testing
-            vid_setup_obj = room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
+            room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
             send_video_call_settings_to_participants(from_client_id, to_client_ids_list[0])
         else:
-            vid_setup_obj = room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
+            room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
 
 
     if message_type == 'sdp':
         assert(to_client_id != 'All')
 
         if message_payload['type'] == 'bye':
-            vid_setup_obj = room_info_obj.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
+            room_info_obj.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
             logging.info('Client %s ' % from_client_id + ' quit from room ' + chat_room_name)
             logging.info('Room ' + chat_room_name + ' has state ' + repr(room_info_obj))
 
