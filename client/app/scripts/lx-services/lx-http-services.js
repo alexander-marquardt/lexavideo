@@ -118,7 +118,7 @@ angular.module('lxHttp.services', [])
                  Note: this data will be serialized automatically by AngularJS into a JSON object/string.
                  */
 
-                lxJs.assert(toClientId);
+                lxJs.assert(toClientId, "toClientId is not set");
 
                 var messageObject = {
                     'fromClientId': fromClientId,
