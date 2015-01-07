@@ -126,7 +126,7 @@ angular.module('lxChannel.services', [])
 //                                    // and the remote user have enabled video elements or not.
 //                                    lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
 //                                        scope,
-//                                        scope.videoCameraStatusObject.localVideoActivationStatus,
+//                                        scope.videoExchangeSettingsObject.localVideoActivationStatus,
 //                                        true /* queryForRemoteVideoElementsEnabled - ie. ask remote to respond with their status */
 //                                    );
 //                                }
@@ -187,11 +187,11 @@ angular.module('lxChannel.services', [])
 //                            scope.ackChatMessageObject.ackMessageUniqueId = messageObject.messagePayload.ackMessageUniqueId;
 //                            break;
 
-                        case 'videoCameraStatusMsg':
-                            scope.videoCameraStatusObject.remoteVideoActivationStatus =
+                        case 'videoExchangeStatusMsg':
+                            scope.videoExchangeSettingsObject.remoteVideoActivationStatus =
                                    messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
 
-                            scope.videoCameraStatusObject.remoteClientId = messageObject.fromClientId;
+                            scope.videoExchangeSettingsObject.remoteClientId = messageObject.fromClientId;
 
                             // Check if the remote user has requested an update of the local users status
                             if ('queryVideoElementsEnabledAndCameraAccessRequested' in messageObject.messagePayload &&
@@ -201,9 +201,9 @@ angular.module('lxChannel.services', [])
                                     var queryForRemoteVideoElementsEnabled = false;
                                     lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                                         scope,
-                                        scope.videoCameraStatusObject.localVideoActivationStatus,
+                                        scope.videoExchangeSettingsObject.localVideoActivationStatus,
                                         queryForRemoteVideoElementsEnabled,
-                                        scope.videoCameraStatusObject.remoteClientId
+                                        scope.videoExchangeSettingsObject.remoteClientId
                                     );
 
                             }
@@ -217,10 +217,10 @@ angular.module('lxChannel.services', [])
                             // Reset localVideoActivationStatus to 'waitingForEnableVideoExchangePermission' so that the remote user will
                             // be able to send a future request to the local user to enable (or deny) access to their video
                             // elements.
-                            if (scope.videoCameraStatusObject.remoteVideoActivationStatus !== 'enableVideoExchange' &&
-                                scope.videoCameraStatusObject.localVideoActivationStatus === 'doNotEnableVideoExchange') {
+                            if (scope.videoExchangeSettingsObject.remoteVideoActivationStatus !== 'enableVideoExchange' &&
+                                scope.videoExchangeSettingsObject.localVideoActivationStatus === 'doNotEnableVideoExchange') {
 
-                                scope.videoCameraStatusObject.localVideoActivationStatus = 'waitingForEnableVideoExchangePermission';
+                                scope.videoExchangeSettingsObject.localVideoActivationStatus = 'waitingForEnableVideoExchangePermission';
                             }
 
                             break;

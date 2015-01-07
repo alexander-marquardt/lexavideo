@@ -31,7 +31,7 @@ def handle_message(room_info_obj, from_client_id, message_obj):
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
 
-    if message_type == 'videoCameraStatusMsg':
+    if message_type == 'videoExchangeStatusMsg':
 
         logging.info('user %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
                      (from_client_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))

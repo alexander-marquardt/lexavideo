@@ -20,7 +20,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
             var remoteVideoObject = scope.remoteVideoObject;
             var localVideoObject = scope.localVideoObject;
-            var videoCameraStatusObject = scope.videoCameraStatusObject;
+            var videoExchangeSettingsObject = scope.videoExchangeSettingsObject;
 
 
             var removeMiniVideoElemsSrc = function() {
@@ -78,7 +78,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
                         // If this is an active HD session on a small screen, then we display the remote video with a local
                         // video embedded inside of a mini-video element.
-                        if ( videoCameraStatusObject.remoteVideoActivationStatus === 'enableVideoExchange') {
+                        if ( videoExchangeSettingsObject.remoteVideoActivationStatus === 'enableVideoExchange') {
                             showMiniVideoElems();
                             localVideoObject.localVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'inline-block';
@@ -111,7 +111,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
 
 
-            scope.$watch('videoCameraStatusObject.remoteVideoActivationStatus', function(newRemoteActivationStatus, oldRemoteActivationStatus) {
+            scope.$watch('videoExchangeSettingsObject.remoteVideoActivationStatus', function(newRemoteActivationStatus, oldRemoteActivationStatus) {
                 // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
                 // We need to make sure that correct windows aer enabled for the current videoType..
                 $log.info('Remote remoteVideoActivationStatus is now: ' + newRemoteActivationStatus + ' Old value was: ' + oldRemoteActivationStatus);

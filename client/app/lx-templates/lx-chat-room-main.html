@@ -9,7 +9,7 @@
     <div ng-if="lxChatRoomCtrl.userSuccessfullyEnteredRoom == true">
         {% endraw %}{% include "lx-templates/lx-chatbox.html" %}{% raw %}
 
-        <div ng-if="videoCameraStatusObject.localVideoActivationStatus == 'enableVideoExchange'">
+        <div ng-if="videoExchangeSettingsObject.localVideoActivationStatus == 'enableVideoExchange'">
 
             {% endraw %}{% include "lx-templates/lx-video-elements.html" %}{% raw %}
 

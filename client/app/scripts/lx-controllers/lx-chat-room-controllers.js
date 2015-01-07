@@ -103,7 +103,7 @@ angular.module('lxUseChatRoom.controllers', [])
             $location.path('/');
         });
 
-        $scope.videoCameraStatusObject = {
+        $scope.videoExchangeSettingsObject = {
 
             // Note: the following values are "requests" for camera access, because they only enable the display
             // of the video elements and show the access prompt that the user must click on before actual camera
@@ -128,7 +128,7 @@ angular.module('lxUseChatRoom.controllers', [])
                                                            queryForRemoteVideoElementsEnabled,
                                                            remoteClientId) {
 
-            $scope.videoCameraStatusObject.localVideoActivationStatus = localVideoActivationStatus;
+            $scope.videoExchangeSettingsObject.localVideoActivationStatus = localVideoActivationStatus;
 
 
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
