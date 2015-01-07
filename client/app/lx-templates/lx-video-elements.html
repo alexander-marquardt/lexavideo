@@ -151,9 +151,9 @@
 
             <!-- "Stop" video button -->
             <button type="button" class="btn btn-sm btn-primary cl-add-left-and-right-margins-to-hangup"
-                    ng-show="videoCameraStatusObject.localVideoActivationStatus == 'enableVideoElements'"
-                    ng-click="showVideoElementsAndStartVideoFn('waitingForEnableVideoElements', true, videoCameraStatusObject.remoteClientId)"
-                    ng-dblclick="showVideoElementsAndStartVideoFn('waitingForEnableVideoElements', true, videoCameraStatusObject.remoteClientId)">
+                    ng-show="videoCameraStatusObject.localVideoActivationStatus == 'enableVideoExchange'"
+                    ng-click="showVideoElementsAndStartVideoFn('waitingForEnableVideoExchangePermission', true, videoCameraStatusObject.remoteClientId)"
+                    ng-dblclick="showVideoElementsAndStartVideoFn('waitingForEnableVideoExchangePermission', true, videoCameraStatusObject.remoteClientId)">
                 <span class="icon-lx-start-video-camera-wrapper-cfg">
                     <span class="icon-lx-phone-hang-up-cfg"></span>
                 </span>

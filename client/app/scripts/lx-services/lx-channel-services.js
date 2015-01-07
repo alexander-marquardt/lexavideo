@@ -209,18 +209,18 @@ angular.module('lxChannel.services', [])
                             }
 
                             // If the local user has denied video activation (as indicated by localVideoActivationStatus
-                            // of 'doNotEnableVideoElements'),
-                            // then by construction this was triggered by a remoteVideoActivationStatus of 'enableVideoElements' .
-                            // If the  remote user now has a status other than 'enableVideoElements' then they are not currently
-                            // attempting to exchange video, and the doNotEnableVideoElements that we previously selected
+                            // of 'doNotEnableVideoExchange'),
+                            // then by construction this was triggered by a remoteVideoActivationStatus of 'enableVideoExchange' .
+                            // If the  remote user now has a status other than 'enableVideoExchange' then they are not currently
+                            // attempting to exchange video, and the doNotEnableVideoExchange that we previously selected
                             // is no longer applicable (since the remote request is no longer pending)
-                            // Reset localVideoActivationStatus to 'waitingForEnableVideoElements' so that the remote user will
+                            // Reset localVideoActivationStatus to 'waitingForEnableVideoExchangePermission' so that the remote user will
                             // be able to send a future request to the local user to enable (or deny) access to their video
                             // elements.
-                            if (scope.videoCameraStatusObject.remoteVideoActivationStatus !== 'enableVideoElements' &&
-                                scope.videoCameraStatusObject.localVideoActivationStatus === 'doNotEnableVideoElements') {
+                            if (scope.videoCameraStatusObject.remoteVideoActivationStatus !== 'enableVideoExchange' &&
+                                scope.videoCameraStatusObject.localVideoActivationStatus === 'doNotEnableVideoExchange') {
 
-                                scope.videoCameraStatusObject.localVideoActivationStatus = 'waitingForEnableVideoElements';
+                                scope.videoCameraStatusObject.localVideoActivationStatus = 'waitingForEnableVideoExchangePermission';
                             }
 
                             break;

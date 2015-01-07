@@ -78,7 +78,7 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
                         // If this is an active HD session on a small screen, then we display the remote video with a local
                         // video embedded inside of a mini-video element.
-                        if ( videoCameraStatusObject.remoteVideoActivationStatus === 'enableVideoElements') {
+                        if ( videoCameraStatusObject.remoteVideoActivationStatus === 'enableVideoExchange') {
                             showMiniVideoElems();
                             localVideoObject.localVideoWrapper.style.display = 'none';
                             remoteVideoObject.remoteVideoWrapper.style.display = 'inline-block';

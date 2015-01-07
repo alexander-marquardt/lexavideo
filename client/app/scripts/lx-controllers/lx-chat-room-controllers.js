@@ -112,12 +112,12 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // localVideoActivationStatus and
             // remoteVideoActivationStatus can be the following values:
-            //    'waitingForEnableVideoElements': user has not made any request for a video exchange
-            //    'enableVideoElements': user has activated video elements
-            //    'doNotEnableVideoElements': user has denied activation of video elements
-            localVideoActivationStatus: 'waitingForEnableVideoElements',
+            //    'waitingForEnableVideoExchangePermission': user has not made any request for a video exchange
+            //    'enableVideoExchange': user has activated video elements
+            //    'doNotEnableVideoExchange': user has denied activation of video elements
+            localVideoActivationStatus: 'waitingForEnableVideoExchangePermission',
 
-            remoteVideoActivationStatus: 'waitingForEnableVideoElements',
+            remoteVideoActivationStatus: 'waitingForEnableVideoExchangePermission',
 
             remoteClientId: null
         };
@@ -137,11 +137,11 @@ angular.module('lxUseChatRoom.controllers', [])
                 queryForRemoteVideoElementsEnabled,
                 remoteClientId);
 
-            // If this has been called with localVideoElementsEnabled === 'doNotEnableVideoElements', then the user has either
+            // If this has been called with localVideoElementsEnabled === 'doNotEnableVideoExchange', then the user has either
             // (1) hung-up/stopped the call, or (2) denied to setup video elements. In the case 1, the
             // call must be hung up. In case 2, the call does not need to be hung up, but for simplicity
             // we also hangup the call for this case.
-            if (localVideoActivationStatus === 'doNotEnableVideoElements' || localVideoActivationStatus === 'waitingForEnableVideoElements') {
+            if (localVideoActivationStatus === 'doNotEnableVideoExchange' || localVideoActivationStatus === 'waitingForEnableVideoExchangePermission') {
                 lxCallService.doHangup();
             }
         };
