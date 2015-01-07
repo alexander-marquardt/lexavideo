@@ -38,7 +38,7 @@ def handle_message(room_info_obj, from_client_id, message_obj):
 
         assert(to_client_id != 'All')
 
-        if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'activateVideo':
+        if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'enableVideoElements':
             room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
             send_video_call_settings_to_participants(from_client_id, to_client_ids_list[0])
         else:

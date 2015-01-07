@@ -31,11 +31,11 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
         }
 
-        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'waitingForActivateVideo') {
+        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'waitingForEnableVideoElements') {
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
         }
 
-        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'doNotActivateVideo') {
+        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'doNotEnableVideoElements') {
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedToExchangeVideo';
         }
 
@@ -44,7 +44,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
         // call back is executed. Note: checking activateWindow just lets us know that the user has already
         // agreed to enable their video elements, and we infer that since we don't have a video stream yet, that the user has not
         // yet given access to their camera and microphone - this may have to be revisited in the future.
-        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'activateVideo' ) {
+        else if (scope.videoCameraStatusObject.remoteVideoActivationStatus === 'enableVideoElements' ) {
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
         }
 

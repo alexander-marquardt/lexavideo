@@ -112,12 +112,12 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // localVideoActivationStatus and
             // remoteVideoActivationStatus can be the following values:
-            //    'waitingForActivateVideo': user has not made any request for a video exchange
-            //    'activateVideo': user has activated video elements
-            //    'doNotActivateVideo': user has denied activation of video elements
-            localVideoActivationStatus: 'waitingForActivateVideo',
+            //    'waitingForEnableVideoElements': user has not made any request for a video exchange
+            //    'enableVideoElements': user has activated video elements
+            //    'doNotEnableVideoElements': user has denied activation of video elements
+            localVideoActivationStatus: 'waitingForEnableVideoElements',
 
-            remoteVideoActivationStatus: 'waitingForActivateVideo',
+            remoteVideoActivationStatus: 'waitingForEnableVideoElements',
 
             remoteClientId: null
         };
@@ -137,11 +137,11 @@ angular.module('lxUseChatRoom.controllers', [])
                 queryForRemoteVideoElementsEnabled,
                 remoteClientId);
 
-            // If this has been called with localVideoElementsEnabled === 'doNotActivateVideo', then the user has either
+            // If this has been called with localVideoElementsEnabled === 'doNotEnableVideoElements', then the user has either
             // (1) hung-up/stopped the call, or (2) denied to setup video elements. In the case 1, the
             // call must be hung up. In case 2, the call does not need to be hung up, but for simplicity
             // we also hangup the call for this case.
-            if (localVideoActivationStatus === 'doNotActivateVideo' || localVideoActivationStatus === 'waitingForActivateVideo') {
+            if (localVideoActivationStatus === 'doNotEnableVideoElements' || localVideoActivationStatus === 'waitingForEnableVideoElements') {
                 lxCallService.doHangup();
             }
         };

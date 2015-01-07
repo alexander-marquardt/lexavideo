@@ -25,9 +25,9 @@
 
                             <div class="panel-body cl-chat-panel-body"
                                  scroll-glue="chatPanelIsGlued"
-                                 ng-class="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ?
+                                 ng-class="videoCameraStatusObject.localVideoActivationStatus == 'enableVideoElements' ?
                                     'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">
-                                <div ng-class="videoCameraStatusObject.localVideoActivationStatus == 'activateVideo' ?
+                                <div ng-class="videoCameraStatusObject.localVideoActivationStatus == 'enableVideoElements' ?
                                     'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>
 
                                 <div class="panel cl-chat-group-members-panel cl-match-chat-group-members-element-to-half-video-sizing"
@@ -36,18 +36,18 @@
                                         Group participants
                                     </div>
                                     <div class="panel-body cl-chat-group-members-panel-body"
-                                         ng-class="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' ?
+                                         ng-class="videoCameraStatusObject.localVideoActivationStatus != 'enableVideoElements' ?
                                                   'cl-chat-group-spacing-between-group-members' : ''">
                                         <div ng-repeat="remoteClient in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
 
                                             <span  ng-class="roomOccupancyObject.listOfClientObjects.length > 1 &&
-                                                             videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' ?
+                                                             videoCameraStatusObject.localVideoActivationStatus != 'enableVideoElements' ?
                                                              'cl-chat-group-video-icon-container' : ''">
                                                 <button type="button"
                                                     class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
-                                                    ng-show="videoCameraStatusObject.localVideoActivationStatus != 'activateVideo' && remoteClient.clientId != lxChatRoomCtrl.clientId"
-                                                    ng-click="showVideoElementsAndStartVideoFn('activateVideo', true, remoteClient.clientId)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', true, remoteClient.clientId)"
+                                                    ng-show="videoCameraStatusObject.localVideoActivationStatus != 'enableVideoElements' && remoteClient.clientId != lxChatRoomCtrl.clientId"
+                                                    ng-click="showVideoElementsAndStartVideoFn('enableVideoElements', true, remoteClient.clientId)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn('enableVideoElements', true, remoteClient.clientId)"
                                                     >
                                                     <span class="icon-lx-video-camera-filled"></span>
                                                 </button>
@@ -64,8 +64,8 @@
                                 <!-- This is the html that prompts the user to exchange video with the remote user if the
                                      remote user has requested to do so -->
                                 <div class="well cl-show-hide-fade cl-prompt-for-video-access cl-chatbox-glow"
-                                     ng-show="videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
-                                              videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo'">
+                                     ng-show="videoCameraStatusObject.remoteVideoActivationStatus == 'enableVideoElements' &&
+                                              videoCameraStatusObject.localVideoActivationStatus == 'waitingForEnableVideoElements'">
 
                                     <div class="row ">
                                         <div class="col-xs-12 cl-text-size-1_5em ">
@@ -74,8 +74,8 @@
 
                                             <button type="button"
                                                     class="btn btn-sm "
-                                                    ng-click="showVideoElementsAndStartVideoFn('activateVideo', false, videoCameraStatusObject.remoteClientId)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn('activateVideo', false, videoCameraStatusObject.remoteClientId)"
+                                                    ng-click="showVideoElementsAndStartVideoFn('enableVideoElements', false, videoCameraStatusObject.remoteClientId)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn('enableVideoElements', false, videoCameraStatusObject.remoteClientId)"
                                                     ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
@@ -84,8 +84,8 @@
                                             </button>
                                             <button type="button"
                                                     class="btn btn-sm "
-                                                    ng-click="showVideoElementsAndStartVideoFn('doNotActivateVideo', false, videoCameraStatusObject.remoteClientId)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn('doNotActivateVideo', false, videoCameraStatusObject.remoteClientId)"
+                                                    ng-click="showVideoElementsAndStartVideoFn('doNotEnableVideoElements', false, videoCameraStatusObject.remoteClientId)"
+                                                    ng-dblclick="showVideoElementsAndStartVideoFn('doNotEnableVideoElements', false, videoCameraStatusObject.remoteClientId)"
                                                     ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
@@ -133,8 +133,8 @@
 
                                     <!-- only show the video/stop video button if the user is not currently being shown the
                                          prompt window to enable/deny video -->
-                                    <div ng-hide="videoCameraStatusObject.remoteVideoActivationStatus == 'activateVideo' &&
-                                              videoCameraStatusObject.localVideoActivationStatus == 'waitingForActivateVideo'">
+                                    <div ng-hide="videoCameraStatusObject.remoteVideoActivationStatus == 'enableVideoElements' &&
+                                              videoCameraStatusObject.localVideoActivationStatus == 'waitingForEnableVideoElements'">
 
                                     </div>
                                 </div>
