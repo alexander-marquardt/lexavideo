@@ -126,7 +126,7 @@ angular.module('lxChannel.services', [])
 //                                    // and the remote user have enabled video elements or not.
 //                                    lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
 //                                        scope,
-//                                        scope.videoExchangeSettingsObject.localVideoActivationStatus,
+//                                        scope.videoExchangeSettingsObject.localVideoEnabledSetting,
 //                                        true /* queryForRemoteVideoElementsEnabled - ie. ask remote to respond with their status */
 //                                    );
 //                                }
@@ -188,7 +188,7 @@ angular.module('lxChannel.services', [])
 //                            break;
 
                         case 'videoExchangeStatusMsg':
-                            scope.videoExchangeSettingsObject.remoteVideoActivationStatus =
+                            scope.videoExchangeSettingsObject.remoteVideoEnabledSetting =
                                    messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
 
                             scope.videoExchangeSettingsObject.remoteClientId = messageObject.fromClientId;
@@ -201,26 +201,26 @@ angular.module('lxChannel.services', [])
                                     var queryForRemoteVideoElementsEnabled = false;
                                     lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                                         scope,
-                                        scope.videoExchangeSettingsObject.localVideoActivationStatus,
+                                        scope.videoExchangeSettingsObject.localVideoEnabledSetting,
                                         queryForRemoteVideoElementsEnabled,
                                         scope.videoExchangeSettingsObject.remoteClientId
                                     );
 
                             }
 
-                            // If the local user has denied video activation (as indicated by localVideoActivationStatus
+                            // If the local user has denied video activation (as indicated by localVideoEnabledSetting
                             // of 'doNotEnableVideoExchange'),
-                            // then by construction this was triggered by a remoteVideoActivationStatus of 'enableVideoExchange' .
+                            // then by construction this was triggered by a remoteVideoEnabledSetting of 'enableVideoExchange' .
                             // If the  remote user now has a status other than 'enableVideoExchange' then they are not currently
                             // attempting to exchange video, and the doNotEnableVideoExchange that we previously selected
                             // is no longer applicable (since the remote request is no longer pending)
-                            // Reset localVideoActivationStatus to 'waitingForEnableVideoExchangePermission' so that the remote user will
+                            // Reset localVideoEnabledSetting to 'waitingForEnableVideoExchangePermission' so that the remote user will
                             // be able to send a future request to the local user to enable (or deny) access to their video
                             // elements.
-                            if (scope.videoExchangeSettingsObject.remoteVideoActivationStatus !== 'enableVideoExchange' &&
-                                scope.videoExchangeSettingsObject.localVideoActivationStatus === 'doNotEnableVideoExchange') {
+                            if (scope.videoExchangeSettingsObject.remoteVideoEnabledSetting !== 'enableVideoExchange' &&
+                                scope.videoExchangeSettingsObject.localVideoEnabledSetting === 'doNotEnableVideoExchange') {
 
-                                scope.videoExchangeSettingsObject.localVideoActivationStatus = 'waitingForEnableVideoExchangePermission';
+                                scope.videoExchangeSettingsObject.localVideoEnabledSetting = 'waitingForEnableVideoExchangePermission';
                             }
 
                             break;

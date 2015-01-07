@@ -25,9 +25,9 @@
 
                             <div class="panel-body cl-chat-panel-body"
                                  scroll-glue="chatPanelIsGlued"
-                                 ng-class="videoExchangeSettingsObject.localVideoActivationStatus == 'enableVideoExchange' ?
+                                 ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?
                                     'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">
-                                <div ng-class="videoExchangeSettingsObject.localVideoActivationStatus == 'enableVideoExchange' ?
+                                <div ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?
                                     'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>
 
                                 <div class="panel cl-chat-group-members-panel cl-match-chat-group-members-element-to-half-video-sizing"
@@ -36,16 +36,16 @@
                                         Group participants
                                     </div>
                                     <div class="panel-body cl-chat-group-members-panel-body"
-                                         ng-class="videoExchangeSettingsObject.localVideoActivationStatus != 'enableVideoExchange' ?
+                                         ng-class="videoExchangeSettingsObject.localVideoEnabledSetting != 'enableVideoExchange' ?
                                                   'cl-chat-group-spacing-between-group-members' : ''">
                                         <div ng-repeat="remoteClient in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
 
                                             <span  ng-class="roomOccupancyObject.listOfClientObjects.length > 1 &&
-                                                             videoExchangeSettingsObject.localVideoActivationStatus != 'enableVideoExchange' ?
+                                                             videoExchangeSettingsObject.localVideoEnabledSetting != 'enableVideoExchange' ?
                                                              'cl-chat-group-video-icon-container' : ''">
                                                 <button type="button"
                                                     class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
-                                                    ng-show="videoExchangeSettingsObject.localVideoActivationStatus != 'enableVideoExchange' && remoteClient.clientId != lxChatRoomCtrl.clientId"
+                                                    ng-show="videoExchangeSettingsObject.localVideoEnabledSetting != 'enableVideoExchange' && remoteClient.clientId != lxChatRoomCtrl.clientId"
                                                     ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClient.clientId)"
                                                     ng-dblclick="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClient.clientId)"
                                                     >
@@ -64,8 +64,8 @@
                                 <!-- This is the html that prompts the user to exchange video with the remote user if the
                                      remote user has requested to do so -->
                                 <div class="well cl-show-hide-fade cl-prompt-for-video-access cl-chatbox-glow"
-                                     ng-show="videoExchangeSettingsObject.remoteVideoActivationStatus == 'enableVideoExchange' &&
-                                              videoExchangeSettingsObject.localVideoActivationStatus == 'waitingForEnableVideoExchangePermission'">
+                                     ng-show="videoExchangeSettingsObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
+                                              videoExchangeSettingsObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
 
                                     <div class="row ">
                                         <div class="col-xs-12 cl-text-size-1_5em ">
@@ -133,8 +133,8 @@
 
                                     <!-- only show the video/stop video button if the user is not currently being shown the
                                          prompt window to enable/deny video -->
-                                    <div ng-hide="videoExchangeSettingsObject.remoteVideoActivationStatus == 'enableVideoExchange' &&
-                                              videoExchangeSettingsObject.localVideoActivationStatus == 'waitingForEnableVideoExchangePermission'">
+                                    <div ng-hide="videoExchangeSettingsObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
+                                              videoExchangeSettingsObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
 
                                     </div>
                                 </div>

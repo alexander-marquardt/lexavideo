@@ -110,30 +110,30 @@ angular.module('lxUseChatRoom.controllers', [])
             // "access" is given. After this, there is a browser prompt that the user will have to accept in order
             // to access their camera and microphone.
 
-            // localVideoActivationStatus and
-            // remoteVideoActivationStatus can be the following values:
+            // localVideoEnabledSetting and
+            // remoteVideoEnabledSetting can be the following values:
             //    'waitingForEnableVideoExchangePermission': user has not made any request for a video exchange
             //    'enableVideoExchange': user has activated video elements
             //    'doNotEnableVideoExchange': user has denied activation of video elements
-            localVideoActivationStatus: 'waitingForEnableVideoExchangePermission',
+            localVideoEnabledSetting: 'waitingForEnableVideoExchangePermission',
 
-            remoteVideoActivationStatus: 'waitingForEnableVideoExchangePermission',
+            remoteVideoEnabledSetting: 'waitingForEnableVideoExchangePermission',
 
             remoteClientId: null
         };
 
 
 
-        $scope.showVideoElementsAndStartVideoFn = function(localVideoActivationStatus,
+        $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting,
                                                            queryForRemoteVideoElementsEnabled,
                                                            remoteClientId) {
 
-            $scope.videoExchangeSettingsObject.localVideoActivationStatus = localVideoActivationStatus;
+            $scope.videoExchangeSettingsObject.localVideoEnabledSetting = localVideoEnabledSetting;
 
 
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                 $scope,
-                localVideoActivationStatus,
+                localVideoEnabledSetting,
                 queryForRemoteVideoElementsEnabled,
                 remoteClientId);
 
@@ -141,7 +141,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // (1) hung-up/stopped the call, or (2) denied to setup video elements. In the case 1, the
             // call must be hung up. In case 2, the call does not need to be hung up, but for simplicity
             // we also hangup the call for this case.
-            if (localVideoActivationStatus === 'doNotEnableVideoExchange' || localVideoActivationStatus === 'waitingForEnableVideoExchangePermission') {
+            if (localVideoEnabledSetting === 'doNotEnableVideoExchange' || localVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
                 lxCallService.doHangup();
             }
         };

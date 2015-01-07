@@ -31,11 +31,11 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
         }
 
-        else if (scope.videoExchangeSettingsObject.remoteVideoActivationStatus === 'waitingForEnableVideoExchangePermission') {
+        else if (scope.videoExchangeSettingsObject.remoteVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
         }
 
-        else if (scope.videoExchangeSettingsObject.remoteVideoActivationStatus === 'doNotEnableVideoExchange') {
+        else if (scope.videoExchangeSettingsObject.remoteVideoEnabledSetting === 'doNotEnableVideoExchange') {
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedToExchangeVideo';
         }
 
@@ -44,7 +44,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
         // call back is executed. Note: checking activateWindow just lets us know that the user has already
         // agreed to enable their video elements, and we infer that since we don't have a video stream yet, that the user has not
         // yet given access to their camera and microphone - this may have to be revisited in the future.
-        else if (scope.videoExchangeSettingsObject.remoteVideoActivationStatus === 'enableVideoExchange' ) {
+        else if (scope.videoExchangeSettingsObject.remoteVideoEnabledSetting === 'enableVideoExchange' ) {
             scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
         }
 
@@ -88,11 +88,11 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                 setVideoSignalingStatusForUserFeedback(scope, null);
             });
 
-            // Monitor remoteVideoActivationStatus to track if the remote user has activated
+            // Monitor remoteVideoEnabledSetting to track if the remote user has activated
             // their video elements and requested access to their camera.
-            scope.$watch('videoExchangeSettingsObject.remoteVideoActivationStatus', function() {
+            scope.$watch('videoExchangeSettingsObject.remoteVideoEnabledSetting', function() {
 
-                // any change on the remoteVideoActivationStatus should trigger a reloading of the notification.
+                // any change on the remoteVideoEnabledSetting should trigger a reloading of the notification.
                 setVideoSignalingStatusForUserFeedback(scope, null);
 
             });
