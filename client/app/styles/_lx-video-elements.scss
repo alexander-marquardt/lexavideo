@@ -39,27 +39,6 @@ video {
 }
 
 
-#id-mini-video-div {
-  position: absolute;
-  height: $mini-video-width-percentage;
-  width: $mini-video-width-percentage;
-  top: 0px;
-  left: 0px;
-  opacity: 1.0;
-  z-index: $video-wrapper-zindex + 1;
-
-  // only show on devices with xs screens
-  @extend .cl-hide-on-larger-than-xs;
-}
-
-.cl-mini-video-element {
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  -webkit-transition-property: opacity;
-  -webkit-transition-duration: 1s;
-}
-
 .cl-text-outline
 {
   font-size: 1.5em;

@@ -17,36 +17,34 @@ $panel-waiting-heading-bg: $brand-danger;
 
 $scrollbar-width: 18px; // this is an assumption, and can vary between browsers
 
-/* Small devices (tablets, 768px and up) */
-$sm-vid-width: ($container-sm - $grid-gutter-width * 2) / 2;
 
-/* Medium devices (desktops, 992px and up) */
-$md-vid-width: ($container-md - $grid-gutter-width * 2) / 2;
-
-/* Large devices (large desktops, 1200px and up) */
-$lg-vid-width : ($container-lg - $grid-gutter-width *2) / 2;
-
-// these are some of the more common viewport sizes for mobile browsers.
-$xs-viewport-widths-list: 320px, 360px, 400px, 480px, 600px;
-
+$viewport-widths-list: 320px, 360px, 400px, 480px, 600px, $container-sm, $container-md, $container-lg;
 
 // We vary the font size of the text-overlay that is shown in a navbar on top of a video element.
-$video-text-overlay-font-size-list: 1em, 1.25em, 1.5em, 1.75em, 2em, 1em, 1.5em, 2em;
+$video-text-overlay-font-size-list: 0.5em, 0.6em, 0.7em, 0.8em, 0.9em, 1em, 1.5em, 2em;
 
-// setup the video window sizes that are associated with the above viewport sizes.
-$xs-video-widths-list: ();
-@each $viewport-size in $xs-viewport-widths-list {
-  $video-size: $viewport-size - $scrollbar-width;
-  $xs-video-widths-list: append($xs-video-widths-list, $video-size);
+// setup the video window sizes that are associated with the xs viewport sizes. Since these screens
+// are smaller, we allocate the maximum size to the video
+$video-widths-list: ();
+@each $viewport-width in $viewport-widths-list {
+  $video-width: null;
+  @if $viewport-width >= $container-sm {
+    $video-width: ($viewport-width - $grid-gutter-width * 2) / 2;
+  } @else {
+    $video-width: ($viewport-width) / 2;
+  }
+  $video-widths-list: append($video-widths-list, $video-width);
 }
-
-// As the viewport size changes, we change the size of the video windows. Also, once the size
-// gets through sm or larger, we place two windows side-by-side instead of one embedded inside the other.
-$viewport-widths-list: join($xs-viewport-widths-list, ($screen-sm-min, $screen-md-min, $screen-lg-min));
-
-// Take into account if there is only a single video window, or if there are two windows side-by-side
-$video-widths-list: join($xs-video-widths-list, ($sm-vid-width, $md-vid-width, $lg-vid-width));
 
 // This list takes into account the total width of the video elements, and can be used for matching
 // other elements to the exact width required by the video elements.
-$video-column-width-list: join($xs-video-widths-list, ($container-sm - $grid-gutter-width, $container-md - $grid-gutter-width, $container-lg - $grid-gutter-width));
+$video-column-width-list: ();
+@each $viewport-width in $viewport-widths-list {
+  $total-width: null;
+  @if $viewport-width >= $container-sm {
+    $total-width: ($viewport-width - $grid-gutter-width);
+  } @else {
+    $total-width: $viewport-width;
+  }
+  $video-column-width-list: append($video-column-width-list, $total-width);
+}
