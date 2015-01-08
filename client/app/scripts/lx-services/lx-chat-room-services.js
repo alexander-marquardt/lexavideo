@@ -94,7 +94,7 @@ angular.module('lxChatRoom.services', [])
             createVideoExchangeSettingsObject: function () {
                 return new VideoExchangeSettingsObject();
             }
-        }
+        };
     });
 
 
