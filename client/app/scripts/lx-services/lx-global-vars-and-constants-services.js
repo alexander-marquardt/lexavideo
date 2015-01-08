@@ -12,20 +12,13 @@ angular.module('lxGlobalVarsAndConstants.services', [])
      */
     .factory('lxChatRoomVarsService', function () {
 
-        var screenXsMax = $('#id-dummy-xs-div').width();
         var self =  {
 
             // Set up audio and video regardless of what devices are present.
             sdpConstraints : {'mandatory': {
                 'OfferToReceiveAudio': true,
                 'OfferToReceiveVideo': true }
-            },
-
-            // the following value should match the value defined in bootstrap for $screen-xs-max. This will be
-            // used for enabling and disabling the remote/local video windows on small devices for which only one
-            // or the other will be shown.
-            screenXsMax : screenXsMax
-
+            }
         };
         return self;
     })
