@@ -15,6 +15,7 @@ angular.module('lxUseChatRoom.controllers', [])
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxCallService,
+             lxCreateVideoExchangeObjectService,
              lxChannelService,
              lxChannelSupportService,
              lxChatRoomVarsService,
@@ -103,26 +104,7 @@ angular.module('lxUseChatRoom.controllers', [])
             $location.path('/');
         });
 
-        $scope.videoExchangeSettingsObject = {
-
-            // Note: the following values are "requests" for camera access, because they only enable the display
-            // of the video elements and show the access prompt that the user must click on before actual camera
-            // "access" is given. After this, there is a get user media request from the browser
-            // that the user will have to accept in order to access their camera and microphone (if we have
-            // enabled ssh, then the get user media request result should be remembered for future sessions)
-
-            // localVideoEnabledSetting and
-            // remoteVideoEnabledSetting can be the following values:
-            //    'waitingForEnableVideoExchangePermission': user has not made any request for a video exchange
-            //    'enableVideoExchange': user has activated video elements
-            //    'doNotEnableVideoExchange': user has denied activation of video elements
-            localVideoEnabledSetting: 'waitingForEnableVideoExchangePermission',
-
-            remoteVideoEnabledSetting: 'waitingForEnableVideoExchangePermission',
-
-            remoteClientId: null
-        };
-
+        $scope.videoExchangeSettingsObject = lxCreateVideoExchangeObjectService.createVideoExchangeSettingsObject();
 
 
         $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting,
