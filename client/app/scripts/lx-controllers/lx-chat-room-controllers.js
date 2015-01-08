@@ -107,8 +107,9 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // Note: the following values are "requests" for camera access, because they only enable the display
             // of the video elements and show the access prompt that the user must click on before actual camera
-            // "access" is given. After this, there is a browser prompt that the user will have to accept in order
-            // to access their camera and microphone.
+            // "access" is given. After this, there is a get user media request from the browser
+            // that the user will have to accept in order to access their camera and microphone (if we have
+            // enabled ssh, then the get user media request result should be remembered for future sessions)
 
             // localVideoEnabledSetting and
             // remoteVideoEnabledSetting can be the following values:
