@@ -15,7 +15,7 @@ $panel-waiting-heading-bg: $brand-danger;
    we also have to account for two gutter widths (1/2 on left and right side of screen, and 1 between
    the video elements */
 
-$scrollbar-width: 18px; // this is an assumption, and can vary between browsers
+$scrollbar-width: 12px; // this is an assumption, and can vary between browsers
 
 
 $viewport-widths-list: 320px, 360px, 400px, 480px, 600px, $container-sm, $container-md, $container-lg;
@@ -23,15 +23,16 @@ $viewport-widths-list: 320px, 360px, 400px, 480px, 600px, $container-sm, $contai
 // We vary the font size of the text-overlay that is shown in a navbar on top of a video element.
 $video-text-overlay-font-size-list: 0.5em, 0.6em, 0.7em, 0.8em, 0.9em, 1em, 1.5em, 2em;
 
-// setup the video window sizes that are associated with the xs viewport sizes. Since these screens
-// are smaller, we allocate the maximum size to the video
+// setup the video window sizes that are associated with the viewport sizes.
 $video-widths-list: ();
 @each $viewport-width in $viewport-widths-list {
   $video-width: null;
   @if $viewport-width >= $container-sm {
     $video-width: ($viewport-width - $grid-gutter-width * 2) / 2;
   } @else {
-    $video-width: ($viewport-width) / 2;
+    // Since these screens are smaller, we remove the padding/gutter, and
+    // allocate more space to the video windows
+    $video-width: ($viewport-width - $scrollbar-width) / 2;
   }
   $video-widths-list: append($video-widths-list, $video-width);
 }
@@ -44,7 +45,7 @@ $video-column-width-list: ();
   @if $viewport-width >= $container-sm {
     $total-width: ($viewport-width - $grid-gutter-width);
   } @else {
-    $total-width: $viewport-width;
+    $total-width: $viewport-width - $scrollbar-width;
   }
   $video-column-width-list: append($video-column-width-list, $total-width);
 }
