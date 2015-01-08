@@ -47,7 +47,6 @@
                                                     class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
                                                     ng-show="videoExchangeSettingsObject.localVideoEnabledSetting != 'enableVideoExchange' && remoteClient.clientId != lxChatRoomCtrl.clientId"
                                                     ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClient.clientId)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClient.clientId)"
                                                     >
                                                     <span class="icon-lx-video-camera-filled"></span>
                                                 </button>
@@ -75,7 +74,6 @@
                                             <button type="button"
                                                     class="btn btn-sm "
                                                     ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', false, videoExchangeSettingsObject.remoteClientId)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn('enableVideoExchange', false, videoExchangeSettingsObject.remoteClientId)"
                                                     ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
@@ -85,7 +83,6 @@
                                             <button type="button"
                                                     class="btn btn-sm "
                                                     ng-click="showVideoElementsAndStartVideoFn('doNotEnableVideoExchange', false, videoExchangeSettingsObject.remoteClientId)"
-                                                    ng-dblclick="showVideoElementsAndStartVideoFn('doNotEnableVideoExchange', false, videoExchangeSettingsObject.remoteClientId)"
                                                     ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'btn-primary' : 'btn-danger'">
                                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                                 <span class="icon-lx-start-video-camera-cfg"></span>
