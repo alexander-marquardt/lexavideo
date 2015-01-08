@@ -44,12 +44,6 @@
   border: 2px solid #e3e3d3;
 }
 
-.cl-hide-on-larger-than-xs {
-  @media (min-width: $screen-sm-min) {
-    display: none;
-  }
-}
-
 
 .cl-show-hide-fade {
   -webkit-transition:opacity linear 0.5s;

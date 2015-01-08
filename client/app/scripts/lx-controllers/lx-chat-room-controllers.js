@@ -157,7 +157,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // The following is a flag that is used for debugging - will over-ride ng-show directives on the video
             // windows to show any window that has this flag on it when it is set to true.
-            debugShowAllVideoWindows: false
+            debugShowAllVideoWindows: true
         };
 
         $scope.remoteVideoObject = {

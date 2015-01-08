@@ -1,12 +1,6 @@
 
 
 #id-remote-video-wrapper-div {
-
-  // initially is hidden on xs devices until we receive a remote stream, at which point the local-wrapper-div will
-  // be hidden and this div displayed.
-  @media (max-width: $screen-xs-max) {
-    display: none;
-  }
 }
 
 #id-local-video-wrapper-div {

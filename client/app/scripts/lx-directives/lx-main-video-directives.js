@@ -62,46 +62,46 @@ videoAppDirectives.directive('lxVideoContainerDirective',
                 }
             };
 
-
-            var setupForCurrentDisplaySize = function() {
-                $log.debug('setupForCurrentDisplaySize');
-
-
-                // the localVideoWrapper and remoteVideoWrapper are set by a directive that
-                // sits directly on the wrapper element. This if makes sure that they are initialized
-                // before attempting to modify the styles on these elements.
-                if (localVideoObject.localVideoWrapper && remoteVideoObject.remoteVideoWrapper) {
-
-
-                    // Check if this is a XS device, and if so, then embed local video inside the remote.
-                    if (viewportSize.getWidth() <= lxChatRoomVarsService.screenXsMax) {
-
-                        // If this is an active HD session on a small screen, then we display the remote video with a local
-                        // video embedded inside of a mini-video element.
-                        if ( videoExchangeSettingsObject.remoteVideoEnabledSetting === 'enableVideoExchange') {
-                            showMiniVideoElems();
-                            localVideoObject.localVideoWrapper.style.display = 'none';
-                            remoteVideoObject.remoteVideoWrapper.style.display = 'inline-block';
-
-                            // The following line is necessary or else Firefox video will freeze after detaching the
-                            // and re-attaching the video element.
-                            reattachMediaStreamToMiniVideoElems();
-
-                        } else {
-                            // XS screen without a remote signal, therefore we should show the local video and hide the remote video
-                            localVideoObject.localVideoWrapper.style.display = 'inline-block';
-                            remoteVideoObject.remoteVideoWrapper.style.display = 'none';
-                            hideMiniVideoElems();
-                        }
-                    }
-
-                    // This is not an XS device - this is a normal display
-                    else {
-                        enablePrincipalVideoWindows();
-                        hideMiniVideoElems();
-                    }
-                }
-            };
+//
+//            var setupForCurrentDisplaySize = function() {
+//                $log.debug('setupForCurrentDisplaySize');
+//
+//
+//                // the localVideoWrapper and remoteVideoWrapper are set by a directive that
+//                // sits directly on the wrapper element. This if makes sure that they are initialized
+//                // before attempting to modify the styles on these elements.
+//                if (localVideoObject.localVideoWrapper && remoteVideoObject.remoteVideoWrapper) {
+//
+//
+//                    // Check if this is a XS device, and if so, then embed local video inside the remote.
+//                    if (viewportSize.getWidth() <= lxChatRoomVarsService.screenXsMax) {
+//
+//                        // If this is an active HD session on a small screen, then we display the remote video with a local
+//                        // video embedded inside of a mini-video element.
+//                        if ( videoExchangeSettingsObject.remoteVideoEnabledSetting === 'enableVideoExchange') {
+//                            showMiniVideoElems();
+//                            localVideoObject.localVideoWrapper.style.display = 'none';
+//                            remoteVideoObject.remoteVideoWrapper.style.display = 'inline-block';
+//
+//                            // The following line is necessary or else Firefox video will freeze after detaching the
+//                            // and re-attaching the video element.
+//                            reattachMediaStreamToMiniVideoElems();
+//
+//                        } else {
+//                            // XS screen without a remote signal, therefore we should show the local video and hide the remote video
+//                            localVideoObject.localVideoWrapper.style.display = 'inline-block';
+//                            remoteVideoObject.remoteVideoWrapper.style.display = 'none';
+//                            hideMiniVideoElems();
+//                        }
+//                    }
+//
+//                    // This is not an XS device - this is a normal display
+//                    else {
+//                        enablePrincipalVideoWindows();
+//                        hideMiniVideoElems();
+//                    }
+//                }
+//            };
 /*
             scope.enterFullScreen = function () {
                 // This will probably fail on non-Chrome browsers -- investigate if extra code is needed.
@@ -111,18 +111,18 @@ videoAppDirectives.directive('lxVideoContainerDirective',
 
 
 
-            scope.$watch('videoExchangeSettingsObject.remoteVideoEnabledSetting', function(newRemoteActivationStatus, oldRemoteActivationStatus) {
-                // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
-                // We need to make sure that correct windows aer enabled for the current videoType..
-                $log.info('Remote remoteVideoEnabledSetting is now: ' + newRemoteActivationStatus + ' Old value was: ' + oldRemoteActivationStatus);
-                setupForCurrentDisplaySize();
-            });
-
-            $(window).resize(function() {
-                // calling jquery window.resize instead of angular watching for resize on the $window service should be slightly
-                // more efficient.
-                setupForCurrentDisplaySize();
-            });
+//            scope.$watch('videoExchangeSettingsObject.remoteVideoEnabledSetting', function(newRemoteActivationStatus, oldRemoteActivationStatus) {
+//                // the remoteVideo videoType has changed, which means that a new remote video window has been activated.
+//                // We need to make sure that correct windows aer enabled for the current videoType..
+//                $log.info('Remote remoteVideoEnabledSetting is now: ' + newRemoteActivationStatus + ' Old value was: ' + oldRemoteActivationStatus);
+//                setupForCurrentDisplaySize();
+//            });
+//
+//            $(window).resize(function() {
+//                // calling jquery window.resize instead of angular watching for resize on the $window service should be slightly
+//                // more efficient.
+//                setupForCurrentDisplaySize();
+//            });
         }
     };
 });
@@ -150,19 +150,19 @@ videoAppDirectives.directive('lxVideoElementDirective',
                     // and the previous "muted" value is lost - therefore we reset it here.
                     lxCallService.setAudioMute(scope.remoteVideoObject, scope.remoteVideoObject.isAudioMuted);
 
-                    // Watch to see if the remote video is not transmitting, and if it stops then hide the video element.
-                    // This is done so that the user will not see a frozen image from the last frame tha the remote user
-                    // transmitted.
-                    // Note, we check videoSignalingStatusForUserFeedback because it will only be null when
-                    // video transmission has begun.
-                    scope.$watch('videoSignalingObject.videoSignalingStatusForUserFeedback', function(videoSignalingStatusForUserFeedback) {
-                        if (videoSignalingStatusForUserFeedback !== null) {
-                            // remote is not transmitting, so hide the video element
-                            e.addClass('cl-hide');
-                        } else {
-                            e.removeClass('cl-hide');
-                        }
-                    });
+//                    // Watch to see if the remote video is not transmitting, and if it stops then hide the video element.
+//                    // This is done so that the user will not see a frozen image from the last frame tha the remote user
+//                    // transmitted.
+//                    // Note, we check videoSignalingStatusForUserFeedback because it will only be null when
+//                    // video transmission has begun.
+//                    scope.$watch('videoSignalingObject.videoSignalingStatusForUserFeedback', function(videoSignalingStatusForUserFeedback) {
+//                        if (videoSignalingStatusForUserFeedback !== null) {
+//                            // remote is not transmitting, so hide the video element
+//                            e.addClass('cl-hide');
+//                        } else {
+//                            e.removeClass('cl-hide');
+//                        }
+//                    });
                 }
                 else {
                     $log.error('Attribute must be "local" or "remote"');
