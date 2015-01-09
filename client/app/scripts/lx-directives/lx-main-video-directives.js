@@ -3,10 +3,6 @@
 var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 
 // define externally defined variables so that jshint doesn't give warnings
-/* global $ */
-/* global viewportSize */
-
-
 
 videoAppDirectives.directive('lxVideoElementDirective',
     function(
