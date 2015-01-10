@@ -192,6 +192,7 @@ angular.module('lxChannel.services', [])
                         case 'videoExchangeStatusMsg':
 
                             if (!(remoteClientId in scope.videoExchangeObjectsDict)) {
+                                $log.info('videoExchangeStatusMsg causing creation of new videoExchangeObjectsDict entry for client ' + remoteClientId);
                                 scope.videoExchangeObjectsDict[remoteClientId] = lxCreateVideoExchangeObjectService.createVideoExchangeSettingsObject();
                             }
                             scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting =

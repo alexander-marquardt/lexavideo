@@ -1,161 +1,156 @@
 {% raw %}
-<div ng-controller="lxMainVideoCtrl">
-{% endraw %}
+<div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
+    <div ng-if="videoExchangeObject.localVideoEnabledSetting == 'enableVideoExchange'">
+        <div ng-controller="lxMainVideoCtrl">
+            {% endraw %}{% include "lx-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
+            <div lx-check-if-system-supports-web-rtc-directive></div>
+            {% endraw %}{% include "lx-templates/lx-tc-access-camera.html" %}{% raw %}
+            <div lx-video-negotiation-directive></div>
+            <div lx-access-camera-and-microphone-directive></div>
 
-    {% include "lx-templates/lx-tc-check-if-system-supports-web-rtc.html" %}
+            <div class="row cl-row-no-xs-margins">
+                <div class="col-xs-12 text-center cl-col-no-xs-padding">
+                    <div class="cl-match-element-to-video-sizing" style="display:inline-block">
 
-{% raw %}
-    <div lx-check-if-system-supports-web-rtc-directive></div>
-{% endraw %}
+                        RemoteId = {{ remoteClientId }}
+                        <div class="row cl-row-no-xs-margins">
+                            <div>
+                                <!-- The following wraps the remote video window -->
+                                <div class="col-xs-6 text-center cl-col-no-xs-padding" >
 
-    {% include "lx-templates/lx-tc-access-camera.html" %}
+                                    <div lx-video-wrapper-directive video-window='remote' class="cl-video-wrapper-div">
+                                    REMOTE VIDEO<br>
+                                        <!-- only show the message in the video window if a modal is not currently being shown - this is
+                                             just so that we don't confuse the user by showing them two different messages at once -->
+                                        <div ng-if="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                             lx-video-settings-negotiation-directive>
+                                         </div>
 
-{% raw %}
-    <div lx-video-negotiation-directive></div>
-    <div lx-access-camera-and-microphone-directive></div>
+                                        <div class="cl-user-feedback-inside-video-wrapper cl-hide-on-larger-than-xs">
+                                            {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
+                                        </div>
 
-    <div class="row cl-row-no-xs-margins">
-        <div class="col-xs-12 text-center cl-col-no-xs-padding">
-            <div class="cl-match-element-to-video-sizing" style="display:inline-block">
-                <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
-                    <div class="row cl-row-no-xs-margins">
-                        <div>
-                            <!-- The following wraps the remote video window -->
-                            <div class="col-xs-6 text-center cl-col-no-xs-padding" >
-
-                                <div lx-video-wrapper-directive video-window='remote' class="cl-video-wrapper-div">
-                                REMOTE VIDEO<br>
-                                    <!-- only show the message in the video window if a modal is not currently being shown - this is
-                                         just so that we don't confuse the user by showing them two different messages at once -->
-                                    <div ng-if="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                                         lx-video-settings-negotiation-directive>
-                                     </div>
-
-                                    <div class="cl-user-feedback-inside-video-wrapper cl-hide-on-larger-than-xs">
-                                        {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
-                                    </div>
-
-                                    <div class="text-center" >
-                                        <div class="cl-my-well">
-                                            <div style="position: relative">
-                                                <div lx-video-element-directive video-window='remote'></div>
+                                        <div class="text-center" >
+                                            <div class="cl-my-well">
+                                                <div style="position: relative">
+                                                    <div lx-video-element-directive video-window='remote'></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- The following wraps the local video window -->
-                            <div class="col-xs-6 text-center cl-col-no-xs-padding" >
+                                <!-- The following wraps the local video window -->
+                                <div class="col-xs-6 text-center cl-col-no-xs-padding" >
 
-                                <div lx-video-wrapper-directive video-window='local'  class="cl-video-wrapper-div">
-                                LOCAL VIDEO<br>
-                                    <div class="cl-user-feedback-inside-video-wrapper">
-                                        {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
-                                    </div>
+                                    <div lx-video-wrapper-directive video-window='local'  class="cl-video-wrapper-div">
+                                    LOCAL VIDEO<br>
+                                        <div class="cl-user-feedback-inside-video-wrapper">
+                                            {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
+                                        </div>
 
-                                    <div class="text-center">
-                                        <div class="cl-my-well" >
-                                            <div style="position: relative">
-                                                <div lx-video-element-directive video-window='local'></div>
+                                        <div class="text-center">
+                                            <div class="cl-my-well" >
+                                                <div style="position: relative">
+                                                    <div lx-video-element-directive video-window='local'></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+
                             </div>
-
-
                         </div>
-                    </div>
 
-                    <!-- This row contains the buttons that control the videoType that will be transmitted and microphone/sound/video mute -->
-                    <div class="row cl-row-no-xs-margins" style="margin-bottom:10px">
+                        <!-- This row contains the buttons that control the videoType that will be transmitted and microphone/sound/video mute -->
+                        <div class="row cl-row-no-xs-margins" style="margin-bottom:10px">
 
-                        <div class="col-xs-12 text-center cl-col-no-xs-padding">
-                            <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
-                            <button ng-show="!localVideoObject.isMicrophoneMuted"
-                                    type="button" class="btn btn-sm btn-primary"
-                                    ng-click="toggleMicrophoneMute()">
+                            <div class="col-xs-12 text-center cl-col-no-xs-padding">
+                                <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
+                                <button ng-show="!localVideoObject.isMicrophoneMuted"
+                                        type="button" class="btn btn-sm btn-primary"
+                                        ng-click="toggleMicrophoneMute()">
 
-                                <span class="cl-lx-call-control-wrapper-cfg">
-                                    <span class="icon-lx-microphone-cfg"></span>
+                                    <span class="cl-lx-call-control-wrapper-cfg">
+                                        <span class="icon-lx-microphone-cfg"></span>
 
-                                </span>
-                            </button>
+                                    </span>
+                                </button>
 
-                            <button ng-show="localVideoObject.isMicrophoneMuted"
-                                    type="button" class="btn btn-sm btn-default"
-                                    ng-click="toggleMicrophoneMute()">
-                                <span class="cl-lx-call-control-wrapper-cfg">
-                                    <span class="icon-lx-microphone-cfg"></span>
-                                    <span class="icon-lx-thick-forward-slash-cfg"></span>
-                                    <span class="icon-lx-thin-forward-slash-cfg"></span>
-                                </span>
+                                <button ng-show="localVideoObject.isMicrophoneMuted"
+                                        type="button" class="btn btn-sm btn-default"
+                                        ng-click="toggleMicrophoneMute()">
+                                    <span class="cl-lx-call-control-wrapper-cfg">
+                                        <span class="icon-lx-microphone-cfg"></span>
+                                        <span class="icon-lx-thick-forward-slash-cfg"></span>
+                                        <span class="icon-lx-thin-forward-slash-cfg"></span>
+                                    </span>
 
-                            </button>
-
-
-                            <!-- enable/disable remote audio -->
-                            <button ng-show="!remoteVideoObject.isAudioMuted"
-                                    type="button" class="btn btn-sm btn-primary"
-                                    ng-click="toggleAudioMute()">
-
-                                <span class="cl-lx-call-control-wrapper-cfg">
-                                    <span class="icon-lx-volume-high-cfg"></span>
-
-                                </span>
-                            </button>
-
-                            <button ng-show="remoteVideoObject.isAudioMuted"
-                                    type="button" class="btn btn-sm btn-default"
-                                    ng-click="toggleAudioMute()">
-                                <span class="cl-lx-call-control-wrapper-cfg">
-                                    <span class="icon-lx-volume-high-cfg"></span>
-                                    <span class="icon-lx-thick-forward-slash-cfg"></span>
-                                    <span class="icon-lx-thin-forward-slash-cfg"></span>
-                                </span>
-
-                            </button>
+                                </button>
 
 
-                            <!-- enable/disable video - button that indicates that the video stream is currently enabled -->
-                            <button ng-show="!localVideoObject.isWebcamMuted"
-                                    type="button" class="btn btn-sm btn-primary"
-                                    ng-click="toggleWebcamMute()">
+                                <!-- enable/disable remote audio -->
+                                <button ng-show="!remoteVideoObject.isAudioMuted"
+                                        type="button" class="btn btn-sm btn-primary"
+                                        ng-click="toggleAudioMute()">
 
-                                <span class="cl-lx-call-control-wrapper-cfg">
-                                    <span class="icon-lx-video-camera-filled-cfg"></span>
-                                </span>
-                            </button>
+                                    <span class="cl-lx-call-control-wrapper-cfg">
+                                        <span class="icon-lx-volume-high-cfg"></span>
 
-                            <button ng-show="localVideoObject.isWebcamMuted"
-                                    type="button" class="btn btn-sm btn-default"
-                                    ng-click="toggleWebcamMute()">
+                                    </span>
+                                </button>
 
-                                <span class="cl-lx-call-control-wrapper-cfg">
-                                    <span class="icon-lx-video-camera-filled-cfg"></span>
-                                    <span class="icon-lx-thick-forward-slash-cfg"></span>
-                                    <span class="icon-lx-thin-forward-slash-cfg"></span>
-                                </span>
+                                <button ng-show="remoteVideoObject.isAudioMuted"
+                                        type="button" class="btn btn-sm btn-default"
+                                        ng-click="toggleAudioMute()">
+                                    <span class="cl-lx-call-control-wrapper-cfg">
+                                        <span class="icon-lx-volume-high-cfg"></span>
+                                        <span class="icon-lx-thick-forward-slash-cfg"></span>
+                                        <span class="icon-lx-thin-forward-slash-cfg"></span>
+                                    </span>
 
-                            </button>
+                                </button>
 
-                            <!-- "Stop" video button -->
-                            <button type="button" class="btn btn-sm btn-primary cl-add-left-and-right-margins-to-hangup"
-                                    ng-click="showVideoElementsAndStartVideoFn('waitingForEnableVideoExchangePermission', true, remoteClientId)">
-                                <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                    <span class="icon-lx-phone-hang-up-cfg"></span>
-                                </span>
-                                    Hangup
-                            </button>
+
+                                <!-- enable/disable video - button that indicates that the video stream is currently enabled -->
+                                <button ng-show="!localVideoObject.isWebcamMuted"
+                                        type="button" class="btn btn-sm btn-primary"
+                                        ng-click="toggleWebcamMute()">
+
+                                    <span class="cl-lx-call-control-wrapper-cfg">
+                                        <span class="icon-lx-video-camera-filled-cfg"></span>
+                                    </span>
+                                </button>
+
+                                <button ng-show="localVideoObject.isWebcamMuted"
+                                        type="button" class="btn btn-sm btn-default"
+                                        ng-click="toggleWebcamMute()">
+
+                                    <span class="cl-lx-call-control-wrapper-cfg">
+                                        <span class="icon-lx-video-camera-filled-cfg"></span>
+                                        <span class="icon-lx-thick-forward-slash-cfg"></span>
+                                        <span class="icon-lx-thin-forward-slash-cfg"></span>
+                                    </span>
+
+                                </button>
+
+                                <!-- "Stop" video button -->
+                                <button type="button" class="btn btn-sm btn-primary cl-add-left-and-right-margins-to-hangup"
+                                        ng-click="showVideoElementsAndStartVideoFn('waitingForEnableVideoExchangePermission', true, remoteClientId)">
+                                    <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                        <span class="icon-lx-phone-hang-up-cfg"></span>
+                                    </span>
+                                        Hangup
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        {% endraw %}
+
+        </div> <!-- lxMainVideoController -->
     </div>
-
-{% endraw %}
-
-</div> <!-- lxMainVideoController -->
-
+</div>

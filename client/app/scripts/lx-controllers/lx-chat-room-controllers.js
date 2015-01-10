@@ -116,6 +116,7 @@ angular.module('lxUseChatRoom.controllers', [])
                                                            remoteClientId) {
 
             if (!(remoteClientId in $scope.videoExchangeObjectsDict)) {
+                $log.info('showVideoElementsAndStartVideoFn creating new videoExchangeObjectsDict entry for client ' + remoteClientId);
                 $scope.videoExchangeObjectsDict[remoteClientId] = lxCreateVideoExchangeObjectService.createVideoExchangeSettingsObject();
             }
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
@@ -164,7 +165,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // The following is a flag that is used for debugging - will over-ride ng-show directives on the video
             // windows to show any window that has this flag on it when it is set to true.
-            debugShowAllVideoWindows: true
+            debugShowAllVideoWindows: false
         };
 
         $scope.remoteVideoObject = {
