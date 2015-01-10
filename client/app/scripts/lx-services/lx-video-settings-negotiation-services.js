@@ -18,40 +18,43 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
         lxStreamService)
     {
 
-    var setVideoSignalingStatusForUserFeedback = function(scope, newValue) {
+    var setVideoSignalingStatusForUserFeedback = function(scope) {
 
-        // if the user has not yet given access to their local stream, then this is the feedback message
-        // that they will be shown.
-        if (!lxStreamService.localStream) {
-            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'mustEnableVideoToStartTransmission';
-        }
+        for (var remoteClientId in scope.videoExchangeObjectsDict) {
 
-        // if there is no remote user in the room, then indicate that they are not connected to anyone right now
-        else if (scope.roomOccupancyObject.listOfClientObjects.length <= 1) {
-            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
-        }
+            // if the user has not yet given access to their local stream, then this is the feedback message
+            // that they will be shown.
+            if (!lxStreamService.localStream) {
+                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'mustEnableVideoToStartTransmission';
+            }
 
-        else if (scope.videoExchangeSettingsObject.remoteVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
-            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
-        }
+            // if there is no remote user in the room, then indicate that they are not connected to anyone right now
+            else if (scope.roomOccupancyObject.listOfClientObjects.length <= 1) {
+                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
+            }
 
-        else if (scope.videoExchangeSettingsObject.remoteVideoEnabledSetting === 'doNotEnableVideoExchange') {
-            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedToExchangeVideo';
-        }
+            else if (scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
+                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
+            }
 
-        // If remote user has activated their video elements then show the message that indicates that we are waiting
-        // for access to their camera and microphone. This message will be removed when the onRemoteStreamAdded
-        // call back is executed. Note: checking activateWindow just lets us know that the user has already
-        // agreed to enable their video elements, and we infer that since we don't have a video stream yet, that the user has not
-        // yet given access to their camera and microphone - this may have to be revisited in the future.
-        else if (scope.videoExchangeSettingsObject.remoteVideoEnabledSetting === 'enableVideoExchange' ) {
-            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
-        }
+            else if (scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'doNotEnableVideoExchange') {
+                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasDeniedToExchangeVideo';
+            }
 
-        // if the user has already given access to their local stream, then we can show them the
-        // feedback that has been requested.
-        else {
-            scope.videoSignalingObject.videoSignalingStatusForUserFeedback = newValue;
+            // If remote user has activated their video elements then show the message that indicates that we are waiting
+            // for access to their camera and microphone. This message will be removed when the onRemoteStreamAdded
+            // call back is executed. Note: checking activateWindow just lets us know that the user has already
+            // agreed to enable their video elements, and we infer that since we don't have a video stream yet, that the user has not
+            // yet given access to their camera and microphone - this may have to be revisited in the future.
+            else if (scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'enableVideoExchange') {
+                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'remoteHasNotEnabledVideoYet';
+            }
+
+            // if the user has already given access to their local stream, then we can show them the
+            // feedback that has been requested.
+            else {
+                $log.info('Not showing any feedback regarding client: ' + remoteClientId);
+            }
         }
     };
 
@@ -75,7 +78,7 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                     // If the user was being shown a message telling them to enable their video, then we can now remove
                     // this message.
                     if (scope.videoSignalingObject.videoSignalingStatusForUserFeedback === 'mustEnableVideoToStartTransmission') {
-                        setVideoSignalingStatusForUserFeedback(scope, null);
+                        setVideoSignalingStatusForUserFeedback(scope);
                     }
                 }
             });
@@ -85,15 +88,26 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                 // call code to generate feedback messages with a null value - this will result in the feedback
                 // being updated with one of the message override values defined in setVideoSignalingStatusForUserFeedback,
                 // or possibly by clearing the feedback in the case that none of the overrides are triggered.
-                setVideoSignalingStatusForUserFeedback(scope, null);
+                setVideoSignalingStatusForUserFeedback(scope);
             });
+
+            function watchRemoteVideoEnabledSettings(scope) {
+                var concatenateRemoteVideoEnabledSettings = '';
+                for (var remoteClientId in scope.videoExchangeObjectsDict) {
+                    if (scope.videoExchangeObjectsDict.hasOwnProperty(remoteClientId)) {
+                        concatenateRemoteVideoEnabledSettings +=
+                            scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting;
+                    }
+                }
+                return concatenateRemoteVideoEnabledSettings;
+            }
 
             // Monitor remoteVideoEnabledSetting to track if the remote user has activated
             // their video elements and requested access to their camera.
-            scope.$watch('videoExchangeSettingsObject.remoteVideoEnabledSetting', function() {
+            scope.$watch(watchRemoteVideoEnabledSettings(scope), function() {
 
                 // any change on the remoteVideoEnabledSetting should trigger a reloading of the notification.
-                setVideoSignalingStatusForUserFeedback(scope, null);
+                setVideoSignalingStatusForUserFeedback(scope);
 
             });
         }

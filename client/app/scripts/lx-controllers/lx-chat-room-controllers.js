@@ -104,14 +104,21 @@ angular.module('lxUseChatRoom.controllers', [])
             $location.path('/');
         });
 
-        $scope.videoExchangeSettingsObject = lxCreateVideoExchangeObjectService.createVideoExchangeSettingsObject();
+        // videoExchangeObjectsDict will be populated with calls to
+        // lxCreateVideoExchangeObjectService.createVideoExchangeSettingsObject(), and there will be one key
+        // for each remote client that the local user is exchanging video settings with.
+
+        $scope.videoExchangeObjectsDict = {};
 
 
         $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting,
                                                            queryForRemoteVideoElementsEnabled,
                                                            remoteClientId) {
 
-            $scope.videoExchangeSettingsObject.localVideoEnabledSetting = localVideoEnabledSetting;
+            if (!(remoteClientId in $scope.videoExchangeObjectsDict)) {
+                $scope.videoExchangeObjectsDict[remoteClientId] = lxCreateVideoExchangeObjectService.createVideoExchangeSettingsObject();
+            }
+            $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
 
 
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(

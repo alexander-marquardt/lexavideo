@@ -534,10 +534,12 @@ webRtcServices.factory('lxMediaService',
                 lxCallService.setMicrophoneMute(localVideoObject, localVideoObject.isMicrophoneMuted);
                 lxCallService.setWebcamMute(localVideoObject, localVideoObject.isWebcamMuted);
 
-
-                // we might have been waiting for access to the media stream to start the call.
-                lxCallService.maybeStart(scope);
-
+                for (var remoteClientId in scope.videoExchangeObjectsDict) {
+                    if (scope.videoExchangeObjectsDict.hasOwnProperty(remoteClientId)) {
+                        // we might have been waiting for access to the media stream to start the call.
+                        lxCallService.maybeStart(scope, remoteClientId);
+                    }
+                }
 
                 // Since onUserMediaSuccess is asynchronously called, we manually call a $apply
                 // on the rootScope, so that angular watchers will re-evaluate to see if the above
@@ -633,7 +635,7 @@ webRtcServices.factory('lxCallService',
             hasAudioOrVideoMediaConstraints : false,
 
 
-            maybeStart : function(scope) {
+            maybeStart : function(scope, remoteClientId) {
 
                 $log.log('************ Entering maybeStart *************');
 
@@ -641,7 +643,6 @@ webRtcServices.factory('lxCallService',
                 var remoteVideoObject = scope.remoteVideoObject;
                 var videoSignalingObject = scope.videoSignalingObject;
                 var clientId = scope.lxChatRoomCtrl.clientId;
-                var remoteClientId = scope.videoExchangeSettingsObject.remoteClientId;
 
                 if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
                     lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {

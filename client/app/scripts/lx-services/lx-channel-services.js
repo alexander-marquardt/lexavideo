@@ -45,6 +45,7 @@ angular.module('lxChannel.services', [])
              lxCallService,
              lxChannelMessageService,
              lxChannelSupportService,
+             lxCreateVideoExchangeObjectService,
              lxHttpChannelService,
              lxMessageService,
              lxWebRtcSessionService
@@ -70,6 +71,7 @@ angular.module('lxChannel.services', [])
 
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
+                    var remoteClientId = messageObject.fromClientId;
 
                     switch (messageObject.messageType) {
                         case 'sdp':
@@ -92,7 +94,7 @@ angular.module('lxChannel.services', [])
 
                                     // We may have been waiting for signalingReady to be true to attempt to start the peer-to-peer video
                                     // call because this user is not the rtcInitiator.
-                                    lxCallService.maybeStart(scope);
+                                    lxCallService.maybeStart(scope, remoteClientId);
 
                                 }
 
@@ -162,7 +164,7 @@ angular.module('lxChannel.services', [])
                                 // are required for a new peer session.
                                 lxWebRtcSessionService.started = false;
 
-                                lxCallService.maybeStart(scope);
+                                lxCallService.maybeStart(scope, remoteClientId);
 
                             }
                             break;
@@ -188,10 +190,12 @@ angular.module('lxChannel.services', [])
 //                            break;
 
                         case 'videoExchangeStatusMsg':
-                            scope.videoExchangeSettingsObject.remoteVideoEnabledSetting =
-                                   messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
 
-                            scope.videoExchangeSettingsObject.remoteClientId = messageObject.fromClientId;
+                            if (!(remoteClientId in scope.videoExchangeObjectsDict)) {
+                                scope.videoExchangeObjectsDict[remoteClientId] = lxCreateVideoExchangeObjectService.createVideoExchangeSettingsObject();
+                            }
+                            scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting =
+                                   messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
 
                             // Check if the remote user has requested an update of the local users status
                             if ('queryVideoElementsEnabledAndCameraAccessRequested' in messageObject.messagePayload &&
@@ -201,9 +205,9 @@ angular.module('lxChannel.services', [])
                                     var queryForRemoteVideoElementsEnabled = false;
                                     lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                                         scope,
-                                        scope.videoExchangeSettingsObject.localVideoEnabledSetting,
+                                        scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting,
                                         queryForRemoteVideoElementsEnabled,
-                                        scope.videoExchangeSettingsObject.remoteClientId
+                                        remoteClientId
                                     );
 
                             }
@@ -217,10 +221,10 @@ angular.module('lxChannel.services', [])
                             // Reset localVideoEnabledSetting to 'waitingForEnableVideoExchangePermission' so that the remote user will
                             // be able to send a future request to the local user to enable (or deny) access to their video
                             // elements.
-                            if (scope.videoExchangeSettingsObject.remoteVideoEnabledSetting !== 'enableVideoExchange' &&
-                                scope.videoExchangeSettingsObject.localVideoEnabledSetting === 'doNotEnableVideoExchange') {
+                            if (scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting !== 'enableVideoExchange' &&
+                                scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting === 'doNotEnableVideoExchange') {
 
-                                scope.videoExchangeSettingsObject.localVideoEnabledSetting = 'waitingForEnableVideoExchangePermission';
+                                scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = 'waitingForEnableVideoExchangePermission';
                             }
 
                             break;

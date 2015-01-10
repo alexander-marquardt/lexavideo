@@ -9,10 +9,10 @@
     <div ng-if="lxChatRoomCtrl.userSuccessfullyEnteredRoom == true">
         {% endraw %}{% include "lx-templates/lx-chatbox.html" %}{% raw %}
 
-        <div ng-if="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange'">
-
-            {% endraw %}{% include "lx-templates/lx-video-elements.html" %}{% raw %}
-
+        <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
+            <div ng-if="videoExchangeObject.localVideoEnabledSetting == 'enableVideoExchange'">
+                {% endraw %}{% include "lx-templates/lx-video-elements.html" %}{% raw %}
+            </div>
         </div>
 
         <div lx-initialize-channel-directive></div>
