@@ -180,7 +180,6 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.localVideoObject = {
             localHdVideoElem:  undefined,  // set in lxVideoElementDirective
             localVideoWrapper: undefined, // set in lxVideoWrapperDirective
-            miniVideoElemInsideRemoteVideoWindow: undefined, //To be set in lxMiniVideoTemplateDirective to .cl-mini-video-element in HD element
             isWebcamMuted: false,
             isMicrophoneMuted: false
         };

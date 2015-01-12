@@ -45,10 +45,6 @@ videoAppDirectives.directive('lxVideoWrapperDirective', function($log) {
             }
             else if (attrs.videoWindow === 'remote' ) {
                 scope.remoteVideoObject.remoteVideoWrapper = elem[0];
-
-                var clMiniVideoElem = angular.element(elem).find('.cl-mini-video-element');
-                scope.localVideoObject.miniVideoElemInsideRemoteVideoWindow = clMiniVideoElem[0];
-
             }
             else {
                 $log.error('Attribute must be "local" or "remote"');
