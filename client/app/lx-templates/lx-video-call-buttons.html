@@ -1,0 +1,79 @@
+
+<!-- This row contains the buttons that control the videoType that will be transmitted and microphone/sound/video mute -->
+
+        <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
+        <button ng-show="!localVideoObject.isMicrophoneMuted"
+                type="button" class="btn btn-sm btn-primary"
+                ng-click="toggleMicrophoneMute()">
+
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-microphone-cfg"></span>
+
+            </span>
+        </button>
+
+        <button ng-show="localVideoObject.isMicrophoneMuted"
+                type="button" class="btn btn-sm btn-default"
+                ng-click="toggleMicrophoneMute()">
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-microphone-cfg"></span>
+                <span class="icon-lx-thick-forward-slash-cfg"></span>
+                <span class="icon-lx-thin-forward-slash-cfg"></span>
+            </span>
+
+        </button>
+
+
+        <!-- enable/disable remote audio -->
+        <button ng-show="!remoteVideoObject.isAudioMuted"
+                type="button" class="btn btn-sm btn-primary"
+                ng-click="toggleAudioMute()">
+
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-volume-high-cfg"></span>
+
+            </span>
+        </button>
+
+        <button ng-show="remoteVideoObject.isAudioMuted"
+                type="button" class="btn btn-sm btn-default"
+                ng-click="toggleAudioMute()">
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-volume-high-cfg"></span>
+                <span class="icon-lx-thick-forward-slash-cfg"></span>
+                <span class="icon-lx-thin-forward-slash-cfg"></span>
+            </span>
+
+        </button>
+
+
+        <!-- enable/disable video - button that indicates that the video stream is currently enabled -->
+        <button ng-show="!localVideoObject.isWebcamMuted"
+                type="button" class="btn btn-sm btn-primary"
+                ng-click="toggleWebcamMute()">
+
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-video-camera-filled-cfg"></span>
+            </span>
+        </button>
+
+        <button ng-show="localVideoObject.isWebcamMuted"
+                type="button" class="btn btn-sm btn-default"
+                ng-click="toggleWebcamMute()">
+
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-video-camera-filled-cfg"></span>
+                <span class="icon-lx-thick-forward-slash-cfg"></span>
+                <span class="icon-lx-thin-forward-slash-cfg"></span>
+            </span>
+
+        </button>
+
+        <!-- "Stop" video button -->
+        <button type="button" class="btn btn-sm btn-primary cl-add-left-and-right-margins-to-hangup"
+                ng-click="showVideoElementsAndStartVideoFn('waitingForEnableVideoExchangePermission', true, remoteClientId)">
+            <span class="icon-lx-start-video-camera-wrapper-cfg">
+                <span class="icon-lx-phone-hang-up-cfg"></span>
+            </span>
+                Hangup
+        </button>
