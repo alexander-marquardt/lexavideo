@@ -72,7 +72,7 @@ angular.module('lxChatRoom.services', [])
     The following factory creates an object that corresponds to the video-settings exchange between
     two clients.
      */
-    .factory('lxCreateVideoExchangeObjectService',
+    .factory('lxCreateChatRoomObjectsService',
     function() {
         function VideoExchangeSettingsObject() {
             // Note: the following values are "requests" for camera access, because they only enable the display

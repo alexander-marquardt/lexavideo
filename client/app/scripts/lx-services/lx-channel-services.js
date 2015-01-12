@@ -45,7 +45,7 @@ angular.module('lxChannel.services', [])
              lxCallService,
              lxChannelMessageService,
              lxChannelSupportService,
-             lxCreateVideoExchangeObjectService,
+             lxCreateChatRoomObjectsService,
              lxHttpChannelService,
              lxMessageService,
              lxWebRtcSessionService
@@ -193,7 +193,7 @@ angular.module('lxChannel.services', [])
 
                             if (!(remoteClientId in scope.videoExchangeObjectsDict)) {
                                 $log.info('videoExchangeStatusMsg causing creation of new videoExchangeObjectsDict entry for client ' + remoteClientId);
-                                scope.videoExchangeObjectsDict[remoteClientId] = lxCreateVideoExchangeObjectService.createVideoExchangeSettingsObject();
+                                scope.videoExchangeObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject();
                             }
                             scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting =
                                    messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
