@@ -4,32 +4,39 @@ var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 
 // define externally defined variables so that jshint doesn't give warnings
 
-videoAppDirectives.directive('lxVideoElementDirective',
+videoAppDirectives.directive('lxLocalVideoElementDirective',
+    function( )
+    {
+        return {
+            restrict : 'A',
+            link: function(scope, elem) {
+                var e;
+                e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay" muted="true"></video>');
+                scope.localVideoObject.localHdVideoElem = e[0];
+
+                elem.append(e);
+            }
+        };
+    }
+);
+
+videoAppDirectives.directive('lxRemoteVideoElementDirective',
     function(
-        $log,
         lxCallService
         )
     {
         return {
             restrict : 'A',
-            link: function(scope, elem, attrs) {
+            link: function(scope, elem) {
                 var e;
 
-                if (attrs.videoWindow === 'local' ) {
-                    e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay" muted="true"></video>');
-                    scope.localVideoObject.localHdVideoElem = e[0];
-                }
-                else if (attrs.videoWindow === 'remote' ) {
-                    e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay"></video>');
-                    scope.remoteVideoObject.remoteHdVideoElem = e[0];
+                e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay"></video>');
+                scope.remoteVideoObject.remoteHdVideoElem = e[0];
 
-                    // each time that this function is executed, a new pointer to the remoteHdVideoElem is obtained,
-                    // and the previous "muted" value is lost - therefore we reset it here.
-                    lxCallService.setAudioMute(scope.remoteVideoObject, scope.remoteVideoObject.isAudioMuted);
-                }
-                else {
-                    $log.error('Attribute must be "local" or "remote"');
-                }
+                // each time that this function is executed, a new pointer to the remoteHdVideoElem is obtained,
+                // and the previous "muted" value is lost - therefore we reset it here.
+                lxCallService.setAudioMute(scope.remoteVideoObject, scope.remoteVideoObject.isAudioMuted);
+
                 elem.append(e);
             }
         };
