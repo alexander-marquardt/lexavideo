@@ -22,16 +22,20 @@ videoAppDirectives.directive('lxLocalVideoElementDirective',
 
 videoAppDirectives.directive('lxRemoteVideoElementDirective',
     function(
+        $log,
         lxCallService
         )
     {
         return {
             restrict : 'A',
-            link: function(scope, elem) {
+
+            link: function(scope, elem, attrs) {
                 var e;
 
                 e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay"></video>');
                 scope.remoteVideoObject.remoteHdVideoElem = e[0];
+
+                $log.info('****** remoteClientId = ' + attrs.remoteClientId);
 
                 // each time that this function is executed, a new pointer to the remoteHdVideoElem is obtained,
                 // and the previous "muted" value is lost - therefore we reset it here.
