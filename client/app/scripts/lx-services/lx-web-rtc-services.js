@@ -352,9 +352,7 @@ webRtcServices.service('lxWebRtcSessionService',
 
         stop: function() {
             self.started = false;
-            // If this user is rtcInitiator, then its signaling is ready. Otherwise wait for other 'offer' from
-            // the other client.
-            self.signalingReady = lxChannelSupportService.rtcInitiator;
+            self.signalingReady = false;
             if (lxPeerService.pc) {
                 lxPeerService.pc.close();
             }
@@ -664,7 +662,7 @@ webRtcServices.factory('lxCallService',
 
                     lxWebRtcSessionService.started = true;
 
-                    if (lxChannelSupportService.rtcInitiator) {
+                    if (scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator) {
                         $log.log('Executing doCall()');
                         lxSessionDescriptionService.doCall(clientId, remoteClientId);
                     }

@@ -87,6 +87,7 @@ angular.module('lxChatRoom.services', [])
             //    'doNotEnableVideoExchange': user has denied activation of video elements
             this.localVideoEnabledSetting = 'waitingForEnableVideoExchangePermission';
             this.remoteVideoEnabledSetting = 'waitingForEnableVideoExchangePermission';
+            this.rtcInitiator = undefined;
         }
 
 

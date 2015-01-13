@@ -149,12 +149,17 @@ def send_video_call_settings_to_participants(from_client_id, to_client_id):
 
         for client_id in vid_setup_obj.video_elements_enabled_client_ids:
 
+            if client_id != from_client_id:
+                remote_client_id = from_client_id
+            else:
+                remote_client_id = to_client_id
+
             # The second person to connect will be the 'rtcInitiator'.
             # By sending this 'rtcInitiator' value to the clients, this will re-initiate
             # the code for setting up a peer-to-peer rtc session. Therefore, this should only be sent
             # once per session, unless the users become disconnected and need to re-connect.
             message_obj = {'messageType': 'roomInitialVideoSettingsMsg',
-                           'fromClientId': from_client_id,
+                           'fromClientId': remote_client_id,
                            'messagePayload': {'rtcInitiator': is_initiator},
                            }
 

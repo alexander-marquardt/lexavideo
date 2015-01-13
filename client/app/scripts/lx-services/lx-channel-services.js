@@ -33,7 +33,6 @@ angular.module('lxChannel.services', [])
     .service('lxChannelSupportService', function() {
         this.channelReady = false;
         this.socket = null;
-        this.rtcInitiator = undefined;
     })
 
     .factory('lxChannelService',
@@ -153,13 +152,13 @@ angular.module('lxChannel.services', [])
                                 lxWebRtcSessionService.stop();
 
                                 // Update the value of rtcInitiator that will be accessed throughout the code.
-                                lxChannelSupportService.rtcInitiator = messageObject.messagePayload.rtcInitiator;
+                                scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator = messageObject.messagePayload.rtcInitiator;
 
                                 // signalingReady will initially be set to be true if this is
                                 // the rtcInitiator, or false otherwise. In the case that this value is initially false, it will be set to
                                 // true once this client has received an sdp 'offer' from the other client.
-                                // Note: rtcInitiator is the 2nd person to start their video
-                                lxWebRtcSessionService.signalingReady = lxChannelSupportService.rtcInitiator;
+                                // Note: rtcInitiator is the 2nd client to start their video
+                                lxWebRtcSessionService.signalingReady = messageObject.messagePayload.rtcInitiator;
 
                                 // when the server sends an rtcInitiator setting, this means that we are re-starting
                                 // the rtc negotiation and peer setup etc. from scratch. Set the following to false
