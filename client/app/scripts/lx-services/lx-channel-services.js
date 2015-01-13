@@ -272,18 +272,18 @@ angular.module('lxChannel.services', [])
                     e.message = '\n\tError in openChannel\n\t' + e.message;
                     $log.error(e);
                 }
-            },
-
-            startClientHeartbeat: function(clientId) {
-                lxHttpChannelService.sendClientHeartbeat(clientId);
-                var timeoutFn = function() {
-                    $timeout(function() {
-                        lxHttpChannelService.sendClientHeartbeat(clientId);
-                        timeoutFn();
-                    }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
-                };
-                timeoutFn();
             }
+
+//            startClientHeartbeat: function(clientId) {
+//                lxHttpChannelService.sendClientHeartbeat(clientId);
+//                var timeoutFn = function() {
+//                    $timeout(function() {
+//                        lxHttpChannelService.sendClientHeartbeat(clientId);
+//                        timeoutFn();
+//                    }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
+//                };
+//                timeoutFn();
+//            }
         };
     });
 

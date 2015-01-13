@@ -59,7 +59,7 @@ angular.module('lxUseChatRoom.controllers', [])
             };
 
             // Periodically update the room so that the server knows if the user is currently in the room.
-            lxChannelService.startClientHeartbeat($scope.lxChatRoomCtrl.clientId);
+            // lxChannelService.startClientHeartbeat($scope.lxChatRoomCtrl.clientId);
 
         }, function() {
             $scope.lxChatRoomCtrl.channelToken = 'Failed to get channelToken';

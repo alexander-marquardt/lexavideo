@@ -40,12 +40,12 @@ angular.module('lxHttp.services', [])
 
         return {
 
-            // this function will be periodically called so that that room will be up-to-date with the users
-            // that are currently in the room.
-            sendClientHeartbeat: function(clientId) {
-                var postData = {'clientId': clientId};
-                $http.post('/_lx/channel/user_heartbeat/', postData);
-            },
+//            // this function will be periodically called so that that room will be up-to-date with the users
+//            // that are currently in the room.
+//            sendClientHeartbeat: function(clientId) {
+//                var postData = {'clientId': clientId};
+//                $http.post('/_lx/channel/user_heartbeat/', postData);
+//            },
 
             addClientToRoom: function(clientId, userId, roomId) {
                 var postData = {
