@@ -47,6 +47,7 @@ angular.module('lxChannel.services', [])
              lxChannelSupportService,
              lxCreateChatRoomObjectsService,
              lxHttpChannelService,
+             lxJs,
              lxMessageService,
              lxWebRtcSessionService
 
@@ -164,6 +165,7 @@ angular.module('lxChannel.services', [])
                                 // are required for a new peer session.
                                 lxWebRtcSessionService.started = false;
 
+                                lxJs.assert(remoteClientId, 'remoteClientId is not set');
                                 lxCallService.maybeStart(scope, remoteClientId);
 
                             }

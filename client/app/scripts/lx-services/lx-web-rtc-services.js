@@ -393,10 +393,10 @@ webRtcServices.service('lxWebRtcSessionService',
 webRtcServices.factory('lxPeerService',
     function(
         $log,
-
         lxAdapterService,
-        lxIceService,
         lxChatRoomVarsService,
+        lxIceService,
+        lxJs,
         lxVideoParamsService)
     {
 
@@ -452,6 +452,9 @@ webRtcServices.factory('lxPeerService',
 
                 $log.log('**************** createPeerConnection ************');
                 try {
+                    lxJs.assert(clientId, 'clientId is not set');
+                    lxJs.assert(remoteClientId, 'remoteClientId is not set');
+
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
                     self.pc = new lxAdapterService.RTCPeerConnection(lxVideoParamsService.pcConfig, lxVideoParamsService.pcConstraints);
                     self.pc.onicecandidate = lxIceService.onIceCandidate(clientId, remoteClientId);
