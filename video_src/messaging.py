@@ -100,9 +100,11 @@ def send_room_occupancy_to_room_clients(room_info_obj):
     # This is called when a user either connects or disconnects from a room. It sends information
     # to room members indicating the status of who is in the room.
 
-    message_obj = {'messageType': 'roomOccupancyMsg',
-                   'messagePayload': {},
-                   }
+    message_obj = {
+        'fromClientId': 'server',
+        'messageType': 'roomOccupancyMsg',
+        'messagePayload': {},
+        }
 
     # Javascript needs to know which users are in this room.
     # first we must create a list that contains information of all users that are in the current room.

@@ -74,6 +74,8 @@ angular.module('lxChannel.services', [])
                     var remoteClientId = messageObject.fromClientId;
                     var remoteVideoObject = scope.remoteVideoObjectsDict[remoteClientId];
 
+                    lxJs.assert(remoteClientId, 'remoteClientId is not set');
+
                     switch (messageObject.messageType) {
                         case 'sdp':
                             //$log.debug('S->C: ' + message.data);
@@ -165,7 +167,6 @@ angular.module('lxChannel.services', [])
                                 // are required for a new peer session.
                                 lxWebRtcSessionService.started = false;
 
-                                lxJs.assert(remoteClientId, 'remoteClientId is not set');
                                 lxCallService.maybeStart(scope, remoteClientId);
 
                             }
