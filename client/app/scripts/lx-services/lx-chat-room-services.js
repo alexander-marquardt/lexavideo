@@ -89,11 +89,24 @@ angular.module('lxChatRoom.services', [])
             this.remoteVideoEnabledSetting = 'waitingForEnableVideoExchangePermission';
         }
 
+
+        function RemoteVideoObject(remoteHdVideoElem) {
+            this.remoteHdVideoElem = remoteHdVideoElem;
+            this.isAudioMuted = true;
+        }
+
         return {
             createVideoExchangeSettingsObject: function () {
                 return new VideoExchangeSettingsObject();
+            },
+            createRemoteVideoObject: function(remoteHdVideoElem) {
+                return new RemoteVideoObject(remoteHdVideoElem);
             }
         };
+
+
     });
+
+
 
 

@@ -23,7 +23,8 @@ videoAppDirectives.directive('lxLocalVideoElementDirective',
 videoAppDirectives.directive('lxRemoteVideoElementDirective',
     function(
         $log,
-        lxCallService
+        lxCallService,
+        lxCreateChatRoomObjectsService
         )
     {
         return {
@@ -31,35 +32,15 @@ videoAppDirectives.directive('lxRemoteVideoElementDirective',
 
             link: function(scope, elem, attrs) {
                 var e;
+                var remoteClientId = attrs.remoteClientId;
 
-                e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay"></video>');
-                scope.remoteVideoObject.remoteHdVideoElem = e[0];
-
-                $log.info('****** remoteClientId = ' + attrs.remoteClientId);
-
-                // each time that this function is executed, a new pointer to the remoteHdVideoElem is obtained,
-                // and the previous "muted" value is lost - therefore we reset it here.
-                lxCallService.setAudioMute(scope.remoteVideoObject, scope.remoteVideoObject.isAudioMuted);
-
-                elem.append(e);
+                // only
+                if (!(remoteClientId in scope.remoteVideoObjectsDict)) {
+                    e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay"></video>');
+                    scope.remoteVideoObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoObject(e[0]);
+                    elem.append(e);
+                }
             }
         };
     }
 );
-
-videoAppDirectives.directive('lxVideoWrapperDirective', function($log) {
-    return {
-        restrict : 'A',
-        link: function(scope, elem, attrs) {
-            if (attrs.videoWindow === 'local' ) {
-                scope.localVideoObject.localVideoWrapper = elem[0];
-            }
-            else if (attrs.videoWindow === 'remote' ) {
-                scope.remoteVideoObject.remoteVideoWrapper = elem[0];
-            }
-            else {
-                $log.error('Attribute must be "local" or "remote"');
-            }
-        }
-    };
-});

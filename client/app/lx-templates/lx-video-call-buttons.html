@@ -27,7 +27,7 @@
         <!-- enable/disable remote audio -->
         <button ng-show="!remoteVideoObject.isAudioMuted"
                 type="button" class="btn btn-sm btn-primary"
-                ng-click="toggleAudioMute()">
+                ng-click="toggleAudioMute(remoteClientId)">
 
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-volume-high-cfg"></span>
@@ -37,7 +37,7 @@
 
         <button ng-show="remoteVideoObject.isAudioMuted"
                 type="button" class="btn btn-sm btn-default"
-                ng-click="toggleAudioMute()">
+                ng-click="toggleAudioMute(remoteClientId)">
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-volume-high-cfg"></span>
                 <span class="icon-lx-thick-forward-slash-cfg"></span>

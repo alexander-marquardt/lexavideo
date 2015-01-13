@@ -104,6 +104,17 @@ angular.module('lxUseChatRoom.controllers', [])
             $location.path('/');
         });
 
+        // remoteVideoObject will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoObject
+        // There will be one object for each remote client that the local user is exchanging video with.
+        $scope.remoteVideoObjectsDict = {};
+
+        $scope.localVideoObject = {
+            localHdVideoElem:  undefined,  // set in lxVideoElementDirective
+            localVideoWrapper: undefined, // set in lxVideoWrapperDirective
+            isWebcamMuted: false,
+            isMicrophoneMuted: false
+        };
+
         // videoExchangeObjectsDict will be populated with calls to
         // lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject(), and there will be one key
         // for each remote client that the local user is exchanging video settings with.
@@ -172,17 +183,6 @@ angular.module('lxUseChatRoom.controllers', [])
             debugShowAllVideoWindows: false
         };
 
-        $scope.remoteVideoObject = {
-            remoteHdVideoElem: undefined, // set in lxVideoElementDirective
-            remoteVideoWrapper: undefined // set in lxHdVideoWrapperDirective
-        };
-
-        $scope.localVideoObject = {
-            localHdVideoElem:  undefined,  // set in lxVideoElementDirective
-            localVideoWrapper: undefined, // set in lxVideoWrapperDirective
-            isWebcamMuted: false,
-            isMicrophoneMuted: false
-        };
     })
 
     .controller('lxMainVideoCtrl',
@@ -222,8 +222,8 @@ angular.module('lxUseChatRoom.controllers', [])
             lxCallService.toggleMicrophoneMute($scope.localVideoObject);
         };
 
-        $scope.toggleAudioMute = function() {
-            lxCallService.toggleAudioMute($scope.remoteVideoObject);
+        $scope.toggleAudioMute = function(remoteClientId) {
+            lxCallService.toggleAudioMute($scope.remoteVideoObjectsDict[remoteClientId]);
         };
 
         $scope.doHangup = function() {

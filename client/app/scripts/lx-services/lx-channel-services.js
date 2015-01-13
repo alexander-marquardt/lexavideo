@@ -67,11 +67,11 @@ angular.module('lxChannel.services', [])
             return function(message) {
 
                 var localVideoObject = scope.localVideoObject;
-                var remoteVideoObject = scope.remoteVideoObject;
 
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
                     var remoteClientId = messageObject.fromClientId;
+                    var remoteVideoObject = scope.remoteVideoObjectsDict[remoteClientId];
 
                     switch (messageObject.messageType) {
                         case 'sdp':
