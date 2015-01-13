@@ -39,7 +39,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.roomOccupancyObject = {
             // This will be updated to reflect the status sent from the server.
-            listOfClientObjects: null,
+            listOfClientObjects: [],
 
             userName: lxAppWideConstantsService.userName,
             userId: lxAppWideConstantsService.userId,
