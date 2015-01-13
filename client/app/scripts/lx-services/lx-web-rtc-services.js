@@ -697,10 +697,13 @@ webRtcServices.factory('lxCallService',
 
             doHangup : function() {
                 $log.log('Hanging up');
-                if (lxStreamService.localStream) {
-                    lxStreamService.localStream.stop();
-                    lxStreamService.localStream = null;
-                }
+                // TODO - stop local stream only if there are no more active video sessions open.
+                // Also, once stopped, if the user starts a new video, then we will have to call
+                // getUserMedia again.
+//                if (lxStreamService.localStream) {
+//                    lxStreamService.localStream.stop();
+//                    lxStreamService.localStream = null;
+//                }
                 lxWebRtcSessionService.stop();
 
             },
