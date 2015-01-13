@@ -148,7 +148,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // call must be hung up. In case 2, the call does not need to be hung up, but for simplicity
             // we also hangup the call for this case.
             if (localVideoEnabledSetting === 'doNotEnableVideoExchange' || localVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
-                lxCallService.doHangup();
+                lxCallService.doHangup(remoteClientId);
             }
         };
 
@@ -224,10 +224,6 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.toggleAudioMute = function(remoteClientId) {
             lxCallService.toggleAudioMute($scope.remoteVideoObjectsDict[remoteClientId]);
-        };
-
-        $scope.doHangup = function() {
-            lxCallService.doHangup();
         };
 
         $scope.myUsername = lxVideoParamsService.myUsername;

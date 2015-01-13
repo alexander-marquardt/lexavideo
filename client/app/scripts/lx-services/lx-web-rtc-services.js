@@ -265,10 +265,10 @@ webRtcServices.factory('lxSessionDescriptionService',
             };
         };
 
-        var waitForRemoteVideo = function(localVideoObject, remoteVideoObject) {
+        var waitForRemoteVideo = function(localVideoObject, remoteVideoObject, remoteClientId) {
             var innerWaitForRemoteVideo = function() {
 
-                var videoTracks = lxPeerService.remoteStream.getVideoTracks();
+                var videoTracks = lxPeerService.remoteStream[remoteClientId].getVideoTracks();
                 if (!(videoTracks.length === 0 || remoteVideoObject.remoteHdVideoElem.currentTime > 0)) {
                     $timeout(innerWaitForRemoteVideo, 100);
                 }
@@ -280,7 +280,7 @@ webRtcServices.factory('lxSessionDescriptionService',
 
             doAnswer : function(clientId, remoteClientId) {
                 $log.log('Sending answer to peer.');
-                lxPeerService.pc.createAnswer(setLocalAndSendMessage(lxPeerService.pc, clientId, remoteClientId),
+                lxPeerService.pc[remoteClientId].createAnswer(setLocalAndSendMessage(lxPeerService.pc[remoteClientId], clientId, remoteClientId),
                     onCreateSessionDescriptionError, lxChatRoomVarsService.sdpConstraints);
             },
 
@@ -288,17 +288,17 @@ webRtcServices.factory('lxSessionDescriptionService',
                 var constraints = mergeConstraints(lxVideoParamsService.offerConstraints, lxChatRoomVarsService.sdpConstraints);
                 $log.log('Sending offer to peer, with constraints: \n' +
                     '  \'' + JSON.stringify(constraints) + '\'.');
-                lxPeerService.pc.createOffer(setLocalAndSendMessage(lxPeerService.pc, clientId, remoteClientId),
+                lxPeerService.pc[remoteClientId].createOffer(setLocalAndSendMessage(lxPeerService.pc[remoteClientId], clientId, remoteClientId),
                     onCreateSessionDescriptionError, constraints);
             },
 
-            setRemote : function(message, localVideoObject, remoteVideoObject) {
+            setRemote : function(message, localVideoObject, remoteVideoObject, remoteClientId) {
                 var onSetRemoteDescriptionSuccess = function(){
                     $log.log('Set remote session description success.');
                     // By now all addstream events for the setRemoteDescription have fired.
                     // So we can know if the peer is sending any stream or is only receiving.
-                    if (lxPeerService.remoteStream) {
-                        waitForRemoteVideo(localVideoObject, remoteVideoObject);
+                    if (lxPeerService.remoteStream[remoteClientId]) {
+                        waitForRemoteVideo(localVideoObject, remoteVideoObject, remoteClientId);
                     } else {
                         $log.log('Not receiving any stream.');
                     }
@@ -313,7 +313,7 @@ webRtcServices.factory('lxSessionDescriptionService',
                 message.sdp = lxCodecsService.maybeSetVideoSendBitRate(message.sdp);
                 message.sdp = lxCodecsService.maybeSetVideoSendInitialBitRate(message.sdp);
 
-                lxPeerService.pc.setRemoteDescription(new lxAdapterService.RTCSessionDescription(message),
+                lxPeerService.pc[remoteClientId].setRemoteDescription(new lxAdapterService.RTCSessionDescription(message),
                     onSetRemoteDescriptionSuccess, onSetSessionDescriptionError);
             }
         };
@@ -350,14 +350,14 @@ webRtcServices.service('lxWebRtcSessionService',
         signalingReady : null,
 
 
-        stop: function() {
+        stop: function(remoteClientId) {
             self.started = false;
             self.signalingReady = false;
-            if (lxPeerService.pc) {
-                lxPeerService.pc.close();
+            if (lxPeerService.pc[remoteClientId]) {
+                lxPeerService.pc[remoteClientId].close();
             }
-            lxPeerService.pc = null;
-            lxPeerService.remoteStream = null;
+            delete lxPeerService.pc[remoteClientId];
+            delete lxPeerService.remoteStream[remoteClientId];
             lxChannelMessageService.clearQueue();
         },
 
@@ -368,16 +368,16 @@ webRtcServices.service('lxWebRtcSessionService',
             }
 
             if (message.type === 'offer') {
-                lxSessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject);
+                lxSessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject, remoteClientId);
                 lxSessionDescriptionService.doAnswer(clientId, remoteClientId);
 
             } else if (message.type === 'answer') {
-                lxSessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject);
+                lxSessionDescriptionService.setRemote(message, localVideoObject, remoteVideoObject, remoteClientId);
             } else if (message.type === 'candidate') {
                 var candidate = new lxAdapterService.RTCIceCandidate({sdpMLineIndex: message.label,
                     candidate: message.candidate});
                 lxIceService.noteIceCandidate('Remote', lxIceService.iceCandidateType(message.candidate));
-                lxPeerService.pc.addIceCandidate(candidate,
+                lxPeerService.pc[remoteClientId].addIceCandidate(candidate,
                     lxIceService.onAddIceCandidateSuccess, lxIceService.onAddIceCandidateError);
             } else if (message.type === 'bye') {
                 onRemoteHangup(this, localVideoObject);
@@ -399,25 +399,25 @@ webRtcServices.factory('lxPeerService',
     {
 
 
-        var pcStatus = function () {
+        var pcStatus = function (pc) {
             var contents = '';
-            if (self.pc) {
-                contents += 'Gathering: ' + self.pc.iceGatheringState + '\n';
+            if (pc) {
+                contents += 'Gathering: ' + pc.iceGatheringState + '\n';
                 contents += 'PC State:\n';
-                contents += 'Signaling: ' + self.pc.signalingState + '\n';
-                contents += 'ICE: ' + self.pc.iceConnectionState + '\n';
+                contents += 'Signaling: ' + pc.signalingState + '\n';
+                contents += 'ICE: ' + pc.iceConnectionState + '\n';
             }
             return contents;
         };
 
-        var onRemoteStreamAdded = function(localVideoObject, remoteVideoObject, videoSignalingObject) {
+        var onRemoteStreamAdded = function(localVideoObject, remoteVideoObject, videoSignalingObject, remoteClientId) {
             return function(mediaStreamEvent) {
                 $log.log('Remote stream added.');
                 $log.log('* remoteVideoObject.remoteHdVideoElem.src before: ' + remoteVideoObject.remoteHdVideoElem.src);
                 lxAdapterService.attachMediaStream(remoteVideoObject.remoteHdVideoElem, mediaStreamEvent.stream);
                 $log.log('* remoteVideoObject.remoteHdVideoElem.src after: ' + remoteVideoObject.remoteHdVideoElem.src);
 
-                self.remoteStream = mediaStreamEvent.stream;
+                self.remoteStream[remoteClientId] = mediaStreamEvent.stream;
 
                 videoSignalingObject.videoSignalingStatusForUserFeedback = null; // clear feedback messages
             };
@@ -425,18 +425,20 @@ webRtcServices.factory('lxPeerService',
 
 
         var onRemoteStreamRemoved = function() {
-            $log.info('Remote stream removed.');
+            return function() {
+                $log.info('Remote stream removed.');
+            }
         };
 
-        var onSignalingStateChanged = function(){
+        var onSignalingStateChanged = function(pc){
             return function() {
-                $log.info(pcStatus());
+                $log.info(pcStatus(pc));
             };
         };
 
-        var onIceConnectionStateChanged = function() {
+        var onIceConnectionStateChanged = function(pc) {
             return function() {
-                $log.info(pcStatus());
+                $log.info(pcStatus(pc));
             };
         };
 
@@ -444,8 +446,8 @@ webRtcServices.factory('lxPeerService',
 
         /* Externally visible variables and methods */
         var self =  {
-            pc : null,
-            remoteStream : null,
+            pc : {},
+            remoteStream : {},
             createPeerConnection : function(localVideoObject, remoteVideoObject, videoSignalingObject, clientId, remoteClientId) {
 
                 $log.log('**************** createPeerConnection ************');
@@ -454,8 +456,8 @@ webRtcServices.factory('lxPeerService',
                     lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
-                    self.pc = new lxAdapterService.RTCPeerConnection(lxVideoParamsService.pcConfig, lxVideoParamsService.pcConstraints);
-                    self.pc.onicecandidate = lxIceService.onIceCandidate(clientId, remoteClientId);
+                    self.pc[remoteClientId] = new lxAdapterService.RTCPeerConnection(lxVideoParamsService.pcConfig, lxVideoParamsService.pcConstraints);
+                    self.pc[remoteClientId].onicecandidate = lxIceService.onIceCandidate(clientId, remoteClientId);
                     $log.log('Created RTCPeerConnnection with:\n' +
                         '  config: \'' + JSON.stringify(lxVideoParamsService.pcConfig) + '\';\n' +
                         '  constraints: \'' + JSON.stringify(lxVideoParamsService.pcConstraints) + '\'.');
@@ -464,21 +466,23 @@ webRtcServices.factory('lxPeerService',
                     $log.error(e);
                     return;
                 }
-                self.pc.onaddstream = onRemoteStreamAdded(localVideoObject, remoteVideoObject, videoSignalingObject);
-                self.pc.onremovestream = onRemoteStreamRemoved;
-                self.pc.onsignalingstatechange = onSignalingStateChanged();
-                self.pc.oniceconnectionstatechange = onIceConnectionStateChanged();
+
+
+                self.pc[remoteClientId].onaddstream = onRemoteStreamAdded(localVideoObject, remoteVideoObject, videoSignalingObject, remoteClientId);
+                self.pc[remoteClientId].onremovestream = onRemoteStreamRemoved();
+                self.pc[remoteClientId].onsignalingstatechange = onSignalingStateChanged(self.pc[remoteClientId]);
+                self.pc[remoteClientId].oniceconnectionstatechange = onIceConnectionStateChanged(self.pc[remoteClientId]);
             },
             removeLocalVideoStream : function(/*localStream*/) {
-                if (self.pc) {
+                if (self.pc[remoteClientId]) {
                     $log.error('This functionality is not supported by Firefox as of Aug 18 2014, and therefore should not be used.');
                     //self.pc.removeStream(localStream);
                 }
             },
-            addLocalVideoStream : function(localStream) {
+            addLocalVideoStream : function(localStream, remoteClientId) {
 
-                if (self.pc) {
-                    self.pc.addStream(localStream);
+                if (self.pc[remoteClientId]) {
+                    self.pc[remoteClientId].addStream(localStream);
                 } else {
                     $log.error('Error: no peer connection has been established, and therefore we cannot add the stream to it.');
                 }
@@ -655,7 +659,7 @@ webRtcServices.factory('lxCallService',
 
                     if (self.hasAudioOrVideoMediaConstraints) {
                         $log.log('Adding local stream.');
-                        lxPeerService.addLocalVideoStream(lxStreamService.localStream);
+                        lxPeerService.addLocalVideoStream(lxStreamService.localStream, remoteClientId);
                     } else {
                         $log.log('Not sending any stream.');
                     }
@@ -695,8 +699,8 @@ webRtcServices.factory('lxCallService',
 
             },
 
-            doHangup : function() {
-                $log.log('Hanging up');
+            doHangup : function(remoteClientId) {
+                $log.log('Hanging up client ID: ' + remoteClientId);
                 // TODO - stop local stream only if there are no more active video sessions open.
                 // Also, once stopped, if the user starts a new video, then we will have to call
                 // getUserMedia again.
@@ -704,7 +708,7 @@ webRtcServices.factory('lxCallService',
 //                    lxStreamService.localStream.stop();
 //                    lxStreamService.localStream = null;
 //                }
-                lxWebRtcSessionService.stop();
+                lxWebRtcSessionService.stop(remoteClientId);
 
             },
 

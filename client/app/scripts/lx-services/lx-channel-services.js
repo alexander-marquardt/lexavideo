@@ -108,7 +108,7 @@ angular.module('lxChannel.services', [])
                                 }
                             } else {
                                 lxWebRtcSessionService.processSignalingMessage(sdpObject, localVideoObject,
-                                    remoteVideoObject, scope.lxChatRoomCtrl.clientId);
+                                    remoteVideoObject, scope.lxChatRoomCtrl.clientId, remoteClientId);
                             }
                             break;
 
@@ -149,7 +149,7 @@ angular.module('lxChannel.services', [])
 
                                 // Kill the current webRtc session - this is probably not strictly necessary, and could be removed
                                 // if it is found to cause delays and/or any other problems.
-                                lxWebRtcSessionService.stop();
+                                lxWebRtcSessionService.stop(remoteClientId);
 
                                 // Update the value of rtcInitiator that will be accessed throughout the code.
                                 scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator = messageObject.messagePayload.rtcInitiator;
