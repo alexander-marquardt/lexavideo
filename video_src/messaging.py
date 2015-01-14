@@ -108,22 +108,21 @@ def send_room_occupancy_to_room_clients(room_info_obj):
 
     # Javascript needs to know which users are in this room.
     # first we must create a list that contains information of all users that are in the current room.
-    list_of_js_client_objects = []
+    dict_of_js_client_objects = {}
     for client_id in room_info_obj.room_members_client_ids:
 
     # We only send relevant data to the client,
-    # which includes the user_id (which is the database key) and the user_name.
+    # which includes the client_id and the user_name.
         js_user_obj = {
             'userName': client_id,
-            'clientId': client_id
         }
 
-        list_of_js_client_objects.append(js_user_obj)
+        dict_of_js_client_objects[client_id] = js_user_obj
 
     # send list_of_js_user_objects to every user in the room
     for i in range(len(room_info_obj.room_members_client_ids)):
         client_id = room_info_obj.room_members_client_ids[i]
-        message_obj['messagePayload']['listOfClientObjects'] = list_of_js_client_objects
+        message_obj['messagePayload']['dictOfClientObjects'] = dict_of_js_client_objects
 
         logging.info('Sending roomOccupancy to %s: %s' % (client_id, json.dumps(message_obj)))
         on_message(room_info_obj, client_id, json.dumps(message_obj))

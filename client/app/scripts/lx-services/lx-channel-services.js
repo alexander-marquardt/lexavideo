@@ -97,7 +97,6 @@ angular.module('lxChannel.services', [])
                                     // We may have been waiting for signalingReady to be true to attempt to start the peer-to-peer video
                                     // call because this user is not the rtcInitiator.
                                     lxCallService.maybeStart(scope, remoteClientId);
-
                                 }
 
                                 // Since the turn response is async and also GAE might disorder the
@@ -120,20 +119,16 @@ angular.module('lxChannel.services', [])
 
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
+                            roomOccupancyObject.dictOfClientObjects = messageObject.messagePayload.dictOfClientObjects;
 
-                            // Get the remoteUserId from the message payload - note that if there is no remote
-                            // user currently in the room, then this value will be null.
-                            roomOccupancyObject.listOfClientObjects = messageObject.messagePayload.listOfClientObjects;
-
-//                                if (roomOccupancyObject.remoteUserId) {
-//                                    // The following function is executed when remote user joins the room - and makes sure that they
-//                                    // and the remote user have enabled video elements or not.
-//                                    lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
-//                                        scope,
-//                                        scope.videoExchangeSettingsObject.localVideoEnabledSetting,
-//                                        true /* queryForRemoteVideoElementsEnabled - ie. ask remote to respond with their status */
-//                                    );
-//                                }
+                            // copy the dictOfClientObjects into a listOfClientObjects, which is more convenient
+                            // for some functions.
+                            roomOccupancyObject.listOfClientObjects = [];
+                            angular.forEach(roomOccupancyObject.dictOfClientObjects, function(clientObject, clientId) {
+                                // manually add the clientId into the clientObject
+                                clientObject.clientId = clientId;
+                                roomOccupancyObject.listOfClientObjects.push(clientObject);
+                            });
 
                             break;
 
@@ -177,19 +172,7 @@ angular.module('lxChannel.services', [])
                             receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
                             // receivedMessageStringToggle is used for triggering the watcher
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
-
-//                            // acknowledge receipt of the message
-//                            lxMessageService.sendMessage('ackChatMessage',
-//                                {'ackMessageUniqueId': messageObject.messagePayload.messageUniqueId},
-//                                scope.lxChatRoomCtrl.clientId);
                             break;
-
-
-//                        // If client receives ackChatMessage, it means that the message (as indicated by ackMessageUniqueId)
-//                        // that was sent to the remote user has been successfully received.
-//                        case 'ackChatMessage':
-//                            scope.ackChatMessageObject.ackMessageUniqueId = messageObject.messagePayload.ackMessageUniqueId;
-//                            break;
 
                         case 'videoExchangeStatusMsg':
 
