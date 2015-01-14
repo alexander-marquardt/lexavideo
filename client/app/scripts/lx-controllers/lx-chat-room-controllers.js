@@ -24,8 +24,12 @@ angular.module('lxUseChatRoom.controllers', [])
              ) {
 
 
-        var uniqueIdentifier = (new Date()).getTime();
-        var clientId = lxAppWideConstantsService.userId + '|' + uniqueIdentifier;
+        // The clientId is unique for each connection that a user makes to the server (ie. each browser
+        // window that they open). In order to create a unique clientID, we append the userId with
+        // a randomly generated number with a billion possibilities. This should generally prevent the user
+        // from being assigned two clientIds that clash.
+        var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
+        var clientId = lxAppWideConstantsService.userId + '|' + uniqueClientIdentifier;
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
