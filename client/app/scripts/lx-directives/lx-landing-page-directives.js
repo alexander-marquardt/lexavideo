@@ -30,7 +30,7 @@ angular.module('lxLandingPage.directives', [])
                  We watch the input element directly as opposed to the ngModel.$modelValue value,
                  because the ngModel value is only updated when all validity
                  conditions are met, which is not sufficient for providing up-to-date and accurate feedback
-                 to the user. Eg. monitoring ngModel would not allow us to reset the roomIsFull variable
+                 to the user. Eg. monitoring ngModel would not allow us to reset the roomNumOccupantsMessage variable
                  if the user hits the backspace key resulting in an invalid room name that is too short
                  (which therefore  would not update the ngModel value), after previously entering in a
                  valid room name.
@@ -57,20 +57,10 @@ angular.module('lxLandingPage.directives', [])
                         var roomObj = null;
 
                         /*
-                         Set roomIsFull 'isValid' to true (which means that the room is not full)
-                         so that the following code will be executed only if none
-                         of the other validity checks have failed.
-                         Note: there is a confusing naming scheme used for the validity values, and in the html the $error.roomIsFull
-                         that is accessed is the negation of the 'isValid' value that is set here (ie. if roomIsFull is
-                         set to false, then the $error value will be true, and the user will be shown the message).
-
-                         'roomIsFull' validity value will be set if all other validity checks have passed.
-                         This prevents the user from receiving two conflicting feedback messages at the same time in the
-                         case that they have entered in a string that is invalid, but that might be an available room.
+                         Note: there is a confusing naming scheme used for the validity values, and in the html the $error.networkOrServerError
+                         that is accessed is the negation of the 'isValid' value that is set here (ie. if networkOrServerError is
+                         set to false, then the $error value will be true, and the user will be shown the error message).
                          */
-                        ctrl.$setValidity('roomIsFull', true);
-
-                        // same logic applies to the networkOrServerError validity flag as to roomIsFull
                         ctrl.$setValidity('networkOrServerError', true);
 
                         /*
@@ -78,7 +68,7 @@ angular.module('lxLandingPage.directives', [])
                         submit button for creating/joining a room.
                         */
                         ctrl.userIsWaitingForRoomStatus = true;
-                        ctrl.roomNotFullMessage = '';
+                        ctrl.roomNumOccupantsMessage = '';
                         ctrl.roomIsEmptyMessage = '';
 
                         if (ctrl.$valid) {
@@ -102,22 +92,15 @@ angular.module('lxLandingPage.directives', [])
                                         // response.
                                         if (data.chatRoomName === inputElement.value.toLowerCase()) {
 
-                                            if (data.numInRoom >= maxOccupancy) {
-                                                ctrl.$setValidity('roomIsFull', false);
+                                            if (data.roomIsRegistered === false || data.numInRoom === 0) {
+                                                ctrl.roomIsEmptyMessage = 'Chat room name is available!';
+                                                ctrl.submitButtonText = 'Create!';
                                             }
                                             else {
-                                                ctrl.$setValidity('roomIsFull', true);
-
-                                                if (data.roomIsRegistered === false || data.numInRoom === 0) {
-                                                    ctrl.roomIsEmptyMessage = 'Chat room name is available!';
-                                                    ctrl.submitButtonText = 'Create!';
-                                                }
-                                                else {
-                                                    var msg = 'Chat ' + data.chatRoomName + ' has ' + data.numInRoom + ' occupant';
-                                                    var plural = msg + 's';
-                                                    ctrl.roomNotFullMessage = data.numInRoom === 1 ? msg : plural;
-                                                    ctrl.submitButtonText = 'Join!';
-                                                }
+                                                var msg = 'Chat ' + data.chatRoomName + ' has ' + data.numInRoom + ' occupant';
+                                                var plural = msg + 's';
+                                                ctrl.roomNumOccupantsMessage = data.numInRoom === 1 ? msg : plural;
+                                                ctrl.submitButtonText = 'Join!';
                                             }
                                         }
                                         else {

@@ -7,7 +7,7 @@ site_name_for_display = 'ChatSurfing'
 
 room_min_chars = 3
 room_max_chars = 80
-room_max_occupancy = 2
+room_max_occupancy = 100 # arbitrarily limit the number of people in a chat room
 
 """"
 Make sure that unicode characters don't cause crashes.

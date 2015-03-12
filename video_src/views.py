@@ -81,7 +81,6 @@ class LandingPageMain(webapp2.RequestHandler):
             'serverLandingPageParamsJson': json.dumps(
                 {'minRoomChars': constants.room_min_chars,
                  'maxRoomChars': constants.room_max_chars,
-                 'maxRoomOccupancy': constants.room_max_occupancy,
                  'chatRoomNameInvalidCharsForRegex': constants.chat_room_name_invalid_chars_regex,
                  })
             }
