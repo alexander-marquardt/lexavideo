@@ -42,12 +42,8 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
              $location.path('/' +  chatRoomName);
         };
 
-        // roomStatus.roomStatus.triggerGetNewRoom is placed on the scope and will be watched for changes by the
-        // checkForRoomOccupancyDirective for changes. If this value changes, then a new check will be done
-        // to see if the room name is available. We simply toggle the value between true and false each time
-        // that we need to trigger a new call to getRoom.
+
         $scope.roomStatus = {};
-        $scope.roomStatus.triggerGetNewRoom = true;
 
         $scope.showFormScope = function() {
             $log.debug($scope);
