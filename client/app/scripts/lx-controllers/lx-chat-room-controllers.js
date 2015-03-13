@@ -43,7 +43,7 @@ angular.module('lxUseChatRoom.controllers', [])
                 } else {
                     // Add the user to the room, now that the channel is open
                     lxHttpChannelService.addClientToRoom($scope.lxMainViewCtrl.clientId,
-                        roomOccupancyObject.userId, roomOccupancyObject.roomId);
+                        $scope.lxMainViewCtrl.userId, roomOccupancyObject.roomId);
                 }
             };
             innerWaitForChannelReady();

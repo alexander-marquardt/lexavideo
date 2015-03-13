@@ -22,10 +22,7 @@ angular.module('lxMainView.controllers', [])
         // Copy information embedded in the Html into an angular service.
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
-        $scope.lxMainViewCtrl = {
-            channelToken: null,
-            clientId: null
-        };
+
 
         // remoteVideoObject will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoObject
         // There will be one object for each remote client that the local user is exchanging video with.
@@ -39,6 +36,12 @@ angular.module('lxMainView.controllers', [])
         var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
         var clientId = lxAppWideConstantsService.userId + '|' + uniqueClientIdentifier;
 
+        $scope.lxMainViewCtrl = {
+            channelToken: null,
+            clientId: clientId,
+            userId: lxAppWideConstantsService.userId,
+            userName: lxAppWideConstantsService.userName
+        };
 
         $scope.localVideoObject = {
             localHdVideoElem:  undefined,  // set in lxVideoElementDirective
@@ -63,9 +66,6 @@ angular.module('lxMainView.controllers', [])
             // [list|dict]OfClientObjects will be updated to reflect the client status sent from the server.
             listOfClientObjects: [],
             dictOfClientObjects: {},
-
-            userName: lxAppWideConstantsService.userName,
-            userId: lxAppWideConstantsService.userId,
             chatRoomName: $location.path().replace(/\//, ''),
             roomId: null
         };
@@ -93,7 +93,6 @@ angular.module('lxMainView.controllers', [])
 
         lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function(response) {
             $scope.lxMainViewCtrl.channelToken = response.data.channelToken;
-            $scope.lxMainViewCtrl.clientId = clientId;
 
             lxChannelService.openChannel($scope);
 

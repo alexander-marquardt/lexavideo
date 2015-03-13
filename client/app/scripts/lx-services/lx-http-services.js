@@ -35,7 +35,8 @@ angular.module('lxHttp.services', [])
     function (
         $log,
         $http,
-        lxChannelSupportService
+        lxChannelSupportService,
+        lxJs
         ) {
 
         return {
@@ -48,6 +49,10 @@ angular.module('lxHttp.services', [])
 //            },
 
             addClientToRoom: function(clientId, userId, roomId) {
+                lxJs.assert(clientId, 'clientId not set');
+                lxJs.assert(userId, 'userId not set');
+                lxJs.assert(roomId, 'roomId not set');
+
                 var postData = {
                     'clientId': clientId,
                     'userId': userId,
