@@ -22,17 +22,4 @@ $viewport-widths-list: 320px, 360px, 400px, 480px, 600px, $screen-sm, $screen-md
 // We vary the font size of the text-overlay that is shown in a navbar on top of a video element.
 $video-text-overlay-font-size-list: 0.5em, 0.6em, 0.7em, 0.8em, 0.9em, 1em, 1.5em, 2em;
 
-// setup the video window sizes that are associated with the viewport sizes.
-$video-widths-list: ();
-@each $viewport-width in $viewport-widths-list {
-  $video-width: null;
-  @if $viewport-width >= $container-sm {
-    $video-width: ($viewport-width - $grid-gutter-width) / 2;
-  } @else {
-    // Since these screens are smaller, we remove the padding/gutter, and
-    // allocate more space to the video windows
-    $video-width: ($viewport-width) / 2;
-  }
-  $video-widths-list: append($video-widths-list, $video-width);
-}
 

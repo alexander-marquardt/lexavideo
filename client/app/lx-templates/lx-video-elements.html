@@ -15,52 +15,33 @@
 
                                 <!-- The following wraps the remote video window -->
                                 <div class="col-xs-6 text-center cl-col-no-xs-padding" >
-                                    <div class="row cl-row-no-xs-margins">
-                                        <div class="cl-video-wrapper-div">
-                                            REMOTE VIDEO RemoteId = {{ remoteClientId }}<br>
+                                    REMOTE VIDEO RemoteId = {{ remoteClientId }}<br>
 
+                                    <div class="cl-video-wrapper-div">
 
-                                            <!-- only show the message in the video window if a modal is not currently being shown - this is
-                                                 just so that we don't confuse the user by showing them two different messages at once -->
-                                            <div ng-if="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                                                 lx-video-settings-negotiation-directive>
-                                             </div>
-
-                                            <div class="cl-user-feedback-inside-video-wrapper cl-hide-on-larger-than-xs">
-                                                {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
-                                            </div>
-
-                                            <div class="text-center" >
-                                                <div class="cl-my-well">
-                                                    <div style="position: relative">
-                                                        <div lx-remote-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
+                                        <div class="cl-user-feedback-inside-video-wrapper cl-hide-on-larger-than-xs">
+                                            {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
                                         </div>
-                                        {% endraw %}{% include "lx-templates/lx-video-call-buttons.html" %}{% raw %}
+                                        <!-- only show the message in the video window if a modal is not currently being shown - this is
+                                             just so that we don't confuse the user by showing them two different messages at once -->
+                                        <div ng-if="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                             lx-video-settings-negotiation-directive>
+                                        </div>
+                                        <div lx-remote-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
                                     </div>
+
+                                    {% endraw %}{% include "lx-templates/lx-video-call-buttons.html" %}{% raw %}
                                 </div>
                             </div>
 
                             <!-- The following wraps the local video window -->
                             <div class="col-xs-6 text-center cl-col-no-xs-padding" >
-                                <div class="row cl-row-no-xs-margins">
-                                    <div class="cl-video-wrapper-div">
-                                    LOCAL VIDEO<br>
+                                LOCAL VIDEO<br>
+                                <div class="cl-video-wrapper-div">
                                         <div class="cl-user-feedback-inside-video-wrapper">
                                             {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
                                         </div>
-
-                                        <div class="text-center">
-                                            <div class="cl-my-well" >
-                                                <div style="position: relative">
-                                                    <div lx-local-video-element-directive></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <div lx-local-video-element-directive></div>
                                 </div>
                             </div>
                         </div>

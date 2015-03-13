@@ -11,7 +11,7 @@ videoAppDirectives.directive('lxLocalVideoElementDirective',
             restrict : 'A',
             link: function(scope, elem) {
                 var e;
-                e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay" muted="true"></video>');
+                e = angular.element('<video class="cl-show-hide-fade" autoplay="autoplay" muted="true"></video>');
                 scope.localVideoObject.localHdVideoElem = e[0];
 
                 elem.append(e);
