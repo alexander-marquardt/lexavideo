@@ -1,5 +1,5 @@
 $chat-panel-heading-height: 50px;
-$chat-groups-members-margin: 5px;
+$chat-groups-members-margin: 15px;
 
 $short-chat-panel-height: 200px;
 $tall-chat-panel-height: 400px;
@@ -52,7 +52,7 @@ $group-members-panel-header-height: 30px;
 .cl-chat-group-members-panel {
   position: absolute;
   top: $chat-panel-heading-height + $chat-groups-members-margin;
-  left: $chat-groups-members-margin;
+  right: $chat-groups-members-margin;
   max-width: $screen-xs-max/2;
   z-index: $chat-group-members-zindex;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);

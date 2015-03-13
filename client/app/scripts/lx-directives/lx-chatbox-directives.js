@@ -193,13 +193,13 @@ angular.module('lxChatbox.directives', [])
                 // watch to see if the local user has sent a new chat message to the remote user
                 scope.$watch('sendMessageTime', function() {
                     if (scope.sendMessagePayload.messageString) {
-                        addMessageToDisplay(scope.sendMessagePayload, 'left', scope.sendMessagePayload.transmittedToServer);
+                        addMessageToDisplay(scope.sendMessagePayload, 'right', scope.sendMessagePayload.transmittedToServer);
                     }
                 });
 
                 scope.$watch('receivedChatMessageObject.receivedMessageTime', function() {
                     if (scope.receivedChatMessageObject.messageString) {
-                        addMessageToDisplay(scope.receivedChatMessageObject, 'right', true);
+                        addMessageToDisplay(scope.receivedChatMessageObject, 'left', true);
                         // if the user is not looking at the current window, then show them how many messages
                         // they have missed while they were not paying attention.
                         if (!windowFocus) {
