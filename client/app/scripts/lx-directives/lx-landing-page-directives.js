@@ -19,12 +19,7 @@ angular.module('lxLandingPage.directives', [])
             require: 'ngModel',
             link: function(scope, elem, attrs, ctrl) {
 
-                // don't move maxOccupancy outside of the link function since it is not set until the
-                // program begins execution.
-                var maxOccupancy = lxLandingPageConstantsService.maxRoomOccupancy;
-
                 var inputElement = angular.element(elem)[0];
-
 
                 /*
                  We watch the input element directly as opposed to the ngModel.$modelValue value,

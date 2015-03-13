@@ -427,7 +427,7 @@ webRtcServices.factory('lxPeerService',
         var onRemoteStreamRemoved = function() {
             return function() {
                 $log.info('Remote stream removed.');
-            }
+            };
         };
 
         var onSignalingStateChanged = function(pc){
@@ -474,10 +474,8 @@ webRtcServices.factory('lxPeerService',
                 self.pc[remoteClientId].oniceconnectionstatechange = onIceConnectionStateChanged(self.pc[remoteClientId]);
             },
             removeLocalVideoStream : function(/*localStream*/) {
-                if (self.pc[remoteClientId]) {
-                    $log.error('This functionality is not supported by Firefox as of Aug 18 2014, and therefore should not be used.');
-                    //self.pc.removeStream(localStream);
-                }
+                $log.error('This functionality is not supported by Firefox as of Aug 18 2014, and therefore should not be used.');
+                //self.pc.removeStream(localStream);
             },
             addLocalVideoStream : function(localStream, remoteClientId) {
 
