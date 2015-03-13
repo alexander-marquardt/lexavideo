@@ -49,23 +49,6 @@ $group-members-panel-header-height: 30px;
   height: $tall-chat-panel-height;
 }
 
-
-@mixin generate-match-chat-group-members-element-to-half-video-sizing() {
-  @for $idx from 2 through length($viewport-widths-list) {
-    @media (min-width: nth($viewport-widths-list, $idx)) {
-      max-width: nth($video-column-width-list, $idx) / 2 - 2 * $chat-groups-members-margin;
-    }
-  }
-}
-
-.cl-match-chat-group-members-element-to-half-video-sizing {
-  box-sizing: border-box;
-  max-width: nth($video-column-width-list, 1) / 2 - 2 * $chat-groups-members-margin; // -30px for
-
-  @include generate-match-chat-group-members-element-to-half-video-sizing();
-}
-
-
 .cl-chat-group-members-panel {
   position: absolute;
   top: $chat-panel-heading-height + $chat-groups-members-margin;

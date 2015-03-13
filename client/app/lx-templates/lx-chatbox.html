@@ -2,10 +2,9 @@
 {% raw %}
 <div ng-controller="lxChatboxMainCtrl">
     <div class="row cl-row-no-xs-margins">
-        <div class="col-xs-12 text-center cl-col-no-xs-padding">
-            <div class="cl-match-element-to-video-sizing" style="display:inline-block">
+        <div class="col-xs-12 cl-col-no-xs-padding text-center">
                 <div class="row cl-row-no-xs-margins">
-                    <div class="col-md-10 col-lg-8 cl-col-no-xs-padding">
+                    <div class="cl-col-no-xs-padding">
 
                         <div class="panel  cl-panel-xs-margin cl-transition-border cl-chat-panel"
                              ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'panel-primary' : 'panel-waiting'"
@@ -33,7 +32,7 @@
                                     <!--'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>-->
                                 <div ng-class="'cl-dummy-blank-div-in-short-chat-panel'"></div>
 
-                                <div class="panel cl-chat-group-members-panel cl-match-chat-group-members-element-to-half-video-sizing"
+                                <div class="panel cl-chat-group-members-panel"
                                      ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'panel-primary' : 'panel-waiting'">
                                     <div class="panel-heading  cl-transition-opacity-and-background-color cl-chat-group-members-panel-header">
                                         Group participants
@@ -130,7 +129,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 </div>

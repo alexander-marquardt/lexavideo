@@ -2,6 +2,12 @@
 .cl-logo-margin {
   margin-top: 8px;
 }
+
+.cl-no-left-or-right-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
 /* no-xs-padding/no-xs-margins are used to remove the padding/margin from xs devices. This
    allows us to fully use the screen space for content as opposed to whitespace */
 .cl-container-no-xs-padding {
@@ -109,24 +115,6 @@
 .cl-feedback-on-input-validity-div {
   min-height: 20px;
 }
-
-
-
-@mixin generate-match-video-column-sizing() {
-  @for $idx from 2 through length($viewport-widths-list) {
-    @media (min-width: nth($viewport-widths-list, $idx)) {
-      width: nth($video-column-width-list, $idx);
-    }
-  }
-}
-
-.cl-match-element-to-video-sizing {
-  box-sizing: border-box;
-  width: nth($video-column-width-list, 1);
-
-  @include generate-match-video-column-sizing();
-}
-
 
 $fast-easing-delay: 0.35s;
 
