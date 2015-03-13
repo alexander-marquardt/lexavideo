@@ -119,7 +119,7 @@ angular.module('lxHttp.services', [])
                  */
 
                 lxJs.assert(toClientId, 'toClientId is not set');
-                lxJs.assert(fromClientId, 'toClientId is not set');
+                lxJs.assert(fromClientId, 'fromClientId is not set');
 
                 var messageObject = {
                     'fromClientId': fromClientId,

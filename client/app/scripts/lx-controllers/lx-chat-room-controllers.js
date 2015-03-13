@@ -19,7 +19,8 @@ angular.module('lxUseChatRoom.controllers', [])
              lxChannelSupportService,
              lxChatRoomVarsService,
              lxHttpChannelService,
-             lxInitializeRoomService
+             lxInitializeRoomService,
+             lxJs
              ) {
 
 
@@ -81,6 +82,8 @@ angular.module('lxUseChatRoom.controllers', [])
             }
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
             $scope.videoStateInfoObject.localVideoIsEnabledCount += 1;
+
+            lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                 $scope,

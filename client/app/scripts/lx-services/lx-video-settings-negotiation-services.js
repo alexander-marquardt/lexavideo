@@ -116,12 +116,15 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
 
 lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCameraService',
     function(
-        lxMessageService
+        lxMessageService,
+        lxJs
     ) {
 
         return {
             sendStatusOfVideoElementsEnabled: function(scope, localVideoElementsEnabled,
                                                        queryForRemoteVideoElementsEnabled, toClientId) {
+
+                lxJs.assert(toClientId, 'toClientId is not set');
 
                 // Only attempt to send a message if there is another user in the room
                 if (scope.roomOccupancyObject.listOfClientObjects.length > 1) {
@@ -137,7 +140,7 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
                             // the case of un-delivered messages.
                             queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled,
                         },
-                        scope.lxChatRoomCtrl.clientId,
+                        scope.lxMainViewCtrl.clientId,
                         toClientId
                     );
                 }
