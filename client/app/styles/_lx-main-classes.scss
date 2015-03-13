@@ -31,6 +31,14 @@
   }
 }
 
+
+.cl-col-xs-smaller-left-right-padding {
+    @media(max-width: $screen-xs-max) {
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+}
+
 .cl-panel-xs-margin {
     @media(max-width: $screen-xs-max) {
       margin-bottom: 5px;
