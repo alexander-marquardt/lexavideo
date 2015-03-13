@@ -44,7 +44,7 @@ angular.module('lxChatbox.controllers', [])
          *      Sends a chat message to other users.
          * toClientId:
          *      either the specific Id of the client that this message should be sent to, or
-         *      the keyword: "All"
+         *      the keyword: "sendMsgToEveryoneInTheChatRoom"
          */
         $scope.sendChatMessageFn = function(toClientId) {
 

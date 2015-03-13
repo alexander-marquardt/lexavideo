@@ -17,11 +17,11 @@ def handle_message(room_info_obj, from_client_id, message_obj):
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
     # as for passing video and other information from one user to the other. 
 
-    # If to_client_id is "All", then the message will be sent to all room members, otherwise it will be sent
+    # If to_client_id is "sendMsgToEveryoneInTheChatRoom", then the message will be sent to all room members, otherwise it will be sent
     # only to the indicated client.
     to_client_id = message_obj['toClientId']
 
-    if to_client_id == 'All':
+    if to_client_id == 'sendMsgToEveryoneInTheChatRoom':
         to_client_ids_list = room_info_obj.get_list_of_other_client_ids(from_client_id)
     else:
         to_client_ids_list = [to_client_id]
@@ -36,7 +36,7 @@ def handle_message(room_info_obj, from_client_id, message_obj):
         logging.info('user %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
                      (from_client_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))
 
-        assert(to_client_id != 'All')
+        assert(to_client_id != 'sendMsgToEveryoneInTheChatRoom')
 
         if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'enableVideoExchange':
             room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
@@ -46,7 +46,7 @@ def handle_message(room_info_obj, from_client_id, message_obj):
 
 
     if message_type == 'sdp':
-        assert(to_client_id != 'All')
+        assert(to_client_id != 'sendMsgToEveryoneInTheChatRoom')
 
         if message_payload['type'] == 'bye':
             room_info_obj.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )

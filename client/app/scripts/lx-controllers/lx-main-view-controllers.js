@@ -70,6 +70,14 @@ angular.module('lxMainView.controllers', [])
             roomId: null
         };
 
+        $scope.receivedChatMessageObject = {
+            messageString: undefined,
+
+           // receivedMessageTime is updated every time the user sends a message - this is necessary because
+            // if we just watch receivedMessageString for changes to trigger sending of the message, then the user will not be
+            // able to send the same message twice.
+            receivedMessageTime: 0
+        };
 
         $scope.mainGlobalControllerObj = {
              // if the user is rejected from a room, then this will contain a information about what went wrong.
