@@ -23,12 +23,12 @@ class TestUtils(unittest.TestCase):
 
     def tearDown(self):
         self.testbed.deactivate()
-
-    def step1(self):
-        user_obj = users.create_new_user()
-        self.assertIsNotNone(user_obj)
-        self.assertEqual(user_obj.user_name, str(user_obj.key.id()))
-        self.new_lx_user_name = user_obj.user_name
+    #
+    # def step1(self):
+    #     user_obj = users.create_new_user()
+    #     self.assertIsNotNone(user_obj)
+    #     self.assertEqual(user_obj.user_name, str(user_obj.key.id()))
+    #     self.new_lx_user_name = user_obj.user_name
 
     def step2(self):
         user_obj = users.get_user_by_name(self.new_lx_user_name)
@@ -40,7 +40,7 @@ class TestUtils(unittest.TestCase):
         self.assertIsNone(user_obj)
 
     def test_one(self):
-        self.step1()
+        # self.step1()
         self.step2()
         self.step3()
 
