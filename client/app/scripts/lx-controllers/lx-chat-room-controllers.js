@@ -16,7 +16,6 @@ angular.module('lxUseChatRoom.controllers', [])
              lxAppWideConstantsService,
              lxCallService,
              lxCreateChatRoomObjectsService,
-             lxChannelService,
              lxChannelSupportService,
              lxChatRoomVarsService,
              lxHttpChannelService,
@@ -24,12 +23,7 @@ angular.module('lxUseChatRoom.controllers', [])
              ) {
 
 
-        // The clientId is unique for each connection that a user makes to the server (ie. each browser
-        // window that they open). In order to create a unique clientID, we append the userId with
-        // a randomly generated number with a billion possibilities. This should generally prevent the user
-        // from being assigned two clientIds that clash.
-        var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
-        var clientId = lxAppWideConstantsService.userId + '|' + uniqueClientIdentifier;
+
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
@@ -41,43 +35,13 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
 
-        $scope.roomOccupancyObject = {
-            // [list|dict]OfClientObjects will be updated to reflect the client status sent from the server.
-            listOfClientObjects: [],
-            dictOfClientObjects: {},
-
-            userName: lxAppWideConstantsService.userName,
-            userId: lxAppWideConstantsService.userId,
-            chatRoomName: $location.path().replace(/\//, ''),
-            roomId: null
-        };
-
-        lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function(response) {
-            $scope.lxChatRoomCtrl.channelToken = response.data.channelToken;
-            $scope.lxChatRoomCtrl.clientId = clientId;
-
-            lxChannelService.openChannel($scope);
-
-            $window.onbeforeunload = function () {
-                $log.debug('Manually disconnecting channel on window unload event.');
-                lxHttpChannelService.manuallyDisconnectChannel($scope.lxChatRoomCtrl.clientId);
-            };
-
-            // Periodically update the room so that the server knows if the user is currently in the room.
-            // lxChannelService.startClientHeartbeat($scope.lxChatRoomCtrl.clientId);
-
-        }, function() {
-            $scope.lxChatRoomCtrl.channelToken = 'Failed to get channelToken';
-            $scope.lxChatRoomCtrl.clientId = 'Failed to get clientId';
-        });
-
         var addClientToRoomWhenChannelReady = function(roomOccupancyObject) {
             var innerWaitForChannelReady = function() {
                 if (!lxChannelSupportService.channelReady) {
                     $timeout(innerWaitForChannelReady, 100);
                 } else {
                     // Add the user to the room, now that the channel is open
-                    lxHttpChannelService.addClientToRoom($scope.lxChatRoomCtrl.clientId,
+                    lxHttpChannelService.addClientToRoom($scope.lxMainViewCtrl.clientId,
                         roomOccupancyObject.userId, roomOccupancyObject.roomId);
                 }
             };
@@ -87,11 +51,6 @@ angular.module('lxUseChatRoom.controllers', [])
         lxInitializeRoomService.addUserToRoom($scope).then(function(data) {
 
             $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
-
-            // The following two lines need to be removed once we have the channelToken passed through the
-//            // "requestChannelToken" function above
-//            $scope.lxChatRoomCtrl.channelToken = data.channelToken;
-//            $scope.lxChatRoomCtrl.clientId = data.clientId;
 
             $scope.roomOccupancyObject.roomId = lxChatRoomVarsService.roomId = data.roomId;
 
@@ -109,27 +68,8 @@ angular.module('lxUseChatRoom.controllers', [])
             $location.path('/');
         });
 
-        // remoteVideoObject will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoObject
-        // There will be one object for each remote client that the local user is exchanging video with.
-        $scope.remoteVideoObjectsDict = {};
 
-        $scope.localVideoObject = {
-            localHdVideoElem:  undefined,  // set in lxVideoElementDirective
-            localVideoWrapper: undefined, // set in lxVideoWrapperDirective
-            isWebcamMuted: false,
-            isMicrophoneMuted: false
-        };
 
-        // videoExchangeObjectsDict will be populated with calls to
-        // lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject(), and there will be one key
-        // for each remote client that the local user is exchanging video settings with.
-        $scope.videoExchangeObjectsDict = {};
-
-        $scope.videoStateInfoObject = {
-            // we keep track of the number of times that the local user has enabled video exchanges. When this
-            // number is zero, we do not show any video boxes, and when it is one or more, we show video.
-            localVideoIsEnabledCount : 0
-        };
 
         $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting,
                                                            queryForRemoteVideoElementsEnabled,

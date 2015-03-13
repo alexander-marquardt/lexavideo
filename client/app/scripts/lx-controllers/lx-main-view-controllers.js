@@ -9,10 +9,67 @@ angular.module('lxMainView.controllers', [])
 .controller('lxVideoChatAppViewCtrl',
     function(
         $rootScope,
+        $location,
         $log,
         $scope,
+        $window,
         lxAppWideConstantsService,
+        lxChannelService,
+        lxHttpChannelService,
         lxModalSupportService) {
+
+
+        // Copy information embedded in the Html into an angular service.
+        angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
+
+        $scope.lxMainViewCtrl = {
+            channelToken: null,
+            clientId: null
+        };
+
+        // remoteVideoObject will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoObject
+        // There will be one object for each remote client that the local user is exchanging video with.
+        $scope.remoteVideoObjectsDict = {};
+
+
+        // The clientId is unique for each connection that a user makes to the server (ie. each new browser
+        // window/device that they connect from). In order to create a unique clientID, we append the userId with
+        // a randomly generated number with a billion possibilities. This should prevent the user
+        // from being assigned two clientIds that clash.
+        var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
+        var clientId = lxAppWideConstantsService.userId + '|' + uniqueClientIdentifier;
+
+
+        $scope.localVideoObject = {
+            localHdVideoElem:  undefined,  // set in lxVideoElementDirective
+            localVideoWrapper: undefined, // set in lxVideoWrapperDirective
+            isWebcamMuted: false,
+            isMicrophoneMuted: false
+        };
+
+        // videoExchangeObjectsDict will be populated with calls to
+        // lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject(), and there will be one key
+        // for each remote client that the local user is exchanging video settings with.
+        $scope.videoExchangeObjectsDict = {};
+
+        $scope.videoStateInfoObject = {
+            // we keep track of the number of times that the local user has enabled video exchanges. When this
+            // number is zero, we do not show any video boxes, and when it is one or more, we show video.
+            localVideoIsEnabledCount : 0
+        };
+
+
+        $scope.roomOccupancyObject = {
+            // [list|dict]OfClientObjects will be updated to reflect the client status sent from the server.
+            listOfClientObjects: [],
+            dictOfClientObjects: {},
+
+            userName: lxAppWideConstantsService.userName,
+            userId: lxAppWideConstantsService.userId,
+            chatRoomName: $location.path().replace(/\//, ''),
+            roomId: null
+        };
+
 
         $scope.mainGlobalControllerObj = {
              // if the user is rejected from a room, then this will contain a information about what went wrong.
@@ -25,6 +82,26 @@ angular.module('lxMainView.controllers', [])
              We set errorEnteringIntoRoomInfoObj to null to indicate that there are no currently un reported errors.*/
             errorEnteringIntoRoomInfoObj: null
         };
+
+        lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function(response) {
+            $scope.lxMainViewCtrl.channelToken = response.data.channelToken;
+            $scope.lxMainViewCtrl.clientId = clientId;
+
+            lxChannelService.openChannel($scope);
+
+            $window.onbeforeunload = function () {
+                $log.debug('Manually disconnecting channel on window unload event.');
+                lxHttpChannelService.manuallyDisconnectChannel($scope.lxMainViewCtrl.clientId);
+            };
+
+            // Periodically update the room so that the server knows if the user is currently in the room.
+            // lxChannelService.startClientHeartbeat($scope.lxMainViewCtrl.clientId);
+
+        }, function() {
+            $scope.lxMainViewCtrl.channelToken = 'Failed to get channelToken';
+            $scope.lxMainViewCtrl.clientId = 'Failed to get clientId';
+        });
+
 
         $scope.$watch('mainGlobalControllerObj.errorEnteringIntoRoomInfoObj', function(errorEnteringIntoRoomInfoObj) {
 
@@ -50,8 +127,6 @@ angular.module('lxMainView.controllers', [])
 
         });
 
-        // Copy information embedded in the Html into an angular service.
-        angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
         // handle case when a route change promise is not resolved
         $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {

@@ -61,7 +61,7 @@ angular.module('lxChatbox.controllers', [])
             };
 
             var sendMessagePromise = lxMessageService.sendMessage(
-                messageType, $scope.sendMessagePayload, $scope.lxChatRoomCtrl.clientId, toClientId);
+                messageType, $scope.sendMessagePayload, $scope.lxMainViewCtrl.clientId, toClientId);
 
             sendMessagePromise.then(
 

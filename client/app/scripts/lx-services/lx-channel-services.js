@@ -107,7 +107,7 @@ angular.module('lxChannel.services', [])
                                 }
                             } else {
                                 lxWebRtcSessionService.processSignalingMessage(sdpObject, localVideoObject,
-                                    remoteVideoObject, scope.lxChatRoomCtrl.clientId, remoteClientId);
+                                    remoteVideoObject, scope.lxMainViewCtrl.clientId, remoteClientId);
                             }
                             break;
 
@@ -247,7 +247,7 @@ angular.module('lxChannel.services', [])
 
                 $log.info('*** Opening channel. ***');
                 try {
-                    var channel = new goog.appengine.Channel(scope.lxChatRoomCtrl.channelToken);
+                    var channel = new goog.appengine.Channel(scope.lxMainViewCtrl.channelToken);
                     lxChannelSupportService.socket = channel.open(handler(this, scope));
 
                 } catch(e) {
