@@ -23,6 +23,9 @@ from video_src import views
 
 import gaesessions
 
+# Note: there is an inconsistency in using trailing slashes due to the fact that the google api uses trailing
+# slashes on their channel URLs, but the angular resource api generates URLs that do not contain trailing
+# slashes (ie. the handle_room URL below). We have decided to use both styles, as it really doesn't matter much.
 app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-chat-room-main.html>/<chat_room_name_from_url:.+>', views.UserChatRoomMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-landing-page-main.html>', views.LandingPageMain),
