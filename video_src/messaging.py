@@ -12,22 +12,27 @@ from video_src import http_helpers
 from error_handling import handle_exceptions
 
 # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
-def handle_message(room_info_obj, from_client_id, message_obj):
+def handle_message_room(room_info_obj, from_client_id, message_obj):
     # This function passes a message from one user in a given "room" to the other user in the same room.
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
     # as for passing video and other information from one user to the other. 
 
     # If to_client_id is "sendMsgToEveryoneInTheChatRoom", then the message will be sent to all room members, otherwise it will be sent
     # only to the indicated client.
+    to_client_ids_list = room_info_obj.get_list_of_other_client_ids(from_client_id)
+
+    for to_client_id in to_client_ids_list:
+        channel.send_message(to_client_id, json.dumps(message_obj))
+
+# Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
+def handle_message_client(from_client_id, message_obj):
+    # This function passes a message from one user in a given "room" to the other user in the same room.
+    # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
+    # as for passing video and other information from one user to the other.
+
+    # If to_client_id is "sendMsgToEveryoneInTheChatRoom", then the message will be sent to all room members, otherwise it will be sent
+    # only to the indicated client.
     to_client_id = message_obj['toClientId']
-
-    if to_client_id == 'sendMsgToEveryoneInTheChatRoom':
-        to_client_ids_list = room_info_obj.get_list_of_other_client_ids(from_client_id)
-    else:
-        to_client_ids_list = [to_client_id]
-
-    chat_room_name = room_info_obj.chat_room_name
-
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
 
@@ -36,35 +41,18 @@ def handle_message(room_info_obj, from_client_id, message_obj):
         logging.info('user %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
                      (from_client_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))
 
-        assert(to_client_id != 'sendMsgToEveryoneInTheChatRoom')
-
         if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'enableVideoExchange':
             room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
             send_video_call_settings_to_participants(from_client_id, to_client_id)
         else:
             room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
 
+        if message_type == 'sdp' and message_payload['type'] == 'offer':
+            # This is just for debugging
+            logging.info('sdp offer. Payload: %s' % repr(message_payload))
 
-    if message_type == 'sdp':
-        assert(to_client_id != 'sendMsgToEveryoneInTheChatRoom')
-
-        if message_payload['type'] == 'bye':
-            room_info_obj.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
-            logging.info('Client %s ' % from_client_id + ' quit from room ' + chat_room_name)
-            logging.info('Room ' + chat_room_name + ' has state ' + repr(room_info_obj))
-
-
-    for to_client_id in to_client_ids_list:
-        if to_client_id and room_info_obj.has_client(to_client_id):
-            if message_type == 'sdp' and message_payload['type'] == 'offer':
-                # This is just for debugging
-                logging.info('sdp offer. Payload: %s' % repr(message_payload))
-
-            on_message(room_info_obj, to_client_id, json.dumps(message_obj))
-
-        else:
-            raise Exception('otherUserNotInRoom')
-
+    logging.info('\n***\nSending message to client %s: %s\n' % (to_client_id,  json.dumps(message_obj)))
+    channel.send_message(to_client_id, json.dumps(message_obj))
 
 
 # def delete_saved_messages(client_id):
@@ -81,18 +69,6 @@ def handle_message(room_info_obj, from_client_id, message_obj):
 #         logging.info('Delivered saved message to ' + client_id)
 #         message.key.delete()
 
-@handle_exceptions
-def on_message(room_info_obj, to_client_id, message):
-
-    if room_info_obj.has_client(to_client_id):
-        channel.send_message(to_client_id, message)
-        #logging.info('Delivered message to user %d' % to_user_id)
-    else:
-        # new_message = models.Message(client_id = to_client_id, msg = message)
-        # new_message.put()
-        logging.error('Unable to deliver message to user ' + to_client_id + ' since they are not connected to the room.')
-        raise Exception('otherUserChannelNotConnected')
-
 
 # Sends information about who is in the room
 @handle_exceptions
@@ -101,9 +77,12 @@ def send_room_occupancy_to_room_clients(room_info_obj):
     # to room members indicating the status of who is in the room.
 
     message_obj = {
-        'fromClientId': 'server',
+        'fromClientId': 'msgSentFromServer',
         'messageType': 'roomOccupancyMsg',
-        'messagePayload': {},
+        'messagePayload': {
+            'roomId': room_info_obj.key.id(),
+            'chatRoomName': room_info_obj.chat_room_name_as_written,
+            },
         }
 
     # Javascript needs to know which users are in this room.
@@ -125,7 +104,7 @@ def send_room_occupancy_to_room_clients(room_info_obj):
         message_obj['messagePayload']['dictOfClientObjects'] = dict_of_js_client_objects
 
         logging.info('Sending roomOccupancy to %s: %s' % (client_id, json.dumps(message_obj)))
-        on_message(room_info_obj, client_id, json.dumps(message_obj))
+        channel.send_message(client_id, json.dumps(message_obj))
 
 # Sends information about video settings, and which client should be designated as the 'rtcInitiator'
 @handle_exceptions
@@ -169,7 +148,7 @@ def send_video_call_settings_to_participants(from_client_id, to_client_id):
 
 
 
-class MessagePage(webapp2.RequestHandler):
+class MessageRoom(webapp2.RequestHandler):
 
     @handle_exceptions
     def post(self):
@@ -181,31 +160,32 @@ class MessagePage(webapp2.RequestHandler):
         room_info_obj = room_module.ChatRoomInfo.get_by_id(room_id)
 
         try:
-            try:
-                if room_info_obj:
-                    handle_message(room_info_obj, from_client_id, message_obj)
-                else:
-                    logging.error('Unknown room_id %d' % room_id)
-                    raise Exception('unknownRoomId')
+            if room_info_obj:
+                handle_message_room(room_info_obj, from_client_id, message_obj)
+            else:
+                logging.error('Unknown room_id %d' % room_id)
+                raise Exception('unknownRoomId')
 
-            except Exception as e:
 
-                status_string = e.message
+        except:
+            status_string = 'Server error'
+            http_status_code = 500
+            logging_function = logging.error
 
-                # if 'otherUserNotInRoom' then we will give the user feedback indicating that they are alone in the room
-                # and that is why their message was not delivered. This is not a serious error, and so we only log
-                # it with a warning message and return a http 403 code.
-                if status_string == 'otherUserNotInRoom':
-                     # 403 = Forbidden - request is valid, but server is refusing to respond to it
-                    http_status_code = 403
-                    logging_function = logging.warning
+            http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function,
+                                                               http_status_code, self.request)
 
-                # else, we don't know what happened so return a 500 error and log all relevant information
-                else:
-                    # re-raise the exception so that it will be caught by the following except clause
-                    raise
 
-                http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function, http_status_code)
+class MessageClient(webapp2.RequestHandler):
+
+    @handle_exceptions
+    def post(self):
+        message = self.request.body
+        message_obj = json.loads(message)
+        from_client_id = message_obj['fromClientId']
+
+        try:
+            handle_message_client(from_client_id, message_obj)
 
         except:
             status_string = 'Unknown server error'
@@ -214,5 +194,3 @@ class MessagePage(webapp2.RequestHandler):
 
             http_helpers.set_error_json_response_and_write_log(self.response, status_string, logging_function,
                                                                http_status_code, self.request)
-
-

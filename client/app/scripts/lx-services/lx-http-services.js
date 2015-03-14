@@ -111,14 +111,37 @@ angular.module('lxHttp.services', [])
          Functionality for posting messages to the server.
          */
         return {
-            sendMessage : function(messageType, messagePayload, fromClientId, toClientId) {
+            broadcastMessageToRoomFn : function(messageType, messagePayload, fromClientId, roomId) {
+                /*
+                 messageType: string indicating if this is a Signaling message or some other kind of message
+                 that is being sent over the Appengine Channel API.
+                 Allowed values:
+                 'chat' - chat messages sent through the server
+                 messagePayload: an object containing data that will be send from one peer to another through the server.
+                 Note: this data will be serialized automatically by AngularJS into a JSON object/string.
+                 */
+
+                lxJs.assert(fromClientId, 'fromClientId is not set');
+                lxJs.assert(roomId, 'roomId is not set');
+
+                var messageObject = {
+                    'fromClientId': fromClientId,
+                    'messageType': messageType,
+                    'messagePayload': messagePayload
+                };
+
+                var path = '/_lx/message_room?r=' + roomId;
+                var httpPromise = $http.post(path, messageObject);
+                return httpPromise;
+            },
+
+            sendMessageToClientFn : function(messageType, messagePayload, fromClientId, toClientId) {
                 /*
                  messageType: string indicating if this is a Signaling message or some other kind of message
                  that is being sent over the Appengine Channel API.
                  Allowed values:
                  'sdp' - setting up peer to peer connection
                  'video' - sending video/images through the server
-                 'chat' - chat messages sent through the server
                  messagePayload: an object containing data that will be send from one peer to another through the server.
                  Note: this data will be serialized automatically by AngularJS into a JSON object/string.
                  */
@@ -136,7 +159,7 @@ angular.module('lxHttp.services', [])
                 //$log.debug('C->S: ' + angular.toJson(messagePayload));
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
-                var path = '/_lx/message?r=' + lxChatRoomVarsService.roomId;
+                var path = '/_lx/message_client';
 
                 var httpPromise = $http.post(path, messageObject);
                 return httpPromise;

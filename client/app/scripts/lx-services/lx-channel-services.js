@@ -115,19 +115,21 @@ angular.module('lxChannel.services', [])
 
 
                         case 'roomOccupancyMsg':
-                            var roomOccupancyObject = scope.roomOccupancyObject;
+                            var roomId = messageObject.messagePayload.roomId;
+                            var roomOccupancyDict = scope.roomOccupancyDict;
+                            roomOccupancyDict[roomId] = {};
 
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
-                            roomOccupancyObject.dictOfClientObjects = messageObject.messagePayload.dictOfClientObjects;
+                            roomOccupancyDict[roomId].dictOfClientObjects = messageObject.messagePayload.dictOfClientObjects;
 
                             // copy the dictOfClientObjects into a listOfClientObjects, which is more convenient
                             // for some functions.
-                            roomOccupancyObject.listOfClientObjects = [];
-                            angular.forEach(roomOccupancyObject.dictOfClientObjects, function(clientObject, clientId) {
+                            roomOccupancyDict[roomId].listOfClientObjects = [];
+                            angular.forEach(roomOccupancyDict[roomId].dictOfClientObjects, function(clientObject, clientId) {
                                 // manually add the clientId into the clientObject
                                 clientObject.clientId = clientId;
-                                roomOccupancyObject.listOfClientObjects.push(clientObject);
+                                roomOccupancyDict[roomId].listOfClientObjects.push(clientObject);
                             });
 
                             break;

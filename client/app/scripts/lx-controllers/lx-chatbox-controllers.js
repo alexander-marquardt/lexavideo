@@ -38,6 +38,7 @@ angular.module('lxChatbox.controllers', [])
         // clicked in the chat panel input.
         $scope.userHasAlreadyClickedInChatPanel = false;
 
+        $scope.sendMessageFormScope = {};
         $scope.sendMessagePayload = {};
 
         /* sendChatMessageFn:
@@ -46,13 +47,12 @@ angular.module('lxChatbox.controllers', [])
          *      either the specific Id of the client that this message should be sent to, or
          *      the keyword: "sendMsgToEveryoneInTheChatRoom"
          */
-        $scope.sendChatMessageFn = function(toClientId) {
-
+        $scope.sendChatMessageFn = function(roomId) {
 
             var messageType = 'chatDataMsg';
 
             $scope.sendMessagePayload = {
-                messageString: $scope.inputMessageString,
+                messageString: $scope.sendMessageFormScope.inputMessageString,
 
                 // The following ID is unique because the user will never be physically able to send more than 1 message per millisecond
                 messageUniqueId:  new Date().getTime(),
@@ -60,15 +60,15 @@ angular.module('lxChatbox.controllers', [])
                 transmittedToServer: null
             };
 
-            var sendMessagePromise = lxMessageService.sendMessage(
-                messageType, $scope.sendMessagePayload, $scope.lxMainViewCtrl.clientId, toClientId);
+            var sendMessagePromise = lxMessageService.broadcastMessageToRoomFn(
+                messageType, $scope.sendMessagePayload, $scope.lxMainViewCtrl.clientId, roomId);
 
             sendMessagePromise.then(
 
                 // message was successfully delivered to the server
                 function() {
                     // clear the input box
-                    $scope.inputMessageString = '';
+                    $scope.sendMessageFormScope.inputMessageString = '';
                     $scope.sendMessagePayload.transmittedToServer = true;
                 },
 
@@ -78,9 +78,9 @@ angular.module('lxChatbox.controllers', [])
                     $scope.sendMessagePayload.transmittedToServer = false;
 
                     if (response.data.statusString === 'otherUserNotInRoom') {
-                        $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + $scope.inputMessageString;
+                        $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + $scope.sendMessageFormScope.inputMessageString;
                     } else {
-                        $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + $scope.inputMessageString;
+                        $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + $scope.sendMessageFormScope.inputMessageString;
                     }
                 }
             )['finally'](function () {

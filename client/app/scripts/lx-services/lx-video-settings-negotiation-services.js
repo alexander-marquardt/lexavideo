@@ -28,11 +28,6 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                 scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'mustEnableVideoToStartTransmission';
             }
 
-            // if there is no remote user in the room, then indicate that they are not connected to anyone right now
-            else if (scope.roomOccupancyObject.listOfClientObjects.length <= 1) {
-                scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'localUserIsAlone';
-            }
-
             else if (scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
                 scope.videoSignalingObject.videoSignalingStatusForUserFeedback = 'waitingForRemoteToAgreeToExchangeVideo';
             }
@@ -83,14 +78,6 @@ lxSelectVideoTypePreferenceServices.factory('lxSelectAndNegotiateVideoTypeServic
                 }
             });
 
-            // remote user has either entered or left the room.
-            scope.$watch('roomOccupancyObject.listOfClientObjects.length', function() {
-                // call code to generate feedback messages with a null value - this will result in the feedback
-                // being updated with one of the message override values defined in setVideoSignalingStatusForUserFeedback,
-                // or possibly by clearing the feedback in the case that none of the overrides are triggered.
-                setVideoSignalingStatusForUserFeedback(scope);
-            });
-
             function watchRemoteVideoEnabledSettings(scope) {
                 var concatenateRemoteVideoEnabledSettings = '';
                 for (var remoteClientId in scope.videoExchangeObjectsDict) {
@@ -126,24 +113,21 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
 
                 lxJs.assert(toClientId, 'toClientId is not set');
 
-                // Only attempt to send a message if there is another user in the room
-                if (scope.roomOccupancyObject.listOfClientObjects.length > 1) {
-                    lxMessageService.sendMessage(
-                        'videoExchangeStatusMsg',
-                        {
-                            videoElementsEnabledAndCameraAccessRequested: localVideoElementsEnabled,
+                lxMessageService.sendMessageToClientFn(
+                    'videoExchangeStatusMsg',
+                    {
+                        videoElementsEnabledAndCameraAccessRequested: localVideoElementsEnabled,
 
-                            // The following will result in the remote user sending their status of the video Elements
-                            // and camera access (ie. have they started the process to enable them) - currently
-                            // we request this information every time that we send the remote user the local status -
-                            // this is strictly not necessary, but doesn't cost much and provides some redundancy in
-                            // the case of un-delivered messages.
-                            queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled,
-                        },
-                        scope.lxMainViewCtrl.clientId,
-                        toClientId
-                    );
-                }
+                        // The following will result in the remote user sending their status of the video Elements
+                        // and camera access (ie. have they started the process to enable them) - currently
+                        // we request this information every time that we send the remote user the local status -
+                        // this is strictly not necessary, but doesn't cost much and provides some redundancy in
+                        // the case of un-delivered messages.
+                        queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled,
+                    },
+                    scope.lxMainViewCtrl.clientId,
+                    toClientId
+                );
             }
         };
     }

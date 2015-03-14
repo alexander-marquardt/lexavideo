@@ -1,7 +1,9 @@
 {% raw %}
 <div class="row cl-row-no-xs-margins">
     <div class="col-xs-12 text-center cl-col-xs-smaller-left-right-padding">
-            <div ng-if="debugBuildEnabled">
+        <div ng-if="debugBuildEnabled">
+            <div ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
+
                 <table class="table table-bordered table-striped">
                     <tr>
                         <td>Room Name: {{ roomOccupancyObject.chatRoomName }}</td>
@@ -25,6 +27,7 @@
                     </tr>
                 </table>
             </div>
+        </div>
     </div>
 </div>
 

@@ -36,26 +36,23 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
 
-        var addClientToRoomWhenChannelReady = function(roomOccupancyObject) {
+        var addClientToRoomWhenChannelReady = function(roomId) {
             var innerWaitForChannelReady = function() {
                 if (!lxChannelSupportService.channelReady) {
                     $timeout(innerWaitForChannelReady, 100);
                 } else {
                     // Add the user to the room, now that the channel is open
                     lxHttpChannelService.addClientToRoom($scope.lxMainViewCtrl.clientId,
-                        $scope.lxMainViewCtrl.userId, roomOccupancyObject.roomId);
+                        $scope.lxMainViewCtrl.userId, roomId);
                 }
             };
             innerWaitForChannelReady();
         };
 
-        lxInitializeRoomService.addUserToRoom($scope).then(function(data) {
+        lxInitializeRoomService.addUserToRoom().then(function(data) {
 
             $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
-
-            $scope.roomOccupancyObject.roomId = lxChatRoomVarsService.roomId = data.roomId;
-
-            addClientToRoomWhenChannelReady($scope.roomOccupancyObject);
+            addClientToRoomWhenChannelReady(data.roomId);
 
         }, function(errorEnteringIntoRoomInfoObj) {
 

@@ -23,7 +23,6 @@ angular.module('lxMainView.controllers', [])
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
 
-
         // remoteVideoObject will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoObject
         // There will be one object for each remote client that the local user is exchanging video with.
         $scope.remoteVideoObjectsDict = {};
@@ -44,7 +43,7 @@ angular.module('lxMainView.controllers', [])
         };
 
         $scope.localVideoObject = {
-            localHdVideoElem:  undefined,  // set in lxVideoElementDirective
+            localHdVideoElem: undefined,  // set in lxVideoElementDirective
             localVideoWrapper: undefined, // set in lxVideoWrapperDirective
             isWebcamMuted: false,
             isMicrophoneMuted: false
@@ -58,17 +57,18 @@ angular.module('lxMainView.controllers', [])
         $scope.videoStateInfoObject = {
             // we keep track of the number of times that the local user has enabled video exchanges. When this
             // number is zero, we do not show any video boxes, and when it is one or more, we show video.
-            localVideoIsEnabledCount : 0
+            localVideoIsEnabledCount: 0
         };
 
-
-        $scope.roomOccupancyObject = {
-            // [list|dict]OfClientObjects will be updated to reflect the client status sent from the server.
-            listOfClientObjects: [],
-            dictOfClientObjects: {},
-            chatRoomName: $location.path().replace(/\//, ''),
-            roomId: null
-        };
+        // roomOccupancyDict will have a unique key corresponding to the roomId of each room the the current
+        // client is a member of. The value of each key will be an object that contains the name of the room
+        // and a listing of all of the clients that are in each room.
+        // eg. roomOccupancyDict[roomId] = {
+        //      chatRoomName: roomName,
+        //      listOfClientObjects: [],
+        //      dictOfClientObjects: {},
+        // }
+        $scope.roomOccupancyDict = {};
 
         $scope.receivedChatMessageObject = {
             messageString: undefined,

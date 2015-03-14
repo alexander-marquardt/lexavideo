@@ -31,15 +31,18 @@ angular.module('lxChatRoom.services', [])
 
         return {
 
-            addUserToRoom : function(scope) {
+            addUserToRoom : function() {
 
+                // For now, we pull the room name from the URL - this will likely change in future versions
+                // of our code.
+                var chatRoomName = $location.path().replace(/\//, '');
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();
 
-                $log.log('Initializing; room=' + scope.roomOccupancyObject.chatRoomName + '.');
+                $log.log('Initializing; room=' + chatRoomName + '.');
 
 
                 var roomObj = {};
-                roomObj.chatRoomName = scope.roomOccupancyObject.chatRoomName;
+                roomObj.chatRoomName = chatRoomName;
 
                 // Pass userId when creating/entering into the room, because if this is the first user to
                 // enter a given room name, then they will be stored as the "creator" of that room

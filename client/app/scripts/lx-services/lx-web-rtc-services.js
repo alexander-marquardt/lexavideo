@@ -197,7 +197,7 @@ webRtcServices.service('lxIceService', function($log, lxMessageService) {
     this.onIceCandidate = function(clientId, remoteClientId) {
         return function(event) {
             if (event.candidate) {
-                lxMessageService.sendMessage('sdp', {type: 'candidate',
+                lxMessageService.sendMessageToClientFn('sdp', {type: 'candidate',
                     label: event.candidate.sdpMLineIndex,
                     id: event.candidate.sdpMid,
                     candidate: event.candidate.candidate},
@@ -261,7 +261,7 @@ webRtcServices.factory('lxSessionDescriptionService',
 
                 pc.setLocalDescription(sessionDescription,
                     onSetSessionDescriptionSuccess, onSetSessionDescriptionError);
-                lxMessageService.sendMessage('sdp', sessionDescription, clientId, remoteClientId);
+                lxMessageService.sendMessageToClientFn('sdp', sessionDescription, clientId, remoteClientId);
             };
         };
 
