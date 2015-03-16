@@ -6,11 +6,10 @@
         <div class="col-xs-12 cl-col-xs-smaller-left-right-padding">
 
             <div ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
-                <div class="panel  cl-panel-xs-margin cl-transition-border cl-chat-panel"
-                     ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'panel-primary' : 'panel-waiting'"
+                <div class="panel  cl-panel-xs-margin cl-transition-border cl-chat-panel panel-primary"
                      ng-click="userHasAlreadyClickedInChatPanel = true">
 
-                    <div class="panel-heading  cl-transition-opacity-and-background-color cl-chat-panel-heading">
+                    <div class="col-xs-12 panel-heading  cl-transition-opacity-and-background-color cl-chat-panel-heading">
                         <span class="cl-text-size-2_0em" style="display:inline-block;line-height:1em;">
                             <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
                             &nbsp;{{ roomOccupancyObject.chatRoomName }}&nbsp;
@@ -20,6 +19,35 @@
                         <span ng-show="roomOccupancyObject.listOfClientObjects.length == 2">Guest has joined</span>
                         <span ng-show="roomOccupancyObject.listOfClientObjects.length > 2">Multiple guests have joined</span>
 
+                        <div class="btn-group pull-right" dropdown>
+                            <button type="button" class="btn btn-primary dropdown-toggle " data-toggle="dropdown">
+                                Members <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu cl-chat-group-members-dropdown " role="menu">
+                                <li>foo1</li>
+                                <li>afsdfas</li>
+                                <li>fafdsdsfasdfasdfoo1</li>
+                                <li>asdfdasfadsfads</li>
+                                <li>asdfdasfadsfads</li>
+                                <li>asdfdasfadsfads</li>
+                                <li>asdfdasfadsfads</li>
+                                <li>asdfdasfadsfads</li>
+
+                                <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
+                                    <span style="white-space:nowrap;">
+                                        <span  class='cl-chat-group-video-icon-container'>
+                                            <button type="button"
+                                                class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
+                                                ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClientObj.clientId)"
+                                                >
+                                                <span class="icon-lx-video-camera-filled"></span>
+                                            </button>
+                                        </span>
+                                        {{ remoteClientObj.userName }}
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
 
@@ -32,27 +60,7 @@
                             <!--'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>-->
                         <div ng-class="'cl-dummy-blank-div-in-short-chat-panel'"></div>
 
-                        <div class="panel cl-chat-group-members-panel"
-                             ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'panel-primary' : 'panel-waiting'">
-                            <div class="panel-heading  cl-transition-opacity-and-background-color cl-chat-group-members-panel-header">
-                                Group participants
-                            </div>
-                            <div class="panel-body cl-chat-group-members-panel-body">
-                                <div ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
 
-                                    <span  class='cl-chat-group-video-icon-container'>
-                                        <button type="button"
-                                            class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
-                                            ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClientObj.clientId)"
-                                            >
-                                            <span class="icon-lx-video-camera-filled"></span>
-                                        </button>
-                                    </span>
-                                    {{ remoteClientObj.userName }}
-
-                                </div>
-                            </div>
-                        </div>
 
                         <div lx-show-chat-messages-directive></div>
 
@@ -102,7 +110,6 @@
                                 <form name="sendMessageForm" role="form" novalidate>
                                     <div class="input-group">
                                         <input class="form-control input-sm"
-                                               ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? '' : 'cl-invalid-input-glow'"
                                                name="messageInputElem"
                                                placeholder="Type your message here..."
                                                ng-model="sendMessageFormScope.inputMessageString"
@@ -115,8 +122,7 @@
 
                                         <span class="input-group-btn">
                                             <button ng-click="sendChatMessageFn(roomId)"
-                                                    class="btn  btn-sm pull-right"
-                                                    ng-class="roomOccupancyObject.listOfClientObjects.length > 1 ? 'btn-primary' : 'btn-danger'"
+                                                    class="btn  btn-sm pull-right  'btn-primary'"
                                                     ng-disabled="sendMessageForm.$invalid">
                                                 Send
                                             </button>

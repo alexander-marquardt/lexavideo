@@ -9,11 +9,9 @@ $tall-chat-panel-height: 400px;
 $estimated-bubble-height: 30px;
 
 $chat-bubble-zindex: 10;
-$chat-group-members-zindex: 20;
-$group-members-panel-header-height: 30px;
 
 .cl-chat-row {
-  color: #777777;
+  color: $gray-dark;
 }
 
 // This div is used to push the chat down to the bottom of the chat panel when there are just a few
@@ -49,23 +47,10 @@ $group-members-panel-header-height: 30px;
   height: $tall-chat-panel-height;
 }
 
-.cl-chat-group-members-panel {
-  position: absolute;
-  top: $chat-panel-heading-height + $chat-groups-members-margin;
-  right: $chat-groups-members-margin;
+.cl-chat-group-members-dropdown {
   max-width: $screen-xs-max/2;
-  z-index: $chat-group-members-zindex;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-}
-
-.cl-chat-group-members-panel-header {
-  height: $group-members-panel-header-height;
-  padding: 5px;
-}
-.cl-chat-group-members-panel-body
-{
-  text-align: left;
-  padding: 0px 5px 0px 5px;
+  max-height: $short-chat-panel-height - 2*$estimated-bubble-height;
+  color: $gray-dark;
   overflow-y: scroll;
 }
 
@@ -86,15 +71,6 @@ $group-members-panel-header-height: 30px;
   vertical-align: middle;
   width: 20px;
 }
-
-.cl-chat-panel-body-short .cl-chat-group-members-panel-body {
-  max-height: $short-chat-panel-height / 2 - $group-members-panel-header-height;
-}
-
-.cl-chat-panel-body-tall .cl-chat-group-members-panel-body{
-  max-height: $tall-chat-panel-height / 2 - $group-members-panel-header-height;
-}
-
 
 .bubble {
   display: block;
