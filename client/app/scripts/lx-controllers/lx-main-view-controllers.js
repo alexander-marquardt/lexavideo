@@ -91,6 +91,12 @@ angular.module('lxMainView.controllers', [])
             errorEnteringIntoRoomInfoObj: null
         };
 
+        // Track if the user has chosen to show or hide the groupMembersDropdown. This is placed in the
+        // mainViewController because we wish to maintain this state between different views.
+        $scope.groupMembersDropdownStatus = {
+            isOpen: true
+        };
+
         lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function(response) {
             $scope.lxMainViewCtrl.channelToken = response.data.channelToken;
 
