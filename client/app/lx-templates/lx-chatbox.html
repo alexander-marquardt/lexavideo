@@ -19,34 +19,27 @@
                         <span ng-show="roomOccupancyObject.listOfClientObjects.length == 2">Guest has joined</span>
                         <span ng-show="roomOccupancyObject.listOfClientObjects.length > 2">Multiple guests have joined</span>
 
-                        <div class="btn-group pull-right" dropdown>
-                            <button type="button" class="btn btn-primary dropdown-toggle " data-toggle="dropdown">
-                                Members <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu cl-chat-group-members-dropdown " role="menu">
-                                <li>foo1</li>
-                                <li>afsdfas</li>
-                                <li>fafdsdsfasdfasdfoo1</li>
-                                <li>asdfdasfadsfads</li>
-                                <li>asdfdasfadsfads</li>
-                                <li>asdfdasfadsfads</li>
-                                <li>asdfdasfadsfads</li>
-                                <li>asdfdasfadsfads</li>
-
-                                <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
-                                    <span style="white-space:nowrap;">
-                                        <span  class='cl-chat-group-video-icon-container'>
-                                            <button type="button"
-                                                class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
-                                                ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClientObj.clientId)"
-                                                >
-                                                <span class="icon-lx-video-camera-filled"></span>
-                                            </button>
+                        <div ng-controller="lxGroupMembersDropdownCtrl" class="pull-right">
+                            <div class="btn-group pull-right" lx-dropdown is-open="status.isOpen" lx-dropdown-toggle>
+                                <button type="button" class="btn btn-primary">
+                                    Members <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu cl-chat-group-members-dropdown " role="menu">
+                                    <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
+                                        <span style="white-space:nowrap;">
+                                            <span  class='cl-chat-group-video-icon-container'>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
+                                                    ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClientObj.clientId)"
+                                                    >
+                                                    <span class="icon-lx-video-camera-filled"></span>
+                                                </button>
+                                            </span>
+                                            {{ remoteClientObj.userName }}
                                         </span>
-                                        {{ remoteClientObj.userName }}
-                                    </span>
-                                </li>
-                            </ul>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 

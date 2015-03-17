@@ -88,5 +88,16 @@ angular.module('lxChatbox.controllers', [])
                 $scope.sendMessageTime = new Date().getTime();
             });
         };
-    }
-);
+    })
+
+    .controller('lxGroupMembersDropdownCtrl',
+    function (
+        $scope
+        ) {
+
+            // We want the group-members dropdown menu to be shown until the user removes it.
+            $scope.status = {
+                isOpen: true
+            }
+        }
+    );
