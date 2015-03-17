@@ -10,49 +10,8 @@ angular.module('lx.ui.bootstrap.dropdown', [])
   openClass: 'open'
 })
 
-.service('lxDropdownService', ['$document', function($document) {
-  var openScope = null;
 
-  this.open = function( lxDropdownScope ) {
-    if ( !openScope ) {
-//      $document.bind('click', closeDropdown);
-//      $document.bind('keydown', escapeKeyBind);
-    }
-
-    if ( openScope && openScope !== lxDropdownScope ) {
-        openScope.isOpen = false;
-    }
-
-    openScope = lxDropdownScope;
-  };
-
-  this.close = function( lxDropdownScope ) {
-    if ( openScope === lxDropdownScope ) {
-      openScope = null;
-      $document.unbind('click', closeDropdown);
-      $document.unbind('keydown', escapeKeyBind);
-    }
-  };
-
-  var closeDropdown = function( evt ) {
-    if (evt && evt.isDefaultPrevented()) {
-        return;
-    }
-
-    openScope.$apply(function() {
-      openScope.isOpen = false;
-    });
-  };
-
-  var escapeKeyBind = function( evt ) {
-    if ( evt.which === 27 ) {
-      openScope.focusToggleElement();
-      closeDropdown();
-    }
-  };
-}])
-
-.controller('lxDropdownController', ['$scope', '$attrs', '$parse', 'lxDropdownConfig', 'lxDropdownService', '$animate', function($scope, $attrs, $parse, lxDropdownConfig, lxDropdownService, $animate) {
+.controller('lxDropdownController', ['$scope', '$attrs', '$parse', 'lxDropdownConfig', '$animate', function($scope, $attrs, $parse, lxDropdownConfig, $animate) {
   var self = this,
       scope = $scope.$new(), // create a child scope so we are not polluting original one
       openClass = lxDropdownConfig.openClass,
@@ -90,13 +49,6 @@ angular.module('lx.ui.bootstrap.dropdown', [])
 
   scope.$watch('isOpen', function( isOpen, wasOpen ) {
     $animate[isOpen ? 'addClass' : 'removeClass'](self.$element, openClass);
-
-    if ( isOpen ) {
-      scope.focusToggleElement();
-      lxDropdownService.open( scope );
-    } else {
-      lxDropdownService.close( scope );
-    }
 
     setIsOpen($scope, isOpen);
     if (angular.isDefined(isOpen) && isOpen !== wasOpen) {
