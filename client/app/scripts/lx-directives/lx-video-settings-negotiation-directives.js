@@ -65,8 +65,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxVideoSettingsNegotiationDirec
 
 
                     case 'mustEnableVideoToStartTransmission':
-                        message = 'You must give access to your camera before we can setup a video conversation. ' +
-                        'Click <a href="" ng-click="showCameraAndMicrophoneInstructions()">here</a> for more details';
+                        message = '<a href="" ng-click="showCameraAndMicrophoneInstructions()">' +
+                            'Click here</a> to to activate video. ';
                         showMessageInVideoWindow(scope, overlayElem, message);
                         break;
 
