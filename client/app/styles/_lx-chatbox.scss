@@ -67,9 +67,10 @@ $chat-bubble-zindex: 10;
 }
 
 .cl-chat-group-video-icon-container {
+  padding-left: 4px;
+  padding-right: 4px;
   display:inline-block;
   vertical-align: middle;
-  width: 20px;
 }
 
 .bubble {
