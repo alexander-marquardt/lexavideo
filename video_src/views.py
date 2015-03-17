@@ -74,9 +74,6 @@ class LandingPageMain(webapp2.RequestHandler):
         response_type = 'jinja'
 
         params = {
-            # Note: pass jinja variables using snake_case, and javascript variables using camelCase
-            'site_name_dot_com': constants.site_name_dot_com,
-
             # The following is an object that passes variables to the javascript code.
             'serverLandingPageParamsJson': json.dumps(
                 {'minRoomChars': constants.room_min_chars,
@@ -103,6 +100,8 @@ class MainPage(registration_and_login.BaseHandler):
         target_page = 'index.html'
         response_type = 'jinja'
         params = {
+            # Note: pass jinja variables using snake_case, and javascript variables using camelCase
+            'site_name_dot_com': constants.site_name_dot_com,
             'site_name_for_display': constants.site_name_for_display,
             'userInfoEmbeddedInHtmlJson': json.dumps(
                 {

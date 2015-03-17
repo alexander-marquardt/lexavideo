@@ -105,22 +105,6 @@ angular.module('lxUseChatRoom.controllers', [])
 //            ackMessageUniqueId: null
 //        };
 
-
-        // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
-        // here because information received on the channel needs to be written into these objects.
-        $scope.videoSignalingObject = {
-
-            localUserAccessCameraAndMicrophoneStatus: 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
-
-            // videoSignalingStatusForUserFeedback indicates what message/status the user should be shown about
-            // the current video type requested/allowed/waiting for/etc.
-            videoSignalingStatusForUserFeedback: null,
-
-            // The following is a flag that is used for debugging - will over-ride ng-show directives on the video
-            // windows to show any window that has this flag on it when it is set to true.
-            debugShowAllVideoWindows: false
-        };
-
     })
 
     .controller('lxMainVideoCtrl',

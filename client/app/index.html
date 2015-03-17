@@ -41,6 +41,10 @@
             <div class="row cl-row-no-xs-margins">
                 <div ng-view></div>
             </div>
+
+            {% include "lx-templates/lx-video-elements.html" %}
+            <div lx-initialize-channel-directive></div>
+            <div lx-initialize-turn-directive></div>
         </div>
 
     </div>
