@@ -10,15 +10,19 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/', {
         templateUrl: function(){
-            return '/_lx/lx-templates/lx-landing-page-main.html';
+                return '/_lx/lx-templates/lx-landing-page-main.html';
+            },
+            controller: 'lxLandingPageCtrl'
         }
-    });
+    );
 
     $routeProvider.when('/:chatRoomName', {
         templateUrl: function(params) {
-            return '/_lx/lx-templates/lx-chat-room-main.html/' + params.chatRoomName;
+                return '/_lx/lx-templates/lx-chat-room-main.html/' + params.chatRoomName;
+            },
+            controller: 'lxChatRoomCtrl'
         }
-    });
+    );
 
     $routeProvider.otherwise({
         redirectTo: '/'
