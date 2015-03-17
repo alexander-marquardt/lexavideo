@@ -24,10 +24,6 @@ angular.module('lxUseChatRoom.controllers', [])
              ) {
 
 
-
-
-        $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
-
         $scope.lxChatRoomCtrl = {
 
             userSuccessfullyEnteredRoom: false,

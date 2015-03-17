@@ -22,6 +22,7 @@ angular.module('lxMainView.controllers', [])
         // Copy information embedded in the Html into an angular service.
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
+        $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
         // remoteVideoObject will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoObject
         // There will be one object for each remote client that the local user is exchanging video with.

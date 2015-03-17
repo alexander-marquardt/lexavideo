@@ -43,7 +43,7 @@ class GetView(webapp2.RequestHandler):
         write_response(self.response, response_type, target_page, params)
 
 
-class UserChatRoomMain(webapp2.RequestHandler):
+class ChatBox(webapp2.RequestHandler):
     
     @handle_exceptions
     def get(self, current_template, chat_room_name_from_url):

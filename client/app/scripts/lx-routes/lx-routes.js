@@ -18,7 +18,7 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider.when('/:chatRoomName', {
         templateUrl: function(params) {
-                return '/_lx/lx-templates/lx-chat-room-main.html/' + params.chatRoomName;
+                return '/_lx/lx-templates/lx-chatbox.html/' + params.chatRoomName;
             },
             controller: 'lxChatRoomCtrl'
         }
