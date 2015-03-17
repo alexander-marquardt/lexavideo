@@ -1,0 +1,23 @@
+
+<div ng-app="videoApp">
+    <div class="container cl-container-no-xs-padding">
+
+        {% include "lx-templates/lx-title-row.html" %}
+
+
+        <div ng-controller="lxVideoChatAppViewCtrl">
+            <!-- ng-view will call in the appropriate template for the current URL location -->
+            <div class="row cl-row-no-xs-margins">
+                <div ng-view></div>
+            </div>
+
+            {% include "lx-templates/lx-video-elements.html" %}
+            <div lx-initialize-channel-directive></div>
+            <div lx-initialize-turn-directive></div>
+
+            {% include "lx-templates/lx-debugging-info.html" %}
+
+        </div>
+
+    </div>
+</div>
