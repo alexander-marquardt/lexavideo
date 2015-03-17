@@ -20,8 +20,10 @@
                         <span ng-show="roomOccupancyObject.listOfClientObjects.length > 2">Multiple guests have joined</span>
 
                         <div ng-controller="lxGroupMembersDropdownCtrl" class="pull-right">
-                            <div class="btn-group pull-right" lx-dropdown is-open="status.isOpen" lx-dropdown-toggle>
-                                <button type="button" class="btn btn-primary">
+                            <div class="btn-group pull-right"
+                                 ng-class="status.isOpen ? 'open': ''">
+                                <button type="button" class="btn btn-primary"
+                                        ng-click="status.isOpen=!status.isOpen">
                                     Members <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu cl-chat-group-members-dropdown " role="menu">

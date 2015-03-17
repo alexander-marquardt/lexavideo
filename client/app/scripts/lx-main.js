@@ -34,9 +34,6 @@ var videoApp = angular.module('videoApp', [
     'lxUtility.services',
     'lxVideoNegotiation.services',
 
-    // replacement of builtin modules
-    'lx.ui.bootstrap.dropdown',
-
     // vendor directives
     'scrollGlue.directives',
 
