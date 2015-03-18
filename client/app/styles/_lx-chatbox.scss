@@ -4,9 +4,8 @@ $chat-panel-footer-height: 50px;
 $chat-groups-members-margin: 15px;
 
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
-// it does not overflow the bottom of the div. Note $line-height-computed in the following calculation is the margin
-// at the bottom that is used in the bootstrap css panel definition.
-$short-chat-panel-height: $sliding-display-area-height - $chat-panel-heading-height - $chat-panel-footer-height - $line-height-computed;
+// it does not overflow the bottom of the div.
+$short-chat-panel-height: $sliding-display-area-height - $chat-panel-heading-height - $chat-panel-footer-height;
 
 $tall-chat-panel-height: 400px;
 

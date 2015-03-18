@@ -49,11 +49,7 @@
 .cl-main-control-dropdown-menu {
   z-index: $zindex-dropdown + 10; // make this dropdown appear above any other dropdowns
 }
-.cl-panel-xs-margin {
-    @media(max-width: $screen-xs-max) {
-      margin-bottom: 5px;
-    }
-}
+
 
 
 .cl-my-well {
@@ -173,5 +169,11 @@ $transition-border: border $fast-easing-delay ease;
 
 .cl-sliding-display-area-wrapper {
   position: relative;
-  height: $sliding-display-area-height;
+  // Note $line-height-computed in the following calculation is the margin
+  // at the bottom that is used in the bootstrap css panel definition.
+  height: $sliding-display-area-height + $line-height-computed;
+
+  @media(max-width: $screen-xs-max) {
+    height: $sliding-display-area-height + $line-height-computed/2;
+  }
 }
