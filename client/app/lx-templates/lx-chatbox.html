@@ -1,24 +1,23 @@
 <!-- This code came from http://www.bootply.com/6mdOs5FvKU -->
 {% raw %}
 
-<div ng-if="mainMenuObject.showMainMenu" class="col-xs-4 cl-main-control-menu">
-    <ul>
-        <li><a href="#">My Chats</a></li>
-        <li class="divider"></li>
-        <li><a href="#">All Rooms</a></li>
-        <li class="divider"></li>
-        <li><a href="#">Friends</a></li>
-        <li class="divider"></li>
-        <li><a href="#">Profile</a></li>
-        <li class="divider"></li>
-        <li><a href="#">Settings</a></li>
-        <li class="divider"></li>
-        <li><a href="#">Logout</a></li>
-    </ul>
+<div ng-if="mainMenuObject.showMainMenu" class="col-xs-4 cl-animate-main-control-menu  cl-col-xs-smaller-left-right-padding">
+        <ul class="cl-main-control-menu">
+            <li><a href="#">My Chats</a></li>
+            <li class="divider"></li>
+            <li><a href="#">All Rooms</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Friends</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Profile</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Settings</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
 </div>
 
-<div class="col-xs-12 cl-col-xs-smaller-left-right-padding cl-main-ng-view-area-div"
-        ng-class="mainMenuObject.showMainMenu? 'col-xs-8 col-xs-offset-4' : 'col-xs-12'">
+<div class="col-xs-12 cl-col-xs-smaller-left-right-padding cl-main-ng-view-area-div">
 
     <div ng-controller="lxChatboxMainCtrl">
 
@@ -60,9 +59,8 @@
                     </div>
                 </div>
 
-                <div class="panel-body cl-chat-panel-body"
-                     scroll-glue="chatPanelIsGlued"
-                     ng-class="'cl-chat-panel-body-short'">
+                <div class="panel-body cl-chat-panel-body cl-chat-panel-body-short"
+                     scroll-glue="chatPanelIsGlued">
                      <!--ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
                         <!--'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">-->
                     <!--<div ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
@@ -111,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-footer">
+                <div class="panel-footer cl-chat-panel-footer">
                     <div class="row">
 
                         <!-- Chat message input and send message button -->

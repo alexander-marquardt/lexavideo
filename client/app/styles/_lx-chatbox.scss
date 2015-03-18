@@ -4,8 +4,8 @@ $chat-panel-footer-height: 50px;
 $chat-groups-members-margin: 15px;
 
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
-// it does not overflow the bottom of the div.
-$short-chat-panel-height: $sliding-display-area-height - $chat-panel-heading-height - $chat-panel-footer-height;
+// it does not overflow the bottom of the div. Subtract 2px for outer panel border.
+$short-chat-panel-body-height: $sliding-display-area-height - $chat-panel-heading-height - $chat-panel-footer-height - 2px;
 
 $tall-chat-panel-height: 400px;
 
@@ -24,7 +24,7 @@ $chat-bubble-zindex: 10;
 // chat messages sent. This makes it more likely that if the user is looking at the video that they
 // will see the new message.
 .cl-dummy-blank-div-in-short-chat-panel {
-  height: $short-chat-panel-height - $estimated-bubble-height;
+  height: $short-chat-panel-body-height - $estimated-bubble-height;
 }
 
 .cl-dummy-blank-div-in-tall-chat-panel {
@@ -37,10 +37,12 @@ $chat-bubble-zindex: 10;
 
 .cl-chat-panel-heading {
   height: $chat-panel-heading-height;
+  box-sizing: border-box;
 }
 
 .cl-chat-panel-footer {
   height: $chat-panel-footer-height;
+  box-sizing: border-box;
 }
 
 .cl-chat-panel-body
@@ -50,7 +52,8 @@ $chat-bubble-zindex: 10;
 }
 
 .cl-chat-panel-body-short {
-  height: $short-chat-panel-height;
+  height: $short-chat-panel-body-height;
+  box-sizing: border-box;
 }
 
 .cl-chat-panel-body-tall {
@@ -59,7 +62,7 @@ $chat-bubble-zindex: 10;
 
 .cl-chat-group-members-dropdown {
   max-width: $screen-xs-max/2;
-  max-height: $short-chat-panel-height - 2*$estimated-bubble-height;
+  max-height: $short-chat-panel-body-height - 2*$estimated-bubble-height;
   color: $gray-dark;
   overflow-y: scroll;
 }
