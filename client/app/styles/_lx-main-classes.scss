@@ -40,7 +40,7 @@ $xs-padding-override: 2px;
     -ms-transition: opacity;
     -o-transition: opacity;
     transition: opacity;
-    transition-duration: 0.5s;
+    transition-duration: $slide-main-menu-duration;
   }
 }
 
