@@ -7,10 +7,8 @@
 
         <div ng-controller="lxVideoChatAppViewCtrl">
             <!-- ng-view will call in the appropriate template for the current URL location -->
-            <div class="row cl-row-no-xs-margins">
-                <div class="col-xs-12 cl-col-xs-smaller-left-right-padding">
-                    <div ng-view></div>
-                </div>
+            <div class="row cl-row-no-xs-margins cl-sliding-display-area-wrapper">
+                <div ng-view></div>
             </div>
 
             {% include "lx-templates/lx-video-elements.html" %}

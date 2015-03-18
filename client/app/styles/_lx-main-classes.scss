@@ -171,3 +171,7 @@ $transition-border: border $fast-easing-delay ease;
   font-size: 2em;
 }
 
+.cl-sliding-display-area-wrapper {
+  position: relative;
+  height: $sliding-display-area-height;
+}
