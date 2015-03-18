@@ -200,7 +200,16 @@ $xs-padding-override: 2px;
   // at the bottom that is used in the bootstrap css panel definition.
   height: $sliding-display-area-height + $line-height-computed;
 
+  overflow: hidden;
+
   @media(max-width: $screen-xs-max) {
     height: $sliding-display-area-height + $line-height-computed/2;
   }
+}
+
+.cl-hide-row-overflow {
+    margin-right: $grid-gutter-width / 2;
+    @media(max-width: $screen-xs-max) {
+      margin-right: $xs-padding-override;
+    }
 }

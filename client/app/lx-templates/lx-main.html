@@ -6,8 +6,11 @@
             {% include "lx-templates/lx-title-row.html" %}
 
             <!-- ng-view will call in the appropriate template for the current URL location -->
-            <div class="row cl-row-no-xs-margins cl-main-ng-view-area-wrapper">
-                <div ng-view></div>
+            <div class="row cl-row-no-xs-margins">
+                <div class=" cl-main-ng-view-area-wrapper "
+                     ng-class="mainMenuObject.showMainMenu? 'cl-hide-row-overflow':''" >
+                    <div ng-view></div>
+                </div>
             </div>
 
             {% include "lx-templates/lx-video-elements.html" %}
