@@ -1,3 +1,5 @@
+
+
 // the following call will override conflicting variable declarations in the bootstrap definitions.
 @import "./lx-override-bootstrap.scss";
 
@@ -6,8 +8,8 @@
 // endbower
 
 @import "./lx-custom-variables";
+@import "./animate";
 @import "./lx-ui-components";
-@import "./lx-animations";
 @import "./lx-main-classes";
 @import "./lx-video-elements";
 @import "./lx-access-camera-prompts";

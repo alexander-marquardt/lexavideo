@@ -1,5 +1,24 @@
 .cl-main-control-menu {
   z-index: $zindex-dropdown;
+  &.ng-enter {
+    animation: slideInLeft $slide-main-menu-duration;
+  }
+  &.ng-leave {
+    animation: slideOutLeft $slide-main-menu-duration;
+  }
+}
+// cl-sliding-div is used for the divs that are animated in and out of the cl-sliding-display-area-wrapper div
+$transition-width-and-margin: width margin;
+.cl-main-ng-view-area-div {
+  position: absolute;
+  top: 0;
+
+  -webkit-transition: $transition-width-and-margin;
+  -moz-transition: $transition-width-and-margin;
+  -ms-transition: $transition-width-and-margin;
+  -o-transition: $transition-width-and-margin;
+  transition: $transition-width-and-margin;
+  transition-duration: $slide-main-menu-duration;
 }
 
 .cl-title-row-top-bottom-margin {
@@ -62,20 +81,6 @@
 }
 
 
-.cl-show-hide-fade {
-  -webkit-transition:opacity linear 0.5s;
-  -moz-transition: opacity linear 0.5s;
-  -o-transition: opacity linear 0.5s;
-  transition:opacity linear 0.5s;
-}
-
-.cl-show-hide-fade.ng-hide-add, .cl-show-hide-fade.ng-hide-remove {
-  display: block!important;
-}
-
-.cl-show-hide-fade.ng-hide, .cl-show-hide-fade.cl-hide {
-  opacity:0;
-}
 
 .cl-room-name-input {
   max-width: $screen-xs-max;
@@ -127,25 +132,6 @@
   min-height: 20px;
 }
 
-$fast-easing-delay: 0.35s;
-
-$transition-opacity-and-background-color: opacity $fast-easing-delay ease,  background-color $fast-easing-delay ease;
-.cl-transition-opacity-and-background-color {
-  -webkit-transition: $transition-opacity-and-background-color;
-  -moz-transition: $transition-opacity-and-background-color;
-  -ms-transition: $transition-opacity-and-background-color;
-  -o-transition: $transition-opacity-and-background-color;
-  transition: $transition-opacity-and-background-color;
-}
-
-$transition-border: border $fast-easing-delay ease;
-.cl-transition-border {
-  -webkit-transition: $transition-border;
-  -moz-transition: $transition-border;
-  -ms-transition: $transition-border;
-  -o-transition: $transition-border;
-  transition: $transition-border;
-}
 
 .cl-text-danger {
   color: $brand-danger;
@@ -164,7 +150,7 @@ $transition-border: border $fast-easing-delay ease;
   font-size: 2em;
 }
 
-.cl-sliding-display-area-wrapper {
+.cl-main-ng-view-area-wrapper {
   position: relative;
   // Note $line-height-computed in the following calculation is the margin
   // at the bottom that is used in the bootstrap css panel definition.
@@ -175,13 +161,3 @@ $transition-border: border $fast-easing-delay ease;
   }
 }
 
-// cl-sliding-div is used for the divs that are animated in and out of the cl-sliding-display-area-wrapper div
-.cl-sliding-div {
-  position: absolute;
-  top: 0;
-}
-
-// if we are showing the menu beside the sliding div, then we need to move the div over to make room
-.cl-siding-div-offset {
-
-}

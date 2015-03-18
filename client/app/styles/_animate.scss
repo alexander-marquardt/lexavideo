@@ -1,0 +1,95 @@
+// Copied from https://github.com/daneden/animate.css/blob/master/animate.css
+
+@-webkit-keyframes slideInLeft {
+  0% {
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+    visibility: visible;
+  }
+
+  100% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    -webkit-transform: translateX(-100%);
+    -ms-transform: translateX(-100%);
+    transform: translateX(-100%);
+    visibility: visible;
+  }
+
+  100% {
+    -webkit-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+@-webkit-keyframes slideOutLeft {
+  0% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  100% {
+    visibility: hidden;
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideOutLeft {
+  0% {
+    -webkit-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  100% {
+    visibility: hidden;
+    -webkit-transform: translateX(-100%);
+    -ms-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
+}
+
+
+
+$fast-easing-delay: 0.35s;
+
+$transition-opacity-and-background-color: opacity $fast-easing-delay ease,  background-color $fast-easing-delay ease;
+.cl-transition-opacity-and-background-color {
+  -webkit-transition: $transition-opacity-and-background-color;
+  -moz-transition: $transition-opacity-and-background-color;
+  -ms-transition: $transition-opacity-and-background-color;
+  -o-transition: $transition-opacity-and-background-color;
+  transition: $transition-opacity-and-background-color;
+}
+
+$transition-border: border $fast-easing-delay ease;
+.cl-transition-border {
+  -webkit-transition: $transition-border;
+  -moz-transition: $transition-border;
+  -ms-transition: $transition-border;
+  -o-transition: $transition-border;
+  transition: $transition-border;
+}
+
+
+.cl-show-hide-fade {
+  -webkit-transition:opacity linear 0.5s;
+  -moz-transition: opacity linear 0.5s;
+  -o-transition: opacity linear 0.5s;
+  transition:opacity linear 0.5s;
+}
+
+.cl-show-hide-fade.ng-hide-add, .cl-show-hide-fade.ng-hide-remove {
+  display: block!important;
+}
+
+.cl-show-hide-fade.ng-hide, .cl-show-hide-fade.cl-hide {
+  opacity:0;
+}
