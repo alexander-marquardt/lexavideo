@@ -2,10 +2,9 @@
 <div ng-app="videoApp">
     <div class="container cl-container-no-xs-padding">
 
-        {% include "lx-templates/lx-title-row.html" %}
-
-
         <div ng-controller="lxVideoChatAppViewCtrl">
+            {% include "lx-templates/lx-title-row.html" %}
+
             <!-- ng-view will call in the appropriate template for the current URL location -->
             <div class="row cl-row-no-xs-margins cl-sliding-display-area-wrapper">
                 <div ng-view></div>

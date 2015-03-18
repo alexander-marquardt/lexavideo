@@ -1,3 +1,6 @@
+.cl-main-control-menu {
+  z-index: $zindex-dropdown;
+}
 
 .cl-title-row-top-bottom-margin {
   margin-top: 4px;
@@ -44,12 +47,6 @@
       padding-right: 2px;
     }
 }
-
-
-.cl-main-control-dropdown-menu {
-  z-index: $zindex-dropdown + 10; // make this dropdown appear above any other dropdowns
-}
-
 
 
 .cl-my-well {
@@ -176,4 +173,15 @@ $transition-border: border $fast-easing-delay ease;
   @media(max-width: $screen-xs-max) {
     height: $sliding-display-area-height + $line-height-computed/2;
   }
+}
+
+// cl-sliding-div is used for the divs that are animated in and out of the cl-sliding-display-area-wrapper div
+.cl-sliding-div {
+  position: absolute;
+  top: 0;
+}
+
+// if we are showing the menu beside the sliding div, then we need to move the div over to make room
+.cl-siding-div-offset {
+
 }

@@ -1,8 +1,27 @@
 <!-- This code came from http://www.bootply.com/6mdOs5FvKU -->
 {% raw %}
-<div ng-controller="lxChatboxMainCtrl">
 
-    <div class="col-xs-12 cl-col-xs-smaller-left-right-padding" style="position:absolute; top:0">
+<div ng-if="mainMenuObject.showMainMenu" class="col-xs-4 cl-main-control-menu">
+    <ul>
+        <li><a href="#">My Chats</a></li>
+        <li class="divider"></li>
+        <li><a href="#">All Rooms</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Friends</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Profile</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Settings</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</div>
+
+
+<div class="col-xs-12 cl-col-xs-smaller-left-right-padding cl-sliding-div"
+        ng-class="mainMenuObject.showMainMenu? 'col-xs-8 col-xs-offset-4' : 'col-xs-12'">
+
+    <div ng-controller="lxChatboxMainCtrl">
 
         <div ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
             <div class="panel cl-transition-border cl-chat-panel panel-primary"

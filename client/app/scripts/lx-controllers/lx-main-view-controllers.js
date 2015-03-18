@@ -50,6 +50,13 @@ angular.module('lxMainView.controllers', [])
             isMicrophoneMuted: false
         };
 
+        $scope.mainMenuObject = {
+            showMainMenu: false
+        };
+        $scope.toggleMainMenu = function() {
+            $scope.mainMenuObject.showMainMenu = !$scope.mainMenuObject.showMainMenu;
+        };
+
         // videoExchangeObjectsDict will be populated with calls to
         // lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject(), and there will be one key
         // for each remote client that the local user is exchanging video settings with.
