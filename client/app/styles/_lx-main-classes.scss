@@ -9,6 +9,7 @@ $xs-padding-override: 2px;
   margin: 0; // override default ul
   min-width: 0px;
   box-shadow: none;
+  background: $gray-lighter;
 }
 
 .cl-animate-main-control-menu {
@@ -23,11 +24,27 @@ $xs-padding-override: 2px;
   }
 }
 
-// cl-sliding-div is used for the divs that are animated in and out of the cl-sliding-display-area-wrapper div
-.cl-main-ng-view-area-div {
-  position: absolute;
-  top: 0;
+.cl-transition-opacity {
+  &.ng-enter,
+  &.ng-leave.ng-leave-active {
+    opacity: 0;
+  }
+  &.ng-leave,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+  }
 
+  &.ng-enter, &.ng-leave {
+    -webkit-transition: opacity;
+    -moz-transition: opacity;
+    -ms-transition: opacity;
+    -o-transition: opacity;
+    transition: opacity;
+    transition-duration: 0.5s;
+  }
+}
+
+.cl-transition-margins {
   -webkit-transition: margin;
   -moz-transition: margin;
   -ms-transition: margin;
@@ -35,8 +52,13 @@ $xs-padding-override: 2px;
   transition: margin;
   transition-duration: $slide-main-menu-duration;
 }
+// cl-sliding-div is used for the divs that are animated in and out of the cl-sliding-display-area-wrapper div
+.cl-main-ng-view-area-div {
+  position: absolute;
+  top: 0;
+}
 
-.cl-pull-md-div-left {
+.cl-pull-inner-view-area-div-left {
   margin-left: -$grid-gutter-width;
 
   @media(max-width: $screen-xs-max) {

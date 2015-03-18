@@ -1,7 +1,7 @@
 <!-- This code came from http://www.bootply.com/6mdOs5FvKU -->
 {% raw %}
 
-<div ng-if="mainMenuObject.showMainMenu" class="col-xs-4 cl-animate-main-control-menu  cl-col-xs-smaller-left-right-padding">
+<div ng-if="mainMenuObject.showMainMenu" class="col-xs-4 cl-animate-main-control-menu  cl-col-xs-smaller-left-right-padding cl-transition-opacity">
         <ul class="dropdown-menu cl-main-control-menu">
             <li><a href="#">My Chats</a></li>
             <li class="divider"></li>
@@ -17,10 +17,11 @@
         </ul>
 </div>
 
-<div class="col-xs-12 cl-col-xs-smaller-left-right-padding cl-main-ng-view-area-div"
+<div class="col-xs-12 cl-col-xs-smaller-left-right-padding cl-main-ng-view-area-div cl-transition-margins"
         ng-class="mainMenuObject.showMainMenu? 'col-xs-offset-4' : ''">
 
-    <div ng-class="mainMenuObject.showMainMenu? 'cl-pull-md-div-left': ''">
+    <div class="cl-transition-margins"
+         ng-class="mainMenuObject.showMainMenu? 'cl-pull-inner-view-area-div-left': ''">
         <div ng-controller="lxChatboxMainCtrl">
 
             <div ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
