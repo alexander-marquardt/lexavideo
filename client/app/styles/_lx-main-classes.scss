@@ -1,15 +1,31 @@
 $xs-padding-override: 2px;
 
+$main-control-background: $gray;
+$main-control-hover-background: $gray-dark;
+$main-control-color: white;
+
 .cl-main-control-menu {
-  position: relative;
-  display: block;
   height: $sliding-display-area-height;
   width: 100%;
   padding: 0;
   margin: 0; // override default ul
   min-width: 0px;
-  box-shadow: none;
-  background: $gray-lighter;
+  background: $main-control-background;
+
+  & .btn-default, & .btn-default.dropdown-toggle, & li, & li>a {
+    background: $main-control-background;
+    color: $main-control-color;
+
+    &:hover, &:active, &:focus {
+      background: $main-control-hover-background;
+      color: $main-control-color;
+    }
+  }
+
+  & ul {
+    background: $main-control-background;
+    color: $main-control-color;
+  }
 }
 
 .cl-animate-main-control-menu {
