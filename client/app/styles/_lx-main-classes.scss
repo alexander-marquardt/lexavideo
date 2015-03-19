@@ -58,6 +58,9 @@ $xs-padding-override: 2px;
   top: 0;
 }
 
+// This class is applied dynamically when the main control menu is shown, and is used for moving the left margin
+// further to the left (to go over top of the gutter), which is necessary if we wish for the  main control
+//menu to butt up against the chatbox.
 .cl-pull-inner-view-area-div-left {
   margin-left: -$grid-gutter-width;
 
@@ -78,13 +81,16 @@ $xs-padding-override: 2px;
 
 /* no-xs-padding/no-xs-margins are used to remove the padding/margin from xs devices. This
    allows us to fully use the screen space for content as opposed to whitespace */
-.cl-container-no-xs-padding {
-  @media(max-width: $screen-xs-max) {
+.cl-container-no-padding {
     padding-left: 0px;
     padding-right: 0px;
-  }
 }
 
+.cl-row-no-margins {
+  margin-left: 0px;
+  margin-right: 0px;
+
+}
 /* Note: at first glance, it may appear that cl-row-no-xs-margins and cl-col-no-xs-padding serve no purpose,
    however, if they are not used, then the right side of the page will be extended by 15px with blank space
    to accommodate the standard bootstrap formatting that uses negative margin on rows to offset the padding
@@ -200,15 +206,16 @@ $xs-padding-override: 2px;
   // at the bottom that is used in the bootstrap css panel definition.
   height: $sliding-display-area-height + $line-height-computed;
 
-  overflow: hidden;
-
   @media(max-width: $screen-xs-max) {
     height: $sliding-display-area-height + $line-height-computed/2;
   }
 }
 
 .cl-hide-row-overflow {
-    margin-right: $grid-gutter-width / 2;
+  overflow: hidden;
+}
+
+.cl-xs-add-right-margin {
     @media(max-width: $screen-xs-max) {
       margin-right: $xs-padding-override;
     }
