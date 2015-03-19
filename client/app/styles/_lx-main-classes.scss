@@ -1,8 +1,9 @@
 $xs-padding-override: 2px;
 
-$main-control-background: $gray;
+$main-control-background: $btn-gray-bg;
 $main-control-hover-background: $gray-dark;
-$main-control-color: white;
+$main-control-color: black;
+$main-control-hover-color: white;
 
 .cl-main-control-menu {
   height: $sliding-display-area-height;
@@ -18,7 +19,7 @@ $main-control-color: white;
 
     &:hover, &:active, &:focus {
       background: $main-control-hover-background;
-      color: $main-control-color;
+      color: $main-control-hover-color;
     }
   }
 
