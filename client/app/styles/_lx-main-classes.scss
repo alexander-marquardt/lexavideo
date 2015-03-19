@@ -61,7 +61,7 @@ $xs-padding-override: 2px;
 // This class is applied dynamically when the main control menu is shown, and is used for moving the left margin
 // further to the left (to go over top of the gutter), which is necessary if we wish for the  main control
 //menu to butt up against the chatbox.
-.cl-pull-inner-view-area-div-left {
+.cl-pull-inner-view-area-margin-left {
   margin-left: -$grid-gutter-width;
 
   @media(max-width: $screen-xs-max) {
