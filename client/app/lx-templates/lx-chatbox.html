@@ -13,10 +13,10 @@
         <div ng-controller="lxChatboxMainCtrl">
 
             <div ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
-                <div class="panel cl-transition-border cl-chat-panel panel-primary"
+                <div class="panel cl-chat-panel panel-primary"
                      ng-click="userHasAlreadyClickedInChatPanel = true">
 
-                    <div class="col-xs-12 panel-heading  cl-transition-opacity-and-background-color cl-chat-panel-heading">
+                    <div class="col-xs-12 panel-heading  cl-chat-panel-heading">
                         <span class="cl-text-size-2_0em" style="display:inline-block;line-height:1em;">
                             <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
                             &nbsp;{{ roomOccupancyObject.chatRoomName }}&nbsp;
