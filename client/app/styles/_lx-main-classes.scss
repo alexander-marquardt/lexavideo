@@ -44,12 +44,12 @@ $xs-padding-override: 2px;
   }
 }
 
-.cl-transition-margins {
-  -webkit-transition: margin;
-  -moz-transition: margin;
-  -ms-transition: margin;
-  -o-transition: margin;
-  transition: margin;
+.cl-transition-margins-and-width {
+  -webkit-transition: margin width;
+  -moz-transition: margin width;
+  -ms-transition: margin width;
+  -o-transition: margin width;
+  transition: margin width;
   transition-duration: $slide-main-menu-duration;
 }
 // cl-sliding-div is used for the divs that are animated in and out of the cl-sliding-display-area-wrapper div
