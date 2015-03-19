@@ -56,6 +56,17 @@ $xs-padding-override: 2px;
 .cl-main-ng-view-area-div {
   position: absolute;
   top: 0;
+
+
+}
+
+.cl-ng-view {
+  &.ng-enter {
+    animation: slideInLeft $slide-main-menu-duration;
+  }
+  &.ng-leave {
+    animation: slideOutRight $slide-main-menu-duration;
+  }
 }
 
 // This class is applied dynamically when the main control menu is shown, and is used for moving the left margin
