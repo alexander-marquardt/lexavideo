@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?52qas4');
-	src:url('fonts/icomoon.eot?#iefix52qas4') format('embedded-opentype'),
-		url('fonts/icomoon.woff?52qas4') format('woff'),
-		url('fonts/icomoon.ttf?52qas4') format('truetype'),
-		url('fonts/icomoon.svg?52qas4#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?668edm');
+	src:url('fonts/icomoon.eot?#iefix668edm') format('embedded-opentype'),
+		url('fonts/icomoon.woff?668edm') format('woff'),
+		url('fonts/icomoon.ttf?668edm') format('truetype'),
+		url('fonts/icomoon.svg?668edm#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -24,11 +24,11 @@
 }
 
 .icon-lx-thin-forward-slash:before {
-	content: "\e601";
+	content: "\e600";
 }
 
 .icon-lx-thick-forward-slash:before {
-	content: "\e600";
+	content: "\e601";
 }
 
 .icon-lx-video-camera-line:before {
@@ -44,7 +44,7 @@
 }
 
 .icon-lx-check-mark:before {
-	content: "\e609";
+	content: "\e605";
 }
 
 .icon-lx-arrow-up:before {
@@ -52,46 +52,62 @@
 }
 
 .icon-lx-video-camera-filled:before {
-	content: "\f03d";
-}
-
-.icon-lx-microphone:before {
-	content: "\f130";
-}
-
-.icon-lx-chat-bubble-left:before {
-	content: "\e112";
-}
-
-.icon-lx-chat-bubble-right:before {
-	content: "\e111";
-}
-
-.icon-lx-time:before {
-	content: "\f017";
-}
-
-.icon-lx-chevron-up:before {
-	content: "\f077";
-}
-
-.icon-lx-chevron-down:before {
-	content: "\f078";
-}
-
-.icon-lx-phone:before {
 	content: "\e607";
 }
 
-.icon-lx-phone-hang-up:before {
+.icon-lx-microphone:before {
 	content: "\e608";
 }
 
-.icon-lx-volume-high:before {
+.icon-lx-chat-bubble-left:before {
+	content: "\e609";
+}
+
+.icon-lx-chat-bubble-right:before {
+	content: "\e60a";
+}
+
+.icon-lx-time:before {
+	content: "\e60b";
+}
+
+.icon-lx-chevron-up:before {
 	content: "\e60c";
 }
 
+.icon-lx-chevron-down:before {
+	content: "\e60d";
+}
+
+.icon-lx-phone:before {
+	content: "\e60e";
+}
+
+.icon-lx-phone-hang-up:before {
+	content: "\e60f";
+}
+
+.icon-lx-volume-high:before {
+	content: "\e610";
+}
+
+.icon-lx-users:before {
+	content: "\e611";
+}
+
+.icon-lx-user-add:before {
+	content: "\e612";
+}
+
+.icon-lx-thumbsup:before {
+	content: "\e613";
+}
+
+.icon-lx-thumbsdown:before {
+	content: "\e614";
+}
+
 .icon-lx-chat-bubble-dual:before {
-	content: "\e605";
+	content: "\e615";
 }
 
