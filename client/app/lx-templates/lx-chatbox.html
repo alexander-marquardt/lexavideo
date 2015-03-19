@@ -22,10 +22,6 @@
                             &nbsp;{{ roomOccupancyObject.chatRoomName }}&nbsp;
                         </span>
 
-                        <span ng-show="roomOccupancyObject.listOfClientObjects.length <= 1">Waiting for someone to join</span>
-                        <span ng-show="roomOccupancyObject.listOfClientObjects.length == 2">Guest has joined</span>
-                        <span ng-show="roomOccupancyObject.listOfClientObjects.length > 2">Multiple guests have joined</span>
-
                         <div class="btn-group pull-right"
                              ng-class="groupMembersDropdownStatus.isOpen ? 'open': ''">
                             <button type="button" class="btn btn-primary"
