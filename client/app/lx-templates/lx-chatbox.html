@@ -16,19 +16,42 @@
                 <div class="panel cl-chat-panel panel-primary"
                      ng-click="userHasAlreadyClickedInChatPanel = true">
 
-                    <div class="col-xs-12 panel-heading  cl-chat-panel-heading">
-                        <span class="cl-text-size-2_0em" style="display:inline-block;line-height:1em;">
-                            <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
-                            &nbsp;{{ roomOccupancyObject.chatRoomName }}&nbsp;
-                        </span>
+                    <div class="col-xs-12 panel-heading cl-chat-panel-heading text-center">
 
-                        <div class="btn-group pull-right"
-                             ng-class="groupMembersDropdownStatus.isOpen ? 'open': ''">
+
+                        <!-- define the open chats button -->
+                        <div class="btn-group pull-left"
+                             ng-class="dropdownMenusStatuses.openChatsDropdownIsOpen ? 'open': ''">
                             <button type="button" class="btn btn-primary"
-                                    ng-click="groupMembersDropdownStatus.isOpen=!groupMembersDropdownStatus.isOpen">
-                                Members <span class="caret"></span>
+                                    ng-click="dropdownMenusStatuses.openChatsDropdownIsOpen=!dropdownMenusStatuses.openChatsDropdownIsOpen">
+                            <span style="display:inline-block;line-height:1em;">
+                                <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
+                            </span>
+                            <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu cl-chat-group-members-dropdown " role="menu">
+                            <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
+                                <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
+                                    <span style="white-space:nowrap;">
+
+                                        Chat 1 fafsdlkdfasj adfdasf
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        Chat name: &nbsp;{{ roomOccupancyObject.chatRoomName }}&nbsp
+
+                        <!-- define the group members button -->
+                        <div class="btn-group pull-right"
+                             ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen ? 'open': ''">
+                            <button type="button" class="btn btn-primary"
+                                    ng-click="dropdownMenusStatuses.groupMembersDropdownIsOpen=!dropdownMenusStatuses.groupMembersDropdownIsOpen">
+                            <span style="display:inline-block;line-height:1em;">
+                                <span class="icon-lx-users" style="display:inline-block;line-height:1em;"></span>
+                            </span>
+                            <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
                                 <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
                                     <span style="white-space:nowrap;">
                                         <span  class='cl-chat-group-video-icon-container'>

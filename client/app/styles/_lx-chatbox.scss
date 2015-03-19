@@ -60,8 +60,14 @@ $chat-bubble-zindex: 10;
   height: $tall-chat-panel-height;
 }
 
-.cl-chat-group-members-dropdown {
-  max-width: $screen-xs-max/2;
+.cl-chat-panel-dropdown {
+
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
+      max-width: nth($content-widths-list, $idx) / 2 - $grid-gutter-width;
+    }
+  }
+
   max-height: $short-chat-panel-body-height - 2*$estimated-bubble-height;
   color: $gray-dark;
   overflow-y: scroll;

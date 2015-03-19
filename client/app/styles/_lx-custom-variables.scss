@@ -1,3 +1,4 @@
+$xs-padding-override: 2px;
 
 $deep-red : #ff0000;
 $btn-gray-bg: #c0c0c0;
@@ -18,6 +19,9 @@ $panel-waiting-heading-bg: $brand-danger;
 $scrollbar-width: 12px; // this is an assumption, and can vary between browsers
 
 $viewport-widths-list: 320px, 360px, 400px, 480px, 600px, $screen-sm, $screen-md, $screen-lg;
+$content-widths-list: 320px - $xs-padding-override, 360px - $xs-padding-override, 400px - $xs-padding-override,
+                      480px - $xs-padding-override, 600px - $xs-padding-override, $screen-sm - $grid-gutter-width,
+                      $screen-md - $grid-gutter-width, $screen-lg - $grid-gutter-width;
 
 // We vary the font size of the text-overlay that is shown in a navbar on top of a video element.
 $video-text-overlay-font-size-list: 0.4em, 0.6em, 0.7em, 0.8em, 0.9em, 1em, 1.5em, 2em;
