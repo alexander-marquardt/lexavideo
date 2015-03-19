@@ -1,5 +1,5 @@
 {% raw %}
-    <div ng-if="videoStateInfoObject.localVideoIsEnabledCount >= 1">
+    <div ng-if="videoStateInfoObject.localVideoIsEnabledCount >= 1" class="cl-transition-opacity">
         <div ng-controller="lxMainVideoCtrl">
             {% endraw %}{% include "lx-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
             <div lx-check-if-system-supports-web-rtc-directive></div>
@@ -11,7 +11,8 @@
                 <div class="col-xs-12 text-center cl-col-no-xs-padding">
 
                         <div class="row cl-row-no-xs-margins">
-                            <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
+                            <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict"
+                                    class="cl-transition-opacity">
 
                                 <!-- The following wraps the remote video window -->
                                 <div class="col-xs-6 text-center cl-col-xs-smaller-left-right-padding" >
@@ -25,6 +26,7 @@
                                         <!-- only show the message in the video window if a modal is not currently being shown - this is
                                              just so that we don't confuse the user by showing them two different messages at once -->
                                         <div ng-if="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                             class="cl-transition-opacity"
                                              lx-video-settings-negotiation-directive>
                                         </div>
                                         <div lx-remote-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
