@@ -211,6 +211,15 @@ $xs-padding-override: 2px;
   }
 }
 
+.cl-ng-view {
+  &.ng-enter {
+    animation: slideInLeft $slide-main-menu-duration;
+  }
+  &.ng-leave {
+    animation: slideOutRight $slide-main-menu-duration;
+  }
+}
+
 .cl-hide-row-overflow {
   overflow: hidden;
 }
