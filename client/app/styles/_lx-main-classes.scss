@@ -212,11 +212,13 @@ $xs-padding-override: 2px;
 }
 
 .cl-ng-view {
+  position: absolute;
+  width: 100%;
   &.ng-enter {
-    animation: slideInLeft $slide-main-menu-duration;
+    animation: slideInUp $slide-main-menu-duration;
   }
   &.ng-leave {
-    animation: slideOutRight $slide-main-menu-duration;
+    animation: slideOutUp $slide-main-menu-duration;
   }
 }
 
