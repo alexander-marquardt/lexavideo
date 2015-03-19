@@ -71,6 +71,7 @@ $chat-bubble-zindex: 10;
   max-height: $short-chat-panel-body-height - 2*$estimated-bubble-height;
   color: $gray-dark;
   overflow-y: auto;
+
 }
 
 .cl-chat-group-video-button-modifier {
@@ -220,11 +221,6 @@ $chat-bubble-zindex: 10;
 .cl-fade-in-chat-bubble-element.cl-show-new-chat-bubble-element {
   opacity: 1;
 }
-
-.cl-flash-chat-heading {
-  opacity:0.5;
-}
-
 
 .cl-chatbox-glow {
    @include my-mixin-border-glow($brand-primary,  1, 5)
