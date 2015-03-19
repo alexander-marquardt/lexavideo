@@ -70,7 +70,7 @@ $chat-bubble-zindex: 10;
 
   max-height: $short-chat-panel-body-height - 2*$estimated-bubble-height;
   color: $gray-dark;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .cl-chat-group-video-button-modifier {
