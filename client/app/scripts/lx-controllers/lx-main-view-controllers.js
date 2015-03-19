@@ -180,6 +180,10 @@ angular.module('lxMainView.controllers', [])
         $rootScope.$on('$locationChangeSuccess', function() {
             $log.debug('$locationChangeSuccess called');
         });
+
+        $rootScope.$on('$routeChangeSuccess', function() {
+            $scope.mainMenuObject.showMainMenu = false;
+        });
     });
 
 

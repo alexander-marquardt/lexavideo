@@ -10,6 +10,8 @@
                     ng-class="mainMenuObject.showMainMenu? 'cl-xs-add-right-margin':''">
                 <div class="row cl-row-no-xs-margins">
                     <div class=" cl-main-ng-view-area-wrapper">
+                        {% include 'lx-templates/lx-main-menu.html' %}
+
                         <div ng-view class="cl-ng-view"></div>
                     </div>
                 </div>

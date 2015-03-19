@@ -216,6 +216,27 @@
 }
 
 
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+
 $fast-easing-delay: 0.35s;
 
 $transition-opacity-and-background-color: opacity $fast-easing-delay ease,  background-color $fast-easing-delay ease;

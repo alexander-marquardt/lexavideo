@@ -215,10 +215,10 @@ $xs-padding-override: 2px;
   position: absolute;
   width: 100%;
   &.ng-enter {
-    animation: slideInUp $slide-main-menu-duration;
+    animation: fadeIn $slide-main-menu-duration * 2;
   }
   &.ng-leave {
-    animation: slideOutUp $slide-main-menu-duration;
+    //animation: slideOutLeft $slide-main-menu-duration;
   }
 }
 
