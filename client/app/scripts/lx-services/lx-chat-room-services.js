@@ -38,7 +38,7 @@ angular.module('lxChatRoom.services', [])
                 var chatRoomName = $location.path().replace(/\//, '');
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();
 
-                $log.log('Initializing; room=' + chatRoomName + '.');
+                $log.log('addUserToRoom called: ' + chatRoomName + '. Adding userId: ' + lxAppWideConstantsService.userId);
 
 
                 var roomObj = {};
