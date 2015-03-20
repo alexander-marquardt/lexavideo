@@ -166,11 +166,13 @@ $chat-bubble-zindex: 10;
   @extend %bubble-arrow-common;
 }
 
-
-.bubble.bubble-error>i {
-  border-color: transparent transparent transparent $brand-danger;
+.bubble.bubble-left.bubble-error>i {
+  border-color: transparent $brand-danger-lighter transparent transparent;
 }
 
+.bubble.bubble-right.bubble-error>i {
+  border-color: transparent transparent transparent $brand-danger;
+}
 
 // the light part of the "arrow"
 %arrow-overlay-common {
