@@ -5,7 +5,7 @@
 <div ng-controller="lxChatRoomCtrl">
     <div ng-controller="lxChatboxMainCtrl">
 
-        <div ng-show="currentlyDisplayedChatRoom.chatRoomNameFromUrl">
+        <div ng-show="chatRoomDisplayObject.chatRoomNameFromUrl">
             {{ moveAndResizeDivBesideMainMenu() }}
 
                 {{ removeSpaceBetwenMainMenuAndDivBesideMainMenu() }}
@@ -14,7 +14,7 @@
                     <div ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
                         <div class="panel cl-chat-panel panel-primary cl-transition-border"
                              ng-click="userHasAlreadyClickedInChatPanel = true"
-                             ng-show="normalizedChatRoomName == currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl">
+                             ng-show="normalizedChatRoomName == chatRoomDisplayObject.normalizedChatRoomNameFromUrl">
                             <!-- Note: javascript adds 'cl-chatbox-glow' class to the panel if a message is received and the user is
                                  not focused on the chat. -->
 
@@ -42,7 +42,7 @@
                                 </div>
 
 
-                                {{ currentlyDisplayedChatRoom.chatRoomNameFromUrl }}
+                                {{ chatRoomDisplayObject.chatRoomNameFromUrl }}
 
                                 <!-- define the group members button -->
                                 <div class="btn-group pull-right"
@@ -55,7 +55,7 @@
                                     <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                        <li ng-repeat="remoteClientObj in roomOccupancyDict[currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl].listOfClientObjects | orderBy: 'userName'">
+                                        <li ng-repeat="remoteClientObj in roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].listOfClientObjects | orderBy: 'userName'">
                                             <span style="white-space:nowrap;">
                                                 <span  class='cl-chat-group-video-icon-container'>
                                                     <button type="button"
@@ -139,7 +139,7 @@
 
 
                                                 <span class="input-group-btn">
-                                                    <button ng-click="sendChatMessageFn(roomOccupancyDict[currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl].chatRoomId)"
+                                                    <button ng-click="sendChatMessageFn(roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].chatRoomId)"
                                                             class="btn  btn-sm pull-right  'btn-primary'"
                                                             ng-disabled="sendMessageForm.$invalid">
                                                         Send

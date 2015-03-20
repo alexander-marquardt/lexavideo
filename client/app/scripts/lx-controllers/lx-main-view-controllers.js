@@ -32,7 +32,14 @@ angular.module('lxMainView.controllers', [])
 
         // Keeps track of which chat room the user has selected, pulled from the URL that is set by ngRoute
         // and ngView.
-        $rootScope.currentlyDisplayedChatRoom = {};
+        $rootScope.chatRoomDisplayObject = {
+            chatRoomNameFromUrl: null,
+            normalizedChatRoomNameFromUrl: null,
+
+            // If the user leaves the chat-room view and then comes back, they will be shown the last chat
+            // room that they were participating in.
+            lastChatRoomNameFromUrl: null
+        };
 
 
         // roomOccupancyDict will have a unique key corresponding to the chatRoomName of each room the the current
@@ -192,11 +199,19 @@ angular.module('lxMainView.controllers', [])
         $rootScope.$on('$routeChangeSuccess', function() {
             $scope.mainMenuObject.showMainMenu = false;
 
-            // set the values on currentlyDisplayedChatRoom
+            // set the values on chatRoomDisplayObject
             var chatRoomNameFromUrl = $route.current.params.chatRoomName;
-            $rootScope.currentlyDisplayedChatRoom.chatRoomNameFromUrl = chatRoomNameFromUrl;
-            $rootScope.currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl = chatRoomNameFromUrl.toLowerCase();
 
+            if (chatRoomNameFromUrl) {
+                $rootScope.chatRoomDisplayObject.chatRoomNameFromUrl = chatRoomNameFromUrl;
+                $rootScope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl = chatRoomNameFromUrl.toLowerCase();
+                $rootScope.chatRoomDisplayObject.lastChatRoomNameFromUrl = chatRoomNameFromUrl;
+            }
+            else {
+                $rootScope.chatRoomDisplayObject.chatRoomNameFromUrl = null;
+                $rootScope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl = null;
+                // Note: do not null lastChatRoomNameFromUrl as it "remembers" the last chat room
+            }
         });
     });
 

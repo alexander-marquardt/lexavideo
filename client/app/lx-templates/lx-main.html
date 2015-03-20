@@ -5,29 +5,22 @@
         <div ng-controller="lxVideoChatAppViewCtrl">
             {% include "lx-templates/lx-title-row.html" %}
 
+
             <!-- ng-view will call in the appropriate template for the current URL location -->
             <div class="cl-row-no-margins cl-hide-row-overflow"
                     ng-class="mainMenuObject.showMainMenu? 'cl-xs-add-right-margin':''">
                 <div class="row cl-row-no-xs-margins">
                     <div class=" cl-main-ng-view-area-wrapper">
 
+                        {% raw %}
+
                         <div ng-if="mainMenuObject.showMainMenu"
                             class="col-xs-4 col-sm-3 col-md-2 cl-animate-main-control-menu cl-col-xs-smaller-left-right-padding
                             cl-transition-opacity">
 
                             <div class="btn-group-vertical well cl-main-control-menu" role="group">
-                                <div class="btn-group" dropdown role="group">
-                                    <button type="button" class="btn btn-default dropdown-toggle">
-                                        Open Chats
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="/Room1">Room 1</a></li>
-                                        <li><a href="/Room2">Room 2</a></li>
-                                    </ul>
-                                </div>
-
-                                <a href="/" class="btn btn-default">All Rooms</a>
+                                <a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}" class="btn btn-default">Open chats</a>
+                                <a href="/" class="btn btn-default">All rooms</a>
                                 <a href="/" class="btn btn-default">Friends</a>
                                 <a href="/" class="btn btn-default">Profile</a>
                                 <a href="/" class="btn btn-default">Settings</a>
@@ -37,7 +30,7 @@
                             </div>
                         </div>
 
-
+                        {% endraw %}
                         <div ng-view class="cl-ng-view"></div>
 
 
@@ -56,6 +49,8 @@
                     </div>
                 </div>
             </div>
+
+
 
             {% include "lx-templates/lx-video-elements.html" %}
             <div lx-initialize-channel-directive></div>
