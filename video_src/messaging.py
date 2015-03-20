@@ -156,11 +156,11 @@ class MessageRoom(webapp2.RequestHandler):
         message = self.request.body
         message_obj = json.loads(message)
 
-        room_id = int(self.request.get('r'))
+        room_id = message_obj['roomId']
         from_client_id = message_obj['fromClientId']
-        room_info_obj = room_module.ChatRoomInfo.get_by_id(room_id)
 
         try:
+            room_info_obj = room_module.ChatRoomInfo.get_by_id(room_id)
             if room_info_obj:
                 handle_message_room(room_info_obj, from_client_id, message_obj)
             else:

@@ -125,12 +125,13 @@ angular.module('lxHttp.services', [])
                 lxJs.assert(roomId, 'roomId is not set');
 
                 var messageObject = {
+                    'roomId': roomId,
                     'fromClientId': fromClientId,
                     'messageType': messageType,
                     'messagePayload': messagePayload
                 };
 
-                var path = '/_lx/message_room?r=' + roomId;
+                var path = '/_lx/message_room';
                 var httpPromise = $http.post(path, messageObject);
                 return httpPromise;
             },
