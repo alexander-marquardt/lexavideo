@@ -12,14 +12,13 @@
 
         <div ng-controller="lxChatboxMainCtrl">
 
-            <div ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
+
                 <div class="panel cl-chat-panel panel-primary cl-transition-border"
                      ng-click="userHasAlreadyClickedInChatPanel = true">
                     <!-- Note: javascript adds 'cl-chatbox-glow' class to the panel if a message is received and the user is
                          not focused on the chat. -->
 
                     <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
-
 
                         <!-- define the open chats button -->
                         <div class="btn-group pull-left"
@@ -33,15 +32,17 @@
                             </button>
                             <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
                                 <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
-                                    <span style="white-space:nowrap;">
+                                    <div ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
 
-                                        Chat 1 fafsdlkdfasj adfdasf
-                                    </span>
+                                        <span style="white-space:nowrap;">
+                                            Room: &nbsp;{{ roomOccupancyObject.chatRoomName }}&nbsp
+                                        </span>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
 
-                        Chat name: &nbsp;{{ roomOccupancyObject.chatRoomName }}&nbsp
+
 
                         <!-- define the group members button -->
                         <div class="btn-group pull-right"
@@ -152,7 +153,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 </div>
