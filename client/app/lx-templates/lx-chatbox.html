@@ -3,157 +3,160 @@
 {% from 'lx-templates/lx-macros.html' import removeSpaceBetwenMainMenuAndDivBesideMainMenu %}
 
 <div ng-controller="lxChatRoomCtrl">
-<div ng-controller="lxChatboxMainCtrl">
+    <div ng-controller="lxChatboxMainCtrl">
 
-    {{ moveAndResizeDivBesideMainMenu() }}
+        <div ng-show="currentlyDisplayedChatRoom.chatRoomNameFromUrl">
+            {{ moveAndResizeDivBesideMainMenu() }}
 
-        {{ removeSpaceBetwenMainMenuAndDivBesideMainMenu() }}
-        {% raw %}
+                {{ removeSpaceBetwenMainMenuAndDivBesideMainMenu() }}
+                {% raw %}
 
-            <div ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
-                <div class="panel cl-chat-panel panel-primary cl-transition-border"
-                     ng-click="userHasAlreadyClickedInChatPanel = true">
-                    <!-- Note: javascript adds 'cl-chatbox-glow' class to the panel if a message is received and the user is
-                         not focused on the chat. -->
+                    <div ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
+                        <div class="panel cl-chat-panel panel-primary cl-transition-border"
+                             ng-click="userHasAlreadyClickedInChatPanel = true"
+                             ng-show="normalizedChatRoomName == currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl">
+                            <!-- Note: javascript adds 'cl-chatbox-glow' class to the panel if a message is received and the user is
+                                 not focused on the chat. -->
 
-                    <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
+                            <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
 
-                        <!-- define the open chats button -->
-                        <div class="btn-group pull-left"
-                             ng-class="dropdownMenusStatuses.openChatsDropdownIsOpen ? 'open': ''">
-                            <button type="button" class="btn btn-primary"
-                                    ng-click="dropdownMenusStatuses.openChatsDropdownIsOpen=!dropdownMenusStatuses.openChatsDropdownIsOpen">
-                            <span style="display:inline-block;line-height:1em;">
-                                <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
-                            </span>
-                            <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                <li ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
-                                    <a href="/{{ roomOccupancyObject.chatRoomNameAsWritten }}">
-                                        <span style="white-space:nowrap;">
-                                            &nbsp;{{ roomOccupancyObject.chatRoomNameAsWritten }}&nbsp
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-
-                        {{ currentlyDisplayedChatRoom.chatRoomNameFromUrl }}
-
-                        <!-- define the group members button -->
-                        <div class="btn-group pull-right"
-                             ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen ? 'open': ''">
-                            <button type="button" class="btn btn-primary"
-                                    ng-click="dropdownMenusStatuses.groupMembersDropdownIsOpen=!dropdownMenusStatuses.groupMembersDropdownIsOpen">
-                            <span style="display:inline-block;line-height:1em;">
-                                <span class="icon-lx-users" style="display:inline-block;line-height:1em;"></span>
-                            </span>
-                            <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                <li ng-repeat="remoteClientObj in roomOccupancyDict[currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl].listOfClientObjects | orderBy: 'userName'">
-                                    <span style="white-space:nowrap;">
-                                        <span  class='cl-chat-group-video-icon-container'>
-                                            <button type="button"
-                                                class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
-                                                ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClientObj.clientId)"
-                                                >
-                                                <span class="icon-lx-video-camera-filled"></span>
-                                            </button>
-                                        </span>
-                                        {{ remoteClientObj.userName }}
+                                <!-- define the open chats button -->
+                                <div class="btn-group pull-left"
+                                     ng-class="dropdownMenusStatuses.openChatsDropdownIsOpen ? 'open': ''">
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="dropdownMenusStatuses.openChatsDropdownIsOpen=!dropdownMenusStatuses.openChatsDropdownIsOpen">
+                                    <span style="display:inline-block;line-height:1em;">
+                                        <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
                                     </span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="panel-body cl-chat-panel-body cl-chat-panel-body-short"
-                         scroll-glue="chatPanelIsGlued">
-                         <!--ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
-                            <!--'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">-->
-                        <!--<div ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
-                            <!--'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>-->
-                        <div ng-class="'cl-dummy-blank-div-in-short-chat-panel'"></div>
-
-
-
-                        <div lx-show-chat-messages-directive></div>
+                                    <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
+                                        <li ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
+                                            <a href="/{{ roomOccupancyObject.chatRoomNameAsWritten }}">
+                                                <span style="white-space:nowrap;">
+                                                    &nbsp;{{ roomOccupancyObject.chatRoomNameAsWritten }}&nbsp
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
 
 
-                        <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
-                            <!-- This is the html that prompts the user to exchange video with the remote user if the
-                                 remote user has requested to do so -->
-                            <div class="well cl-show-hide-fade cl-prompt-for-video-access cl-chatbox-glow"
-                                 ng-show="videoExchangeObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
-                                          videoExchangeObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
+                                {{ currentlyDisplayedChatRoom.chatRoomNameFromUrl }}
 
-                                <div class="row ">
-                                    <div class="col-xs-12 cl-text-size-1_5em ">
-                                        <div>Remote user has requested to exchange video. Do you accept?</div>
+                                <!-- define the group members button -->
+                                <div class="btn-group pull-right"
+                                     ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen ? 'open': ''">
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="dropdownMenusStatuses.groupMembersDropdownIsOpen=!dropdownMenusStatuses.groupMembersDropdownIsOpen">
+                                    <span style="display:inline-block;line-height:1em;">
+                                        <span class="icon-lx-users" style="display:inline-block;line-height:1em;"></span>
+                                    </span>
+                                    <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
+                                        <li ng-repeat="remoteClientObj in roomOccupancyDict[currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl].listOfClientObjects | orderBy: 'userName'">
+                                            <span style="white-space:nowrap;">
+                                                <span  class='cl-chat-group-video-icon-container'>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
+                                                        ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClientObj.clientId)"
+                                                        >
+                                                        <span class="icon-lx-video-camera-filled"></span>
+                                                    </button>
+                                                </span>
+                                                {{ remoteClientObj.userName }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="panel-body cl-chat-panel-body cl-chat-panel-body-short"
+                                 scroll-glue="chatPanelIsGlued">
+                                 <!--ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
+                                    <!--'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">-->
+                                <!--<div ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
+                                    <!--'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>-->
+                                <div ng-class="'cl-dummy-blank-div-in-short-chat-panel'"></div>
 
 
-                                        <button type="button"
-                                                class="btn btn-sm btn-primary"
-                                                ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', false, remoteClientId)">
-                                        <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                            <span class="icon-lx-start-video-camera-cfg"></span>
-                                        </span>
-                                            Start
-                                        </button>
-                                        <button type="button"
-                                                class="btn btn-sm btn-primary"
-                                                ng-click="showVideoElementsAndStartVideoFn('doNotEnableVideoExchange', false, remoteClientId)">
-                                        <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                            <span class="icon-lx-start-video-camera-cfg"></span>
-                                            <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
-                                            <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
-                                        </span>
-                                            Deny
-                                        </button>
+
+                                <div lx-show-chat-messages-directive></div>
+
+
+                                <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
+                                    <!-- This is the html that prompts the user to exchange video with the remote user if the
+                                         remote user has requested to do so -->
+                                    <div class="well cl-show-hide-fade cl-prompt-for-video-access cl-chatbox-glow"
+                                         ng-show="videoExchangeObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
+                                                  videoExchangeObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
+
+                                        <div class="row ">
+                                            <div class="col-xs-12 cl-text-size-1_5em ">
+                                                <div>Remote user has requested to exchange video. Do you accept?</div>
+
+
+                                                <button type="button"
+                                                        class="btn btn-sm btn-primary"
+                                                        ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', false, remoteClientId)">
+                                                <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                                    <span class="icon-lx-start-video-camera-cfg"></span>
+                                                </span>
+                                                    Start
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-primary"
+                                                        ng-click="showVideoElementsAndStartVideoFn('doNotEnableVideoExchange', false, remoteClientId)">
+                                                <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                                    <span class="icon-lx-start-video-camera-cfg"></span>
+                                                    <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
+                                                    <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
+                                                </span>
+                                                    Deny
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer cl-chat-panel-footer">
+                                <div class="row">
+
+                                    <!-- Chat message input and send message button -->
+                                    <div class="col-xs-12">
+                                        <form name="sendMessageForm" role="form" novalidate>
+                                            <div class="input-group">
+                                                <input class="form-control input-sm"
+                                                       name="messageInputElem"
+                                                       placeholder="Type your message here..."
+                                                       ng-model="sendMessageFormScope.inputMessageString"
+                                                       maxlength="{{ maxMsgLength }}"
+                                                       ng-click="chatPanelIsGlued = true"
+                                                       required
+                                                        />
+
+
+
+                                                <span class="input-group-btn">
+                                                    <button ng-click="sendChatMessageFn(roomOccupancyDict[currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl].chatRoomId)"
+                                                            class="btn  btn-sm pull-right  'btn-primary'"
+                                                            ng-disabled="sendMessageForm.$invalid">
+                                                        Send
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="panel-footer cl-chat-panel-footer">
-                        <div class="row">
-
-                            <!-- Chat message input and send message button -->
-                            <div class="col-xs-12">
-                                <form name="sendMessageForm" role="form" novalidate>
-                                    <div class="input-group">
-                                        <input class="form-control input-sm"
-                                               name="messageInputElem"
-                                               placeholder="Type your message here..."
-                                               ng-model="sendMessageFormScope.inputMessageString"
-                                               maxlength="{{ maxMsgLength }}"
-                                               ng-click="chatPanelIsGlued = true"
-                                               required
-                                                />
-
-
-
-                                        <span class="input-group-btn">
-                                            <button ng-click="sendChatMessageFn(roomOccupancyDict[currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl].chatRoomId)"
-                                                    class="btn  btn-sm pull-right  'btn-primary'"
-                                                    ng-disabled="sendMessageForm.$invalid">
-                                                Send
-                                            </button>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
-    </div>
-</div>
 </div>
 
 {% endraw %}

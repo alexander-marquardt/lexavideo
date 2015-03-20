@@ -11,6 +11,7 @@ angular.module('lxMainView.controllers', [])
         $rootScope,
         $location,
         $log,
+        $route,
         $scope,
         $window,
         lxAppWideConstantsService,
@@ -31,7 +32,7 @@ angular.module('lxMainView.controllers', [])
 
         // Keeps track of which chat room the user has selected, pulled from the URL that is set by ngRoute
         // and ngView.
-        $scope.currentlyDisplayedChatRoom = {};
+        $rootScope.currentlyDisplayedChatRoom = {};
 
 
         // roomOccupancyDict will have a unique key corresponding to the chatRoomName of each room the the current
@@ -190,6 +191,12 @@ angular.module('lxMainView.controllers', [])
 
         $rootScope.$on('$routeChangeSuccess', function() {
             $scope.mainMenuObject.showMainMenu = false;
+
+            // set the values on currentlyDisplayedChatRoom
+            var chatRoomNameFromUrl = $route.current.params.chatRoomName;
+            $rootScope.currentlyDisplayedChatRoom.chatRoomNameFromUrl = chatRoomNameFromUrl;
+            $rootScope.currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl = chatRoomNameFromUrl.toLowerCase();
+
         });
     });
 

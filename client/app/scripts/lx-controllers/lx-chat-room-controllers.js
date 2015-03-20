@@ -15,13 +15,6 @@ angular.module('lxUseChatRoom.controllers', [])
         lxInitializeRoomService
         ) {
 
-        // set the values on currentlyDisplayedChatRoom, which is defined in lxVideoChatAppViewCtrl
-        var chatRoomNameFromUrl = $location.path().replace(/\//, '');
-        $scope.currentlyDisplayedChatRoom.chatRoomNameFromUrl = chatRoomNameFromUrl;
-        $scope.currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl = chatRoomNameFromUrl.toLowerCase();
-
-
-
         $scope.lxChatRoomCtrl = {
 
             userSuccessfullyEnteredRoom: false,
@@ -65,7 +58,6 @@ angular.module('lxUseChatRoom.controllers', [])
 
     .controller('lxChatRoomCtrl',
     function($scope,
-             $location,
              $log,
              $timeout,
              $window,
