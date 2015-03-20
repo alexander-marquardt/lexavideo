@@ -29,6 +29,22 @@ angular.module('lxMainView.controllers', [])
         $scope.remoteVideoObjectsDict = {};
 
 
+        // Keeps track of which chat room the user has selected, pulled from the URL that is set by ngRoute
+        // and ngView.
+        $scope.currentlyDisplayedChatRoom = {};
+
+
+        // roomOccupancyDict will have a unique key corresponding to the chatRoomName of each room the the current
+        // client is a member of. The value of each key will be an object that contains the name of the room
+        // and a listing of all of the clients that are in each room.
+        // eg. roomOccupancyDict[chatRoomName] = {
+        //      chatRoomId: chatRoomId,
+        //      listOfClientObjects: [],
+        //      dictOfClientObjects: {},
+        // }
+        $scope.roomOccupancyDict = {};
+
+
         // The clientId is unique for each connection that a user makes to the server (ie. each new browser
         // window/device that they connect from). In order to create a unique clientID, we append the userId with
         // a randomly generated number with a billion possibilities. This should prevent the user
@@ -85,16 +101,6 @@ angular.module('lxMainView.controllers', [])
             debugShowAllVideoWindows: false
         };
 
-
-        // roomOccupancyDict will have a unique key corresponding to the chatRoomName of each room the the current
-        // client is a member of. The value of each key will be an object that contains the name of the room
-        // and a listing of all of the clients that are in each room.
-        // eg. roomOccupancyDict[chatRoomName] = {
-        //      chatRoomId: chatRoomId,
-        //      listOfClientObjects: [],
-        //      dictOfClientObjects: {},
-        // }
-        $scope.roomOccupancyDict = {};
 
         $scope.receivedChatMessageObject = {
             messageString: undefined,

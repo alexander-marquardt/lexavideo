@@ -12,17 +12,13 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
         templateUrl: function(){
                 return '/_lx/lx-templates/lx-landing-page-main.html';
             },
-            controller: 'lxLandingPageCtrl'
-        }
-    );
+        controller: 'lxLandingPageCtrl'
+    });
 
     $routeProvider.when('/:chatRoomName', {
-        templateUrl: function(params) {
-                return '/_lx/lx-templates/lx-chatbox.html/' + params.chatRoomName;
-            },
-            controller: 'lxChatRoomCtrl'
-        }
-    );
+        template: '',
+        controller: 'lxChatViewCtrl'
+    });
 
     $routeProvider.otherwise({
         redirectTo: '/'

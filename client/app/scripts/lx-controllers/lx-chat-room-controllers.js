@@ -6,22 +6,20 @@
 angular.module('lxUseChatRoom.controllers', [])
 
 
-    .controller('lxChatRoomCtrl',
-    function($scope,
-             $location,
-             $log,
-             $timeout,
-             $window,
-             lxAccessVideoElementsAndAccessCameraService,
-             lxAppWideConstantsService,
-             lxCallService,
-             lxCreateChatRoomObjectsService,
-             lxChannelSupportService,
-             lxChatRoomVarsService,
-             lxHttpChannelService,
-             lxInitializeRoomService,
-             lxJs
-             ) {
+    .controller('lxChatViewCtrl', function(
+        $location,
+        $scope,
+        $timeout,
+        lxChannelSupportService,
+        lxHttpChannelService,
+        lxInitializeRoomService
+        ) {
+
+        // set the values on currentlyDisplayedChatRoom, which is defined in lxVideoChatAppViewCtrl
+        var chatRoomNameFromUrl = $location.path().replace(/\//, '');
+        $scope.currentlyDisplayedChatRoom.chatRoomNameFromUrl = chatRoomNameFromUrl;
+        $scope.currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl = chatRoomNameFromUrl.toLowerCase();
+
 
 
         $scope.lxChatRoomCtrl = {
@@ -45,6 +43,7 @@ angular.module('lxUseChatRoom.controllers', [])
             innerWaitForChannelReady();
         };
 
+
         lxInitializeRoomService.addUserToRoom().then(function(data) {
 
             $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
@@ -62,6 +61,21 @@ angular.module('lxUseChatRoom.controllers', [])
             $location.path('/');
         });
 
+    })
+
+    .controller('lxChatRoomCtrl',
+    function($scope,
+             $location,
+             $log,
+             $timeout,
+             $window,
+             lxAccessVideoElementsAndAccessCameraService,
+             lxAppWideConstantsService,
+             lxCallService,
+             lxCreateChatRoomObjectsService,
+             lxChatRoomVarsService,
+             lxJs
+             ) {
 
 
 

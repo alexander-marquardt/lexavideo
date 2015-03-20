@@ -220,7 +220,7 @@ $main-control-hover-color: white;
   position: relative;
   // Note $line-height-computed in the following calculation is the margin
   // at the bottom that is used in the bootstrap css panel definition.
-  height: $sliding-display-area-height + $line-height-computed;
+  height: ($sliding-display-area-height + $line-height-computed) * 2;
 
   @media(max-width: $screen-xs-max) {
     height: $sliding-display-area-height + $line-height-computed/2;
