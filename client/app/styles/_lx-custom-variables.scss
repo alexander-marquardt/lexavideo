@@ -4,7 +4,11 @@ $deep-red : #ff0000;
 $btn-gray-bg: #c0c0c0;
 $brand-primary-lighter: #daf6fd;
 $brand-danger-lighter: #fee;
+$gray-light-more: lighten(#000, 75%) !default;
+$gray-lighter-more: lighten(#000, 97%) !default;
 
+$bubble-left-background: $brand-primary-lighter;
+$bubble-right-background: $gray-lighter-more;
 
 $panel-waiting-text: white !default;
 $panel-waiting-bg: $brand-danger !default;

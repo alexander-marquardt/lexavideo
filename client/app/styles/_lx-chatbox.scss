@@ -43,12 +43,15 @@ $chat-bubble-zindex: 10;
 .cl-chat-panel-footer {
   height: $chat-panel-footer-height;
   box-sizing: border-box;
+  background: $gray-lighter;
 }
 
 .cl-chat-panel-body
 {
   padding: 0px 15px 0px 15px;
   overflow-y: scroll;
+
+  background: $gray-lighter-more;
 }
 
 .cl-chat-panel-body-short {
@@ -110,16 +113,17 @@ $chat-bubble-zindex: 10;
   z-index: $chat-bubble-zindex;
 }
 
+
 .bubble.bubble-left {
   float: left;
   text-align: left;
-  background: $gray-lighter;
+  background: $bubble-left-background;
 }
 
 .bubble.bubble-right {
   float: right;
   text-align: left;
-  background: $brand-primary-lighter;
+  background: $bubble-right-background;
 }
 
 .bubble.bubble-error {
@@ -164,7 +168,7 @@ $chat-bubble-zindex: 10;
 
 
 .bubble.bubble-error>i {
-  border-color: transparent $brand-danger transparent transparent;
+  border-color: transparent transparent transparent $brand-danger;
 }
 
 
@@ -183,7 +187,7 @@ $chat-bubble-zindex: 10;
 .bubble.bubble-left>i:after {
   left: 2px;
   border-width: 5px 10px 5px 0;
-  border-color: transparent $gray-lighter transparent transparent;
+  border-color: transparent $bubble-left-background transparent transparent;
   z-index: $chat-bubble-zindex + 2;
   @extend %arrow-overlay-common;
 }
@@ -193,13 +197,17 @@ $chat-bubble-zindex: 10;
 .bubble.bubble-right>i:after {
   left: -12px;
   border-width: 5px 0px 5px 10px;
-  border-color: transparent  transparent transparent $brand-primary-lighter;
+  border-color: transparent  transparent transparent $bubble-right-background;
   z-index: $chat-bubble-zindex + 2;
   @extend %arrow-overlay-common;
 }
 
 .bubble.bubble-left.bubble-error>i:after {
   border-color: transparent $brand-danger-lighter transparent transparent;
+}
+
+.bubble.bubble-right.bubble-error>i:after {
+  border-color: transparent  transparent transparent $brand-danger-lighter;
 }
 
 .cl-chat-time-display {
