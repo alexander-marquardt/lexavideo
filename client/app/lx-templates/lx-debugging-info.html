@@ -2,31 +2,30 @@
 <div class="row cl-row-no-xs-margins">
     <div class="col-xs-12 text-center cl-col-xs-smaller-left-right-padding">
         <div ng-if="debugBuildEnabled">
-            <div ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td>User Name: {{ lxMainViewCtrl.userName }}</td>
+                    <td>User Id: {{ lxMainViewCtrl.userId }}</td>
+                </tr>
 
-                <table class="table table-bordered table-striped">
-                    <tr>
-                        <td>Room Name: {{ roomOccupancyObject.chatRoomName }}</td>
-                        <td>Room Id:   {{ roomOccupancyObject.roomId }}</td>
-                    </tr>
-                    <tr>
-                        <td>User Name: {{ lxMainViewCtrl.userName }}</td>
-                        <td>User Id: {{ lxMainViewCtrl.userId }}</td>
-                    </tr>
-                    <tr ng-repeat="user in roomOccupancyObject.listOfClientObjects | filter:{userId: '!'+ roomOccupancyObject.userId}">
-                        <td>Remote User Name: {{ user.userName }}</td>
-                        <td>Remote User Id: {{ user.userId }}</td>
-                    </tr>
-                    <tr ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
-                        <td>
-                            localVideoEnabledSetting:<br> {{ videoExchangeObject.localVideoEnabledSetting }}
-                        </td>
-                        <td>
-                            remoteVideoEnabledSetting:<br> {{ videoExchangeObject.remoteVideoEnabledSetting }}
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                <tr ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
+                    <td>Room Name: {{ roomOccupancyObject.chatRoomName }}</td>
+                    <td>Room Id:   {{ roomOccupancyObject.roomId }}</td>
+                </tr>
+
+                <tr ng-repeat="user in roomOccupancyObject.listOfClientObjects | filter:{userId: '!'+ roomOccupancyObject.userId}">
+                    <td>Remote User Name: {{ user.userName }}</td>
+                    <td>Remote User Id: {{ user.userId }}</td>
+                </tr>
+                <tr ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
+                    <td>
+                        localVideoEnabledSetting:<br> {{ videoExchangeObject.localVideoEnabledSetting }}
+                    </td>
+                    <td>
+                        remoteVideoEnabledSetting:<br> {{ videoExchangeObject.remoteVideoEnabledSetting }}
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
