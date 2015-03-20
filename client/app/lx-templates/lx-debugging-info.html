@@ -10,7 +10,7 @@
 
                 <tr ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
                     <td>Room Name: {{ roomOccupancyObject.chatRoomName }}</td>
-                    <td>Room Id:   {{ roomOccupancyObject.roomId }}</td>
+                    <td>Room Id:   {{ roomId }}</td>
                 </tr>
 
                 <tr ng-repeat="user in roomOccupancyObject.listOfClientObjects | filter:{userId: '!'+ roomOccupancyObject.userId}">

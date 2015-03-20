@@ -116,8 +116,11 @@ angular.module('lxChannel.services', [])
 
                         case 'roomOccupancyMsg':
                             var roomId = messageObject.messagePayload.roomId;
+                            var chatRoomName = messageObject.messagePayload.chatRoomName;
                             var roomOccupancyDict = scope.roomOccupancyDict;
                             roomOccupancyDict[roomId] = {};
+
+                            roomOccupancyDict[roomId].chatRoomName = chatRoomName;
 
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
