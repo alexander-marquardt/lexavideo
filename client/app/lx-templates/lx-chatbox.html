@@ -31,18 +31,18 @@
                             <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                <li ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
-                                    <a href="/{{ roomOccupancyObject.chatRoomName }}">
+                                <li ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
+                                    <a href="/{{ roomOccupancyObject.chatRoomNameAsWritten }}">
                                         <span style="white-space:nowrap;">
-                                            &nbsp;{{ roomOccupancyObject.chatRoomName }}&nbsp
+                                            &nbsp;{{ roomOccupancyObject.chatRoomNameAsWritten }}&nbsp
                                         </span>
                                     </a>
                                 </li>
                             </ul>
                         </div>
 
-                        
-                        {{ currentlyDisplayedChatRoom.chatRoomName }}
+
+                        {{ currentlyDisplayedChatRoom.chatRoomNameFromUrl }}
 
                         <!-- define the group members button -->
                         <div class="btn-group pull-right"
@@ -55,7 +55,7 @@
                             <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
+                                <li ng-repeat="remoteClientObj in roomOccupancyDict[currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl].listOfClientObjects | orderBy: 'userName'">
                                     <span style="white-space:nowrap;">
                                         <span  class='cl-chat-group-video-icon-container'>
                                             <button type="button"
@@ -139,7 +139,7 @@
 
 
                                         <span class="input-group-btn">
-                                            <button ng-click="sendChatMessageFn(roomId)"
+                                            <button ng-click="sendChatMessageFn(roomOccupancyDict[currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl].chatRoomId)"
                                                     class="btn  btn-sm pull-right  'btn-primary'"
                                                     ng-disabled="sendMessageForm.$invalid">
                                                 Send

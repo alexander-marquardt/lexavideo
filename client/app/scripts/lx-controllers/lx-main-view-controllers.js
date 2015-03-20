@@ -86,11 +86,11 @@ angular.module('lxMainView.controllers', [])
         };
 
 
-        // roomOccupancyDict will have a unique key corresponding to the roomId of each room the the current
+        // roomOccupancyDict will have a unique key corresponding to the chatRoomName of each room the the current
         // client is a member of. The value of each key will be an object that contains the name of the room
         // and a listing of all of the clients that are in each room.
-        // eg. roomOccupancyDict[roomId] = {
-        //      chatRoomName: roomName,
+        // eg. roomOccupancyDict[chatRoomName] = {
+        //      chatRoomId: chatRoomId,
         //      listOfClientObjects: [],
         //      dictOfClientObjects: {},
         // }

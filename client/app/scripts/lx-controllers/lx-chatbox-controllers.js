@@ -41,8 +41,10 @@ angular.module('lxChatbox.controllers', [])
         $scope.sendMessageFormScope = {};
         $scope.sendMessagePayload = {};
 
+        var chatRoomNameFromUrl = $location.path().replace(/\//, '');
         $scope.currentlyDisplayedChatRoom = {};
-        $scope.currentlyDisplayedChatRoom.chatRoomName = $location.path().replace(/\//, '');
+        $scope.currentlyDisplayedChatRoom.chatRoomNameFromUrl = chatRoomNameFromUrl;
+        $scope.currentlyDisplayedChatRoom.normalizedChatRoomNameFromUrl = chatRoomNameFromUrl.toLowerCase();
 
         /* sendChatMessageFn:
          *      Sends a chat message to other users.

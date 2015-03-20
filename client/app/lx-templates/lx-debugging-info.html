@@ -8,9 +8,9 @@
                     <td>User Id: {{ lxMainViewCtrl.userId }}</td>
                 </tr>
 
-                <tr ng-repeat="(roomId, roomOccupancyObject) in roomOccupancyDict">
-                    <td>Room Name: {{ roomOccupancyObject.chatRoomName }}</td>
-                    <td>Room Id:   {{ roomId }}</td>
+                <tr ng-repeat="(chatRoomName, roomOccupancyObject) in roomOccupancyDict">
+                    <td>Room Name: {{ chatRoomName }}</td>
+                    <td>Room Id:   {{ roomOccupancyObject.chatRoomId }}</td>
                 </tr>
 
                 <tr ng-repeat="user in roomOccupancyObject.listOfClientObjects | filter:{userId: '!'+ roomOccupancyObject.userId}">

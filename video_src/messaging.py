@@ -80,8 +80,9 @@ def send_room_occupancy_to_room_clients(room_info_obj):
         'fromClientId': 'msgSentFromServer',
         'messageType': 'roomOccupancyMsg',
         'messagePayload': {
-            'roomId': room_info_obj.key.id(),
-            'chatRoomName': room_info_obj.chat_room_name_as_written,
+            'normalizedChatRoomName': room_info_obj.chat_room_name,
+            'chatRoomNameAsWritten': room_info_obj.chat_room_name_as_written,
+            'chatRoomId': room_info_obj.key.id(),
             },
         }
 
