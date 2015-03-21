@@ -232,11 +232,27 @@ $main-control-hover-color: white;
 .cl-ng-view {
   position: absolute;
   width: 100%;
+}
+
+.cl-fade-in-main-view {
   &.ng-enter {
-    animation: fadeIn $slide-main-menu-duration * 2;
+    animation: fadeIn $slide-main-menu-duration;
   }
-  &.ng-leave {
-    //animation: slideOutLeft $slide-main-menu-duration;
+}
+.cl-fade-in-chatbox-view {
+  &.ng-hide-add, &.ng-hide-remove {
+    /* this is needed to override the "display: none !important" from ng-hide */
+    display: block !important;
+  }
+  &.ng-hide {
+    opacity: 0;
+  }
+  /**
+   * we fade-in/fade-out accordingly, upon adding/removing the ng-hide class
+   */
+  &.ng-hide-remove {
+    animation: $slide-main-menu-duration fadeIn;
+    -webkit-animation: $slide-main-menu-duration fadeIn;
   }
 }
 
