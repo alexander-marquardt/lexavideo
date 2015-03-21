@@ -1,0 +1,26 @@
+
+<!-- Because there is a small (maybe 500ms) delay when showing the appropriate chatbox in lx-chatbox.html,
+     we load a "fake" chatbox panel as soon as the view is shown. This provides a sense of immediate response
+     to the user. Read comments in lx-chatbox.html for more information on the problem that this overcomes.
+
+     The panels in this file should mirror the panels in lx-chatbox.html -->
+
+{% from 'lx-templates/lx-macros.html' import moveAndResizeDivBesideMainMenu %}
+{% from 'lx-templates/lx-macros.html' import removeSpaceBetwenMainMenuAndDivBesideMainMenu %}
+
+<div ng-show="chatRoomDisplayObject.chatRoomNameFromUrl" class="cl-fade-in-chatbox-view">
+    {{ moveAndResizeDivBesideMainMenu() }}
+
+        {{ removeSpaceBetwenMainMenuAndDivBesideMainMenu() }}
+
+
+            <div class="panel cl-chat-panel panel-primary">
+                <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center"></div>
+                <div class="panel-body cl-chat-panel-body cl-chat-panel-body-short"></div>
+                <div class="panel-footer cl-chat-panel-footer"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
