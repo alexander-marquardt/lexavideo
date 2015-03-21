@@ -232,13 +232,6 @@ $chat-bubble-zindex: 10;
   opacity: 1;
 }
 
-.cl-chatbox-glow {
-   @include my-mixin-border-glow($brand-primary,  1, 5)
-}
-
-
-
-
 .cl-prompt-for-video-access {
      margin-top: 20px;
      padding-top: 3px;

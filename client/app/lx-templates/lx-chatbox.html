@@ -12,11 +12,9 @@
                 {% raw %}
 
                     <div ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
-                        <div class="panel cl-chat-panel panel-primary cl-transition-border"
+                        <div class="panel cl-chat-panel panel-primary"
                              ng-click="userHasAlreadyClickedInChatPanel = true"
                              ng-show="normalizedChatRoomName == chatRoomDisplayObject.normalizedChatRoomNameFromUrl">
-                            <!-- Note: javascript adds 'cl-chatbox-glow' class to the panel if a message is received and the user is
-                                 not focused on the chat. -->
 
                             <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
 
@@ -88,7 +86,7 @@
                                 <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
                                     <!-- This is the html that prompts the user to exchange video with the remote user if the
                                          remote user has requested to do so -->
-                                    <div class="well cl-show-hide-fade cl-prompt-for-video-access cl-chatbox-glow"
+                                    <div class="well cl-show-hide-fade cl-prompt-for-video-access"
                                          ng-show="videoExchangeObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
                                                   videoExchangeObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
 

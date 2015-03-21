@@ -16,7 +16,6 @@ angular.module('lxChatbox.directives', [])
         lxTimeService
         ) {
 
-        var flashChatboxNotificationTime = 500; //ms
         var windowFocus = true;
         var numMessagesReceivedSinceLastWindowFocus = 0;
         var numMessagesIsShownToggle = true;
@@ -86,18 +85,6 @@ angular.module('lxChatbox.directives', [])
             }
         };
 
-        // Add classes that will make the chat panel "flash". Note that timeouts are necessary because
-        // css transitions work depending on the transition class being defined on the element before
-        // the actual transition event occurs.
-        var flashChatPanel = function(chatPanel, chatPanelHeadingElement) {
-            //chatPanelHeadingElement.addClass('cl-flash-chat-heading');
-            chatPanel.addClass('cl-chatbox-glow');
-            $timeout(function() {
-                //chatPanelHeadingElement.removeClass('cl-flash-chat-heading');
-                chatPanel.removeClass('cl-chatbox-glow');
-            }, flashChatboxNotificationTime);
-
-        };
 
         return {
             restrict: 'A',

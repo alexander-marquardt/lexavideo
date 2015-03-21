@@ -254,11 +254,3 @@ $fast-easing-delay: 0.35s;
   opacity:0;
 }
 
-$transition-border: border $fast-easing-delay ease;
-.cl-transition-border {
-  -webkit-transition: $transition-border;
-  -moz-transition: $transition-border;
-  -ms-transition: $transition-border;
-  -o-transition: $transition-border;
-  transition: $transition-border;
-}
