@@ -34,16 +34,8 @@
 
                         {% endraw %}
 
-                        <!-- Because we have multiple chat boxes that can all be "open" at once (although only one
-                             will be visible at any time), we need to keep all of the chatboxes in the dom independent
-                             of whatever view is being currently displayed. This allows each box to continue to receive
-                             messages which will be visible immediatley whenever the user re-displays the chatbox.
-
-                             Therefore, when chatbox URLs are selected,  the ngView that is shown is blank and one of
-                             the chat panels defined in the lx-chatbox.html file will be enabled, depending on the
-                             current URL (where the URL contains the chat name).
-
-                             When a chatbox URL is not selected, we must make sure that the chatboxes are all hidden -->
+                        <!-- Chat views are "faked" in the ng-view directive and are over-written by lx-chatbox.html.
+                             Read comments in lx-chatbox.html for more details. -->
                         {% include 'lx-templates/lx-chatbox.html' %}
 
                     </div>

@@ -1,3 +1,15 @@
+    <!-- Because we have multiple chat boxes that can all be "open" at once (although only one
+         will be visible at any time), we need to keep all of the chatboxes in the dom irregardless
+         of whatever view is being currently displayed. This allows each box to continue to receive
+         messages which will be shown whenever the user displays any chatbox.
+
+         Therefore, when chatbox URLs are selected,  the ngView that is shown is blank and one of
+         the chat panels defined in the lx-chatbox.html file will be enabled, depending on the
+         current URL (where the URL contains the chat name).
+
+         When a chatbox URL is not selected, we must hide all chatboxes. This is accomplished by
+         making sure that chatRoomNameFromUrl is not set.
+         -->
 
 {% from 'lx-templates/lx-macros.html' import moveAndResizeDivBesideMainMenu %}
 {% from 'lx-templates/lx-macros.html' import removeSpaceBetwenMainMenuAndDivBesideMainMenu %}
@@ -12,6 +24,17 @@
                 {% raw %}
 
                     <div ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
+
+                        <!-- The following ng-show ensures that only the currently selected chatbox is visible to the
+                             client.
+
+                             Note: the ng-show below causes a small delay (probably about 500ms) that prevents
+                             a portion of the cl-fade-in-chatbox-view animation (above) from fully displaying
+                             when a new room is created (it is already almost done by the time this element is shown).
+                             It is not obvious the cause of this delay, other than the
+                             time that it takes for the variables to propagate, or for angular code to run first.
+                             Preliminary investigations into this delay were not fruitful.
+                             -->
                         <div class="panel cl-chat-panel panel-primary"
                              ng-click="userHasAlreadyClickedInChatPanel = true"
                              ng-show="normalizedChatRoomName == chatRoomDisplayObject.normalizedChatRoomNameFromUrl">

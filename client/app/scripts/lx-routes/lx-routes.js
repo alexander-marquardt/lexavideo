@@ -16,6 +16,9 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
     });
 
     $routeProvider.when('/:chatRoomName', {
+        /* When chatbox URLs are selected,  the ngView that is shown is blank and one of
+         the chat panels defined in the lx-chatbox.html file will be enabled, depending on the
+         current URL (where the URL contains the chat name). */
         template: '',
         controller: 'lxChatViewCtrl'
     });
