@@ -30,10 +30,12 @@
 
                              Note: the ng-show below causes a small delay (probably about 500ms) that prevents
                              a portion of the cl-fade-in-chatbox-view animation (above) from fully displaying
-                             when a new room is created (it is already almost done by the time this element is shown).
-                             It is not obvious the cause of this delay, other than the
-                             time that it takes for the variables to propagate, or for angular code to run first.
-                             Preliminary investigations into this delay were not fruitful.
+                             when a new room is created (the animation is already almost done by the time this
+                             element is shown).
+
+                             I believe that this delay is caused from waiting for the server to respond with
+                             an updated roomOccupancyDict object that contains the room that the user is currently
+                             viewing. 
                              -->
                         <div class="panel cl-chat-panel panel-primary"
                              ng-click="userHasAlreadyClickedInChatPanel = true"
