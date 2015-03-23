@@ -346,6 +346,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             room_info_obj = ChatRoomInfo.create_or_get_room(chat_room_name_from_url, room_dict,
                                                             room_creator_user_key)
 
+            response_dict['normalizedChatRoomName'] = normalized_chat_room_name
             response_dict['roomId'] = room_info_obj.key.id()
             response_dict['statusString'] = 'roomJoined'
 

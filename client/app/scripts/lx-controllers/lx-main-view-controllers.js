@@ -52,6 +52,14 @@ angular.module('lxMainView.controllers', [])
         // }
         $scope.roomOccupancyDict = {};
 
+        // The following structure contains a list of the room names, and is used for displaying a sorted list
+        // of room names. Eg, it would contain ['room1', 'room5', 'room2', etc.]. Note, it is stored un-sorted,
+        // and we use angular filters to do the sorting.
+        $scope.normalizedRoomNamesList = [];
+
+        $scope.simpleArrayOrderByFn = function(x) {
+            return x;
+        };
 
 
         // The clientId is unique for each connection that a user makes to the server (ie. each new browser

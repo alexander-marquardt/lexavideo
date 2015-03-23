@@ -48,6 +48,11 @@ angular.module('lxUseChatRoom.controllers', [])
                 chatPanelIsCurrentlyVisible: false
             };
 
+            // Add the normalizedRoomName to normalizedRoomNamesList, but only if it is not already there.
+            if ($.inArray(data.normalizedChatRoomName, $scope.normalizedRoomNamesList) == -1) {
+                $scope.normalizedRoomNamesList.push(data.normalizedChatRoomName);
+            }
+
         }, function(errorEnteringIntoRoomInfoObj) {
 
             $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = false;
