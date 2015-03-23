@@ -54,11 +54,16 @@
                                         </button>
                                         <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
                                             <li ng-repeat="normalizedChatRoomName in normalizedRoomNamesList | orderBy: simpleArrayOrderByFn">
-                                                <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}">
-                                                    <span style="white-space:nowrap;">
-                                                        &nbsp;{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}&nbsp
-                                                    </span>
-                                                </a>
+
+                                                    <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}">
+                                                        <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
+                                                            [{{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}]
+                                                        </span>
+
+                                                        <span style="white-space:nowrap;">
+                                                            &nbsp;{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}&nbsp
+                                                        </span>
+                                                    </a>
                                             </li>
                                         </ul>
                                     </div>
