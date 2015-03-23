@@ -60,7 +60,8 @@ video {
 }
 
 @mixin generate-video-overlay-text-mixin {
-  @for $idx from 2 through length($viewport-widths-list) {
+  font-size: nth($video-text-overlay-font-size-list, 1);
+  @for $idx from 1 through length($viewport-widths-list) {
     @media (min-width: nth($viewport-widths-list, $idx)) {
       font-size: nth($video-text-overlay-font-size-list, $idx);
     }
@@ -69,7 +70,6 @@ video {
 
 .cl-video-overlay-text {
   color: white;
-  font-size: nth($video-text-overlay-font-size-list, 1);
   @include generate-video-overlay-text-mixin();
 }
 

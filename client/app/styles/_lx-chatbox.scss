@@ -40,6 +40,15 @@ $chat-bubble-zindex: 10;
   box-sizing: border-box;
 }
 
+.cl-chat-panel-name-size {
+  font-size: nth($chat-panel-name-size, 1);
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
+      font-size: nth($chat-panel-name-size, $idx);
+    }
+  }
+}
+
 .cl-chat-panel-footer {
   height: $chat-panel-footer-height;
   box-sizing: border-box;
@@ -64,7 +73,7 @@ $chat-bubble-zindex: 10;
 }
 
 .cl-chat-panel-dropdown {
-
+  max-width: nth($content-widths-list, 1) / 2 - $grid-gutter-width;
   @for $idx from 1 through length($viewport-widths-list) {
     @media (min-width: nth($viewport-widths-list, $idx)) {
       max-width: nth($content-widths-list, $idx) / 2 - $grid-gutter-width;
