@@ -108,7 +108,6 @@ angular.module('lxChatbox.directives', [])
                     // the chat panel)
                     // This should help them notice when new messages have been received.
                     if (!scope.chatPanelIsGlued || !windowFocus || !scope.userHasAlreadyClickedInChatPanel) {
-                        flashChatPanel(chatPanel, chatPanelHeadingElement);
                         playSoundOnMessage();
                     }
 
