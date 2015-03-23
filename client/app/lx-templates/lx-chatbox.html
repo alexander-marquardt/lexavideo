@@ -82,7 +82,7 @@
                                         <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                            <li ng-repeat="remoteClientObj in roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].listOfClientObjects | orderBy: 'userName'">
+                                            <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
                                                 <span style="white-space:nowrap;">
                                                     <span  class='cl-chat-group-video-icon-container'>
                                                         <button type="button"
