@@ -174,11 +174,12 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'chatDataMsg':
-                            var receivedChatMessageObject = scope.receivedChatMessageObject;
+                            var chatRoomId = messageObject.roomId;
+                            var receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
 
-                            receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
-                            // receivedMessageStringToggle is used for triggering the watcher
-                            receivedChatMessageObject.receivedMessageTime = new Date().getTime();
+                            receivedChatMessageObject['messageString'] = messageObject.messagePayload.messageString;
+                            // receivedMessageTime is used for triggering the watcher
+                            receivedChatMessageObject['receivedMessageTime'] = new Date().getTime();
                             break;
 
                         case 'videoExchangeStatusMsg':

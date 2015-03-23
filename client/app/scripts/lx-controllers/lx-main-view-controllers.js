@@ -109,15 +109,18 @@ angular.module('lxMainView.controllers', [])
             debugShowAllVideoWindows: false
         };
 
+        // receivedChatMessageObject will have a unique key corresponding to the chatRoomId of each room the the current
+        // client is a member of. The value of each key will be an object that contains the name of the room
+        // and a listing of all of the clients that are in each room.
+        // eg. roomOccupancyDict[chatRoomId] = {
+        //      messageString: string,
+        //      // receivedMessageTime is updated every time the user sends a message - this is necessary because
+        //      // if we just watch receivedMessageString for changes to trigger sending of the message, then the user will not be
+        //      // able to send the same message twice.
+        //      receivedMessageTime: time
+        // }
+        $scope.receivedChatMessageObject = {};
 
-        $scope.receivedChatMessageObject = {
-            messageString: undefined,
-
-           // receivedMessageTime is updated every time the user sends a message - this is necessary because
-            // if we just watch receivedMessageString for changes to trigger sending of the message, then the user will not be
-            // able to send the same message twice.
-            receivedMessageTime: 0
-        };
 
         $scope.mainGlobalControllerObj = {
              // if the user is rejected from a room, then this will contain a information about what went wrong.

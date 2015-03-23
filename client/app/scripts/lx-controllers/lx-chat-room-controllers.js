@@ -41,6 +41,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
             $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
             addClientToRoomWhenChannelReady(data.roomId);
+            $scope.receivedChatMessageObject[data.roomId] = {};
 
         }, function(errorEnteringIntoRoomInfoObj) {
 

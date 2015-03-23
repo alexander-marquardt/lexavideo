@@ -91,9 +91,7 @@ angular.module('lxChatbox.directives', [])
             link: function (scope, elem) {
 
                 var timeString;
-                var chatPanelBody = angular.element(elem).parent();
-                var chatPanelHeadingElement = chatPanelBody.prev();
-                var chatPanel = chatPanelBody.parent();
+                var chatRoomId = scope.roomOccupancyObject.chatRoomId;
 
                 var addMessageToDisplay = function(messagePayload, bubbleSide, transmittedSuccessBoolean) {
                     // message: The text that will be displayed to the user
@@ -183,9 +181,11 @@ angular.module('lxChatbox.directives', [])
                     }
                 });
 
-                scope.$watch('receivedChatMessageObject.receivedMessageTime', function() {
-                    if (scope.receivedChatMessageObject.messageString) {
-                        addMessageToDisplay(scope.receivedChatMessageObject, 'left', true);
+                scope.$watch(function(scope){
+                    return scope.receivedChatMessageObject[chatRoomId].receivedMessageTime;
+                }, function() {
+                    if (scope.receivedChatMessageObject[chatRoomId].messageString) {
+                        addMessageToDisplay(scope.receivedChatMessageObject[chatRoomId], 'left', true);
                         // if the user is not looking at the current window, then show them how many messages
                         // they have missed while they were not paying attention.
                         if (!windowFocus) {
