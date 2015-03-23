@@ -343,7 +343,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # If this is a new room, then the room_creator_user_key will be stored in the room
             # object as the "creator" of the room
             room_creator_user_key = ndb.Key('UserModel', user_id)
-            room_info_obj = ChatRoomInfo.create_or_get_room(chat_room_name_from_url, room_dict,
+            room_info_obj = ChatRoomInfo.create_or_get_room(normalized_chat_room_name, room_dict,
                                                             room_creator_user_key)
 
             response_dict['normalizedChatRoomName'] = normalized_chat_room_name
