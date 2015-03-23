@@ -72,8 +72,8 @@
                                     <span class="cl-chat-panel-name-size">
                                         {{ chatRoomDisplayObject.chatRoomNameFromUrl }}
                                     </span>
-                                    <span ng-if="chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
-                                        [ {{ chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }} new messages ]
+                                    <span class="cl-chat-panel-name-size" ng-if="chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
+                                        [{{ chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}]
                                     </span>
 
                                     <!-- define the group members button -->
