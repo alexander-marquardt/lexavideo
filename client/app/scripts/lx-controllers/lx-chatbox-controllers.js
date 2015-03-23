@@ -6,7 +6,7 @@
 
 angular.module('lxChatbox.controllers', [])
 
-    .controller('lxChatboxMainCtrl',
+    .controller('lxChatPanelCtrl',
     function (
         $anchorScroll,
         $location,
@@ -77,12 +77,7 @@ angular.module('lxChatbox.controllers', [])
                 function(response) {
 
                     $scope.sendMessagePayload.transmittedToServer = false;
-
-                    if (response.data.statusString === 'otherUserNotInRoom') {
-                        $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Unable to deliver message.<br>There are no other users in this chat.</b></span><br> ' + $scope.sendMessageFormScope.inputMessageString;
-                    } else {
-                        $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + $scope.sendMessageFormScope.inputMessageString;
-                    }
+                    $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + $scope.sendMessageFormScope.inputMessageString;
                 }
             )['finally'](function () {
                 // once the promise is resolved, update the sendMessageTime which will trigger some watchers.
