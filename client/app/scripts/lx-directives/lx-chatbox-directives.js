@@ -93,6 +93,7 @@ angular.module('lxChatbox.directives', [])
                 var timeString;
                 var chatRoomId = scope.roomOccupancyObject.chatRoomId;
 
+
                 var addMessageToDisplay = function(messagePayload, bubbleSide, transmittedSuccessBoolean) {
                     // message: The text that will be displayed to the user
                     // bubbleSide: 'left' (message sent) or 'right' (message received)
@@ -102,8 +103,8 @@ angular.module('lxChatbox.directives', [])
 
                     // The following code will make a sound if the chat panel is not glued, to let the user
                     // know that they have received a message that they might not notice
-                    if (!scope.chatPanelObject.chatPanelIsGlued || !scope.chatPanelObject.chatPanelIsCurrentlyVisible) {
-                        scope.chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed ++;
+                    if (!scope.chatPanelDict[chatRoomId].chatPanelIsGlued || !scope.chatPanelDict[chatRoomId].chatPanelIsCurrentlyVisible) {
+                        scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed ++;
                     }
 
                     var outerElement = angular.element('<div class="cl-fade-in-chat-bubble-element">');

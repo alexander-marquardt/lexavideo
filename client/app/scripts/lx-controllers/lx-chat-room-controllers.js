@@ -45,7 +45,7 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.chatPanelDict[data.roomId] = {
                 chatPanelIsGlued: true,
                 numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
-                chatPanelIsCurrentlyVisible: false
+                chatPanelIsCurrentlyVisible: true
             };
 
             // Add the normalizedRoomName to normalizedRoomNamesList, but only if it is not already there.

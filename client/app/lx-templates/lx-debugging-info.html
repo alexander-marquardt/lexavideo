@@ -8,12 +8,13 @@
                     <td>User Id: {{ lxMainViewCtrl.userId }}</td>
                 </tr>
 
-                <tr ng-repeat="(chatRoomName, roomOccupancyObject) in roomOccupancyDict">
-                    <td>Room Name: {{ chatRoomName }}</td>
+                <tr ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
+                    <td>Room Name: {{ normalizedChatRoomName }}</td>
                     <td>Room Id:   {{ roomOccupancyObject.chatRoomId }}</td>
+                    <td>{{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}</td>
                 </tr>
 
-                <tr ng-repeat="user in roomOccupancyObject.listOfClientObjects | filter:{userId: '!'+ roomOccupancyObject.userId}">
+                <tr ng-repeat="user in roomOccupancyObject.listOfClientObjects | filter:{userName: '!'+ roomOccupancyObject.userName}">
                     <td>Remote User Name: {{ user.userName }}</td>
                     <td>Remote User Id: {{ user.userId }}</td>
                 </tr>
@@ -29,5 +30,7 @@
         </div>
     </div>
 </div>
+
+{{ chatPanelDict }}
 
 {% endraw %}

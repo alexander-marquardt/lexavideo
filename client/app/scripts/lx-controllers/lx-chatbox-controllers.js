@@ -30,8 +30,6 @@ angular.module('lxChatbox.controllers', [])
 
         $scope.maxMsgLength = 5000;
 
-        $scope.chatPanelObject = $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId];
-
 
         $scope.sendMessageFormScope = {};
         $scope.sendMessagePayload = {};
@@ -81,13 +79,13 @@ angular.module('lxChatbox.controllers', [])
         };
 
         $scope.gluePanel = function() {
-            $scope.chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
-            $scope.chatPanelObject.chatPanelIsGlued = true;
+            $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+            $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsGlued = true;
         };
 
-        $scope.$watch('chatPanelObject.chatPanelIsGlued', function() {
-            if ($scope.chatPanelObject.chatPanelIsGlued) {
-                $scope.chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+        $scope.$watch('chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsGlued', function() {
+            if ($scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsGlued) {
+                $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
             }
         });
 
@@ -95,9 +93,9 @@ angular.module('lxChatbox.controllers', [])
            if ($scope.normalizedChatRoomName && $scope.chatRoomDisplayObject &&
                $scope.normalizedChatRoomName == $scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl) {
 
-               $scope.chatPanelObject.chatPanelIsCurrentlyVisible = true;
+               $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = true;
            } else {
-               $scope.chatPanelObject.chatPanelIsCurrentlyVisible = false;
+               $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = false;
            }
         });
     });

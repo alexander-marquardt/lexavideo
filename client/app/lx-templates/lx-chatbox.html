@@ -38,7 +38,7 @@
                                  viewing.
                                  -->
                             <div class="panel cl-chat-panel panel-primary"
-                                 ng-show="chatPanelObject.chatPanelIsCurrentlyVisible">
+                                 ng-show="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible">
 
                                 <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
 
@@ -72,8 +72,8 @@
                                     <span class="cl-chat-panel-name-size">
                                         {{ chatRoomDisplayObject.chatRoomNameFromUrl }}
                                     </span>
-                                    <span ng-if="chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed">
-                                        [ {{ chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed }} new messages ]
+                                    <span ng-if="chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
+                                        [ {{ chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }} new messages ]
                                     </span>
 
                                     <!-- define the group members button -->
@@ -105,7 +105,7 @@
                                 </div>
 
                                 <div class="panel-body cl-chat-panel-body cl-chat-panel-body-short"
-                                     scroll-glue="chatPanelObject.chatPanelIsGlued">
+                                     scroll-glue="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsGlued">
                                      <!--ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
                                         <!--'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">-->
                                     <!--<div ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
