@@ -75,7 +75,7 @@ angular.module('lxChatbox.directives', [])
                             document.title = '(' + numMessagesReceivedSinceLastWindowFocus + ') ' + $('#id-document-title-div').text();
                         }
                         numMessagesIsShownToggle = !numMessagesIsShownToggle;
-                        // after initial wait, start flashing every 2 seconds.
+                        // after initial wait, start flashing every X seconds.
                         timeoutDelay = 1000;
 
                         timeoutFn();
