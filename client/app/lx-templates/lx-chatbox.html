@@ -38,8 +38,7 @@
                                  viewing.
                                  -->
                             <div class="panel cl-chat-panel panel-primary"
-                                 ng-click="userHasAlreadyClickedInChatPanel = true"
-                                 ng-show="normalizedChatRoomName == chatRoomDisplayObject.normalizedChatRoomNameFromUrl">
+                                 ng-show="chatPanelObject.chatPanelIsCurrentlyVisible">
 
                                 <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
 
@@ -67,6 +66,9 @@
 
                                     <span class="cl-chat-panel-name-size">
                                         {{ chatRoomDisplayObject.chatRoomNameFromUrl }}
+                                    </span>
+                                    <span ng-if="chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed">
+                                        [ {{ chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed }} new messages ]
                                     </span>
 
                                     <!-- define the group members button -->
@@ -98,7 +100,7 @@
                                 </div>
 
                                 <div class="panel-body cl-chat-panel-body cl-chat-panel-body-short"
-                                     scroll-glue="chatPanelIsGlued">
+                                     scroll-glue="chatPanelObject.chatPanelIsGlued">
                                      <!--ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
                                         <!--'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">-->
                                     <!--<div ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
@@ -157,7 +159,7 @@
                                                            placeholder="Type your message here..."
                                                            ng-model="sendMessageFormScope.inputMessageString"
                                                            maxlength="{{ maxMsgLength }}"
-                                                           ng-click="chatPanelIsGlued = true"
+                                                           ng-click="gluePanel()"
                                                            required
                                                             />
 

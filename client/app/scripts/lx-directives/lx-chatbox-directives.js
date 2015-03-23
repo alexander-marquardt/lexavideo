@@ -102,9 +102,9 @@ angular.module('lxChatbox.directives', [])
 
                     // The following code will make a sound if the chat panel is not glued, to let the user
                     // know that they have received a message that they might not notice
-//                    if (!scope.chatPanelIsGlued || !windowFocus || !scope.userHasAlreadyClickedInChatPanel) {
-//                        playSoundOnMessage();
-//                    }
+                    if (!scope.chatPanelObject.chatPanelIsGlued || !scope.chatPanelObject.chatPanelIsCurrentlyVisible) {
+                        scope.chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed ++;
+                    }
 
                     var outerElement = angular.element('<div class="cl-fade-in-chat-bubble-element">');
                     var messageElement = angular.element('<div  class="row cl-chat-row">');

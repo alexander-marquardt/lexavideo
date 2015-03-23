@@ -53,6 +53,7 @@ angular.module('lxMainView.controllers', [])
         $scope.roomOccupancyDict = {};
 
 
+
         // The clientId is unique for each connection that a user makes to the server (ie. each new browser
         // window/device that they connect from). In order to create a unique clientID, we append the userId with
         // a randomly generated number with a billion possibilities. This should prevent the user
@@ -120,6 +121,18 @@ angular.module('lxMainView.controllers', [])
         //      receivedMessageTime: time
         // }
         $scope.receivedChatMessageObject = {};
+
+
+
+        // chatPanelDict will have a unique key corresponding to the chatRoomId of each room that the client
+        // is currently a member of.
+        // eg. chatPanelDict[chatRoomId] = {
+        //    // initially keep the chat panel glued so that the most recent messages are shown.
+        //    chatPanelIsGlued: true,
+        //    numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
+        //    chatPanelIsCurrentlyVisible: false
+        // };
+        $scope.chatPanelDict = {};
 
 
         $scope.mainGlobalControllerObj = {

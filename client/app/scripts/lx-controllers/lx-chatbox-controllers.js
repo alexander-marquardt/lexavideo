@@ -30,13 +30,8 @@ angular.module('lxChatbox.controllers', [])
 
         $scope.maxMsgLength = 5000;
 
+        $scope.chatPanelObject = $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId];
 
-        // initially keep the chat panel glued so that the most recent messages are shown.
-        $scope.chatPanelIsGlued = true;
-
-        // userHasClickedInChatPanelInput is used to give the user more flashes/sounds if they have not yet
-        // clicked in the chat panel input.
-        $scope.userHasAlreadyClickedInChatPanel = false;
 
         $scope.sendMessageFormScope = {};
         $scope.sendMessagePayload = {};
@@ -84,4 +79,25 @@ angular.module('lxChatbox.controllers', [])
                 $scope.sendMessageTime = new Date().getTime();
             });
         };
+
+        $scope.gluePanel = function() {
+            $scope.chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+            $scope.chatPanelObject.chatPanelIsGlued = true;
+        };
+
+        $scope.$watch('chatPanelObject.chatPanelIsGlued', function() {
+            if ($scope.chatPanelObject.chatPanelIsGlued) {
+                $scope.chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+            }
+        });
+
+        $scope.$watch('chatRoomDisplayObject.normalizedChatRoomNameFromUrl', function() {
+           if ($scope.normalizedChatRoomName && $scope.chatRoomDisplayObject &&
+               $scope.normalizedChatRoomName == $scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl) {
+
+               $scope.chatPanelObject.chatPanelIsCurrentlyVisible = true;
+           } else {
+               $scope.chatPanelObject.chatPanelIsCurrentlyVisible = false;
+           }
+        });
     });

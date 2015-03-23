@@ -42,6 +42,11 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
             addClientToRoomWhenChannelReady(data.roomId);
             $scope.receivedChatMessageObject[data.roomId] = {};
+            $scope.chatPanelDict[data.roomId] = {
+                chatPanelIsGlued: true,
+                numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
+                chatPanelIsCurrentlyVisible: false
+            };
 
         }, function(errorEnteringIntoRoomInfoObj) {
 
