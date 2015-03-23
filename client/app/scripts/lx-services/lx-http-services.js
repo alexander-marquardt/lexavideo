@@ -9,7 +9,7 @@ angular.module('lxHttp.services', [])
         ) {
 
         var handleRoomUrl = '/_lx/handle_room/';
-        var RoomResource = $resource(handleRoomUrl + ':chatRoomName', {chatRoomName: '@chatRoomName'});
+        var RoomResource = $resource(handleRoomUrl + ':chatRoomNameAsWritten', {chatRoomNameAsWritten: '@chatRoomNameAsWritten'});
 
         return {
             enterIntoRoom : function(roomObj) {
@@ -21,11 +21,11 @@ angular.module('lxHttp.services', [])
             },
 
 
-            getRoom : function(chatRoomName) {
+            getRoom : function(chatRoomNameAsWritten) {
 
                 var roomObj = null;
-                if (chatRoomName) {
-                    roomObj = RoomResource.get({chatRoomName:chatRoomName});
+                if (chatRoomNameAsWritten) {
+                    roomObj = RoomResource.get({chatRoomNameAsWritten:chatRoomNameAsWritten});
                 }
                 return roomObj;
             }

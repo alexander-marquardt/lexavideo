@@ -35,14 +35,14 @@ angular.module('lxChatRoom.services', [])
 
                 // For now, we pull the room name from the URL - this will likely change in future versions
                 // of our code.
-                var chatRoomName = $location.path().replace(/\//, '');
+                var chatRoomNameAsWritten = $location.path().replace(/\//, '');
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();
 
-                $log.log('addUserToRoom called: ' + chatRoomName + '. Adding userId: ' + lxAppWideConstantsService.userId);
+                $log.log('addUserToRoom called: ' + chatRoomNameAsWritten + '. Adding userId: ' + lxAppWideConstantsService.userId);
 
 
                 var roomObj = {};
-                roomObj.chatRoomName = chatRoomName;
+                roomObj.chatRoomNameAsWritten = chatRoomNameAsWritten;
 
                 // Pass userId when creating/entering into the room, because if this is the first user to
                 // enter a given room name, then they will be stored as the "creator" of that room
@@ -56,13 +56,13 @@ angular.module('lxChatRoom.services', [])
                         }
                         else {
                             // something went wrong - redirect back to login with an appropriate errorString
-                            failedToEnterRoom($log.warn, roomObj.chatRoomName, data.statusString, deferredUserSuccessfullyEnteredRoom);
+                            failedToEnterRoom($log.warn, roomObj.chatRoomNameAsWritten, data.statusString, deferredUserSuccessfullyEnteredRoom);
                         }
                     },
                     function(data) {
                         // Failed to enter into the room. The 'data' returned from the reject is actually an object
                         // containing another object called 'data'.
-                        failedToEnterRoom($log.error, roomObj.chatRoomName, data.data.statusString, deferredUserSuccessfullyEnteredRoom);
+                        failedToEnterRoom($log.error, roomObj.chatRoomNameAsWritten, data.data.statusString, deferredUserSuccessfullyEnteredRoom);
                     }
                 );
 

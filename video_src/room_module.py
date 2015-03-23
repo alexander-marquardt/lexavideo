@@ -55,15 +55,15 @@ class VideoSetup(ndb.Model):
 class ChatRoomInfo(ndb.Model):
     """All the data necessary for keeping track of room names and occupancy etc. """
 
-    unique_chat_room_name_model = UniqueChatRoomName
+    unique_normalized_chat_room_name_model = UniqueChatRoomName
 
     room_creator_user_key = ndb.KeyProperty(kind='UserModel')
 
     # This is the lower case room name - ie. user wrote 'Alex', but it will be stored as 'alex'
-    chat_room_name = ndb.StringProperty(default = None)
+    normalized_chat_room_name = ndb.StringProperty(default = None)
 
     # The following is used for showing/remembering the room nam as it was written i.e.
-    # if the user wrote 'aLeX', it will be stored here as 'aLeX'
+    # if the room creator wrote 'aLeX', it will be stored here as 'aLeX'
     chat_room_name_as_written = ndb.StringProperty(default = None)
 
     # room_members_client_ids contains ids of all users currently in a chat room.
@@ -72,26 +72,26 @@ class ChatRoomInfo(ndb.Model):
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
     @classmethod
-    def get_unique_chat_room_name_model_key_string(cls, chat_room_name):
-        return '%s.%s:%s' % (cls.__name__, 'chat_room_name', chat_room_name)
+    def get_unique_normalized_chat_room_name_model_key_string(cls, normalized_chat_room_name):
+        return '%s.%s:%s' % (cls.__name__, 'normalized_chat_room_name', normalized_chat_room_name)
 
 
     @classmethod
-    def check_if_room_name_is_unique(cls, chat_room_name):
-        key_string = cls.get_unique_chat_room_name_model_key_string(chat_room_name)
-        is_unique = cls.unique_chat_room_name_model.create(key_string)
+    def check_if_room_name_is_unique(cls, normalized_chat_room_name):
+        key_string = cls.get_unique_normalized_chat_room_name_model_key_string(normalized_chat_room_name)
+        is_unique = cls.unique_normalized_chat_room_name_model.create(key_string)
         return is_unique
 
 
     # The ChatRoomName has been added to the chatRoomName structure. Now create a new Room object
     # for the new room.
     @classmethod
-    def create_or_get_room(cls, chat_room_name, room_dict, room_creator_user_key):
+    def create_or_get_room(cls, normalized_chat_room_name, room_dict, room_creator_user_key):
 
         # make a copy of room_dict, so that our modifications don't accidentally change it for other functions
         room_info_obj_dict = copy.copy(room_dict)
 
-        room_name_is_unique = cls.check_if_room_name_is_unique(chat_room_name)
+        room_name_is_unique = cls.check_if_room_name_is_unique(normalized_chat_room_name)
 
         if room_name_is_unique:
 
@@ -102,9 +102,9 @@ class ChatRoomInfo(ndb.Model):
             room_info_obj = cls(**room_info_obj_dict)
             room_info_obj.put()
         else:
-            room_info_obj = cls.query(cls.chat_room_name == chat_room_name).get()
+            room_info_obj = cls.query(cls.normalized_chat_room_name == normalized_chat_room_name).get()
             if not room_info_obj:
-                raise Exception('chat_room_name %s does not exist in the ChatRoomInfo data structure' % chat_room_name)
+                raise Exception('normalized_chat_room_name %s does not exist in the ChatRoomInfo data structure' % normalized_chat_room_name)
 
         return room_info_obj
 
@@ -278,15 +278,15 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
     @handle_exceptions
     def get(self, chat_room_name_from_url=None):
         chat_room_name_from_url = chat_room_name_from_url.decode('utf8')
-        chat_room_name = chat_room_name_from_url.lower()
+        normalized_chat_room_name = chat_room_name_from_url.lower()
 
-        if chat_room_name:
-            logging.info('Query for room name: ' + chat_room_name)
-            room_info_obj = ChatRoomInfo.query(ChatRoomInfo.chat_room_name == chat_room_name).get()
+        if normalized_chat_room_name:
+            logging.info('Query for room name: ' + normalized_chat_room_name)
+            room_info_obj = ChatRoomInfo.query(ChatRoomInfo.normalized_chat_room_name == normalized_chat_room_name).get()
 
             if room_info_obj:
                 response_dict = {
-                    'chatRoomName': chat_room_name,
+                    'chatRoomName': normalized_chat_room_name,
                     'roomIsRegistered': True,
                     'numInRoom': room_info_obj.get_occupancy(),
                 }
@@ -294,11 +294,11 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             else:
                 response_dict = {
-                    'chatRoomName': chat_room_name,
+                    'chatRoomName': normalized_chat_room_name,
                     'roomIsRegistered' : False,
                     'numInRoom': 0
                 }
-                logging.info('Room name is available: ' + chat_room_name)
+                logging.info('Room name is available: ' + normalized_chat_room_name)
 
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
@@ -322,10 +322,9 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             chat_room_name_from_url = chat_room_name_from_url.decode('utf8')
             room_dict = utils.convert_dict(room_dict, utils.camel_to_underscore)
 
-            assert (room_dict['chat_room_name'] == chat_room_name_from_url)
-            room_dict['chat_room_name_as_written'] = room_dict['chat_room_name']
-            chat_room_name = chat_room_name_from_url.lower()
-            room_dict['chat_room_name'] = chat_room_name
+            assert (room_dict['chat_room_name_as_written'] == chat_room_name_from_url)
+            normalized_chat_room_name = chat_room_name_from_url.lower()
+            room_dict['normalized_chat_room_name'] = normalized_chat_room_name
 
 
             # Make sure that the room name is valid before continuing.
@@ -333,10 +332,10 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # already formatted to be within bounds and characters checked by the client-side javascript.
             # Only if the user has somehow bypassed the javascript checks should we receive values that don't
             # conform to the constraints that we have placed.
-            if not constants.valid_chat_room_name_regex_compiled.match(chat_room_name):
+            if not constants.valid_chat_room_name_regex_compiled.match(chat_room_name_from_url):
                 raise Exception('Room name regexp did not match')
-            if len(chat_room_name) > constants.room_max_chars or len(chat_room_name) < constants.room_min_chars:
-                raise Exception('Room name length of %s is out of range' % len(chat_room_name))
+            if len(chat_room_name_from_url) > constants.room_max_chars or len(chat_room_name_from_url) < constants.room_min_chars:
+                raise Exception('Room name length of %s is out of range' % len(chat_room_name_from_url))
 
             response_dict = {}
             user_id = long(room_dict['user_id'])
@@ -344,7 +343,7 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # If this is a new room, then the room_creator_user_key will be stored in the room
             # object as the "creator" of the room
             room_creator_user_key = ndb.Key('UserModel', user_id)
-            room_info_obj = ChatRoomInfo.create_or_get_room(chat_room_name, room_dict,
+            room_info_obj = ChatRoomInfo.create_or_get_room(chat_room_name_from_url, room_dict,
                                                             room_creator_user_key)
 
             response_dict['roomId'] = room_info_obj.key.id()
