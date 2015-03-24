@@ -11,51 +11,47 @@ angular.module('lxChatbox.directives', [])
 
     function(
         $compile,
+        $log,
         $timeout,
         lxSoundService,
         lxTimeService
         ) {
 
-        var windowFocus = true;
-        var numMessagesReceivedSinceLastWindowFocus = 0;
         var numMessagesIsShownToggle = true;
         var timerId;
 
-        // function that removes the message counter from the document title, and resets the
-        // message counter back to zero.
-        var resetDocumentTitleToDefault = function() {
-            numMessagesReceivedSinceLastWindowFocus = 0;
-            document.title = $('#id-document-title-div').text();
+        // function that stops the title from flashing the number of new messages, and that adjusts
+        // the number of unseen messages to reflect that the user has just clicked on a chat panel whose messages
+        // have now been "seen" and are therefore removed from the count.
+        var stopFlashingTitleAndAdjustCount = function(scope, chatRoomId) {
+
+            if (scope.chatPanelDict[chatRoomId].chatPanelIsCurrentlyVisible) {
+
+                if (scope.chatPanelDict[chatRoomId].chatPanelIsGlued) {
+                    scope.trackUnseenMessageCountObject.unseenMessageCount -= scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed;
+                    scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+                }
+
+                if (!scope.trackUnseenMessageCountObject.unseenMessageCount) {
+                    document.title = $('#id-document-title-div').text();
+                } else {
+                    document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
+                }
+
+            }
+
             // remove blinking of the number of messages
             $timeout.cancel(timerId);
         };
 
-        // self-executing function that monitors the window to see if it has focus, and set the windowFocus
-        // variable appropriately
-        (function setWindowFocus() {
-            $(window).focus(function() {
-                windowFocus = true;
-                resetDocumentTitleToDefault();
-            }).blur(function() {
-                windowFocus = false;
-            });
-        })();
 
-
-        var playSoundOnMessage = function() {
-            if (lxSoundService.canPlayMp3) {
-                var sound = new Audio('/sounds/croak.mp3');
-                sound.volume = 0.3;
-                sound.play();
-            }
-        };
 
         // Displays the number of messages received in the document title , and flashes the
         // number of messages to get the users attention.
-        var showNumMessagesInDocumentTitle = function() {
+        var showNumMessagesInDocumentTitle = function(trackUnseenMessageCountObject) {
 
             // show the number of messages in the document title.
-            document.title = '(' + numMessagesReceivedSinceLastWindowFocus + ') ' + $('#id-document-title-div').text();
+            document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
 
             // The remainder of this code deals with making the number of messages flash in the document title.
             // First, check to see if the title is already flashing by seeing if timerId has been set. If it is already
@@ -69,10 +65,8 @@ angular.module('lxChatbox.directives', [])
                     timerId = $timeout(function () {
                         if (numMessagesIsShownToggle) {
                             document.title = $('#id-document-title-div').text();
-
                         } else {
-                            // the arrow is now shown, display it for a while
-                            document.title = '(' + numMessagesReceivedSinceLastWindowFocus + ') ' + $('#id-document-title-div').text();
+                            document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
                         }
                         numMessagesIsShownToggle = !numMessagesIsShownToggle;
                         // after initial wait, start flashing every X seconds.
@@ -100,12 +94,6 @@ angular.module('lxChatbox.directives', [])
                     // transmittedSuccessBoolean: true or false. true if message sent/received correctly, false otherwise.
 
 
-
-                    // The following code will make a sound if the chat panel is not glued, to let the user
-                    // know that they have received a message that they might not notice
-                    if (!scope.chatPanelDict[chatRoomId].chatPanelIsGlued || !scope.chatPanelDict[chatRoomId].chatPanelIsCurrentlyVisible) {
-                        scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed ++;
-                    }
 
                     var outerElement = angular.element('<div class="cl-fade-in-chat-bubble-element">');
                     var messageElement = angular.element('<div  class="row cl-chat-row">');
@@ -176,6 +164,7 @@ angular.module('lxChatbox.directives', [])
                 scope.$watch('sendMessageTime', function() {
                     if (scope.sendMessagePayload.messageString) {
                         addMessageToDisplay(scope.sendMessagePayload, 'right', scope.sendMessagePayload.transmittedToServer);
+
                     }
                 });
 
@@ -183,16 +172,18 @@ angular.module('lxChatbox.directives', [])
                     return scope.receivedChatMessageObject[chatRoomId].receivedMessageTime;
                 }, function() {
                     if (scope.receivedChatMessageObject[chatRoomId].messageString) {
-                        addMessageToDisplay(scope.receivedChatMessageObject[chatRoomId], 'left', true);
-                        // if the user is not looking at the current window, then show them how many messages
-                        // they have missed while they were not paying attention.
-                        if (!windowFocus) {
-                            numMessagesReceivedSinceLastWindowFocus++;
-                            showNumMessagesInDocumentTitle();
 
-                        } else {
-                            numMessagesReceivedSinceLastWindowFocus = 0;
+                        addMessageToDisplay(scope.receivedChatMessageObject[chatRoomId], 'left', true);
+
+                        // The following code will keep track of "un-noticed" messages that the user has received
+                        if (!scope.chatPanelDict[chatRoomId].chatPanelIsGlued || !scope.chatPanelDict[chatRoomId].chatPanelIsCurrentlyVisible ||
+                            !scope.windowWatcher.isFocused) {
+                            scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed ++;
+                            scope.trackUnseenMessageCountObject.unseenMessageCount++;
                         }
+
+                        showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject);
+
                     }
                 });
 
@@ -201,6 +192,11 @@ angular.module('lxChatbox.directives', [])
 //                        updateMessageWithAcknowledgement(ackMessageUniqueId);
 //                    }
 //                });
+
+                scope.$watch('windowWatcher.isFocused', function() {
+                    stopFlashingTitleAndAdjustCount(scope, chatRoomId);
+                    $log.log('chatPanelDict:' + angular.toJson(scope.chatPanelDict));
+                });
             }
         };
     }

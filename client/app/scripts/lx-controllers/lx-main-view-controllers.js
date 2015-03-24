@@ -142,6 +142,9 @@ angular.module('lxMainView.controllers', [])
         // };
         $scope.chatPanelDict = {};
 
+        $scope.trackUnseenMessageCountObject = {
+            unseenMessageCount: 0
+        };
 
         $scope.mainGlobalControllerObj = {
              // if the user is rejected from a room, then this will contain a information about what went wrong.
@@ -237,6 +240,22 @@ angular.module('lxMainView.controllers', [])
                 // Note: do not null lastChatRoomNameFromUrl as it "remembers" the last chat room
             }
         });
+
+        $scope.windowWatcher = {
+            isFocused: true
+        };
+        // Monitor the window to see if it has focus, and set the windowWatcher.isFocused
+        // variable appropriately. $scope.windowWatcher.isFocused can then be watched by child scopes.
+        $(window).focus(function() {
+            $scope.$apply(function() {
+                $scope.windowWatcher.isFocused = true;
+            });
+        }).blur(function() {
+            $scope.$apply(function() {
+                $scope.windowWatcher.isFocused = false;
+            });
+        });
+
     });
 
 
