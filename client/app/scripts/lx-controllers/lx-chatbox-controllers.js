@@ -80,8 +80,7 @@ angular.module('lxChatbox.controllers', [])
         };
 
         $scope.gluePanel = function() {
-            $scope.trackUnseenMessageCountObject.unseenMessageCount -= $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed;
-            $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+            lxShowNumMessagesService.clearNumMessagesInChatPanel($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId]);
             lxShowNumMessagesService.showNumMessagesInDocumentTitle($scope.trackUnseenMessageCountObject);
 
             $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsGlued = true;
@@ -91,8 +90,7 @@ angular.module('lxChatbox.controllers', [])
             return scope.chatPanelDict[scope.roomOccupancyObject.chatRoomId].chatPanelIsGlued;
         }, function(chatPanelIsGlued) {
             if (chatPanelIsGlued) {
-                $scope.trackUnseenMessageCountObject.unseenMessageCount -= $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed;
-                $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+                lxShowNumMessagesService.clearNumMessagesInChatPanel($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId]);
                 lxShowNumMessagesService.showNumMessagesInDocumentTitle($scope.trackUnseenMessageCountObject);
             }
         });

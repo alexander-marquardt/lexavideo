@@ -69,7 +69,13 @@ angular.module('lxUtility.services', [])
         var timerId;
 
 
-        return {
+        var self = {
+            clearNumMessagesInChatPanel: function(trackUnseenMessageCountObject, chatPanelObject) {
+                trackUnseenMessageCountObject.unseenMessageCount -= chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed;
+                chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+            },
+
+
             // function that stops the title from flashing the number of new messages, and that adjusts
             // the number of unseen messages to reflect that the user has just clicked on a chat panel whose messages
             // have now been "seen" and are therefore removed from the count.
@@ -78,8 +84,7 @@ angular.module('lxUtility.services', [])
                 if (chatPanelObject.chatPanelIsCurrentlyVisible) {
 
                     if (chatPanelObject.chatPanelIsGlued) {
-                        trackUnseenMessageCountObject.unseenMessageCount -= chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed;
-                        chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+                        self.clearNumMessagesInChatPanel(trackUnseenMessageCountObject, chatPanelObject);
                     }
                 }
 
@@ -126,4 +131,5 @@ angular.module('lxUtility.services', [])
                 }
             }
         }
+        return self;
     });
