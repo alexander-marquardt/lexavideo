@@ -52,4 +52,22 @@ angular.module('lxChatRoom.directives', [])
                 lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess(scope);
             }
         };
+    })
+
+    .directive('lxShowUnseenMessageCountDirective',
+    function(
+        lxShowNumMessagesService
+        ){
+
+        return {
+            restrict: 'A',
+            link: function(scope) {
+
+                scope.$watch('windowWatcher.isFocused', function() {
+                    var chatPanelObject = scope.chatRoomDisplayObject.chatPanelObject;
+                    lxShowNumMessagesService.stopFlashingTitleAndAdjustCount(scope.trackUnseenMessageCountObject, chatPanelObject);
+                    lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject)
+                });
+            }
+        };
     });

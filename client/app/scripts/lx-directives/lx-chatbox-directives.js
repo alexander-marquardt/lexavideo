@@ -13,68 +13,11 @@ angular.module('lxChatbox.directives', [])
         $compile,
         $log,
         $timeout,
+        lxShowNumMessagesService,
         lxSoundService,
         lxTimeService
         ) {
 
-        var numMessagesIsShownToggle = true;
-        var timerId;
-
-        // function that stops the title from flashing the number of new messages, and that adjusts
-        // the number of unseen messages to reflect that the user has just clicked on a chat panel whose messages
-        // have now been "seen" and are therefore removed from the count.
-        var stopFlashingTitleAndAdjustCount = function(scope, chatRoomId) {
-
-            if (scope.chatPanelDict[chatRoomId].chatPanelIsCurrentlyVisible) {
-
-                if (scope.chatPanelDict[chatRoomId].chatPanelIsGlued) {
-                    scope.trackUnseenMessageCountObject.unseenMessageCount -= scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed;
-                    scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
-                }
-            }
-
-            // remove blinking of the number of messages
-            $timeout.cancel(timerId);
-            document.title = $('#id-document-title-div').text();
-            numMessagesIsShownToggle = true;
-        };
-
-
-
-        // Displays the number of messages received in the document title , and flashes the
-        // number of messages to get the users attention.
-        var showNumMessagesInDocumentTitle = function(trackUnseenMessageCountObject) {
-
-            // show the number of messages in the document title.
-            document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
-
-            // The remainder of this code deals with making the number of messages flash in the document title.
-            // First, check to see if the title is already flashing by seeing if timerId has been set. If it is already
-            // flashing, then don't start any new timer-loops.
-            if (!timerId) {
-                // don't start flashing until 10 seconds have passed.
-                var timeoutDelay = 10000;
-                // the following timer is used for switching between the title with and without the number of
-                // new messages included in the title.
-                var timeoutFn = function () {
-                    timerId = $timeout(function () {
-                        if (trackUnseenMessageCountObject.unseenMessageCount) {
-                            if (numMessagesIsShownToggle) {
-                                document.title = $('#id-document-title-div').text();
-                            } else {
-                                document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
-                            }
-                        }
-                        numMessagesIsShownToggle = !numMessagesIsShownToggle;
-                        // after initial wait, start flashing every X seconds.
-                        timeoutDelay = 1000;
-
-                        timeoutFn();
-                    }, timeoutDelay);
-                };
-                timeoutFn();
-            }
-        };
 
 
         return {
@@ -179,7 +122,7 @@ angular.module('lxChatbox.directives', [])
                             scope.trackUnseenMessageCountObject.unseenMessageCount++;
                         }
 
-                        showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject);
+                        lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject);
 
                     }
                 });
@@ -190,11 +133,6 @@ angular.module('lxChatbox.directives', [])
 //                    }
 //                });
 
-                scope.$watch('windowWatcher.isFocused', function() {
-                    stopFlashingTitleAndAdjustCount(scope, chatRoomId);
-                    $log.log('chatPanelDict:' + angular.toJson(scope.chatPanelDict));
-                    showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject)
-                });
             }
         };
     }

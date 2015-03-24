@@ -12,7 +12,8 @@ angular.module('lxChatbox.controllers', [])
         $location,
         $log,
         $scope,
-        lxMessageService
+        lxMessageService,
+        lxShowNumMessagesService
         ) {
 
         // Note: inputMessageString is updated with each keyboard keypress. Therefore, this value is only used
@@ -81,6 +82,8 @@ angular.module('lxChatbox.controllers', [])
         $scope.gluePanel = function() {
             $scope.trackUnseenMessageCountObject.unseenMessageCount -= $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed;
             $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+            lxShowNumMessagesService.showNumMessagesInDocumentTitle($scope.trackUnseenMessageCountObject);
+
             $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsGlued = true;
         };
 
@@ -90,6 +93,7 @@ angular.module('lxChatbox.controllers', [])
             if (chatPanelIsGlued) {
                 $scope.trackUnseenMessageCountObject.unseenMessageCount -= $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed;
                 $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+                lxShowNumMessagesService.showNumMessagesInDocumentTitle($scope.trackUnseenMessageCountObject);
             }
         });
 
@@ -98,6 +102,7 @@ angular.module('lxChatbox.controllers', [])
                $scope.normalizedChatRoomName == $scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl) {
 
                $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = true;
+               $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId];
            } else {
                $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = false;
            }

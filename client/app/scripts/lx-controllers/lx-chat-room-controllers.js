@@ -42,11 +42,20 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
             addClientToRoomWhenChannelReady(data.roomId);
             $scope.receivedChatMessageObject[data.roomId] = {};
+
+            // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
+            // from the "global" unseenMessageCount before zeroing it.
+            if (data.roomId in $scope.chatPanelDict) {
+                $scope.trackUnseenMessageCountObject.unseenMessageCount -= $scope.chatPanelDict[data.roomId].numMessagesSinceLastTimeBottomOfPanelWasViewed;
+            }
+
             $scope.chatPanelDict[data.roomId] = {
                 chatPanelIsGlued: true,
                 numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
                 chatPanelIsCurrentlyVisible: true
             };
+
+            $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[data.roomId];
 
             // Add the normalizedRoomName to normalizedRoomNamesList, but only if it is not already there.
             if ($.inArray(data.normalizedChatRoomName, $scope.normalizedRoomNamesList) == -1) {

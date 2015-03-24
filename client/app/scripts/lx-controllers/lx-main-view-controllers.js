@@ -38,7 +38,10 @@ angular.module('lxMainView.controllers', [])
 
             // If the user leaves the chat-room view and then comes back, they will be shown the last chat
             // room that they were participating in.
-            lastChatRoomNameFromUrl: null
+            lastChatRoomNameFromUrl: null,
+
+            // point to the element in chatPanelDict that corresponds to the currently displayed chat
+            chatPanelObject: null
         };
 
 
