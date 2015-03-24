@@ -10,6 +10,7 @@ angular.module('lxChatRoom.services', [])
     function(
         $log,
         $location,
+        $routeParams,
         $window,
         $q,
         lxChannelService,
@@ -35,7 +36,7 @@ angular.module('lxChatRoom.services', [])
 
                 // For now, we pull the room name from the URL - this will likely change in future versions
                 // of our code.
-                var chatRoomNameAsWritten = $location.path().replace(/\//, '');
+                var chatRoomNameAsWritten = $routeParams.chatRoomName;
                 var deferredUserSuccessfullyEnteredRoom = $q.defer();
 
                 $log.log('addUserToRoom called: ' + chatRoomNameAsWritten + '. Adding userId: ' + lxAppWideConstantsService.userId);
