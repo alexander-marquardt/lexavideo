@@ -33,12 +33,19 @@
     border-color: $main-control-background;
     &:hover {
       background-color: $chat-panel-body-background;
+      cursor: pointer;
     }
   }
 
   & > .nav > li.active > a {
     background-color: $chat-panel-body-background;
     border-color: $chat-panel-body-background;
+    &:hover {
+      cursor: default;
+    }
   }
 }
 
+.nav-tabs.cl-notifications-nav-tabs {
+  border-bottom: 1px solid $main-control-background !important;;
+}
