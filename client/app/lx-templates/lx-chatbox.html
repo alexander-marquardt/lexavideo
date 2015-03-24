@@ -36,6 +36,11 @@
                                  I believe that this delay is caused from waiting for the server to respond with
                                  an updated roomOccupancyDict object that contains the room that the user is currently
                                  viewing.
+
+                                 As a workaround, we slide in an empty chat panel, which is called directly from
+                                 the ng-view directive (see lx-routes.js for the view that is pulled in). As of
+                                 the writing of this comment March 25 2015, the view specified in
+                                 lx-dummy-chatbox-view.html is shown until a new chatbox is loaded.
                                  -->
                             <div class="panel cl-chat-panel panel-primary"
                                  ng-show="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible">
