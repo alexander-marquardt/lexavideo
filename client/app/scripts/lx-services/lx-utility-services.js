@@ -131,6 +131,6 @@ angular.module('lxUtility.services', [])
                     document.title = $('#id-document-title-div').text();
                 }
             }
-        }
+        };
         return self;
     });
