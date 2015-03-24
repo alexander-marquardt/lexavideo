@@ -11,7 +11,6 @@
                 <tr ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
                     <td>Room Name: {{ normalizedChatRoomName }}</td>
                     <td>Room Id:   {{ roomOccupancyObject.chatRoomId }}</td>
-                    <td>{{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}</td>
                 </tr>
 
                 <tr ng-repeat="user in roomOccupancyObject.listOfClientObjects | filter:{userName: '!'+ roomOccupancyObject.userName}">
@@ -31,6 +30,5 @@
     </div>
 </div>
 
-{{ chatPanelDict }}
 
 {% endraw %}
