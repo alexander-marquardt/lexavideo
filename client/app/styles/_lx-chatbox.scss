@@ -40,7 +40,7 @@
 .cl-chat-panel-body
 {
   padding: 0px 15px 0px 15px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   background: $chat-panel-body-background;
 }
