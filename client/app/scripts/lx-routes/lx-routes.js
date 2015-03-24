@@ -8,12 +8,15 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 
 
+    // Note to self: To extract URL /.../:foo, use $routeParams.foo
     $routeProvider.when('/', {
         templateUrl: function(){
                 return '/_lx/lx-templates/lx-landing-page-main.html';
             },
         controller: 'lxLandingPageCtrl'
     });
+
+
 
     $routeProvider.when('/:chatRoomName', {
         /* When chatbox URLs are selected,  the ngView that is shown is blank and one of
@@ -24,6 +27,14 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
             },
         controller: 'lxChatViewCtrl'
     });
+
+
+    $routeProvider.when('/c/n', {
+        templateUrl: function(){
+                return '/_lx/lx-templates/lx-notifications.html';
+            }
+    });
+
 
     $routeProvider.otherwise({
         redirectTo: '/'

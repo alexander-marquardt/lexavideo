@@ -1,0 +1,44 @@
+
+.cl-menu-button {
+  position: relative;
+  padding: 9px 10px;
+}
+
+// Bars
+.cl-icon-bar {
+  background-color: $gray-dark;
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+}
+.cl-icon-bar + .cl-icon-bar {
+  margin-top: 4px;
+}
+
+.cl-notification-panel-body {
+  height: $notification-panel-body-height;
+  box-sizing: border-box;
+}
+
+.cl-panel-heading-behind-notification-nav-tabs {
+ background-color: $main-control-background !important;
+  padding: 2px 2px 0px 2px !important;
+  border-bottom: none !important;
+
+  & > .nav > li > a {
+    height: 47px;
+    box-sizing: border-box;
+    background-color: $gray-lighter;
+    border-color: $main-control-background;
+    &:hover {
+      background-color: $chat-panel-body-background;
+    }
+  }
+
+  & > .nav > li.active > a {
+    background-color: $chat-panel-body-background;
+    border-color: $chat-panel-body-background;
+  }
+}
+

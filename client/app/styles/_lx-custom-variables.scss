@@ -12,6 +12,8 @@ $main-control-hover-background: $gray-dark;
 $main-control-color: black;
 $main-control-hover-color: white;
 
+$chat-panel-body-background: $gray-lighter-more;
+
 $btn-gray-bg: $gray-light-more;
 
 $bubble-left-background: $brand-primary-lighter;
@@ -21,6 +23,29 @@ $panel-waiting-text: white !default;
 $panel-waiting-bg: $brand-danger !default;
 $panel-waiting-border: $standard-border-color !default;
 $panel-waiting-heading-bg: $brand-danger;
+
+
+$chat-panel-heading-height: 50px;
+$chat-panel-footer-height: 50px;
+
+$chat-groups-members-margin: 15px;
+
+$sliding-display-area-height: 300px;
+
+// since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
+// it does not overflow the bottom of the div. Subtract 2px for outer panel border.
+$short-chat-panel-body-height: $sliding-display-area-height - $chat-panel-heading-height - $chat-panel-footer-height - 2px;
+$notification-panel-body-height: $short-chat-panel-body-height + $chat-panel-footer-height;
+
+$tall-chat-panel-height: 400px;
+
+
+// $estimated-bubble-height is used for computing the offset required in the first div to push the first
+// message to the bottom of the chat panel.
+$estimated-bubble-height: 30px;
+
+$chat-bubble-zindex: 10;
+
 
 /* The following section defines the width of the video elements for various viewport sizes.
    note that for sm and larger devices, two video elements are shown side-by-side. This means that
@@ -42,6 +67,5 @@ $video-text-overlay-font-size-list: 0.4em, 0.6em, 0.7em, 0.8em, 0.9em, 1em, 1.5e
 $chat-panel-name-size: 1em, 1em, 1em, 1.25em, 1.5em, 1.5em, 1.5em, 1.5em;
 
 
-$sliding-display-area-height: 300px;
 
 $slide-main-menu-duration: 0.2s;

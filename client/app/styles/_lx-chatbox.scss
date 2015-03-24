@@ -1,21 +1,3 @@
-$chat-panel-heading-height: 50px;
-$chat-panel-footer-height: 50px;
-
-$chat-groups-members-margin: 15px;
-
-// since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
-// it does not overflow the bottom of the div. Subtract 2px for outer panel border.
-$short-chat-panel-body-height: $sliding-display-area-height - $chat-panel-heading-height - $chat-panel-footer-height - 2px;
-
-$tall-chat-panel-height: 400px;
-
-
-// $estimated-bubble-height is used for computing the offset required in the first div to push the first
-// message to the bottom of the chat panel.
-$estimated-bubble-height: 30px;
-
-$chat-bubble-zindex: 10;
-
 .cl-chat-row {
   color: $gray-dark;
 }
@@ -60,7 +42,7 @@ $chat-bubble-zindex: 10;
   padding: 0px 15px 0px 15px;
   overflow-y: scroll;
 
-  background: $gray-lighter-more;
+  background: $chat-panel-body-background;
 }
 
 .cl-chat-panel-body-short {
