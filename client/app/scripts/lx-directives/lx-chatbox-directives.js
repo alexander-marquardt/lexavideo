@@ -31,17 +31,12 @@ angular.module('lxChatbox.directives', [])
                     scope.trackUnseenMessageCountObject.unseenMessageCount -= scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed;
                     scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
                 }
-
-                if (!scope.trackUnseenMessageCountObject.unseenMessageCount) {
-                    document.title = $('#id-document-title-div').text();
-                } else {
-                    document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
-                }
-
             }
 
             // remove blinking of the number of messages
             $timeout.cancel(timerId);
+            document.title = $('#id-document-title-div').text();
+            numMessagesIsShownToggle = true;
         };
 
 
@@ -63,10 +58,12 @@ angular.module('lxChatbox.directives', [])
                 // new messages included in the title.
                 var timeoutFn = function () {
                     timerId = $timeout(function () {
-                        if (numMessagesIsShownToggle) {
-                            document.title = $('#id-document-title-div').text();
-                        } else {
-                            document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
+                        if (trackUnseenMessageCountObject.unseenMessageCount) {
+                            if (numMessagesIsShownToggle) {
+                                document.title = $('#id-document-title-div').text();
+                            } else {
+                                document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
+                            }
                         }
                         numMessagesIsShownToggle = !numMessagesIsShownToggle;
                         // after initial wait, start flashing every X seconds.
@@ -196,6 +193,7 @@ angular.module('lxChatbox.directives', [])
                 scope.$watch('windowWatcher.isFocused', function() {
                     stopFlashingTitleAndAdjustCount(scope, chatRoomId);
                     $log.log('chatPanelDict:' + angular.toJson(scope.chatPanelDict));
+                    showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject)
                 });
             }
         };
