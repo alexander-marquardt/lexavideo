@@ -68,8 +68,10 @@ angular.module('lxChatRoom.directives', [])
                 // viewed, and the message counts will be adjusted accordingly.
                 scope.$watch('windowWatcher.isFocused', function() {
                     var chatPanelObject = scope.chatRoomDisplayObject.chatPanelObject;
-                    lxShowNumMessagesService.stopFlashingTitleAndAdjustCount(scope.trackUnseenMessageCountObject, chatPanelObject);
-                    lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject)
+                    if (chatPanelObject) {
+                        lxShowNumMessagesService.stopFlashingTitleAndAdjustCount(scope.trackUnseenMessageCountObject, chatPanelObject);
+                        lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject);
+                    }
                 });
             }
         };
