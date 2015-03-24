@@ -13,7 +13,7 @@ var videoApp = angular.module('videoApp', [
     // proprietary directives
     'lxChatbox.directives',
     'lxChatRoom.directives',
-    'lxCheckCompatibility.directives',
+    'lxCommon.directives',
     'lxMainVideo.directives',
     'lxLandingPage.directives',
     'lxVideoNegotiation.directives',
