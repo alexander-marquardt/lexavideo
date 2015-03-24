@@ -1,11 +1,18 @@
 $xs-padding-override: 2px;
 
 $deep-red : #ff0000;
-$btn-gray-bg: #c0c0c0;
+
 $brand-primary-lighter: #daf6fd;
 $brand-danger-lighter: #fee;
-$gray-light-more: lighten(#000, 75%) !default;
-$gray-lighter-more: lighten(#000, 97%) !default;
+$gray-light-more: mix($gray-light, $gray-lighter, 50%) !default;
+$gray-lighter-more: mix($gray-lighter, #FFF, 50%) !default;
+
+$main-control-background: $gray-light-more;
+$main-control-hover-background: $gray-dark;
+$main-control-color: black;
+$main-control-hover-color: white;
+
+$btn-gray-bg: $gray-light-more;
 
 $bubble-left-background: $brand-primary-lighter;
 $bubble-right-background: $gray-lighter;
