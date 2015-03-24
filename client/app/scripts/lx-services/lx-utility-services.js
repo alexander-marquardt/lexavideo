@@ -66,7 +66,7 @@ angular.module('lxUtility.services', [])
         ) {
 
         var numMessagesIsShownToggle = true;
-        var timerId;
+        var timerId = null;
 
 
         var self = {
@@ -90,6 +90,7 @@ angular.module('lxUtility.services', [])
 
                 // remove blinking of the number of messages
                 $timeout.cancel(timerId);
+                timerId = null;
             },
 
             // Displays the number of messages received in the document title , and flashes the
