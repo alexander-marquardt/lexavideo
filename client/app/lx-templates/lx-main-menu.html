@@ -1,0 +1,23 @@
+<!--
+Contains the html that defines the "main" menu that slides out from the left side when the user presses
+the "menu-button" icon
+-->
+
+{% raw %}
+
+    <div ng-if="mainMenuObject.showMainMenu"
+        class="col-xs-4 col-sm-3 col-md-2 cl-animate-main-control-menu cl-col-xs-smaller-left-right-padding
+        cl-transition-opacity">
+
+        <div class="btn-group-vertical well cl-main-control-menu" role="group">
+            <a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}" class="btn btn-default">My chats</a>
+            <a href="/" class="btn btn-default">New chat</a>
+            <a href="/" class="btn btn-default">Friends</a>
+            <a href="/" class="btn btn-default">Profile</a>
+            <a href="/" class="btn btn-default">Settings</a>
+            <a href="/" class="btn btn-default">Logout</a>
+
+
+        </div>
+    </div>
+{% endraw %}
