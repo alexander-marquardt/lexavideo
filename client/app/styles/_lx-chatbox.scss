@@ -122,6 +122,14 @@
     background: $brand-danger-lighter;
 }
 
+.cl-message-count-bubble-override {
+  float: left !important;
+  padding: 0px 3px 0px 3px;
+  margin: 0px 5px 0px 0px;
+  font-size: 0.8em;
+  background: $bubble-left-background !important;
+}
+
 /* The bubble arrows are made by overlaying two triangles on top of each other. The first is a dark color, and the
    second is a light color. The part of the dark triangle that is visible is the "border" of the triangle, and the
    part of the triangle that is light is the "content" of the chat bubble.
@@ -155,6 +163,11 @@
   border-color: transparent transparent transparent $gray-light;
   z-index: $chat-bubble-zindex + 1;
   @extend %bubble-arrow-common;
+}
+
+.bubble.bubble-right.cl-message-count-bubble-override>i {
+  top: 4px;
+  border-width: 3px 0px 3px 6px;
 }
 
 .bubble.bubble-left.bubble-error>i {
@@ -193,6 +206,13 @@
   border-color: transparent  transparent transparent $bubble-right-background;
   z-index: $chat-bubble-zindex + 2;
   @extend %arrow-overlay-common;
+}
+
+.bubble.bubble-right.cl-message-count-bubble-override>i:after {
+  left: -8px;
+  top: -3px;
+  border-width: 3px 0px 3px 6px;
+  border-color: transparent transparent transparent $bubble-left-background;
 }
 
 .bubble.bubble-left.bubble-error>i:after {

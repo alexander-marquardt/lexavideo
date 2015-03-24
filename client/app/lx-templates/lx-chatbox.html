@@ -65,7 +65,11 @@
 
                                                     <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}">
                                                         <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
-                                                            [{{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}]
+
+                                                            <div class="bubble bubble-right cl-message-count-bubble-override"><i></i>
+                                                            {{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
+                                                            </div>
+
                                                         </span>
 
                                                         <span style="white-space:nowrap;">
