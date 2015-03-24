@@ -22,7 +22,7 @@
 }
 
 .cl-panel-heading-behind-notification-nav-tabs {
- background-color: $main-control-background !important;
+ background-color: $notification-panel-header-background !important;
   padding: 2px 2px 0px 2px !important;
   border-bottom: none !important;
 
@@ -30,7 +30,7 @@
     height: 47px;
     box-sizing: border-box;
     background-color: $gray-lighter;
-    border-color: $main-control-background;
+    border-color: $notification-panel-header-background;
     &:hover {
       background-color: $chat-panel-body-background;
       cursor: pointer;
@@ -47,5 +47,5 @@
 }
 
 .nav-tabs.cl-notifications-nav-tabs {
-  border-bottom: 1px solid $main-control-background !important;;
+  border-bottom: 1px solid $notification-panel-header-background !important;;
 }
