@@ -123,7 +123,7 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
                         // we request this information every time that we send the remote user the local status -
                         // this is strictly not necessary, but doesn't cost much and provides some redundancy in
                         // the case of un-delivered messages.
-                        queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled,
+                        queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled
                     },
                     scope.lxMainViewCtrl.clientId,
                     toClientId

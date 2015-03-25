@@ -129,40 +129,7 @@
                                     <div lx-show-chat-messages-directive></div>
 
 
-                                    <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
-                                        <!-- This is the html that prompts the user to exchange video with the remote user if the
-                                             remote user has requested to do so -->
-                                        <div class="well cl-show-hide-fade cl-prompt-for-video-access"
-                                             ng-show="videoExchangeObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
-                                                      videoExchangeObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
 
-                                            <div class="row ">
-                                                <div class="col-xs-12 cl-text-size-1_5em ">
-                                                    <div>Remote user has requested to exchange video. Do you accept?</div>
-
-
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-primary"
-                                                            ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', false, remoteClientId)">
-                                                    <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                                        <span class="icon-lx-start-video-camera-cfg"></span>
-                                                    </span>
-                                                        Start
-                                                    </button>
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-primary"
-                                                            ng-click="showVideoElementsAndStartVideoFn('doNotEnableVideoExchange', false, remoteClientId)">
-                                                    <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                                        <span class="icon-lx-start-video-camera-cfg"></span>
-                                                        <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
-                                                        <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
-                                                    </span>
-                                                        Deny
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="panel-footer cl-chat-panel-footer">
                                     <div class="row">

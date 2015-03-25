@@ -95,6 +95,11 @@ angular.module('lxUseChatRoom.controllers', [])
                                                            queryForRemoteVideoElementsEnabled,
                                                            remoteClientId) {
 
+            /* queryForRemoteVideoElementsEnabled: If the client is initiating a request to start video, then we want
+               to know if the remote user has accepted the request. However, if the client is responding then we don't
+               want to request the remote user (who is the original initiator of the video exchange) to tell us if they
+               have accepted to transmit video (and doing so would cause circular requests).
+             */
             if (!(remoteClientId in $scope.videoExchangeObjectsDict)) {
                 $log.info('showVideoElementsAndStartVideoFn creating new videoExchangeObjectsDict entry for client ' + remoteClientId);
                 $scope.videoExchangeObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject();

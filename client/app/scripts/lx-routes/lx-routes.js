@@ -28,14 +28,6 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
         controller: 'lxChatViewCtrl'
     });
 
-
-    $routeProvider.when('/c/n', {
-        templateUrl: function(){
-                return '/_lx/lx-templates/lx-notifications.html';
-            }
-    });
-
-
     $routeProvider.otherwise({
         redirectTo: '/'
     });

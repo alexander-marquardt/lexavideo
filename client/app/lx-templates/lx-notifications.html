@@ -1,7 +1,7 @@
 
 <!-- This html shows to notifications that the user receives such as a request to start a video conversation,
      or a friend request -->
-
+{% raw %}
 <div ng-if="notificationMenuObject.showNotificationMenu"
     class="col-xs-offset-2 col-xs-10 col-sm-offset-4 col-sm-8 col-md-offset-6 col-md-6 cl-main-notification-menu
     cl-animate-main-notification-menu cl-col-xs-smaller-left-right-padding">
@@ -24,34 +24,43 @@
 
         <!-- Define the contents of the tab. -->
         <div class="panel-body cl-notification-panel-body">
-            <h4>The following people would like to exchange live video.</h4>
-            <div class="row ">
-                <div class="col-xs-12 ">
-                    <div style="display:inline-block">
-                        <hr class="cl-hr-in-chat-panel">
-                        <strong>
-                            User X
-                        </strong>
-                        <button type="button"
-                                class="btn btn-sm btn-primary">
-                                <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                    <span class="icon-lx-start-video-camera-cfg"></span>
-                                </span>
-                            Start
-                        </button>
-                        <button type="button"
-                                class="btn btn-sm btn-primary">
-                        <span class="icon-lx-start-video-camera-wrapper-cfg">
-                            <span class="icon-lx-start-video-camera-cfg"></span>
-                            <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
-                            <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
-                        </span>
-                            Deny
-                        </button>
+            <h4 >The following people would like to exchange live video.</h4>
 
+            <div class="row ">
+                <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
+                    <div class="col-xs-12"
+                    ng-show="videoExchangeObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
+                             videoExchangeObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
+                        <div style="display:inline-block">
+                            <hr class="cl-hr-in-chat-panel">
+                            <strong>
+                                {{ remoteClientId }}
+                            </strong>
+                            <button type="button"
+                                    class="btn btn-sm btn-primary"
+                                    ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', false, remoteClientId)">
+                                    <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                        <span class="icon-lx-start-video-camera-cfg"></span>
+                                    </span>
+                                Start
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-primary"
+                                    ng-click="showVideoElementsAndStartVideoFn('doNotEnableVideoExchange', false, remoteClientId)">
+                            <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                <span class="icon-lx-start-video-camera-cfg"></span>
+                                <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
+                                <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
+                            </span>
+                                Deny
+                            </button>
+
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{% endraw %}
