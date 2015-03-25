@@ -8,6 +8,8 @@
 
     <div class="panel panel-default cl-notification-panel">
         <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs">
+
+            <!-- First, define the tabs that will correspond to the various displays -->
             <ul class="nav nav-tabs cl-notifications-nav-tabs" >
                     <li class="active">
                         <a>
@@ -17,24 +19,19 @@
                             <span style="vertical-align:middle">Video requests</span>
                         </a>
                     </li>
-                    <!--<li>-->
-                        <!--<a>-->
-                            <!--<span style="display: inline-block; vertical-align:middle" >-->
-                                <!--FooTab3-->
-                            <!--</span>-->
-                        <!--</a>-->
-                    <!--</li>-->
             </ul>
         </div>
+
+        <!-- Define the contents of the tab. -->
         <div class="panel-body cl-notification-panel-body">
-            <div class="cl-text-size-1_5em">The following people would like to exchange live video.</div>
+            <h4>The following people would like to exchange live video.</h4>
             <div class="row ">
                 <div class="col-xs-12 ">
                     <div style="display:inline-block">
                         <hr class="cl-hr-in-chat-panel">
-                        <span class="cl-text-size-1_5em" style="line-height: 1em; vertical-align:middle">
+                        <strong>
                             User X
-                        </span>
+                        </strong>
                         <button type="button"
                                 class="btn btn-sm btn-primary">
                                 <span class="icon-lx-start-video-camera-wrapper-cfg">
