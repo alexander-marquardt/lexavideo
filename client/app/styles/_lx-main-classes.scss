@@ -7,6 +7,7 @@
   margin: 0; // override default ul
   min-width: 0px;
   background: $main-control-background;
+  border: 1px solid $main-control-border-color;
 
   & .btn-default, & .btn-default.dropdown-toggle, & li, & li>a {
     background: $main-control-background;
@@ -37,6 +38,19 @@
     animation: slideOutLeft $slide-main-menu-duration;
   }
 }
+
+.cl-animate-main-notification-menu {
+  right: 0;
+  z-index: $zindex-dropdown + 10;
+
+  &.ng-enter {
+    animation: slideInRight $slide-main-menu-duration;
+  }
+  &.ng-leave {
+    animation: slideOutRight $slide-main-menu-duration;
+  }
+}
+
 
 .cl-transition-opacity {
   &.ng-enter,

@@ -2,6 +2,8 @@
 .cl-menu-button {
   position: relative;
   padding: 9px 10px;
+  height: 32px;
+  box-sizing: border-box;
 }
 
 // Bars
@@ -16,9 +18,19 @@
   margin-top: 4px;
 }
 
+.cl-notification-panel {
+  border: 1px solid $notification-panel-border-color;
+  margin: 0px;
+}
+
 .cl-notification-panel-body {
   height: $notification-panel-body-height;
   box-sizing: border-box;
+
+  padding: 0px 15px 0px 15px;
+  overflow-y: auto;
+
+  background: $chat-notification-body-background;
 
   & button {
     padding: 2px 4px 2px 4px;
@@ -36,14 +48,14 @@
     background-color: $gray-lighter;
     border-color: $notification-panel-header-background;
     &:hover {
-      background-color: $chat-panel-body-background;
+      background-color: $chat-notification-body-background;
       cursor: pointer;
     }
   }
 
   & > .nav > li.active > a {
-    background-color: $chat-panel-body-background;
-    border-color: $chat-panel-body-background;
+    background-color: $chat-notification-body-background;
+    border-color: $chat-notification-body-background;
     &:hover {
       cursor: default;
     }

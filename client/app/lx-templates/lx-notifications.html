@@ -1,77 +1,59 @@
 
-<!-- Because there is a small (maybe 500ms) delay when showing the appropriate chatbox in lx-chatbox.html,
-     we load a "fake" chatbox panel as soon as the view is shown. This provides a sense of immediate response
-     to the user. Read comments in lx-chatbox.html for more information on the problem that this overcomes.
+<!-- This html shows to notifications that the user receives such as a request to start a video conversation,
+     or a friend request -->
 
-     The panels in this file should mirror the panels in lx-chatbox.html -->
+<div ng-if="notificationMenuObject.showNotificationMenu"
+    class="col-xs-offset-2 col-xs-10 col-sm-offset-4 col-sm-8 col-md-offset-6 col-md-6 cl-animate-main-notification-menu cl-col-xs-smaller-left-right-padding">
 
-{% from 'lx-templates/lx-macros.html' import moveAndResizeDivBesideMainMenu %}
-{% from 'lx-templates/lx-macros.html' import removeSpaceBetwenMainMenuAndDivBesideMainMenu %}
-
-<div class="cl-fade-in-chatbox-view">
-    {{ moveAndResizeDivBesideMainMenu() }}
-
-        {{ removeSpaceBetwenMainMenuAndDivBesideMainMenu() }}
-
-        <div class="panel panel-default">
-            <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs">
-                <ul class="nav nav-tabs cl-notifications-nav-tabs" >
-                        <li class="active">
-                            <a>
-                                <span class="cl-text-size-1_5em" style="line-height: 1em; vertical-align:middle">
-                                        <span class="icon-lx-video-camera-filled "></span>
-                                </span>
-                                <span style="vertical-align:middle">Video requests</span>
-                            </a>
-                        </li>
-                        <!--<li>-->
-                            <!--<a>-->
-                                <!--<span style="display: inline-block; vertical-align:middle" >-->
-                                    <!--FooTab3-->
-                                <!--</span>-->
-                            <!--</a>-->
-                        <!--</li>-->
-                </ul>
-            </div>
-            <div class="panel-body cl-chat-panel-body cl-notification-panel-body">
-                <div class="cl-text-size-1_5em">The following people would like to exchange live video.</div>
-                <div class="row ">
-                    <div class="col-xs-12 ">
-                        <div style="display:inline-block">
-                            <hr class="cl-hr-in-chat-panel">
+    <div class="panel panel-default cl-notification-panel">
+        <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs">
+            <ul class="nav nav-tabs cl-notifications-nav-tabs" >
+                    <li class="active">
+                        <a>
                             <span class="cl-text-size-1_5em" style="line-height: 1em; vertical-align:middle">
-                                User X
+                                    <span class="icon-lx-video-camera-filled "></span>
                             </span>
-                            <button type="button"
-                                    class="btn btn-sm btn-primary">
-                                    <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                        <span class="icon-lx-start-video-camera-cfg"></span>
-                                    </span>
-                                Start
-                            </button>
-                            <button type="button"
-                                    class="btn btn-sm btn-primary">
-                            <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                <span class="icon-lx-start-video-camera-cfg"></span>
-                                <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
-                                <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
-                            </span>
-                                Deny
-                            </button>
+                            <span style="vertical-align:middle">Video requests</span>
+                        </a>
+                    </li>
+                    <!--<li>-->
+                        <!--<a>-->
+                            <!--<span style="display: inline-block; vertical-align:middle" >-->
+                                <!--FooTab3-->
+                            <!--</span>-->
+                        <!--</a>-->
+                    <!--</li>-->
+            </ul>
+        </div>
+        <div class="panel-body cl-notification-panel-body">
+            <div class="cl-text-size-1_5em">The following people would like to exchange live video.</div>
+            <div class="row ">
+                <div class="col-xs-12 ">
+                    <div style="display:inline-block">
+                        <hr class="cl-hr-in-chat-panel">
+                        <span class="cl-text-size-1_5em" style="line-height: 1em; vertical-align:middle">
+                            User X
+                        </span>
+                        <button type="button"
+                                class="btn btn-sm btn-primary">
+                                <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                    <span class="icon-lx-start-video-camera-cfg"></span>
+                                </span>
+                            Start
+                        </button>
+                        <button type="button"
+                                class="btn btn-sm btn-primary">
+                        <span class="icon-lx-start-video-camera-wrapper-cfg">
+                            <span class="icon-lx-start-video-camera-cfg"></span>
+                            <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
+                            <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
+                        </span>
+                            Deny
+                        </button>
 
-                        </div>
                     </div>
-
                 </div>
-
-
-            <!--<div class="panel cl-chat-panel panel-primary">-->
-                <!--<div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center"></div>-->
-                <!--<div class="panel-body cl-chat-panel-body cl-chat-panel-body-short"></div>-->
-                <!--<div class="panel-footer cl-chat-panel-footer"></div>-->
-            <!--</div>-->
+            </div>
         </div>
     </div>
-    </div>
 </div>
-
