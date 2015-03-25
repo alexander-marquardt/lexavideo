@@ -261,3 +261,9 @@
       margin-right: $xs-padding-override;
     }
 }
+
+hr.cl-hr-in-chat-panel {
+  border-top: 1px solid $gray-light-more;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
