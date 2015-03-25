@@ -21,6 +21,7 @@
 .cl-notification-panel {
   border: 1px solid $notification-panel-border-color;
   margin: 0px;
+  @include box-shadow(0 8px 14px rgba(0,0,0,.175));
 }
 
 .cl-notification-panel-body {

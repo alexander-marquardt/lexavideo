@@ -89,15 +89,26 @@ angular.module('lxMainView.controllers', [])
         $scope.mainMenuObject = {
             showMainMenu: false
         };
-        $scope.toggleMainMenu = function() {
-            $scope.mainMenuObject.showMainMenu = !$scope.mainMenuObject.showMainMenu;
-        };
-
         $scope.notificationMenuObject = {
             showNotificationMenu: false
         };
+
+        $scope.toggleMainMenu = function() {
+            $scope.mainMenuObject.showMainMenu = !$scope.mainMenuObject.showMainMenu;
+
+            // if main menu is now shown, then remove the notification menu
+            if ($scope.mainMenuObject.showMainMenu) {
+                $scope.notificationMenuObject.showNotificationMenu = false;
+            }
+        };
+
         $scope.toggleNotificationMenu = function() {
             $scope.notificationMenuObject.showNotificationMenu = !$scope.notificationMenuObject.showNotificationMenu;
+
+            // if notification menu is now shown, then get ride of the main menu
+            if ($scope.notificationMenuObject.showNotificationMenu) {
+                $scope.mainMenuObject.showMainMenu = false;
+            }
         };
 
         // videoExchangeObjectsDict will be populated with calls to
