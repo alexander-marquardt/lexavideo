@@ -14,160 +14,158 @@
 {% from 'lx-templates/lx-macros.html' import moveAndResizeDivBesideMainMenu %}
 {% from 'lx-templates/lx-macros.html' import removeSpaceBetwenMainMenuAndDivBesideMainMenu %}
 
-<div ng-controller="lxChatRoomCtrl">
 
-        <div ng-show="chatRoomDisplayObject.chatRoomNameFromUrl" class="cl-fade-in-chatbox-view">
-            {{ moveAndResizeDivBesideMainMenu() }}
+<div ng-show="chatRoomDisplayObject.chatRoomNameFromUrl" class="cl-fade-in-chatbox-view">
+    {{ moveAndResizeDivBesideMainMenu() }}
 
-                {{ removeSpaceBetwenMainMenuAndDivBesideMainMenu() }}
-                {% raw %}
+        {{ removeSpaceBetwenMainMenuAndDivBesideMainMenu() }}
+        {% raw %}
 
-                    <div ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
-                        <div ng-controller="lxChatPanelCtrl">
+            <div ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
+                <div ng-controller="lxChatPanelCtrl">
 
-                            <!-- The following ng-show ensures that only the currently selected chatbox is visible to the
-                                 client.
+                    <!-- The following ng-show ensures that only the currently selected chatbox is visible to the
+                         client.
 
-                                 Note: the ng-show below causes a small delay (probably about 500ms) that prevents
-                                 a portion of the cl-fade-in-chatbox-view animation (above) from fully displaying
-                                 when a new room is created (the animation is already almost done by the time this
-                                 element is shown).
+                         Note: the ng-show below causes a small delay (probably about 500ms) that prevents
+                         a portion of the cl-fade-in-chatbox-view animation (above) from fully displaying
+                         when a new room is created (the animation is already almost done by the time this
+                         element is shown).
 
-                                 I believe that this delay is caused from waiting for the server to respond with
-                                 an updated roomOccupancyDict object that contains the room that the user is currently
-                                 viewing.
+                         I believe that this delay is caused from waiting for the server to respond with
+                         an updated roomOccupancyDict object that contains the room that the user is currently
+                         viewing.
 
-                                 As a workaround, we slide in an empty chat panel, which is called directly from
-                                 the ng-view directive (see lx-routes.js for the view that is pulled in). As of
-                                 the writing of this comment March 25 2015, the view specified in
-                                 lx-dummy-chatbox-view.html is shown until a new chatbox is loaded.
-                                 -->
-                            <div class="panel cl-chat-panel panel-primary"
-                                 ng-show="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible">
+                         As a workaround, we slide in an empty chat panel, which is called directly from
+                         the ng-view directive (see lx-routes.js for the view that is pulled in). As of
+                         the writing of this comment March 25 2015, the view specified in
+                         lx-dummy-chatbox-view.html is shown until a new chatbox is loaded.
+                         -->
+                    <div class="panel cl-chat-panel panel-primary"
+                         ng-show="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible">
 
-                                <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
+                        <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
 
-                                    <!-- define the open chats button -->
-                                    <div class="btn-group pull-left"
-                                         ng-class="dropdownMenusStatuses.openChatsDropdownIsOpen ? 'open': ''">
-                                        <button type="button" class="btn btn-primary"
-                                                ng-click="dropdownMenusStatuses.openChatsDropdownIsOpen=!dropdownMenusStatuses.openChatsDropdownIsOpen">
-                                            <span style="display:inline-block;line-height:1em;">
-                                                <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
-                                            </span>
-                                            <span ng-if="trackUnseenMessageCountObject.unseenMessageCount">
-                                                {{ trackUnseenMessageCountObject.unseenMessageCount }}
-                                            </span>
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                            <li ng-repeat="normalizedChatRoomName in normalizedRoomNamesList | orderBy: simpleArrayOrderByFn">
-
-                                                    <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}">
-                                                        <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
-
-                                                            <div class="bubble bubble-right cl-message-count-bubble-override"><i></i>
-                                                            {{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
-                                                            </div>
-
-                                                        </span>
-
-                                                        <span style="white-space:nowrap;">
-                                                            &nbsp;{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}&nbsp
-                                                        </span>
-                                                    </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-
-                                    <span class="cl-chat-panel-name-size">
-                                        {{ chatRoomDisplayObject.chatRoomNameFromUrl }}
+                            <!-- define the open chats button -->
+                            <div class="btn-group pull-left"
+                                 ng-class="dropdownMenusStatuses.openChatsDropdownIsOpen ? 'open': ''">
+                                <button type="button" class="btn btn-primary"
+                                        ng-click="dropdownMenusStatuses.openChatsDropdownIsOpen=!dropdownMenusStatuses.openChatsDropdownIsOpen">
+                                    <span style="display:inline-block;line-height:1em;">
+                                        <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
                                     </span>
-                                    <span class="cl-chat-panel-name-size" ng-if="chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
-                                        [{{ chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}]
+                                    <span ng-if="trackUnseenMessageCountObject.unseenMessageCount">
+                                        {{ trackUnseenMessageCountObject.unseenMessageCount }}
                                     </span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
+                                    <li ng-repeat="normalizedChatRoomName in normalizedRoomNamesList | orderBy: simpleArrayOrderByFn">
 
-                                    <!-- define the group members button -->
-                                    <div class="btn-group pull-right"
-                                         ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen ? 'open': ''">
-                                        <button type="button" class="btn btn-primary"
-                                                ng-click="dropdownMenusStatuses.groupMembersDropdownIsOpen=!dropdownMenusStatuses.groupMembersDropdownIsOpen">
-                                        <span style="display:inline-block;line-height:1em;">
-                                            <span class="icon-lx-users" style="display:inline-block;line-height:1em;"></span>
-                                        </span>
-                                        <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                            <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
-                                                <span style="white-space:nowrap;">
-                                                    <span  class='cl-chat-group-video-icon-container'>
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
-                                                            ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClientObj.clientId)"
-                                                            >
-                                                            <span class="icon-lx-video-camera-filled"></span>
-                                                        </button>
-                                                    </span>
-                                                    {{ remoteClientObj.userName }}
+                                            <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}">
+                                                <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
+
+                                                    <div class="bubble bubble-right cl-message-count-bubble-override"><i></i>
+                                                    {{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
+                                                    </div>
+
                                                 </span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
 
-                                <div class="panel-body cl-chat-panel-body cl-chat-panel-body-short"
-                                     scroll-glue="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsGlued">
-                                     <!--ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
-                                        <!--'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">-->
-                                    <!--<div ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
-                                        <!--'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>-->
-                                    <div ng-class="'cl-dummy-blank-div-in-short-chat-panel'"></div>
+                                                <span style="white-space:nowrap;">
+                                                    &nbsp;{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}&nbsp
+                                                </span>
+                                            </a>
+                                    </li>
+                                </ul>
+                            </div>
 
 
+                            <span class="cl-chat-panel-name-size">
+                                {{ chatRoomDisplayObject.chatRoomNameFromUrl }}
+                            </span>
+                            <span class="cl-chat-panel-name-size" ng-if="chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
+                                [{{ chatPanelDict[roomOccupancyObject.chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}]
+                            </span>
 
-                                    <div lx-show-chat-messages-directive></div>
+                            <!-- define the group members button -->
+                            <div class="btn-group pull-right"
+                                 ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen ? 'open': ''">
+                                <button type="button" class="btn btn-primary"
+                                        ng-click="dropdownMenusStatuses.groupMembersDropdownIsOpen=!dropdownMenusStatuses.groupMembersDropdownIsOpen">
+                                <span style="display:inline-block;line-height:1em;">
+                                    <span class="icon-lx-users" style="display:inline-block;line-height:1em;"></span>
+                                </span>
+                                <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
+                                    <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
+                                        <span style="white-space:nowrap;">
+                                            <span  class='cl-chat-group-video-icon-container'>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
+                                                    ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', true, remoteClientObj.clientId)"
+                                                    >
+                                                    <span class="icon-lx-video-camera-filled"></span>
+                                                </button>
+                                            </span>
+                                            {{ remoteClientObj.userName }}
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="panel-body cl-chat-panel-body cl-chat-panel-body-short"
+                             scroll-glue="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsGlued">
+                             <!--ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
+                                <!--'cl-chat-panel-body-short' : 'cl-chat-panel-body-tall'">-->
+                            <!--<div ng-class="videoExchangeSettingsObject.localVideoEnabledSetting == 'enableVideoExchange' ?-->
+                                <!--'cl-dummy-blank-div-in-short-chat-panel' : 'cl-dummy-blank-div-in-tall-chat-panel'"></div>-->
+                            <div ng-class="'cl-dummy-blank-div-in-short-chat-panel'"></div>
 
 
 
-                                </div>
-                                <div class="panel-footer cl-chat-panel-footer">
-                                    <div class="row">
-
-                                        <!-- Chat message input and send message button -->
-                                        <div class="col-xs-12">
-                                            <form name="sendMessageForm" role="form" novalidate>
-                                                <div class="input-group">
-                                                    <input class="form-control input-sm"
-                                                           name="messageInputElem"
-                                                           placeholder="Type your message here..."
-                                                           ng-model="sendMessageFormScope.inputMessageString"
-                                                           maxlength="{{ maxMsgLength }}"
-                                                           ng-click="gluePanel()"
-                                                           required
-                                                            />
+                            <div lx-show-chat-messages-directive></div>
 
 
 
-                                                    <span class="input-group-btn">
-                                                        <button ng-click="sendChatMessageFn(roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].chatRoomId)"
-                                                                class="btn  btn-sm pull-right  'btn-primary'"
-                                                                ng-disabled="sendMessageForm.$invalid">
-                                                            Send
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </form>
+                        </div>
+                        <div class="panel-footer cl-chat-panel-footer">
+                            <div class="row">
+
+                                <!-- Chat message input and send message button -->
+                                <div class="col-xs-12">
+                                    <form name="sendMessageForm" role="form" novalidate>
+                                        <div class="input-group">
+                                            <input class="form-control input-sm"
+                                                   name="messageInputElem"
+                                                   placeholder="Type your message here..."
+                                                   ng-model="sendMessageFormScope.inputMessageString"
+                                                   maxlength="{{ maxMsgLength }}"
+                                                   ng-click="gluePanel()"
+                                                   required
+                                                    />
+
+
+
+                                            <span class="input-group-btn">
+                                                <button ng-click="sendChatMessageFn(roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].chatRoomId)"
+                                                        class="btn  btn-sm pull-right  'btn-primary'"
+                                                        ng-disabled="sendMessageForm.$invalid">
+                                                    Send
+                                                </button>
+                                            </span>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            </div>
         </div>
+    </div>
+    </div>
 </div>
 
 {% endraw %}

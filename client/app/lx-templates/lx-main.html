@@ -15,17 +15,20 @@
                 <div class="row cl-row-no-xs-margins">
                     <div class=" cl-main-ng-view-area-wrapper">
 
-                        <!-- lx-main-menu.html contains the "main" menu that displays website controls -->
-                        {% include 'lx-templates/lx-main-menu.html' %}
+                        <div ng-controller="lxChatRoomCtrl">
 
-                        <div ng-view class="cl-ng-view cl-fade-in-main-view"></div>
+                            <!-- lx-main-menu.html contains the "main" menu that displays website controls -->
+                            {% include 'lx-templates/lx-main-menu.html' %}
 
-                        <!-- Chat views are "faked" in the ng-view directive and are over-written by lx-chatbox.html.
-                             Read comments in lx-chatbox.html for more details. -->
-                        {% include 'lx-templates/lx-chatbox.html' %}
+                            <div ng-view class="cl-ng-view cl-fade-in-main-view"></div>
 
-                        {% include 'lx-templates/lx-notifications.html' %}
+                            <!-- Chat views are "faked" in the ng-view directive and are over-written by lx-chatbox.html.
+                                 Read comments in lx-chatbox.html for more details. -->
+                            {% include 'lx-templates/lx-chatbox.html' %}
 
+                            {% include 'lx-templates/lx-notifications.html' %}
+
+                        </div>
                     </div>
                 </div>
             </div>
