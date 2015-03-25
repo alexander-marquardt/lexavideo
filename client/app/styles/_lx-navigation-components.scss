@@ -19,6 +19,10 @@
 .cl-notification-panel-body {
   height: $notification-panel-body-height;
   box-sizing: border-box;
+
+  & button {
+    padding: 2px 4px 2px 4px;
+  }
 }
 
 .cl-panel-heading-behind-notification-nav-tabs {

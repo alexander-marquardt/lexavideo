@@ -104,13 +104,24 @@
   @extend %call-control-icon-common;
   @extend .icon-lx-video-camera-filled;
   top: 40%;
+  font-size: 1.5em;
 }
 
 .icon-lx-deny-start-video-camera-thick-forward-slash-cfg {
   @extend %call-control-icon-common;
   @extend .icon-lx-thick-forward-slash;
   top: 40%;
+  font-size: 1.5em;
 }
+
+.icon-lx-deny-start-video-camera-thin-forward-slash-cfg {
+  color: white;
+  @extend %call-control-icon-common;
+  @extend .icon-lx-thin-forward-slash;
+  top: 40%;
+  font-size: 1.5em;
+}
+
 
 .btn-primary .icon-lx-deny-start-video-camera-thick-forward-slash-cfg {
   color: $brand-primary;
@@ -128,13 +139,6 @@
   color: darken($brand-danger, 10%);
 }
 
-.icon-lx-deny-start-video-camera-thin-forward-slash-cfg {
-  color: $deep-red;
-  color: white;
-  @extend %call-control-icon-common;
-  @extend .icon-lx-thin-forward-slash;
-  top: 40%;
-}
 
 
 // Chatbox icons
