@@ -66,6 +66,10 @@
   color: $gray-dark;
   overflow-y: auto;
 
+  & > li > a {
+    padding: 0px;
+  }
+
 }
 
 .cl-chat-group-video-button-modifier {
@@ -125,7 +129,7 @@
 .cl-message-count-bubble-override {
   float: left !important;
   padding: 0px 3px 0px 3px;
-  margin: 0px 5px 0px 0px;
+  margin: 0px 5px 0px 3px;
   font-size: 0.8em;
   background: $bubble-left-background !important;
 }
