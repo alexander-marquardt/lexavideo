@@ -22,8 +22,12 @@
     <div class="col-xs-2 cl-col-xs-smaller-left-right-padding">
         <div class="btn-group pull-right">
             <button type="button" class="btn btn-default cl-menu-button"
-                    ng-click="toggleNotificationMenu()" my-click-once>
-                    F [{{ videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive }}]
+                ng-click="toggleNotificationMenu()" my-click-once>
+                <span class="cl-text-size-1_5em" style="vertical-align:middle">
+                        <span class="icon-lx-flag"></span>
+                </span>
+
+                {{ videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive }}
             </button>
 
         </div>
