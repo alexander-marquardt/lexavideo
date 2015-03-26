@@ -93,7 +93,7 @@ angular.module('lxChannel.services', [])
                                     // Early candidates before offer at present.
                                     lxChannelMessageService.unshift(sdpObject);
 
-                                    lxWebRtcSessionService.signalingReady = true;
+                                    lxWebRtcSessionService.signalingReady[remoteClientId] = true;
                                     $log.debug('lxWebRtcSessionService.signalingReady = true');
 
                                     // We may have been waiting for signalingReady to be true to attempt to start the peer-to-peer video
@@ -162,7 +162,7 @@ angular.module('lxChannel.services', [])
                                 // the rtcInitiator, or false otherwise. In the case that this value is initially false, it will be set to
                                 // true once this client has received an sdp 'offer' from the other client.
                                 // Note: rtcInitiator is the 2nd client to start their video
-                                lxWebRtcSessionService.signalingReady = messageObject.messagePayload.rtcInitiator;
+                                lxWebRtcSessionService.signalingReady[remoteClientId] = messageObject.messagePayload.rtcInitiator;
 
                                 // when the server sends an rtcInitiator setting, this means that we are re-starting
                                 // the rtc negotiation and peer setup etc. from scratch. Set the following to false

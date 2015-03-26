@@ -346,13 +346,14 @@ webRtcServices.service('lxWebRtcSessionService',
     var self = {
 
         started : false,
-        // initial value for signalingReady will be set in lxChannelMessageService->onChannelMessage
-        signalingReady : null,
+        // initial value for signalingReady will be set in lxChannelMessageService->onChannelMessage. It
+        // will be a dictionary containing a value for each remoteClientId.
+        signalingReady : {},
 
 
         stop: function(remoteClientId) {
             self.started = false;
-            self.signalingReady = false;
+            self.signalingReady[remoteClientId] = false;
             if (lxPeerService.pc[remoteClientId]) {
                 lxPeerService.pc[remoteClientId].close();
             }
@@ -647,7 +648,7 @@ webRtcServices.factory('lxCallService',
                 var videoSignalingObject = scope.videoSignalingObject;
                 var clientId = scope.lxMainViewCtrl.clientId;
 
-                if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady && lxChannelSupportService.channelReady &&
+                if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady[remoteClientId] && lxChannelSupportService.channelReady &&
                     lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
                     $log.debug('Starting webRtc services!!');
@@ -680,8 +681,8 @@ webRtcServices.factory('lxCallService',
                     if (lxWebRtcSessionService.started) {
                         $log.debug('Because lxWebRtcSessionService.started is true');
                     }
-                    if (!lxWebRtcSessionService.signalingReady) {
-                        $log.debug('Because lxWebRtcSessionService.signalingReady is false');
+                    if (!lxWebRtcSessionService.signalingReady[remoteClientId]) {
+                        $log.debug('Because lxWebRtcSessionService.signalingReady[remoteClientId is false for remoteClientId: ' + remoteClientId);
                     }
                     if (!lxChannelSupportService.channelReady) {
                         $log.debug('Because lxChannelSupportService.channelReady is false');
