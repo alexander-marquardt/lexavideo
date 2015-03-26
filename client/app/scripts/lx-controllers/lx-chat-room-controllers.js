@@ -3,6 +3,8 @@
  */
 'use strict';
 
+/* global $ */
+
 angular.module('lxUseChatRoom.controllers', [])
 
 
@@ -58,7 +60,7 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[data.roomId];
 
             // Add the normalizedRoomName to normalizedRoomNamesList, but only if it is not already there.
-            if ($.inArray(data.normalizedChatRoomName, $scope.normalizedRoomNamesList) == -1) {
+            if ($.inArray(data.normalizedChatRoomName, $scope.normalizedRoomNamesList) === -1) {
                 $scope.normalizedRoomNamesList.push(data.normalizedChatRoomName);
             }
 
@@ -96,10 +98,10 @@ angular.module('lxUseChatRoom.controllers', [])
                                                            remoteClientId) {
 
             /* localVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
-               queryForRemoteVideoElementsEnabled: If the client is initiating a request to start video, then we want
-               to know if the remote user has accepted the request. However, if the client is responding then we don't
-               want to request the remote user (who is the original initiator of the video exchange) to tell us if they
-               have accepted to transmit video (and doing so would cause circular requests).
+             queryForRemoteVideoElementsEnabled: If the client is initiating a request to start video, then we want
+             to know if the remote user has accepted the request. However, if the client is responding then we don't
+             want to request the remote user (who is the original initiator of the video exchange) to tell us if they
+             have accepted to transmit video (and doing so would cause circular requests).
              */
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
@@ -110,8 +112,15 @@ angular.module('lxUseChatRoom.controllers', [])
 
             }
 
-            if (localVideoEnabledSetting == "enableVideoExchange") {
+            if (localVideoEnabledSetting === 'enableVideoExchange') {
                 $scope.videoStateInfoObject.localCurrentOpenVideoExchanges += 1;
+            }
+
+            // if the remoteVideoEnabledSetting is 'enableVideoExchange', then the local user is either accepting
+            // or denying the remote request. In either case, we decrement the counter that tracks numer
+            // of pending remote requests.
+            if ($scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'enableVideoExchange') {
+                $scope.videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive--;
             }
 
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
