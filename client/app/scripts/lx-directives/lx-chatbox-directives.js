@@ -3,8 +3,6 @@
  */
 'use strict';
 
-/* global $ */
-
 angular.module('lxChatbox.directives', [])
 
 .directive('lxShowChatMessagesDirective',

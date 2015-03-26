@@ -1,5 +1,5 @@
 'use strict';
-
+/* global $ */
 angular.module('lxUtility.services', [])
     .factory('lxDelayActionService', function() {
 

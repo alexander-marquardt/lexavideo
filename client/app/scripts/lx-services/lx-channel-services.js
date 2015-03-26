@@ -72,6 +72,7 @@ angular.module('lxChannel.services', [])
                     var messageObject = JSON.parse(message.data);
                     var remoteClientId = messageObject.fromClientId;
                     var remoteVideoObject = scope.remoteVideoObjectsDict[remoteClientId];
+                    var chatRoomId = null;
 
                     lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
@@ -119,7 +120,7 @@ angular.module('lxChannel.services', [])
                         case 'roomOccupancyMsg':
                             var normalizedChatRoomName = messageObject.messagePayload.normalizedChatRoomName;
                             var chatRoomNameAsWritten = messageObject.messagePayload.chatRoomNameAsWritten;
-                            var chatRoomId = messageObject.messagePayload.chatRoomId;
+                            chatRoomId = messageObject.messagePayload.chatRoomId;
                             var roomOccupancyDict = scope.roomOccupancyDict;
                             roomOccupancyDict[normalizedChatRoomName] = {};
 
@@ -176,12 +177,12 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'chatDataMsg':
-                            var chatRoomId = messageObject.roomId;
+                            chatRoomId = messageObject.roomId;
                             var receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
 
-                            receivedChatMessageObject['messageString'] = messageObject.messagePayload.messageString;
+                            receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
                             // receivedMessageTime is used for triggering the watcher
-                            receivedChatMessageObject['receivedMessageTime'] = new Date().getTime();
+                            receivedChatMessageObject.receivedMessageTime = new Date().getTime();
                             break;
 
                         case 'videoExchangeStatusMsg':
@@ -198,16 +199,16 @@ angular.module('lxChannel.services', [])
                             // If the remote user has requested to start video, and the local user has not responded
                             // then we need to increment the counter that track the number of video sessions not
                             // yet responded to.
-                            if (localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission' &&
-                                newRemoteVideoEnabledSetting == 'enableVideoExchange') {
+                            if (localVideoEnabledSetting === 'waitingForEnableVideoExchangePermission' &&
+                                newRemoteVideoEnabledSetting === 'enableVideoExchange') {
                                  scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers ++;
                                  scope.notificationMenuObject.drawAttentionToNotificationMenuButton = true;
                             }
 
                             // if remote user requested to exchange video, and then changed their mind, then
                             // we need to remove the previous request from the counter.
-                            if (localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission' &&
-                                newRemoteVideoEnabledSetting == 'doNotEnableVideoExchange') {
+                            if (localVideoEnabledSetting === 'waitingForEnableVideoExchangePermission' &&
+                                newRemoteVideoEnabledSetting === 'doNotEnableVideoExchange') {
                                  scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers --;
                             }
 

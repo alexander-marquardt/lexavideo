@@ -68,7 +68,7 @@ angular.module('lxChatbox.controllers', [])
                 },
 
                 // message was not delivered to the server
-                function(response) {
+                function() {
 
                     $scope.sendMessagePayload.transmittedToServer = false;
                     $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + $scope.sendMessageFormScope.inputMessageString;
@@ -97,7 +97,7 @@ angular.module('lxChatbox.controllers', [])
 
         $scope.$watch('chatRoomDisplayObject.normalizedChatRoomNameFromUrl', function() {
            if ($scope.normalizedChatRoomName && $scope.chatRoomDisplayObject &&
-               $scope.normalizedChatRoomName == $scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl) {
+               $scope.normalizedChatRoomName === $scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl) {
 
                $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = true;
                $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId];
