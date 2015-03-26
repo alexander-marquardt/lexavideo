@@ -6,26 +6,37 @@ angular.module('lxChannel.services', [])
 
 
     .service('lxChannelMessageService', function() {
-        var msgQueue = [];
+        var msgQueue = {};
+
+        function makeSureQueueExists(remoteClientId) {
+            if (!(remoteClientId in msgQueue)) {
+                    msgQueue[remoteClientId] = [];
+            }
+        }
 
         return {
-            clearQueue : function() {
-                msgQueue.length = 0;
+            clearQueue : function(remoteClientId) {
+                makeSureQueueExists(remoteClientId);
+                msgQueue[remoteClientId].length = 0;
             },
-            unshift : function(msg) {
+            unshift : function(remoteClientId, msg) {
                 // adds the msg to the beginning of the array.
-                return msgQueue.unshift(msg);
+                makeSureQueueExists(remoteClientId);
+                return msgQueue[remoteClientId].unshift(msg);
             },
-            push: function(msg) {
+            push: function(remoteClientId, msg) {
+                makeSureQueueExists(remoteClientId);
                 // adds the msg to the end of the array.
-                return msgQueue.push(msg);
+                return msgQueue[remoteClientId].push(msg);
             },
-            shift : function() {
+            shift : function(remoteClientId) {
+                makeSureQueueExists(remoteClientId);
                 // pull the first element out of the array and return it.
-                return msgQueue.shift();
+                return msgQueue[remoteClientId].shift();
             },
-            getQueueLength : function() {
-                return msgQueue.length;
+            getQueueLength : function(remoteClientId) {
+                makeSureQueueExists(remoteClientId);
+                return msgQueue[remoteClientId].length;
             }
         };
     })
@@ -91,7 +102,7 @@ angular.module('lxChannel.services', [])
                                 if (sdpObject.type === 'offer') {
                                     // Add offer to the beginning of msgQueue, since we can't handle
                                     // Early candidates before offer at present.
-                                    lxChannelMessageService.unshift(sdpObject);
+                                    lxChannelMessageService.unshift(remoteClientId, sdpObject);
 
                                     lxWebRtcSessionService.signalingReady[remoteClientId] = true;
                                     $log.debug('lxWebRtcSessionService.signalingReady = true');
@@ -105,7 +116,7 @@ angular.module('lxChannel.services', [])
                                 // Message delivery due to possible datastore query at server side,
                                 // So callee needs to cache messages before peerConnection is created.
                                 else {
-                                    lxChannelMessageService.push(sdpObject);
+                                    lxChannelMessageService.push(remoteClientId, sdpObject);
                                 }
                             } else {
                                 lxWebRtcSessionService.processSignalingMessage(sdpObject, localVideoObject,

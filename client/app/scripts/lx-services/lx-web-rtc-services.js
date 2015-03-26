@@ -361,7 +361,7 @@ webRtcServices.service('lxWebRtcSessionService',
             }
             delete lxPeerService.pc[remoteClientId];
             delete lxPeerService.remoteStream[remoteClientId];
-            lxChannelMessageService.clearQueue();
+            lxChannelMessageService.clearQueue(remoteClientId);
         },
 
         processSignalingMessage: function( message, localVideoObject, remoteVideoObject, clientId, remoteClientId) {
@@ -629,8 +629,8 @@ webRtcServices.factory('lxCallService',
 
         var calleeStart = function(localVideoObject, remoteVideoObject, clientId, remoteClientId) {
             // Callee starts to process cached offer and other messages.
-            while (lxChannelMessageService.getQueueLength() > 0 ) {
-                lxWebRtcSessionService.processSignalingMessage(lxChannelMessageService.shift(), localVideoObject,
+            while (lxChannelMessageService.getQueueLength(remoteClientId) > 0 ) {
+                lxWebRtcSessionService.processSignalingMessage(lxChannelMessageService.shift(remoteClientId), localVideoObject,
                     remoteVideoObject, clientId, remoteClientId);
             }
         };
