@@ -125,7 +125,7 @@ angular.module('lxMainView.controllers', [])
         $scope.videoStateInfoObject = {
             // we keep track of the number of times that the local user has enabled video exchanges. When this
             // number is zero, we do not show any video boxes, and when it is one or more, we show video.
-            localVideoIsEnabledCount: 0,
+            localCurrentOpenVideoExchanges: 0,
 
             // Track number of requests for video exchanges that the local user has not yet responded to.
             numVideoSessionsRequestedByRemoteClientNotYetActive: 0

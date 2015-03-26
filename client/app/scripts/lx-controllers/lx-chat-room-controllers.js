@@ -109,7 +109,7 @@ angular.module('lxUseChatRoom.controllers', [])
                 $scope.videoStateInfoObject.numVideoSessionsOpenOnLocalClient += 1;
             }
 
-            $scope.videoStateInfoObject.localVideoIsEnabledCount += 1;
+            $scope.videoStateInfoObject.localCurrentOpenVideoExchanges += 1;
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
 
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(

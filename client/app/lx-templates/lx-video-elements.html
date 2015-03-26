@@ -1,5 +1,5 @@
 {% raw %}
-    <div ng-if="videoStateInfoObject.localVideoIsEnabledCount >= 1" class="cl-transition-opacity">
+    <div ng-if="videoStateInfoObject.localCurrentOpenVideoExchanges >= 1" class="cl-transition-opacity">
         <div ng-controller="lxMainVideoCtrl">
             {% endraw %}{% include "lx-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
             <div lx-check-if-system-supports-web-rtc-directive></div>
