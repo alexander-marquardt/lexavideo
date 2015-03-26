@@ -200,7 +200,7 @@ angular.module('lxChannel.services', [])
                             // yet responded to.
                             if (localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission' &&
                                 newRemoteVideoEnabledSetting == 'enableVideoExchange') {
-                                 scope.videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive ++;
+                                 scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers ++;
                                  scope.notificationMenuObject.drawAttentionToNotificationMenuButton = true;
                             }
 
@@ -208,7 +208,7 @@ angular.module('lxChannel.services', [])
                             // we need to remove the previous request from the counter.
                             if (localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission' &&
                                 newRemoteVideoEnabledSetting == 'doNotEnableVideoExchange') {
-                                 scope.videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive --;
+                                 scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers --;
                             }
 
 

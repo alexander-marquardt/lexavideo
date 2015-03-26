@@ -130,7 +130,7 @@ angular.module('lxMainView.controllers', [])
             localCurrentOpenVideoExchanges: 0,
 
             // Track number of requests for video exchanges that the local user has not yet responded to.
-            numVideoSessionsRequestedByRemoteClientNotYetActive: 0
+            numVideoRequestsPendingFromRemoteUsers: 0
         };
 
 

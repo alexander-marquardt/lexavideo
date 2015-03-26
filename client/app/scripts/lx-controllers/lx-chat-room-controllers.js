@@ -120,7 +120,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // or denying the remote request. In either case, we decrement the counter that tracks numer
             // of pending remote requests.
             if ($scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'enableVideoExchange') {
-                $scope.videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive--;
+                $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
             }
 
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;

@@ -27,8 +27,8 @@
                     <span class="cl-text-size-1_5em" style="vertical-align:middle">
                             <span class="icon-lx-flag" ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-text-danger cl-text-shadow cl-pulse': ''"></span>
                     </span>
-                    <span ng-if="videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive" class="bubble bubble-left cl-notification-count-bubble-override"><i></i>
-                        {{ videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive }}
+                    <span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" class="bubble bubble-left cl-notification-count-bubble-override"><i></i>
+                        {{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}
                     </span>
                 </span>
             </button>
