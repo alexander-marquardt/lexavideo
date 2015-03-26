@@ -83,8 +83,7 @@ angular.module('lxChannel.services', [])
                             var sdpObject = messageObject.messagePayload;
 
 
-                            // TODO - this looks like an incorrect reference to rtcInitiator come back and investigate
-                            if (!lxChannelSupportService.rtcInitiator && !lxWebRtcSessionService.started) {
+                            if (!scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator && !lxWebRtcSessionService.started) {
                                 // Callee is the client that is *not* the rtcInitiator (the rtcInitiator calls
                                 // the callee). The callee will only start negotiating video connection if they
                                 // receive an "offer" from the caller.
