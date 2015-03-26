@@ -81,6 +81,8 @@ angular.module('lxChannel.services', [])
 
                             var sdpObject = messageObject.messagePayload;
 
+
+                            // TODO - this looks like an incorrect reference to rtcInitiator come back and investigate
                             if (!lxChannelSupportService.rtcInitiator && !lxWebRtcSessionService.started) {
                                 // Callee is the client that is *not* the rtcInitiator (the rtcInitiator calls
                                 // the callee). The callee will only start negotiating video connection if they
@@ -188,8 +190,26 @@ angular.module('lxChannel.services', [])
                                 $log.info('videoExchangeStatusMsg causing creation of new videoExchangeObjectsDict entry for client ' + remoteClientId);
                                 scope.videoExchangeObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject();
                             }
-                            scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting =
-                                   messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
+                            var localVideoEnabledSetting = scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting;
+                            var newRemoteVideoEnabledSetting = messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
+                            scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting = newRemoteVideoEnabledSetting;
+
+
+                            // If the remote user has requested to start video, and the local user has not responded
+                            // then we need to increment the counter that track the number of video sessions not
+                            // yet responded to.
+                            if (localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission' &&
+                                newRemoteVideoEnabledSetting == 'enableVideoExchange') {
+                                 scope.videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive ++;
+                            }
+
+                            // if remote user requested to exchange video, and then changed their mind, then
+                            // we need to remove the previous request from the counter.
+                            if (localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission' &&
+                                newRemoteVideoEnabledSetting == 'doNotEnableVideoExchange') {
+                                 scope.videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive --;
+                            }
+
 
                             // Check if the remote user has requested an update of the local users status
                             if ('queryVideoElementsEnabledAndCameraAccessRequested' in messageObject.messagePayload &&

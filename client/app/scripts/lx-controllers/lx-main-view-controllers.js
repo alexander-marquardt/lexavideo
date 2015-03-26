@@ -111,15 +111,24 @@ angular.module('lxMainView.controllers', [])
             }
         };
 
-        // videoExchangeObjectsDict will be populated with calls to
+        // videoExchangeObjectsDict will be populated by calling
         // lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject(), and there will be one key
         // for each remote client that the local user is exchanging video settings with.
+        // eg.
+        // videoExchangeObjectsDict[remoteClientId] = {
+        //    remoteVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
+        //    localVideoEnabledSetting:
+        //    rtcInitiator:
+        // }
         $scope.videoExchangeObjectsDict = {};
 
         $scope.videoStateInfoObject = {
             // we keep track of the number of times that the local user has enabled video exchanges. When this
             // number is zero, we do not show any video boxes, and when it is one or more, we show video.
-            localVideoIsEnabledCount: 0
+            localVideoIsEnabledCount: 0,
+
+            // Track number of requests for video exchanges that the local user has not yet responded to.
+            numVideoSessionsRequestedByRemoteClientNotYetActive: 0
         };
 
 
