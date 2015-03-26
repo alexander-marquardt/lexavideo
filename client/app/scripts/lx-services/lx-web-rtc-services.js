@@ -345,14 +345,16 @@ webRtcServices.service('lxWebRtcSessionService',
 
     var self = {
 
-        started : false,
+        // For each remote client, track if we have started the webRtc session. Will have an entry
+        // for each remoteClientId (eg. webRtcSessionStarted[remoteClientId])
+        webRtcSessionStarted : {},
         // initial value for signalingReady will be set in lxChannelMessageService->onChannelMessage. It
-        // will be a dictionary containing a value for each remoteClientId.
+        // will be a dictionary containing a value for each remoteClientId (eg signalingReady[remoteClientId])
         signalingReady : {},
 
 
         stop: function(remoteClientId) {
-            self.started = false;
+            self.webRtcSessionStarted[remoteClientId] = false;
             self.signalingReady[remoteClientId] = false;
             if (lxPeerService.pc[remoteClientId]) {
                 lxPeerService.pc[remoteClientId].close();
@@ -363,7 +365,7 @@ webRtcServices.service('lxWebRtcSessionService',
         },
 
         processSignalingMessage: function( message, localVideoObject, remoteVideoObject, clientId, remoteClientId) {
-            if (!self.started) {
+            if (!self.webRtcSessionStarted[remoteClientId]) {
                 $log.warn('peerConnection has not been created yet!');
                 return;
             }
@@ -648,7 +650,7 @@ webRtcServices.factory('lxCallService',
                 var videoSignalingObject = scope.videoSignalingObject;
                 var clientId = scope.lxMainViewCtrl.clientId;
 
-                if (!lxWebRtcSessionService.started && lxWebRtcSessionService.signalingReady[remoteClientId] && lxChannelSupportService.channelReady &&
+                if (!lxWebRtcSessionService.webRtcSessionStarted[remoteClientId] && lxWebRtcSessionService.signalingReady[remoteClientId] && lxChannelSupportService.channelReady &&
                     lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
                     $log.debug('Starting webRtc services!!');
@@ -663,7 +665,7 @@ webRtcServices.factory('lxCallService',
                         $log.log('Not sending any stream.');
                     }
 
-                    lxWebRtcSessionService.started = true;
+                    lxWebRtcSessionService.webRtcSessionStarted[remoteClientId] = true;
 
                     if (scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator) {
                         $log.log('Executing doCall()');
@@ -678,8 +680,8 @@ webRtcServices.factory('lxCallService',
                     // By construction, this branch should not be executed since all of the pre-requisites for setting
                     // up a call should have been previously met.
                     $log.debug('Not ready to start webRtc services.');
-                    if (lxWebRtcSessionService.started) {
-                        $log.debug('Because lxWebRtcSessionService.started is true');
+                    if (lxWebRtcSessionService.webRtcSessionStarted[remoteClientId]) {
+                        $log.debug('Because lxWebRtcSessionService.webRtcSessionStarted[remoteClientId] is true for remoteClientId: ' + remoteClientId);
                     }
                     if (!lxWebRtcSessionService.signalingReady[remoteClientId]) {
                         $log.debug('Because lxWebRtcSessionService.signalingReady[remoteClientId is false for remoteClientId: ' + remoteClientId);

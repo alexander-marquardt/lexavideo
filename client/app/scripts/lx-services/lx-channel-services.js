@@ -83,7 +83,7 @@ angular.module('lxChannel.services', [])
                             var sdpObject = messageObject.messagePayload;
 
 
-                            if (!scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator && !lxWebRtcSessionService.started) {
+                            if (!scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator && !lxWebRtcSessionService.webRtcSessionStarted[remoteClientId]) {
                                 // Callee is the client that is *not* the rtcInitiator (the rtcInitiator calls
                                 // the callee). The callee will only start negotiating video connection if they
                                 // receive an "offer" from the caller.
@@ -168,7 +168,7 @@ angular.module('lxChannel.services', [])
                                 // the rtc negotiation and peer setup etc. from scratch. Set the following to false
                                 // so that the code inside maybeStart will execute all of the initializations that
                                 // are required for a new peer session.
-                                lxWebRtcSessionService.started = false;
+                                lxWebRtcSessionService.webRtcSessionStarted[remoteClientId] = false;
 
                                 lxCallService.maybeStart(scope, remoteClientId);
 
