@@ -91,7 +91,11 @@
 }
 
 .btn-gray {
-  @include button-variant($btn-default-color, $btn-gray-bg, $btn-default-border);
+  @include button-variant($btn-default-color, $btn-gray-bg, $btn-gray-border);
+}
+
+.btn-gray-light {
+  @include button-variant($btn-default-color, $btn-gray-light-bg, $btn-gray-light-border);
 }
 
 .icon-lx-start-video-camera-wrapper-cfg {

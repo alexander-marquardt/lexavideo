@@ -4,7 +4,7 @@
 
     <div class="col-xs-2 cl-col-xs-smaller-left-right-padding">
         <div class="btn-group">
-            <button type="button" class="btn btn-default cl-menu-button"
+            <button type="button" class="btn btn-gray-light cl-menu-button"
                     ng-click="toggleMainMenu()" my-click-once>
                 <span class="sr-only">Toggle menu</span>
                 <span class="cl-icon-bar"></span>
@@ -21,14 +21,16 @@
 
     <div class="col-xs-2 cl-col-xs-smaller-left-right-padding">
         <div class="btn-group pull-right">
-            <button type="button" class="btn btn-default cl-menu-button"
+            <button type="button" class="btn btn-gray-light cl-menu-button"
                 ng-click="toggleNotificationMenu()" my-click-once>
-                <span class="cl-text-size-1_5em" style="vertical-align:middle">
-                        <span class="icon-lx-flag"></span>
+                <span style="white-space: nowrap">
+                    <span class="cl-text-size-1_5em" style="vertical-align:middle">
+                            <span ng-class="videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive?'cl-text-danger': ''" class="icon-lx-flag"></span>
+                    </span>
+                    <span class="bubble bubble-left cl-notification-count-bubble-override"><i></i>
+                        {{ videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive }}
+                    </span>
                 </span>
-                <div class="bubble bubble-left cl-notification-count-bubble-override"><i></i>
-                    {{ videoStateInfoObject.numVideoSessionsRequestedByRemoteClientNotYetActive }}
-                </div>
             </button>
 
         </div>
