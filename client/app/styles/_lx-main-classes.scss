@@ -203,10 +203,21 @@
    @include my-mixin-border-glow($brand-primary,  1)
 }
 
+
+.cl-pulse {
+  animation-name: pulse;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+
+}
+
 .cl-feedback-on-input-validity-div {
   min-height: 20px;
 }
 
+.cl-text-shadow {
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+}
 
 .cl-text-danger {
   color: $brand-danger;

@@ -90,7 +90,8 @@ angular.module('lxMainView.controllers', [])
             showMainMenu: false
         };
         $scope.notificationMenuObject = {
-            showNotificationMenu: false
+            showNotificationMenu: false,
+            drawAttentionToNotificationMenuButton: false
         };
 
         $scope.toggleMainMenu = function() {
@@ -104,6 +105,7 @@ angular.module('lxMainView.controllers', [])
 
         $scope.toggleNotificationMenu = function() {
             $scope.notificationMenuObject.showNotificationMenu = !$scope.notificationMenuObject.showNotificationMenu;
+            $scope.notificationMenuObject.drawAttentionToNotificationMenuButton = false;
 
             // if notification menu is now shown, then get ride of the main menu
             if ($scope.notificationMenuObject.showNotificationMenu) {
