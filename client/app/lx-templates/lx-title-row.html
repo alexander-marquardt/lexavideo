@@ -5,7 +5,7 @@
     <div class="col-xs-2 cl-col-xs-smaller-left-right-padding">
         <div class="btn-group">
             <button type="button" class="btn btn-gray-light cl-menu-button"
-                    ng-click="toggleMainMenu()" my-click-once>
+                    ng-click="toggleMainMenu($event)" my-click-once>
                 <span class="sr-only">Toggle menu</span>
                 <span class="cl-icon-bar"></span>
                 <span class="cl-icon-bar"></span>
@@ -22,7 +22,7 @@
     <div class="col-xs-2 cl-col-xs-smaller-left-right-padding">
         <div class="btn-group pull-right">
             <button type="button" class="btn btn-gray-light cl-menu-button"
-                ng-click="toggleNotificationMenu()" my-click-once>
+                ng-click="toggleNotificationMenu($event)" my-click-once>
                 <span style="white-space: nowrap">
                     <span class="cl-text-size-1_5em" style="vertical-align:middle">
                             <span class="icon-lx-flag" ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-text-danger cl-text-shadow cl-pulse': ''"></span>

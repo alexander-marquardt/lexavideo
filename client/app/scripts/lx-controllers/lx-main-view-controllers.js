@@ -9,6 +9,7 @@ angular.module('lxMainView.controllers', [])
 
 .controller('lxVideoChatAppViewCtrl',
     function(
+        $document,
         $rootScope,
         $location,
         $log,
@@ -95,16 +96,26 @@ angular.module('lxMainView.controllers', [])
             drawAttentionToNotificationMenuButton: false
         };
 
-        $scope.toggleMainMenu = function() {
+        $scope.toggleMainMenu = function($event) {
+            $event.stopPropagation();
             $scope.mainMenuObject.showMainMenu = !$scope.mainMenuObject.showMainMenu;
 
-            // if main menu is now shown, then remove the notification menu
+            // if main menu is now shown, then remove the notification menu (this needs to be done manually
+            // since we have stopped propagation of this click event, and so code that detects a click outside
+            // of the notification menu will not be triggered.
             if ($scope.mainMenuObject.showMainMenu) {
                 $scope.notificationMenuObject.showNotificationMenu = false;
             }
         };
 
-        $scope.toggleNotificationMenu = function() {
+        $document.on('click', function() {
+            $scope.$apply(function(){
+                $scope.mainMenuObject.showMainMenu = false;
+            });
+        });
+
+        $scope.toggleNotificationMenu = function($event) {
+            $event.stopPropagation();
             $scope.notificationMenuObject.showNotificationMenu = !$scope.notificationMenuObject.showNotificationMenu;
             $scope.notificationMenuObject.drawAttentionToNotificationMenuButton = false;
 
