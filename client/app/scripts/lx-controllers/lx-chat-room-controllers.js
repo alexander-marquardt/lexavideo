@@ -107,9 +107,13 @@ angular.module('lxUseChatRoom.controllers', [])
                 $log.info('showVideoElementsAndStartVideoFn creating new videoExchangeObjectsDict entry for remote client ' + remoteClientId);
                 $scope.videoExchangeObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject();
                 $scope.videoStateInfoObject.numVideoSessionsOpenOnLocalClient += 1;
+
             }
 
-            $scope.videoStateInfoObject.localCurrentOpenVideoExchanges += 1;
+            if (localVideoEnabledSetting == "enableVideoExchange") {
+                $scope.videoStateInfoObject.localCurrentOpenVideoExchanges += 1;
+            }
+
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
 
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
