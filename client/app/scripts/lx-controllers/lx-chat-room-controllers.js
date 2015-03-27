@@ -103,6 +103,7 @@ angular.module('lxUseChatRoom.controllers', [])
              want to request the remote user (who is the original initiator of the video exchange) to tell us if they
              have accepted to transmit video (and doing so would cause circular requests).
              */
+            $log.log('Executing showVideoElementsAndStartVideoFn');
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
             var isANewRequest = false;

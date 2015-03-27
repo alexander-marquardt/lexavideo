@@ -8,14 +8,14 @@
 
             {% include "lx-templates/lx-title-row.html" %}
 
+            <div ng-controller="lxChatRoomCtrl">
 
-            <!-- ng-view will call in the appropriate template for the current URL location -->
-            <div class="cl-row-no-margins cl-hide-row-overflow"
-                    ng-class="mainMenuObject.showMainMenu? 'cl-xs-add-right-margin':''">
-                <div class="row cl-row-no-xs-margins">
-                    <div class=" cl-main-ng-view-area-wrapper">
+                <!-- ng-view will call in the appropriate template for the current URL location -->
+                <div class="cl-row-no-margins cl-hide-row-overflow"
+                        ng-class="mainMenuObject.showMainMenu? 'cl-xs-add-right-margin':''">
+                    <div class="row cl-row-no-xs-margins">
+                        <div class=" cl-main-ng-view-area-wrapper">
 
-                        <div ng-controller="lxChatRoomCtrl">
 
                             <!-- lx-main-menu.html contains the "main" menu that displays website controls -->
                             {% include 'lx-templates/lx-main-menu.html' %}
@@ -31,11 +31,13 @@
                         </div>
                     </div>
                 </div>
+
+                {% include "lx-templates/lx-video-elements.html" %}
+
             </div>
 
 
 
-            {% include "lx-templates/lx-video-elements.html" %}
             <div lx-initialize-channel-directive></div>
             <div lx-initialize-turn-directive></div>
 
