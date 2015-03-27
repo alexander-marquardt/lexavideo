@@ -15,7 +15,7 @@
                                     class="cl-transition-opacity">
 
                                 <!-- The following wraps the remote video window -->
-                                <div class="col-xs-6 text-center cl-col-xs-smaller-left-right-padding" >
+                                <div ng-if="videoExchangeObject.localVideoEnabledSetting == 'enableVideoExchange'" class="col-xs-6 text-center cl-col-xs-smaller-left-right-padding" >
                                     REMOTE VIDEO RemoteId = {{ remoteClientId }}<br>
 
                                     <div class="cl-video-wrapper-div">
