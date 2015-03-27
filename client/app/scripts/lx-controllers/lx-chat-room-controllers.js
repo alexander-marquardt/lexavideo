@@ -120,14 +120,15 @@ angular.module('lxUseChatRoom.controllers', [])
 
 
             if (localVideoEnabledSetting === 'enableVideoExchange' && previousLocalVideoEnabledSetting !== 'enableVideoExchange') {
-                $scope.videoStateInfoObject.localCurrentOpenVideoExchanges += 1;
+                $scope.videoStateInfoObject.numOpenVideoExchanges ++;
             }
 
             if (isANewRequest) {
-                // if the remoteVideoEnabledSetting is 'enableVideoExchange', then the local user is either accepting
+                // if the remoteVideoEnabledSetting is not 'waitingForEnableVideoExchangePermission' (it is therefore
+                // either 'doNotEnableVideoExchange' or 'enableVideoExchange') then the local user is either accepting
                 // or denying the remote request. In either case, we decrement the counter that tracks number
                 // of pending remote requests.
-                if ($scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'enableVideoExchange') {
+                if ($scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting !== 'waitingForEnableVideoExchangePermission') {
                     $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
                 }
             }
@@ -140,12 +141,11 @@ angular.module('lxUseChatRoom.controllers', [])
                 queryForRemoteVideoElementsEnabled,
                 remoteClientId);
 
-            // If this has been called with localVideoElementsEnabled === 'doNotEnableVideoExchange', then the user has either
-            // (1) hung-up/stopped the call, or (2) denied to setup video elements. In the case 1, the
-            // call must be hung up. In case 2, the call does not need to be hung up, but for simplicity
-            // we also hangup the call for this case.
-            if (localVideoEnabledSetting === 'doNotEnableVideoExchange' || localVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
-                lxCallService.doHangup(remoteClientId);
+            // If the user previously enabled video exchange with this client, and now is "waiting" for a new video
+            // connection, then they have hung up the connection to the remote user.
+            if (previousLocalVideoEnabledSetting === 'enableVideoExchange' && localVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
+                lxCallService.doHangup(remoteClientId, $scope.videoStateInfoObject.numOpenVideoExchanges);
+                $scope.videoStateInfoObject.numOpenVideoExchanges --;
             }
         };
 
