@@ -29,6 +29,17 @@ angular.module('lxMainView.controllers', [])
 
         // remoteVideoObject will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoObject
         // There will be one object for each remote client that the local user is exchanging video with.
+        //
+        // eg. remoteVideoObjectsDict[remoteClientId] = {
+        //      localVideoEnabledSetting: [string - see below for description],
+        //      remoteVideoEnabledSetting: [string - see below for description],
+        //      rtcInitiator: boolean
+        //     }
+        // localVideoEnabledSetting and remoteVideoEnabledSetting can be the following values:
+        //    'waitingForEnableVideoExchangePermission': user has not made any request for a video exchange
+        //    'enableVideoExchange': user has activated video elements
+        //    'doNotEnableVideoExchange': user has denied activation of video elements
+
         $scope.remoteVideoObjectsDict = {};
 
 

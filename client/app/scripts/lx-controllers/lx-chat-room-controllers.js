@@ -146,6 +146,7 @@ angular.module('lxUseChatRoom.controllers', [])
             if (previousLocalVideoEnabledSetting === 'enableVideoExchange' && localVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
                 lxCallService.doHangup(remoteClientId, $scope.videoStateInfoObject.numOpenVideoExchanges);
                 $scope.videoStateInfoObject.numOpenVideoExchanges --;
+                delete $scope.remoteVideoObjectsDict[remoteClientId] ;
             }
         };
 

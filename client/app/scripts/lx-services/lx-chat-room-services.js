@@ -84,14 +84,9 @@ angular.module('lxChatRoom.services', [])
             // "access" is given. After this, there is a get user media request from the browser
             // that the user will have to accept in order to access their camera and microphone (if we have
             // enabled ssh, then the get user media request result should be remembered for future sessions)
-
-            // localVideoEnabledSetting and remoteVideoEnabledSetting can be the following values:
-            //    'waitingForEnableVideoExchangePermission': user has not made any request for a video exchange
-            //    'enableVideoExchange': user has activated video elements
-            //    'doNotEnableVideoExchange': user has denied activation of video elements
             this.localVideoEnabledSetting = 'waitingForEnableVideoExchangePermission';
             this.remoteVideoEnabledSetting = 'waitingForEnableVideoExchangePermission';
-            this.rtcInitiator = undefined;
+            this.rtcInitiator = false;
         }
 
 
