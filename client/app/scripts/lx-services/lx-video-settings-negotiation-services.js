@@ -109,7 +109,14 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
 
         return {
             sendStatusOfVideoElementsEnabled: function(scope, localVideoElementsEnabled,
-                                                       queryForRemoteVideoElementsEnabled, toClientId) {
+                                                       localClientIsInitiatingVideoInformationExchange, toClientId) {
+
+                /* localClientIsInitiatingVideoInformationExchange: If the client is initiating a request to start video, then we want
+                 to know if the remote user has accepted the request. However, if the client is responding to
+                 a remote request to start a video exchange, then we don't
+                 want to request the remote user (who is the original initiator of the video exchange) to tell us if they
+                 have accepted to transmit video, as doing so would cause circular requests and responses.
+                 */
 
                 lxJs.assert(toClientId, 'toClientId is not set');
 
@@ -123,7 +130,7 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
                         // we request this information every time that we send the remote user the local status -
                         // this is strictly not necessary, but doesn't cost much and provides some redundancy in
                         // the case of un-delivered messages.
-                        queryVideoElementsEnabledAndCameraAccessRequested: queryForRemoteVideoElementsEnabled
+                        queryVideoElementsEnabledAndCameraAccessRequested: localClientIsInitiatingVideoInformationExchange
                     },
                     scope.lxMainViewCtrl.clientId,
                     toClientId

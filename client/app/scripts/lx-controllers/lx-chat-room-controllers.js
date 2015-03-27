@@ -94,14 +94,14 @@ angular.module('lxUseChatRoom.controllers', [])
 
 
         $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting,
-                                                           queryForRemoteVideoElementsEnabled,
+                                                           localClientIsInitiatingVideoInformationExchange,
                                                            remoteClientId) {
 
             /* localVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
-             queryForRemoteVideoElementsEnabled: If the client is initiating a request to start video, then we want
-             to know if the remote user has accepted the request. However, if the client is responding then we don't
-             want to request the remote user (who is the original initiator of the video exchange) to tell us if they
-             have accepted to transmit video (and doing so would cause circular requests).
+             localClientIsInitiatingVideoInformationExchange: If local client is the one who is asking the remote
+             user to exchange video, then this is true. If local user is responding to a remote request to exchange
+             video, then this is false. If local user is modifying an existing video exchange (ie. by hanging up)
+             then this will be true.
              */
             $log.log('Executing showVideoElementsAndStartVideoFn');
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
@@ -123,12 +123,15 @@ angular.module('lxUseChatRoom.controllers', [])
                 $scope.videoStateInfoObject.numOpenVideoExchanges ++;
             }
 
-            // if the remoteVideoEnabledSetting is not 'waitingForEnableVideoExchangePermission' (it is therefore
-            // either 'doNotEnableVideoExchange' or 'enableVideoExchange') then the local user is either accepting
-            // or denying the remote request. In either case, we decrement the counter that tracks number
-            // of pending remote requests.
-            if ($scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting !== 'waitingForEnableVideoExchangePermission') {
-                $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
+            // Check if the local user is responding to a remote request for a video exchange
+            if (!localClientIsInitiatingVideoInformationExchange) {
+                // if the remoteVideoEnabledSetting is 'enableVideoExchange' then the local user is either accepting
+                // or denying the remote request.
+                // In either case, we decrement the counter that tracks number of pending remote requests, as they
+                // are now "dealt with".
+                if ($scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'enableVideoExchange') {
+                    $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
+                }
             }
 
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
@@ -136,7 +139,7 @@ angular.module('lxUseChatRoom.controllers', [])
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                 $scope,
                 localVideoEnabledSetting,
-                queryForRemoteVideoElementsEnabled,
+                localClientIsInitiatingVideoInformationExchange,
                 remoteClientId);
 
             // If the user previously enabled video exchange with this client, and now is "waiting" for a new video
