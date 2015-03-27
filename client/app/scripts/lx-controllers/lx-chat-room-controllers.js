@@ -105,22 +105,30 @@ angular.module('lxUseChatRoom.controllers', [])
              */
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
+            var isANewRequest = false;
+            var previousLocalVideoEnabledSetting = null;
             if (!(remoteClientId in $scope.videoExchangeObjectsDict)) {
                 $log.info('showVideoElementsAndStartVideoFn creating new videoExchangeObjectsDict entry for remote client ' + remoteClientId);
                 $scope.videoExchangeObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject();
                 $scope.videoStateInfoObject.numVideoSessionsOpenOnLocalClient += 1;
-
+                isANewRequest = true;
+            }
+            else {
+                previousLocalVideoEnabledSetting = $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting;
             }
 
-            if (localVideoEnabledSetting === 'enableVideoExchange') {
+
+            if (localVideoEnabledSetting === 'enableVideoExchange' && previousLocalVideoEnabledSetting !== 'enableVideoExchange') {
                 $scope.videoStateInfoObject.localCurrentOpenVideoExchanges += 1;
             }
 
-            // if the remoteVideoEnabledSetting is 'enableVideoExchange', then the local user is either accepting
-            // or denying the remote request. In either case, we decrement the counter that tracks numer
-            // of pending remote requests.
-            if ($scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'enableVideoExchange') {
-                $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
+            if (isANewRequest) {
+                // if the remoteVideoEnabledSetting is 'enableVideoExchange', then the local user is either accepting
+                // or denying the remote request. In either case, we decrement the counter that tracks number
+                // of pending remote requests.
+                if ($scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting === 'enableVideoExchange') {
+                    $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
+                }
             }
 
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
