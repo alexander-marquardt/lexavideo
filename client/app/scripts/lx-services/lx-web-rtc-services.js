@@ -461,7 +461,7 @@ webRtcServices.factory('lxPeerService',
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
                     self.pc[remoteClientId] = new lxAdapterService.RTCPeerConnection(lxVideoParamsService.pcConfig, lxVideoParamsService.pcConstraints);
                     self.pc[remoteClientId].onicecandidate = lxIceService.onIceCandidate(clientId, remoteClientId);
-                    $log.log('Created RTCPeerConnnection with:\n' +
+                    $log.log('Created RTCPeerConnnection to client:\'' + remoteClientId + '\' with:\n' +
                         '  config: \'' + JSON.stringify(lxVideoParamsService.pcConfig) + '\';\n' +
                         '  constraints: \'' + JSON.stringify(lxVideoParamsService.pcConstraints) + '\'.');
                 } catch (e) {
