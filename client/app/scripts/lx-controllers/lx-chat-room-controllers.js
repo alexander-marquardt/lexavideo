@@ -139,12 +139,11 @@ angular.module('lxUseChatRoom.controllers', [])
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                 $scope,
                 localVideoEnabledSetting,
-                localClientIsInitiatingVideoInformationExchange,
                 remoteClientId);
 
-            // If the user previously enabled video exchange with this client, and now is "waiting" for a new video
+            // If the user previously enabled video exchange with this client, and now is "doNotEnableVideoExchange" for a new video
             // connection, then they have hung up the connection to the remote user.
-            if (previousLocalVideoEnabledSetting === 'enableVideoExchange' && localVideoEnabledSetting === 'waitingForEnableVideoExchangePermission') {
+            if (previousLocalVideoEnabledSetting === 'enableVideoExchange' && localVideoEnabledSetting === 'doNotEnableVideoExchange') {
                 lxCallService.doHangup(remoteClientId, $scope.videoStateInfoObject.numOpenVideoExchanges);
                 $scope.videoStateInfoObject.numOpenVideoExchanges --;
                 delete $scope.remoteVideoObjectsDict[remoteClientId] ;
