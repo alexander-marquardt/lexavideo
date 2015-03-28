@@ -207,6 +207,12 @@ angular.module('lxChannel.services', [])
                             var newRemoteVideoEnabledSetting = messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
                             scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting = newRemoteVideoEnabledSetting;
 
+                            // If the remote user has hung-up, or denied a video exchange, then stop the remote stream
+                            // (this is really only necessary for hangup, as a denied video exchange would not have
+                            // a remote stream yet.
+                            if (newRemoteVideoEnabledSetting === 'doNotEnableVideoExchange') {
+                                lxWebRtcSessionService.stop(remoteClientId);
+                            }
 
                             // If the remote user has requested to start video, and the local user has not responded
                             // then we need to increment the counter that track the number of video sessions not
