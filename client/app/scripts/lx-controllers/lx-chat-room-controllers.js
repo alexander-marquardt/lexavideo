@@ -141,6 +141,7 @@ angular.module('lxUseChatRoom.controllers', [])
                 lxCallService.doHangup(remoteClientId, $scope.videoStateInfoObject.numOpenVideoExchanges);
                 $scope.videoStateInfoObject.numOpenVideoExchanges --;
                 delete $scope.remoteVideoObjectsDict[remoteClientId] ;
+                delete $scope.videoExchangeObjectsDict[remoteClientId];
             }
         };
     })
