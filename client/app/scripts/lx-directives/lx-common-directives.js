@@ -51,7 +51,6 @@ commonDirectives.directive('myClickOnce', function ($timeout) {
 });
 
 commonDirectives.factory('clickAnywhereButHereService', function($document){
-  var tracker = [];
 
   return function($scope, expr) {
     var handler = function() {
@@ -70,7 +69,7 @@ commonDirectives.factory('clickAnywhereButHereService', function($document){
 commonDirectives.directive('clickAnywhereButHere', function($document, clickAnywhereButHereService){
   return {
     restrict: 'A',
-    link: function(scope, elem, attr, ctrl) {
+    link: function(scope, elem, attr) {
       var handler = function(e) {
         e.stopPropagation();
       };
