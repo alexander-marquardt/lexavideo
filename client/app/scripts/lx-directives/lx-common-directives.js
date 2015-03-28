@@ -23,7 +23,7 @@ commonDirectives.directive('lxCheckIfSystemSupportsWebRtcDirective',
 });
 
 
-commonDirectives.directive('myClickOnce', function ($timeout) {
+commonDirectives.directive('lxClickOnceDirective', function ($timeout) {
     var delay = 500;   // min milliseconds between clicks
 
     return {
@@ -60,9 +60,7 @@ commonDirectives.factory('clickAnywhereButHereService', function($document){
     $document.on('click', handler);
 
     // IMPORTANT! Tear down this event handler when the scope is destroyed.
-    $scope.$on('$destroy', function(){
-      $document.off('click', handler);
-    });
+    $scope.$on('$destroy', function(){$document.off('click', handler);});
   };
 });
 

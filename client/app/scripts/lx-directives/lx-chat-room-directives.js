@@ -75,4 +75,56 @@ angular.module('lxChatRoom.directives', [])
                 });
             }
         };
+    })
+
+
+    .directive('lxNotificationMenuButtonDirective',
+    function(
+        ){
+
+
+
+        return {
+            restrict: 'A',
+            template: '' +
+                '<span style="white-space: nowrap">' +
+                    '<span class="cl-text-size-1_5em" style="vertical-align:middle">' +
+                            '<span class="icon-lx-flag"></span>' +
+                    '</span>' +
+                    '<span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers"' +
+                        'class="bubble bubble-left cl-notification-count-bubble-override"><i></i>' +
+                        '{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}' +
+                    '</span>'+
+                '</span>',
+
+            link: function(scope, elem) {
+
+                var toggleNotificationMenu = function(event) {
+                    scope.$apply(function() {
+                        event.stopPropagation();
+                        scope.notificationMenuObject.showNotificationMenu = !scope.notificationMenuObject.showNotificationMenu;
+
+                        // if notification menu is now shown, then get ride of the main menu
+                        if (scope.notificationMenuObject.showNotificationMenu) {
+                            scope.mainMenuObject.showMainMenu = false;
+                        }
+                    });
+                };
+
+                elem.on('click', toggleNotificationMenu);
+
+                // IMPORTANT! Tear down this event handler when the scope is destroyed.
+                scope.$on('$destroy', function(){
+                  $document.off('click', toggleNotificationMenu);
+                });
+
+                // if the user gets a new notification then we want to draw attention to the button.
+//                scope.$watch('videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers', function(numPendingRequests) {
+//                    if (numPendingRequests > 0) {
+//                        elem.addClass('cl-text-danger cl-text-shadow cl-pulse');
+//                        $compile(elem)(scope);
+//                    }
+//                });
+            }
+        };
     });

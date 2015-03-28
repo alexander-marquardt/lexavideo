@@ -126,10 +126,6 @@ angular.module('lxUseChatRoom.controllers', [])
                 $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
             }
 
-            if ($scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers === 0) {
-                $scope.notificationMenuObject.drawAttentionToNotificationMenuButton = false;
-            }
-
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
                 $scope,
                 localVideoEnabledSetting,

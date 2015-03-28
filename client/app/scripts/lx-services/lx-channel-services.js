@@ -219,7 +219,6 @@ angular.module('lxChannel.services', [])
                             // yet responded to.
                             if (isANewRequest && newRemoteVideoEnabledSetting === 'enableVideoExchange') {
                                  scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers ++;
-                                 scope.notificationMenuObject.drawAttentionToNotificationMenuButton = true;
                             }
 
                             // if remote user requested to exchange video, and then changed their mind, then

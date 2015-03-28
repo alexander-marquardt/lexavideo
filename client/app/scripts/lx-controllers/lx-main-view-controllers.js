@@ -92,8 +92,7 @@ angular.module('lxMainView.controllers', [])
             showMainMenu: false
         };
         $scope.notificationMenuObject = {
-            showNotificationMenu: false,
-            drawAttentionToNotificationMenuButton: false
+            showNotificationMenu: false
         };
 
         $scope.toggleMainMenu = function($event) {
@@ -114,16 +113,6 @@ angular.module('lxMainView.controllers', [])
             });
         });
 
-        $scope.toggleNotificationMenu = function($event) {
-            $event.stopPropagation();
-            $scope.notificationMenuObject.showNotificationMenu = !$scope.notificationMenuObject.showNotificationMenu;
-            $scope.notificationMenuObject.drawAttentionToNotificationMenuButton = false;
-
-            // if notification menu is now shown, then get ride of the main menu
-            if ($scope.notificationMenuObject.showNotificationMenu) {
-                $scope.mainMenuObject.showMainMenu = false;
-            }
-        };
 
         // videoExchangeObjectsDict will be populated by calling
         // lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject(), and there will be one key
