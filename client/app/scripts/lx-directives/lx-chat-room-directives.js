@@ -108,8 +108,8 @@ angular.module('lxChatRoom.directives', [])
                 scope.$on('$destroy', function(){elem.off('click', applyToggleNotificationMenu);});
 
                 // if the user gets a new notification then we want to draw attention to the button.
-                scope.$watch('videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers', function(numPendingRequests) {
-                    if (numPendingRequests > 0) {
+                scope.$watch('videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers', function(numPendingRequests, prevNumPendingRequests) {
+                    if (numPendingRequests > 0 && numPendingRequests > prevNumPendingRequests) {
                         scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention = true;
                     }
 
