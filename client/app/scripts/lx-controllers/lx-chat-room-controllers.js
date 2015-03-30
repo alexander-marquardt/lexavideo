@@ -98,6 +98,16 @@ angular.module('lxUseChatRoom.controllers', [])
 
             /* localVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
              */
+
+            /* If the "partial" notification menu is shown, then act when someone clicks on one of the
+               video buttons. We instead want to treat the click as an indication that the user want to see the
+               entire notification menu.
+             */
+            if ($scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention) {
+                return;
+            }
+
+
             $log.log('Executing showVideoElementsAndStartVideoFn');
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
