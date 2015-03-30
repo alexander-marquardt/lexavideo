@@ -58,19 +58,12 @@
   }
 }
 
-.cl-negative-left-margin {
-  margin-left: -$grid-gutter-width * 2;
-  @media(max-width: $screen-xs-max) {
-    margin-left: -$grid-gutter-width + $xs-padding-override;
-  }
-}
-
-.cl-transition-margin {
-    -webkit-transition: margin;
-    -moz-transition: margin;
-    -ms-transition: margin;
-    -o-transition: margin;
-    transition: margin;
+.cl-transition-margin_and_color {
+    -webkit-transition: margin color;
+    -moz-transition: margin color;
+    -ms-transition: margin color;
+    -o-transition: margin color;
+    transition: margin color;
     transition-duration: $slide-main-menu-duration;
 }
 
