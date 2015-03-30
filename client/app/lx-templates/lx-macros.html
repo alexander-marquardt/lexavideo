@@ -1,8 +1,10 @@
 
 {% macro moveAndResizeDivBesideMainMenu() %}
     <div style="position:relative">
-        <div class="col-xs-12  cl-col-xs-smaller-left-right-padding cl-main-ng-view-area-div cl-transition-margins-and-width"
-            ng-class="mainMenuObject.showMainMenu? 'col-xs-offset-4 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2' : ''">
+        <div class=" cl-col-xs-smaller-left-right-padding cl-main-ng-view-area-div cl-transition-margins-and-width"
+            ng-class="{'col-xs-12': !mainMenuObject.showMainMenu && !notificationMenuObject.partialShowNotificationMenuAndGetAttention,
+            'col-xs-offset-4 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2' : mainMenuObject.showMainMenu,
+             'col-xs-11 cl-col-remove-right-padding': notificationMenuObject.partialShowNotificationMenuAndGetAttention}">
 {% endmacro %}
 
 {% macro removeSpaceBetwenMainMenuAndDivBesideMainMenu() %}

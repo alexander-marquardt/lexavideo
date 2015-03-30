@@ -45,6 +45,7 @@
 
 .cl-main-notification-menu {
   position: absolute;
+  padding-left: 0px;
 }
 
 .cl-animate-main-notification-menu {
@@ -150,6 +151,14 @@
       padding-left: $xs-padding-override;
       padding-right: $xs-padding-override;
     }
+}
+
+.cl-col-remove-right-padding {
+  padding-right: 0px;
+}
+
+.col-remove-left-padding {
+  padding-left: 0px;
 }
 
 .cl-my-well {
