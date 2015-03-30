@@ -9,10 +9,13 @@
                'col-xs-offset-11 col-sm-offset-11 col-md-offset-11 ': notificationMenuObject.partialShowNotificationMenu}">
 
     <div class="panel panel-default cl-notification-panel"
+         ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-notification-panel-attention': ''"
          ng-click="toggleNotificationMenu($event)"
          click-anywhere-but-here="notificationMenuObject.showNotificationMenu = false">
 
-        <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs">
+        <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs"
+             ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-panel-heading-behind-notification-nav-tabs-attention': ''"
+             >
 
             <!-- First, define the tabs that will correspond to the various displays -->
             <ul class="nav nav-tabs cl-notifications-nav-tabs" >
