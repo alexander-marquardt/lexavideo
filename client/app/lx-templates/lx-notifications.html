@@ -6,65 +6,67 @@
     class="col-xs-10  col-sm-8  col-md-6
      cl-main-notification-menu cl-animate-main-notification-menu cl-col-xs-smaller-left-right-padding cl-transition-margin"
      ng-class="{'col-xs-offset-2 col-sm-offset-4 col-md-offset-6': notificationMenuObject.showNotificationMenu,
-               'col-xs-offset-11 col-sm-offset-11 col-md-offset-11 ': notificationMenuObject.partialShowNotificationMenu}">
+               'col-xs-offset-12': notificationMenuObject.partialShowNotificationMenu}">
 
-    <div class="panel panel-default cl-notification-panel"
-         ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-notification-panel-attention': ''"
-         ng-click="toggleNotificationMenu($event)"
-         click-anywhere-but-here="notificationMenuObject.showNotificationMenu = false">
+    <div ng-class="notificationMenuObject.partialShowNotificationMenu?'cl-negative-left-margin':''">
+        <div class="panel panel-default cl-notification-panel"
+             ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-notification-panel-attention': ''"
+             ng-click="toggleNotificationMenu($event)"
+             click-anywhere-but-here="notificationMenuObject.showNotificationMenu = false">
 
-        <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs"
-             ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-panel-heading-behind-notification-nav-tabs-attention': ''"
-             >
+            <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs"
+                 ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-panel-heading-behind-notification-nav-tabs-attention': ''"
+                 >
 
-            <!-- First, define the tabs that will correspond to the various displays -->
-            <ul class="nav nav-tabs cl-notifications-nav-tabs" >
-                    <li class="active">
-                        <a>
-                            <span class="cl-text-size-1_5em" style="line-height: 1em; vertical-align:middle">
-                                    <span class="icon-lx-video-camera-filled "></span>
-                            </span>
-                            <span style="vertical-align:middle">Video requests</span>
-                        </a>
-                    </li>
-            </ul>
-        </div>
+                <!-- First, define the tabs that will correspond to the various displays -->
+                <ul class="nav nav-tabs cl-notifications-nav-tabs" >
+                        <li class="active">
+                            <a>
+                                <span class="cl-text-size-1_5em" style="line-height: 1em; vertical-align:middle">
+                                        <span class="icon-lx-video-camera-filled "></span>
+                                </span>
+                                <span style="vertical-align:middle">Video requests</span>
+                            </a>
+                        </li>
+                </ul>
+            </div>
 
-        <!-- Define the contents of the tab. -->
-        <div class="panel-body cl-notification-panel-body">
+            <!-- Define the contents of the tab. -->
+            <div class="panel-body cl-notification-panel-body">
 
-            <h4 ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" >The following people would like to exchange live video.</h4>
-            <h4 ng-if="!videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" >No one has requested you to exchange live video.</h4>
+                <h4 ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" >The following people would like to exchange live video.</h4>
+                <h4 ng-if="!videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" >No one has requested you to exchange live video.</h4>
 
-            <div class="row ">
-                <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
-                    <div class="col-xs-12"
-                    ng-show="videoExchangeObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
-                             videoExchangeObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
-                        <div style="display:inline-block">
-                            <hr class="cl-hr-in-chat-panel">
-                            <strong>
-                                {{ remoteClientId }}
-                            </strong>
-                            <button type="button"
-                                    class="btn btn-sm btn-primary"
-                                    ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', remoteClientId)">
-                                    <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                        <span class="icon-lx-start-video-camera-cfg"></span>
-                                    </span>
-                                Start
-                            </button>
-                            <button type="button"
-                                    class="btn btn-sm btn-primary"
-                                    ng-click="showVideoElementsAndStartVideoFn('doNotEnableVideoExchange', remoteClientId)">
-                            <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                <span class="icon-lx-start-video-camera-cfg"></span>
-                                <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
-                                <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
-                            </span>
-                                Deny
-                            </button>
+                <div class="row ">
+                    <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
+                        <div class="col-xs-12"
+                        ng-show="videoExchangeObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
+                                 videoExchangeObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
+                            <div style="display:inline-block">
+                                <hr class="cl-hr-in-chat-panel">
+                                <strong>
+                                    {{ remoteClientId }}
+                                </strong>
+                                <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        ng-click="showVideoElementsAndStartVideoFn('enableVideoExchange', remoteClientId)">
+                                        <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                            <span class="icon-lx-start-video-camera-cfg"></span>
+                                        </span>
+                                    Start
+                                </button>
+                                <button type="button"
+                                        class="btn btn-sm btn-primary"
+                                        ng-click="showVideoElementsAndStartVideoFn('doNotEnableVideoExchange', remoteClientId)">
+                                <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                    <span class="icon-lx-start-video-camera-cfg"></span>
+                                    <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
+                                    <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
+                                </span>
+                                    Deny
+                                </button>
 
+                            </div>
                         </div>
                     </div>
                 </div>
