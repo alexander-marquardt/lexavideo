@@ -11,7 +11,7 @@
     <div ng-class="notificationMenuObject.partialShowNotificationMenu?'cl-negative-left-margin':''">
         <div class="panel panel-default cl-notification-panel"
              ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-notification-panel-attention': ''"
-             ng-click="toggleNotificationMenu($event)"
+             ng-click="notificationMenuObject.drawAttentionToNotificationMenuButton? toggleNotificationMenu($event): ''"
              click-anywhere-but-here="notificationMenuObject.showNotificationMenu = false">
 
             <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs"
