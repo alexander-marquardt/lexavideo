@@ -116,9 +116,13 @@
 
 /* no-xs-padding/no-xs-margins are used to remove the padding/margin from xs devices. This
    allows us to fully use the screen space for content as opposed to whitespace */
-.cl-container-no-padding {
+.cl-container-padding-and-margins {
     padding-left: 0px;
     padding-right: 0px;
+    @media(max-width: $screen-xs-max) {
+      margin-left: $xs-container-margin;
+      margin-right: $xs-container-margin;
+    }
 }
 
 .cl-row-no-margins {
@@ -143,14 +147,6 @@
     padding-left: 0px;
     padding-right: 0px;
   }
-}
-
-
-.cl-col-xs-smaller-left-right-padding {
-    @media(max-width: $screen-xs-max) {
-      padding-left: $xs-padding-override;
-      padding-right: $xs-padding-override;
-    }
 }
 
 .cl-col-remove-right-padding {
@@ -297,11 +293,6 @@
   overflow: hidden;
 }
 
-.cl-xs-add-right-margin {
-    @media(max-width: $screen-xs-max) {
-      margin-right: $xs-padding-override;
-    }
-}
 
 hr.cl-hr-in-chat-panel {
   border-top: 1px solid $gray-light-more;

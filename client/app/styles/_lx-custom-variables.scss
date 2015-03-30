@@ -1,4 +1,4 @@
-$xs-padding-override: 2px;
+$xs-container-margin: 2px;
 
 $deep-red : #ff0000;
 
@@ -64,8 +64,8 @@ $chat-bubble-zindex: 10;
 $scrollbar-width: 12px; // this is an assumption, and can vary between browsers
 
 $viewport-widths-list: 320px, 360px, 400px, 480px, 600px, $screen-sm, $screen-md, $screen-lg;
-$content-widths-list: 320px - $xs-padding-override, 360px - $xs-padding-override, 400px - $xs-padding-override,
-                      480px - $xs-padding-override, 600px - $xs-padding-override, $screen-sm - $grid-gutter-width,
+$content-widths-list: 320px - $xs-container-margin, 360px - $xs-container-margin, 400px - $xs-container-margin,
+                      480px - $xs-container-margin, 600px - $xs-container-margin, $screen-sm - $grid-gutter-width,
                       $screen-md - $grid-gutter-width, $screen-lg - $grid-gutter-width;
 
 // We vary the font size of the text-overlay that is shown in a navbar on top of a video element.
