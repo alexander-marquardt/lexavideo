@@ -92,7 +92,8 @@ angular.module('lxMainView.controllers', [])
             showMainMenu: false
         };
         $scope.notificationMenuObject = {
-            showNotificationMenu: false
+            showNotificationMenu: false,
+            partialShowNotificationMenu: false
         };
 
         $scope.toggleMainMenu = function($event) {

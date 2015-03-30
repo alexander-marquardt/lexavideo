@@ -114,6 +114,7 @@ angular.module('lxChatRoom.directives', [])
                         // If a user clicks on the button, then we stop drawing attention to it because they have
                         // now seen whatever they needed to be alerted about.
                         scope.drawAttentionToNotificationMenuButton = false;
+                        scope.notificationMenuObject.partialShowNotificationMenu = false;
                     });
                 };
 
@@ -124,10 +125,12 @@ angular.module('lxChatRoom.directives', [])
                 scope.$watch('videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers', function(numPendingRequests) {
                     if (numPendingRequests > 0) {
                         scope.drawAttentionToNotificationMenuButton = true;
+                        scope.notificationMenuObject.partialShowNotificationMenu = true;
                     }
 
                     if (numPendingRequests === 0) {
                         scope.drawAttentionToNotificationMenuButton = false;
+                        scope.notificationMenuObject.partialShowNotificationMenu = false;
                     }
                 });
             }
