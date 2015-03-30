@@ -30,6 +30,9 @@
 
 .cl-notification-panel-attention {
   border-color: $brand-danger;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .cl-notification-panel-body {
