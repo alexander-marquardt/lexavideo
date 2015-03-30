@@ -86,11 +86,11 @@ angular.module('lxChatRoom.directives', [])
             template: '' +
                 '<span style="white-space: nowrap">' +
                     '<span class="cl-text-size-1_5em" style="vertical-align:middle"' +
-                        'ng-class="drawAttentionToNotificationMenuButton?\'cl-text-danger cl-text-shadow cl-pulse\': \'\'">' +
+                        'ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?\'cl-text-danger cl-text-shadow cl-pulse\': \'\'">' +
                         '<span class="icon-lx-flag"></span>' +
                     '</span>' +
                     '<span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers"' +
-                        'ng-class="drawAttentionToNotificationMenuButton?\'cl-text-danger\':\'\'"' +
+                        'ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?\'cl-text-danger\':\'\'"' +
                         'class="bubble bubble-left cl-notification-count-bubble-override"><i></i>' +
                         '{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}' +
                     '</span>'+
@@ -98,38 +98,26 @@ angular.module('lxChatRoom.directives', [])
 
             link: function(scope, elem) {
 
-                scope.drawAttentionToNotificationButton = false;
+                function applyToggleNotificationMenu(event) {
+                    scope.$apply(function() {
+                        scope.toggleNotificationMenu(event)
+                    });
+                }
+
                 var iconLxFlagElem = elem.find('.icon-lx-flag');
 
-                var toggleNotificationMenu = function(event) {
-                    scope.$apply(function() {
-                        event.stopPropagation();
-                        scope.notificationMenuObject.showNotificationMenu = !scope.notificationMenuObject.showNotificationMenu;
-
-                        // if notification menu is now shown, then get ride of the main menu
-                        if (scope.notificationMenuObject.showNotificationMenu) {
-                            scope.mainMenuObject.showMainMenu = false;
-                        }
-
-                        // If a user clicks on the button, then we stop drawing attention to it because they have
-                        // now seen whatever they needed to be alerted about.
-                        scope.drawAttentionToNotificationMenuButton = false;
-                        scope.notificationMenuObject.partialShowNotificationMenu = false;
-                    });
-                };
-
-                elem.on('click', toggleNotificationMenu);
-                scope.$on('$destroy', function(){elem.off('click', toggleNotificationMenu);});
+                elem.on('click', applyToggleNotificationMenu);
+                scope.$on('$destroy', function(){elem.off('click', applyToggleNotificationMenu);});
 
                 // if the user gets a new notification then we want to draw attention to the button.
                 scope.$watch('videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers', function(numPendingRequests) {
                     if (numPendingRequests > 0) {
-                        scope.drawAttentionToNotificationMenuButton = true;
+                        scope.notificationMenuObject.drawAttentionToNotificationMenuButton = true;
                         scope.notificationMenuObject.partialShowNotificationMenu = true;
                     }
 
                     if (numPendingRequests === 0) {
-                        scope.drawAttentionToNotificationMenuButton = false;
+                        scope.notificationMenuObject.drawAttentionToNotificationMenuButton = false;
                         scope.notificationMenuObject.partialShowNotificationMenu = false;
                     }
                 });

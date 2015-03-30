@@ -88,16 +88,39 @@ angular.module('lxMainView.controllers', [])
             isMicrophoneMuted: false
         };
 
-        $scope.mainMenuObject = {
-            showMainMenu: false
-        };
+
         $scope.notificationMenuObject = {
             showNotificationMenu: false,
-            partialShowNotificationMenu: false
+            partialShowNotificationMenu: false,
+            drawAttentionToNotificationMenuButton: false
+        };
+
+        $scope.toggleNotificationMenu = function(event) {
+            // we don't want a click inside the notfication menu to propagate, because clicks outside
+            // of the notification menu will close the menu (due to clickAnywhereButHere directive)
+            event.stopPropagation();
+
+
+            $scope.notificationMenuObject.showNotificationMenu = !$scope.notificationMenuObject.showNotificationMenu;
+
+            // if notification menu is now shown, then get ride of the main menu
+            if ($scope.notificationMenuObject.showNotificationMenu) {
+                $scope.mainMenuObject.showMainMenu = false;
+            }
+
+            // If a user clicks on the button, then we stop drawing attention to it because they have
+            // now seen whatever they needed to be alerted about.
+            $scope.notificationMenuObject.drawAttentionToNotificationMenuButton = false;
+            $scope.notificationMenuObject.partialShowNotificationMenu = false;
+        };
+
+        $scope.mainMenuObject = {
+            showMainMenu: false
         };
 
         $scope.toggleMainMenu = function($event) {
             $event.stopPropagation();
+
             $scope.mainMenuObject.showMainMenu = !$scope.mainMenuObject.showMainMenu;
 
             // if main menu is now shown, then remove the notification menu (this needs to be done manually

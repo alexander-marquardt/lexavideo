@@ -9,7 +9,7 @@
                'col-xs-offset-11 col-sm-offset-11 col-md-offset-11 ': notificationMenuObject.partialShowNotificationMenu}">
 
     <div class="panel panel-default cl-notification-panel"
-         ng-click="notificationMenuObject.showNotificationMenu = true; notificationMenuObject.partialShowNotificationMenu = false"
+         ng-click="toggleNotificationMenu($event)"
          click-anywhere-but-here="notificationMenuObject.showNotificationMenu = false">
 
         <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs">
