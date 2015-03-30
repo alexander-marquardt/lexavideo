@@ -86,11 +86,11 @@ angular.module('lxChatRoom.directives', [])
             template: '' +
                 '<span style="white-space: nowrap">' +
                     '<span class="cl-text-size-1_5em" style="vertical-align:middle"' +
-                        'ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?\'cl-text-danger cl-text-shadow cl-pulse\': \'\'">' +
+                        'ng-class="notificationMenuObject.partialShowNotificationMenuAndGetAttention?\'cl-text-danger cl-text-shadow cl-pulse\': \'\'">' +
                         '<span class="icon-lx-flag"></span>' +
                     '</span>' +
                     '<span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers"' +
-                        'ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?\'cl-text-danger\':\'\'"' +
+                        'ng-class="notificationMenuObject.partialShowNotificationMenuAndGetAttention?\'cl-text-danger\':\'\'"' +
                         'class="bubble bubble-left cl-notification-count-bubble-override"><i></i>' +
                         '{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}' +
                     '</span>'+
@@ -100,11 +100,9 @@ angular.module('lxChatRoom.directives', [])
 
                 function applyToggleNotificationMenu(event) {
                     scope.$apply(function() {
-                        scope.toggleNotificationMenu(event)
+                        scope.toggleNotificationMenu(event);
                     });
                 }
-
-                var iconLxFlagElem = elem.find('.icon-lx-flag');
 
                 elem.on('click', applyToggleNotificationMenu);
                 scope.$on('$destroy', function(){elem.off('click', applyToggleNotificationMenu);});
@@ -112,13 +110,11 @@ angular.module('lxChatRoom.directives', [])
                 // if the user gets a new notification then we want to draw attention to the button.
                 scope.$watch('videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers', function(numPendingRequests) {
                     if (numPendingRequests > 0) {
-                        scope.notificationMenuObject.drawAttentionToNotificationMenuButton = true;
-                        scope.notificationMenuObject.partialShowNotificationMenu = true;
+                        scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention = true;
                     }
 
                     if (numPendingRequests === 0) {
-                        scope.notificationMenuObject.drawAttentionToNotificationMenuButton = false;
-                        scope.notificationMenuObject.partialShowNotificationMenu = false;
+                        scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention = false;
                     }
                 });
             }

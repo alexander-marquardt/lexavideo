@@ -91,8 +91,7 @@ angular.module('lxMainView.controllers', [])
 
         $scope.notificationMenuObject = {
             showNotificationMenu: false,
-            partialShowNotificationMenu: false,
-            drawAttentionToNotificationMenuButton: false
+            partialShowNotificationMenuAndGetAttention: false,
         };
 
         $scope.toggleNotificationMenu = function(event) {
@@ -110,8 +109,7 @@ angular.module('lxMainView.controllers', [])
 
             // If a user clicks on the button, then we stop drawing attention to it because they have
             // now seen whatever they needed to be alerted about.
-            $scope.notificationMenuObject.drawAttentionToNotificationMenuButton = false;
-            $scope.notificationMenuObject.partialShowNotificationMenu = false;
+            $scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention = false;
         };
 
         $scope.mainMenuObject = {

@@ -2,19 +2,19 @@
 <!-- This html shows to notifications that the user receives such as a request to start a video conversation,
      or a friend request -->
 {% raw %}
-<div ng-if="notificationMenuObject.showNotificationMenu || notificationMenuObject.partialShowNotificationMenu"
+<div ng-if="notificationMenuObject.showNotificationMenu || notificationMenuObject.partialShowNotificationMenuAndGetAttention"
     class="col-xs-10  col-sm-8  col-md-6
      cl-main-notification-menu cl-animate-main-notification-menu cl-col-xs-smaller-left-right-padding cl-transition-margin_and_color"
      ng-class="{'col-xs-offset-2 col-sm-offset-4 col-md-offset-6': notificationMenuObject.showNotificationMenu,
-               'col-xs-offset-11': notificationMenuObject.partialShowNotificationMenu}">
+               'col-xs-offset-11': notificationMenuObject.partialShowNotificationMenuAndGetAttention}">
 
     <div class="panel panel-default cl-notification-panel"
-         ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-notification-panel-attention': ''"
-         ng-click="notificationMenuObject.drawAttentionToNotificationMenuButton? toggleNotificationMenu($event): ''"
+         ng-class="notificationMenuObject.partialShowNotificationMenuAndGetAttention?'cl-notification-panel-attention animated bounce': ''"
+         ng-click="notificationMenuObject.partialShowNotificationMenuAndGetAttention? toggleNotificationMenu($event): ''"
          click-anywhere-but-here="notificationMenuObject.showNotificationMenu = false">
 
         <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs"
-             ng-class="notificationMenuObject.drawAttentionToNotificationMenuButton?'cl-panel-heading-behind-notification-nav-tabs-attention': ''"
+             ng-class="notificationMenuObject.partialShowNotificationMenuAndGetAttention?'cl-panel-heading-behind-notification-nav-tabs-attention': ''"
              >
 
             <!-- First, define the tabs that will correspond to the various displays -->
