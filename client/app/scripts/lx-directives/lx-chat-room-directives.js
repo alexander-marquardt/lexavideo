@@ -86,7 +86,7 @@ angular.module('lxChatRoom.directives', [])
             template: '' +
                 '<span style="white-space: nowrap">' +
                     '<span class="cl-text-size-1_5em" style="vertical-align:middle"' +
-                        'ng-class="notificationMenuObject.partialShowNotificationMenuAndGetAttention?\'cl-text-danger cl-text-shadow cl-pulse\': \'\'">' +
+                        'ng-class="notificationMenuObject.partialShowNotificationMenuAndGetAttention?\'cl-text-danger cl-pulse\': \'\'">' +
                         '<span class="icon-lx-flag"></span>' +
                     '</span>' +
                     '<span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers"' +
