@@ -29,7 +29,6 @@
 }
 
 .cl-notification-panel-attention {
-  border-color: $brand-danger;
   &:hover {
     cursor: pointer;
   }
@@ -66,16 +65,13 @@
   }
 
   & > .nav > li.active > a {
+    color: black;
     background-color: $chat-notification-body-background;
     border-color: $chat-notification-body-background;
     &:hover {
       cursor: default;
     }
   }
-}
-
-.cl-panel-heading-behind-notification-nav-tabs-attention {
-  background-color: $brand-danger !important
 }
 
 .nav-tabs.cl-notifications-nav-tabs {
