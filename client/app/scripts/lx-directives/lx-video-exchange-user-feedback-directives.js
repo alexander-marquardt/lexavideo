@@ -4,7 +4,7 @@
 
 'use strict';
 
-var lxSelectVideoTypePreferenceDirectives = angular.module('lxVideoNegotiation.directives', []);
+var lxSelectVideoTypePreferenceDirectives = angular.module('lxVideoExchangeUserFeedback.directives', []);
 
 
 var  showMessageInVideoWindow = function(scope, overlayElem, message, $compile) {

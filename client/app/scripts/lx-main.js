@@ -16,7 +16,7 @@ var videoApp = angular.module('videoApp', [
     'lxCommon.directives',
     'lxMainVideo.directives',
     'lxLandingPage.directives',
-    'lxVideoNegotiation.directives',
+    'lxVideoExchangeUserFeedback.directives',
 
     // proprietary services
     'lxAccessSystemResources.services',
