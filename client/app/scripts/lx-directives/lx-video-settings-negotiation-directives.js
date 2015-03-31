@@ -24,7 +24,8 @@ var removeMessageInVideoWindow = function(scope, elem) {
 lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
     function(
         $compile,
-        $log
+        $log,
+        lxPeerService
     ) {
 
     return {
@@ -33,6 +34,16 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
         link : function(scope, elem) {
             var message;
             var overlayElem = angular.element(elem).find('div.cl-video-overlay');
+
+            function checkIfRemoteStreamActive() {
+                return !!lxPeerService.remoteStream[scope.remoteClientId];
+            }
+
+            scope.$watch(checkIfRemoteStreamActive, function(remoteStreamIsActive) {
+                if (remoteStreamIsActive) {
+                    removeMessageInVideoWindow(scope, elem);
+                }
+            });
 
             scope.$watch('videoExchangeObject.remoteVideoEnabledSetting', function(remoteVideoSetting) {
 

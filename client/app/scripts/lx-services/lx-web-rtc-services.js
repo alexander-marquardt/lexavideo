@@ -421,14 +421,13 @@ webRtcServices.factory('lxPeerService',
                 $log.log('* remoteVideoObject.remoteHdVideoElem.src after: ' + remoteVideoObject.remoteHdVideoElem.src);
 
                 self.remoteStream[remoteClientId] = mediaStreamEvent.stream;
-
-                videoSignalingObject.videoSignalingStatusForUserFeedback = null; // clear feedback messages
             };
         };
 
 
-        var onRemoteStreamRemoved = function() {
+        var onRemoteStreamRemoved = function(remoteClientId) {
             return function() {
+                self.remoteStream[remoteClientId] = null;
                 $log.info('Remote stream removed.');
             };
         };
@@ -472,7 +471,7 @@ webRtcServices.factory('lxPeerService',
 
 
                 self.pc[remoteClientId].onaddstream = onRemoteStreamAdded(localVideoObject, remoteVideoObject, videoSignalingObject, remoteClientId);
-                self.pc[remoteClientId].onremovestream = onRemoteStreamRemoved();
+                self.pc[remoteClientId].onremovestream = onRemoteStreamRemoved(remoteClientId);
                 self.pc[remoteClientId].onsignalingstatechange = onSignalingStateChanged(self.pc[remoteClientId]);
                 self.pc[remoteClientId].oniceconnectionstatechange = onIceConnectionStateChanged(self.pc[remoteClientId]);
             },

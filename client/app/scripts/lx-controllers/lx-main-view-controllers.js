@@ -172,10 +172,6 @@ angular.module('lxMainView.controllers', [])
 
             localUserAccessCameraAndMicrophoneStatus: 'requestNotMade', // 'requestNotMade', 'waitingForResponse', 'allowAccess', 'denyAccess'
 
-            // videoSignalingStatusForUserFeedback indicates what message/status the user should be shown about
-            // the current video type requested/allowed/waiting for/etc.
-            videoSignalingStatusForUserFeedback: null,
-
             // The following is a flag that is used for debugging - will over-ride ng-show directives on the video
             // windows to show any window that has this flag on it when it is set to true.
             debugShowAllVideoWindows: false
