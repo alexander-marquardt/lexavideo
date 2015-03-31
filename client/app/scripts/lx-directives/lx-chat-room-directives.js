@@ -25,21 +25,6 @@ angular.module('lxChatRoom.directives', [])
         };
     })
 
-    // Directive that will control signalling between two users about the type of video that they wish to transmit.
-    // (ie. HD Video or Ascii Video)
-    .directive('lxVideoNegotiationDirective',
-    function (
-        lxSelectAndNegotiateVideoTypeService) {
-
-
-        return {
-            restrict: 'A',
-            link: function(scope) {
-                lxSelectAndNegotiateVideoTypeService.watchForVideoSettingsChanges (scope);
-            }
-        };
-    })
-
 
     .directive('lxAccessCameraAndMicrophoneDirective',
     function(
