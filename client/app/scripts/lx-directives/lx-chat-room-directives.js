@@ -110,7 +110,11 @@ angular.module('lxChatRoom.directives', [])
                 // if the user gets a new notification then we want to draw attention to the button.
                 scope.$watch('videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers', function(numPendingRequests, prevNumPendingRequests) {
                     if (numPendingRequests > 0 && numPendingRequests > prevNumPendingRequests) {
-                        scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention = true;
+                        // Show the "partial" notification menu, but only if the "full" notification menu is not already
+                        // being viewed.
+                        if (!scope.notificationMenuObject.showNotificationMenu) {
+                            scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention = true;
+                        }
                     }
 
                     if (numPendingRequests === 0) {
