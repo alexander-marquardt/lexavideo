@@ -81,3 +81,41 @@ commonDirectives.directive('clickAnywhereButHere', function($document, clickAnyw
     }
   };
 });
+
+commonDirectives.directive('setClassesForCommonArea', function(){
+    return {
+        restrict: 'A',
+        link: function(scope,element){
+
+            var standardClasses = 'col-xs-12';
+            var mainMenuShownClasses = 'col-xs-12 col-xs-offset-4 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2';
+            var partialNotificationMenuShown = 'col-xs-11 cl-col-remove-right-padding';
+
+            function resizeCommonArea() {
+                if (!scope.mainMenuObject.showMainMenu && !scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention) {
+                    element.removeClass(mainMenuShownClasses);
+                    element.removeClass(partialNotificationMenuShown);
+                    element.addClass   (standardClasses);
+                }
+                else if (scope.mainMenuObject.showMainMenu) {
+                    element.removeClass(standardClasses);
+                    element.removeClass(partialNotificationMenuShown);
+                    element.addClass   (mainMenuShownClasses);
+                }
+                else if (scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention) {
+                    element.removeClass(standardClasses);
+                    element.removeClass(mainMenuShownClasses);
+                    element.addClass   (partialNotificationMenuShown);
+                }
+            }
+
+            scope.$watch('mainMenuObject.showMainMenu', function() {
+                resizeCommonArea();
+            });
+
+            scope.$watch('notificationMenuObject.partialShowNotificationMenuAndGetAttention', function() {
+                resizeCommonArea();
+            });
+        }
+    };
+});
