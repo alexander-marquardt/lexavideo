@@ -1,10 +1,8 @@
 
-{% macro moveAndResizeDivBesideMainMenu() %}
+{% macro moveAndResizeCommonDisplayArea() %}
     <div style="position:relative">
         <div class=" cl-col-no-xs-padding cl-main-ng-view-area-div cl-transition-margins-and-width"
              set-classes-for-common-area>
+            <div class="cl-transition-margins-and-width">
 {% endmacro %}
 
-{% macro removeSpaceBetwenMainMenuAndDivBesideMainMenu() %}
-<div class="cl-transition-margins-and-width">
-{% endmacro %}

@@ -20,11 +20,15 @@
                             <!-- lx-main-menu.html contains the "main" menu that displays website controls -->
                             {% include 'lx-templates/lx-main-menu.html' %}
 
+                            <!-- Start the "common display area" -->
+
                             <div ng-view class="cl-ng-view cl-fade-in-main-view"></div>
 
                             <!-- Chat views are "faked" in the ng-view directive and are over-written by lx-chatbox.html.
                                  Read comments in lx-chatbox.html for more details. -->
                             {% include 'lx-templates/lx-chatbox.html' %}
+
+                            <!-- End the "common display area" -->
 
                             {% include 'lx-templates/lx-notifications.html' %}
 

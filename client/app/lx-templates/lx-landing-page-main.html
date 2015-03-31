@@ -1,69 +1,66 @@
-{% from 'lx-templates/lx-macros.html' import moveAndResizeDivBesideMainMenu %}
-{% from 'lx-templates/lx-macros.html' import removeSpaceBetwenMainMenuAndDivBesideMainMenu %}
+{% from 'lx-templates/lx-macros.html' import moveAndResizeCommonDisplayArea %}
 
 <script type='text/javascript'>
     var lxLandingPageConstantsEmbeddedInHtml = {{ serverLandingPageParamsJson }}
 </script>
 
-{{ moveAndResizeDivBesideMainMenu() }}
+{{ moveAndResizeCommonDisplayArea() }}
 
-    {{ removeSpaceBetwenMainMenuAndDivBesideMainMenu() }}
     {% raw %}
-        <div class="well col-xs-12 text-left">
-            <h3>Enter into a chat room</h3>
-            <div class="clearfix">
-                <form name="createRoomForm" role="form" novalidate>
-                    <div class="cl-room-name-input">
-                        <div class="form-group">
+    <div class="well col-xs-12 text-left">
+        <h3>Enter into a chat room</h3>
+        <div class="clearfix">
+            <form name="createRoomForm" role="form" novalidate>
+                <div class="cl-room-name-input">
+                    <div class="form-group">
 
 
-                            <label for="id-inputRoomName">Chat room name</label>
-                            <input class=" form-control"
-                                   id="id-inputRoomName"
-                                   placeholder="Name of chat room to create and/or join"
-                                   name="chatRoomNameInputElem"
-                                   ng-model="roomObj.chatRoomName"
-                                   ng-minlength="{{ minInputLength }}"
-                                   maxlength = "{{ maxInputLength }}"
-                                   ng-class="highlightInput(createRoomForm.chatRoomNameInputElem)"
-                                   ng-pattern="validRoomNamesPattern"
-                                   ng-trim="false"
-                                   check-for-room-occupancy-directive
-                                   required
-                                    />
-                            <div class="cl-feedback-on-input-validity-div"
-                                  ng-show="createRoomForm.chatRoomNameInputElem.$dirty || createRoomForm.$valid">
-                                <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
-                                added and removed from the DOM -->
-                                <div class="text-danger" ng-show="createRoomForm.chatRoomNameInputElem.$dirty">
-                                    <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.required">Please input a chat name</small>
-                                    <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
-                                    <!--<small  ng-show="createRoomForm.chatRoomNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
-                                    <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.pattern">
-                                        {{ invalidCharacterFeedback }}</small>
-                                    <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
-                                </div>
-                                <div  ng-show="createRoomForm.$valid">
-                                    <small ng-show="createRoomForm.chatRoomNameInputElem.roomNumOccupantsMessage">
-                                        {{ createRoomForm.chatRoomNameInputElem.roomNumOccupantsMessage }}</small>
-                                    <small ng-show="createRoomForm.chatRoomNameInputElem.roomIsEmptyMessage">
-                                        {{ createRoomForm.chatRoomNameInputElem.roomIsEmptyMessage }} </small>
-                                </div>
+                        <label for="id-inputRoomName">Chat room name</label>
+                        <input class=" form-control"
+                               id="id-inputRoomName"
+                               placeholder="Name of chat room to create and/or join"
+                               name="chatRoomNameInputElem"
+                               ng-model="roomObj.chatRoomName"
+                               ng-minlength="{{ minInputLength }}"
+                               maxlength = "{{ maxInputLength }}"
+                               ng-class="highlightInput(createRoomForm.chatRoomNameInputElem)"
+                               ng-pattern="validRoomNamesPattern"
+                               ng-trim="false"
+                               check-for-room-occupancy-directive
+                               required
+                                />
+                        <div class="cl-feedback-on-input-validity-div"
+                              ng-show="createRoomForm.chatRoomNameInputElem.$dirty || createRoomForm.$valid">
+                            <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
+                            added and removed from the DOM -->
+                            <div class="text-danger" ng-show="createRoomForm.chatRoomNameInputElem.$dirty">
+                                <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.required">Please input a chat name</small>
+                                <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
+                                <!--<small  ng-show="createRoomForm.chatRoomNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
+                                <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.pattern">
+                                    {{ invalidCharacterFeedback }}</small>
+                                <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
+                            </div>
+                            <div  ng-show="createRoomForm.$valid">
+                                <small ng-show="createRoomForm.chatRoomNameInputElem.roomNumOccupantsMessage">
+                                    {{ createRoomForm.chatRoomNameInputElem.roomNumOccupantsMessage }}</small>
+                                <small ng-show="createRoomForm.chatRoomNameInputElem.roomIsEmptyMessage">
+                                    {{ createRoomForm.chatRoomNameInputElem.roomIsEmptyMessage }} </small>
                             </div>
                         </div>
                     </div>
+                </div>
 
 
-                    <div class="form-group">
-                        <div>
-                            <button ng-click="goToRoomUrl(roomObj.chatRoomName)" class="btn btn-primary"
-                                    ng-disabled="createRoomForm.$invalid || createRoomForm.chatRoomNameInputElem.userIsWaitingForRoomStatus">
-                                {{ createRoomForm.chatRoomNameInputElem.submitButtonText }}</button>
-                        </div>
-
+                <div class="form-group">
+                    <div>
+                        <button ng-click="goToRoomUrl(roomObj.chatRoomName)" class="btn btn-primary"
+                                ng-disabled="createRoomForm.$invalid || createRoomForm.chatRoomNameInputElem.userIsWaitingForRoomStatus">
+                            {{ createRoomForm.chatRoomNameInputElem.submitButtonText }}</button>
                     </div>
-                </form>
-            </div>
+
+                </div>
+            </form>
         </div>
     </div>
 </div>
