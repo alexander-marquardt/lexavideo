@@ -18,11 +18,12 @@
                     <td>Remote User Id: {{ user.userId }}</td>
                 </tr>
                 <tr ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
-                    <td>
-                        localVideoEnabledSetting:<br> {{ videoExchangeObject.localVideoEnabledSetting }}
-                    </td>
+
                     <td>
                         remoteVideoEnabledSetting:<br>{{ remoteClientId }}<br>{{ videoExchangeObject.remoteVideoEnabledSetting }}
+                    </td>
+                    <td>
+                        localVideoEnabledSetting:<br> {{ videoExchangeObject.localVideoEnabledSetting }}
                     </td>
                 </tr>
 
