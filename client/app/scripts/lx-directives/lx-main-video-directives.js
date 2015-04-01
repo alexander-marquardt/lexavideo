@@ -21,9 +21,9 @@ videoAppDirectives.directive('lxRemoteVideoElementDirective',
                 var remoteClientId = attrs.remoteClientId;
 
                 // only
-                if (!(remoteClientId in scope.remoteVideoObjectsDict)) {
+                if (!(remoteClientId in scope.remoteVideoElementsDict)) {
                     e = angular.element('<video class="cl-video-sizing cl-show-hide-fade" autoplay="autoplay"></video>');
-                    scope.remoteVideoObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoObject(e[0]);
+                    scope.remoteVideoElementsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(e[0]);
                     elem.append(e);
                 }
             }

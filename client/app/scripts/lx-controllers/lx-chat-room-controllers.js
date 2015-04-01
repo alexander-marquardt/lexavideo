@@ -147,7 +147,7 @@ angular.module('lxUseChatRoom.controllers', [])
                 var numOpenVideoExchanges = $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
 
                 lxCallService.doHangup(remoteClientId, numOpenVideoExchanges);
-                delete $scope.remoteVideoObjectsDict[remoteClientId] ;
+                delete $scope.remoteVideoElementsDict[remoteClientId] ;
                 delete $scope.videoExchangeObjectsDict[remoteClientId];
 
             }
@@ -197,7 +197,7 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         $scope.toggleAudioMute = function(remoteClientId) {
-            lxCallService.toggleAudioMute($scope.remoteVideoObjectsDict[remoteClientId]);
+            lxCallService.toggleAudioMute($scope.remoteVideoElementsDict[remoteClientId]);
         };
 
         $scope.myUsername = lxVideoParamsService.myUsername;

@@ -82,7 +82,7 @@ angular.module('lxChannel.services', [])
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
                     var remoteClientId = messageObject.fromClientId;
-                    var remoteVideoObject = scope.remoteVideoObjectsDict[remoteClientId];
+                    var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId];
                     var chatRoomId = null;
 
                     lxJs.assert(remoteClientId, 'remoteClientId is not set');
