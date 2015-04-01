@@ -150,9 +150,10 @@ angular.module('lxMainView.controllers', [])
         //      rtcInitiator: boolean
         //     }
         // localVideoEnabledSetting and remoteVideoEnabledSetting can be the following values:
-        //    'waitingForEnableVideoExchangePermission': user has not made any request for a video exchange
+        //    'waitingForPermissionToEnableVideoExchange': user has not made any request for a video exchange
         //    'enableVideoExchange': user has activated video elements
-        //    'doNotEnableVideoExchange': user has denied activation of video elements
+        //    'denyVideoExchange': user has denied activation of video elements
+        //    'hangupVideoExchange': user has denied activation of video elements
         $scope.videoExchangeObjectsDict = {};
 
         $scope.videoStateInfoObject = {

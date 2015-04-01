@@ -131,8 +131,8 @@ angular.module('lxUseChatRoom.controllers', [])
 
 
             // check if user has either accepted or denied a pending request
-            if (previousLocalVideoEnabledSetting === 'waitingForEnableVideoExchangePermission' &&
-                (localVideoEnabledSetting === 'enableVideoExchange' || localVideoEnabledSetting === 'doNotEnableVideoExchange')) {
+            if (previousLocalVideoEnabledSetting === 'waitingForPermissionToEnableVideoExchange' &&
+                (localVideoEnabledSetting !== 'waitingForPermissionToEnableVideoExchange')) {
                 $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
             }
 
@@ -141,9 +141,9 @@ angular.module('lxUseChatRoom.controllers', [])
                 localVideoEnabledSetting,
                 remoteClientId);
 
-            // If the user previously enabled video exchange with this client, and now is "doNotEnableVideoExchange" for a new video
+            // If the user previously enabled video exchange with this client, and now is "hangupVideoExchange" for a new video
             // connection, then they have hung up the connection to the remote user.
-            if (previousLocalVideoEnabledSetting === 'enableVideoExchange' && localVideoEnabledSetting === 'doNotEnableVideoExchange') {
+            if (previousLocalVideoEnabledSetting === 'enableVideoExchange' && localVideoEnabledSetting === 'hangupVideoExchange') {
                 lxCallService.doHangup(remoteClientId, $scope.videoStateInfoObject.numOpenVideoExchanges);
                 $scope.videoStateInfoObject.numOpenVideoExchanges --;
                 delete $scope.remoteVideoObjectsDict[remoteClientId] ;

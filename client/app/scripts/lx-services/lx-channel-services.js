@@ -210,7 +210,7 @@ angular.module('lxChannel.services', [])
                             // If the remote user has hung-up, or denied a video exchange, then stop the remote stream
                             // (this is really only necessary for hangup, as a denied video exchange would not have
                             // a remote stream yet.
-                            if (newRemoteVideoEnabledSetting === 'doNotEnableVideoExchange') {
+                            if (newRemoteVideoEnabledSetting === 'hangupEnableVideoExchange') {
                                 lxWebRtcSessionService.stop(remoteClientId);
                             }
 
@@ -223,24 +223,24 @@ angular.module('lxChannel.services', [])
 
                             // if remote user requested to exchange video, and then changed their mind, then
                             // we need to remove the previous request from the counter.
-                            if (localVideoEnabledSetting === 'waitingForEnableVideoExchangePermission' &&
+                            if (localVideoEnabledSetting === 'waitingForPermissionToEnableVideoExchange' &&
                                 newRemoteVideoEnabledSetting !== 'enableVideoExchange') {
                                  scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers --;
                             }
 
                             // If the local user has denied video activation (as indicated by localVideoEnabledSetting
-                            // of 'doNotEnableVideoExchange'),
+                            // of 'denyVideoExchange'),
                             // then by construction this was triggered by a remoteVideoEnabledSetting of 'enableVideoExchange' .
                             // If the  remote user now has a status other than 'enableVideoExchange' then they are not currently
-                            // attempting to exchange video, and the doNotEnableVideoExchange that we previously selected
+                            // attempting to exchange video, and the denyVideoExchange that we previously selected
                             // is no longer applicable (since the remote request is no longer pending)
-                            // Reset localVideoEnabledSetting to 'waitingForEnableVideoExchangePermission' so that the remote user will
+                            // Reset localVideoEnabledSetting to 'waitingForPermissionToEnableVideoExchange' so that the remote user will
                             // be able to send a future request to the local user to enable (or deny) access to their video
                             // elements.
                             if (scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting !== 'enableVideoExchange' &&
-                                scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting === 'doNotEnableVideoExchange') {
+                                scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting === 'denyVideoExchange') {
 
-                                scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = 'waitingForEnableVideoExchangePermission';
+                                scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = 'waitingForPermissionToEnableVideoExchange';
                             }
 
                             break;

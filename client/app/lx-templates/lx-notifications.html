@@ -38,7 +38,7 @@
                 <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
                     <div class="col-xs-12"
                     ng-show="videoExchangeObject.remoteVideoEnabledSetting == 'enableVideoExchange' &&
-                             videoExchangeObject.localVideoEnabledSetting == 'waitingForEnableVideoExchangePermission'">
+                             videoExchangeObject.localVideoEnabledSetting == 'waitingForPermissionToEnableVideoExchange'">
                         <div style="display:inline-block">
                             <hr class="cl-hr-in-chat-panel">
                             <strong>
@@ -54,7 +54,7 @@
                             </button>
                             <button type="button"
                                     class="btn btn-sm btn-primary"
-                                    ng-click="showVideoElementsAndStartVideoFn('doNotEnableVideoExchange', remoteClientId)">
+                                    ng-click="showVideoElementsAndStartVideoFn('denyVideoExchange', remoteClientId)">
                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                 <span class="icon-lx-start-video-camera-cfg"></span>
                                 <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
