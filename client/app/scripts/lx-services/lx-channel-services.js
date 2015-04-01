@@ -206,8 +206,17 @@ angular.module('lxChannel.services', [])
                             scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting = remoteVideoEnabledSetting;
 
                             // If the remote user has hung-up then stop the remote stream
-                            if (remoteVideoEnabledSetting === 'hangupEnableVideoExchange') {
+                            if (remoteVideoEnabledSetting === 'hangupVideoExchange') {
                                 lxWebRtcSessionService.stop(remoteClientId);
+
+                                // If remote user hangs up before the local user has responded to the remote request,
+                                // then we need to remove the remoteClient from videoExchangeObjectsDict. This is a
+                                // special case, because if the user had already acknowledged the remote request, then
+                                // he would either have a video session open, or alternatively have denied and already removed
+                                // the remote client from videoExchangeObjectsDict.
+                                if (scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting === 'waitingForPermissionToEnableVideoExchange') {
+                                    delete scope.videoExchangeObjectsDict[remoteClientId];
+                                }
                             }
 
                             // If the remote user has sent a request to exchange video and we are not already

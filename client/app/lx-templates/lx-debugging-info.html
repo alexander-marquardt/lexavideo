@@ -27,6 +27,12 @@
                     </td>
                 </tr>
 
+                <tr ng-repeat="(remoteClientId, remoteElementObject) in remoteVideoElementsDict">
+                    <td>remoteVideoElement {{ remoteClientId }}</td>
+                    <td>Audio muted: {{ remoteElementObject.isAudioMuted }}<br>
+                        Element current time: {{ remoteElementObject.remoteHdVideoElem.currentTime }}</td>
+                </tr>
+
                 <tr>
                     <td>Open vid count:{{videoStateInfoObject.numOpenVideoExchanges }}</td>
                 </tr>
