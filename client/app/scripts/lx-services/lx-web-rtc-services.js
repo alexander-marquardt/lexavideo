@@ -703,7 +703,7 @@ webRtcServices.factory('lxCallService',
                 $log.log('Hanging up client ID: ' + remoteClientId);
                 // Also, once stopped, if the user starts a new video, then we will have to call
                 // getUserMedia again.
-                if (numOpenVideoExchanges && lxStreamService.localStream) {
+                if (numOpenVideoExchanges === 0 && lxStreamService.localStream) {
                     lxStreamService.localStream.stop();
                     lxStreamService.localStream = null;
                 }

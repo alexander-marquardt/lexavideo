@@ -140,13 +140,16 @@ angular.module('lxUseChatRoom.controllers', [])
             // If the user hangs up or denies, then remove the references to the remote user
             if (localVideoEnabledSetting === 'hangupVideoExchange' || localVideoEnabledSetting === 'denyVideoExchange') {
 
-                lxCallService.doHangup(remoteClientId, $scope.videoStateInfoObject.numOpenVideoExchanges);
+                // remove client from *currently open* list (it should be there by construction as we have just added it if it wasn't)
+                indexOfRemoteIdOpenSessions = $scope.videoStateInfoObject.currentOpenVideoSessionsList.indexOf(remoteClientId);
+                $scope.videoStateInfoObject.currentOpenVideoSessionsList.splice(indexOfRemoteIdOpenSessions, 1);
+
+                var numOpenVideoExchanges = $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
+
+                lxCallService.doHangup(remoteClientId, numOpenVideoExchanges);
                 delete $scope.remoteVideoObjectsDict[remoteClientId] ;
                 delete $scope.videoExchangeObjectsDict[remoteClientId];
 
-                // remove client from *currently open* list (it should be there by construction as we have just added it if it wasn't)
-                indexOfRemoteIdOpenSessions = $scope.videoStateInfoObject.currentOpenVideoSessionsList.indexOf(remoteClientId);
-                $scope.videoStateInfoObject.currentOpenVideoSessionsList.splice(indexOfRemoteIdOpenSessions, 1)
             }
 
 
