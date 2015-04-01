@@ -10,12 +10,11 @@
                 <div class="col-xs-12 cl-col-no-xs-padding">
 
                         <div class="row cl-row-no-xs-margins">
-                            <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict"
+                            <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
                                     class="cl-transition-opacity">
 
                                 <!-- The following wraps the remote video window -->
-                                <div ng-if="videoExchangeObject.localVideoEnabledSetting == 'doVideoExchange'"
-                                     class="col-xs-6 text-center cl-col-no-xs-padding" >
+                                <div class="col-xs-6 text-center cl-col-no-xs-padding" >
                                     REMOTE VIDEO RemoteId = {{ remoteClientId }}<br>
 
                                     <div class="cl-video-wrapper-div">

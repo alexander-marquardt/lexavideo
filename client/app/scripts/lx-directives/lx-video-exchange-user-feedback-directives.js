@@ -40,7 +40,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
             // remoteStreamIsActive status is updated. Therefore we need to check both in order to ensure
             // that user feedback is accurate.
             function checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting() {
-                return scope.videoExchangeObject.remoteVideoEnabledSetting + (!!lxPeerService.remoteStream[scope.remoteClientId]).toString();
+                return scope.videoExchangeObjectsDict[scope.remoteClientId].remoteVideoEnabledSetting + (!!lxPeerService.remoteStream[scope.remoteClientId]).toString();
             }
 
             scope.$watch(checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting, function(newVal) {
@@ -50,7 +50,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                 // hide any messages so we are at at known default state.
                 hideMessageInVideoWindow(scope, overlayElem);
 
-                var remoteVideoSetting = scope.videoExchangeObject.remoteVideoEnabledSetting;
+                var remoteVideoSetting = scope.videoExchangeObjectsDict[scope.remoteClientId].remoteVideoEnabledSetting;
 
                 switch (remoteVideoSetting) {
                     case 'waitingForPermissionToEnableVideoExchange':
