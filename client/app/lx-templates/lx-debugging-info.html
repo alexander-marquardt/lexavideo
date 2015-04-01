@@ -27,19 +27,22 @@
                     </td>
                 </tr>
 
-                <tr ng-repeat="(remoteClientId, remoteElementObject) in remoteVideoElementsDict">
+                <tr ng-repeat="(remoteClientId, remoteElementObject) in remoteVideoElementsDict" ng-controller="lxDebuggingRemoteStreamController">
+
                     <td>remoteVideoElement {{ remoteClientId }}</td>
                     <td>Audio muted: {{ remoteElementObject.isAudioMuted }}<br>
-                        Element current time: {{ remoteElementObject.remoteHdVideoElem.currentTime }}</td>
+                        Element current time: {{ remoteElementObject.remoteHdVideoElem.currentTime }}<br>
+                        Remote stream active: {{ remoteStreamActive }}
+                    </td>
                 </tr>
 
                 <tr>
                     <td>Open vid count:{{videoStateInfoObject.numOpenVideoExchanges }}</td>
+                    <td></td>
                 </tr>
             </table>
         </div>
     </div>
 </div>
-
 
 {% endraw %}
