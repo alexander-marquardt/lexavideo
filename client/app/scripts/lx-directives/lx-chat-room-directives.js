@@ -104,6 +104,13 @@ angular.module('lxChatRoom.directives', [])
 
                     if (numPendingRequests === 0) {
                         scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention = false;
+
+                        // If the notification menu is shown, and then the number of pending notification is
+                        // reduced (eg. a user agrees/denies a video exchange request) to zero, then hide
+                        // the notification menu.
+                        if (prevNumPendingRequests > 0) {
+                            scope.notificationMenuObject.showNotificationMenu = false;
+                        }
                     }
                 });
             }
