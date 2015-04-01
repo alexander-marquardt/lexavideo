@@ -92,7 +92,7 @@ angular.module('lxUseChatRoom.controllers', [])
              ) {
 
 
-
+// TODO - move this function into a service.
         $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting,
                                                            remoteClientId, resetRemoteVideoEnabledSetting) {
 
@@ -130,14 +130,16 @@ angular.module('lxUseChatRoom.controllers', [])
 
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
 
-            if (localVideoEnabledSetting === 'enableVideoExchange' && previousLocalVideoEnabledSetting !== 'enableVideoExchange') {
+            if ((localVideoEnabledSetting === 'requestVideoExchange' || localVideoEnabledSetting === 'acceptVideoExchange') &&
+                !(previousLocalVideoEnabledSetting === 'requestVideoExchange' || previousLocalVideoEnabledSetting === 'acceptVideoExchange')) {
+
                 $scope.videoStateInfoObject.numOpenVideoExchanges ++;
             }
 
 
             // check if user has either accepted or denied a pending request
             if (previousLocalVideoEnabledSetting === 'waitingForPermissionToEnableVideoExchange' &&
-                (localVideoEnabledSetting !== 'waitingForPermissionToEnableVideoExchange')) {
+                localVideoEnabledSetting !== 'waitingForPermissionToEnableVideoExchange') {
                 $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
             }
 
@@ -148,12 +150,17 @@ angular.module('lxUseChatRoom.controllers', [])
 
             // If the user previously enabled video exchange with this client, and now is "hangupVideoExchange" for a new video
             // connection, then they have hung up the connection to the remote user.
-            if (previousLocalVideoEnabledSetting === 'enableVideoExchange' && localVideoEnabledSetting === 'hangupVideoExchange') {
+            if ((previousLocalVideoEnabledSetting === 'requestVideoExchange' || previousLocalVideoEnabledSetting === 'acceptVideoExchange')
+                && localVideoEnabledSetting === 'hangupVideoExchange') {
+
                 lxCallService.doHangup(remoteClientId, $scope.videoStateInfoObject.numOpenVideoExchanges);
                 $scope.videoStateInfoObject.numOpenVideoExchanges --;
                 delete $scope.remoteVideoObjectsDict[remoteClientId] ;
                 delete $scope.videoExchangeObjectsDict[remoteClientId];
             }
+
+            lxJs.assert($scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers >= 0, 'Negative numVideoRequestsPendingFromRemoteUsers');
+            lxJs.assert($scope.videoStateInfoObject.numOpenVideoExchanges >= 0, 'Negative numOpenVideoExchanges');
         };
     })
 
