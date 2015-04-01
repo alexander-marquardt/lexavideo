@@ -94,7 +94,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
 // TODO - move this function into a service.
         $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting,
-                                                           remoteClientId, resetRemoteVideoEnabledSetting) {
+                                                           remoteClientId) {
 
             /* localVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
                resetRemoteVideoEnabledSetting: boolean - if true, will reset the remoteVideoEnabledSetting value to the
@@ -102,45 +102,34 @@ angular.module('lxUseChatRoom.controllers', [])
              */
 
             /* If the "partial" notification menu is shown, then treat the click as an indication that the user wants
-               to see the entire notification menu.
+               to see the entire notification menu. This is done so that if the user clicks on a button that
+               is shown in the partial-menu, that the entire menu will be shown instead of acting on the button click.
+               (This will likely cause problems with normal video buttons, and should be re-visited)
              */
             if ($scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention) {
                 return;
             }
 
-
-            $log.log('Executing showVideoElementsAndStartVideoFn');
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
-            var isANewRequest = false;
-            var previousLocalVideoEnabledSetting = null;
             if (!(remoteClientId in $scope.videoExchangeObjectsDict)) {
                 $log.info('showVideoElementsAndStartVideoFn creating new videoExchangeObjectsDict entry for remote client ' + remoteClientId);
                 $scope.videoExchangeObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject();
-                $scope.videoStateInfoObject.numVideoSessionsOpenOnLocalClient += 1;
-                isANewRequest = true;
-            }
-            else {
-                previousLocalVideoEnabledSetting = $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting;
-            }
-
-            if (resetRemoteVideoEnabledSetting) {
-                $scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting = 'waitingForPermissionToEnableVideoExchange';
             }
 
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
 
-            if ((localVideoEnabledSetting === 'requestVideoExchange' || localVideoEnabledSetting === 'acceptVideoExchange') &&
-                !(previousLocalVideoEnabledSetting === 'requestVideoExchange' || previousLocalVideoEnabledSetting === 'acceptVideoExchange')) {
-
-                $scope.videoStateInfoObject.numOpenVideoExchanges ++;
+            // Add remoteClientId to list of *currently open* list if it is not already there (Note: we
+            // will even add 'hangup' and 'deny' settings here, as they will be removed by code below)
+            var indexOfRemoteIdOpenSessions = $scope.videoStateInfoObject.currentOpenVideoSessionsList.indexOf(remoteClientId);
+            if (indexOfRemoteIdOpenSessions === -1) {
+                $scope.videoStateInfoObject.currentOpenVideoSessionsList.push(remoteClientId);
             }
 
-
-            // check if user has either accepted or denied a pending request
-            if (previousLocalVideoEnabledSetting === 'waitingForPermissionToEnableVideoExchange' &&
-                localVideoEnabledSetting !== 'waitingForPermissionToEnableVideoExchange') {
-                $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers--;
+            // Remove remoteClientId from *pending* requests if it is there
+            var indexOfRemoteIdRequestPending = $scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.indexOf(remoteClientId);
+            if (indexOfRemoteIdRequestPending >= 0) {
+                $scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.splice(indexOfRemoteIdRequestPending, 1)
             }
 
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(
@@ -148,19 +137,22 @@ angular.module('lxUseChatRoom.controllers', [])
                 localVideoEnabledSetting,
                 remoteClientId);
 
-            // If the user previously enabled video exchange with this client, and now is "hangupVideoExchange" for a new video
-            // connection, then they have hung up the connection to the remote user.
-            if ((previousLocalVideoEnabledSetting === 'requestVideoExchange' || previousLocalVideoEnabledSetting === 'acceptVideoExchange')
-                && localVideoEnabledSetting === 'hangupVideoExchange') {
+            // If the user hangs up or denies, then remove the references to the remote user
+            if (localVideoEnabledSetting === 'hangupVideoExchange' || localVideoEnabledSetting === 'denyVideoExchange') {
 
                 lxCallService.doHangup(remoteClientId, $scope.videoStateInfoObject.numOpenVideoExchanges);
-                $scope.videoStateInfoObject.numOpenVideoExchanges --;
                 delete $scope.remoteVideoObjectsDict[remoteClientId] ;
                 delete $scope.videoExchangeObjectsDict[remoteClientId];
+
+                // remove client from *currently open* list (it should be there by construction as we have just added it if it wasn't)
+                indexOfRemoteIdOpenSessions = $scope.videoStateInfoObject.currentOpenVideoSessionsList.indexOf(remoteClientId);
+                $scope.videoStateInfoObject.currentOpenVideoSessionsList.splice(indexOfRemoteIdOpenSessions, 1)
             }
 
-            lxJs.assert($scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers >= 0, 'Negative numVideoRequestsPendingFromRemoteUsers');
-            lxJs.assert($scope.videoStateInfoObject.numOpenVideoExchanges >= 0, 'Negative numOpenVideoExchanges');
+
+            $scope.videoStateInfoObject.numOpenVideoExchanges = $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
+            $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers = $scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.length;
+
         };
     })
 

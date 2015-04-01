@@ -151,8 +151,7 @@ angular.module('lxMainView.controllers', [])
         //     }
         // localVideoEnabledSetting and remoteVideoEnabledSetting can be the following values:
         //    'waitingForPermissionToEnableVideoExchange': user has not made any request for a video exchange
-        //    'requestVideoExchange': user has requested to start video
-        //    'acceptVideoExchange': user has agreed to request to start video
+        //    'doVideoExchange': user has requested/accepted to start video
         //    'denyVideoExchange': user has denied activation of video elements
         //    'hangupVideoExchange': user has denied activation of video elements
         $scope.videoExchangeObjectsDict = {};
@@ -163,7 +162,13 @@ angular.module('lxMainView.controllers', [])
             numOpenVideoExchanges: 0,
 
             // Track number of requests for video exchanges that the local user has not yet responded to.
-            numVideoRequestsPendingFromRemoteUsers: 0
+            numVideoRequestsPendingFromRemoteUsers: 0,
+
+
+            // Track the remote IDs that have pending requests for video sessions
+            pendingRequestsForVideoSessionsList: [],
+            // Track the remote IDs that currently have open video sessions
+            currentOpenVideoSessionsList: []
         };
 
 

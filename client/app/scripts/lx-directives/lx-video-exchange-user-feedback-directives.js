@@ -68,19 +68,14 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                         showMessageInVideoWindow(scope, overlayElem, message, $compile);
                         break;
 
-                    case 'requestVideoExchange':
+                    case 'doVideoExchange':
                         if (!remoteStreamIsActive) {
-                            message = 'Requesting remote user to establish video connection';
+                            message = 'Establishing video connection';
                             showMessageInVideoWindow(scope, overlayElem, message, $compile);
                         }
                         break;
 
-                    case 'acceptVideoExchange':
-                        if (!remoteStreamIsActive) {
-                            message = 'Request accepted. Establishing video connection';
-                            showMessageInVideoWindow(scope, overlayElem, message, $compile);
-                        }
-                        break;
+
 
                     $log.debug(message);
                 }

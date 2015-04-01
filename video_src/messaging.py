@@ -41,8 +41,7 @@ def handle_message_client(from_client_id, message_obj):
         logging.info('user %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
                      (from_client_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))
 
-        if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'requestVideoExchange' or \
-                        message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'acceptVideoExchange':
+        if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'doVideoExchange':
 
             room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
             send_video_call_settings_to_participants(from_client_id, to_client_id)
