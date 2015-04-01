@@ -222,8 +222,8 @@ angular.module('lxChannel.services', [])
                                 }
                             }
 
-                            // if remote user has sent status that is not 'doVideoExchange', then the remote
-                            // user should not appear in pendingRequestsForVideoSessionsList
+                            // if remote user has sent status that is *not* 'doVideoExchange', then the remote
+                            // user should *not* appear in pendingRequestsForVideoSessionsList
                             if (remoteVideoEnabledSetting !== 'doVideoExchange') {
                                 var indexOfRemoteId = scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.indexOf(remoteClientId);
                                 if (indexOfRemoteId >= 0) {

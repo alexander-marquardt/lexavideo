@@ -110,6 +110,7 @@ angular.module('lxUseChatRoom.controllers', [])
                 return;
             }
 
+
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
             if (!(remoteClientId in $scope.videoExchangeObjectsDict)) {
@@ -118,6 +119,7 @@ angular.module('lxUseChatRoom.controllers', [])
             }
 
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
+
 
             // Add remoteClientId to list of *currently open* list if it is not already there (Note: we
             // will even add 'hangup' and 'deny' settings here, as they will be removed by code below)
@@ -136,6 +138,16 @@ angular.module('lxUseChatRoom.controllers', [])
                 $scope,
                 localVideoEnabledSetting,
                 remoteClientId);
+
+            // If the remote user previously hung-up or denied our request, and we are calling them again, then we
+            // update the status of the remote user to indicate that we are now waiting for them to give permission
+            // to our request to exhcange video.
+            var remoteVideoEnabledSetting =  $scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting;
+            if (localVideoEnabledSetting === 'doVideoExchange') {
+                if (remoteVideoEnabledSetting === 'hangupVideoExchange' || remoteVideoEnabledSetting === 'denyVideoExchange') {
+                    $scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting = 'waitingForPermissionToEnableVideoExchange';
+                }
+            }
 
             // If the user hangs up or denies, then remove the references to the remote user
             if (localVideoEnabledSetting === 'hangupVideoExchange' || localVideoEnabledSetting === 'denyVideoExchange') {
