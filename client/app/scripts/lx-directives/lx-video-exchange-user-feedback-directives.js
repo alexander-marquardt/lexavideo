@@ -51,33 +51,30 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                 hideMessageInVideoWindow(scope, overlayElem);
 
                 var remoteVideoSetting = scope.videoExchangeObjectsDict[scope.remoteClientId].remoteVideoEnabledSetting;
+                if (!remoteStreamIsActive) {
+                    switch (remoteVideoSetting) {
+                        case 'waitingForPermissionToEnableVideoExchange':
+                            message = 'We are waiting for the remote user to agree to exchange video';
+                            showMessageInVideoWindow(scope, overlayElem, message, $compile);
+                            break;
 
-                switch (remoteVideoSetting) {
-                    case 'waitingForPermissionToEnableVideoExchange':
-                        message = 'We are waiting for the remote user to agree to exchange video';
-                        showMessageInVideoWindow(scope, overlayElem, message, $compile);
-                        break;
+                        case 'denyVideoExchange':
+                            message = 'Remote user has denied your request to exchange video';
+                            showMessageInVideoWindow(scope, overlayElem, message, $compile);
+                            break;
 
-                    case 'denyVideoExchange':
-                        message = 'Remote user has denied your request to exchange video';
-                        showMessageInVideoWindow(scope, overlayElem, message, $compile);
-                        break;
+                        case 'hangupVideoExchange':
+                            message = 'Remote user has closed this video exchange';
+                            showMessageInVideoWindow(scope, overlayElem, message, $compile);
+                            break;
 
-                    case 'hangupVideoExchange':
-                        message = 'Remote user has closed this video exchange';
-                        showMessageInVideoWindow(scope, overlayElem, message, $compile);
-                        break;
-
-                    case 'doVideoExchange':
-                        if (!remoteStreamIsActive) {
+                        case 'doVideoExchange':
                             message = 'Establishing video connection';
                             showMessageInVideoWindow(scope, overlayElem, message, $compile);
-                        }
-                        break;
+                            break;
 
-
-
-                    $log.debug(message);
+                        $log.debug(message);
+                    }
                 }
             });
         }
