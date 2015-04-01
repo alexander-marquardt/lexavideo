@@ -32,13 +32,11 @@
         <div class="panel-body cl-notification-panel-body">
 
             <h4 ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" >The following people would like to exchange live video.</h4>
-            <h4 ng-if="!videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" >No one has requested you to exchange live video.</h4>
+            <h4 ng-if="!videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">You do not have any pending requests to exchange live video.</h4>
 
             <div class="row ">
-                <div ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
-                    <div class="col-xs-12"
-                    ng-show="videoExchangeObject.remoteVideoEnabledSetting == 'doVideoExchange' &&
-                             videoExchangeObject.localVideoEnabledSetting == 'waitingForPermissionToEnableVideoExchange'">
+                <div ng-repeat="remoteClientId in videoStateInfoObject.pendingRequestsForVideoSessionsList">
+                    <div class="col-xs-12">
                         <div style="display:inline-block">
                             <hr class="cl-hr-in-chat-panel">
                             <strong>
