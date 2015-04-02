@@ -13,6 +13,7 @@ from video_src import messaging
 from video_src import room_module
 from video_src import status_reporting
 from video_src import users
+from video_src import video_setup
 
 from error_handling import handle_exceptions
 
@@ -140,7 +141,7 @@ class DisconnectClient(webapp2.RequestHandler):
         if client_obj:
             for room_info_obj_key in client_obj.list_of_open_rooms_keys:
 
-                room_module.ChatRoomInfo.remove_video_setup_objects_containing_client_id(client_id)
+                video_setup.VideoSetup.remove_video_setup_objects_containing_client_id(client_id)
 
                 room_info_obj = room_info_obj_key.get()
 

@@ -7,6 +7,7 @@ from google.appengine.api import channel
 
 from video_src import room_module
 from video_src import http_helpers
+from video_src import video_setup
 
 
 from error_handling import handle_exceptions
@@ -41,10 +42,10 @@ def handle_message_client(from_client_id, message_obj):
 
         if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'doVideoExchange':
 
-            room_module.ChatRoomInfo.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
+            video_setup.VideoSetup.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
             send_video_call_settings_to_participants(from_client_id, to_client_id)
         else:
-            room_module.ChatRoomInfo.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
+            video_setup.VideoSetup.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
 
         if message_type == 'sdp' and message_payload['type'] == 'offer':
             # This is just for debugging
@@ -110,8 +111,8 @@ def send_room_occupancy_to_room_clients(room_info_obj):
 @handle_exceptions
 def send_video_call_settings_to_participants(from_client_id, to_client_id):
 
-    vid_setup_id = room_module.VideoSetup.get_vid_setup_id_for_client_id_pair(from_client_id, to_client_id)
-    vid_setup_obj = room_module.VideoSetup.get_by_id(vid_setup_id)
+    vid_setup_id = video_setup.VideoSetup.get_vid_setup_id_for_client_id_pair(from_client_id, to_client_id)
+    vid_setup_obj = video_setup.VideoSetup.get_by_id(vid_setup_id)
 
     count_of_clients_exchanging_video = len(vid_setup_obj.video_elements_enabled_client_ids)
 
