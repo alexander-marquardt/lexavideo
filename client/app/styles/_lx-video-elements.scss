@@ -45,18 +45,20 @@ video {
   padding: 10px;
   bottom: 0px;
   text-align: right;
-  z-index: $video-wrapper-zindex + 3;
+  z-index: $video-wrapper-zindex + 2;
   opacity: 0.6;
 }
 
 .cl-video-buttons-overlay {
-  background: black;
+  bottom: 0;
+  left: 0;
   box-sizing: border-box;
   position: absolute;
   font-size: 1.5em;
   padding: 10px;
-  z-index: $video-wrapper-zindex + 1;
-  opacity: 0.7;
+  z-index: $video-wrapper-zindex + 3;
+  opacity: 0.5;
+
 }
 
 .cl-video-exchange-info-overlay {
