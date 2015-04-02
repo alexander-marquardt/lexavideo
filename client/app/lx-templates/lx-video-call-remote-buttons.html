@@ -1,7 +1,7 @@
 
 <!-- This row contains the buttons that control the videoType that will be transmitted and microphone/sound/video mute -->
 
-    <div class="cl-video-buttons-overlay">
+    <div class="cl-video-buttons-overlay cl-hangup-button-overlay">
 
         <!-- "Hangup" video button -->
         <button type="button" class="btn btn-sm btn-danger cl-video-control-button"
@@ -10,8 +10,10 @@
                 <span class="icon-lx-phone-hang-up-cfg"></span>
             </span>
         </button>
+    </div>
 
 
+    <div class="cl-video-buttons-overlay">
         <!-- enable/disable remote audio -->
         <button ng-show="!remoteVideoElementsDict[remoteClientId].isAudioMuted"
                 type="button" class="btn btn-sm btn-primary cl-video-control-button"
