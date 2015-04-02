@@ -79,16 +79,23 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
             });
 
             function getIceConnectionState() {
-                return lxPeerService.pc[scope.remoteClientId].iceConnectionState ;
+                try {
+                    return lxPeerService.pc[scope.remoteClientId].iceConnectionState;
+                }
+
+                // This error can occur right after the user enables their video elements, but before they
+                // have setup the peer connection.
+                catch(err) {
+                    return null;
+                }
             }
 
             // We watch the ICE connection state for 'disconnected' value, since this is the best way to see
             // if the remote user has lost their connection/closed browser/etc.
             scope.$watch(getIceConnectionState, function(iceConnectionState) {
 
-                hideMessageInVideoWindow(scope, overlayElem);
-
                 if (iceConnectionState === 'disconnected') {
+                    hideMessageInVideoWindow(scope, overlayElem);
                     message = 'The video connection has been lost';
                     showMessageInVideoWindow(scope, overlayElem, message, $compile);
                 }
