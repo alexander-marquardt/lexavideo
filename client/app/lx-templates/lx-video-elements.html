@@ -19,6 +19,8 @@
 
                                     <div class="cl-video-wrapper-div">
 
+                                        {% endraw %}{% include "lx-templates/lx-video-call-buttons.html" %}{% raw %}
+
                                         <div class="cl-user-feedback-inside-video-wrapper">
                                             {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
                                         </div>
@@ -31,7 +33,6 @@
                                         <div lx-remote-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
                                     </div>
 
-                                    {% endraw %}{% include "lx-templates/lx-video-call-buttons.html" %}{% raw %}
                                 </div>
                             </div>
 

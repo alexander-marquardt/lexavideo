@@ -10,7 +10,7 @@ var lxSelectVideoTypePreferenceDirectives = angular.module('lxVideoExchangeUserF
 var  showMessageInVideoWindow = function(scope, overlayElem, message, $compile) {
     overlayElem.removeClass('ng-hide');
     overlayElem.html('');
-    var el = angular.element('<p class="cl-video-overlay-text"/>');
+    var el = angular.element('<p class="cl-video-exchange-info-overlay-text"/>');
     el.html(message);
     var compiledEl = $compile(el)(scope);
     overlayElem.append(compiledEl);
@@ -30,10 +30,10 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
 
     return {
         restrict: 'A',
-        template: '<div class="cl-video-overlay cl-show-hide-fade ng-hide" ></div>',
+        template: '<div class="cl-video-exchange-info-overlay cl-show-hide-fade ng-hide" ></div>',
         link : function(scope, elem) {
             var message;
-            var overlayElem = angular.element(elem).find('div.cl-video-overlay');
+            var overlayElem = angular.element(elem).find('div.cl-video-exchange-info-overlay');
 
 
             // If the remote user hangs up, the remoteVideoEnabledSetting will be received before the
@@ -112,10 +112,10 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayLocalVideoStatus',
 
     return {
         restrict: 'A',
-        template: '<div class="cl-video-overlay cl-show-hide-fade ng-hide" ></div>',
+        template: '<div class="cl-video-exchange-info-overlay cl-show-hide-fade ng-hide" ></div>',
         link: function (scope, elem) {
             var message;
-            var overlayElem = angular.element(elem).find('div.cl-video-overlay');
+            var overlayElem = angular.element(elem).find('div.cl-video-exchange-info-overlay');
 
             var watchLocalStream = function() {
                 return !!lxStreamService.localStream
