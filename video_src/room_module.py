@@ -166,11 +166,26 @@ class ChatRoomInfo(ndb.Model):
         vid_setup_id = VideoSetup.get_vid_setup_id_for_client_id_pair(from_client_id, to_client_id)
         vid_setup_obj = VideoSetup.get_by_id(vid_setup_id)
 
-        if from_client_id in vid_setup_obj.video_elements_enabled_client_ids:
-            vid_setup_obj.video_elements_enabled_client_ids.remove(from_client_id)
-            vid_setup_obj.put()
+        if (vid_setup_obj):
+
+            if from_client_id in vid_setup_obj.video_elements_enabled_client_ids:
+                vid_setup_obj.video_elements_enabled_client_ids.remove(from_client_id)
+
+                # If this is the last user in the VideoSetup object, then remove the object as it will never
+                # be accessed again.
+                if (len(vid_setup_obj.video_elements_enabled_client_ids) == 0):
+                    vid_setup_obj.key.delete()
+                else:
+                    vid_setup_obj.put()
+
+            else:
+                logging.warning('client_id %s not found in VideoStup object: %s. Not removed!' % (from_client_id, vid_setup_id))
+
         else:
-            logging.warning('Attempting to remove client_id %s from %s' % (from_client_id, vid_setup_id))
+            # It may happen that the remote user has disconnected their channel, in which case all VideoSetup objects
+            # associated with that user have already been deleted. If the local user had setup video to a remote
+            # user that disconnected, then this branch will be executed as the VideoSetup object was previously removed.
+            logging.warning('vid_setup_object not found')
 
         return vid_setup_obj
 
