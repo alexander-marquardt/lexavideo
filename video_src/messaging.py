@@ -30,8 +30,6 @@ def handle_message_client(from_client_id, message_obj):
     # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
     # as for passing video and other information from one user to the other.
 
-    # If to_client_id is "sendMsgToEveryoneInTheChatRoom", then the message will be sent to all room members, otherwise it will be sent
-    # only to the indicated client.
     to_client_id = message_obj['toClientId']
     message_type = message_obj['messageType']
     message_payload = message_obj['messagePayload']
