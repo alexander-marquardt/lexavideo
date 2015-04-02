@@ -365,6 +365,10 @@ webRtcServices.service('lxWebRtcSessionService',
         },
 
         processSignalingMessage: function( message, localVideoObject, remoteVideoObject, clientId, remoteClientId) {
+
+            // Note: this function is called for both the rtcInitiator and the non-rtcInitiator. For this reason
+            // it deals with the message types that may be received by either end of call setup.
+            
             if (!self.webRtcSessionStarted[remoteClientId]) {
                 $log.warn('peerConnection has not been created yet!');
                 return;
