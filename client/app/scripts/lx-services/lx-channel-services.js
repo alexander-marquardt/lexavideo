@@ -94,7 +94,8 @@ angular.module('lxChannel.services', [])
                             var sdpObject = messageObject.messagePayload;
 
 
-                            if (!scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator && !lxWebRtcSessionService.webRtcSessionStarted[remoteClientId]) {
+                            if (!(scope.videoExchangeObjectsDict[remoteClientId] && scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator) &&
+                                !lxWebRtcSessionService.webRtcSessionStarted[remoteClientId]) {
                                 // Callee is the client that is *not* the rtcInitiator (the rtcInitiator calls
                                 // the callee). The callee will only start negotiating video connection if they
                                 // receive an "offer" from the caller.
