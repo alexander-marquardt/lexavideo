@@ -434,12 +434,14 @@ webRtcServices.factory('lxPeerService',
 
         var onSignalingStateChanged = function(pc){
             return function() {
+                $log.info('onSignalingStateChanged');
                 $log.info(pcStatus(pc));
             };
         };
 
         var onIceConnectionStateChanged = function(pc) {
             return function() {
+                $log.info('onIceConnectionStateChanged');
                 $log.info(pcStatus(pc));
             };
         };

@@ -77,6 +77,22 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                     }
                 }
             });
+
+            function getIceConnectionState() {
+                return lxPeerService.pc[scope.remoteClientId].iceConnectionState ;
+            }
+
+            // We watch the ICE connection state for 'disconnected' value, since this is the best way to see
+            // if the remote user has lost their connection/closed browser/etc.
+            scope.$watch(getIceConnectionState, function(iceConnectionState) {
+
+                hideMessageInVideoWindow(scope, overlayElem);
+
+                if (iceConnectionState === 'disconnected') {
+                    message = 'The video connection has been lost';
+                    showMessageInVideoWindow(scope, overlayElem, message, $compile);
+                }
+            });
         }
     };
 });
