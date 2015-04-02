@@ -57,11 +57,9 @@
   @extend %call-control-icon-common;
   @extend .icon-lx-phone-hang-up;
   margin-top: -0.60em;
+  margin-left: -0.35em;
 }
 
-.cl-add-left-and-right-margins-to-hangup {
-  margin: 0px 15px 0px 15px;
-}
 
 .icon-lx-microphone-cfg {
   @extend %call-control-icon-common;

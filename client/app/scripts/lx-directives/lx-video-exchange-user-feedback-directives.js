@@ -14,10 +14,12 @@ var  showMessageInVideoWindow = function(scope, overlayElem, message, $compile) 
     el.html(message);
     var compiledEl = $compile(el)(scope);
     overlayElem.append(compiledEl);
+    scope.videoExchangeDisplayOverlayTrackerObject.currentlyShown = true;
 };
 
 var hideMessageInVideoWindow = function(scope, overlayElem) {
     overlayElem.addClass('ng-hide');
+    scope.videoExchangeDisplayOverlayTrackerObject.currentlyShown = false;
 };
 
 
@@ -54,7 +56,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                 if (!remoteStreamIsActive) {
                     switch (remoteVideoSetting) {
                         case 'waitingForPermissionToEnableVideoExchange':
-                            message = 'We are waiting for the remote user to agree to exchange video';
+                            message = 'Waiting for remote user to agree to exchange video';
                             showMessageInVideoWindow(scope, overlayElem, message, $compile);
                             break;
 
@@ -127,7 +129,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayLocalVideoStatus',
                         'Click here</a> to to activate video. ';
                     showMessageInVideoWindow(scope, overlayElem, message, $compile);
                 } else {
-                    hideMessageInVideoWindow(scope, elem);
+                    hideMessageInVideoWindow(scope, overlayElem);
                 }
             });
         }

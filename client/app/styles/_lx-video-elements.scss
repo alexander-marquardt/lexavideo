@@ -49,19 +49,33 @@ video {
   opacity: 0.6;
 }
 
+$overlay-buttons-col-width: 44px;
+$overlay-buttons-col-padding: 2px;
 .cl-video-buttons-overlay {
-  bottom: 0;
+  top: 0;
   left: 0;
+  width: $overlay-buttons-col-width;
   box-sizing: border-box;
   position: absolute;
   font-size: 1.5em;
-  padding: 10px;
+  padding: $overlay-buttons-col-padding;
   z-index: $video-wrapper-zindex + 3;
   opacity: 0.5;
 
 }
 
+.cl-video-control-button {
+  width: $overlay-buttons-col-width - 2 * $overlay-buttons-col-padding;
+  display: block;
+
+  // Add space above the next video button that appears after the first one (this assumes they appear in a column)
+  & + .cl-video-control-button {
+    margin-top: 4px;
+  }
+}
+
 .cl-video-exchange-info-overlay {
+  left: $overlay-buttons-col-width;
   background: black;
   box-sizing: border-box;
   position: absolute;
