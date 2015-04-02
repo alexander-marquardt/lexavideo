@@ -19,11 +19,9 @@
 
                                     <div class="cl-video-wrapper-div">
 
-                                        {% endraw %}{% include "lx-templates/lx-video-call-buttons.html" %}{% raw %}
+                                        {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
 
-                                        <div class="cl-user-feedback-inside-video-wrapper">
-                                            {% endraw %}{% include "lx-templates/lx-show-microphone-status-in-video-window.html" %}{% raw %}
-                                        </div>
+
                                         <!-- only show the message in the video window if a modal is not currently being shown - this is
                                              just so that we don't confuse the user by showing them two different messages at once -->
                                         <div ng-if="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
@@ -40,6 +38,8 @@
                             <div class="col-xs-6 text-center cl-col-no-xs-padding" >
                                 LOCAL VIDEO<br>
                                 <div class="cl-video-wrapper-div">
+                                    {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
+
                                     <div ng-if="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
                                              class="cl-transition-opacity"
                                              lx-display-local-video-status>

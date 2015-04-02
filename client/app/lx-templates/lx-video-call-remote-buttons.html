@@ -1,0 +1,49 @@
+
+<!-- This row contains the buttons that control the videoType that will be transmitted and microphone/sound/video mute -->
+
+    <div class="cl-video-buttons-overlay">
+
+
+        <!-- enable/disable remote audio -->
+        <button ng-show="!remoteVideoObject.isAudioMuted"
+                type="button" class="btn btn-sm btn-primary"
+                ng-click="toggleAudioMute(remoteClientId)">
+
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-volume-high-cfg"></span>
+
+            </span>
+        </button>
+
+        <button ng-show="remoteVideoObject.isAudioMuted"
+                type="button" class="btn btn-sm btn-default"
+                ng-click="toggleAudioMute(remoteClientId)">
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-volume-high-cfg"></span>
+                <span class="icon-lx-thick-forward-slash-cfg"></span>
+                <span class="icon-lx-thin-forward-slash-cfg"></span>
+            </span>
+
+        </button>
+
+
+
+        <!-- "Stop" video button -->
+        <button type="button" class="btn btn-sm btn-primary cl-add-left-and-right-margins-to-hangup"
+                ng-click="showVideoElementsAndStartVideoFn('hangupVideoExchange', remoteClientId)">
+            <span class="icon-lx-start-video-camera-wrapper-cfg">
+                <span class="icon-lx-phone-hang-up-cfg"></span>
+            </span>
+                Hangup
+        </button>
+    </div>
+
+
+    <div class="cl-button-status-overlay cl-video-exchange-info-overlay-text">
+        <div ng-show="remoteVideoObject.isAudioMuted"
+             class="cl-show-hide-fade">
+            <div class="cl-text-outline ">
+                Sound is muted
+            </div>
+        </div>
+    </div>
