@@ -5,7 +5,7 @@
         <!-- enable/disable microphone - button that indicates that the microphone stream is currently enabled -->
         <button ng-show="!localVideoObject.isMicrophoneMuted"
                 type="button" class="btn btn-sm btn-primary"
-                ng-click="toggleMicrophoneMute()">
+                ng-click="toggleMicrophoneMuteInterfaceFn()">
 
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-microphone-cfg"></span>
@@ -15,7 +15,7 @@
 
         <button ng-show="localVideoObject.isMicrophoneMuted"
                 type="button" class="btn btn-sm btn-default"
-                ng-click="toggleMicrophoneMute()">
+                ng-click="toggleMicrophoneMuteInterfaceFn()">
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-microphone-cfg"></span>
                 <span class="icon-lx-thick-forward-slash-cfg"></span>
@@ -28,7 +28,7 @@
         <!-- enable/disable video - button that indicates that the video stream is currently enabled -->
         <button ng-show="!localVideoObject.isWebcamMuted"
                 type="button" class="btn btn-sm btn-primary"
-                ng-click="toggleWebcamMute()">
+                ng-click="toggleWebcamMuteInterfaceFn()">
 
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-video-camera-filled-cfg"></span>
@@ -37,7 +37,7 @@
 
         <button ng-show="localVideoObject.isWebcamMuted"
                 type="button" class="btn btn-sm btn-default"
-                ng-click="toggleWebcamMute()">
+                ng-click="toggleWebcamMuteInterfaceFn()">
 
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-video-camera-filled-cfg"></span>
