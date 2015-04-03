@@ -125,7 +125,8 @@ angular.module('lxUseChatRoom.controllers', [])
             // will even add 'hangup' and 'deny' settings here, as they will be removed by code below)
             var indexOfRemoteIdOpenSessions = $scope.videoStateInfoObject.currentOpenVideoSessionsList.indexOf(remoteClientId);
             if (indexOfRemoteIdOpenSessions === -1) {
-                $scope.videoStateInfoObject.currentOpenVideoSessionsList.push(remoteClientId);
+                // "push" to the front of the array, so that most recent additions appear first in the video section
+                $scope.videoStateInfoObject.currentOpenVideoSessionsList.unshift(remoteClientId);
             }
 
             // Remove remoteClientId from *pending* requests if it is there
