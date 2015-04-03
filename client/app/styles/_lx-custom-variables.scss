@@ -68,13 +68,7 @@ $content-widths-list: 320px - $xs-container-margin, 360px - $xs-container-margin
                       480px - $xs-container-margin, 600px - $xs-container-margin, $screen-sm - $grid-gutter-width,
                       $screen-md - $grid-gutter-width, $screen-lg - $grid-gutter-width;
 
-// We vary the font size of the text-overlay that is shown in a navbar on top of a video element.
-$video-text-overlay-font-size-list: 0.4em, 0.6em, 0.7em, 0.8em, 0.9em, 1em, 1.5em, 2em;
-
-
 // vary the size of the chat panel name
 $chat-panel-name-size: 1em, 1em, 1em, 1.25em, 1.5em, 1.5em, 1.5em, 1.5em;
-
-
 
 $slide-main-menu-duration: 0.4s;
