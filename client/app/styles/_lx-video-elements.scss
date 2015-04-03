@@ -34,34 +34,55 @@ video {
   padding-right: 0.5em;
 }
 
-
-.cl-button-status-overlay {
+%cl-overlay-common {
   box-sizing: border-box;
   position: absolute;
+}
+
+$text-overlay-opacity: 0.5;
+$button-overlay-opacity: 0.75;
+
+$username-overlay-height: 20px;
+.cl-username-overlay {
+  @extend %cl-overlay-common;
+  color: white;
+  background: black;
   width: 100%;
   padding: 0px;
   top: 0;
   left: 0;
+  right: 0;
+  height: $username-overlay-height;
+  text-align: center;
+  z-index: $video-wrapper-zindex + 2;
+  opacity: $text-overlay-opacity;
+}
+
+.cl-button-status-overlay {
+  @extend %cl-overlay-common;
+  width: 100%;
+  padding: 0px;
+  top: $username-overlay-height;
+  left: 0;
   text-align: left;
   z-index: $video-wrapper-zindex + 2;
-  opacity: 0.75;
+  opacity: $text-overlay-opacity;
 }
 
 $overlay-buttons-col-padding: 2px;
 .cl-video-buttons-overlay {
+  @extend %cl-overlay-common;
   bottom: 0;
   left: 0;
-  box-sizing: border-box;
-  position: absolute;
   padding: $overlay-buttons-col-padding;
   z-index: $video-wrapper-zindex + 6;
-  opacity: 0.75;
+  opacity: $button-overlay-opacity;
 }
 
 .cl-video-buttons-overlay.cl-hangup-button-overlay {
   right: 0;
   left: auto;
-  opacity: 0.75;
+  opacity: $button-overlay-opacity;
 }
 
 .cl-video-control-button {
@@ -69,7 +90,7 @@ $overlay-buttons-col-padding: 2px;
 }
 
 .cl-video-exchange-info-overlay {
-  position: absolute;
+  @extend %cl-overlay-common;
   height: 100%;
   left: 0;
   right: 0;
