@@ -10,12 +10,12 @@
                 <div class="col-xs-12 cl-col-no-xs-padding">
 
                         <div class="row cl-row-no-xs-margins">
+                            <!-- The following wraps the remote video windows -->
                             <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
-                                    class="cl-transition-opacity">
+                                    class="cl-transition-opacity col-xs-6 text-center cl-col-no-xs-padding"
+                                    ng-style="{clear: $even ? 'left': 'none'}">
 
-                                <!-- The following wraps the remote video window -->
-                                <div class="col-xs-6 text-center cl-col-no-xs-padding" >
-                                    REMOTE VIDEO RemoteId = {{ remoteClientId }}<br>
+                                    {{ $odd }}REMOTE VIDEO RemoteId = {{ remoteClientId }}<br>
 
                                     <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl">
 
@@ -30,14 +30,13 @@
                                         </div>
                                         <div lx-remote-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
                                     </div>
-
-                                </div>
                             </div>
 
                             <!-- The following wraps the local video window -->
-                            <div class="col-xs-6 text-center cl-col-no-xs-padding" >
-                                LOCAL VIDEO<br>
-                                <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl">
+                            <div class="col-xs-6 text-center cl-col-no-xs-padding"
+                                 ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
+                                LOCAL VIDEO {{ videoStateInfoObject.currentOpenVideoSessionsList.length % 2 }}<br>
+                                <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl" >
                                     {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
 
                                     <div ng-show="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
