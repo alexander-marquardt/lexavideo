@@ -15,7 +15,7 @@
                                     class="cl-transition-opacity col-xs-6 text-center cl-col-no-xs-padding cl-vbottom"
                                     ng-style="{clear: $even ? 'left': 'none'}">
 
-                                    {{ $odd }}REMOTE VIDEO RemoteId = {{ remoteClientId }}<br>
+                                    REMOTE VIDEO RemoteId = {{ remoteClientId }}<br>
 
                                     <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl">
 
@@ -37,7 +37,7 @@
                             to work correctly)
                          --><div class="col-xs-6 text-center cl-col-no-xs-padding cl-vbottom"
                                  ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
-                                LOCAL VIDEO {{ videoStateInfoObject.currentOpenVideoSessionsList.length % 2 }}<br>
+                                LOCAL VIDEO<br>
                                 <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl" >
                                     {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
 
