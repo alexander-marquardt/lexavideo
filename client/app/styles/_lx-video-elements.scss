@@ -42,42 +42,38 @@ video {
   position: absolute;
   width: 100%;
   padding: 0px;
-  bottom: 0px;
-  text-align: right;
+  top: 0;
+  left: 0;
+  text-align: left;
   z-index: $video-wrapper-zindex + 2;
   opacity: 0.75;
 }
 
-$overlay-buttons-col-width: 44px;
 $overlay-buttons-col-padding: 2px;
 .cl-video-buttons-overlay {
-  top: 0;
+  bottom: 0;
   left: 0;
-  width: $overlay-buttons-col-width;
   box-sizing: border-box;
   position: absolute;
-  font-size: 1.5em;
-  padding: 0px $overlay-buttons-col-padding 0px $overlay-buttons-col-padding;
+  padding: $overlay-buttons-col-padding;
   z-index: $video-wrapper-zindex + 6;
   opacity: 0.75;
 }
 
 .cl-video-buttons-overlay.cl-hangup-button-overlay {
-  bottom: 0;
-  top: auto;
+  right: 0;
+  left: auto;
   opacity: 0.75;
 }
 
 .cl-video-control-button {
-  width: $overlay-buttons-col-width - 2 * $overlay-buttons-col-padding;
-  display: block;
-  margin: 2px 0px 2px 0px;
+  margin: 0px 2px 0x 2px;
 }
 
 .cl-video-exchange-info-overlay {
   position: absolute;
   height: 100%;
-  left: $overlay-buttons-col-width;
+  left: 0;
   right: 0;
   background: black;
   text-align: center;
