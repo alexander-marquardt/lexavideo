@@ -130,6 +130,13 @@
   margin-right: 0px;
 
 }
+
+.cl-vbottom {
+    display: inline-block;
+    vertical-align: bottom;
+    float: none;
+}
+
 /* Note: at first glance, it may appear that cl-row-no-xs-margins and cl-col-no-xs-padding serve no purpose,
    however, if they are not used, then the right side of the page will be extended by 15px with blank space
    to accommodate the standard bootstrap formatting that uses negative margin on rows to offset the padding
