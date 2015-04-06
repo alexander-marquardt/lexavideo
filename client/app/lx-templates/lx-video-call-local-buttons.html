@@ -51,19 +51,27 @@
 <!-- if the overlay information is already shown (ie. "we are connecting to remote user"), then don't show
 the status of the users buttons (ie. "microphone is muted") - this is necessary because on small screens there
 is not enough space to show both messages without them overlapping. -->
-<div ng-show='!videoExchangeDisplayOverlayTrackerObject.currentlyShown'
-     class="cl-button-status-overlay">
-    <div ng-show="localVideoObject.isMicrophoneMuted"
+<div ng-show='true || !videoExchangeDisplayOverlayTrackerObject.currentlyShown'
+     class="cl-selected-icon-status-overlay">
+    <span ng-show="localVideoObject.isMicrophoneMuted"
          class="cl-show-hide-fade">
-        <div class="cl-text-outline ">
-            Microphone is muted
-        </div>
-    </div>
+        <span class="cl-video-status-icon">
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-microphone-cfg"></span>
+                <span class="icon-lx-thick-forward-slash-cfg"></span>
+                <span class="icon-lx-thin-forward-slash-cfg"></span>
+            </span>
+        </span>
+    </span>
 
-    <div ng-show="localVideoObject.isWebcamMuted"
+    <span ng-show="localVideoObject.isWebcamMuted"
          class="cl-show-hide-fade">
-        <div class="cl-text-outline ">
-            Camera is blocked
-        </div>
-    </div>
+        <span class="cl-video-status-icon">
+            <span class="cl-lx-call-control-wrapper-cfg">
+                <span class="icon-lx-video-camera-filled-cfg"></span>
+                <span class="icon-lx-thick-forward-slash-cfg"></span>
+                <span class="icon-lx-thin-forward-slash-cfg"></span>
+            </span>
+        </span>
+    </span>
 </div>

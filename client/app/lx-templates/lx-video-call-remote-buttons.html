@@ -15,7 +15,7 @@
 
     <div class="cl-video-buttons-overlay">
         <!-- enable/disable remote audio -->
-        <button ng-show="!remoteVideoElementsDict[remoteClientId].isAudioMuted"
+        <button ng-show="remoteVideoElementsDict[remoteClientId].isAudioMuted"
                 type="button" class="btn btn-sm btn-primary cl-video-control-button"
                 ng-click="toggleAudioMuteInterfaceFn(remoteClientId)">
 
@@ -25,8 +25,8 @@
             </span>
         </button>
 
-        <button ng-show="remoteVideoElementsDict[remoteClientId].isAudioMuted"
-                type="button" class="btn btn-sm btn-default cl-video-control-button"
+        <button ng-show="!remoteVideoElementsDict[remoteClientId].isAudioMuted"
+                type="button" class="btn btn-sm btn-primary cl-video-control-button"
                 ng-click="toggleAudioMuteInterfaceFn(remoteClientId)">
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-volume-high-cfg"></span>
@@ -37,13 +37,15 @@
         </button>
     </div>
 
-
-    <div ng-show='!videoExchangeDisplayOverlayTrackerObject.currentlyShown'
-         class="cl-button-status-overlay">
-        <div ng-show="remoteVideoElementsDict[remoteClientId].isAudioMuted"
+    <div ng-show='true || !videoExchangeDisplayOverlayTrackerObject.currentlyShown'  class="cl-selected-icon-status-overlay cl-status-beside-hangup-overlay">
+        <div ng-show="true || remoteVideoElementsDict[remoteClientId].isAudioMuted"
              class="cl-show-hide-fade">
-            <div class="cl-text-outline ">
-                Sound is muted
-            </div>
+            <span class="cl-video-status-icon">
+                <span class="cl-lx-call-control-wrapper-cfg">
+                    <span class="icon-lx-volume-high-cfg"></span>
+                    <span class="icon-lx-thick-forward-slash-cfg"></span>
+                    <span class="icon-lx-thin-forward-slash-cfg"></span>
+                </span>
+            </span>
         </div>
     </div>
