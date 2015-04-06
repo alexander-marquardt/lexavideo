@@ -43,7 +43,7 @@
 
 %call-control-icon-common {
   position: absolute;
-  font-size: 2em;
+  font-size: 1.5em;
   bottom: 0em;
   left: 50%;
   top: 50%;
@@ -69,6 +69,7 @@
 
 .icon-lx-video-camera-filled-cfg {
   @extend %call-control-icon-common;
+  margin-top: -0.55em;
   @extend .icon-lx-video-camera-filled;
 }
 
@@ -79,11 +80,13 @@
 
 .icon-lx-thin-forward-slash-cfg {
   @extend %call-control-icon-common;
+  margin-top: -0.55em;
   @extend .icon-lx-thin-forward-slash;
 }
 
 .icon-lx-thick-forward-slash-cfg {
   color: $btn-gray-bg;
+  margin-top: -0.55em;
   @extend %call-control-icon-common;
   @extend .icon-lx-thick-forward-slash;
 }

@@ -40,21 +40,13 @@ video {
 }
 
 
-.cl-video-status-icon
-{
-  color: $brand-danger;
-  padding: 5px 10px;
-  text-shadow: 0px 0px 1px black;
-  line-height: 1.5;
-  font-size: 12px;
-}
 
-
+$video-control-button-pdding: 3px 5px;
 $text-overlay-opacity: 0.5;
 $button-overlay-opacity: 0.85;
 $username-overlay-height: 20px;
 $overlay-buttons-col-padding: 2px;
-$hangup-button-space: 46px;
+$hangup-button-space: 35px;
 
 .cl-username-overlay {
   @extend %cl-overlay-common;
@@ -77,7 +69,6 @@ $hangup-button-space: 46px;
   bottom: 0px;
   right: 0;
   left: 0px;
-  height: 34px;
   text-align: right;
   z-index: $video-wrapper-zindex + 5;
   white-space: nowrap;
@@ -106,6 +97,16 @@ $hangup-button-space: 46px;
 
 .cl-video-control-button {
   margin: 0px 2px 0x 2px;
+  padding: $video-control-button-pdding;
+}
+
+.cl-video-status-icon
+{
+  color: $brand-danger;
+  padding: $video-control-button-pdding;
+  text-shadow: 0px 0px 1px black;
+  line-height: 1.5;
+  font-size: 12px;
 }
 
 .cl-video-exchange-info-overlay {
