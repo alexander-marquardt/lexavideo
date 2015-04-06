@@ -19,7 +19,7 @@
 
                                         {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
 
-                                        <div class="cl-username-overlay">{{ remoteClientId }}</div>
+                                        <div class="cl-username-overlay cl-text-shadow">{{ remoteClientId }}</div>
                                         <!-- only show the message in the video window if a modal is not currently being shown - this is
                                              just so that we don't confuse the user by showing them two different messages at once -->
                                         <div ng-show="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
@@ -37,7 +37,7 @@
                                  ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
                                 <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl" >
                                     {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
-                                    <div class="cl-username-overlay">Local Video</div>
+                                    <div class="cl-username-overlay cl-text-shadow">Local Video</div>
 
                                     <div ng-show="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
                                              class="cl-transition-opacity"
