@@ -37,8 +37,8 @@
         </button>
     </div>
 
-    <div ng-show='true || !videoExchangeDisplayOverlayTrackerObject.currentlyShown'  class="cl-selected-icon-status-overlay cl-status-beside-hangup-overlay">
-        <div ng-show="true || remoteVideoElementsDict[remoteClientId].isAudioMuted"
+    <div ng-show='!videoExchangeDisplayOverlayTrackerObject.currentlyShown'  class="cl-selected-icon-status-overlay cl-status-beside-hangup-overlay">
+        <div ng-show="remoteVideoElementsDict[remoteClientId].isAudioMuted"
              class="cl-show-hide-fade">
             <span class="cl-video-status-icon">
                 <span class="cl-lx-call-control-wrapper-cfg">

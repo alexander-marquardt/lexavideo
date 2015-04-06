@@ -6,20 +6,21 @@
     <button ng-show="!localVideoObject.isMicrophoneMuted"
             type="button" class="btn btn-md btn-primary cl-video-control-button"
             ng-click="toggleMicrophoneMuteInterfaceFn()">
-
-        <span class="cl-lx-call-control-wrapper-cfg">
-            <span class="icon-lx-microphone-cfg"></span>
-
-        </span>
-    </button>
-
-    <button ng-show="localVideoObject.isMicrophoneMuted"
-            type="button" class="btn btn-md btn-default cl-video-control-button"
-            ng-click="toggleMicrophoneMuteInterfaceFn()">
         <span class="cl-lx-call-control-wrapper-cfg">
             <span class="icon-lx-microphone-cfg"></span>
             <span class="icon-lx-thick-forward-slash-cfg"></span>
             <span class="icon-lx-thin-forward-slash-cfg"></span>
+        </span>
+
+
+    </button>
+
+    <button ng-show="localVideoObject.isMicrophoneMuted"
+            type="button" class="btn btn-md btn-primary cl-video-control-button"
+            ng-click="toggleMicrophoneMuteInterfaceFn()">
+        <span class="cl-lx-call-control-wrapper-cfg">
+            <span class="icon-lx-microphone-cfg"></span>
+
         </span>
 
     </button>
@@ -29,21 +30,21 @@
     <button ng-show="!localVideoObject.isWebcamMuted"
             type="button" class="btn btn-md btn-primary cl-video-control-button"
             ng-click="toggleWebcamMuteInterfaceFn()">
-
-        <span class="cl-lx-call-control-wrapper-cfg">
-            <span class="icon-lx-video-camera-filled-cfg"></span>
-        </span>
-    </button>
-
-    <button ng-show="localVideoObject.isWebcamMuted"
-            type="button" class="btn btn-md btn-default cl-video-control-button"
-            ng-click="toggleWebcamMuteInterfaceFn()">
-
         <span class="cl-lx-call-control-wrapper-cfg">
             <span class="icon-lx-video-camera-filled-cfg"></span>
             <span class="icon-lx-thick-forward-slash-cfg"></span>
             <span class="icon-lx-thin-forward-slash-cfg"></span>
         </span>
+
+    </button>
+
+    <button ng-show="localVideoObject.isWebcamMuted"
+            type="button" class="btn btn-md btn-primary cl-video-control-button"
+            ng-click="toggleWebcamMuteInterfaceFn()">
+        <span class="cl-lx-call-control-wrapper-cfg">
+            <span class="icon-lx-video-camera-filled-cfg"></span>
+        </span>
+
     </button>
 </div>
 
@@ -51,7 +52,7 @@
 <!-- if the overlay information is already shown (ie. "we are connecting to remote user"), then don't show
 the status of the users buttons (ie. "microphone is muted") - this is necessary because on small screens there
 is not enough space to show both messages without them overlapping. -->
-<div ng-show='true || !videoExchangeDisplayOverlayTrackerObject.currentlyShown'
+<div ng-show='!videoExchangeDisplayOverlayTrackerObject.currentlyShown'
      class="cl-selected-icon-status-overlay">
     <div style="float:right">
         <div style="display: inline-block">
@@ -66,7 +67,7 @@ is not enough space to show both messages without them overlapping. -->
                 </span>
             </span>
         </div>
-        
+
         <div style="display: inline-block">
             <span ng-show="localVideoObject.isWebcamMuted"
                  class="cl-show-hide-fade">
