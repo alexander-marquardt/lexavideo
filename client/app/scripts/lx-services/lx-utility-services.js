@@ -76,18 +76,8 @@ angular.module('lxUtility.services', [])
             },
 
 
-            // function that stops the title from flashing the number of new messages, and that adjusts
-            // the number of unseen messages to reflect that the user has just clicked on a chat panel whose messages
-            // have now been "seen" and are therefore removed from the count.
-            stopFlashingTitleAndAdjustCount: function(trackUnseenMessageCountObject, chatPanelObject) {
-
-                if (chatPanelObject.chatPanelIsCurrentlyVisible) {
-
-                    if (chatPanelObject.chatPanelIsGlued) {
-                        self.clearNumMessagesInChatPanel(trackUnseenMessageCountObject, chatPanelObject);
-                    }
-                }
-
+            // function that stops the title from flashing the number of new messages
+            stopFlashingTitle: function(trackUnseenMessageCountObject, chatPanelObject) {
                 // remove blinking of the number of messages
                 $timeout.cancel(timerId);
                 timerId = null;

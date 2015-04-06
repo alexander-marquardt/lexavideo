@@ -14,7 +14,8 @@ angular.module('lxUseChatRoom.controllers', [])
         $timeout,
         lxChannelSupportService,
         lxHttpChannelService,
-        lxInitializeRoomService
+        lxInitializeRoomService,
+        lxShowNumMessagesService
         ) {
 
         $scope.lxChatRoomCtrl = {
@@ -48,7 +49,8 @@ angular.module('lxUseChatRoom.controllers', [])
             // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
             // from the "global" unseenMessageCount before zeroing it.
             if (data.roomId in $scope.chatPanelDict) {
-                $scope.trackUnseenMessageCountObject.unseenMessageCount -= $scope.chatPanelDict[data.roomId].numMessagesSinceLastTimeBottomOfPanelWasViewed;
+                lxShowNumMessagesService.clearNumMessagesInChatPanel($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[data.roomId]);
+                lxShowNumMessagesService.showNumMessagesInDocumentTitle($scope.trackUnseenMessageCountObject);
             }
 
             $scope.chatPanelDict[data.roomId] = {
