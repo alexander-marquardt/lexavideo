@@ -55,7 +55,6 @@ angular.module('lxChatRoom.directives', [])
                     var chatPanelObject = scope.chatRoomDisplayObject.chatPanelObject;
                     if (chatPanelObject) {
                         lxShowNumMessagesService.stopFlashingTitle(scope.trackUnseenMessageCountObject, chatPanelObject);
-                        lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject);
                     }
                 });
             }

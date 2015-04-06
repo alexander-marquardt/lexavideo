@@ -49,8 +49,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
             // from the "global" unseenMessageCount before zeroing it.
             if (data.roomId in $scope.chatPanelDict) {
-                lxShowNumMessagesService.clearNumMessagesInChatPanel($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[data.roomId]);
-                lxShowNumMessagesService.showNumMessagesInDocumentTitle($scope.trackUnseenMessageCountObject);
+                lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[data.roomId]);
             }
 
             $scope.chatPanelDict[data.roomId] = {

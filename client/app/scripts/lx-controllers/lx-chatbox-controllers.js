@@ -80,9 +80,7 @@ angular.module('lxChatbox.controllers', [])
         };
 
         $scope.gluePanel = function() {
-            lxShowNumMessagesService.clearNumMessagesInChatPanel($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId]);
-            lxShowNumMessagesService.showNumMessagesInDocumentTitle($scope.trackUnseenMessageCountObject);
-
+            lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId]);
             $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsGlued = true;
         };
 
@@ -90,8 +88,7 @@ angular.module('lxChatbox.controllers', [])
             return scope.chatPanelDict[scope.roomOccupancyObject.chatRoomId].chatPanelIsGlued;
         }, function(chatPanelIsGlued) {
             if (chatPanelIsGlued) {
-                lxShowNumMessagesService.clearNumMessagesInChatPanel($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId]);
-                lxShowNumMessagesService.showNumMessagesInDocumentTitle($scope.trackUnseenMessageCountObject);
+                lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId]);
             }
         });
 

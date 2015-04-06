@@ -69,58 +69,64 @@ angular.module('lxUtility.services', [])
         var timerId = null;
 
 
-        var self = {
-            clearNumMessagesInChatPanel: function(trackUnseenMessageCountObject, chatPanelObject) {
-                trackUnseenMessageCountObject.unseenMessageCount -= chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed;
-                chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+
+        var clearNumMessagesInChatPanel = function(trackUnseenMessageCountObject, chatPanelObject) {
+            trackUnseenMessageCountObject.unseenMessageCount -= chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed;
+            chatPanelObject.numMessagesSinceLastTimeBottomOfPanelWasViewed = 0;
+        };
+
+
+
+
+        // Displays the number of messages received in the document title , and flashes the
+        // number of messages to get the users attention.
+        var showNumMessagesInDocumentTitle = function (trackUnseenMessageCountObject) {
+
+            // show the number of messages in the document title.
+            if (trackUnseenMessageCountObject.unseenMessageCount) {
+                document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
+
+                // The remainder of this code deals with making the number of messages flash in the document title.
+                // First, check to see if the title is already flashing by seeing if timerId has been set. If it is already
+                // flashing, then don't start any new timer-loops.
+                if (!timerId) {
+                    // don't start flashing until 10 seconds have passed.
+                    var timeoutDelay = 10000;
+                    // the following timer is used for switching between the title with and without the number of
+                    // new messages included in the title.
+                    var timeoutFn = function () {
+                        timerId = $timeout(function () {
+                            if (trackUnseenMessageCountObject.unseenMessageCount) {
+                                if (numMessagesIsShownToggle) {
+                                    document.title = $('#id-document-title-div').text();
+                                } else {
+                                    document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
+                                }
+                            }
+                            numMessagesIsShownToggle = !numMessagesIsShownToggle;
+                            // after initial wait, start flashing every X seconds.
+                            timeoutDelay = 1000;
+
+                            timeoutFn();
+                        }, timeoutDelay);
+                    };
+                    timeoutFn();
+                }
+            } else {
+                document.title = $('#id-document-title-div').text();
+            }
+        };
+
+        return {
+            subtractNumMessagesSeen: function(trackUnseenMessageCountObject, chatPanelObject) {
+                clearNumMessagesInChatPanel(trackUnseenMessageCountObject, chatPanelObject);
+                showNumMessagesInDocumentTitle(trackUnseenMessageCountObject)
             },
-
-
-            // function that stops the title from flashing the number of new messages
+                    // function that stops the title from flashing the number of new messages
             stopFlashingTitle: function(trackUnseenMessageCountObject, chatPanelObject) {
                 // remove blinking of the number of messages
                 $timeout.cancel(timerId);
                 timerId = null;
-            },
-
-            // Displays the number of messages received in the document title , and flashes the
-            // number of messages to get the users attention.
-            showNumMessagesInDocumentTitle: function (trackUnseenMessageCountObject) {
-
-                // show the number of messages in the document title.
-                if (trackUnseenMessageCountObject.unseenMessageCount) {
-                    document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
-
-                    // The remainder of this code deals with making the number of messages flash in the document title.
-                    // First, check to see if the title is already flashing by seeing if timerId has been set. If it is already
-                    // flashing, then don't start any new timer-loops.
-                    if (!timerId) {
-                        // don't start flashing until 10 seconds have passed.
-                        var timeoutDelay = 10000;
-                        // the following timer is used for switching between the title with and without the number of
-                        // new messages included in the title.
-                        var timeoutFn = function () {
-                            timerId = $timeout(function () {
-                                if (trackUnseenMessageCountObject.unseenMessageCount) {
-                                    if (numMessagesIsShownToggle) {
-                                        document.title = $('#id-document-title-div').text();
-                                    } else {
-                                        document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
-                                    }
-                                }
-                                numMessagesIsShownToggle = !numMessagesIsShownToggle;
-                                // after initial wait, start flashing every X seconds.
-                                timeoutDelay = 1000;
-
-                                timeoutFn();
-                            }, timeoutDelay);
-                        };
-                        timeoutFn();
-                    }
-                } else {
-                    document.title = $('#id-document-title-div').text();
-                }
             }
         };
-        return self;
     });
