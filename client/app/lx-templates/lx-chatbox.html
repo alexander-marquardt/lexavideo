@@ -99,7 +99,8 @@
                                             <button type="button"
                                                 class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
                                                 ng-click="showVideoElementsAndStartVideoFn('doVideoExchange', remoteClientObj.clientId)"
-                                                >
+                                                ng-class="{'invisible disabled' : remoteClientObj.clientId == lxMainViewCtrl.clientId,
+                                                           'disabled' : videoExchangeObjectsDict[remoteClientObj.clientId].localVideoEnabledSetting == 'doVideoExchange'}">
                                                 <span class="icon-lx-video-camera-filled"></span>
                                             </button>
                                         </span>
