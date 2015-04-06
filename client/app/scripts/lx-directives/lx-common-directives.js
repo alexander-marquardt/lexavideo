@@ -109,12 +109,22 @@ commonDirectives.directive('setClassesForCommonArea', function(){
                 }
             }
 
+            // Set the body background to a different color, so that the user will notice that something is pending.
+            function setBodyClassToAttention(getAttention) {
+                if (getAttention) {
+                    $('body').addClass('cl-body-notification-pending');
+                } else {
+                    $('body').removeClass('cl-body-notification-pending');
+                }
+            }
+
             scope.$watch('mainMenuObject.showMainMenu', function() {
                 resizeCommonArea();
             });
 
-            scope.$watch('notificationMenuObject.partialShowNotificationMenuAndGetAttention', function() {
+            scope.$watch('notificationMenuObject.partialShowNotificationMenuAndGetAttention', function(getAttention) {
                 resizeCommonArea();
+                setBodyClassToAttention(getAttention);
             });
         }
     };
