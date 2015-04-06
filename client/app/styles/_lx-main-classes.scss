@@ -151,12 +151,23 @@
   }
 }
 
+.cl-row-no-margins {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
 .cl-col-no-xs-padding {
   @media(max-width: $screen-xs-max) {
     padding-left: 0px;
     padding-right: 0px;
   }
 }
+
+.cl-col-no-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
 
 .cl-col-remove-right-padding {
   padding-right: 0px;
@@ -264,11 +275,8 @@
   position: relative;
   // Note $line-height-computed in the following calculation is the margin
   // at the bottom that is used in the bootstrap css panel definition.
-  height: ($sliding-display-area-height + $line-height-computed);
 
-  @media(max-width: $screen-xs-max) {
-    height: $sliding-display-area-height + $line-height-computed/2;
-  }
+  height: $sliding-display-area-height + $line-height-computed/4;
 }
 
 .cl-ng-view {
