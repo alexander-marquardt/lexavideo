@@ -60,7 +60,8 @@
                             <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
                                 <li ng-repeat="normalizedChatRoomName in normalizedRoomNamesList | orderBy: simpleArrayOrderByFn">
 
-                                        <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}">
+                                        <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}"
+                                           ng-click="gluePanel()">
                                             <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
 
                                                 <div class="bubble bubble-right cl-message-count-bubble-override"><i></i>
