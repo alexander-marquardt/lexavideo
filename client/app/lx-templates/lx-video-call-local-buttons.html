@@ -53,25 +53,31 @@ the status of the users buttons (ie. "microphone is muted") - this is necessary 
 is not enough space to show both messages without them overlapping. -->
 <div ng-show='true || !videoExchangeDisplayOverlayTrackerObject.currentlyShown'
      class="cl-selected-icon-status-overlay">
-    <span ng-show="localVideoObject.isMicrophoneMuted"
-         class="cl-show-hide-fade">
-        <span class="cl-video-status-icon">
-            <span class="cl-lx-call-control-wrapper-cfg">
-                <span class="icon-lx-microphone-cfg"></span>
-                <span class="icon-lx-thick-forward-slash-cfg"></span>
-                <span class="icon-lx-thin-forward-slash-cfg"></span>
+    <div style="float:right">
+        <div style="display: inline-block">
+            <span ng-show="localVideoObject.isMicrophoneMuted"
+                 class="cl-show-hide-fade">
+                <span class="cl-video-status-icon">
+                    <span class="cl-lx-call-control-wrapper-cfg">
+                        <span class="icon-lx-microphone-cfg"></span>
+                        <span class="icon-lx-thick-forward-slash-cfg"></span>
+                        <span class="icon-lx-thin-forward-slash-cfg"></span>
+                    </span>
+                </span>
             </span>
-        </span>
-    </span>
-
-    <span ng-show="localVideoObject.isWebcamMuted"
-         class="cl-show-hide-fade">
-        <span class="cl-video-status-icon">
-            <span class="cl-lx-call-control-wrapper-cfg">
-                <span class="icon-lx-video-camera-filled-cfg"></span>
-                <span class="icon-lx-thick-forward-slash-cfg"></span>
-                <span class="icon-lx-thin-forward-slash-cfg"></span>
+        </div>
+        
+        <div style="display: inline-block">
+            <span ng-show="localVideoObject.isWebcamMuted"
+                 class="cl-show-hide-fade">
+                <span class="cl-video-status-icon">
+                    <span class="cl-lx-call-control-wrapper-cfg">
+                        <span class="icon-lx-video-camera-filled-cfg"></span>
+                        <span class="icon-lx-thick-forward-slash-cfg"></span>
+                        <span class="icon-lx-thin-forward-slash-cfg"></span>
+                    </span>
+                </span>
             </span>
-        </span>
-    </span>
+        </div>
+    </div>
 </div>
