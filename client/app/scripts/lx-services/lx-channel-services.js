@@ -74,7 +74,7 @@ angular.module('lxChannel.services', [])
             };
         };
 
-        var onChannelMessage = function(self, scope) {
+        var onChannelMessage = function(scope) {
             return function(message) {
 
                 var localVideoObject = scope.localVideoObject;
@@ -264,10 +264,10 @@ angular.module('lxChannel.services', [])
             lxChannelSupportService.channelReady = false;
         };
 
-        var handler = function(self, scope) {
+        var handler = function(scope) {
             return {
                 'onopen': onChannelOpened(),
-                'onmessage': onChannelMessage(self, scope),
+                'onmessage': onChannelMessage(scope),
                 'onerror': onChannelError,
                 'onclose': onChannelClosed
             };
@@ -279,7 +279,7 @@ angular.module('lxChannel.services', [])
                 $log.info('*** Opening channel. ***');
                 try {
                     var channel = new goog.appengine.Channel(scope.lxMainViewCtrl.channelToken);
-                    lxChannelSupportService.socket = channel.open(handler(this, scope));
+                    lxChannelSupportService.socket = channel.open(handler(scope));
 
                 } catch(e) {
                     e.message = '\n\tError in openChannel\n\t' + e.message;
