@@ -298,7 +298,7 @@
     opacity: 0;
   }
   /**
-   * we fade-in/fade-out accordingly, upon adding/removing the ng-hide class
+   * we fade-in upon removing the ng-hide class
    */
   &.ng-hide-remove {
     animation: $slide-main-menu-duration fadeIn;
