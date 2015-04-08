@@ -17,8 +17,6 @@ $video-wrapper-zindex: 10;
 
 video {
   opacity: 1;
-  -webkit-transition-property: opacity;
-  -webkit-transition-duration: 1s;
   display: block; // remove 5 px gap at bottom
   width: 100%;
 }
