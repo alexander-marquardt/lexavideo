@@ -77,7 +77,8 @@ class RequestChannelToken(webapp2.RequestHandler):
 
     @handle_exceptions
     def post(self):
-        token_timeout = 300  # minutes
+        token_timeout = 24 * 60 - 1  # minutes
+        #token_timeout = 1  # minutes
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
         user_id = data_object['userId']
