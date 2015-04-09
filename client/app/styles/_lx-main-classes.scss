@@ -153,35 +153,20 @@ body{
     float: none;
 }
 
-/* Note: at first glance, it may appear that cl-row-no-xs-margins and cl-col-no-xs-padding serve no purpose,
+/* Note: at first glance, it may appear that cl-row-no-margins and cl-col-no-padding serve no purpose,
    however, if they are not used, then the right side of the page will be extended by 15px with blank space
    to accommodate the standard bootstrap formatting that uses negative margin on rows to offset the padding
    that is added in the columns. Removing these classes will cause a bottom scrollbar to appear even though
    there is nothing shown to the right of the contents. */
-.cl-row-no-xs-margins {
-  @media(max-width: $screen-xs-max) {
+.cl-row-no-margins {
     margin-left: 0px;
     margin-right: 0px;
-  }
-}
-
-.cl-row-no-margins {
-  margin-left: 0px;
-  margin-right: 0px;
-}
-
-.cl-col-no-xs-padding {
-  @media(max-width: $screen-xs-max) {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
 }
 
 .cl-col-no-padding {
     padding-left: 0px;
     padding-right: 0px;
 }
-
 
 .cl-col-remove-right-padding {
   padding-right: 0px;
