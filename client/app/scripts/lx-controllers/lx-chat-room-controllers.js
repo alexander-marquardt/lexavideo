@@ -60,9 +60,9 @@ angular.module('lxUseChatRoom.controllers', [])
 
             $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[data.roomId];
 
-            // Add the normalizedRoomName to normalizedRoomNamesList, but only if it is not already there.
-            if ($.inArray(data.normalizedChatRoomName, $scope.normalizedRoomNamesList) === -1) {
-                $scope.normalizedRoomNamesList.push(data.normalizedChatRoomName);
+            // Add the normalizedRoomName to normalizedOpenRoomNamesList, but only if it is not already there.
+            if ($.inArray(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList) === -1) {
+                $scope.normalizedOpenRoomNamesList.push(data.normalizedChatRoomName);
             }
 
         }, function(errorEnteringIntoRoomInfoObj) {

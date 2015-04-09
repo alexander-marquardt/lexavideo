@@ -64,7 +64,7 @@ angular.module('lxMainView.controllers', [])
         // The following structure contains a list of the room names, and is used for displaying a sorted list
         // of room names. Eg, it would contain ['room1', 'room5', 'room2', etc.]. Note, it is stored un-sorted,
         // and we use angular filters to do the sorting.
-        $scope.normalizedRoomNamesList = [];
+        $scope.normalizedOpenRoomNamesList = [];
 
         $scope.simpleArrayOrderByFn = function(x) {
             return x;

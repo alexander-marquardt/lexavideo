@@ -63,20 +63,20 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                    <li ng-repeat="normalizedChatRoomName in normalizedRoomNamesList | orderBy: simpleArrayOrderByFn">
+                                    <li ng-repeat="normalizedChatRoomNameInDropdown in normalizedOpenRoomNamesList | orderBy: simpleArrayOrderByFn">
 
-                                            <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}"
-                                               ng-click="gluePanel()">
-                                                <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
+                                            <a href="/{{ roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomNameAsWritten }}"
+                                               ng-click="normalizedChatRoomNameInDropdown == normalizedChatRoomName? gluePanel(): ''">
+                                                <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
 
                                                     <div class="bubble bubble-right cl-message-count-bubble-override"><i></i>
-                                                    {{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
+                                                    {{ chatPanelDict[roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
                                                     </div>
 
                                                 </span>
 
                                                 <span style="white-space:nowrap;">
-                                                    &nbsp;{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}&nbsp
+                                                    &nbsp;{{ roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomNameAsWritten }}&nbsp
                                                 </span>
                                             </a>
                                     </li>
