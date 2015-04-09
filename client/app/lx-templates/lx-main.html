@@ -11,28 +11,25 @@
             <div ng-controller="lxChatRoomCtrl">
 
                 <!-- ng-view will call in the appropriate template for the current URL location -->
-                <div class="cl-row-no-margins cl-hide-row-overflow"
-                        ng-class="mainMenuObject.showMainMenu? 'cl-xs-add-right-margin':''">
-                    <div class="row cl-row-no-xs-margins">
-                        <div class=" cl-main-ng-view-area-wrapper">
+                <div class="row cl-row-no-xs-margins cl-hide-row-overflow">
+                    <div class=" cl-main-ng-view-area-wrapper">
 
 
-                            <!-- lx-main-menu.html contains the "main" menu that displays website controls -->
-                            {% include 'lx-templates/lx-main-menu.html' %}
+                        <!-- lx-main-menu.html contains the "main" menu that displays website controls -->
+                        {% include 'lx-templates/lx-main-menu.html' %}
 
-                            <!-- Start the "common display area" -->
+                        <!-- Start the "common display area" -->
 
-                            <div ng-view class="cl-ng-view cl-fade-in-main-view"></div>
+                        <div ng-view class="cl-ng-view cl-fade-in-main-view"></div>
 
-                            <!-- Chat views are "faked" in the ng-view directive and are over-written by lx-chatbox.html.
-                                 Read comments in lx-chatbox.html for more details. -->
-                            {% include 'lx-templates/lx-chatbox.html' %}
+                        <!-- Chat views are "faked" in the ng-view directive and are over-written by lx-chatbox.html.
+                             Read comments in lx-chatbox.html for more details. -->
+                        {% include 'lx-templates/lx-chatbox.html' %}
 
-                            <!-- End the "common display area" -->
+                        <!-- End the "common display area" -->
 
-                            {% include 'lx-templates/lx-notifications.html' %}
+                        {% include 'lx-templates/lx-notifications.html' %}
 
-                        </div>
                     </div>
                 </div>
 
@@ -48,6 +45,5 @@
             {% include "lx-templates/lx-debugging-info.html" %}
 
         </div>
-
     </div>
 </div>
