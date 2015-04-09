@@ -1,4 +1,4 @@
-$sticky-footer-height: 50px;
+$sticky-footer-height: $chat-panel-heading-height;
 
 body{
   margin-bottom: $sticky-footer-height;
@@ -8,8 +8,8 @@ body{
   position: fixed;
   bottom: 0;
   width: 100%;
-  /* Set the fixed height of the footer here */
   height: $sticky-footer-height;
+  z-index: $zindex-navbar-fixed;
 }
 
 .cl-body-notification-pending {
@@ -329,4 +329,10 @@ hr.cl-hr-in-chat-panel {
   border-top: 1px solid $gray-light-more;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.well.cl-footer-well {
+  height: $sticky-footer-height;
+  box-sizing: border-box;
+  background: $brand-primary;
 }
