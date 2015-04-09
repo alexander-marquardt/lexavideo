@@ -3,12 +3,14 @@
 
 .navbar.cl-navbar {
   min-height: none;
+  border-radius: 4px;
+  text-align: center;
 }
 
 .navbar-nav.cl-navbar-nav {
   margin: 0;
-  float: left;
-  border-radius: 4px;
+  float: none;
+  display: inline-block;
   & > li {
     float: left; // override default behaviour, which stacks navbar on small screens.
 

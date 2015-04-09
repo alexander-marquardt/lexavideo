@@ -46,23 +46,26 @@
 
         </div>
     </div>
+
+    {% raw %}
     <div class="cl-sticky-footer">
         <div class="container cl-container-padding-and-margins">
             <div class="row cl-row-no-margins">
                 <div class="col-xs-12 cl-col-no-padding">
                     <nav class="navbar navbar-default cl-navbar">
                         <ul class="nav navbar-nav cl-navbar-nav">
-                            <li class="active">
-                                <a href="#">Foobar</a>
-                            </li>
-                            <li>
-                                <a href="#">Catfat</a>
-                            </li>
+                            <li><a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}">My chats</a>
+                            <li><a href="/">New chat</a>
+                            <li><a href="/">Friends</a>
+                            <li><a href="/">Profile</a>
+                            <li class="active"><a href="/">Settings</a>
+                            <li><a href="/">Logout</a>
                         </ul>
                     </nav>
                 </div>
             </div>
         </div>
     </div>
+    {% endraw %}
 
 </div>
