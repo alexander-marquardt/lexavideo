@@ -13,7 +13,8 @@
 
 {% from 'lx-templates/lx-macros.html' import moveAndResizeCommonDisplayArea %}
 
-
+<!-- ng-show if chatRoomNameFromUrl is set, as this indicates that one of the chatrooms needs to be displayed.
+     The "inner" ng-show will enable the correct chat room for display.-->
 <div ng-show="chatRoomDisplayObject.chatRoomNameFromUrl" class="cl-fade-in-chatbox-view">
     {{ moveAndResizeCommonDisplayArea() }}
 
