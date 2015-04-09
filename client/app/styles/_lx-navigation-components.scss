@@ -1,4 +1,25 @@
 
+
+
+.navbar.cl-navbar {
+  min-height: none;
+}
+
+.navbar-nav.cl-navbar-nav {
+  margin: 0;
+  float: left;
+  border-radius: 4px;
+  & > li {
+    float: left; // override default behaviour, which stacks navbar on small screens.
+
+    & > a {
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
+  }
+}
+
+
 .cl-menu-button {
   position: relative;
   vertical-align: middle;
