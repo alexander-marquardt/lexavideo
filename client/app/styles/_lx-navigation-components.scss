@@ -4,7 +4,7 @@
 .navbar.cl-navbar {
   min-height: none;
   border-radius: 4px;
-  background: $brand-primary;
+  background: $main-control-background;
 }
 
 .navbar-nav.cl-navbar-nav {
@@ -16,17 +16,24 @@
     & > a {
       padding-top: 15px;
       padding-bottom: 15px;
-      color: white;
+      color: black;
       &:hover {
-        background-color: $brand-primary-little-darker;
+        background-color: $main-control-hover-background;
       }
-      &:hover, &:active, &:focus {
+
+      &:active, &:focus {
+        color: black;
+      }
+
+      &:hover {
         color: white;
       }
+
     }
   }
   & > .active > a {
-    background-color: $brand-primary-darker;
+    background-color: $main-control-hover-background;
+    color: white;
   }
 }
 
