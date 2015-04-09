@@ -44,71 +44,77 @@
 
                     <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
 
-                        <!-- define the open chats button -->
-                        <div class="btn-group pull-left"
-                             ng-class="dropdownMenusStatuses.openChatsDropdownIsOpen ? 'open': ''">
-                            <button type="button" class="btn btn-primary"
-                                    ng-click="dropdownMenusStatuses.openChatsDropdownIsOpen=!dropdownMenusStatuses.openChatsDropdownIsOpen">
+                        <!-- if this chat panel is not currently shown, then remove the code that updates the
+                             list of groups and the group members. This removes watchers and ng-repeats that
+                             could slow down the app -->
+                        <div ng-if="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible">
+
+                            <!-- define the open chats button -->
+                            <div class="btn-group pull-left"
+                                 ng-class="dropdownMenusStatuses.openChatsDropdownIsOpen ? 'open': ''">
+                                <button type="button" class="btn btn-primary"
+                                        ng-click="dropdownMenusStatuses.openChatsDropdownIsOpen=!dropdownMenusStatuses.openChatsDropdownIsOpen">
+                                    <span style="display:inline-block;line-height:1em;">
+                                        <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
+                                    </span>
+                                    <span ng-if="trackUnseenMessageCountObject.unseenMessageCount">
+                                        {{ trackUnseenMessageCountObject.unseenMessageCount }}
+                                    </span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
+                                    <li ng-repeat="normalizedChatRoomName in normalizedRoomNamesList | orderBy: simpleArrayOrderByFn">
+
+                                            <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}"
+                                               ng-click="gluePanel()">
+                                                <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
+
+                                                    <div class="bubble bubble-right cl-message-count-bubble-override"><i></i>
+                                                    {{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
+                                                    </div>
+
+                                                </span>
+
+                                                <span style="white-space:nowrap;">
+                                                    &nbsp;{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}&nbsp
+                                                </span>
+                                            </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                            <span class="cl-chat-panel-name-size">
+                                {{ chatRoomDisplayObject.chatRoomNameFromUrl }}
+                            </span>
+
+                            <!-- define the group members button -->
+                            <div class="btn-group pull-right"
+                                 ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen ? 'open': ''">
+                                <button type="button" class="btn btn-primary"
+                                        ng-click="dropdownMenusStatuses.groupMembersDropdownIsOpen=!dropdownMenusStatuses.groupMembersDropdownIsOpen">
                                 <span style="display:inline-block;line-height:1em;">
-                                    <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
-                                </span>
-                                <span ng-if="trackUnseenMessageCountObject.unseenMessageCount">
-                                    {{ trackUnseenMessageCountObject.unseenMessageCount }}
+                                    <span class="icon-lx-users" style="display:inline-block;line-height:1em;"></span>
                                 </span>
                                 <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                <li ng-repeat="normalizedChatRoomName in normalizedRoomNamesList | orderBy: simpleArrayOrderByFn">
-
-                                        <a href="/{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}"
-                                           ng-click="gluePanel()">
-                                            <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
-
-                                                <div class="bubble bubble-right cl-message-count-bubble-override"><i></i>
-                                                {{ chatPanelDict[roomOccupancyDict[normalizedChatRoomName].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
-                                                </div>
-
+                                </button>
+                                <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
+                                    <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
+                                        <span style="white-space:nowrap;">
+                                            <span  class='cl-chat-group-video-icon-container'>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
+                                                    ng-click="showVideoElementsAndStartVideoFn('doVideoExchange', remoteClientObj.clientId)"
+                                                    ng-class="{'invisible disabled' : remoteClientObj.clientId == lxMainViewCtrl.clientId,
+                                                               'disabled' : videoExchangeObjectsDict[remoteClientObj.clientId].localVideoEnabledSetting == 'doVideoExchange'}">
+                                                    <span class="icon-lx-video-camera-filled"></span>
+                                                </button>
                                             </span>
-
-                                            <span style="white-space:nowrap;">
-                                                &nbsp;{{ roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten }}&nbsp
-                                            </span>
-                                        </a>
-                                </li>
-                            </ul>
-                        </div>
-
-
-                        <span class="cl-chat-panel-name-size">
-                            {{ chatRoomDisplayObject.chatRoomNameFromUrl }}
-                        </span>
-
-                        <!-- define the group members button -->
-                        <div class="btn-group pull-right"
-                             ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen ? 'open': ''">
-                            <button type="button" class="btn btn-primary"
-                                    ng-click="dropdownMenusStatuses.groupMembersDropdownIsOpen=!dropdownMenusStatuses.groupMembersDropdownIsOpen">
-                            <span style="display:inline-block;line-height:1em;">
-                                <span class="icon-lx-users" style="display:inline-block;line-height:1em;"></span>
-                            </span>
-                            <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
-                                <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
-                                    <span style="white-space:nowrap;">
-                                        <span  class='cl-chat-group-video-icon-container'>
-                                            <button type="button"
-                                                class="btn btn-sm btn-primary cl-chat-group-video-button-modifier"
-                                                ng-click="showVideoElementsAndStartVideoFn('doVideoExchange', remoteClientObj.clientId)"
-                                                ng-class="{'invisible disabled' : remoteClientObj.clientId == lxMainViewCtrl.clientId,
-                                                           'disabled' : videoExchangeObjectsDict[remoteClientObj.clientId].localVideoEnabledSetting == 'doVideoExchange'}">
-                                                <span class="icon-lx-video-camera-filled"></span>
-                                            </button>
+                                            {{ remoteClientObj.userName }}
                                         </span>
-                                        {{ remoteClientObj.userName }}
-                                    </span>
-                                </li>
-                            </ul>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
