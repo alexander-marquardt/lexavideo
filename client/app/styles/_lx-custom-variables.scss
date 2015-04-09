@@ -7,6 +7,9 @@ $brand-danger-lighter: #fee;
 $gray-light-more: mix($gray-light, $gray-lighter, 50%) !default;
 $gray-lighter-more: mix($gray-lighter, #FFF, 50%) !default;
 
+$brand-primary-little-darker: darken($brand-primary, 7.5%) !default;
+$brand-primary-darker: darken($brand-primary, 15%) !default;
+
 $main-control-background: $gray-light-more;
 $main-control-hover-background: $gray-dark;
 $main-control-color: black;

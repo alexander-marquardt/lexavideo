@@ -53,14 +53,19 @@
             <div class="row cl-row-no-margins">
                 <div class="col-xs-12 cl-col-no-padding">
                     <nav class="navbar navbar-default cl-navbar">
-                        <ul class="nav navbar-nav cl-navbar-nav">
+
+                        <ul class="nav navbar-nav cl-navbar-nav cl-navbar-nav-left">
+                            <li><a href="/">Logout</a>
+                        </ul>
+
+                        <ul class="nav navbar-nav cl-navbar-nav cl-navbar-nav-right">
                             <li><a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}">My chats</a>
                             <li><a href="/">New chat</a>
                             <li><a href="/">Friends</a>
                             <li><a href="/">Profile</a>
                             <li class="active"><a href="/">Settings</a>
-                            <li><a href="/">Logout</a>
                         </ul>
+
                     </nav>
                 </div>
             </div>

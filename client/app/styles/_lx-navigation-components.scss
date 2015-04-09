@@ -4,23 +4,39 @@
 .navbar.cl-navbar {
   min-height: none;
   border-radius: 4px;
-  text-align: center;
+  background: $brand-primary;
 }
 
 .navbar-nav.cl-navbar-nav {
   margin: 0;
-  float: none;
-  display: inline-block;
-  & > li {
+
+  & > li, & > .active {
     float: left; // override default behaviour, which stacks navbar on small screens.
 
     & > a {
       padding-top: 15px;
       padding-bottom: 15px;
+      color: white;
+      &:hover {
+        background-color: $brand-primary-little-darker;
+      }
+      &:hover, &:active, &:focus {
+        color: white;
+      }
     }
+  }
+  & > .active > a {
+    background-color: $brand-primary-darker;
   }
 }
 
+.navbar-nav.cl-navbar-nav.cl-navbar-nav-right {
+  float: right;
+}
+
+.navbar-nav.cl-navbar-nav.cl-navbar-nav-left {
+  float: left;
+}
 
 .cl-menu-button {
   position: relative;
