@@ -112,25 +112,18 @@ class ChatRoomInfo(ndb.Model):
 
     @classmethod
     @ndb.transactional(xg=True)
-    def txn_remove_client_from_room(cls, room_key, client_id):
+    def txn_remove_client_from_room(cls, room_key, user_id, client_id):
 
         logging.info('Removing client %s from room %s ' % (client_id, room_key))
 
+        # First, we remove the "client" from the room
         room_info_obj = room_key.get()
         try:
-            # if the user_id is not in the list, an exception will be raised
+            # if the client_id is not in the list, an exception will be raised
             room_info_obj.room_members_client_ids.remove(client_id)
         except:
             logging.error("client_id %s not found in room - why is it being removed?" % client_id)
-
         room_info_obj.put()
-
-        client_model_obj = users.ClientModel.get_by_id(client_id)
-
-        if (room_info_obj.key in client_model_obj.list_of_open_rooms_keys):
-            client_model_obj.list_of_open_rooms_keys.remove(room_info_obj.key)
-            client_model_obj.put()
-
 
         return room_info_obj
 
@@ -184,11 +177,13 @@ class ChatRoomInfo(ndb.Model):
             status_string = 'serverError'
             logging.error('Invalid room id: %d' % room_id)
 
-        # Now we need to add the room to the client model (ie. track which rooms the user has open in the current
-        # browser "client" window)
-        client_model_obj = users.ClientModel.get_by_id(client_id)
-        client_model_obj.list_of_open_rooms_keys.append(room_info_obj.key)
-        client_model_obj.put()
+        # Now we need to add the room to the user status tracker model (ie. track which rooms the user currently has open)
+        user_obj = users.UserModel.get_by_id(user_id)
+        user_status_tracker_obj = user_obj.user_status_tracker_key.get()
+        if user_id not in user_status_tracker_obj.list_of_open_rooms_keys:
+            user_status_tracker_obj.list_of_open_rooms_keys.append(room_info_obj.key)
+
+        user_status_tracker_obj.put()
 
 
         # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from

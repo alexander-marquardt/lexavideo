@@ -10,7 +10,7 @@ from google.appengine.ext import ndb
 from video_src import constants
 from video_src import http_helpers
 from video_src import messaging
-from video_src import room_module
+from video_src import chat_room_module
 from video_src import status_reporting
 from video_src import users
 from video_src import video_setup
@@ -49,7 +49,7 @@ class AddClientToRoom(webapp2.RequestHandler):
         client_id = data_object['clientId']
         room_id = data_object['roomId']
 
-        (room_info_obj, dummy_status_string) = room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id, user_id)
+        (room_info_obj, dummy_status_string) = chat_room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id, user_id)
         messaging.send_room_occupancy_to_room_clients(room_info_obj)
 
 
@@ -140,23 +140,33 @@ class DisconnectClient(webapp2.RequestHandler):
         client_obj = users.ClientModel.get_by_id(client_id)
 
         if client_obj:
-            for room_info_obj_key in client_obj.list_of_open_rooms_keys:
+            video_setup.VideoSetup.remove_video_setup_objects_containing_client_id(client_id)
 
-                video_setup.VideoSetup.remove_video_setup_objects_containing_client_id(client_id)
 
-                room_info_obj = room_info_obj_key.get()
+        user_obj = users.UserModel.get_by_id(user_id)
+        user_status_tracker_obj = user_obj.user_status_tracker_key.get()
 
-                if room_info_obj.has_client(client_id):
+        # We only have a single structure for tracking the chat rooms that the user (user_id) currently has open
+        # (as opposed to having a structure for each client_id that the user currently has), however,
+        # since we synchronize the clients so that the user is in the same rooms on all clients
+        # in general we should expect that every room that the user is currently in
+        # for any given client, he will also be in that room for all other clients.
+        for room_info_obj_key in user_status_tracker_obj.list_of_open_rooms_keys:
+            room_info_obj = room_info_obj_key.get()
 
-                    room_info_obj = room_module.ChatRoomInfo.txn_remove_client_from_room(room_info_obj.key, client_id)
+            if room_info_obj.has_client(client_id):
 
-                    logging.info('Client %s' % client_id + ' removed from room %d state: %s' % (room_info_obj.key.id(), str(room_info_obj)))
+                room_info_obj = chat_room_module.ChatRoomInfo.txn_remove_client_from_room(room_info_obj.key, user_id, client_id)
 
-                    # The 'active' user has disconnected from the room, so we want to send an update to the remote
-                    # user informing them of the new status.
-                    messaging.send_room_occupancy_to_room_clients(room_info_obj)
+                logging.info('Client %s' % client_id + ' removed from room %d state: %s' % (room_info_obj.key.id(), str(room_info_obj)))
 
-                    users.UserModel.txn_delete_client_model_and_remove_from_client_tracker(user_id, client_id)
+                # The 'active' user has disconnected from the room, so we want to send an update to the remote
+                # user informing them of the new status.
+                messaging.send_room_occupancy_to_room_clients(room_info_obj)
 
-                else:
-                    logging.error('Room %s (%d) does not have client %s - disconnect failed' % (room_info_obj.chat_room_name, room_info_obj.key.id(), client_id))
+                users.UserModel.txn_delete_client_model_and_remove_from_client_tracker(user_id, client_id)
+
+            else:
+                # This is probably not really an error. Change it later once we understand which conditions can trigger
+                # this branch to be executed.
+                logging.error('Room %s (%d) does not have client %s - not removed' % (room_info_obj.chat_room_name, room_info_obj.key.id(), client_id))

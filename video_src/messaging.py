@@ -5,7 +5,7 @@ import webapp2
 
 from google.appengine.api import channel
 
-from video_src import room_module
+from video_src import chat_room_module
 from video_src import http_helpers
 from video_src import video_setup
 
@@ -160,7 +160,7 @@ class MessageRoom(webapp2.RequestHandler):
         from_client_id = message_obj['fromClientId']
 
         try:
-            room_info_obj = room_module.ChatRoomInfo.get_by_id(room_id)
+            room_info_obj = chat_room_module.ChatRoomInfo.get_by_id(room_id)
             if room_info_obj:
                 handle_message_room(room_info_obj, from_client_id, message_obj)
             else:
