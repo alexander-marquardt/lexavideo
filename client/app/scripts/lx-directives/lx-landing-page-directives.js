@@ -47,7 +47,7 @@ angular.module('lxLandingPage.directives', [])
                      */
                     function() {
 
-                        var getRoomPromise = null;
+                        var checkIfRoomExistsPromise = null;
 
                         /*
                          Note: there is a confusing naming scheme used for the validity values, and in the html the $error.networkOrServerError
@@ -74,10 +74,10 @@ angular.module('lxLandingPage.directives', [])
 
                                     // This is the GET call to the server that will return the status of the room as
                                     // will be indicated by resolution of getRoomPromise.
-                                    getRoomPromise = lxHttpHandleRoomService.getRoom(inputElement.value);
-                                    $log.debug('getRoom called for: ' + inputElement.value);
+                                    checkIfRoomExistsPromise = lxHttpHandleRoomService.checkIfRoomExists(inputElement.value);
+                                    $log.debug('checkIfRoomExists called for: ' + inputElement.value);
 
-                                    getRoomPromise.then(function(response) {
+                                    checkIfRoomExistsPromise.then(function(response) {
 
                                         // Modify validity and feedback only if this is a response to the most recently
                                         // typed chatRoomName. This guards against a slow server response that could be

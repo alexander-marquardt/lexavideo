@@ -21,14 +21,14 @@ angular.module('lxHttp.services', [])
             },
 
 
-            getRoom : function(chatRoomNameAsWritten) {
+            checkIfRoomExists : function(chatRoomNameAsWritten) {
 
-                var getRoomPromise = null;
+                var httpPromise = null;
                 if (chatRoomNameAsWritten) {
                     var url = '/_lx/check_if_chat_room_exists/' + chatRoomNameAsWritten;
-                    getRoomPromise = $http.get(url);
+                    httpPromise = $http.get(url);
                 }
-                return getRoomPromise;
+                return httpPromise;
             }
         };
     })
