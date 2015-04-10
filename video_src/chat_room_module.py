@@ -238,6 +238,8 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
 
             # Need to get the URL encoded data from utf8. Note that json encoded data appears to already be decoded.
             chat_room_name_from_url = chat_room_name_from_url.decode('utf8')
+
+            # Convert camel case keys to underscore (standard python) keys
             room_dict = utils.convert_dict(room_dict, utils.camel_to_underscore)
 
             assert (room_dict['chat_room_name_as_written'] == chat_room_name_from_url)

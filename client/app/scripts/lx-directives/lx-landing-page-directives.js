@@ -47,7 +47,7 @@ angular.module('lxLandingPage.directives', [])
                      */
                     function() {
 
-                        var roomObj = null;
+                        var getRoomPromise = null;
 
                         /*
                          Note: there is a confusing naming scheme used for the validity values, and in the html the $error.networkOrServerError
@@ -73,26 +73,26 @@ angular.module('lxLandingPage.directives', [])
                                 delayAction(function() {
 
                                     // This is the GET call to the server that will return the status of the room as
-                                    // will be indicated by resolution of the promise on the roomObj.
-                                    roomObj = lxHttpHandleRoomService.getRoom(inputElement.value);
+                                    // will be indicated by resolution of getRoomPromise.
+                                    getRoomPromise = lxHttpHandleRoomService.getRoom(inputElement.value);
                                     $log.debug('getRoom called for: ' + inputElement.value);
 
-                                    roomObj && roomObj.$promise.then(function(data) {
+                                    getRoomPromise.then(function(response) {
 
                                         // Modify validity and feedback only if this is a response to the most recently
                                         // typed chatRoomName. This guards against a slow server response that could be
                                         // out-of-date if the user has typed in a new chatRoomName before receiving the
                                         // response.
-                                        if (data.chatRoomName === inputElement.value.toLowerCase()) {
+                                        if (response.data.chatRoomName === inputElement.value.toLowerCase()) {
 
-                                            if (data.roomIsRegistered === false || data.numInRoom === 0) {
+                                            if (response.data.roomIsRegistered === false || response.data.numInRoom === 0) {
                                                 ctrl.roomIsEmptyMessage = 'Chat room name is available!';
                                                 ctrl.submitButtonText = 'Create!';
                                             }
                                             else {
-                                                var msg = 'Chat ' + data.chatRoomName + ' has ' + data.numInRoom + ' occupant';
+                                                var msg = 'Chat ' + response.data.chatRoomName + ' has ' + response.data.numInRoom + ' occupant';
                                                 var plural = msg + 's';
-                                                ctrl.roomNumOccupantsMessage = data.numInRoom === 1 ? msg : plural;
+                                                ctrl.roomNumOccupantsMessage = response.data.numInRoom === 1 ? msg : plural;
                                                 ctrl.submitButtonText = 'Join!';
                                             }
                                         }
@@ -100,13 +100,13 @@ angular.module('lxLandingPage.directives', [])
                                             // This will likely occasionally happen, but if it happens too often then it is likely an indication
                                             // that something is going wrong. This can occur because of server delay in responding
                                             // to recent requests. It is not serious and can be ignored.
-                                            $log.warn('Warning: chat room name ' + data.chatRoomName +
+                                            $log.warn('Warning: chat room name ' + response.data.chatRoomName +
                                                 ' returned from server does not match most recently typed room name ' + inputElement.value);
                                         }
 
-                                    }, function() {
+                                    }, function(response) {
                                         ctrl.$setValidity('networkOrServerError', false);
-                                        $log.error('checkForRoomOccupancy - unknown network or server error');
+                                        $log.error('checkForRoomOccupancy - Error: ' + response.statusText);
                                     })
                                     ['finally'](function () {
                                         ctrl.userIsWaitingForRoomStatus = false;

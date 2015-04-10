@@ -5,11 +5,10 @@ angular.module('lxHttp.services', [])
     .factory('lxHttpHandleRoomService',
     function (
         $log,
-        $resource
+        $http
         ) {
 
         var handleRoomUrl = '/_lx/handle_room/';
-        var RoomResource = $resource(handleRoomUrl + ':chatRoomNameAsWritten', {chatRoomNameAsWritten: '@chatRoomNameAsWritten'});
 
         return {
             enterIntoRoom : function(roomObj) {
@@ -17,17 +16,20 @@ angular.module('lxHttp.services', [])
                 // to chatRoomName.
                 // Note: the returned value is a promise that will be fulfilled once the resource
                 // has been created on the server.
-                return new RoomResource(roomObj).$save();
+                var url = handleRoomUrl + roomObj.chatRoomNameAsWritten;
+                var httpPromise = $http.post(url, roomObj);
+                return httpPromise;
             },
 
 
             getRoom : function(chatRoomNameAsWritten) {
 
-                var roomObj = null;
+                var getRoomPromise = null;
                 if (chatRoomNameAsWritten) {
-                    roomObj = RoomResource.get({chatRoomNameAsWritten:chatRoomNameAsWritten});
+                    var url = handleRoomUrl + chatRoomNameAsWritten;
+                    getRoomPromise = $http.get(url);
                 }
-                return roomObj;
+                return getRoomPromise;
             }
         };
     })

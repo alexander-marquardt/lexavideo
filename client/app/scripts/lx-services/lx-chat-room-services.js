@@ -50,20 +50,20 @@ angular.module('lxChatRoom.services', [])
                 roomObj.userId = lxAppWideConstantsService.userId;
 
                 lxHttpHandleRoomService.enterIntoRoom(roomObj).then(
-                    function(data){
-                        if (data.statusString === 'roomJoined') {
+                    function(response){
+                        if (response.data.statusString === 'roomJoined') {
                             // everything OK
-                            deferredUserSuccessfullyEnteredRoom.resolve(data);
+                            deferredUserSuccessfullyEnteredRoom.resolve(response.data);
                         }
                         else {
                             // something went wrong - redirect back to login with an appropriate errorString
-                            failedToEnterRoom($log.warn, roomObj.chatRoomNameAsWritten, data.statusString, deferredUserSuccessfullyEnteredRoom);
+                            failedToEnterRoom($log.warn, roomObj.chatRoomNameAsWritten, response.data.statusString, deferredUserSuccessfullyEnteredRoom);
                         }
                     },
-                    function(data) {
+                    function(response) {
                         // Failed to enter into the room. The 'data' returned from the reject is actually an object
                         // containing another object called 'data'.
-                        failedToEnterRoom($log.error, roomObj.chatRoomNameAsWritten, data.data.statusString, deferredUserSuccessfullyEnteredRoom);
+                        failedToEnterRoom($log.error, roomObj.chatRoomNameAsWritten, response.data.statusString, deferredUserSuccessfullyEnteredRoom);
                     }
                 );
 
