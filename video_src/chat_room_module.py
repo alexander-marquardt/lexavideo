@@ -192,7 +192,7 @@ class ChatRoomInfo(ndb.Model):
 
 
 
-class HandleEnterIntoRoom(webapp2.RequestHandler):
+class CheckIfChatRoomExists(webapp2.RequestHandler):
     @handle_exceptions
     def get(self, chat_room_name_from_url=None):
         chat_room_name_from_url = chat_room_name_from_url.decode('utf8')
@@ -230,20 +230,20 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
                 rooms_list.append(room_dict)
 
             http_helpers.set_http_ok_json_response(self.response, rooms_list)
-
+            
+class EnterIntoRoom(webapp2.RequestHandler):
     @handle_exceptions
-    def post(self, chat_room_name_from_url):
+    def post(self):
         try:
             room_dict = json.loads(self.request.body)
 
             # Need to get the URL encoded data from utf8. Note that json encoded data appears to already be decoded.
-            chat_room_name_from_url = chat_room_name_from_url.decode('utf8')
 
             # Convert camel case keys to underscore (standard python) keys
             room_dict = utils.convert_dict(room_dict, utils.camel_to_underscore)
 
-            assert (room_dict['chat_room_name_as_written'] == chat_room_name_from_url)
-            normalized_chat_room_name = chat_room_name_from_url.lower()
+            chat_room_name_as_written = room_dict['chat_room_name_as_written']
+            normalized_chat_room_name = chat_room_name_as_written.lower()
             room_dict['normalized_chat_room_name'] = normalized_chat_room_name
 
 
@@ -252,10 +252,10 @@ class HandleEnterIntoRoom(webapp2.RequestHandler):
             # already formatted to be within bounds and characters checked by the client-side javascript.
             # Only if the user has somehow bypassed the javascript checks should we receive values that don't
             # conform to the constraints that we have placed.
-            if not constants.valid_chat_room_name_regex_compiled.match(chat_room_name_from_url):
+            if not constants.valid_chat_room_name_regex_compiled.match(chat_room_name_as_written):
                 raise Exception('Room name regexp did not match')
-            if len(chat_room_name_from_url) > constants.room_max_chars or len(chat_room_name_from_url) < constants.room_min_chars:
-                raise Exception('Room name length of %s is out of range' % len(chat_room_name_from_url))
+            if len(chat_room_name_as_written) > constants.room_max_chars or len(chat_room_name_as_written) < constants.room_min_chars:
+                raise Exception('Room name length of %s is out of range' % len(chat_room_name_as_written))
 
             response_dict = {}
             user_id = long(room_dict['user_id'])

@@ -8,7 +8,6 @@ angular.module('lxHttp.services', [])
         $http
         ) {
 
-        var handleRoomUrl = '/_lx/handle_room/';
 
         return {
             enterIntoRoom : function(roomObj) {
@@ -16,7 +15,7 @@ angular.module('lxHttp.services', [])
                 // to chatRoomName.
                 // Note: the returned value is a promise that will be fulfilled once the resource
                 // has been created on the server.
-                var url = handleRoomUrl + roomObj.chatRoomNameAsWritten;
+                var url = '/_lx/handle_room/';
                 var httpPromise = $http.post(url, roomObj);
                 return httpPromise;
             },
@@ -26,7 +25,7 @@ angular.module('lxHttp.services', [])
 
                 var getRoomPromise = null;
                 if (chatRoomNameAsWritten) {
-                    var url = handleRoomUrl + chatRoomNameAsWritten;
+                    var url = '/_lx/check_if_chat_room_exists/' + chatRoomNameAsWritten;
                     getRoomPromise = $http.get(url);
                 }
                 return getRoomPromise;
