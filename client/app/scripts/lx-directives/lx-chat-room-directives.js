@@ -51,12 +51,12 @@ angular.module('lxChatRoom.directives', [])
                 // If the user is not focused on the current window, and then comes back to look at the current window
                 // then the messages shown in the chat panel that is open in the window will be considered to have been
                 // viewed, and the message counts will be adjusted accordingly.
-                scope.$watch('presenceStatus.ACTIVE.active', function(activePresenceBool) {
+                scope.$watch('presenceStatus.ACTIVE.isCurrentState', function(activeIsCurrentState) {
                     var chatPanelObject = scope.chatRoomDisplayObject.chatPanelObject;
-                    if (activePresenceBool === true && chatPanelObject) {
+                    if (activeIsCurrentState === true && chatPanelObject) {
                         lxShowNumMessagesService.stopFlashingTitle();
                         lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject,
-                                                                                scope.presenceStatus.ACTIVE.active);
+                                                                                scope.presenceStatus.ACTIVE.isCurrentState);
                     }
                 });
             }

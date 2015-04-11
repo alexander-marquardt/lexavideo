@@ -80,9 +80,9 @@ angular.module('lxUtility.services', [])
 
 
         var self = {
-            subtractNumMessagesSeen: function(trackUnseenMessageCountObject, chatPanelObject, presenceStateActiveBoolean) {
+            subtractNumMessagesSeen: function(trackUnseenMessageCountObject, chatPanelObject, activeIsCurrentState) {
                 clearNumMessagesInChatPanel(trackUnseenMessageCountObject, chatPanelObject);
-                self.showNumMessagesInDocumentTitle(trackUnseenMessageCountObject, presenceStateActiveBoolean)
+                self.showNumMessagesInDocumentTitle(trackUnseenMessageCountObject, activeIsCurrentState)
             },
                     // function that stops the title from flashing the number of new messages
             stopFlashingTitle: function() {
@@ -93,7 +93,7 @@ angular.module('lxUtility.services', [])
 
             // Displays the number of messages received in the document title , and flashes the
             // number of messages to get the users attention.
-            showNumMessagesInDocumentTitle: function (trackUnseenMessageCountObject, presenceStateActiveBoolean) {
+            showNumMessagesInDocumentTitle: function (trackUnseenMessageCountObject, activeIsCurrentState) {
 
                 // show the number of messages in the document title.
                 if (trackUnseenMessageCountObject.unseenMessageCount) {
@@ -103,7 +103,7 @@ angular.module('lxUtility.services', [])
                     // flashing, we stop the flashing. It should only start to flash again in the case
                     // that the user is not active, and that the number of unseen messages has increased
                     // in the time that the user was not active.
-                    if (presenceStateActiveBoolean) {
+                    if (activeIsCurrentState) {
                         self.stopFlashingTitle();
                     }
 
@@ -113,7 +113,7 @@ angular.module('lxUtility.services', [])
                         // flashing, then don't start any new timer-loops.
                         if (!timerId) {
                             // don't start flashing until 10 seconds have passed.
-                            var timeoutDelay = 10000;
+                            var timeoutDelay = 2000;
                             // the following timer is used for switching between the title with and without the number of
                             // new messages included in the title.
                             var timeoutFn = function () {
@@ -128,7 +128,7 @@ angular.module('lxUtility.services', [])
                                     }
                                     numMessagesIsShownToggle = !numMessagesIsShownToggle;
                                     // after initial wait, start flashing every X seconds.
-                                    timeoutDelay = 1000;
+                                    timeoutDelay = 500;
 
                                     timeoutFn();
 

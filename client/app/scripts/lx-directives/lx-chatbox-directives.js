@@ -115,14 +115,14 @@ angular.module('lxChatbox.directives', [])
 
                         // The following code will keep track of "un-noticed" messages that the user has received
                         if (!scope.chatPanelDict[chatRoomId].chatPanelIsGlued || !scope.chatPanelDict[chatRoomId].chatPanelIsCurrentlyVisible ||
-                            !scope.presenceStatus.ACTIVE.active) {
+                            !scope.presenceStatus.ACTIVE.isCurrentState) {
 
                             scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed ++;
                             scope.trackUnseenMessageCountObject.unseenMessageCount++;
                         }
 
                         lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject,
-                                                                                scope.presenceStatus.ACTIVE.active);
+                                                                                scope.presenceStatus.ACTIVE.isCurrentState);
 
                     }
                 });

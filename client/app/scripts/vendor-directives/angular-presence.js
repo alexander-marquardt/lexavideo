@@ -69,6 +69,7 @@ angular.module('presenceModule', []).directive('presenceDirective', [
                     }
                     state.name = key;
                     state.enter = state.enter || 0;
+                    state.isCurrentState = false;
                 });
                 return statesInput;
             }
@@ -127,9 +128,9 @@ angular.module('presenceModule', []).directive('presenceDirective', [
             var oldStateId = currentStateId;
             if (states[oldStateId]) {
                 states[oldStateId].leftOn = new Date();
-                states[oldStateId].active = false;
+                states[oldStateId].isCurrentState = false;
             }
-            states[newStateId].active = true;
+            states[newStateId].isCurrentState = true;
             states[newStateId].enteredOn = new Date();
             states[newStateId].enteredFrom = states[oldStateId] ? states[oldStateId].name : undefined;
             currentStateId = newStateId;

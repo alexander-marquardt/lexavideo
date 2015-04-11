@@ -50,7 +50,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // from the "global" unseenMessageCount before zeroing it.
             if (data.roomId in $scope.chatPanelDict) {
                 lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject,
-                    $scope.chatPanelDict[data.roomId], $scope.presenceStatus.ACTIVE.active);
+                    $scope.chatPanelDict[data.roomId], $scope.presenceStatus.ACTIVE.isCurrentState);
             }
 
             $scope.chatPanelDict[data.roomId] = {
