@@ -172,3 +172,14 @@ class DisconnectClient(webapp2.RequestHandler):
                 # This is probably not really an error. Change it later once we understand which conditions can trigger
                 # this branch to be executed.
                 logging.info('Room %s (%d) does not have client %s - probably already removed' % (room_info_obj.normalized_chat_room_name, room_info_obj.key.id(), client_id))
+
+
+class AutoDisconnectClient(DisconnectClient):
+    def post(self):
+        logging.info('Executing AutoDisconnectClient')
+        super(AutoDisconnectClient, self).post()
+
+class ManuallyDisconnectClient(DisconnectClient):
+    def post(self):
+        logging.info('Executing ManuallyDisconnectClient')
+        super(ManuallyDisconnectClient, self).post()
