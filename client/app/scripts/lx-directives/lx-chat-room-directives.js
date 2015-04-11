@@ -115,4 +115,38 @@ angular.module('lxChatRoom.directives', [])
                 });
             }
         };
+    })
+
+
+    .directive('lxWatchForErrorEnteringIntoRoom',
+    function(
+        lxModalSupportService
+        )
+    {
+
+        return {
+            restrict: 'A',
+            link: function(scope) {
+                scope.$watch('mainGlobalControllerObj.errorEnteringIntoRoomInfoObj', function(errorEnteringIntoRoomInfoObj) {
+
+                    if (errorEnteringIntoRoomInfoObj !== null) {
+                        lxModalSupportService.showStandardModalWindowFromTemplate(
+                                '<div class="modal-header">' +
+                                '<h3 class="modal-title">Error entering into room ' + errorEnteringIntoRoomInfoObj.pageNameThatCausedError + '</h3>' +
+                                '<div class="modal-body">' +
+                                'Unable to enter into room: <strong>' +
+                                errorEnteringIntoRoomInfoObj.pageNameThatCausedError + '</strong>' +
+                                ' due to error code: ' + errorEnteringIntoRoomInfoObj.statusString  + '<br>' +
+                                '<a ng-click="modalOkFn()" href=' +
+                                errorEnteringIntoRoomInfoObj.pageUrlThatCausedError + '>Try Again </a>' +
+                                '</div>' +
+                                '<div class="modal-footer">' +
+                                '<button class="btn btn-primary" ng-click="modalOkFn()">Close</button>' +
+                                '</div>' +
+                                '</div>');
+                        scope.mainGlobalControllerObj.errorEnteringIntoRoomInfoObj = null;
+                    }
+                });
+            }
+        };
     });

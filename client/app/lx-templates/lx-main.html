@@ -8,7 +8,7 @@
 
         {% include "lx-templates/lx-title-row.html" %}
 
-        <div ng-controller="lxChatRoomCtrl">
+        <div ng-controller="lxChatRoomCtrl" lx-watch-for-error-entering-into-room>
 
             <!-- ng-view will call in the appropriate template for the current URL location -->
             <div class="row cl-row-no-margins cl-hide-row-overflow">
