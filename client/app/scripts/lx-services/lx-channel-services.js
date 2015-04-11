@@ -300,11 +300,11 @@ angular.module('lxChannel.services', [])
         // Also, each time the server receives a heartbeat, it will respond with an acknowledgement on the channel,
         // and if this is not received within an expected "response time", then the channel is assumed to have failed
         // and will be re initialized.
-        var startClientHeartbeat = function(clientId) {
-            lxHttpChannelService.sendClientHeartbeat(clientId);
+        var startClientHeartbeat = function(clientId, presenceStatus) {
+            lxHttpChannelService.sendClientHeartbeat(clientId, presenceStatus);
             var timeoutFn = function() {
                 timerId = $timeout(function() {
-                    lxHttpChannelService.sendClientHeartbeat(clientId);
+                    lxHttpChannelService.sendClientHeartbeat(clientId, presenceStatus);
                     timeoutFn();
                 }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
             };
@@ -325,7 +325,7 @@ angular.module('lxChannel.services', [])
 
                     // Heartbeat updates the server so that it knows that the current user is still connected.
                     stopClientHeartbeat();
-                    startClientHeartbeat(clientId);
+                    startClientHeartbeat(clientId, scope.presenceStatus);
 
                 }, function () {
                     scope.lxMainViewCtrl.channelToken = 'Failed to get channelToken';

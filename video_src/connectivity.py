@@ -25,10 +25,11 @@ class ClientHeartbeat(webapp2.RequestHandler):
     def post(self):
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
+        presence_state = data_object['presenceState']
 
         client_model = users.ClientModel(id=str(client_id))
 
-        logging.info('heartbeat received from client_id %s' % client_id)
+        logging.info('heartbeat of %s received from client_id %s' % (presence_state, client_id))
 
         # room_info_obj = room_module.ChatRoomInfo.get_room_by_id(room_id)
         #

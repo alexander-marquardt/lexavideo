@@ -44,8 +44,11 @@ angular.module('lxHttp.services', [])
 
             // this function will be periodically called so that that room will be up-to-date with the users
             // that are currently in the room.
-            sendClientHeartbeat: function(clientId) {
-                var postData = {'clientId': clientId};
+            sendClientHeartbeat: function(clientId, presenceStatus) {
+                var postData = {
+                    'clientId': clientId,
+                    'presenceState': presenceStatus.getCurrent().name
+                };
                 $http.post('/_lx/channel/user_heartbeat/', postData);
             },
 
