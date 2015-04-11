@@ -231,23 +231,7 @@ angular.module('lxMainView.controllers', [])
             openChatsDropdownIsOpen: true
         };
 
-        lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function(response) {
-            $scope.lxMainViewCtrl.channelToken = response.data.channelToken;
-
-            lxChannelService.openChannel($scope);
-
-            $window.onbeforeunload = function () {
-                $log.debug('Manually disconnecting channel on window unload event.');
-                lxHttpChannelService.manuallyDisconnectChannel($scope.lxMainViewCtrl.clientId);
-            };
-
-            // Periodically update the room so that the server knows if the user is currently in the room.
-            // lxChannelService.startClientHeartbeat($scope.lxMainViewCtrl.clientId);
-
-        }, function() {
-            $scope.lxMainViewCtrl.channelToken = 'Failed to get channelToken';
-            $scope.lxMainViewCtrl.clientId = 'Failed to get clientId';
-        });
+        lxChannelService.initializeChannel($scope, clientId, lxAppWideConstantsService.userId);
 
 
         $scope.$watch('mainGlobalControllerObj.errorEnteringIntoRoomInfoObj', function(errorEnteringIntoRoomInfoObj) {

@@ -272,19 +272,40 @@ angular.module('lxChannel.services', [])
                 'onclose': onChannelClosed
             };
         };
+        var openChannel = function(scope) {
+
+            $log.info('*** Opening channel. ***');
+            try {
+                var channel = new goog.appengine.Channel(scope.lxMainViewCtrl.channelToken);
+                lxChannelSupportService.socket = channel.open(handler(scope));
+
+            } catch(e) {
+                e.message = '\n\tError in openChannel\n\t' + e.message;
+                $log.error(e);
+            }
+        };
 
         return {
-            openChannel: function(scope) {
 
-                $log.info('*** Opening channel. ***');
-                try {
-                    var channel = new goog.appengine.Channel(scope.lxMainViewCtrl.channelToken);
-                    lxChannelSupportService.socket = channel.open(handler(scope));
+            
+            initializeChannel: function(scope, clientId, userId) {
+                lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function (response) {
+                    scope.lxMainViewCtrl.channelToken = response.data.channelToken;
 
-                } catch(e) {
-                    e.message = '\n\tError in openChannel\n\t' + e.message;
-                    $log.error(e);
-                }
+                    openChannel(scope);
+
+                    $window.onbeforeunload = function () {
+                        $log.debug('Manually disconnecting channel on window unload event.');
+                        lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainViewCtrl.clientId);
+                    };
+
+                    // Periodically update the room so that the server knows if the user is currently in the room.
+                    // lxChannelService.startClientHeartbeat(scope.lxMainViewCtrl.clientId);
+
+                }, function () {
+                    scope.lxMainViewCtrl.channelToken = 'Failed to get channelToken';
+                    scope.lxMainViewCtrl.clientId = 'Failed to get clientId';
+                });
             }
 
 //            startClientHeartbeat: function(clientId) {
