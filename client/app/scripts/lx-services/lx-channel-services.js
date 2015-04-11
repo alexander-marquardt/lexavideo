@@ -50,6 +50,7 @@ angular.module('lxChannel.services', [])
     function($log,
              $timeout,
              $rootScope,
+             $window,
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxCallService,
