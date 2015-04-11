@@ -1,77 +1,75 @@
 
-<div >
-    <div >
-        <div class="container cl-container-padding-and-margins">
+<div presence-directive ng-controller="presenceCtrl">
+    <div class="container cl-container-padding-and-margins">
 
 
 
-            <div lx-show-unseen-message-count-directive></div>
+        <div lx-show-unseen-message-count-directive></div>
 
-            {% include "lx-templates/lx-title-row.html" %}
+        {% include "lx-templates/lx-title-row.html" %}
 
-            <div ng-controller="lxChatRoomCtrl">
+        <div ng-controller="lxChatRoomCtrl">
 
-                <!-- ng-view will call in the appropriate template for the current URL location -->
-                <div class="row cl-row-no-margins cl-hide-row-overflow">
-                    <div class=" cl-main-ng-view-area-wrapper">
+            <!-- ng-view will call in the appropriate template for the current URL location -->
+            <div class="row cl-row-no-margins cl-hide-row-overflow">
+                <div class=" cl-main-ng-view-area-wrapper">
 
 
-                        <!-- lx-main-menu.html contains the "main" menu that displays website controls -->
-                        {% include 'lx-templates/lx-main-menu.html' %}
+                    <!-- lx-main-menu.html contains the "main" menu that displays website controls -->
+                    {% include 'lx-templates/lx-main-menu.html' %}
 
-                        <!-- Start the "common display area" -->
+                    <!-- Start the "common display area" -->
 
-                        <div ng-view class="cl-ng-view cl-fade-in-main-view"></div>
+                    <div ng-view class="cl-ng-view cl-fade-in-main-view"></div>
 
-                        <!-- Chat views are "faked" in the ng-view directive and are over-written by lx-chatbox.html.
-                             Read comments in lx-chatbox.html for more details. -->
-                        {% include 'lx-templates/lx-chatbox.html' %}
+                    <!-- Chat views are "faked" in the ng-view directive and are over-written by lx-chatbox.html.
+                         Read comments in lx-chatbox.html for more details. -->
+                    {% include 'lx-templates/lx-chatbox.html' %}
 
-                        <!-- End the "common display area" -->
+                    <!-- End the "common display area" -->
 
-                        {% include 'lx-templates/lx-notifications.html' %}
+                    {% include 'lx-templates/lx-notifications.html' %}
 
-                    </div>
                 </div>
-
-                {% include "lx-templates/lx-video-elements.html" %}
-
             </div>
 
-
-
-            <div lx-initialize-channel-directive></div>
-            <div lx-initialize-turn-directive></div>
-
-            {% include "lx-templates/lx-debugging-info.html" %}
+            {% include "lx-templates/lx-video-elements.html" %}
 
         </div>
 
-    {% raw %}
-        <div class="cl-sticky-footer">
-            <div class="container cl-container-padding-and-margins">
-                <div class="row cl-row-no-margins">
-                    <div class="col-xs-12 cl-col-no-padding">
-                        <nav class="navbar navbar-default cl-navbar">
 
-                            <ul class="nav navbar-nav cl-navbar-nav cl-navbar-nav-left">
-                                <li><a href="/">Logout</a>
-                            </ul>
 
-                            <ul class="nav navbar-nav cl-navbar-nav cl-navbar-nav-right">
-                                <li><a href="/">New chat</a>
-                                <li ng-if="chatRoomDisplayObject.lastChatRoomNameFromUrl"><a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}">My chats</a>
-                                <!--<li><a href="/">Friends</a>-->
-                                <!--<li><a href="/">Profile</a>-->
-                                <!--<li class="active"><a href="/">Settings</a>-->
-                                <li><a lx-notification-menu-button-directive lx-click-once-directive></a>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endraw %}
+        <div lx-initialize-channel-directive></div>
+        <div lx-initialize-turn-directive></div>
+
+        {% include "lx-templates/lx-debugging-info.html" %}
 
     </div>
+
+{% raw %}
+    <div class="cl-sticky-footer">
+        <div class="container cl-container-padding-and-margins">
+            <div class="row cl-row-no-margins">
+                <div class="col-xs-12 cl-col-no-padding">
+                    <nav class="navbar navbar-default cl-navbar">
+
+                        <ul class="nav navbar-nav cl-navbar-nav cl-navbar-nav-left">
+                            <li><a href="/">Logout</a>
+                        </ul>
+
+                        <ul class="nav navbar-nav cl-navbar-nav cl-navbar-nav-right">
+                            <li><a href="/">New chat</a>
+                            <li ng-if="chatRoomDisplayObject.lastChatRoomNameFromUrl"><a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}">My chats</a>
+                            <!--<li><a href="/">Friends</a>-->
+                            <!--<li><a href="/">Profile</a>-->
+                            <!--<li class="active"><a href="/">Settings</a>-->
+                            <li><a lx-notification-menu-button-directive lx-click-once-directive></a>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endraw %}
+
 </div>

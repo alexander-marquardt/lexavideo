@@ -11,6 +11,7 @@ var videoApp = angular.module('videoApp', [
     'lxLandingPage.controllers',
     'lxMainView.controllers',
     'lxVideo.controllers',
+    'presence.controllers',
 
     // proprietary directives
     'lxChatbox.directives',
@@ -38,6 +39,7 @@ var videoApp = angular.module('videoApp', [
 
     // vendor directives
     'scrollGlue.directives',
+    'presenceModule',
 
     // angular services
     'ngAnimate',
