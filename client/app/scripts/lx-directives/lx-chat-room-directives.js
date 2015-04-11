@@ -54,8 +54,9 @@ angular.module('lxChatRoom.directives', [])
                 scope.$watch('presenceStatus.ACTIVE.active', function(activePresenceBool) {
                     var chatPanelObject = scope.chatRoomDisplayObject.chatPanelObject;
                     if (activePresenceBool === true && chatPanelObject) {
-                        lxShowNumMessagesService.stopFlashingTitle(scope.trackUnseenMessageCountObject, chatPanelObject);
-                        lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject);
+                        lxShowNumMessagesService.stopFlashingTitle();
+                        lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject,
+                                                                                scope.presenceStatus.ACTIVE.active);
                     }
                 });
             }

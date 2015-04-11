@@ -80,12 +80,12 @@ angular.module('lxUtility.services', [])
 
 
         var self = {
-            subtractNumMessagesSeen: function(trackUnseenMessageCountObject, chatPanelObject) {
+            subtractNumMessagesSeen: function(trackUnseenMessageCountObject, chatPanelObject, presenceStateActiveBoolean) {
                 clearNumMessagesInChatPanel(trackUnseenMessageCountObject, chatPanelObject);
-                self.showNumMessagesInDocumentTitle(trackUnseenMessageCountObject)
+                self.showNumMessagesInDocumentTitle(trackUnseenMessageCountObject, presenceStateActiveBoolean)
             },
                     // function that stops the title from flashing the number of new messages
-            stopFlashingTitle: function(trackUnseenMessageCountObject, chatPanelObject) {
+            stopFlashingTitle: function() {
                 // remove blinking of the number of messages
                 $timeout.cancel(timerId);
                 timerId = null;
@@ -93,37 +93,49 @@ angular.module('lxUtility.services', [])
 
             // Displays the number of messages received in the document title , and flashes the
             // number of messages to get the users attention.
-            showNumMessagesInDocumentTitle: function (trackUnseenMessageCountObject) {
+            showNumMessagesInDocumentTitle: function (trackUnseenMessageCountObject, presenceStateActiveBoolean) {
 
                 // show the number of messages in the document title.
                 if (trackUnseenMessageCountObject.unseenMessageCount) {
                     document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
 
-                    // The remainder of this code deals with making the number of messages flash in the document title.
-                    // First, check to see if the title is already flashing by seeing if timerId has been set. If it is already
-                    // flashing, then don't start any new timer-loops.
-                    if (!timerId) {
-                        // don't start flashing until 10 seconds have passed.
-                        var timeoutDelay = 10000;
-                        // the following timer is used for switching between the title with and without the number of
-                        // new messages included in the title.
-                        var timeoutFn = function () {
-                            timerId = $timeout(function () {
-                                if (trackUnseenMessageCountObject.unseenMessageCount) {
-                                    if (numMessagesIsShownToggle) {
-                                        document.title = $('#id-document-title-div').text();
-                                    } else {
-                                        document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
-                                    }
-                                }
-                                numMessagesIsShownToggle = !numMessagesIsShownToggle;
-                                // after initial wait, start flashing every X seconds.
-                                timeoutDelay = 1000;
+                    // If the user is active, or if the user becomes active on a page that has a title
+                    // flashing, we stop the flashing. It should only start to flash again in the case
+                    // that the user is not active, and that the number of unseen messages has increased
+                    // in the time that the user was not active.
+                    if (presenceStateActiveBoolean) {
+                        self.stopFlashingTitle();
+                    }
 
-                                timeoutFn();
-                            }, timeoutDelay);
-                        };
-                        timeoutFn();
+                    else {
+                        // The remainder of this code deals with making the number of messages flash in the document title.
+                        // First, check to see if the title is already flashing by seeing if timerId has been set. If it is already
+                        // flashing, then don't start any new timer-loops.
+                        if (!timerId) {
+                            // don't start flashing until 10 seconds have passed.
+                            var timeoutDelay = 10000;
+                            // the following timer is used for switching between the title with and without the number of
+                            // new messages included in the title.
+                            var timeoutFn = function () {
+                                timerId = $timeout(function () {
+
+                                    if (trackUnseenMessageCountObject.unseenMessageCount) {
+                                        if (numMessagesIsShownToggle) {
+                                            document.title = $('#id-document-title-div').text();
+                                        } else {
+                                            document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
+                                        }
+                                    }
+                                    numMessagesIsShownToggle = !numMessagesIsShownToggle;
+                                    // after initial wait, start flashing every X seconds.
+                                    timeoutDelay = 1000;
+
+                                    timeoutFn();
+
+                                }, timeoutDelay);
+                            };
+                            timeoutFn();
+                        }
                     }
                 } else {
                     document.title = $('#id-document-title-div').text();

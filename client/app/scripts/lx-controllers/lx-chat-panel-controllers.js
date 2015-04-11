@@ -88,7 +88,8 @@ angular.module('lxChatbox.controllers', [])
             return scope.chatPanelDict[scope.roomOccupancyObject.chatRoomId].chatPanelIsGlued;
         }, function(chatPanelIsGlued) {
             if (chatPanelIsGlued) {
-                lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject, $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId]);
+                lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject,
+                    $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId], $scope.presenceStatus.ACTIVE.active);
             }
         });
 
