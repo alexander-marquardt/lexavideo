@@ -11,7 +11,7 @@ var videoApp = angular.module('videoApp', [
     'lxLandingPage.controllers',
     'lxMainView.controllers',
     'lxVideo.controllers',
-    'presence.controllers',
+    'lxPresence.controllers',
 
     // proprietary directives
     'lxChatbox.directives',
@@ -32,6 +32,7 @@ var videoApp = angular.module('videoApp', [
     'lxErrorHandling.services',
     'lxGlobalVarsAndConstants.services',
     'lxHttp.services',
+    'lxPresence.services',
     'lxVideoSetup.services',
     'lxModalSupport.services',
     'lxUtility.services',
