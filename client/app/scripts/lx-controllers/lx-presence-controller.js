@@ -1,8 +1,9 @@
 angular.module('presence.controllers', ['presenceModule'])
-    .factory('states', function($presence) {
+    .factory('presenceStatus', function($presence) {
         return $presence.init({
             ACTIVE : {
-                enter: 0
+                enter: 0,
+                initial: true
             },
             IDLE : {
                 enter: 2000
@@ -15,19 +16,19 @@ angular.module('presence.controllers', ['presenceModule'])
             }
         });
     })
-    .controller('presenceCtrl', function($log, $scope, states) {
-        $scope.states = states;
+    .controller('presenceCtrl', function($log, $scope, presenceStatus) {
+        $scope.presenceStatus = presenceStatus;
 
-        states.onChange(function(state) {
+        presenceStatus.onChange(function(state) {
             $scope.text = state.name;
             $log.log('onChage: ' + state.name);
         });
 
-        states.ACTIVE.onEnter(function() {
+        presenceStatus.ACTIVE.onEnter(function() {
            $log.log('Entering ACTIVE')
         });
 
-        states.ACTIVE.onLeave(function() {
+        presenceStatus.ACTIVE.onLeave(function() {
             $log.log('Leaving ACTIVE');
         });
     });
