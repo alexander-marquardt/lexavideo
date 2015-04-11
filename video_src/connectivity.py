@@ -28,6 +28,8 @@ class ClientHeartbeat(webapp2.RequestHandler):
 
         client_model = users.ClientModel(id=str(client_id))
 
+        logging.info('heartbeat received from client_id %s' % client_id)
+
         # room_info_obj = room_module.ChatRoomInfo.get_room_by_id(room_id)
         #
         # # check if the user is already in the room, and add them if they are not in the room. Otherwise,
@@ -169,4 +171,4 @@ class DisconnectClient(webapp2.RequestHandler):
             else:
                 # This is probably not really an error. Change it later once we understand which conditions can trigger
                 # this branch to be executed.
-                logging.error('Room %s (%d) does not have client %s - not removed' % (room_info_obj.chat_room_name, room_info_obj.key.id(), client_id))
+                logging.info('Room %s (%d) does not have client %s - probably already removed' % (room_info_obj.normalized_chat_room_name, room_info_obj.key.id(), client_id))

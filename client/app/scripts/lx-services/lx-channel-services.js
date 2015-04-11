@@ -286,10 +286,33 @@ angular.module('lxChannel.services', [])
             }
         };
 
-        return {
+        var timerId = null;
 
-            
-            initializeChannel: function(scope, clientId, userId) {
+        // Stop sending heartbeats to the server. Intended to be called before
+        // starting a new heartbeat, so that we don't have multiple timer loops
+        // running at the same time.
+        var stopClientHeartbeat = function() {
+            $timeout.cancel(timerId);
+            timerId = null;
+        };
+
+        // Send periodic updates to the server so that the server can track the presence status of each user.
+        // Also, each time the server receives a heartbeat, it will respond with an acknowledgement on the channel,
+        // and if this is not received within an expected "response time", then the channel is assumed to have failed
+        // and will be re initialized.
+        var startClientHeartbeat = function(clientId) {
+            lxHttpChannelService.sendClientHeartbeat(clientId);
+            var timeoutFn = function() {
+                timerId = $timeout(function() {
+                    lxHttpChannelService.sendClientHeartbeat(clientId);
+                    timeoutFn();
+                }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
+            };
+            timeoutFn();
+        };
+
+        return {
+            initializeChannel: function(scope, clientId) {
                 lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function (response) {
                     scope.lxMainViewCtrl.channelToken = response.data.channelToken;
 
@@ -300,25 +323,15 @@ angular.module('lxChannel.services', [])
                         lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainViewCtrl.clientId);
                     };
 
-                    // Periodically update the room so that the server knows if the user is currently in the room.
-                    // lxChannelService.startClientHeartbeat(scope.lxMainViewCtrl.clientId);
+                    // Heartbeat updates the server so that it knows that the current user is still connected.
+                    stopClientHeartbeat();
+                    startClientHeartbeat(clientId);
 
                 }, function () {
                     scope.lxMainViewCtrl.channelToken = 'Failed to get channelToken';
                     scope.lxMainViewCtrl.clientId = 'Failed to get clientId';
                 });
             }
-
-//            startClientHeartbeat: function(clientId) {
-//                lxHttpChannelService.sendClientHeartbeat(clientId);
-//                var timeoutFn = function() {
-//                    $timeout(function() {
-//                        lxHttpChannelService.sendClientHeartbeat(clientId);
-//                        timeoutFn();
-//                    }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
-//                };
-//                timeoutFn();
-//            }
         };
     });
 

@@ -229,11 +229,7 @@ angular.module('lxMainView.controllers', [])
             openChatsDropdownIsOpen: true
         };
 
-        lxChannelService.initializeChannel($scope, clientId, lxAppWideConstantsService.userId);
-
-
-
-
+        lxChannelService.initializeChannel($scope, clientId);
 
         // handle case when a route change promise is not resolved
         $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
