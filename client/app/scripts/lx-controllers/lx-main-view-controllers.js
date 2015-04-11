@@ -17,9 +17,7 @@ angular.module('lxMainView.controllers', [])
         $scope,
         $window,
         lxAppWideConstantsService,
-        lxChannelService,
-        lxHttpChannelService,
-        lxModalSupportService) {
+        lxChannelService) {
 
 
         // Copy information embedded in the Html into an angular service.
