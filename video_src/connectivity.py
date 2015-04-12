@@ -23,13 +23,16 @@ class ClientHeartbeat(webapp2.RequestHandler):
 
     @handle_exceptions
     def post(self):
-        data_object = json.loads(self.request.body)
-        client_id = data_object['clientId']
-        presence_state = data_object['presenceState']
+        message_obj = json.loads(self.request.body)
+        from_client_id = message_obj['fromClientId']
+        to_client_id = message_obj['toClientId']
+        presence_state = message_obj['messagePayload']['presenceState']
 
-        client_model = users.ClientModel(id=str(client_id))
+        assert(to_client_id == from_client_id)
 
-        logging.info('heartbeat of %s received from client_id %s' % (presence_state, client_id))
+        messaging.handle_message_client(from_client_id, message_obj)
+
+        logging.info('heartbeat of %s received from client_id %s and returned to same client on channel api' % (presence_state, from_client_id))
 
         # room_info_obj = room_module.ChatRoomInfo.get_room_by_id(room_id)
         #

@@ -197,6 +197,10 @@ angular.module('lxChannel.services', [])
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
                             break;
 
+                        case 'heartBeatMsg':
+                            $log.log('Received heartbeat: ' + JSON.stringify(messageObject))
+                            break;
+
                         case 'videoExchangeStatusMsg':
 
                             if (!(remoteClientId in scope.videoExchangeObjectsDict)) {
