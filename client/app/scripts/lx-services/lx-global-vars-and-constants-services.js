@@ -4,6 +4,16 @@
 
 angular.module('lxGlobalVarsAndConstants.services', [])
 
+    .factory('lxJavascriptConstants', function () {
+
+        var self =  {
+
+            // Define the maximum amount of time that the channel has to respond to a heartbeat message, before
+            // we decide that the channel is down and needs to be re-initialized.
+            msToWaitForHeartbeatResponse: 5000
+        };
+        return self;
+    })
 
     /*
      This services provides access to variables that are used by multiple services, and that don't

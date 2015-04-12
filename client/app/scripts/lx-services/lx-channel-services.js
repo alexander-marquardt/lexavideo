@@ -52,6 +52,7 @@ angular.module('lxChannel.services', [])
              lxChannelMessageService,
              lxCreateChatRoomObjectsService,
              lxHttpChannelService,
+             lxJavascriptConstants,
              lxJs,
              lxMessageService,
              lxWebRtcSessionService
@@ -64,7 +65,6 @@ angular.module('lxChannel.services', [])
 
         var sendHeartbeatTimerId = null;
         var reInitializeChannelTimerId = null;
-        var msToWaitForHeartbeatResponse = 3000; // X milliseconds
 
 
         var onChannelMessage = function(scope) {
@@ -321,7 +321,7 @@ angular.module('lxChannel.services', [])
                     // time to reply to the heartbeat that this client has sent to the server.
                     reInitializeChannelTimerId = $timeout(function() {
                         reInitializeChannelIfResponseNotReceived(scope, clientId);
-                    }, msToWaitForHeartbeatResponse);
+                    }, lxJavascriptConstants.msToWaitForHeartbeatResponse);
 
                 }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
             };
@@ -331,7 +331,7 @@ angular.module('lxChannel.services', [])
         // If we have not received a response on the channel within a few seconds of sending the heartbeat to the
         // server, then we assume that the channel has died, and that a new one is needed.
         var reInitializeChannelIfResponseNotReceived = function(scope, clientId) {
-            $log.error('Heartbeat not received within ' + msToWaitForHeartbeatResponse + ' ms. Re-initializing channel.');
+            $log.error('Heartbeat not received within ' + lxJavascriptConstants.msToWaitForHeartbeatResponse + ' ms. Re-initializing channel.');
             self.initializeChannel(scope, clientId);
         };
 
