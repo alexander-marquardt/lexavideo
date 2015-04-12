@@ -655,7 +655,7 @@ webRtcServices.factory('lxCallService',
                 var videoSignalingObject = scope.videoSignalingObject;
                 var clientId = scope.lxMainViewCtrl.clientId;
 
-                if (!lxWebRtcSessionService.webRtcSessionStarted[remoteClientId] && lxWebRtcSessionService.signalingReady[remoteClientId] && lxChannelSupportService.channelReady &&
+                if (!lxWebRtcSessionService.webRtcSessionStarted[remoteClientId] && lxWebRtcSessionService.signalingReady[remoteClientId] && scope.channelObject.channelIsAlive &&
                     lxTurnSupportService.turnDone && (lxStreamService.localStream || !self.hasAudioOrVideoMediaConstraints)) {
 
                     $log.debug('Starting webRtc services!!');
@@ -691,8 +691,8 @@ webRtcServices.factory('lxCallService',
                     if (!lxWebRtcSessionService.signalingReady[remoteClientId]) {
                         $log.debug('Because lxWebRtcSessionService.signalingReady[remoteClientId is false for remoteClientId: ' + remoteClientId);
                     }
-                    if (!lxChannelSupportService.channelReady) {
-                        $log.debug('Because lxChannelSupportService.channelReady is false');
+                    if (!scope.channelObject.channelIsAlive) {
+                        $log.debug('Because scope.channelObject.channelIsAlive is false');
                     }
 
                     if (!lxTurnSupportService.turnDone) {

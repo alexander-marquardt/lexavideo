@@ -42,7 +42,6 @@ angular.module('lxChannel.services', [])
     })
 
     .service('lxChannelSupportService', function() {
-        this.channelReady = false;
         this.socket = null;
     })
 
@@ -72,12 +71,6 @@ angular.module('lxChannel.services', [])
         var reInitializeChannelTimerId = null;
         var msToWaitForHeartbeatResponse = 3000; // X milliseconds
 
-        var onChannelOpened = function() {
-            return function () {
-                $log.log('Channel opened.');
-                lxChannelSupportService.channelReady = true;
-            };
-        };
 
         var onChannelMessage = function(scope) {
             return function(message) {
@@ -203,6 +196,7 @@ angular.module('lxChannel.services', [])
 
                         case 'heartBeatMsg':
                             $log.log('Received heartbeat: ' + JSON.stringify(messageObject));
+                            scope.channelObject.channelIsAlive = true;
                             $timeout.cancel(reInitializeChannelTimerId);
                             break;
 
@@ -264,22 +258,33 @@ angular.module('lxChannel.services', [])
             };
         };
 
-        var onChannelError = function() {
-            $log.error('*** Channel error. ***');
-            // lxChannelSupportService.channelReady = false;
+        var onChannelOpened = function(scope) {
+            return function () {
+                $log.log('Channel opened.');
+                scope.channelObject.channelIsAlive = true;
+            };
         };
 
-        var onChannelClosed = function() {
-            $log.warn('*** Channel closed. ***');
-            lxChannelSupportService.channelReady = false;
+        var onChannelError = function(scope) {
+            return function() {
+                $log.error('*** Channel error. ***');
+                scope.channelObject.channelIsAlive = false;
+            }
+        };
+
+        var onChannelClosed = function(scope) {
+            return function() {
+                $log.warn('*** Channel closed. ***');
+                scope.channelObject.channelIsAlive = false;
+            }
         };
 
         var handler = function(scope) {
             return {
-                'onopen': onChannelOpened(),
+                'onopen': onChannelOpened(scope),
                 'onmessage': onChannelMessage(scope),
-                'onerror': onChannelError,
-                'onclose': onChannelClosed
+                'onerror': onChannelError(scope),
+                'onclose': onChannelClosed(scope)
             };
         };
         var openChannel = function(scope) {
@@ -288,8 +293,6 @@ angular.module('lxChannel.services', [])
             try {
                 var channel = new goog.appengine.Channel(scope.channelObject.channelToken);
                 lxChannelSupportService.socket = channel.open(handler(scope));
-                scope.channelObject.channelIsAlive = true;
-
             } catch(e) {
                 e.message = '\n\tError in openChannel\n\t' + e.message;
                 $log.error(e);

@@ -26,7 +26,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
         var addClientToRoomWhenChannelReady = function(roomId) {
             var innerWaitForChannelReady = function() {
-                if (!lxChannelSupportService.channelReady) {
+                if (!$scope.channelObject.channelIsAlive) {
                     $timeout(innerWaitForChannelReady, 100);
                 } else {
                     // Add the user to the room, now that the channel is open
