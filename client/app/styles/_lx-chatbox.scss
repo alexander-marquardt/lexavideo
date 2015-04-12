@@ -50,6 +50,11 @@
   box-sizing: border-box;
 }
 
+
+.cl-chat-panel-body-dead-channel {
+  background: $gray-light;
+}
+
 .cl-chat-panel-body-tall {
   height: $tall-chat-panel-height;
 }

@@ -113,7 +113,14 @@ body{
   transition-duration: $slide-main-menu-duration;
 }
 
-
+.cl-transition-background-color {
+  -webkit-transition: background-color;
+  -moz-transition: background-color;
+  -ms-transition: background-color;
+  -o-transition: background-color;
+  transition: background-color;
+  transition-duration: 0.3s;
+}
 // cl-sliding-div is used for the divs that are animated in and out of the cl-sliding-display-area-wrapper div
 .cl-main-ng-view-area-div {
   position: absolute;
