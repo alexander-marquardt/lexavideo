@@ -314,6 +314,11 @@ angular.module('lxChannel.services', [])
                     lxHttpChannelService.sendClientHeartbeat(clientId, presenceStatus);
                     timeoutFn();
 
+                    // reInitializeChannelTimerId will be cancelled if a 'heartBeatMsg' is received on the chanel
+                    // within msToWaitForHeartbeatResponse milliseconds.
+                    // This means that reInitializeChannelIfResponseNotReceived will
+                    // only be executed if the channel is down, or if the channel takes an unexpectedly long
+                    // time to reply to the heartbeat that this client has sent to the server.
                     reInitializeChannelTimerId = $timeout(function() {
                         reInitializeChannelIfResponseNotReceived(scope, clientId);
                     }, msToWaitForHeartbeatResponse);
