@@ -39,10 +39,16 @@ $hangup-button-space: 35px;
   text-shadow: 2px 0px 6px white, -2px 0px 6px white, 0px 2px 6px white, 0px -2px 6px white;
 }
 
+span.cl-username-overlay-text {
+  background: rgba(0, 0, 0, 0.15);
+  color:rgba(255, 255, 255, 0.5);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
 .cl-username-overlay {
   @extend %cl-overlay-common;
-  width: 100%;
-  color: black;
+  color: white;
   padding: 0px;
   top: 0;
   left: 0;
@@ -50,8 +56,6 @@ $hangup-button-space: 35px;
   height: $username-overlay-height;
   text-align: center;
   z-index: $video-wrapper-zindex + 2;
-  opacity: $text-overlay-opacity;
-
 }
 
 .cl-selected-icon-status-overlay {
