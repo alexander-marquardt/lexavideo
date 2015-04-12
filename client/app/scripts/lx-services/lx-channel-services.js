@@ -286,12 +286,14 @@ angular.module('lxChannel.services', [])
 
             $log.info('*** Opening channel. ***');
             try {
-                var channel = new goog.appengine.Channel(scope.lxMainViewCtrl.channelToken);
+                var channel = new goog.appengine.Channel(scope.channelObject.channelToken);
                 lxChannelSupportService.socket = channel.open(handler(scope));
+                scope.channelObject.channelIsAlive = true;
 
             } catch(e) {
                 e.message = '\n\tError in openChannel\n\t' + e.message;
                 $log.error(e);
+                scope.channelObject.channelIsAlive = false;
             }
         };
 
@@ -339,7 +341,7 @@ angular.module('lxChannel.services', [])
         var self = {
             initializeChannel: function(scope, clientId) {
                 lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function (response) {
-                    scope.lxMainViewCtrl.channelToken = response.data.channelToken;
+                    scope.channelObject.channelToken = response.data.channelToken;
 
                     openChannel(scope);
 
@@ -353,7 +355,8 @@ angular.module('lxChannel.services', [])
                     startSendingHeartbeat(scope, clientId, scope.presenceStatus);
 
                 }, function () {
-                    scope.lxMainViewCtrl.channelToken = 'Failed to get channelToken';
+                    scope.channelObject.channelToken = 'Failed to get channelToken';
+                    scope.channelObject.channelIsAlive = false;
                 });
             }
         };

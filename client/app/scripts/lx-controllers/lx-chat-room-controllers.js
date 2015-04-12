@@ -19,9 +19,7 @@ angular.module('lxUseChatRoom.controllers', [])
         ) {
 
         $scope.lxChatRoomCtrl = {
-
             userSuccessfullyEnteredRoom: false,
-            channelToken: null,
             clientId: null
         };
 

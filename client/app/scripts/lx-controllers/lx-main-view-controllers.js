@@ -77,10 +77,14 @@ angular.module('lxMainView.controllers', [])
         var clientId = lxAppWideConstantsService.userId + '|' + uniqueClientIdentifier;
 
         $scope.lxMainViewCtrl = {
-            channelToken: null,
             clientId: clientId,
             userId: lxAppWideConstantsService.userId,
             userName: lxAppWideConstantsService.userName
+        };
+
+        $scope.channelObject = {
+            channelToken: null,
+            channelIsAlive: false
         };
 
         $scope.localVideoObject = {
