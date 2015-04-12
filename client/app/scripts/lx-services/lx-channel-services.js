@@ -349,7 +349,6 @@ angular.module('lxChannel.services', [])
 
                 }, function () {
                     scope.lxMainViewCtrl.channelToken = 'Failed to get channelToken';
-                    scope.lxMainViewCtrl.clientId = 'Failed to get clientId';
                 });
             }
         };
