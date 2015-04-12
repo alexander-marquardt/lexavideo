@@ -27,7 +27,12 @@ class ClientHeartbeat(webapp2.RequestHandler):
         to_client_id = from_client_id = message_obj['fromClientId']
         presence_state = message_obj['messagePayload']['presenceState']
 
-        channel.send_message(to_client_id, json.dumps(message_obj))
+        # Just send a short simple response so that the client can verify if the channel is up.
+        response_message_obj = {
+            'fromClientId': from_client_id,
+            'messageType': 'heartBeatMsg'
+        }
+        channel.send_message(to_client_id, json.dumps(response_message_obj))
 
         logging.info('heartbeat of %s received from client_id %s and returned to same client on channel api' % (presence_state, from_client_id))
 
