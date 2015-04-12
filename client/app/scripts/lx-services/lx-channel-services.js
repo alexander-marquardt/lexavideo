@@ -188,7 +188,7 @@ angular.module('lxChannel.services', [])
                             }
                             break;
 
-                        case 'chatDataMsg':
+                        case 'chatTextMsg':
                             chatRoomId = messageObject.roomId;
                             var receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
 
@@ -198,7 +198,7 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'heartBeatMsg':
-                            $log.log('Received heartbeat: ' + JSON.stringify(messageObject))
+                            $log.log('Received heartbeat: ' + JSON.stringify(messageObject));
                             break;
 
                         case 'videoExchangeStatusMsg':

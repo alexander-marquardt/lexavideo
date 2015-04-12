@@ -24,13 +24,10 @@ class ClientHeartbeat(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         message_obj = json.loads(self.request.body)
-        from_client_id = message_obj['fromClientId']
-        to_client_id = message_obj['toClientId']
+        to_client_id = from_client_id = message_obj['fromClientId']
         presence_state = message_obj['messagePayload']['presenceState']
 
-        assert(to_client_id == from_client_id)
-
-        messaging.handle_message_client(from_client_id, message_obj)
+        channel.send_message(to_client_id, json.dumps(message_obj))
 
         logging.info('heartbeat of %s received from client_id %s and returned to same client on channel api' % (presence_state, from_client_id))
 

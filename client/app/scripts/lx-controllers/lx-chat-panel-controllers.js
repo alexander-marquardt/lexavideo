@@ -44,7 +44,7 @@ angular.module('lxChatbox.controllers', [])
          */
         $scope.sendChatMessageFn = function(roomId) {
 
-            var messageType = 'chatDataMsg';
+            var messageType = 'chatTextMsg';
 
             $scope.sendMessagePayload = {
                 messageString: $scope.sendMessageFormScope.inputMessageString,
