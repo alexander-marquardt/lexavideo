@@ -141,9 +141,8 @@ class ChatRoomInfo(ndb.Model):
 
 
 
-    # The following function adds a given user to a chat room.
-    # This is done in a transaction to ensure that after two users are in a room, that no
-    # more users will be added.
+    # The following function adds a given user to a chat room. Since multiple clients may be attempting to enter
+    # the room at the same time, it is ran in a transaction to prevent conflicts.
     @classmethod
     @ndb.transactional(xg=True)
     def txn_add_client_to_room(cls, room_id, client_id, user_id):

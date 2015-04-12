@@ -6,6 +6,7 @@ import webapp2
 
 from google.appengine.api import channel
 from google.appengine.ext import ndb
+from google.appengine.api import taskqueue
 
 from video_src import constants
 from video_src import http_helpers
@@ -48,6 +49,7 @@ class ClientHeartbeat(webapp2.RequestHandler):
 
 
 
+# The following class handles when a user explicitly enters into a room by going to a URL for a given room.
 class AddClientToRoom(webapp2.RequestHandler):
 
     @handle_exceptions
@@ -57,16 +59,43 @@ class AddClientToRoom(webapp2.RequestHandler):
         client_id = data_object['clientId']
         room_id = data_object['roomId']
 
+        logging.info('AddClientToRoom user_id %s added to room_id %s' % (user_id, room_id))
         (room_info_obj, dummy_status_string) = chat_room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id, user_id)
         messaging.send_room_occupancy_to_room_clients(room_info_obj)
 
+# The following class defines a handler that is called from the taskqueue, and that updates the rooms to include
+# the client_id. Ensures that every client for a given user will have the same rooms open.
+# Also is useful for cases where the channel has died, and we wish to ensure that the new client_id
+# is placed in all of the rooms that the user has open.
+class AddClientToUsersRooms(webapp2.RequestHandler):
+    def post(self):
 
+        user_id = self.request.get('user_id')
+        client_id = self.request.get('client_id')
+
+        logging.info('AddClientToUsersRooms called for user_id %s' % user_id)
+
+        # Add this "client" in to all of the rooms that the "user" currently has open
+        user_obj = users.get_user_by_id(user_id)
+
+        if user_obj:
+            list_of_open_rooms_keys = user_obj.user_status_tracker_key.get().list_of_open_rooms_keys
+            for open_room_key in list_of_open_rooms_keys:
+                room_id = open_room_key.id()
+
+                logging.info('adding client_id %s to room_id %s' % (client_id, room_id))
+                (room_info_obj, dummy_status_string) =  chat_room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id, user_id)
+                messaging.send_room_occupancy_to_room_clients(room_info_obj)
+        else:
+            # The following happens on the development server. Related to task queue executing before the user object
+            # is recognized as being written to the database. Probably will not happen in production.
+            logging.warning('user_id %s user object not found.' % user_id)
 
 class RequestChannelToken(webapp2.RequestHandler):
 
     @classmethod
     @ndb.transactional(xg=True)
-    def txn_create_new_client_model_and_add_to_user_object(cls, user_id, client_id):
+    def txn_create_new_client_model_and_add_to_client_tracker_object(cls, user_id, client_id):
         # Create a new client_model corresponding to the channel that we have just opened for
         # the current user.
         user_obj = users.get_user_by_id(user_id)
@@ -79,8 +108,9 @@ class RequestChannelToken(webapp2.RequestHandler):
         if len(client_tracker_obj.list_of_client_model_keys) > constants.maximum_number_of_client_connections_per_user:
             raise Exception('User has attempted to exceed the maximum number of clients that are simultaneously allowed per user')
 
-        client_tracker_obj.list_of_client_model_keys.append(client_model.key)
-        client_tracker_obj.put()
+        if client_model.key not in client_tracker_obj.list_of_client_model_keys:
+            client_tracker_obj.list_of_client_model_keys.append(client_model.key)
+            client_tracker_obj.put()
 
 
     @handle_exceptions
@@ -93,7 +123,10 @@ class RequestChannelToken(webapp2.RequestHandler):
         channel_token = channel.create_channel(str(client_id), token_timeout)
 
         try:
-            self.txn_create_new_client_model_and_add_to_user_object(user_id, client_id)
+            self.txn_create_new_client_model_and_add_to_client_tracker_object(user_id, client_id)
+            taskqueue.add(url="/taskqueue/add_client_to_users_rooms",
+                          params={'client_id': client_id, 'user_id': user_id},
+                          retry_options=taskqueue.TaskRetryOptions(task_retry_limit=1, task_age_limit=1))
 
             response_dict = {
                 'channelToken': channel_token,

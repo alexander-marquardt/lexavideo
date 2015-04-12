@@ -49,4 +49,4 @@ cookie_key = '13f2xi^7170a0a564fc2a26b8ffae123-5a17'
 heartbeatIntervalSeconds = 5 # reduce this speed for production
 
 # maximum number of windows (clients) that a user can have open at once
-maximum_number_of_client_connections_per_user = 20
+maximum_number_of_client_connections_per_user = 2

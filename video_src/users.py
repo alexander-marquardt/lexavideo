@@ -1,4 +1,7 @@
+
+import logging
 import time
+
 import webapp2_extras.appengine.auth.models
 
 from webapp2_extras import security
@@ -148,6 +151,8 @@ def txn_create_new_user():
     new_user_name = "Not set"
     new_user_obj.user_name = str(new_user_name)
     new_user_obj.put()
+
+    logging.info('new user object with user_id %s written' % new_user_obj.key.id())
     return new_user_obj
 
 def get_user_by_name(user_name):

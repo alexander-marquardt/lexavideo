@@ -43,6 +43,8 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_ah/channel/connected/',  connectivity.ConnectClient),
     webapp2.Route(r'/_ah/channel/disconnected/',  connectivity.AutoDisconnectClient),
 
+    webapp2.Route(r'/taskqueue/add_client_to_users_rooms', connectivity.AddClientToUsersRooms),
+
     webapp2.Route(r'/temp-login', registration_and_login.CreateTemporaryUserHandler, name='temp-login'),
 
     webapp2.Route(r'/', views.MainPage, name='main'),
