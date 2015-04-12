@@ -12,7 +12,7 @@
                         <div class="row cl-row-no-margins">
                             <!-- The following wraps the remote video windows -->
                             <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
-                                    class="cl-transition-opacity col-xs-6 text-center cl-col-no-padding cl-vertical-align-video-elements"
+                                    class="cl-transition-opacity col-xs-6 text-center cl-col-no-padding cl-vertical-align-inline-block"
                                     ng-style="{clear: $even ? 'left': 'none'}">
 
                                     <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl">
@@ -34,7 +34,7 @@
 
                             (Note: this comment is removing the whitespace between the div's and is necessary for the layout
                             to work correctly)
-                         --><div class="col-xs-6 text-center cl-col-no-padding cl-vertical-align-video-elements"
+                         --><div class="col-xs-6 text-center cl-col-no-padding cl-vertical-align-inline-block"
                                  ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
                                 <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl" >
                                     {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
