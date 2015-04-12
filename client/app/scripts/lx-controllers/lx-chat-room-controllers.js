@@ -12,7 +12,6 @@ angular.module('lxUseChatRoom.controllers', [])
         $location,
         $scope,
         $timeout,
-        lxChannelSupportService,
         lxHttpChannelService,
         lxInitializeRoomService,
         lxShowNumMessagesService

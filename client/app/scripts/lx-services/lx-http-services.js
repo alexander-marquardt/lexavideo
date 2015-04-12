@@ -36,7 +36,6 @@ angular.module('lxHttp.services', [])
     function (
         $log,
         $http,
-        lxChannelSupportService,
         lxJs
         ) {
 
@@ -89,7 +88,7 @@ angular.module('lxHttp.services', [])
                 return httpPromise;
             },
 
-            manuallyDisconnectChannel: function(clientId) {
+            manuallyDisconnectChannel: function(clientId, channelObject) {
                 // If we know that the user is disconnecting from the page, then we may want to send
                 // a message to the server immediately, so that the room will be vacated instantly. This
                 // is useful for cases where the user clicks on the reload button so that they are removed
@@ -105,7 +104,7 @@ angular.module('lxHttp.services', [])
                 });
 
                 // close the socket
-                lxChannelSupportService.socket.close();
+                channelObject.socket.close();
             }
         };
     })

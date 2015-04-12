@@ -41,10 +41,6 @@ angular.module('lxChannel.services', [])
         };
     })
 
-    .service('lxChannelSupportService', function() {
-        this.socket = null;
-    })
-
     .factory('lxChannelService',
     function($log,
              $timeout,
@@ -54,7 +50,6 @@ angular.module('lxChannel.services', [])
              lxAppWideConstantsService,
              lxCallService,
              lxChannelMessageService,
-             lxChannelSupportService,
              lxCreateChatRoomObjectsService,
              lxHttpChannelService,
              lxJs,
@@ -292,7 +287,7 @@ angular.module('lxChannel.services', [])
             $log.info('*** Opening channel. ***');
             try {
                 var channel = new goog.appengine.Channel(scope.channelObject.channelToken);
-                lxChannelSupportService.socket = channel.open(handler(scope));
+                scope.channelObject.socket = channel.open(handler(scope));
             } catch(e) {
                 e.message = '\n\tError in openChannel\n\t' + e.message;
                 $log.error(e);
@@ -350,7 +345,7 @@ angular.module('lxChannel.services', [])
 
                     $window.onbeforeunload = function () {
                         $log.debug('Manually disconnecting channel on window unload event.');
-                        lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainViewCtrl.clientId);
+                        lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainViewCtrl.clientId, scope.channelObject);
                     };
 
                     // Heartbeat updates the server so that it knows that the current user is still connected.

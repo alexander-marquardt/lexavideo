@@ -84,7 +84,8 @@ angular.module('lxMainView.controllers', [])
 
         $scope.channelObject = {
             channelToken: null,
-            channelIsAlive: false
+            channelIsAlive: false,
+            socket: null
         };
 
         $scope.localVideoObject = {

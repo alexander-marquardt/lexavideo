@@ -334,7 +334,6 @@ webRtcServices.service('lxWebRtcSessionService',
         lxIceService,
         lxPeerService,
         lxChannelMessageService,
-        lxChannelSupportService,
         lxAdapterService) {
 
 
@@ -622,7 +621,6 @@ webRtcServices.factory('lxCallService',
         lxTurnSupportService,
         lxPeerService,
         lxWebRtcSessionService,
-        lxChannelSupportService,
         lxVideoParamsService,
         lxChatRoomVarsService,
         lxChannelMessageService,
