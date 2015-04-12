@@ -65,8 +65,12 @@ angular.module('lxChannel.services', [])
              ) {
 
         /*
-         Provides functionality for opening up and handling callbacks from the Google App-engine "Channel API".
+         lxChannelService provides functionality for opening up and handling callbacks from the Google App-engine "Channel API".
          */
+
+        var sendHeartbeatTimerId = null;
+        var reInitializeChannelTimerId = null;
+        var msToWaitForHeartbeatResponse = 3000; // X milliseconds
 
         var onChannelOpened = function() {
             return function () {
@@ -199,6 +203,7 @@ angular.module('lxChannel.services', [])
 
                         case 'heartBeatMsg':
                             $log.log('Received heartbeat: ' + JSON.stringify(messageObject));
+                            $timeout.cancel(reInitializeChannelTimerId);
                             break;
 
                         case 'videoExchangeStatusMsg':
@@ -290,32 +295,43 @@ angular.module('lxChannel.services', [])
             }
         };
 
-        var timerId = null;
-
         // Stop sending heartbeats to the server. Intended to be called before
         // starting a new heartbeat, so that we don't have multiple timer loops
         // running at the same time.
-        var stopClientHeartbeat = function() {
-            $timeout.cancel(timerId);
-            timerId = null;
+        var stopSendingHeartbeat = function() {
+            $timeout.cancel(sendHeartbeatTimerId);
+            sendHeartbeatTimerId = null;
         };
 
         // Send periodic updates to the server so that the server can track the presence status of each user.
         // Also, each time the server receives a heartbeat, it will respond with an acknowledgement on the channel,
         // and if this is not received within an expected "response time", then the channel is assumed to have failed
         // and will be re initialized.
-        var startClientHeartbeat = function(clientId, presenceStatus) {
+        var startSendingHeartbeat = function(scope, clientId, presenceStatus) {
             lxHttpChannelService.sendClientHeartbeat(clientId, presenceStatus);
             var timeoutFn = function() {
-                timerId = $timeout(function() {
+                sendHeartbeatTimerId = $timeout(function() {
                     lxHttpChannelService.sendClientHeartbeat(clientId, presenceStatus);
                     timeoutFn();
+
+                    reInitializeChannelTimerId = $timeout(function() {
+                        reInitializeChannelIfResponseNotReceived(scope, clientId);
+                    }, msToWaitForHeartbeatResponse);
+
                 }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
             };
             timeoutFn();
         };
 
-        return {
+        // If we have not received a response on the channel within a few seconds of sending the heartbeat to the
+        // server, then we assume that the channel has died, and that a new one is needed.
+        var reInitializeChannelIfResponseNotReceived = function(scope, clientId) {
+            $log.error('Heartbeat not received within ' + msToWaitForHeartbeatResponse + ' ms. Re-initializing channel.');
+            self.initializeChannel(scope, clientId);
+        };
+
+
+        var self = {
             initializeChannel: function(scope, clientId) {
                 lxHttpChannelService.requestChannelToken(clientId, lxAppWideConstantsService.userId).then(function (response) {
                     scope.lxMainViewCtrl.channelToken = response.data.channelToken;
@@ -328,8 +344,8 @@ angular.module('lxChannel.services', [])
                     };
 
                     // Heartbeat updates the server so that it knows that the current user is still connected.
-                    stopClientHeartbeat();
-                    startClientHeartbeat(clientId, scope.presenceStatus);
+                    stopSendingHeartbeat();
+                    startSendingHeartbeat(scope, clientId, scope.presenceStatus);
 
                 }, function () {
                     scope.lxMainViewCtrl.channelToken = 'Failed to get channelToken';
@@ -337,5 +353,7 @@ angular.module('lxChannel.services', [])
                 });
             }
         };
+
+        return self;
     });
 
