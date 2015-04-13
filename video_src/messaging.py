@@ -12,47 +12,6 @@ from video_src import video_setup
 
 from error_handling import handle_exceptions
 
-# Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
-def handle_message_room(room_info_obj, from_client_id, message_obj):
-    # This function passes a message from one user in a given "room" to the other user in the same room.
-    # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
-    # as for passing video and other information from one user to the other. 
-
-    # If to_client_id is "sendMsgToEveryoneInTheChatRoom", then the message will be sent to all room members, otherwise it will be sent
-    # only to the indicated client.
-    to_client_ids_list = room_info_obj.get_list_of_other_client_ids(from_client_id)
-
-    for to_client_id in to_client_ids_list:
-        channel.send_message(to_client_id, json.dumps(message_obj))
-
-# Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
-def handle_message_client(from_client_id, message_obj):
-    # This function passes a message from one user in a given "room" to the other user in the same room.
-    # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
-    # as for passing video and other information from one user to the other.
-
-    to_client_id = message_obj['toClientId']
-    message_type = message_obj['messageType']
-    message_payload = message_obj['messagePayload']
-
-    if message_type == 'videoExchangeStatusMsg':
-
-        logging.info('user %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
-                     (from_client_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))
-
-        if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'doVideoExchange':
-
-            video_setup.VideoSetup.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
-            send_video_call_settings_to_participants(from_client_id, to_client_id)
-        else:
-            video_setup.VideoSetup.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
-
-        if message_type == 'sdp' and message_payload['type'] == 'offer':
-            # This is just for debugging
-            logging.info('sdp offer. Payload: %s' % repr(message_payload))
-
-    logging.info('\n***\nSending message to client %s: %s\n' % (to_client_id,  json.dumps(message_obj)))
-    channel.send_message(to_client_id, json.dumps(message_obj))
 
 
 # def delete_saved_messages(client_id):
@@ -151,6 +110,20 @@ def send_video_call_settings_to_participants(from_client_id, to_client_id):
 
 class MessageRoom(webapp2.RequestHandler):
 
+    # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
+    def handle_message_room(self, room_info_obj, from_client_id, message_obj):
+        # This function passes a message from one user in a given "room" to the other user in the same room.
+        # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
+        # as for passing video and other information from one user to the other.
+
+        # If to_client_id is "sendMsgToEveryoneInTheChatRoom", then the message will be sent to all room members, otherwise it will be sent
+        # only to the indicated client.
+        to_client_ids_list = room_info_obj.get_list_of_other_client_ids(from_client_id)
+
+        for to_client_id in to_client_ids_list:
+            channel.send_message(to_client_id, json.dumps(message_obj))
+
+
     @handle_exceptions
     def post(self):
         message = self.request.body
@@ -162,7 +135,7 @@ class MessageRoom(webapp2.RequestHandler):
         try:
             room_info_obj = chat_room_module.ChatRoomInfo.get_by_id(room_id)
             if room_info_obj:
-                handle_message_room(room_info_obj, from_client_id, message_obj)
+                self.handle_message_room(room_info_obj, from_client_id, message_obj)
             else:
                 logging.error('Unknown room_id %d' % room_id)
                 raise Exception('unknownRoomId')
@@ -179,6 +152,37 @@ class MessageRoom(webapp2.RequestHandler):
 
 class MessageClient(webapp2.RequestHandler):
 
+
+
+    # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
+    def handle_message_client(self, from_client_id, message_obj):
+        # This function passes a message from one user in a given "room" to the other user in the same room.
+        # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
+        # as for passing video and other information from one user to the other.
+
+        to_client_id = message_obj['toClientId']
+        message_type = message_obj['messageType']
+        message_payload = message_obj['messagePayload']
+
+        if message_type == 'videoExchangeStatusMsg':
+
+            logging.info('user %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
+                         (from_client_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))
+
+            if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'doVideoExchange':
+
+                video_setup.VideoSetup.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
+                send_video_call_settings_to_participants(from_client_id, to_client_id)
+            else:
+                video_setup.VideoSetup.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
+
+            if message_type == 'sdp' and message_payload['type'] == 'offer':
+                # This is just for debugging
+                logging.info('sdp offer. Payload: %s' % repr(message_payload))
+
+        logging.info('\n***\nSending message to client %s: %s\n' % (to_client_id,  json.dumps(message_obj)))
+        channel.send_message(to_client_id, json.dumps(message_obj))
+
     @handle_exceptions
     def post(self):
         message = self.request.body
@@ -186,7 +190,7 @@ class MessageClient(webapp2.RequestHandler):
         from_client_id = message_obj['fromClientId']
 
         try:
-            handle_message_client(from_client_id, message_obj)
+            self.handle_message_client(from_client_id, message_obj)
 
         except:
             status_string = 'Unknown server error'
