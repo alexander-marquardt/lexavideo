@@ -16,6 +16,15 @@ body{
   background: $brand-danger-lighter;
 }
 
+
+span.cl-overlay-text-span {
+  background: rgba(0, 0, 0, 0.15);
+  color:rgba(255, 255, 255, 1);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+
 .cl-main-control-menu {
   height: $sliding-display-area-height;
   width: 100%;
