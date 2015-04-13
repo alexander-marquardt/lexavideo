@@ -102,7 +102,6 @@ angular.module('lxChatbox.directives', [])
                 scope.$watch('sendMessageTime', function() {
                     if (scope.sendMessagePayload.messageString) {
                         addMessageToDisplay(scope.sendMessagePayload, 'right', scope.sendMessagePayload.transmittedToServer);
-
                     }
                 });
 
@@ -127,18 +126,28 @@ angular.module('lxChatbox.directives', [])
                     }
                 });
 
-                scope.$watch('channelObject.channelIsAlive', function(channelIsAlive) {
+                scope.$watch('channelObject.channelIsAlive', function(channelIsAlive, previousChannelIsAlive) {
 
-                    if (!channelIsAlive) {
+                    if (channelIsAlive === false) {
                         var channelDeadMsgPayload = {
-                            messageString: 'Internet connection is not functioning. ' +
-                                'You will not recieve messages sent while your connection is down.',
+                            messageString: 'Internet/Server error. ' +
+                                'Your connection to ChatSurfing is not functioning correctly. ' +
+                                'Messages sent to you while your connection is down are ' +
+                                'permanently lost.',
                             messageUniqueId: 'Not set',
                             transmittedToServer: false
                         };
                         addMessageToDisplay(channelDeadMsgPayload, 'left', channelDeadMsgPayload.transmittedToServer);
                     }
 
+                    if (previousChannelIsAlive === false && channelIsAlive) {
+                        var channelDeadMsgPayload = {
+                            messageString: 'Your connection to ChatSurfing appears to be working again',
+                            messageUniqueId: 'Not set',
+                            transmittedToServer: true
+                        };
+                        addMessageToDisplay(channelDeadMsgPayload, 'left', channelDeadMsgPayload.transmittedToServer);
+                    }
                 });
 
 //                scope.$watch('ackChatMessageObject.ackMessageUniqueId', function(ackMessageUniqueId) {

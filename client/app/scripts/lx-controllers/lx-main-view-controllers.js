@@ -84,7 +84,7 @@ angular.module('lxMainView.controllers', [])
 
         $scope.channelObject = {
             channelToken: null,
-            channelIsAlive: false,
+            channelIsAlive: null,
             socket: null
         };
 
