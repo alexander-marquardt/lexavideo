@@ -10,7 +10,7 @@ var lxSelectVideoTypePreferenceDirectives = angular.module('lxVideoExchangeUserF
 var  showMessageInVideoWindow = function(scope, overlayElem, message, $compile) {
     overlayElem.removeClass('ng-hide');
     overlayElem.html('');
-    var el = angular.element('<p class="cl-video-exchange-info-overlay-text"/>');
+    var el = angular.element('<span class="cl-overlay-text-span cl-video-overlay-text-span"/>');
     el.html(message);
     var compiledEl = $compile(el)(scope);
     overlayElem.append(compiledEl);

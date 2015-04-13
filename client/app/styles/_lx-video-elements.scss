@@ -108,16 +108,14 @@ $hangup-button-space: 35px;
   z-index: $video-wrapper-zindex + 4;
 }
 
-.cl-video-exchange-info-overlay-text {
-  color: white;
-  font-size: 1em;
-  padding: 10px;
-  opacity: 0.75;
+span.cl-video-overlay-text-span {
+  z-index: $chat-bubble-zindex + 1;
 }
+
 
 $lighten-link-color: lighten($link-color, 15%) !default;
 
-.cl-video-exchange-info-overlay-text a:hover {
+span.cl-video-overlay-text-span a:hover {
   text-decoration: none;
   color:  $lighten-link-color;
 }
