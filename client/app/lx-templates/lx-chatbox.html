@@ -23,6 +23,13 @@
                 <div ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
                     <div ng-controller="lxChatPanelCtrl">
 
+                        <div class="cl-chat-panel-overlay">
+                            <div class="cl-chat-panel-overlay-vertical-align">
+                                <div class="cl-chat-panel-overlay-center-div">
+                                    FOOBAR HERE!!!!
+                                </div>
+                            </div>
+                        </div>
                         <!-- The following ng-show ensures that only the currently selected chatbox is visible to the
                              client.
 
@@ -124,6 +131,7 @@
                                  ng-class="!channelObject.channelIsAlive?'cl-chat-panel-body-dead-channel':''">
                                 <div class="cl-dummy-blank-div-in-short-chat-panel"></div>
                                 <div lx-show-chat-messages-directive></div>
+
                             </div>
                             <div class="panel-footer cl-chat-panel-footer">
                                 <div class="row">

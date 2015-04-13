@@ -50,6 +50,28 @@
   box-sizing: border-box;
 }
 
+.cl-chat-panel-overlay {
+  display: table;
+  box-sizing: border-box;
+  position: absolute;
+  top: $chat-panel-heading-height;
+  height: $short-chat-panel-body-height ;
+  width: 100%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 999999;
+}
+
+.cl-chat-panel-overlay-vertical-align {
+  display:table-cell;
+  vertical-align: middle;
+}
+
+.cl-chat-panel-overlay-center-div {
+  margin-left: auto;
+  margin-right:auto;
+}
 
 .cl-chat-panel-body-dead-channel {
   background: $gray-light;
