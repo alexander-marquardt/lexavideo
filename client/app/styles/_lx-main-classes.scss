@@ -19,11 +19,14 @@ body{
 
 span.cl-overlay-text-span {
   background: rgba(0, 0, 0, 0.15);
-  color:rgba(255, 255, 255, 1);
+  color:rgba(255, 255, 255, 0.9);
   padding: 2px 4px;
   border-radius: 4px;
 }
 
+span.cl-chat-panel-overlay-span {
+  z-index: $chat-bubble-zindex + 1;
+}
 
 .cl-main-control-menu {
   height: $sliding-display-area-height;
