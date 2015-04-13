@@ -189,10 +189,11 @@ angular.module('lxChannel.services', [])
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
                             break;
 
-                        case 'heartBeatMsg':
-                            $log.log('Received heartbeat: ' + JSON.stringify(messageObject));
+                        case 'synAckHeartBeat':
+                            $log.log('Received heartbeat syn acknowledgement: ' + JSON.stringify(messageObject));
                             scope.channelObject.channelIsAlive = true;
                             $timeout.cancel(reInitializeChannelTimerId);
+                            lxHttpChannelService.sendAckHeartbeatToServer(scope.lxMainViewCtrl.clientId, scope.presenceStatus)
                             break;
 
                         case 'videoExchangeStatusMsg':
@@ -307,11 +308,11 @@ angular.module('lxChannel.services', [])
         // Also, each time the server receives a heartbeat, it will respond with an acknowledgement on the channel,
         // and if this is not received within an expected "response time", then the channel is assumed to have failed
         // and will be re initialized.
-        var startSendingHeartbeat = function(scope, clientId, presenceStatus) {
-            lxHttpChannelService.sendClientHeartbeat(clientId, presenceStatus);
+        var startSendingHeartbeat = function(scope, clientId) {
+            lxHttpChannelService.sendSynHeartbeatToServer(clientId);
             var timeoutFn = function() {
                 sendHeartbeatTimerId = $timeout(function() {
-                    lxHttpChannelService.sendClientHeartbeat(clientId, presenceStatus);
+                    lxHttpChannelService.sendSynHeartbeatToServer(clientId);
                     timeoutFn();
 
                     // reInitializeChannelTimerId will be cancelled if a 'heartBeatMsg' is received on the chanel
@@ -350,7 +351,7 @@ angular.module('lxChannel.services', [])
 
                     // Heartbeat updates the server so that it knows that the current user is still connected.
                     stopSendingHeartbeat();
-                    startSendingHeartbeat(scope, clientId, scope.presenceStatus);
+                    startSendingHeartbeat(scope, clientId);
 
                 }, function () {
                     scope.channelObject.channelToken = 'Failed to get channelToken';

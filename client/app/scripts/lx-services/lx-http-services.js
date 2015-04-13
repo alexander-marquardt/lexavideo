@@ -41,21 +41,46 @@ angular.module('lxHttp.services', [])
 
         return {
 
+            // In order to ensure that the channel is functioning, we periodically send the server "heartbeat"
+            // messages.
+            //
+            // Heartbeat has three stages. 1st, the "syn" heartbeat is sent to the server. A "synAck" response from the
+            // server is sent on the Channel and is expected with msToWaitForHeartbeatResponse milliseconds. Once
+            // received, we know that connectivity is working in both directions (from client to server, and server
+            // to client). We then send an "ack" response to the server,
+            // along with the clients current presence, which will be updated in the servers data structures.
+
+
             // this function will be periodically called so that that room will be up-to-date with the users
             // that are currently in the room.
-            sendClientHeartbeat: function(clientId, presenceStatus) {
+            sendSynHeartbeatToServer: function(clientId) {
 
-                var messagePayload = {
-                    'presenceState': presenceStatus.getCurrent().name
-                };
+                var messagePayload = {};
 
                 var messageObject = {
                     'fromClientId': clientId,
                     'toClientId': clientId,
-                    'messageType': 'heartBeatMsg',
+                    'messageType': 'synHeartBeat', // use handshaking terminology for naming
                     'messagePayload': messagePayload
                 };
-                $http.post('/_lx/channel/user_heartbeat/', messageObject);
+                $http.post('/_lx/channel/syn_user_heartbeat/', messageObject);
+            },
+
+            // Once a "synchronization acknowledgement" has been received on the channel, we then send
+            // a final "ack" to the server to let it know  that communications in both direction have been verified.
+            sendAckHeartbeatToServer: function(clientId, presenceStatus) {
+
+                var messagePayload = {
+                    presenceStateName: presenceStatus.getCurrent().name
+                };
+
+                var messageObject = {
+                    'fromClientId': clientId,
+                    'messageType': 'ackHeartBeat', // use handshaking terminology for naming
+                    'messagePayload': messagePayload
+                };
+
+                $http.post('/_lx/channel/ack_user_heartbeat/', messageObject);
             },
 
             addClientToRoom: function(clientId, userId, roomId) {

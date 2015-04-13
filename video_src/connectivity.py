@@ -20,32 +20,35 @@ from error_handling import handle_exceptions
 
 
 
-class ClientHeartbeat(webapp2.RequestHandler):
+# Receives a "syncronization heartbeat" from the client, which we respond to on the channel.
+class SynClientHeartbeat(webapp2.RequestHandler):
 
     @handle_exceptions
     def post(self):
         message_obj = json.loads(self.request.body)
         to_client_id = from_client_id = message_obj['fromClientId']
-        presence_state = message_obj['messagePayload']['presenceState']
 
         # Just send a short simple response so that the client can verify if the channel is up.
         response_message_obj = {
             'fromClientId': from_client_id,
-            'messageType': 'heartBeatMsg'
+            'messageType': 'synAckHeartBeat' # use handshaking terminology for naming
         }
+        logging.info('Heartbeat synchronization received from client_id %s. '
+                     'Synchronization acknowledgement returned to same client on channel api' % (from_client_id))
         channel.send_message(to_client_id, json.dumps(response_message_obj))
 
-        logging.info('heartbeat of %s received from client_id %s and returned to same client on channel api' % (presence_state, from_client_id))
 
-        # room_info_obj = room_module.ChatRoomInfo.get_room_by_id(room_id)
-        #
-        # # check if the user is already in the room, and add them if they are not in the room. Otherwise,
-        # # no action is necessary.
-        # if not room_info_obj.has_user(user_id):
-        #     (room_info_obj, dummy_status_string) = room_module.ChatRoomInfo.txn_add_user_to_room(room_id, user_id)
-        #
-        #     # Update the other members of the room so they know that this user has joined the room.
-        #     send_room_occupancy_to_room_members(room_info_obj, user_id)
+# Receives an acknowledgement to the response that we sent to the client on the channel. If we receive a post
+# to this URL, then we know that the channel is currently functioning.
+class AckClientHeartbeat(webapp2.RequestHandler):
+
+    @handle_exceptions
+    def post(self):
+        message_obj = json.loads(self.request.body)
+        from_client_id = message_obj['fromClientId']
+        presence_state_name = message_obj['messagePayload']['presenceStateName']
+
+        logging.info('Heartbeat acknowledgement received from client_id %s with presence %s' % (from_client_id, presence_state_name))
 
 
 
