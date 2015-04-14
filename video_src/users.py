@@ -43,7 +43,7 @@ class UserTrackClientsModel(ndb.Model):
 # rooms are they participating in.
 class UserTrackRoomsModel(ndb.Model):
     # Track the chats that the user is currently participating in.
-    list_of_open_rooms_keys = ndb.KeyProperty(kind='ChatRoomInfo', repeated=True)
+    list_of_open_chat_rooms_keys = ndb.KeyProperty(kind='ChatRoomModel', repeated=True)
 
 
 # UserModel is accessed from the webapp2 auth module, and is accessed/included with the following

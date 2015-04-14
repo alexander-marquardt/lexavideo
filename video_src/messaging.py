@@ -31,7 +31,7 @@ from error_handling import handle_exceptions
 
 # Sends information about who is in the room
 @handle_exceptions
-def send_room_occupancy_to_room_clients(room_info_obj):
+def send_room_occupancy_to_room_clients(chat_room_obj):
     # This is called when a user either connects or disconnects from a room. It sends information
     # to room members indicating the status of who is in the room.
 
@@ -39,16 +39,16 @@ def send_room_occupancy_to_room_clients(room_info_obj):
         'fromClientId': 'msgSentFromServer',
         'messageType': 'roomOccupancyMsg',
         'messagePayload': {
-            'normalizedChatRoomName': room_info_obj.normalized_chat_room_name,
-            'chatRoomNameAsWritten': room_info_obj.chat_room_name_as_written,
-            'chatRoomId': room_info_obj.key.id(),
+            'normalizedChatRoomName': chat_room_obj.normalized_chat_room_name,
+            'chatRoomNameAsWritten': chat_room_obj.chat_room_name_as_written,
+            'chatRoomId': chat_room_obj.key.id(),
             },
         }
 
     # Javascript needs to know which users are in this room.
     # first we must create a list that contains information of all users that are in the current room.
     dict_of_js_client_objects = {}
-    for client_id in room_info_obj.room_members_client_ids:
+    for client_id in chat_room_obj.room_members_client_ids:
 
     # We only send relevant data to the client,
     # which includes the client_id and the user_name.
@@ -59,8 +59,8 @@ def send_room_occupancy_to_room_clients(room_info_obj):
         dict_of_js_client_objects[client_id] = js_user_obj
 
     # send list_of_js_user_objects to every user in the room
-    for i in range(len(room_info_obj.room_members_client_ids)):
-        client_id = room_info_obj.room_members_client_ids[i]
+    for i in range(len(chat_room_obj.room_members_client_ids)):
+        client_id = chat_room_obj.room_members_client_ids[i]
         message_obj['messagePayload']['dictOfClientObjects'] = dict_of_js_client_objects
 
         logging.info('Sending roomOccupancy to %s: %s' % (client_id, json.dumps(message_obj)))
@@ -111,14 +111,14 @@ def send_video_call_settings_to_participants(from_client_id, to_client_id):
 class MessageRoom(webapp2.RequestHandler):
 
     # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
-    def handle_message_room(self, room_info_obj, from_client_id, message_obj):
+    def handle_message_room(self, chat_room_obj, from_client_id, message_obj):
         # This function passes a message from one user in a given "room" to the other user in the same room.
         # It is used for exchanging sdp (session description protocol) data for setting up sessions, as well
         # as for passing video and other information from one user to the other.
 
         # If to_client_id is "sendMsgToEveryoneInTheChatRoom", then the message will be sent to all room members, otherwise it will be sent
         # only to the indicated client.
-        to_client_ids_list = room_info_obj.get_list_of_other_client_ids(from_client_id)
+        to_client_ids_list = chat_room_obj.get_list_of_other_client_ids(from_client_id)
 
         for to_client_id in to_client_ids_list:
             channel.send_message(to_client_id, json.dumps(message_obj))
@@ -133,9 +133,9 @@ class MessageRoom(webapp2.RequestHandler):
         from_client_id = message_obj['fromClientId']
 
         try:
-            room_info_obj = chat_room_module.ChatRoomInfo.get_by_id(room_id)
-            if room_info_obj:
-                self.handle_message_room(room_info_obj, from_client_id, message_obj)
+            chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
+            if chat_room_obj:
+                self.handle_message_room(chat_room_obj, from_client_id, message_obj)
             else:
                 logging.error('Unknown room_id %d' % room_id)
                 raise Exception('unknownRoomId')

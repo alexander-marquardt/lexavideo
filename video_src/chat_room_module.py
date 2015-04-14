@@ -20,8 +20,8 @@ class UniqueChatRoomName(webapp2_extras.appengine.auth.models.Unique):pass
 
 
 
-# ChatRoomInfo will contain data about which users are currently in a given chat room
-class ChatRoomInfo(ndb.Model):
+# ChatRoomModel will contain data about which users are currently in a given chat room
+class ChatRoomModel(ndb.Model):
     """All the data necessary for keeping track of room names and occupancy etc. """
 
     unique_normalized_chat_room_name_model = UniqueChatRoomName
@@ -58,24 +58,24 @@ class ChatRoomInfo(ndb.Model):
     def create_or_get_room(cls, normalized_chat_room_name, room_dict, room_creator_user_key):
 
         # make a copy of room_dict, so that our modifications don't accidentally change it for other functions
-        room_info_obj_dict = copy.copy(room_dict)
+        chat_room_obj_dict = copy.copy(room_dict)
 
         room_name_is_unique = cls.check_if_room_name_is_unique(normalized_chat_room_name)
 
         if room_name_is_unique:
 
-            # remove 'user_id' from the room_dict since it will not be stored on the room_info_obj as 'user_id'
-            del room_info_obj_dict['user_id']
+            # remove 'user_id' from the room_dict since it will not be stored on the chat_room_obj as 'user_id'
+            del chat_room_obj_dict['user_id']
 
-            room_info_obj_dict['room_creator_user_key'] = room_creator_user_key
-            room_info_obj = cls(**room_info_obj_dict)
-            room_info_obj.put()
+            chat_room_obj_dict['room_creator_user_key'] = room_creator_user_key
+            chat_room_obj = cls(**chat_room_obj_dict)
+            chat_room_obj.put()
         else:
-            room_info_obj = cls.query(cls.normalized_chat_room_name == normalized_chat_room_name).get()
-            if not room_info_obj:
-                raise Exception('normalized_chat_room_name %s does not exist in the ChatRoomInfo data structure' % normalized_chat_room_name)
+            chat_room_obj = cls.query(cls.normalized_chat_room_name == normalized_chat_room_name).get()
+            if not chat_room_obj:
+                raise Exception('normalized_chat_room_name %s does not exist in the ChatRoomModel data structure' % normalized_chat_room_name)
 
-        return room_info_obj
+        return chat_room_obj
 
     def __str__(self):
         result = '['
@@ -122,15 +122,15 @@ class ChatRoomInfo(ndb.Model):
         logging.info('Removing client %s from room %s ' % (client_id, room_key))
 
         # First, we remove the "client" from the room
-        room_info_obj = room_key.get()
+        chat_room_obj = room_key.get()
         try:
             # if the client_id is not in the list, an exception will be raised
-            room_info_obj.room_members_client_ids.remove(client_id)
+            chat_room_obj.room_members_client_ids.remove(client_id)
         except:
             logging.error("client_id %s not found in room - why is it being removed?" % client_id)
-        room_info_obj.put()
+        chat_room_obj.put()
 
-        return room_info_obj
+        return chat_room_obj
 
 
 
@@ -138,11 +138,11 @@ class ChatRoomInfo(ndb.Model):
     @classmethod
     def get_room_by_id(cls, room_id):
 
-        room_info_obj = ChatRoomInfo.get_by_id(room_id)
-        if not room_info_obj:
+        chat_room_obj = ChatRoomModel.get_by_id(room_id)
+        if not chat_room_obj:
             logging.error('Attempt to get room by id failed. Room %d does not exist.' % room_id)
 
-        return room_info_obj
+        return chat_room_obj
 
 
 
@@ -153,16 +153,16 @@ class ChatRoomInfo(ndb.Model):
     def txn_add_client_to_room(cls, room_id, client_id):
 
         logging.info('Adding client %s to room %d ' % (client_id, room_id))
-        room_info_obj = cls.get_room_by_id(room_id)
+        chat_room_obj = cls.get_room_by_id(room_id)
 
 
-        if room_info_obj:
+        if chat_room_obj:
 
             try:
                 # If user is not already in the room, then add them
-                if not client_id in room_info_obj.room_members_client_ids:
-                    room_info_obj.room_members_client_ids.append(client_id)
-                    room_info_obj.put()
+                if not client_id in chat_room_obj.room_members_client_ids:
+                    chat_room_obj.room_members_client_ids.append(client_id)
+                    chat_room_obj.put()
                     logging.info('Client %s has joined room %d ' % (client_id, room_id))
 
                 else:
@@ -187,18 +187,18 @@ class ChatRoomInfo(ndb.Model):
         # Now we need to add the room to the user status tracker model (ie. track which rooms the user currently has open)
         logging.info('Adding room %s to user_status_tracker for user %s' % (room_id, user_id))
 
-        room_info_obj = cls.get_room_by_id(room_id)
+        chat_room_obj = cls.get_room_by_id(room_id)
 
         user_obj = users.UserModel.get_by_id(user_id)
         track_rooms_obj = user_obj.track_rooms_key.get()
-        if user_id not in track_rooms_obj.list_of_open_rooms_keys:
-            track_rooms_obj.list_of_open_rooms_keys.append(room_info_obj.key)
+        if user_id not in track_rooms_obj.list_of_open_chat_rooms_keys:
+            track_rooms_obj.list_of_open_chat_rooms_keys.append(chat_room_obj.key)
             track_rooms_obj.put()
 
 
-        # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
+        # Notice that we pass back chat_room_obj - this is necessary because we have pulled out a "new" copy from
         # the database and may have updated it. We want any enclosing functions to use the updated version.
-        return room_info_obj
+        return chat_room_obj
 
 
 
@@ -210,15 +210,15 @@ class CheckIfChatRoomExists(webapp2.RequestHandler):
 
         if normalized_chat_room_name:
             logging.info('Query for room name: ' + normalized_chat_room_name)
-            room_info_obj = ChatRoomInfo.query(ChatRoomInfo.normalized_chat_room_name == normalized_chat_room_name).get()
+            chat_room_obj = ChatRoomModel.query(ChatRoomModel.normalized_chat_room_name == normalized_chat_room_name).get()
 
-            if room_info_obj:
+            if chat_room_obj:
                 response_dict = {
                     'chatRoomName': normalized_chat_room_name,
                     'roomIsRegistered': True,
-                    'numInRoom': room_info_obj.get_occupancy(),
+                    'numInRoom': chat_room_obj.get_occupancy(),
                 }
-                logging.info('Found room: ' + repr(room_info_obj))
+                logging.info('Found room: ' + repr(chat_room_obj))
 
             else:
                 response_dict = {
@@ -231,7 +231,7 @@ class CheckIfChatRoomExists(webapp2.RequestHandler):
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
         else:
-            room_query = ChatRoomInfo.query()
+            room_query = ChatRoomModel.query()
             rooms_list = []
 
             for room_obj in room_query:
@@ -273,11 +273,11 @@ class EnterIntoRoom(webapp2.RequestHandler):
             # If this is a new room, then the room_creator_user_key will be stored in the room
             # object as the "creator" of the room
             room_creator_user_key = ndb.Key('UserModel', user_id)
-            room_info_obj = ChatRoomInfo.create_or_get_room(normalized_chat_room_name, room_dict,
+            chat_room_obj = ChatRoomModel.create_or_get_room(normalized_chat_room_name, room_dict,
                                                             room_creator_user_key)
 
             response_dict['normalizedChatRoomName'] = normalized_chat_room_name
-            response_dict['chatRoomId'] = room_info_obj.key.id()
+            response_dict['chatRoomId'] = chat_room_obj.key.id()
             response_dict['statusString'] = 'roomJoined'
 
             http_helpers.set_http_ok_json_response(self.response, response_dict)
