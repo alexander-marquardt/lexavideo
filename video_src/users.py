@@ -26,7 +26,7 @@ class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique): pass
 class ClientModel(ndb.Model):
     # These should be periodically cleared out of the database - use creation_date to find and remove
     # old/expired client models.
-    # Note: if these are cleared out, they should also be removed from ClientTrackerModel's client_models_list_of_keys.
+    # Note: if these are cleared out, they should also be removed from UserTrackClientsModel's client_models_list_of_keys.
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
 
@@ -35,14 +35,13 @@ class ClientModel(ndb.Model):
 # the user disconnects the page or if that fails, it will be cleared out periodically.
 # Note: we have intentionally placed this information outside of the UserModel so that we can modify it
 # with a lower probability of transaction collisions.
-class ClientTrackerModel(ndb.Model):
+class UserTrackClientsModel(ndb.Model):
     list_of_client_model_keys = ndb.KeyProperty(kind='ClientModel', repeated=True)
 
 
 # Track information about what the user is doing right now. For example, what
 # rooms are they participating in.
-class UserStatusTrackerModel(ndb.Model):
-    last_write = ndb.DateTimeProperty(auto_now=True)
+class UserTrackRoomsModel(ndb.Model):
     # Track the chats that the user is currently participating in.
     list_of_open_rooms_keys = ndb.KeyProperty(kind='ChatRoomInfo', repeated=True)
 
@@ -73,10 +72,10 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
     # track each "client" (unique browser window) that the user currently has open
-    client_tracker_key = ndb.KeyProperty(kind='ClientTrackerModel')
+    track_clients_key = ndb.KeyProperty(kind='UserTrackClientsModel')
 
     # Track information about the user activity/status of the user
-    user_status_tracker_key = ndb.KeyProperty(kind='UserStatusTrackerModel')
+    track_rooms_key = ndb.KeyProperty(kind='UserTrackRoomsModel')
 
     """
     Each user can have multiple "clients" (one for each browser/window), and each client can (in the future) have
@@ -93,9 +92,9 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
         client_obj.key.delete()
 
         user_obj = cls.get_by_id(user_id)
-        client_tracker_obj = user_obj.client_tracker_key.get()
-        client_tracker_obj.list_of_client_model_keys.remove(client_key)
-        client_tracker_obj.put
+        track_clients_obj = user_obj.track_clients_key.get()
+        track_clients_obj.list_of_client_model_keys.remove(client_key)
+        track_clients_obj.put
 
 
 
@@ -137,15 +136,15 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 @ndb.transactional(xg=True)
 def txn_create_new_user():
 
-    client_tracker = ClientTrackerModel()
+    client_tracker = UserTrackClientsModel()
     client_tracker.put()
 
-    user_status_tracker = UserStatusTrackerModel()
+    user_status_tracker = UserTrackRoomsModel()
     user_status_tracker.put()
 
     new_user_obj = UserModel()
-    new_user_obj.client_tracker_key = client_tracker.key
-    new_user_obj.user_status_tracker_key = user_status_tracker.key
+    new_user_obj.track_clients_key = client_tracker.key
+    new_user_obj.track_rooms_key = user_status_tracker.key
 
     # use the key as the user_name until they decide to create their own user_name.
     new_user_name = "Not set"

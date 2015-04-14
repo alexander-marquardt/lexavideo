@@ -190,10 +190,10 @@ class ChatRoomInfo(ndb.Model):
         room_info_obj = cls.get_room_by_id(room_id)
 
         user_obj = users.UserModel.get_by_id(user_id)
-        user_status_tracker_obj = user_obj.user_status_tracker_key.get()
-        if user_id not in user_status_tracker_obj.list_of_open_rooms_keys:
-            user_status_tracker_obj.list_of_open_rooms_keys.append(room_info_obj.key)
-            user_status_tracker_obj.put()
+        track_rooms_obj = user_obj.track_rooms_key.get()
+        if user_id not in track_rooms_obj.list_of_open_rooms_keys:
+            track_rooms_obj.list_of_open_rooms_keys.append(room_info_obj.key)
+            track_rooms_obj.put()
 
 
         # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from

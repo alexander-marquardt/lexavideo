@@ -41,7 +41,7 @@ class AddClientToRoom(webapp2.RequestHandler):
         user_obj = users.get_user_by_id(user_id)
 
         if user_obj:
-            list_of_open_rooms_keys = user_obj.user_status_tracker_key.get().list_of_open_rooms_keys
+            list_of_open_rooms_keys = user_obj.track_rooms_key.get().list_of_open_rooms_keys
 
             # Loop over all rooms that the user currently has open.
             for open_room_key in list_of_open_rooms_keys:
@@ -118,7 +118,7 @@ class RequestChannelToken(webapp2.RequestHandler):
 
     @classmethod
     @ndb.transactional(xg=True)
-    def txn_create_new_client_model_and_add_to_client_tracker_object(cls, user_id, client_id):
+    def txn_create_new_client_model_and_add_to_track_clients_object(cls, user_id, client_id):
         # Create a new client_model corresponding to the channel that we have just opened for
         # the current user.
         user_obj = users.get_user_by_id(user_id)
@@ -126,14 +126,14 @@ class RequestChannelToken(webapp2.RequestHandler):
         client_model = users.ClientModel(id=client_id)
         client_model.put()
 
-        client_tracker_obj = user_obj.client_tracker_key.get()
+        track_clients_obj = user_obj.track_clients_key.get()
 
-        if len(client_tracker_obj.list_of_client_model_keys) > constants.maximum_number_of_client_connections_per_user:
+        if len(track_clients_obj.list_of_client_model_keys) > constants.maximum_number_of_client_connections_per_user:
             raise Exception('User has attempted to exceed the maximum number of clients that are simultaneously allowed per user')
 
-        if client_model.key not in client_tracker_obj.list_of_client_model_keys:
-            client_tracker_obj.list_of_client_model_keys.append(client_model.key)
-            client_tracker_obj.put()
+        if client_model.key not in track_clients_obj.list_of_client_model_keys:
+            track_clients_obj.list_of_client_model_keys.append(client_model.key)
+            track_clients_obj.put()
 
 
     @handle_exceptions
@@ -146,7 +146,7 @@ class RequestChannelToken(webapp2.RequestHandler):
         channel_token = channel.create_channel(str(client_id), token_timeout)
 
         try:
-            self.txn_create_new_client_model_and_add_to_client_tracker_object(user_id, client_id)
+            self.txn_create_new_client_model_and_add_to_track_clients_object(user_id, client_id)
             response_dict = {
                 'channelToken': channel_token,
             }
@@ -205,14 +205,14 @@ class DisconnectClient(webapp2.RequestHandler):
 
 
         user_obj = users.UserModel.get_by_id(user_id)
-        user_status_tracker_obj = user_obj.user_status_tracker_key.get()
+        track_rooms_obj = user_obj.track_rooms_key.get()
 
         # We only have a single structure for tracking the chat rooms that the user (user_id) currently has open
         # (as opposed to having a structure for each client_id that the user currently has), however,
         # since we synchronize the clients so that the user is in the same rooms on all clients
         # in general we should expect that every room that the user is currently in
         # for any given client, he will also be in that room for all other clients.
-        for room_info_obj_key in user_status_tracker_obj.list_of_open_rooms_keys:
+        for room_info_obj_key in track_rooms_obj.list_of_open_rooms_keys:
             room_info_obj = room_info_obj_key.get()
 
             if room_info_obj.has_client(client_id):
