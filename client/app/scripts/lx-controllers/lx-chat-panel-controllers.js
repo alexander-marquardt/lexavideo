@@ -73,6 +73,11 @@ angular.module('lxChatbox.controllers', [])
                     $scope.sendMessagePayload.transmittedToServer = false;
                     $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + $scope.sendMessageFormScope.inputMessageString;
 
+                    // There is some kind of error with connectivity, perhaps the user was not recognized as being in the room that they
+                    // have sent a message to. Send a heartbeat to the server to try to update the server so it knows that this
+                    // client is now active. This should help the client on the next attempt to send a message, if they
+                    // are able to get connectivity back.
+                    lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainViewCtrl.clientId);
                 }
             )['finally'](function () {
                 // once the promise is resolved, update the sendMessageTime which will trigger some watchers.
