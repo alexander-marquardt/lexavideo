@@ -6,8 +6,8 @@ import webapp2
 
 from google.appengine.api import channel
 from google.appengine.ext import ndb
-from google.appengine.api import taskqueue
 
+from video_src import clients
 from video_src import constants
 from video_src import http_helpers
 from video_src import messaging
@@ -123,7 +123,7 @@ class RequestChannelToken(webapp2.RequestHandler):
         # the current user.
         user_obj = users.get_user_by_id(user_id)
 
-        client_model = users.ClientModel(id=client_id)
+        client_model = clients.ClientModel(id=client_id)
         client_model.put()
 
         track_clients_obj = user_obj.track_clients_key.get()
@@ -198,7 +198,7 @@ class DisconnectClient(webapp2.RequestHandler):
         client_id = self.request.get('from')
         user_id, unique_client_postfix = [int(n) for n in client_id.split('|')]
 
-        client_obj = users.ClientModel.get_by_id(client_id)
+        client_obj = clients.ClientModel.get_by_id(client_id)
 
         if client_obj:
             video_setup.VideoSetup.remove_video_setup_objects_containing_client_id(client_id)

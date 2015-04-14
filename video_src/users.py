@@ -18,17 +18,6 @@ from video_src import constants
 class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique): pass
 
 
-# ClientModel is complementary to UserModel. Each user will only have a single associated UserModel
-# but they will have a unique ClientModel object for each unique browser window/channel that they
-# connect to the website with.
-# Each client model object will be keyed by a unique id that will follow the following format
-# str(user_id) + '|' + str(current_time_in_ms)
-class ClientModel(ndb.Model):
-    # These should be periodically cleared out of the database - use creation_date to find and remove
-    # old/expired client models.
-    # Note: if these are cleared out, they should also be removed from UserTrackClientsModel's client_models_list_of_keys.
-    creation_date = ndb.DateTimeProperty(auto_now_add=True)
-
 
 # This model is used for keeping track of which clients (browser window) the user currently has open. Each
 # client will be added to the list_of_client_model_keys when it is opened, and will be removed either when
