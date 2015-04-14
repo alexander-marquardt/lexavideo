@@ -20,41 +20,6 @@ from error_handling import handle_exceptions
 
 
 
-# Receives a "syncronization heartbeat" from the client, which we respond to on the channel.
-class SynClientHeartbeat(webapp2.RequestHandler):
-
-    @handle_exceptions
-    def post(self):
-        message_obj = json.loads(self.request.body)
-        to_client_id = from_client_id = message_obj['fromClientId']
-
-        # Just send a short simple response so that the client can verify if the channel is up.
-        response_message_obj = {
-            'fromClientId': from_client_id,
-            'messageType': 'synAckHeartBeat' # use handshaking terminology for naming
-        }
-        logging.info('Heartbeat synchronization received from client_id %s. '
-                     'Synchronization acknowledgement returned to same client on channel api' % (from_client_id))
-        channel.send_message(to_client_id, json.dumps(response_message_obj))
-
-
-# Receives an acknowledgement to the response that we sent to the client on the channel. If we receive a post
-# to this URL, then we know that the channel is currently functioning.
-class AckClientHeartbeat(webapp2.RequestHandler):
-
-    @handle_exceptions
-    def post(self):
-        message_obj = json.loads(self.request.body)
-        from_client_id = message_obj['fromClientId']
-        presence_state_name = message_obj['messagePayload']['presenceStateName']
-
-        logging.info('Heartbeat acknowledgement received from client_id %s with presence %s' % (from_client_id, presence_state_name))
-
-        # Make sure that this client is a member of all of the rooms that the associated user is a member of
-
-
-
-
 # The following class handles when a user explicitly enters into a room by going to a URL for a given room.
 class AddClientToRoom(webapp2.RequestHandler):
 
@@ -64,6 +29,37 @@ class AddClientToRoom(webapp2.RequestHandler):
         chat_room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id)
         room_info_obj = chat_room_module.ChatRoomInfo.txn_add_room_to_user_status_tracker(room_id, user_id)
         messaging.send_room_occupancy_to_room_clients(room_info_obj)
+
+    # add_client_to_all_users_rooms is useful for cases where the channel has died, and we wish to ensure that the new client_id
+    # associated with a user is placed in all of the rooms that the user has open once the client re-joins the room.
+    @staticmethod
+    def add_client_to_all_users_rooms(client_id, user_id):
+
+        logging.info('AddClientToUsersRooms called for user_id %s' % user_id)
+
+        # Add this "client" in to all of the rooms that the "user" currently has open
+        user_obj = users.get_user_by_id(user_id)
+
+        if user_obj:
+            list_of_open_rooms_keys = user_obj.user_status_tracker_key.get().list_of_open_rooms_keys
+
+            # Loop over all rooms that the user currently has open.
+            for open_room_key in list_of_open_rooms_keys:
+                room_id = open_room_key.id()
+                room_info_obj = chat_room_module.ChatRoomInfo.get_room_by_id(room_id)
+                room_members_client_ids = room_info_obj.room_members_client_ids
+
+                # Only add the client to the room if the client is not already in the room (Note: this
+                # is also verified inside the transaction, but we don't want to tie-up the transaction
+                # with un-necessary calls)
+                if client_id not in room_members_client_ids:
+                    AddClientToRoom.add_client_to_room(client_id, room_id, user_id)
+
+        else:
+            status_string = 'user_id %s user object not found.' % user_id
+            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
+
+
 
     @handle_exceptions
     def post(self):
@@ -75,42 +71,40 @@ class AddClientToRoom(webapp2.RequestHandler):
         self.add_client_to_room(client_id, room_id, user_id)
 
 
+# Receives a "syncronization heartbeat" from the client, which we respond to on the channel.
+class SynClientHeartbeat(webapp2.RequestHandler):
 
-# The following class defines a handler that is called from the taskqueue, and that updates the rooms to include
-# the client_id. Ensures that every client for a given user will have the same rooms open.
-# Also is useful for cases where the channel has died, and we wish to ensure that the new client_id
-# is placed in all of the rooms that the user has open.
-class AddClientToUsersRooms(webapp2.RequestHandler):
-
-    @staticmethod
-    def add_client_to_users_rooms(client_id, user_id):
-
-        logging.info('AddClientToUsersRooms called for user_id %s' % user_id)
-
-        # Add this "client" in to all of the rooms that the "user" currently has open
-        user_obj = users.get_user_by_id(user_id)
-
-        if user_obj:
-            list_of_open_rooms_keys = user_obj.user_status_tracker_key.get().list_of_open_rooms_keys
-            for open_room_key in list_of_open_rooms_keys:
-                room_id = open_room_key.id()
-
-                logging.info('adding client_id %s to room_id %s' % (client_id, room_id))
-                chat_room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id)
-                room_info_obj = chat_room_module.ChatRoomInfo.txn_add_room_to_user_status_tracker(room_id, user_id)
-                messaging.send_room_occupancy_to_room_clients(room_info_obj)
-        else:
-            # The following happens on the development server. Related to task queue executing before the user object
-            # is recognized as being written to the database. Probably will not happen in production.
-            logging.warning('user_id %s user object not found.' % user_id)
-
-
+    @handle_exceptions
     def post(self):
+        message_obj = json.loads(self.request.body)
+        client_id = message_obj['clientId']
 
-        user_id = self.request.get('user_id')
-        client_id = self.request.get('client_id')
-        self.add_client_to_users_rooms(client_id, user_id)
+        # Just send a short simple response so that the client can verify if the channel is up.
+        response_message_obj = {
+            'fromClientId': client_id, # channel-services expects fromClientId to be specified.
+            'messageType': 'synAckHeartBeat' # use handshaking terminology for naming
+        }
+        logging.info('Heartbeat synchronization received from client_id %s. '
+                     'Synchronization acknowledgement returned to same client on channel api' % (client_id))
+        channel.send_message(client_id, json.dumps(response_message_obj))
 
+
+# Receives an acknowledgement to the response that we sent to the client on the channel. If we receive a post
+# to this URL, then we know that the channel is currently functioning.
+class AckClientHeartbeat(webapp2.RequestHandler):
+
+    @handle_exceptions
+    def post(self):
+        message_obj = json.loads(self.request.body)
+        client_id = message_obj['clientId']
+        presence_state_name = message_obj['messagePayload']['presenceStateName']
+        user_id, unique_client_postfix = [int(n) for n in client_id.split('|')]
+
+
+        logging.info('Heartbeat acknowledgement received from client_id %s with presence %s' % (client_id, presence_state_name))
+
+        # Make sure that this client is a member of all of the rooms that the associated user is a member of
+        AddClientToRoom.add_client_to_all_users_rooms(client_id, user_id)
 
 class RequestChannelToken(webapp2.RequestHandler):
 

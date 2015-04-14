@@ -190,6 +190,7 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'synAckHeartBeat':
+                            lxJs.assert(remoteClientId === scope.lxMainViewCtrl.clientId, 'clientId mismatch');
                             $log.log('Received heartbeat syn acknowledgement: ' + JSON.stringify(messageObject));
                             scope.channelObject.channelIsAlive = true;
                             $timeout.cancel(reInitializeChannelTimerId);

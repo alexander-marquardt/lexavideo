@@ -58,8 +58,7 @@ angular.module('lxHttp.services', [])
                 var messagePayload = {};
 
                 var messageObject = {
-                    'fromClientId': clientId,
-                    'toClientId': clientId,
+                    'clientId': clientId,
                     'messageType': 'synHeartBeat', // use handshaking terminology for naming
                     'messagePayload': messagePayload
                 };
@@ -75,7 +74,7 @@ angular.module('lxHttp.services', [])
                 };
 
                 var messageObject = {
-                    'fromClientId': clientId,
+                    'clientId': clientId,
                     'messageType': 'ackHeartBeat', // use handshaking terminology for naming
                     'messagePayload': messagePayload
                 };

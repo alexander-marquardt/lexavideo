@@ -188,8 +188,7 @@ class ChatRoomInfo(ndb.Model):
         user_status_tracker_obj = user_obj.user_status_tracker_key.get()
         if user_id not in user_status_tracker_obj.list_of_open_rooms_keys:
             user_status_tracker_obj.list_of_open_rooms_keys.append(room_info_obj.key)
-
-        user_status_tracker_obj.put()
+            user_status_tracker_obj.put()
 
 
         # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
