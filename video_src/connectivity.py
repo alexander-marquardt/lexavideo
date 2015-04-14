@@ -50,6 +50,9 @@ class AckClientHeartbeat(webapp2.RequestHandler):
 
         logging.info('Heartbeat acknowledgement received from client_id %s with presence %s' % (from_client_id, presence_state_name))
 
+        # Make sure that this client is a member of all of the rooms that the associated user is a member of
+
+
 
 
 # The following class handles when a user explicitly enters into a room by going to a URL for a given room.
@@ -71,10 +74,9 @@ class AddClientToRoom(webapp2.RequestHandler):
 # Also is useful for cases where the channel has died, and we wish to ensure that the new client_id
 # is placed in all of the rooms that the user has open.
 class AddClientToUsersRooms(webapp2.RequestHandler):
-    def post(self):
 
-        user_id = self.request.get('user_id')
-        client_id = self.request.get('client_id')
+    @staticmethod
+    def add_client_to_users_rooms(client_id, user_id):
 
         logging.info('AddClientToUsersRooms called for user_id %s' % user_id)
 
@@ -93,6 +95,14 @@ class AddClientToUsersRooms(webapp2.RequestHandler):
             # The following happens on the development server. Related to task queue executing before the user object
             # is recognized as being written to the database. Probably will not happen in production.
             logging.warning('user_id %s user object not found.' % user_id)
+
+
+    def post(self):
+
+        user_id = self.request.get('user_id')
+        client_id = self.request.get('client_id')
+        self.add_client_to_users_rooms(client_id, user_id)
+
 
 class RequestChannelToken(webapp2.RequestHandler):
 
@@ -127,10 +137,6 @@ class RequestChannelToken(webapp2.RequestHandler):
 
         try:
             self.txn_create_new_client_model_and_add_to_client_tracker_object(user_id, client_id)
-            taskqueue.add(url="/taskqueue/add_client_to_users_rooms",
-                          params={'client_id': client_id, 'user_id': user_id},
-                          retry_options=taskqueue.TaskRetryOptions(task_retry_limit=1, task_age_limit=1))
-
             response_dict = {
                 'channelToken': channel_token,
             }
@@ -142,6 +148,7 @@ class RequestChannelToken(webapp2.RequestHandler):
             status_string = 'serverError'
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
 
+        # Finally, send the http response.
         http_helpers.set_http_ok_json_response(self.response, response_dict)
 
 
