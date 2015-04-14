@@ -58,6 +58,13 @@ class AckClientHeartbeat(webapp2.RequestHandler):
 # The following class handles when a user explicitly enters into a room by going to a URL for a given room.
 class AddClientToRoom(webapp2.RequestHandler):
 
+    @staticmethod
+    def add_client_to_room(client_id, room_id, user_id):
+        logging.info('AddClientToRoom client_id %s added to room_id %s' % (client_id, room_id))
+        chat_room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id)
+        room_info_obj = chat_room_module.ChatRoomInfo.txn_add_room_to_user_status_tracker(room_id, user_id)
+        messaging.send_room_occupancy_to_room_clients(room_info_obj)
+
     @handle_exceptions
     def post(self):
         data_object = json.loads(self.request.body)
@@ -65,9 +72,9 @@ class AddClientToRoom(webapp2.RequestHandler):
         client_id = data_object['clientId']
         room_id = data_object['roomId']
 
-        logging.info('AddClientToRoom user_id %s added to room_id %s' % (user_id, room_id))
-        (room_info_obj, dummy_status_string) = chat_room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id, user_id)
-        messaging.send_room_occupancy_to_room_clients(room_info_obj)
+        self.add_client_to_room(client_id, room_id, user_id)
+
+
 
 # The following class defines a handler that is called from the taskqueue, and that updates the rooms to include
 # the client_id. Ensures that every client for a given user will have the same rooms open.
@@ -89,7 +96,8 @@ class AddClientToUsersRooms(webapp2.RequestHandler):
                 room_id = open_room_key.id()
 
                 logging.info('adding client_id %s to room_id %s' % (client_id, room_id))
-                (room_info_obj, dummy_status_string) =  chat_room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id, user_id)
+                chat_room_module.ChatRoomInfo.txn_add_client_to_room(room_id, client_id)
+                room_info_obj = chat_room_module.ChatRoomInfo.txn_add_room_to_user_status_tracker(room_id, user_id)
                 messaging.send_room_occupancy_to_room_clients(room_info_obj)
         else:
             # The following happens on the development server. Related to task queue executing before the user object

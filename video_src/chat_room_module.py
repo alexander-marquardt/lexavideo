@@ -144,10 +144,10 @@ class ChatRoomInfo(ndb.Model):
     # The following function adds a given user to a chat room. Since multiple clients may be attempting to enter
     # the room at the same time, it is ran in a transaction to prevent conflicts.
     @classmethod
-    @ndb.transactional(xg=True)
-    def txn_add_client_to_room(cls, room_id, client_id, user_id):
+    @ndb.transactional
+    def txn_add_client_to_room(cls, room_id, client_id):
 
-        logging.info('Attempting to add client %s to room %d ' % (client_id, room_id))
+        logging.info('Adding client %s to room %d ' % (client_id, room_id))
         room_info_obj = cls.get_room_by_id(room_id)
 
 
@@ -163,20 +163,27 @@ class ChatRoomInfo(ndb.Model):
                 else:
                     logging.info('Client %s was already in room %d ' % (client_id, room_id))
 
-                status_string = 'roomJoined'
-
-
             # If the user cannot be added to the room, then an exception will be generated - let the client
             # know that the server had a problem.
             except:
-                status_string = 'serverError'
-                status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
+                status_reporting.log_call_stack_and_traceback(logging.error)
+                raise Exception('Error adding client %s to room %s' % (client_id, room_id))
 
         else:
-            status_string = 'serverError'
-            logging.error('Invalid room id: %d' % room_id)
+            error_message = 'Invalid room id: %d' % room_id
+            logging.error(error_message)
+            raise Exception(error_message)
+
+
+    @classmethod
+    @ndb.transactional(xg=True)
+    def txn_add_room_to_user_status_tracker(cls, room_id, user_id):
 
         # Now we need to add the room to the user status tracker model (ie. track which rooms the user currently has open)
+        logging.info('Adding room %s to user_status_tracker for user %s' % (room_id, user_id))
+
+        room_info_obj = cls.get_room_by_id(room_id)
+
         user_obj = users.UserModel.get_by_id(user_id)
         user_status_tracker_obj = user_obj.user_status_tracker_key.get()
         if user_id not in user_status_tracker_obj.list_of_open_rooms_keys:
@@ -187,7 +194,7 @@ class ChatRoomInfo(ndb.Model):
 
         # Notice that we pass back room_info_obj - this is necessary because we have pulled out a "new" copy from
         # the database and may have updated it. We want any enclosing functions to use the updated version.
-        return room_info_obj, status_string
+        return room_info_obj
 
 
 
