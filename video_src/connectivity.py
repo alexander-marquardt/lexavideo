@@ -55,6 +55,14 @@ class AddClientToRoom(webapp2.RequestHandler):
                 if client_id not in room_members_client_ids:
                     AddClientToRoom.add_client_to_room(client_id, room_id, user_id)
 
+                    message_obj = {
+                        'fromClientId': client_id,
+                        'chatRoomId': room_id,
+                        'messageType': 'clientReAddedToRoomAfterAbsence',
+                        'messagePayload': {},
+                        }
+                    channel.send_message(client_id, json.dumps(message_obj))
+
         else:
             status_string = 'user_id %s user object not found.' % user_id
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
@@ -66,7 +74,7 @@ class AddClientToRoom(webapp2.RequestHandler):
         data_object = json.loads(self.request.body)
         user_id = data_object['userId']
         client_id = data_object['clientId']
-        room_id = data_object['roomId']
+        room_id = data_object['chatRoomId']
 
         self.add_client_to_room(client_id, room_id, user_id)
 

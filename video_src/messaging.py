@@ -129,7 +129,7 @@ class MessageRoom(webapp2.RequestHandler):
         message = self.request.body
         message_obj = json.loads(message)
 
-        room_id = message_obj['roomId']
+        room_id = message_obj['chatRoomId']
         from_client_id = message_obj['fromClientId']
 
         try:

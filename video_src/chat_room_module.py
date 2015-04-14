@@ -272,7 +272,7 @@ class EnterIntoRoom(webapp2.RequestHandler):
                                                             room_creator_user_key)
 
             response_dict['normalizedChatRoomName'] = normalized_chat_room_name
-            response_dict['roomId'] = room_info_obj.key.id()
+            response_dict['chatRoomId'] = room_info_obj.key.id()
             response_dict['statusString'] = 'roomJoined'
 
             http_helpers.set_http_ok_json_response(self.response, response_dict)

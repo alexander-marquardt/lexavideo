@@ -23,14 +23,14 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
 
-        var addClientToRoomWhenChannelReady = function(roomId) {
+        var addClientToRoomWhenChannelReady = function(chatRoomId) {
             var innerWaitForChannelReady = function() {
                 if (!$scope.channelObject.channelIsAlive) {
                     $timeout(innerWaitForChannelReady, 100);
                 } else {
                     // Add the user to the room, now that the channel is open
                     lxHttpChannelService.addClientToRoom($scope.lxMainViewCtrl.clientId,
-                        $scope.lxMainViewCtrl.userId, roomId);
+                        $scope.lxMainViewCtrl.userId, chatRoomId);
                 }
             };
             innerWaitForChannelReady();
@@ -40,23 +40,23 @@ angular.module('lxUseChatRoom.controllers', [])
         lxInitializeRoomService.addUserToRoom().then(function(data) {
 
             $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
-            addClientToRoomWhenChannelReady(data.roomId);
-            $scope.receivedChatMessageObject[data.roomId] = {};
+            addClientToRoomWhenChannelReady(data.chatRoomId);
+            $scope.receivedChatMessageObject[data.chatRoomId] = {};
 
             // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
             // from the "global" unseenMessageCount before zeroing it.
-            if (data.roomId in $scope.chatPanelDict) {
+            if (data.chatRoomId in $scope.chatPanelDict) {
                 lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject,
-                    $scope.chatPanelDict[data.roomId], $scope.presenceStatus.ACTIVE.isCurrentState);
+                    $scope.chatPanelDict[data.chatRoomId], $scope.presenceStatus.ACTIVE.isCurrentState);
             }
 
-            $scope.chatPanelDict[data.roomId] = {
+            $scope.chatPanelDict[data.chatRoomId] = {
                 chatPanelIsGlued: true,
                 numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
                 chatPanelIsCurrentlyVisible: true
             };
 
-            $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[data.roomId];
+            $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[data.chatRoomId];
 
             // Add the normalizedRoomName to normalizedOpenRoomNamesList, but only if it is not already there.
             if ($.inArray(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList) === -1) {

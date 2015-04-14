@@ -181,12 +181,21 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'chatTextMsg':
-                            chatRoomId = messageObject.roomId;
+                            chatRoomId = messageObject.chatRoomId;
                             var receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
 
                             receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
                             // receivedMessageTime is used for triggering the watcher
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
+                            break;
+
+                        case 'clientReAddedToRoomAfterAbsence':
+                            chatRoomId = messageObject.chatRoomId;
+                            var receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
+                            receivedChatMessageObject.messageString = '**** WARNING *** Due to connectivity problems, you may have missed some messages';
+                            // receivedMessageTime is used for triggering the watcher
+                            receivedChatMessageObject.receivedMessageTime = new Date().getTime();
+
                             break;
 
                         case 'synAckHeartBeat':

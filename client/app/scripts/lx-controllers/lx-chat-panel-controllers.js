@@ -42,7 +42,7 @@ angular.module('lxChatbox.controllers', [])
          *      either the specific Id of the client that this message should be sent to, or
          *      the keyword: "sendMsgToEveryoneInTheChatRoom"
          */
-        $scope.sendChatMessageFn = function(roomId) {
+        $scope.sendChatMessageFn = function(chatRoomId) {
 
             var messageType = 'chatTextMsg';
 
@@ -56,7 +56,7 @@ angular.module('lxChatbox.controllers', [])
             };
 
             var sendMessagePromise = lxMessageService.broadcastMessageToRoomFn(
-                messageType, $scope.sendMessagePayload, $scope.lxMainViewCtrl.clientId, roomId);
+                messageType, $scope.sendMessagePayload, $scope.lxMainViewCtrl.clientId, chatRoomId);
 
             sendMessagePromise.then(
 

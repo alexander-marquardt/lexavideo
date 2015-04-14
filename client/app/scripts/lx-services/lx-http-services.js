@@ -82,15 +82,15 @@ angular.module('lxHttp.services', [])
                 $http.post('/_lx/channel/ack_user_heartbeat/', messageObject);
             },
 
-            addClientToRoom: function(clientId, userId, roomId) {
+            addClientToRoom: function(clientId, userId, chatRoomId) {
                 lxJs.assert(clientId, 'clientId not set');
                 lxJs.assert(userId, 'userId not set');
-                lxJs.assert(roomId, 'roomId not set');
+                lxJs.assert(chatRoomId, 'chatRoomId not set');
 
                 var postData = {
                     'clientId': clientId,
                     'userId': userId,
-                    'roomId': roomId
+                    'chatRoomId': chatRoomId
                 };
                 $http.post('/_lx/add_client_to_room/', postData);
             },
@@ -145,7 +145,7 @@ angular.module('lxHttp.services', [])
          Functionality for posting messages to the server.
          */
         return {
-            broadcastMessageToRoomFn : function(messageType, messagePayload, fromClientId, roomId) {
+            broadcastMessageToRoomFn : function(messageType, messagePayload, fromClientId, chatRoomId) {
                 /*
                  messageType: string indicating if this is a Signaling message or some other kind of message
                  that is being sent over the Appengine Channel API.
@@ -156,10 +156,10 @@ angular.module('lxHttp.services', [])
                  */
 
                 lxJs.assert(fromClientId, 'fromClientId is not set');
-                lxJs.assert(roomId, 'roomId is not set');
+                lxJs.assert(chatRoomId, 'chatRoomId is not set');
 
                 var messageObject = {
-                    'roomId': roomId,
+                    'chatRoomId': chatRoomId,
                     'fromClientId': fromClientId,
                     'messageType': messageType,
                     'messagePayload': messagePayload
