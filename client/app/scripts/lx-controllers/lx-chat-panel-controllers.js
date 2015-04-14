@@ -72,6 +72,7 @@ angular.module('lxChatbox.controllers', [])
 
                     $scope.sendMessagePayload.transmittedToServer = false;
                     $scope.sendMessagePayload.messageString = '<span class="cl-text-danger "><b>Server error. Message not delivered</b></span><br> ' + $scope.sendMessageFormScope.inputMessageString;
+
                 }
             )['finally'](function () {
                 // once the promise is resolved, update the sendMessageTime which will trigger some watchers.
