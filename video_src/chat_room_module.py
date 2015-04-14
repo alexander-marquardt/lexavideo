@@ -96,9 +96,14 @@ class ChatRoomInfo(ndb.Model):
     def get_occupancy(self):
         return len(self.room_members_client_ids)
 
+
     def get_list_of_other_client_ids(self, client_id):
         list_of_client_ids = list(self.room_members_client_ids)
-        list_of_client_ids.remove(client_id)
+        try:
+            list_of_client_ids.remove(client_id)
+        except:
+            raise Exception('client_id %s is not a member of room_id %s and therefore cannot send a message to the room' % (client_id, self.key.id()))
+
         return list_of_client_ids
 
 
