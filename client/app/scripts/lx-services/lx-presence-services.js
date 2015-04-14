@@ -6,13 +6,10 @@ angular.module('lxPresence.services', ['presenceModule'])
                 initial: true
             },
             IDLE : {
-                enter: 2000
+                enter: 30 * 1000 // 30 seconds
             },
-            SHORTAWAY : {
-                enter: 5000
-            },
-            LONGAWAY : {
-                enter: 10000
+            AWAY : {
+                enter: 5 * 60 * 1000 // 5 minutes
             }
         });
     });
