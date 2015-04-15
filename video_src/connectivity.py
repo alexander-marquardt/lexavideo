@@ -26,9 +26,13 @@ class AddClientToRoom(webapp2.RequestHandler):
     @staticmethod
     def add_client_to_room(client_id, room_id, user_id):
         # logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
-        chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
+        new_client_has_been_added = chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
         chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
-        messaging.send_room_occupancy_to_room_clients(chat_room_obj, chat_room_obj.room_members_client_ids, recompute_from_scratch=True)
+
+        # Send a notification to all room members that a new client has joined the room, but only if he was not already
+        # in the room.
+        if new_client_has_been_added:
+            messaging.send_room_occupancy_to_room_clients(chat_room_obj, chat_room_obj.room_members_client_ids, recompute_from_scratch=True)
 
 
 

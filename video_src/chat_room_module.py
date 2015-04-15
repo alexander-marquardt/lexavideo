@@ -161,6 +161,8 @@ class ChatRoomModel(ndb.Model):
     @ndb.transactional
     def txn_add_client_to_room(cls, room_id, client_id):
 
+        new_client_has_been_added = False
+
         logging.info('Adding client %s to room %d ' % (client_id, room_id))
         chat_room_obj = cls.get_room_by_id(room_id)
 
@@ -173,7 +175,7 @@ class ChatRoomModel(ndb.Model):
                     chat_room_obj.room_members_client_ids.append(client_id)
                     chat_room_obj.put()
                     logging.info('Client %s has joined room %d ' % (client_id, room_id))
-
+                    new_client_has_been_added = True
                 else:
                     logging.info('Client %s was already in room %d ' % (client_id, room_id))
 
@@ -188,6 +190,7 @@ class ChatRoomModel(ndb.Model):
             logging.error(error_message)
             raise Exception(error_message)
 
+        return new_client_has_been_added
 
     @classmethod
     @ndb.transactional(xg=True)
