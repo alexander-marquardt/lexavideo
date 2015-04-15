@@ -20,9 +20,11 @@ class UniqueChatRoomName(webapp2_extras.appengine.auth.models.Unique):pass
 
 
 
-# ChatRoomModel will contain data about which users are currently in a given chat room
 class ChatRoomModel(ndb.Model):
-    """All the data necessary for keeping track of room names and occupancy etc. """
+    """
+    ChatRoomModel will contain data about which users are currently in a given chat room
+    Tracks all the data necessary for keeping track of room names and occupancy etc.
+    """
 
     unique_normalized_chat_room_name_model = UniqueChatRoomName
 
@@ -201,7 +203,13 @@ class ChatRoomModel(ndb.Model):
         return chat_room_obj
 
 
-    def get_dict_of_client_objects(self):
+    def get_dict_of_client_objects(self, force_update):
+        """
+         Get a list of objects corresponding to each client that is in the chat room.
+
+         Parameters:
+         force_update -- if this is true, then we will not attempt to pull the dictionary from memcache.
+         """
 
         # Javascript needs to know which clients are in this room.
         # Create a list, where each element corresponds to a client in the room, and that element

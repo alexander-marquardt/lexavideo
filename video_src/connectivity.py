@@ -20,35 +20,26 @@ from error_handling import handle_exceptions
 
 
 
-# The following class handles when a user explicitly enters into a room by going to a URL for a given room.
 class AddClientToRoom(webapp2.RequestHandler):
-
-    @classmethod
-    @ndb.transactional(xg=True)
-    def txn_create_new_client_model_and_add_to_track_clients_object(cls, user_id, client_id):
-        # Create a new client_model corresponding to the channel that we have just opened for
-        # the current user.
-        user_obj = users.get_user_by_id(user_id)
-
-        client_model = clients.ClientModel(id=client_id)
-        client_model.put()
-
-
+    """Handles when a user explicitly enters into a room by going to a URL for a given room."""
 
     @staticmethod
     def add_client_to_room(client_id, room_id, user_id):
         logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
         chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
         chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
-        dict_of_client_objects = chat_room_obj.get_dict_of_client_objects()
+        dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(force_update=True)
         messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects)
 
 
-    # tell_client_they_were_re_added_to_room_after_they_have_been_absent is used for notifying the client that they have be re-added to
-    # a room that they had previously been in. This will allow us to show them a message
-    # indicting that they may have missed some messages while they were absent.
+
     @staticmethod
     def tell_client_they_were_re_added_to_room_after_they_have_been_absent(client_id, room_id):
+        """
+        Used for notifying the client that they have be re-added to
+        a room that they had previously been in. This will allow us to show them a message
+        indicting that they may have missed some messages while they were absent.
+        """
 
         message_obj = {
             'fromClientId': client_id,
@@ -59,10 +50,13 @@ class AddClientToRoom(webapp2.RequestHandler):
         channel.send_message(client_id, json.dumps(message_obj))
 
 
-    # add_client_to_all_users_rooms is useful for cases where the channel has died, and we wish to ensure that the new client_id
-    # associated with a user is placed in all of the rooms that the user has open once the client re-joins the room.
+
     @staticmethod
     def add_client_to_all_users_rooms(client_id, user_id):
+        """
+        Useful for cases where the channel has died, and we wish to ensure that the new client_id
+        associated with a user is placed in all of the rooms that the user has open once the client re-joins the room.
+        """
 
         logging.debug('add_client_to_all_users_rooms called for user_id %s' % user_id)
 
@@ -101,8 +95,8 @@ class AddClientToRoom(webapp2.RequestHandler):
         self.add_client_to_room(client_id, room_id, user_id)
 
 
-# Receives a "synchronization heartbeat" from the client, which we respond to on the channel.
 class SynClientHeartbeat(webapp2.RequestHandler):
+    """Receives a "synchronization heartbeat" from the client, which we respond to on the channel."""
 
     @handle_exceptions
     def post(self):
@@ -119,9 +113,12 @@ class SynClientHeartbeat(webapp2.RequestHandler):
         channel.send_message(client_id, json.dumps(response_message_obj))
 
 
-# Receives an acknowledgement to the response that we sent to the client on the channel. If we receive a post
-# to this URL, then we know that the channel is currently functioning.
+
 class AckClientHeartbeat(webapp2.RequestHandler):
+    """
+    Receives an acknowledgement to the response that we sent to the client on the channel. If we receive a post
+    to this URL, then we know that the channel is currently functioning.
+    """
 
     @handle_exceptions
     def post(self):
@@ -138,6 +135,7 @@ class AckClientHeartbeat(webapp2.RequestHandler):
         # Make sure that this client is a member of all of the rooms that the associated user is a member of
         AddClientToRoom.add_client_to_all_users_rooms(client_id, user_id)
 
+
 class RequestChannelToken(webapp2.RequestHandler):
 
     @handle_exceptions
@@ -146,21 +144,12 @@ class RequestChannelToken(webapp2.RequestHandler):
         #token_timeout = 1  # minutes
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
-        user_id = data_object['userId']
         channel_token = channel.create_channel(str(client_id), token_timeout)
 
-        try:
-            AddClientToRoom.txn_create_new_client_model_and_add_to_track_clients_object(user_id, client_id)
-            response_dict = {
-                'channelToken': channel_token,
-            }
-        except:
-            response_dict = {
-                'channelToken': None,
-            }
+        response_dict = {
+            'channelToken': channel_token,
+        }
 
-            status_string = 'serverError'
-            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
 
         # Finally, send the http response.
         http_helpers.set_http_ok_json_response(self.response, response_dict)
@@ -225,7 +214,7 @@ class DisconnectClient(webapp2.RequestHandler):
 
                 logging.debug('Client %s' % client_id + ' removed from room %d state: %s' % (chat_room_obj.key.id(), str(chat_room_obj)))
 
-                dict_of_client_objects = chat_room_obj.get_dict_of_client_objects()
+                dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(force_update=True)
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
                 messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects)
