@@ -6,7 +6,6 @@ import webapp2
 from google.appengine.api import channel
 
 from video_src import chat_room_module
-from video_src import clients
 from video_src import http_helpers
 from video_src import video_setup
 
@@ -53,7 +52,7 @@ def send_room_occupancy_to_room_clients(chat_room_obj, list_of_clients_to_update
 
     # send list_of_js_user_objects to every user in the room
     for i in range(len(list_of_clients_to_update)):
-        client_id = chat_room_obj.room_members_client_ids[i]
+        client_id = list_of_clients_to_update[i]
         message_obj['messagePayload']['dictOfClientObjects'] = dict_of_client_objects
 
         logging.info('Sending roomOccupancy to %s: %s' % (client_id, json.dumps(message_obj)))
