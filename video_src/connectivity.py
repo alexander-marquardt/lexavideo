@@ -81,7 +81,7 @@ class AddClientToRoom(webapp2.RequestHandler):
                 # with un-necessary calls)
                 if client_id not in room_members_client_ids:
                     AddClientToRoom.add_client_to_room(client_id, room_id, user_id)
-                    AddClientToRoom.tell_client_they_were_re_added_to_room_after_absence(client_id, user_id)
+                    AddClientToRoom.tell_client_they_were_re_added_to_room_after_absence(client_id, room_id)
 
         else:
             status_string = 'user_id %s user object not found.' % user_id
