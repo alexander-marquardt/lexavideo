@@ -2,6 +2,7 @@
 import copy
 import json
 import logging
+import pickle
 import webapp2
 import webapp2_extras.appengine.auth.models
 
@@ -9,12 +10,16 @@ from google.appengine.ext import ndb
 
 from video_src import constants
 from video_src import http_helpers
+from video_src.memcache_wrapper import memcache
 from video_src import status_reporting
 from video_src import users
 from video_src import utils
 
 from video_src.error_handling import handle_exceptions
 
+
+DICT_OF_CLIENT_OBJECTS_MEMCACHE_PREFIX = 'dict_of_client_objects-'
+DICT_OF_CLIENT_OBJECTS_MEMCACHE_EXPIRY_IN_SECONDS = 5
 
 class UniqueChatRoomName(webapp2_extras.appengine.auth.models.Unique):pass
 
@@ -203,27 +208,45 @@ class ChatRoomModel(ndb.Model):
         return chat_room_obj
 
 
-    def get_dict_of_client_objects(self, force_update):
+    def get_dict_of_client_objects(self, recompute_from_scratch):
         """
          Get a list of objects corresponding to each client that is in the chat room.
 
          Parameters:
-         force_update -- if this is true, then we will not attempt to pull the dictionary from memcache.
+         recompute_from_scratch -- if this is true, then we will not attempt to pull the dictionary from memcache.
          """
 
-        # Javascript needs to know which clients are in this room.
-        # Create a list, where each element corresponds to a client in the room, and that element
-        # contains the status of that client.
-        dict_of_client_objects = {}
-        for client_id in self.room_members_client_ids:
+        dict_of_client_objects_memcache_key = DICT_OF_CLIENT_OBJECTS_MEMCACHE_PREFIX + str(self.key.id())
 
-        # We only send relevant data to the client,
-        # which includes the client_id and the user_name.
-            dict_of_client_objects[client_id] =  {
-                'userName': client_id,
-            }
+        if not recompute_from_scratch:
+            serialized_dict_of_client_objects = memcache.get(dict_of_client_objects_memcache_key)
+        else:
+            serialized_dict_of_client_objects = None
 
-        return dict_of_client_objects
+
+        # If we pulled the dictionary out of memcache, then we return the memcache value
+        if serialized_dict_of_client_objects:
+            logging.debug('Pulled serialized_dict_of_client_objects from memcache')
+            dict_of_client_objects = pickle.loads(serialized_dict_of_client_objects)
+            return dict_of_client_objects
+
+        else:
+            logging.debug('Computing dict_of_client_objects')
+            dict_of_client_objects = {}
+            for client_id in self.room_members_client_ids:
+
+                # We only send relevant data to the client,
+                # which includes the client_id and the user_name.
+                dict_of_client_objects[client_id] =  {
+                    'userName': client_id,
+                    }
+
+            # Store the dictionary to memcache
+            serialized_dict_of_client_objects = pickle.dumps(dict_of_client_objects, constants.pickle_protocol)
+            memcache.set(dict_of_client_objects_memcache_key, serialized_dict_of_client_objects, DICT_OF_CLIENT_OBJECTS_MEMCACHE_EXPIRY_IN_SECONDS)
+
+            return dict_of_client_objects
+
 
 
 class CheckIfChatRoomExists(webapp2.RequestHandler):
