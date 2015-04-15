@@ -87,7 +87,7 @@ angular.module('lxHttp.services', [])
             // Once a "synchronization acknowledgement" has been received on the channel, we then send
             // a final "ack" to the server to let it know  that communications in both direction have been verified.
             sendAckHeartbeatToServer: function(clientId, presenceStatus, currentlyOpenChatRoomId) {
-                self.updateClientStatusOnServerAndRequestUpdatedRoomInfo(clientId, presenceStatus, currentlyOpenChatRoomId, 'ackHeartBeat');
+                self.updateClientStatusOnServerAndRequestUpdatedRoomInfo(clientId, presenceStatus, currentlyOpenChatRoomId, 'ackHeartbeat');
             },
 
             addClientToRoom: function(clientId, userId, chatRoomId) {

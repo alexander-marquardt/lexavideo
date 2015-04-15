@@ -116,7 +116,8 @@ class SynClientHeartbeat(webapp2.RequestHandler):
 class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
     """
     Called by the client in the following cases:
-    1) Acknowledgement to the 'synAckHeartBeat' response that we sent to the client over the channel
+    1) Acknowledgement to the 'synAckHeartBeat' response that we sent to the client over the channel. In this
+       case, we expect the posted 'messageType' to be 'ackHeartbeat'. In this case, presence state will be updated.
     2) Message from the client when the client has changed rooms.
 
     After this object is posted to, the client will be sent a message on the channel that will contain
@@ -127,12 +128,17 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
     def post(self):
         message_obj = json.loads(self.request.body)
         client_id = message_obj['clientId']
+        message_type = message_obj['messageType']
         presence_state_name = message_obj['messagePayload']['presenceStateName']
         currently_open_chat_room_id = message_obj['messagePayload']['currentlyOpenChatRoomId']
         user_id, unique_client_postfix = [int(n) for n in client_id.split('|')]
 
-        client_obj = clients.ClientModel.get_by_id(client_id)
-        client_obj.store_current_presence_state(presence_state_name)
+        # We only update the user presence in the case that this is posted to as an acknowledgement
+        # of a heartbeat. If we were to update presence state in other cases, then the memcache and other timeouts
+        # that are synchronized to the heartbeat timing would be incorrect.
+        if message_type == 'ackHeartbeat':
+            client_obj = clients.ClientModel.get_by_id(client_id)
+            client_obj.store_current_presence_state(presence_state_name)
 
         # logging.debug('%s received from client_id %s with presence %s' % (message_type, client_id, presence_state_name))
 
@@ -140,7 +146,7 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         AddClientToRoom.add_client_to_all_users_rooms(client_id, user_id)
 
         # Status of the chat room that the user is currently looking at should have an up-to-date view of
-        # clients and their activity. Other rooms do not need to be updated as often. Send the current
+        # clients and their activity. Other rooms do not need to be updated as often. Send the 
         # client an updated view of the room members.
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(currently_open_chat_room_id)
         list_of_client_ids_to_update = [client_id,]
