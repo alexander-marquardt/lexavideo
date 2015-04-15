@@ -219,7 +219,7 @@ class DisconnectClient(webapp2.RequestHandler):
 
             if chat_room_obj.has_client(client_id):
 
-                chat_room_obj = chat_room_module.ChatRoomModel.txn_remove_client_from_room(chat_room_obj.key, user_id, client_id)
+                chat_room_obj = chat_room_module.ChatRoomModel.txn_remove_client_from_room(chat_room_obj.key, client_id)
 
                 logging.debug('Client %s' % client_id + ' removed from room %d state: %s' % (chat_room_obj.key.id(), str(chat_room_obj)))
 

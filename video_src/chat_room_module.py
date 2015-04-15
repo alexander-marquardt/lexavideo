@@ -116,8 +116,8 @@ class ChatRoomModel(ndb.Model):
 
 
     @classmethod
-    @ndb.transactional(xg=True)
-    def txn_remove_client_from_room(cls, room_key, user_id, client_id):
+    @ndb.transactional
+    def txn_remove_client_from_room(cls, room_key, client_id):
 
         logging.info('Removing client %s from room %s ' % (client_id, room_key))
 
