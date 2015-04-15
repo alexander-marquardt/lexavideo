@@ -6,6 +6,7 @@ import webapp2
 from google.appengine.api import channel
 
 from video_src import chat_room_module
+from video_src import clients
 from video_src import http_helpers
 from video_src import video_setup
 
@@ -47,21 +48,19 @@ def send_room_occupancy_to_room_clients(chat_room_obj):
 
     # Javascript needs to know which users are in this room.
     # first we must create a list that contains information of all users that are in the current room.
-    dict_of_js_client_objects = {}
+    dict_of_client_objects = {}
     for client_id in chat_room_obj.room_members_client_ids:
 
     # We only send relevant data to the client,
     # which includes the client_id and the user_name.
-        js_user_obj = {
+        dict_of_client_objects[client_id] =  {
             'userName': client_id,
         }
-
-        dict_of_js_client_objects[client_id] = js_user_obj
 
     # send list_of_js_user_objects to every user in the room
     for i in range(len(chat_room_obj.room_members_client_ids)):
         client_id = chat_room_obj.room_members_client_ids[i]
-        message_obj['messagePayload']['dictOfClientObjects'] = dict_of_js_client_objects
+        message_obj['messagePayload']['dictOfClientObjects'] = dict_of_client_objects
 
         logging.info('Sending roomOccupancy to %s: %s' % (client_id, json.dumps(message_obj)))
         channel.send_message(client_id, json.dumps(message_obj))
