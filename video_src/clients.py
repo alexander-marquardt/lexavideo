@@ -57,32 +57,26 @@ class ClientModel(ndb.Model):
             'stored_datetime': datetime.datetime.now(),
         }
         logging.debug('Storing presence state %s to memcache key %s' % (presence_state_name, client_memcache_key))
-        serialized_obj = pickle.dumps(client_memcache_dict, constants.pickle_protocol)
-        memcache.set(client_memcache_key, serialized_obj)
-
-
-
-    def store_current_presence_state(self, presence_state_name):
-
-        self._periodically_store_current_presence_state_to_db(presence_state_name)
-        self._store_current_presence_state_to_memcache(presence_state_name)
-
+        serialized_dict = pickle.dumps(client_memcache_dict, constants.pickle_protocol)
+        memcache.set(client_memcache_key, serialized_dict)
 
 
     def _get_current_presence_state_from_memcache(self):
         client_id = self.key.id()
         client_memcache_key = CLIENT_PRESENCE_MEMCACHE_PREFIX + client_id
-        serialized_obj = memcache.get(client_memcache_key)
+        serialized_dict = memcache.get(client_memcache_key)
         presence_state_name = None
 
-        if serialized_obj:
-            client_memcache_dict = pickle.loads(serialized_obj)
+        if serialized_dict:
+            client_memcache_dict = pickle.loads(serialized_dict)
             logging.debug('Pulled presence states %s from memcache key: %s' % (client_memcache_dict['presence_state_name'],
             client_memcache_key))
 
             # memcache is active, therefore we make sure that the client presence status has been updated recently,
             # otherwise the client will be considered OFFLINE
             if client_memcache_dict['stored_datetime'] + datetime.timedelta(seconds=HEARTBEAT_INTERVAL_TIMEOUT_SECONDS) < datetime.datetime.now():
+
+                logging.debug('Client %s is set to OFFLINE due to timeout' % client_id)
                 # Memcache has not been updated within the expected time, therefore the user is considered offline.
                 presence_state_name = 'OFFLINE'
             else:
@@ -98,6 +92,7 @@ class ClientModel(ndb.Model):
     # this into consideration when determining if the client should be considered OFFLINE.
     def _get_current_presence_state_from_database(self):
 
+        client_id = self.key.id()
         logging.warning('Reading presence state from database for client %s' % self.key.id())
 
         # Make sure that the value stored in the database was recently written, and if not then
@@ -105,10 +100,17 @@ class ClientModel(ndb.Model):
         if (self.last_db_write + datetime.timedelta(seconds=DATABASE_PRESENCE_UPDATE_INTERVAL_TIMEOUT_SECONDS) <
             datetime.datetime.now()):
 
+            logging.debug('Client %s is set to OFFLINE due to timeout' % client_id)
             return 'OFFLINE'
 
         else:
             return self.most_recent_presence_state_stored_in_db
+
+
+    def store_current_presence_state(self, presence_state_name):
+
+        self._periodically_store_current_presence_state_to_db(presence_state_name)
+        self._store_current_presence_state_to_memcache(presence_state_name)
 
 
     # Get the presence state of the client. Return values
