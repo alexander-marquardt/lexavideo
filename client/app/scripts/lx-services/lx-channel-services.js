@@ -203,7 +203,8 @@ angular.module('lxChannel.services', [])
                             $log.log('Received heartbeat syn acknowledgement: ' + JSON.stringify(messageObject));
                             scope.channelObject.channelIsAlive = true;
                             $timeout.cancel(reInitializeChannelTimerId);
-                            lxHttpChannelService.sendAckHeartbeatToServer(scope.lxMainViewCtrl.clientId, scope.presenceStatus);
+                            lxHttpChannelService.sendAckHeartbeatToServer(scope.lxMainViewCtrl.clientId,
+                                scope.presenceStatus, scope.chatRoomDisplayObject.chatRoomId);
                             break;
 
                         case 'videoExchangeStatusMsg':

@@ -45,7 +45,10 @@ angular.module('lxMainView.controllers', [])
             lastChatRoomNameFromUrl: null,
 
             // point to the element in chatPanelDict that corresponds to the currently displayed chat
-            chatPanelObject: null
+            chatPanelObject: null,
+
+            // track the chatRoomId of the room that is currently displayed
+            chatRoomId: null
         };
 
 

@@ -57,6 +57,7 @@ angular.module('lxUseChatRoom.controllers', [])
             };
 
             $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[data.chatRoomId];
+            $scope.chatRoomDisplayObject.chatRoomId = data.chatRoomId
 
             // Add the normalizedRoomName to normalizedOpenRoomNamesList, but only if it is not already there.
             if ($.inArray(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList) === -1) {

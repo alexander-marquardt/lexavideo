@@ -15,6 +15,8 @@ import datetime
 import logging
 import pickle
 
+from video_src import status_reporting
+
 from video_src.memcache_wrapper import memcache
 from google.appengine.ext import ndb
 
@@ -92,20 +94,25 @@ class ClientModel(ndb.Model):
     # this into consideration when determining if the client should be considered OFFLINE.
     def _get_current_presence_state_from_database(self):
 
-        client_id = self.key.id()
-        logging.warning('Reading presence state from database for client %s' % self.key.id())
+        try:
+            client_id = self.key.id()
+            logging.warning('Reading presence state from database for client %s' % self.key.id())
 
-        # Make sure that the value stored in the database was recently written, and if not then
-        # the user is considered to be offline
-        if (self.last_db_write + datetime.timedelta(seconds=DATABASE_PRESENCE_UPDATE_INTERVAL_TIMEOUT_SECONDS) <
-            datetime.datetime.now()):
+            # Make sure that the value stored in the database was recently written, and if not then
+            # the user is considered to be offline
+            if (self.last_db_write + datetime.timedelta(seconds=DATABASE_PRESENCE_UPDATE_INTERVAL_TIMEOUT_SECONDS) <
+                datetime.datetime.now()):
 
-            logging.debug('Client %s is set to OFFLINE due to timeout' % client_id)
+                logging.debug('Client %s is set to OFFLINE due to timeout' % client_id)
+                return 'OFFLINE'
+
+            else:
+                return self.most_recent_presence_state_stored_in_db
+
+        except:
+            err_message = '_get_current_presence_state_from_database returning OFFLINE due to internal error'
+            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_message)
             return 'OFFLINE'
-
-        else:
-            return self.most_recent_presence_state_stored_in_db
-
 
     def store_current_presence_state(self, presence_state_name):
 

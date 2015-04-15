@@ -39,7 +39,7 @@ angular.module('lxHttp.services', [])
         lxJs
         ) {
 
-        return {
+        self = {
 
             // In order to ensure that the channel is functioning, we periodically send the server "heartbeat"
             // messages.
@@ -65,21 +65,29 @@ angular.module('lxHttp.services', [])
                 $http.post('/_lx/channel/syn_user_heartbeat/', messageObject);
             },
 
-            // Once a "synchronization acknowledgement" has been received on the channel, we then send
-            // a final "ack" to the server to let it know  that communications in both direction have been verified.
-            sendAckHeartbeatToServer: function(clientId, presenceStatus) {
+
+            // Update the users activity status on the server, to which the server will send an updated
+            // list of clients (and their presence state) in the currently open chat room.
+            updateClientStatusOnServerAndRequestUpdatedRoomInfo: function(clientId, presenceStatus, currentlyOpenChatRoomId, messageType) {
 
                 var messagePayload = {
-                    presenceStateName: presenceStatus.getCurrent().name
+                    presenceStateName: presenceStatus.getCurrent().name,
+                    currentlyOpenChatRoomId: currentlyOpenChatRoomId
                 };
 
                 var messageObject = {
                     'clientId': clientId,
-                    'messageType': 'ackHeartBeat', // use handshaking terminology for naming
+                    'messageType': messageType,
                     'messagePayload': messagePayload
                 };
 
-                $http.post('/_lx/channel/ack_user_heartbeat/', messageObject);
+                $http.post('/_lx/channel/update_client_status_and_request_updated_room_info/', messageObject);
+            },
+
+            // Once a "synchronization acknowledgement" has been received on the channel, we then send
+            // a final "ack" to the server to let it know  that communications in both direction have been verified.
+            sendAckHeartbeatToServer: function(clientId, presenceStatus, currentlyOpenChatRoomId) {
+                self.updateClientStatusOnServerAndRequestUpdatedRoomInfo(clientId, presenceStatus, currentlyOpenChatRoomId, 'ackHeartBeat')
             },
 
             addClientToRoom: function(clientId, userId, chatRoomId) {
@@ -131,6 +139,8 @@ angular.module('lxHttp.services', [])
                 channelObject.socket.close();
             }
         };
+
+        return self;
     })
 
     .factory('lxMessageService',

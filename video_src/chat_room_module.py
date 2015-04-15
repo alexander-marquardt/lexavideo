@@ -127,7 +127,7 @@ class ChatRoomModel(ndb.Model):
     def txn_remove_client_from_room(self, client_id):
 
         room_key = self.key
-        logging.info('Removing client %s from room %s ' % (client_id, room_key))
+        logging.debug('Removing client %s from room %s ' % (client_id, room_key))
 
         # First, we remove the "client" from the room
         chat_room_obj = room_key.get()
@@ -241,8 +241,8 @@ class ChatRoomModel(ndb.Model):
                 logging.debug('Getting presence state for client_obj %s' % client_obj)
                 presence_state_name = client_obj.get_current_presence_state()
 
-                # If client is OFFLINE, then don't include them in dict_of_client_objects and remove the client
-                # from the room.
+                # If client is OFFLINE, then don't include them in dict_of_client_objects *and* also remove the client
+                # from the room (if they later start their heartbeat, then they will be added back to the room)
                 if presence_state_name == "OFFLINE":
                     self.txn_remove_client_from_room(client_id)
 

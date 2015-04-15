@@ -114,7 +114,7 @@ class SynClientHeartbeat(webapp2.RequestHandler):
 
 
 
-class AckClientHeartbeat(webapp2.RequestHandler):
+class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
     """
     Receives an acknowledgement to the response that we sent to the client on the channel. If we receive a post
     to this URL, then we know that the channel is currently functioning.
@@ -125,6 +125,7 @@ class AckClientHeartbeat(webapp2.RequestHandler):
         message_obj = json.loads(self.request.body)
         client_id = message_obj['clientId']
         presence_state_name = message_obj['messagePayload']['presenceStateName']
+        currently_open_chat_room_id = message_obj['messagePayload']['currentlyOpenChatRoomId']
         user_id, unique_client_postfix = [int(n) for n in client_id.split('|')]
 
         client_obj = clients.ClientModel.get_by_id(client_id)
@@ -134,6 +135,12 @@ class AckClientHeartbeat(webapp2.RequestHandler):
 
         # Make sure that this client is a member of all of the rooms that the associated user is a member of
         AddClientToRoom.add_client_to_all_users_rooms(client_id, user_id)
+
+        # Status of the chat room that the user is currently looking at should have an up-to-date view of
+        # clients and their activity. Other rooms do not need to be updated as often.
+        chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(currently_open_chat_room_id)
+        dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(recompute_from_scratch=False)
+        messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects)
 
 
 class RequestChannelToken(webapp2.RequestHandler):
