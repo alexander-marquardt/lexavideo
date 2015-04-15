@@ -28,8 +28,7 @@ class AddClientToRoom(webapp2.RequestHandler):
         logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
         chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
         chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
-        dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(recompute_from_scratch=True)
-        messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects, chat_room_obj.room_members_client_ids)
+        messaging.send_room_occupancy_to_room_clients(chat_room_obj, chat_room_obj.room_members_client_ids, recompute_from_scratch=True)
 
 
 
@@ -141,9 +140,8 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         # clients and their activity. Other rooms do not need to be updated as often. Send the current
         # client an updated view of the room members.
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(currently_open_chat_room_id)
-        dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(recompute_from_scratch=False)
         list_of_client_ids_to_update = [client_id,]
-        messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects, list_of_client_ids_to_update)
+        messaging.send_room_occupancy_to_room_clients(chat_room_obj, list_of_client_ids_to_update, recompute_from_scratch=False)
 
 
 class RequestChannelToken(webapp2.RequestHandler):
@@ -229,10 +227,9 @@ class DisconnectClient(webapp2.RequestHandler):
 
                 logging.debug('Client %s' % client_id + ' removed from room %d state: %s' % (chat_room_obj.key.id(), str(chat_room_obj)))
 
-                dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(recompute_from_scratch=True)
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
-                messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects, chat_room_obj.room_members_client_ids)
+                messaging.send_room_occupancy_to_room_clients(chat_room_obj, chat_room_obj.room_members_client_ids, recompute_from_scratch=True)
 
             else:
                 # This is probably not really an error. Change it later once we understand which conditions can trigger

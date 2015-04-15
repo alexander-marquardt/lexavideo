@@ -32,9 +32,13 @@ from error_handling import handle_exceptions
 
 # Sends information about who is in the room
 @handle_exceptions
-def send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects, list_of_clients_to_update):
+def send_room_occupancy_to_room_clients(chat_room_obj, list_of_clients_to_update, recompute_from_scratch):
     # This is called when a user either connects or disconnects from a room. It sends information
     # to room members indicating the status of who is in the room.
+
+    # Get the list of clients that are currently in the room, as well as any status associated with
+    # each of these clients (status such as presence state, and anything else that may come up in the future).
+    dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(recompute_from_scratch)
 
     message_obj = {
         'fromClientId': 'msgSentFromServer',
