@@ -124,8 +124,7 @@ angular.module('lxChatbox.directives', [])
                             scope.trackUnseenMessageCountObject.unseenMessageCount++;
                         }
 
-                        lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject,
-                                                                                scope.presenceStatus.ACTIVE.isCurrentState);
+                        lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject);
 
                     }
                 });

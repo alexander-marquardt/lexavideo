@@ -95,7 +95,7 @@ angular.module('lxChatbox.controllers', [])
         }, function(chatPanelIsGlued) {
             if (chatPanelIsGlued) {
                 lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject,
-                    $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId], $scope.presenceStatus.ACTIVE.isCurrentState);
+                    $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId]);
             }
         });
 

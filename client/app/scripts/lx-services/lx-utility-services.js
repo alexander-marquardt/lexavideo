@@ -83,7 +83,8 @@ angular.module('lxUtility.services', [])
 
     .factory('lxShowNumMessagesService',
     function(
-        $timeout
+        $timeout,
+        lxWindowFocus
         ) {
 
         var numMessagesIsShownToggle = true;
@@ -101,9 +102,9 @@ angular.module('lxUtility.services', [])
 
 
         var self = {
-            subtractNumMessagesSeen: function(trackUnseenMessageCountObject, chatPanelObject, activeIsCurrentState) {
+            subtractNumMessagesSeen: function(trackUnseenMessageCountObject, chatPanelObject) {
                 clearNumMessagesInChatPanel(trackUnseenMessageCountObject, chatPanelObject);
-                self.showNumMessagesInDocumentTitle(trackUnseenMessageCountObject, activeIsCurrentState)
+                self.showNumMessagesInDocumentTitle(trackUnseenMessageCountObject)
             },
                     // function that stops the title from flashing the number of new messages
             stopFlashingTitle: function() {
@@ -114,17 +115,17 @@ angular.module('lxUtility.services', [])
 
             // Displays the number of messages received in the document title , and flashes the
             // number of messages to get the users attention.
-            showNumMessagesInDocumentTitle: function (trackUnseenMessageCountObject, activeIsCurrentState) {
+            showNumMessagesInDocumentTitle: function (trackUnseenMessageCountObject) {
 
                 // show the number of messages in the document title.
                 if (trackUnseenMessageCountObject.unseenMessageCount) {
                     document.title = '(' + trackUnseenMessageCountObject.unseenMessageCount + ') ' + $('#id-document-title-div').text();
 
-                    // If the user is active, or if the user becomes active on a page that has a title
+                    // If the user is focused on a page that
                     // flashing, we stop the flashing. It should only start to flash again in the case
-                    // that the user is not active, and that the number of unseen messages has increased
-                    // in the time that the user was not active.
-                    if (activeIsCurrentState) {
+                    // that the user focus is away from the page, and that the number of unseen messages has increased
+                    // in the time that the user was not focused.
+                    if (lxWindowFocus.isFocusedFn()) {
                         self.stopFlashingTitle();
                     }
 
