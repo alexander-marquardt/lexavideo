@@ -8,6 +8,7 @@ import webapp2_extras.appengine.auth.models
 
 from google.appengine.ext import ndb
 
+from video_src import clients
 from video_src import constants
 from video_src import http_helpers
 from video_src.memcache_wrapper import memcache
@@ -19,7 +20,7 @@ from video_src.error_handling import handle_exceptions
 
 
 DICT_OF_CLIENT_OBJECTS_MEMCACHE_PREFIX = 'dict_of_client_objects-'
-DICT_OF_CLIENT_OBJECTS_MEMCACHE_EXPIRY_IN_SECONDS = 5
+DICT_OF_CLIENT_OBJECTS_MEMCACHE_EXPIRY_IN_SECONDS = 2
 
 class UniqueChatRoomName(webapp2_extras.appengine.auth.models.Unique):pass
 
@@ -122,10 +123,10 @@ class ChatRoomModel(ndb.Model):
 
 
 
-    @classmethod
     @ndb.transactional
-    def txn_remove_client_from_room(cls, room_key, client_id):
+    def txn_remove_client_from_room(self, client_id):
 
+        room_key = self.key
         logging.info('Removing client %s from room %s ' % (client_id, room_key))
 
         # First, we remove the "client" from the room
@@ -135,6 +136,7 @@ class ChatRoomModel(ndb.Model):
             chat_room_obj.room_members_client_ids.remove(client_id)
         except:
             logging.error("client_id %s not found in room - why is it being removed?" % client_id)
+
         chat_room_obj.put()
 
         return chat_room_obj
@@ -224,7 +226,7 @@ class ChatRoomModel(ndb.Model):
             serialized_dict_of_client_objects = None
 
 
-        # If we pulled the dictionary out of memcache, then we return the memcache value
+        # If we successfully pulled the dictionary out of memcache, then we return the value we pulled
         if serialized_dict_of_client_objects:
             logging.debug('Pulled serialized_dict_of_client_objects from memcache')
             dict_of_client_objects = pickle.loads(serialized_dict_of_client_objects)
@@ -235,11 +237,22 @@ class ChatRoomModel(ndb.Model):
             dict_of_client_objects = {}
             for client_id in self.room_members_client_ids:
 
-                # We only send relevant data to the client,
-                # which includes the client_id and the user_name.
-                dict_of_client_objects[client_id] =  {
-                    'userName': client_id,
-                    }
+                client_obj = clients.ClientModel.get_by_id(id=client_id)
+                logging.debug('Getting presence state for client_obj %s' % client_obj)
+                presence_state_name = client_obj.get_current_presence_state()
+
+                # If client is OFFLINE, then don't include them in dict_of_client_objects and remove the client
+                # from the room.
+                if presence_state_name == "OFFLINE":
+                    self.txn_remove_client_from_room(client_id)
+
+                # Client is not OFFLINE, include them in dict_of_client_objects
+                else:
+                    # Send relevant data to the client, which includes the client_id, user_name, and presence state.
+                    dict_of_client_objects[client_id] =  {
+                        'userName': client_id,
+                        'presenceStateName': presence_state_name
+                        }
 
             # Store the dictionary to memcache
             serialized_dict_of_client_objects = pickle.dumps(dict_of_client_objects, constants.pickle_protocol)
