@@ -19,6 +19,7 @@ from error_handling import handle_exceptions
 
 
 
+
 # The following class handles when a user explicitly enters into a room by going to a URL for a given room.
 class AddClientToRoom(webapp2.RequestHandler):
 
@@ -39,7 +40,8 @@ class AddClientToRoom(webapp2.RequestHandler):
         logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
         chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
         chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
-        messaging.send_room_occupancy_to_room_clients(chat_room_obj)
+        dict_of_client_objects = chat_room_obj.get_dict_of_client_objects()
+        messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects)
 
 
     # tell_client_they_were_re_added_to_room_after_absence is used for notifying the client that they have be re-added to
@@ -223,9 +225,10 @@ class DisconnectClient(webapp2.RequestHandler):
 
                 logging.debug('Client %s' % client_id + ' removed from room %d state: %s' % (chat_room_obj.key.id(), str(chat_room_obj)))
 
+                dict_of_client_objects = chat_room_obj.get_dict_of_client_objects()
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
-                messaging.send_room_occupancy_to_room_clients(chat_room_obj)
+                messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects)
 
             else:
                 # This is probably not really an error. Change it later once we understand which conditions can trigger

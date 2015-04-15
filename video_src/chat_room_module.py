@@ -201,6 +201,22 @@ class ChatRoomModel(ndb.Model):
         return chat_room_obj
 
 
+    def get_dict_of_client_objects(self):
+
+        # Javascript needs to know which clients are in this room.
+        # Create a list, where each element corresponds to a client in the room, and that element
+        # contains the status of that client.
+        dict_of_client_objects = {}
+        for client_id in self.room_members_client_ids:
+
+        # We only send relevant data to the client,
+        # which includes the client_id and the user_name.
+            dict_of_client_objects[client_id] =  {
+                'userName': client_id,
+            }
+
+        return dict_of_client_objects
+
 
 class CheckIfChatRoomExists(webapp2.RequestHandler):
     @handle_exceptions
