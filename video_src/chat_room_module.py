@@ -20,7 +20,7 @@ from video_src.error_handling import handle_exceptions
 
 
 DICT_OF_CLIENT_OBJECTS_MEMCACHE_PREFIX = 'dict_of_client_objects-'
-DICT_OF_CLIENT_OBJECTS_MEMCACHE_EXPIRY_IN_SECONDS = 2
+DICT_OF_CLIENT_OBJECTS_MEMCACHE_EXPIRY_IN_SECONDS = 5
 
 class UniqueChatRoomName(webapp2_extras.appengine.auth.models.Unique):pass
 
@@ -213,17 +213,19 @@ class ChatRoomModel(ndb.Model):
         return chat_room_obj
 
 
-    def get_dict_of_client_objects(self, recompute_from_scratch):
+    def get_dict_of_client_objects(self, recompute_members_from_scratch):
         """
          Get a list of objects corresponding to each client that is in the chat room.
 
          Parameters:
-         recompute_from_scratch -- if this is true, then we will not attempt to pull the dictionary from memcache.
+         recompute_members_from_scratch -- if this is true, then we will not attempt to pull the dictionary from memcache.
+             We should set this to True in cases where we know that the list of room members has changed, and needs to
+             be updated from the database. 
          """
 
         dict_of_client_objects_memcache_key = DICT_OF_CLIENT_OBJECTS_MEMCACHE_PREFIX + str(self.key.id())
 
-        if not recompute_from_scratch:
+        if not recompute_members_from_scratch:
             serialized_dict_of_client_objects = memcache.get(dict_of_client_objects_memcache_key)
         else:
             serialized_dict_of_client_objects = None
