@@ -8,6 +8,7 @@ from webapp2_extras import security
 from google.appengine.ext import ndb
 
 from video_src import constants
+from video_src import clients
 
 # UniqueUserModel is used for ensuring that UserModel "auth_id" is unique. It also
 # keeps track of any other properties that are specified as requiring a unique value
@@ -76,7 +77,7 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
     @ndb.transactional(xg=True)
     def txn_delete_client_model_and_remove_from_client_tracker(cls, user_id, client_id):
 
-        client_obj = ClientModel.get_by_id(client_id)
+        client_obj = clients.ClientModel.get_by_id(client_id)
         client_key = client_obj.key
         client_obj.key.delete()
 
