@@ -115,15 +115,18 @@ class SynClientHeartbeat(webapp2.RequestHandler):
 
 class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
     """
-    Receives an acknowledgement to the response that we sent to the client on the channel. If we receive a post
-    to this URL, then we know that the channel is currently functioning.
+    Called by the client in the following cases:
+    1) Acknowledgement to the 'synAckHeartBeat' response that we sent to the client over the channel
+    2) Message from the client when the client has changed rooms.
+
+    After this object is posted to, the client will be sent a message on the channel that will contain
+    an updated list of all of the clients that are in the room that the client is currently viewing.
     """
 
     @handle_exceptions
     def post(self):
         message_obj = json.loads(self.request.body)
         client_id = message_obj['clientId']
-        message_type = message_obj['messageType']
         presence_state_name = message_obj['messagePayload']['presenceStateName']
         currently_open_chat_room_id = message_obj['messagePayload']['currentlyOpenChatRoomId']
         user_id, unique_client_postfix = [int(n) for n in client_id.split('|')]
