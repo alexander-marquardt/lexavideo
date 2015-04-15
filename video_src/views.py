@@ -108,7 +108,7 @@ class MainPage(registration_and_login.BaseHandler):
                     'userName': user_obj.user_name,
                     'userId': user_obj.key.id(),
                     'debugBuildEnabled': vidsetup.DEBUG_BUILD,
-                    'heartbeatIntervalMilliseconds': constants.heartbeatIntervalSeconds * 1000
+                    'heartbeatIntervalMilliseconds': constants.heartbeat_interval_seconds * 1000
                     }
             ),
             'enable_live_reload': vidsetup.ENABLE_LIVE_RELOAD,

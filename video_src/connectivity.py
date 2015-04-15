@@ -25,7 +25,7 @@ class AddClientToRoom(webapp2.RequestHandler):
 
     @staticmethod
     def add_client_to_room(client_id, room_id, user_id):
-        logging.info('AddClientToRoom client_id %s added to room_id %s' % (client_id, room_id))
+        logging.info('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
         chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
         chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
         messaging.send_room_occupancy_to_room_clients(chat_room_obj)
@@ -35,7 +35,7 @@ class AddClientToRoom(webapp2.RequestHandler):
     @staticmethod
     def add_client_to_all_users_rooms(client_id, user_id):
 
-        logging.info('AddClientToUsersRooms called for user_id %s' % user_id)
+        logging.info('add_client_to_all_users_rooms called for user_id %s' % user_id)
 
         # Add this "client" in to all of the rooms that the "user" currently has open
         user_obj = users.get_user_by_id(user_id)
@@ -79,7 +79,7 @@ class AddClientToRoom(webapp2.RequestHandler):
         self.add_client_to_room(client_id, room_id, user_id)
 
 
-# Receives a "syncronization heartbeat" from the client, which we respond to on the channel.
+# Receives a "synchronization heartbeat" from the client, which we respond to on the channel.
 class SynClientHeartbeat(webapp2.RequestHandler):
 
     @handle_exceptions
@@ -108,6 +108,8 @@ class AckClientHeartbeat(webapp2.RequestHandler):
         presence_state_name = message_obj['messagePayload']['presenceStateName']
         user_id, unique_client_postfix = [int(n) for n in client_id.split('|')]
 
+        client_obj = clients.ClientModel.get_by_id(client_id)
+        client_obj.store_current_presence_state(presence_state_name)
 
         logging.info('Heartbeat acknowledgement received from client_id %s with presence %s' % (client_id, presence_state_name))
 
