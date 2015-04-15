@@ -11,7 +11,7 @@ import datetime
 import logging
 import pickle
 
-from google.appengine.api import memcache
+from video_src.memcache_wrapper import memcache
 from google.appengine.ext import ndb
 
 # For efficiency, we only periodically write the client presence to the database
@@ -48,12 +48,12 @@ class ClientModel(ndb.Model):
 
         client_id = self.key.id()
         client_memcache_key = CLIENT_PRESENCE_MEMCACHE_PREFIX + client_id
-        client_memcache_obj = {
+        client_memcache_dict = {
             'presence_state_name': presence_state_name,
             'stored_datetime': datetime.datetime.now(),
         }
-        logging.info('Storing state %s to memcache for client_id %s' % (presence_state_name, client_id))
-        serialized_obj = pickle.dumps(client_memcache_obj, constants.pickle_protocol)
+        logging.info('Storing presence state %s to memcache key %s' % (presence_state_name, client_memcache_key))
+        serialized_obj = pickle.dumps(client_memcache_dict, constants.pickle_protocol)
         memcache.set(client_memcache_key, serialized_obj)
 
 
@@ -69,19 +69,20 @@ class ClientModel(ndb.Model):
         client_id = self.key.id()
         client_memcache_key = CLIENT_PRESENCE_MEMCACHE_PREFIX + client_id
         serialized_obj = memcache.get(client_memcache_key)
-        client_memcache_obj = pickle.loads(serialized_obj)
+        client_memcache_dict = pickle.loads(serialized_obj)
         presence_state_name = None
 
-        if client_memcache_obj:
-            logging.info('Pulled presence from memcache: %s' % serialized_obj)
+        if client_memcache_dict:
+            logging.info('Pulled presence states %s from memcache key: %s' % (client_memcache_dict['presence_state_name'],
+            client_memcache_key))
 
             # memcache is active, therefore we make sure that the client presence status has been updated recently,
             # otherwise the client will be considered OFFLINE
-            if client_memcache_obj.stored_datetime + datetime.timedelta(seconds=HEARTBEAT_INTERVAL_TIMEOUT_SECONDS) < datetime.datetime.now():
+            if client_memcache_dict['stored_datetime'] + datetime.timedelta(seconds=HEARTBEAT_INTERVAL_TIMEOUT_SECONDS) < datetime.datetime.now():
                 # Memcache has not been updated within the expected time, therefore the user is considered offline.
                 presence_state_name = 'OFFLINE'
             else:
-                presence_state_name = client_memcache_obj.presence_state_name
+                presence_state_name = client_memcache_dict['presence_state_name']
 
 
         return presence_state_name
