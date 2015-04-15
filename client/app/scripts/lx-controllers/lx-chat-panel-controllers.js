@@ -111,7 +111,7 @@ angular.module('lxChatbox.controllers', [])
                 $scope.chatRoomDisplayObject.chatRoomId = $scope.roomOccupancyObject.chatRoomId;
 
                 lxHttpChannelService.updateClientStatusOnServerAndRequestUpdatedRoomInfo($scope.lxMainViewCtrl.clientId,
-                    $scope.presenceStatus.getCurrent().name, $scope.roomOccupancyObject.chatRoomId, 'updateOnRoomChange');
+                    $scope.presenceStatus, $scope.roomOccupancyObject.chatRoomId, 'updateOnRoomChange');
 
             } else {
                 $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = false;
