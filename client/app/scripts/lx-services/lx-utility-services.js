@@ -60,6 +60,27 @@ angular.module('lxUtility.services', [])
         };
     })
 
+    .factory('lxWindowFocus', function() {
+
+        var isFocused = true;
+
+        // Monitor the window to see if it has focus, and set the windowWatcher.isFocused
+        // variable appropriately. $scope.windowWatcher.isFocused can then be watched by child scopes.
+        $(window).focus(function() {
+            isFocused = true;
+        }).blur(function() {
+            isFocused = false;
+        });
+
+        function isFocusedFn() {
+            return isFocused;
+        }
+
+        return {
+            'isFocusedFn': isFocusedFn
+        }
+    })
+
     .factory('lxShowNumMessagesService',
     function(
         $timeout

@@ -13,7 +13,8 @@ angular.module('lxChatbox.directives', [])
         $timeout,
         lxShowNumMessagesService,
         lxSoundService,
-        lxTimeService
+        lxTimeService,
+        lxWindowFocus
         ) {
 
 
@@ -113,8 +114,11 @@ angular.module('lxChatbox.directives', [])
                         addMessageToDisplay(scope.receivedChatMessageObject[chatRoomId], 'left', true);
 
                         // The following code will keep track of "un-noticed" messages that the user has received
+                        // The reason we check if numMessagesSinceLastTimeBottomOfPanelWasViewed !== 0 is because if the
+                        // user already has a non-zero counter of unread messages, we don't want to stop counting
+                        // until they have explicitly acknowledged the messages (eg. by clicking in the input)
                         if (!scope.chatPanelDict[chatRoomId].chatPanelIsGlued || !scope.chatPanelDict[chatRoomId].chatPanelIsCurrentlyVisible ||
-                            !scope.presenceStatus.ACTIVE.isCurrentState) {
+                            !lxWindowFocus.isFocusedFn() || scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed !== 0) {
 
                             scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed ++;
                             scope.trackUnseenMessageCountObject.unseenMessageCount++;
