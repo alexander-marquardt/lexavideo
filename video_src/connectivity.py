@@ -29,7 +29,7 @@ class AddClientToRoom(webapp2.RequestHandler):
         chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
         chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
         dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(recompute_from_scratch=True)
-        messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects)
+        messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects, chat_room_obj.room_members_client_ids)
 
 
 
@@ -124,6 +124,7 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
     def post(self):
         message_obj = json.loads(self.request.body)
         client_id = message_obj['clientId']
+        message_type = message_obj['messageType']
         presence_state_name = message_obj['messagePayload']['presenceStateName']
         currently_open_chat_room_id = message_obj['messagePayload']['currentlyOpenChatRoomId']
         user_id, unique_client_postfix = [int(n) for n in client_id.split('|')]
@@ -131,16 +132,18 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         client_obj = clients.ClientModel.get_by_id(client_id)
         client_obj.store_current_presence_state(presence_state_name)
 
-        logging.debug('Heartbeat acknowledgement received from client_id %s with presence %s' % (client_id, presence_state_name))
+        logging.debug('%s received from client_id %s with presence %s' % (message_type, client_id, presence_state_name))
 
         # Make sure that this client is a member of all of the rooms that the associated user is a member of
         AddClientToRoom.add_client_to_all_users_rooms(client_id, user_id)
 
         # Status of the chat room that the user is currently looking at should have an up-to-date view of
-        # clients and their activity. Other rooms do not need to be updated as often.
+        # clients and their activity. Other rooms do not need to be updated as often. Send the current
+        # client an updated view of the room members.
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(currently_open_chat_room_id)
         dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(recompute_from_scratch=False)
-        messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects)
+        list_of_client_ids_to_update = [client_id,]
+        messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects, list_of_client_ids_to_update)
 
 
 class RequestChannelToken(webapp2.RequestHandler):
@@ -229,7 +232,7 @@ class DisconnectClient(webapp2.RequestHandler):
                 dict_of_client_objects = chat_room_obj.get_dict_of_client_objects(recompute_from_scratch=True)
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
-                messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects)
+                messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects, chat_room_obj.room_members_client_ids)
 
             else:
                 # This is probably not really an error. Change it later once we understand which conditions can trigger
