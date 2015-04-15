@@ -1,3 +1,6 @@
+
+'use strict';
+
 angular.module('lxPresence.services', ['presenceModule'])
     .factory('presenceStatus', function($presence) {
         return $presence.init({

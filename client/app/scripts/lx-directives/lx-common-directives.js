@@ -5,7 +5,7 @@
 'use strict';
 
 // define externally defined variables so that jshint doesn't give warnings
-
+/* global $ */
 
 var commonDirectives = angular.module('lxCommon.directives', []);
 

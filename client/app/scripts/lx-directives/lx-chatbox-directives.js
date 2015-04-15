@@ -25,7 +25,7 @@ angular.module('lxChatbox.directives', [])
 
                 var timeString;
                 var chatRoomId = scope.roomOccupancyObject.chatRoomId;
-
+                var channelDeadMsgPayload;
 
                 var addMessageToDisplay = function(messagePayload, bubbleSide, transmittedSuccessBoolean) {
                     // message: The text that will be displayed to the user
@@ -132,7 +132,7 @@ angular.module('lxChatbox.directives', [])
                 scope.$watch('channelObject.channelIsAlive', function(channelIsAlive, previousChannelIsAlive) {
 
                     if (channelIsAlive === false) {
-                        var channelDeadMsgPayload = {
+                        channelDeadMsgPayload = {
                             messageString: 'Internet/Server error. ' +
                                 'Your connection to ChatSurfing is not functioning correctly. ' +
                                 'Messages sent to you while your connection is down are ' +
@@ -144,7 +144,7 @@ angular.module('lxChatbox.directives', [])
                     }
 
                     if (previousChannelIsAlive === false && channelIsAlive) {
-                        var channelDeadMsgPayload = {
+                        channelDeadMsgPayload = {
                             messageString: 'Your connection to ChatSurfing appears to be working again',
                             messageUniqueId: 'Not set',
                             transmittedToServer: true

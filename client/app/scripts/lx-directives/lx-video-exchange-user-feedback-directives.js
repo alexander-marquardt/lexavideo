@@ -45,7 +45,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                 return scope.videoExchangeObjectsDict[scope.remoteClientId].remoteVideoEnabledSetting + (!!lxPeerService.remoteStream[scope.remoteClientId]).toString();
             }
 
-            scope.$watch(checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting, function(newVal) {
+            scope.$watch(checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting, function() {
 
                 var remoteStreamIsActive = !!lxPeerService.remoteStream[scope.remoteClientId];
 
@@ -74,8 +74,6 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                             message = 'Establishing video connection';
                             showMessageInVideoWindow(scope, overlayElem, message, $compile);
                             break;
-
-                        $log.debug(message);
                     }
                 }
             });
@@ -120,7 +118,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayLocalVideoStatus',
             var overlayElem = angular.element(elem).find('div.cl-video-exchange-info-overlay');
 
             var watchLocalStream = function() {
-                return !!lxStreamService.localStream
+                return !!lxStreamService.localStream;
             };
 
             scope.$watch(watchLocalStream, function(localStream) {
@@ -133,5 +131,5 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayLocalVideoStatus',
                 }
             });
         }
-    }
+    };
 });

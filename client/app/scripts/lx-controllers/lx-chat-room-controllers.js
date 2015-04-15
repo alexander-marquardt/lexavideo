@@ -57,7 +57,7 @@ angular.module('lxUseChatRoom.controllers', [])
             };
 
             $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[data.chatRoomId];
-            $scope.chatRoomDisplayObject.chatRoomId = data.chatRoomId
+            $scope.chatRoomDisplayObject.chatRoomId = data.chatRoomId;
 
             // Add the normalizedRoomName to normalizedOpenRoomNamesList, but only if it is not already there.
             if ($.inArray(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList) === -1) {
@@ -132,7 +132,7 @@ angular.module('lxUseChatRoom.controllers', [])
             // Remove remoteClientId from *pending* requests if it is there
             var indexOfRemoteIdRequestPending = $scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.indexOf(remoteClientId);
             if (indexOfRemoteIdRequestPending >= 0) {
-                $scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.splice(indexOfRemoteIdRequestPending, 1)
+                $scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.splice(indexOfRemoteIdRequestPending, 1);
             }
 
             lxAccessVideoElementsAndAccessCameraService.sendStatusOfVideoElementsEnabled(

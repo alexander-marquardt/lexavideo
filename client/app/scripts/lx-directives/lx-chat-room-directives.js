@@ -54,7 +54,7 @@ angular.module('lxChatRoom.directives', [])
                 // viewed, and the message counts will be adjusted accordingly.
                 scope.$watch(
                     function() {
-                        return lxWindowFocus.isFocusedFn()
+                        return lxWindowFocus.isFocusedFn();
                     },
                     function(windowIsFocused) {
                         var chatPanelObject = scope.chatRoomDisplayObject.chatPanelObject;

@@ -77,6 +77,7 @@ angular.module('lxChannel.services', [])
                     var remoteClientId = messageObject.fromClientId;
                     var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId];
                     var chatRoomId = null;
+                    var receivedChatMessageObject;
 
                     lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
@@ -182,7 +183,7 @@ angular.module('lxChannel.services', [])
 
                         case 'chatTextMsg':
                             chatRoomId = messageObject.chatRoomId;
-                            var receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
+                            receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
 
                             receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
                             // receivedMessageTime is used for triggering the watcher
@@ -191,7 +192,7 @@ angular.module('lxChannel.services', [])
 
                         case 'clientReAddedToRoomAfterAbsence':
                             chatRoomId = messageObject.chatRoomId;
-                            var receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
+                            receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
                             receivedChatMessageObject.messageString = '**** WARNING *** Due to connectivity problems, you may have missed some messages';
                             // receivedMessageTime is used for triggering the watcher
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
@@ -281,14 +282,14 @@ angular.module('lxChannel.services', [])
             return function() {
                 $log.error('*** Channel error. ***');
                 scope.channelObject.channelIsAlive = false;
-            }
+            };
         };
 
         var onChannelClosed = function(scope) {
             return function() {
                 $log.warn('*** Channel closed. ***');
                 scope.channelObject.channelIsAlive = false;
-            }
+            };
         };
 
         var handler = function(scope) {

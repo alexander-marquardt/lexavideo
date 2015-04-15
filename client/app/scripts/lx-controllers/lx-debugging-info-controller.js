@@ -1,5 +1,5 @@
 
-
+'use strict';
 
 angular.module('lxDebuggingInfo.controllers', [])
 
@@ -14,5 +14,5 @@ angular.module('lxDebuggingInfo.controllers', [])
         }
         $scope.$watch(getRemoteStreamBoolean, function(newVal) {
             $scope.remoteStreamActive = newVal;
-        })
+        });
     });

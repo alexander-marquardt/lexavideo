@@ -1,4 +1,4 @@
-
+'use strict';
 angular.module('lxVideo.controllers', [])
 
 .controller('lxVideoWrapperCtrl',
@@ -7,6 +7,6 @@ angular.module('lxVideo.controllers', [])
 
         $scope.videoExchangeDisplayOverlayTrackerObject = {
             currentlyShown: false
-        }
+        };
     });
 

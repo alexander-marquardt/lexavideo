@@ -78,7 +78,7 @@ angular.module('lxUtility.services', [])
 
         return {
             'isFocusedFn': isFocusedFn
-        }
+        };
     })
 
     .factory('lxShowNumMessagesService',
@@ -104,7 +104,7 @@ angular.module('lxUtility.services', [])
         var self = {
             subtractNumMessagesSeen: function(trackUnseenMessageCountObject, chatPanelObject) {
                 clearNumMessagesInChatPanel(trackUnseenMessageCountObject, chatPanelObject);
-                self.showNumMessagesInDocumentTitle(trackUnseenMessageCountObject)
+                self.showNumMessagesInDocumentTitle(trackUnseenMessageCountObject);
             },
                     // function that stops the title from flashing the number of new messages
             stopFlashingTitle: function() {

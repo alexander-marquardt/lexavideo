@@ -39,7 +39,7 @@ angular.module('lxHttp.services', [])
         lxJs
         ) {
 
-        self = {
+        var self = {
 
             // In order to ensure that the channel is functioning, we periodically send the server "heartbeat"
             // messages.
@@ -87,7 +87,7 @@ angular.module('lxHttp.services', [])
             // Once a "synchronization acknowledgement" has been received on the channel, we then send
             // a final "ack" to the server to let it know  that communications in both direction have been verified.
             sendAckHeartbeatToServer: function(clientId, presenceStatus, currentlyOpenChatRoomId) {
-                self.updateClientStatusOnServerAndRequestUpdatedRoomInfo(clientId, presenceStatus, currentlyOpenChatRoomId, 'ackHeartBeat')
+                self.updateClientStatusOnServerAndRequestUpdatedRoomInfo(clientId, presenceStatus, currentlyOpenChatRoomId, 'ackHeartBeat');
             },
 
             addClientToRoom: function(clientId, userId, chatRoomId) {

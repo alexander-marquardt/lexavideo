@@ -90,13 +90,13 @@ angular.module('lxChatRoom.services', [])
                     localVideoEnabledSetting: 'waitingForPermissionToEnableVideoExchange',
                     remoteVideoEnabledSetting: 'waitingForPermissionToEnableVideoExchange',
                     rtcInitiator: false
-                }
+                };
             },
             createRemoteVideoElementsObject: function(remoteHdVideoElem) {
                 return {
                     remoteHdVideoElem: remoteHdVideoElem,
                     isAudioMuted: false
-                }
+                };
             }
         };
     });
