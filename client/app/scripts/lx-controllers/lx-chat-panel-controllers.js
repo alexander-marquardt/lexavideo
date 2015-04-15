@@ -101,15 +101,20 @@ angular.module('lxChatbox.controllers', [])
         });
 
         $scope.$watch('chatRoomDisplayObject.normalizedChatRoomNameFromUrl', function() {
-           if ($scope.normalizedChatRoomName && $scope.chatRoomDisplayObject &&
-               $scope.normalizedChatRoomName === $scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl) {
 
-               $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = true;
-               $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId];
-               $scope.chatRoomDisplayObject.chatRoomId = $scope.roomOccupancyObject.chatRoomId;
+            // Check if the chat room name has changed - if so, update appropriate structures.
+            if ($scope.normalizedChatRoomName && $scope.chatRoomDisplayObject &&
+                $scope.normalizedChatRoomName === $scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl) {
 
-           } else {
-               $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = false;
-           }
+                $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = true;
+                $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId];
+                $scope.chatRoomDisplayObject.chatRoomId = $scope.roomOccupancyObject.chatRoomId;
+
+                lxHttpChannelService.updateClientStatusOnServerAndRequestUpdatedRoomInfo($scope.lxMainViewCtrl.clientId,
+                    $scope.presenceStatus.getCurrent().name, $scope.roomOccupancyObject.chatRoomId, 'updateOnRoomChange');
+
+            } else {
+                $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = false;
+            }
         });
     });
