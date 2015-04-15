@@ -25,7 +25,7 @@ class AddClientToRoom(webapp2.RequestHandler):
 
     @staticmethod
     def add_client_to_room(client_id, room_id, user_id):
-        logging.info('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
+        logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
         chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
         chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
         messaging.send_room_occupancy_to_room_clients(chat_room_obj)
@@ -35,7 +35,7 @@ class AddClientToRoom(webapp2.RequestHandler):
     @staticmethod
     def add_client_to_all_users_rooms(client_id, user_id):
 
-        logging.info('add_client_to_all_users_rooms called for user_id %s' % user_id)
+        logging.debug('add_client_to_all_users_rooms called for user_id %s' % user_id)
 
         # Add this "client" in to all of the rooms that the "user" currently has open
         user_obj = users.get_user_by_id(user_id)
@@ -92,7 +92,7 @@ class SynClientHeartbeat(webapp2.RequestHandler):
             'fromClientId': client_id, # channel-services expects fromClientId to be specified.
             'messageType': 'synAckHeartBeat' # use handshaking terminology for naming
         }
-        logging.info('Heartbeat synchronization received from client_id %s. '
+        logging.debug('Heartbeat synchronization received from client_id %s. '
                      'Synchronization acknowledgement returned to same client on channel api' % (client_id))
         channel.send_message(client_id, json.dumps(response_message_obj))
 
@@ -111,7 +111,7 @@ class AckClientHeartbeat(webapp2.RequestHandler):
         client_obj = clients.ClientModel.get_by_id(client_id)
         client_obj.store_current_presence_state(presence_state_name)
 
-        logging.info('Heartbeat acknowledgement received from client_id %s with presence %s' % (client_id, presence_state_name))
+        logging.debug('Heartbeat acknowledgement received from client_id %s with presence %s' % (client_id, presence_state_name))
 
         # Make sure that this client is a member of all of the rooms that the associated user is a member of
         AddClientToRoom.add_client_to_all_users_rooms(client_id, user_id)
@@ -221,7 +221,7 @@ class DisconnectClient(webapp2.RequestHandler):
 
                 chat_room_obj = chat_room_module.ChatRoomModel.txn_remove_client_from_room(chat_room_obj.key, user_id, client_id)
 
-                logging.info('Client %s' % client_id + ' removed from room %d state: %s' % (chat_room_obj.key.id(), str(chat_room_obj)))
+                logging.debug('Client %s' % client_id + ' removed from room %d state: %s' % (chat_room_obj.key.id(), str(chat_room_obj)))
 
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
@@ -237,10 +237,10 @@ class DisconnectClient(webapp2.RequestHandler):
 
 class AutoDisconnectClient(DisconnectClient):
     def post(self):
-        logging.info('Executing AutoDisconnectClient')
+        logging.debug('Executing AutoDisconnectClient')
         super(AutoDisconnectClient, self).post()
 
 class ManuallyDisconnectClient(DisconnectClient):
     def post(self):
-        logging.info('Executing ManuallyDisconnectClient')
+        logging.debug('Executing ManuallyDisconnectClient')
         super(ManuallyDisconnectClient, self).post()

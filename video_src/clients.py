@@ -1,7 +1,11 @@
 
 """
 This module tracks the presence state of each user. States that may be sent from the client
-are ACTIVE, IDLE, and AWAY. Additionally, if the client does not send a presence state within
+are ACTIVE, IDLE, and AWAY.
+
+Values that may be returned from this module are ACTIVE, IDLE, AWAY, and OFFLINE(*).
+
+(*) If the client does not send a presence state within
 a certain amount of time (eg. a value that is 1.5 * heartbeat_interval_seconds), then the user is
 determined to be OFFLINE.
 """
@@ -39,7 +43,7 @@ class ClientModel(ndb.Model):
         if (datetime.datetime.now() - self.last_db_write >
                 datetime.timedelta(seconds=constants.db_presence_update_interval_seconds)):
 
-            logging.info('Storing state %s to database for client_id %s' % (presence_state_name, self.key.id()))
+            logging.debug('Storing state %s to database for client_id %s' % (presence_state_name, self.key.id()))
             self.most_recent_presence_state_stored_in_db = presence_state_name
             self.put()
 
@@ -52,7 +56,7 @@ class ClientModel(ndb.Model):
             'presence_state_name': presence_state_name,
             'stored_datetime': datetime.datetime.now(),
         }
-        logging.info('Storing presence state %s to memcache key %s' % (presence_state_name, client_memcache_key))
+        logging.debug('Storing presence state %s to memcache key %s' % (presence_state_name, client_memcache_key))
         serialized_obj = pickle.dumps(client_memcache_dict, constants.pickle_protocol)
         memcache.set(client_memcache_key, serialized_obj)
 
@@ -69,11 +73,11 @@ class ClientModel(ndb.Model):
         client_id = self.key.id()
         client_memcache_key = CLIENT_PRESENCE_MEMCACHE_PREFIX + client_id
         serialized_obj = memcache.get(client_memcache_key)
-        client_memcache_dict = pickle.loads(serialized_obj)
         presence_state_name = None
 
-        if client_memcache_dict:
-            logging.info('Pulled presence states %s from memcache key: %s' % (client_memcache_dict['presence_state_name'],
+        if serialized_obj:
+            client_memcache_dict = pickle.loads(serialized_obj)
+            logging.debug('Pulled presence states %s from memcache key: %s' % (client_memcache_dict['presence_state_name'],
             client_memcache_key))
 
             # memcache is active, therefore we make sure that the client presence status has been updated recently,
@@ -88,7 +92,13 @@ class ClientModel(ndb.Model):
         return presence_state_name
 
 
+    # Reading presence from the database should only be done in the case that memcache has failed.
+    # This should happen very rarely, and is only a backup.
+    # Note that since we write to the database with a much lower frequency than memcache, we must take
+    # this into consideration when determining if the client should be considered OFFLINE.
     def _get_current_presence_state_from_database(self):
+
+        logging.warning('Reading presence state from database for client %s' % self.key.id())
 
         # Make sure that the value stored in the database was recently written, and if not then
         # the user is considered to be offline
@@ -101,13 +111,14 @@ class ClientModel(ndb.Model):
             return self.most_recent_presence_state_stored_in_db
 
 
+    # Get the presence state of the client. Return values
     def get_current_presence_state(self):
 
         presence_state_name = self._get_current_presence_state_from_memcache()
 
         # If the presence_state_name is not returned from memcache, then we fallback to checking the last time
         # that it was written to the database.
-        if not presence_state_name:
+        if presence_state_name is None:
             presence_state_name = self._get_current_presence_state_from_database()
 
         assert presence_state_name
