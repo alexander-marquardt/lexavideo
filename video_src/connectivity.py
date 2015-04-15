@@ -23,6 +23,26 @@ from error_handling import handle_exceptions
 # The following class handles when a user explicitly enters into a room by going to a URL for a given room.
 class AddClientToRoom(webapp2.RequestHandler):
 
+    @classmethod
+    @ndb.transactional(xg=True)
+    def txn_create_new_client_model_and_add_to_track_clients_object(cls, user_id, client_id):
+        # Create a new client_model corresponding to the channel that we have just opened for
+        # the current user.
+        user_obj = users.get_user_by_id(user_id)
+
+        client_model = clients.ClientModel(id=client_id)
+        client_model.put()
+
+        track_clients_obj = user_obj.track_clients_key.get()
+
+        if len(track_clients_obj.list_of_client_model_keys) > constants.maximum_number_of_client_connections_per_user:
+            raise Exception('User has attempted to exceed the maximum number of clients that are simultaneously allowed per user')
+
+        if client_model.key not in track_clients_obj.list_of_client_model_keys:
+            track_clients_obj.list_of_client_model_keys.append(client_model.key)
+            track_clients_obj.put()
+
+
     @staticmethod
     def add_client_to_room(client_id, room_id, user_id):
         logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
@@ -127,26 +147,6 @@ class AckClientHeartbeat(webapp2.RequestHandler):
 
 class RequestChannelToken(webapp2.RequestHandler):
 
-    @classmethod
-    @ndb.transactional(xg=True)
-    def txn_create_new_client_model_and_add_to_track_clients_object(cls, user_id, client_id):
-        # Create a new client_model corresponding to the channel that we have just opened for
-        # the current user.
-        user_obj = users.get_user_by_id(user_id)
-
-        client_model = clients.ClientModel(id=client_id)
-        client_model.put()
-
-        track_clients_obj = user_obj.track_clients_key.get()
-
-        if len(track_clients_obj.list_of_client_model_keys) > constants.maximum_number_of_client_connections_per_user:
-            raise Exception('User has attempted to exceed the maximum number of clients that are simultaneously allowed per user')
-
-        if client_model.key not in track_clients_obj.list_of_client_model_keys:
-            track_clients_obj.list_of_client_model_keys.append(client_model.key)
-            track_clients_obj.put()
-
-
     @handle_exceptions
     def post(self):
         token_timeout = 24 * 60 - 1  # minutes
@@ -157,7 +157,7 @@ class RequestChannelToken(webapp2.RequestHandler):
         channel_token = channel.create_channel(str(client_id), token_timeout)
 
         try:
-            self.txn_create_new_client_model_and_add_to_track_clients_object(user_id, client_id)
+            AddClientToRoom.txn_create_new_client_model_and_add_to_track_clients_object(user_id, client_id)
             response_dict = {
                 'channelToken': channel_token,
             }
