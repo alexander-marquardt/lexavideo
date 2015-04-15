@@ -7,7 +7,7 @@ angular.module('lxPresence.controllers', [])
 
         presenceStatus.onChange(function(state) {
             $scope.text = state.name;
-            $log.log('onChage: ' + state.name);
+            $log.log('onChange: ' + state.name);
         });
 
         presenceStatus.ACTIVE.onEnter(function() {
