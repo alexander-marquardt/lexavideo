@@ -44,11 +44,11 @@ class AddClientToRoom(webapp2.RequestHandler):
         messaging.send_room_occupancy_to_room_clients(chat_room_obj, dict_of_client_objects)
 
 
-    # tell_client_they_were_re_added_to_room_after_absence is used for notifying the client that they have be re-added to
+    # tell_client_they_were_re_added_to_room_after_they_have_been_absent is used for notifying the client that they have be re-added to
     # a room that they had previously been in. This will allow us to show them a message
     # indicting that they may have missed some messages while they were absent.
     @staticmethod
-    def tell_client_they_were_re_added_to_room_after_absence(client_id, room_id):
+    def tell_client_they_were_re_added_to_room_after_they_have_been_absent(client_id, room_id):
 
         message_obj = {
             'fromClientId': client_id,
@@ -83,7 +83,7 @@ class AddClientToRoom(webapp2.RequestHandler):
                 # with un-necessary calls)
                 if client_id not in room_members_client_ids:
                     AddClientToRoom.add_client_to_room(client_id, room_id, user_id)
-                    AddClientToRoom.tell_client_they_were_re_added_to_room_after_absence(client_id, room_id)
+                    AddClientToRoom.tell_client_they_were_re_added_to_room_after_they_have_been_absent(client_id, room_id)
 
         else:
             status_string = 'user_id %s user object not found.' % user_id
