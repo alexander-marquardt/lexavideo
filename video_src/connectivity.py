@@ -8,7 +8,6 @@ from google.appengine.api import channel
 from google.appengine.ext import ndb
 
 from video_src import clients
-from video_src import constants
 from video_src import http_helpers
 from video_src import messaging
 from video_src import chat_room_module
@@ -33,14 +32,6 @@ class AddClientToRoom(webapp2.RequestHandler):
         client_model = clients.ClientModel(id=client_id)
         client_model.put()
 
-        track_clients_obj = user_obj.track_clients_key.get()
-
-        if len(track_clients_obj.list_of_client_model_keys) > constants.maximum_number_of_client_connections_per_user:
-            raise Exception('User has attempted to exceed the maximum number of clients that are simultaneously allowed per user')
-
-        if client_model.key not in track_clients_obj.list_of_client_model_keys:
-            track_clients_obj.list_of_client_model_keys.append(client_model.key)
-            track_clients_obj.put()
 
 
     @staticmethod
@@ -235,8 +226,6 @@ class DisconnectClient(webapp2.RequestHandler):
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
                 messaging.send_room_occupancy_to_room_clients(chat_room_obj)
-
-                users.UserModel.txn_delete_client_model_and_remove_from_client_tracker(user_id, client_id)
 
             else:
                 # This is probably not really an error. Change it later once we understand which conditions can trigger

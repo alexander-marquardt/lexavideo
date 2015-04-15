@@ -18,17 +18,6 @@ from video_src import clients
 # datastore. 
 class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique): pass
 
-
-
-# This model is used for keeping track of which clients (browser window) the user currently has open. Each
-# client will be added to the list_of_client_model_keys when it is opened, and will be removed either when
-# the user disconnects the page or if that fails, it will be cleared out periodically.
-# Note: we have intentionally placed this information outside of the UserModel so that we can modify it
-# with a lower probability of transaction collisions.
-class UserTrackClientsModel(ndb.Model):
-    list_of_client_model_keys = ndb.KeyProperty(kind='ClientModel', repeated=True)
-
-
 # Track information about what the user is doing right now. For example, what
 # rooms are they participating in.
 class UserTrackRoomsModel(ndb.Model):
@@ -61,31 +50,20 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
-    # track each "client" (unique browser window) that the user currently has open
-    track_clients_key = ndb.KeyProperty(kind='UserTrackClientsModel')
-
     # Track information about the user activity/status of the user
     track_rooms_key = ndb.KeyProperty(kind='UserTrackRoomsModel')
 
     """
     Each user can have multiple "clients" (one for each browser/window), and each client can (in the future) have
     multiple rooms open at once. This structure will track which rooms are open by which client, and should
-    be removed when the user closes the "client window" or alternatively should be periodically cleared out of the
-    database.
+    be periodically cleared out of the database.
     """
     @classmethod
-    @ndb.transactional(xg=True)
-    def txn_delete_client_model_and_remove_from_client_tracker(cls, user_id, client_id):
+    @ndb.transactional
+    def txn_delete_client_model(cls, client_id):
 
         client_obj = clients.ClientModel.get_by_id(client_id)
-        client_key = client_obj.key
         client_obj.key.delete()
-
-        user_obj = cls.get_by_id(user_id)
-        track_clients_obj = user_obj.track_clients_key.get()
-        track_clients_obj.list_of_client_model_keys.remove(client_key)
-        track_clients_obj.put
-
 
 
     # Some of this code is from: http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
@@ -126,15 +104,11 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 @ndb.transactional(xg=True)
 def txn_create_new_user():
 
-    client_tracker = UserTrackClientsModel()
-    client_tracker.put()
-
-    user_status_tracker = UserTrackRoomsModel()
-    user_status_tracker.put()
+    track_rooms_obj = UserTrackRoomsModel()
+    track_rooms_obj.put()
 
     new_user_obj = UserModel()
-    new_user_obj.track_clients_key = client_tracker.key
-    new_user_obj.track_rooms_key = user_status_tracker.key
+    new_user_obj.track_rooms_key = track_rooms_obj.key
 
     # use the key as the user_name until they decide to create their own user_name.
     new_user_name = "Not set"
