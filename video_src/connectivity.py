@@ -30,6 +30,22 @@ class AddClientToRoom(webapp2.RequestHandler):
         chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
         messaging.send_room_occupancy_to_room_clients(chat_room_obj)
 
+
+    # tell_client_they_were_re_added_to_room_after_absence is used for notifying the client that they have be re-added to
+    # a room that they had previously been in. This will allow us to show them a message
+    # indicting that they may have missed some messages while they were absent.
+    @staticmethod
+    def tell_client_they_were_re_added_to_room_after_absence(client_id, room_id):
+
+        message_obj = {
+            'fromClientId': client_id,
+            'chatRoomId': room_id,
+            'messageType': 'clientReAddedToRoomAfterAbsence',
+            'messagePayload': {},
+            }
+        channel.send_message(client_id, json.dumps(message_obj))
+
+
     # add_client_to_all_users_rooms is useful for cases where the channel has died, and we wish to ensure that the new client_id
     # associated with a user is placed in all of the rooms that the user has open once the client re-joins the room.
     @staticmethod
@@ -54,15 +70,8 @@ class AddClientToRoom(webapp2.RequestHandler):
                 # with un-necessary calls)
                 if client_id not in room_members_client_ids:
                     AddClientToRoom.add_client_to_room(client_id, room_id, user_id)
-
-                    message_obj = {
-                        'fromClientId': client_id,
-                        'chatRoomId': room_id,
-                        'messageType': 'clientReAddedToRoomAfterAbsence',
-                        'messagePayload': {},
-                        }
-                    channel.send_message(client_id, json.dumps(message_obj))
-
+                    AddClientToRoom.tell_client_they_were_re_added_to_room_after_absence(client_id, user_id)
+                    
         else:
             status_string = 'user_id %s user object not found.' % user_id
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
