@@ -127,7 +127,7 @@ class ChatRoomModel(ndb.Model):
     def txn_remove_client_from_room(self, client_id):
 
         room_key = self.key
-        logging.debug('Removing client %s from room %s ' % (client_id, room_key))
+        logging.info('Removing client %s from room %s ' % (client_id, room_key))
 
         # First, we remove the "client" from the room
         chat_room_obj = room_key.get()
@@ -228,17 +228,17 @@ class ChatRoomModel(ndb.Model):
 
         # If we successfully pulled the dictionary out of memcache, then we return the value we pulled
         if serialized_dict_of_client_objects:
-            logging.debug('Pulled serialized_dict_of_client_objects from memcache')
+            # logging.debug('Pulled serialized_dict_of_client_objects from memcache')
             dict_of_client_objects = pickle.loads(serialized_dict_of_client_objects)
             return dict_of_client_objects
 
         else:
-            logging.debug('Computing dict_of_client_objects')
+            # logging.debug('Computing dict_of_client_objects')
             dict_of_client_objects = {}
             for client_id in self.room_members_client_ids:
 
                 client_obj = clients.ClientModel.get_by_id(id=client_id)
-                logging.debug('Getting presence state for client_obj %s' % client_obj)
+                # logging.debug('Getting presence state for client_obj %s' % client_obj)
                 presence_state_name = client_obj.get_current_presence_state()
 
                 # If client is OFFLINE, then don't include them in dict_of_client_objects *and* also remove the client

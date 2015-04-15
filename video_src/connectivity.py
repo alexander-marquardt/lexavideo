@@ -25,7 +25,7 @@ class AddClientToRoom(webapp2.RequestHandler):
     
     @staticmethod
     def add_client_to_room(client_id, room_id, user_id):
-        logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
+        # logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
         chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
         chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
         messaging.send_room_occupancy_to_room_clients(chat_room_obj, chat_room_obj.room_members_client_ids, recompute_from_scratch=True)
@@ -57,7 +57,7 @@ class AddClientToRoom(webapp2.RequestHandler):
         associated with a user is placed in all of the rooms that the user has open once the client re-joins the room.
         """
 
-        logging.debug('add_client_to_all_users_rooms called for user_id %s' % user_id)
+        # logging.debug('add_client_to_all_users_rooms called for user_id %s' % user_id)
 
         # Add this "client" in to all of the rooms that the "user" currently has open
         user_obj = users.get_user_by_id(user_id)
@@ -107,8 +107,8 @@ class SynClientHeartbeat(webapp2.RequestHandler):
             'fromClientId': client_id, # channel-services expects fromClientId to be specified.
             'messageType': 'synAckHeartBeat' # use handshaking terminology for naming
         }
-        logging.debug('Heartbeat synchronization received from client_id %s. '
-                     'Synchronization acknowledgement returned to same client on channel api' % (client_id))
+        # logging.debug('Heartbeat synchronization received from client_id %s. '
+        #              'Synchronization acknowledgement returned to same client on channel api' % (client_id))
         channel.send_message(client_id, json.dumps(response_message_obj))
 
 
@@ -131,7 +131,7 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         client_obj = clients.ClientModel.get_by_id(client_id)
         client_obj.store_current_presence_state(presence_state_name)
 
-        logging.debug('%s received from client_id %s with presence %s' % (message_type, client_id, presence_state_name))
+        # logging.debug('%s received from client_id %s with presence %s' % (message_type, client_id, presence_state_name))
 
         # Make sure that this client is a member of all of the rooms that the associated user is a member of
         AddClientToRoom.add_client_to_all_users_rooms(client_id, user_id)
@@ -157,7 +157,7 @@ class RequestChannelToken(webapp2.RequestHandler):
         client_obj = clients.ClientModel(id=client_id)
         client_obj.put()
 
-        logging.debug('Wrote client_obj %s' % client_obj)
+        # logging.debug('Wrote client_obj %s' % client_obj)
 
         response_dict = {
             'channelToken': channel_token,
@@ -225,7 +225,7 @@ class DisconnectClient(webapp2.RequestHandler):
 
                 chat_room_obj = chat_room_obj.txn_remove_client_from_room(client_id)
 
-                logging.debug('Client %s' % client_id + ' removed from room %d state: %s' % (chat_room_obj.key.id(), str(chat_room_obj)))
+                # logging.debug('Client %s' % client_id + ' removed from room %d state: %s' % (chat_room_obj.key.id(), str(chat_room_obj)))
 
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
@@ -239,10 +239,10 @@ class DisconnectClient(webapp2.RequestHandler):
 
 class AutoDisconnectClient(DisconnectClient):
     def post(self):
-        logging.debug('Executing AutoDisconnectClient')
+        # logging.debug('Executing AutoDisconnectClient')
         super(AutoDisconnectClient, self).post()
 
 class ManuallyDisconnectClient(DisconnectClient):
     def post(self):
-        logging.debug('Executing ManuallyDisconnectClient')
+        # logging.debug('Executing ManuallyDisconnectClient')
         super(ManuallyDisconnectClient, self).post()
