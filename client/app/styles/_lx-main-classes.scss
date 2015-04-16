@@ -5,6 +5,12 @@ body{
 }
 
 .cl-sticky-footer {
+
+  // hide the footer on short displays
+  @media (max-height: 300px) {
+    display: none;
+  }
+
   position: fixed;
   bottom: 0;
   width: 100%;
