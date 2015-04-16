@@ -6,7 +6,12 @@
 // chat messages sent. This makes it more likely that if the user is looking at the video that they
 // will see the new message.
 .cl-dummy-blank-div-in-short-chat-panel {
-  height: $chat-panel-body-height - $estimated-bubble-height;
+  height: nth($chat-panel-body-height-list, 1) - $estimated-bubble-height;
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($chat-panel-body-height-list, $idx) - $estimated-bubble-height;
+    }
+  }
 }
 
 .cl-chat-panel {
@@ -42,7 +47,12 @@
 }
 
 .cl-chat-panel-body-height {
-  height: $chat-panel-body-height;
+  height: nth($chat-panel-body-height-list, 1);
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($chat-panel-body-height-list, $idx);
+    }
+  }
   box-sizing: border-box;
 }
 
@@ -59,7 +69,13 @@
     }
   }
 
-  max-height: $chat-panel-body-height - 2*$estimated-bubble-height;
+  max-height: max(nth($chat-panel-body-height-list, 1)- 2*$estimated-bubble-height, 2*$estimated-bubble-height);
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      max-height: max(nth($chat-panel-body-height-list, $idx)- 2*$estimated-bubble-height, 2*$estimated-bubble-height);
+    }
+  }
+
   color: $gray-dark;
   overflow-y: auto;
 

@@ -29,7 +29,12 @@ span.cl-chat-panel-overlay-text-span {
 }
 
 .cl-main-control-menu {
-  height: $common-display-area-height;
+  height: nth($common-display-area-height-list, 1);
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($common-display-area-height-list, $idx);
+    }
+  }
   width: 100%;
   padding: 0;
   margin: 0; // override default ul
@@ -293,8 +298,12 @@ span.cl-chat-panel-overlay-text-span {
   position: relative;
   // Note $line-height-computed in the following calculation is the margin
   // at the bottom that is used in the bootstrap css panel definition.
-
-  height: $common-display-area-height + $line-height-computed/4;
+  height: nth($common-display-area-height-list, 1) + $line-height-computed/4;
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($common-display-area-height-list, $idx) + $line-height-computed/4;
+    }
+  }
 }
 
 .cl-ng-view {

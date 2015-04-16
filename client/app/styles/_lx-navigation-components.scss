@@ -81,7 +81,12 @@
 }
 
 .cl-notification-panel-body {
-  height: $notification-panel-body-height;
+  height: nth($notification-panel-body-height-list, 1);
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($notification-panel-body-height-list, $idx);
+    }
+  }
   box-sizing: border-box;
 
   padding: 0px 15px 0px 15px;

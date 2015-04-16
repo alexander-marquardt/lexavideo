@@ -42,13 +42,20 @@ $chat-panel-footer-height: 50px;
 
 $chat-groups-members-margin: 15px;
 
-$common-display-area-height: 300px;
-
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
 // it does not overflow the bottom of the div. Subtract 2px for outer panel border.
-$chat-panel-body-height: $common-display-area-height - $chat-panel-heading-height - $chat-panel-footer-height - 2px;
-$notification-panel-body-height: $chat-panel-body-height + $chat-panel-footer-height;
 
+$viewport-heights-list: 400px, 500px, 600px, 700px, 800px, 900px, 1000px, 1250px, 1500px;
+
+$chat-panel-body-height-list: ();
+$common-display-area-height-list: ();
+$notification-panel-body-height-list: ();
+
+@for $idx from 1 through length($viewport-heights-list) {
+  $common-display-area-height-list: append($common-display-area-height-list, nth($viewport-heights-list, $idx)/2);
+  $chat-panel-body-height-list: append($chat-panel-body-height-list, nth($common-display-area-height-list, $idx) - $chat-panel-heading-height - $chat-panel-footer-height - 2px);
+  $notification-panel-body-height-list: append($notification-panel-body-height-list, nth($chat-panel-body-height-list, $idx) + $chat-panel-footer-height);
+}
 
 // $estimated-bubble-height is used for computing the offset required in the first div to push the first
 // message to the bottom of the chat panel.

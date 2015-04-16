@@ -28,7 +28,7 @@ video {
 }
 
 
-$video-control-button-pdding: 3px 5px;
+$video-control-button-padding: 3px 5px;
 $text-overlay-opacity: 0.6;
 $button-overlay-opacity: 0.85;
 $username-overlay-height: 20px;
@@ -87,13 +87,13 @@ $hangup-button-space: 35px;
 
 .cl-video-control-button {
   margin: 0px 2px 0x 2px;
-  padding: $video-control-button-pdding;
+  padding: $video-control-button-padding;
 }
 
 .cl-video-status-icon
 {
   color: $brand-danger;
-  padding: $video-control-button-pdding;
+  padding: $video-control-button-padding;
   line-height: 1.5;
   font-size: 12px;
 }
