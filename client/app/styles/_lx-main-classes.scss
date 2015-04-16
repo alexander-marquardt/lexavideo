@@ -34,7 +34,17 @@ span.cl-chat-panel-overlay-text-span {
   z-index: $chat-bubble-zindex + 1;
 }
 
+.cl-landing-page-well {
+  height: nth($common-display-area-height-list, 1);
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($common-display-area-height-list, $idx);
+    }
+  }
+}
+
 .cl-main-control-menu {
+  position: absolute;
   height: nth($common-display-area-height-list, 1);
   @for $idx from 1 through length($viewport-heights-list) {
     @media (min-height: nth($viewport-heights-list, $idx)) {
@@ -47,6 +57,7 @@ span.cl-chat-panel-overlay-text-span {
   min-width: 0px;
   background: $main-control-background;
   border: 1px solid $main-control-border-color;
+  box-sizing: border-box;
 
   & .btn-default, & .btn-default.dropdown-toggle, & li, & li>a {
     background: $main-control-background;
@@ -64,10 +75,6 @@ span.cl-chat-panel-overlay-text-span {
     background: $main-control-background;
     color: $main-control-color;
   }
-}
-
-.cl-main-control-menu {
-  position: absolute;
 }
 
 .cl-animate-main-control-menu {
