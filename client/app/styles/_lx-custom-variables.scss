@@ -42,11 +42,11 @@ $chat-panel-footer-height: 50px;
 
 $chat-groups-members-margin: 15px;
 
-$sliding-display-area-height: 300px;
+$common-display-area-height: 300px;
 
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
 // it does not overflow the bottom of the div. Subtract 2px for outer panel border.
-$short-chat-panel-body-height: $sliding-display-area-height - $chat-panel-heading-height - $chat-panel-footer-height - 2px;
+$short-chat-panel-body-height: $common-display-area-height - $chat-panel-heading-height - $chat-panel-footer-height - 2px;
 $notification-panel-body-height: $short-chat-panel-body-height + $chat-panel-footer-height;
 
 $tall-chat-panel-height: 400px;

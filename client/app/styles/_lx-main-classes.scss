@@ -29,7 +29,7 @@ span.cl-chat-panel-overlay-text-span {
 }
 
 .cl-main-control-menu {
-  height: $sliding-display-area-height;
+  height: $common-display-area-height;
   width: 100%;
   padding: 0;
   margin: 0; // override default ul
@@ -294,7 +294,7 @@ span.cl-chat-panel-overlay-text-span {
   // Note $line-height-computed in the following calculation is the margin
   // at the bottom that is used in the bootstrap css panel definition.
 
-  height: $sliding-display-area-height + $line-height-computed/4;
+  height: $common-display-area-height + $line-height-computed/4;
 }
 
 .cl-ng-view {
