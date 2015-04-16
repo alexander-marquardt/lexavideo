@@ -6,11 +6,7 @@
 // chat messages sent. This makes it more likely that if the user is looking at the video that they
 // will see the new message.
 .cl-dummy-blank-div-in-short-chat-panel {
-  height: $short-chat-panel-body-height - $estimated-bubble-height;
-}
-
-.cl-dummy-blank-div-in-tall-chat-panel {
-  height: $tall-chat-panel-height - $estimated-bubble-height;
+  height: $chat-panel-body-height - $estimated-bubble-height;
 }
 
 .cl-chat-panel {
@@ -45,8 +41,8 @@
   background: $chat-panel-body-background;
 }
 
-.cl-chat-panel-body-short {
-  height: $short-chat-panel-body-height;
+.cl-chat-panel-body-height {
+  height: $chat-panel-body-height;
   box-sizing: border-box;
 }
 
@@ -54,9 +50,6 @@
   background: $gray-light;
 }
 
-.cl-chat-panel-body-tall {
-  height: $tall-chat-panel-height;
-}
 
 .cl-chat-panel-dropdown {
   max-width: nth($content-widths-list, 1) / 2 - $grid-gutter-width;
@@ -66,7 +59,7 @@
     }
   }
 
-  max-height: $short-chat-panel-body-height - 2*$estimated-bubble-height;
+  max-height: $chat-panel-body-height - 2*$estimated-bubble-height;
   color: $gray-dark;
   overflow-y: auto;
 
