@@ -265,7 +265,7 @@ webRtcServices.factory('lxSessionDescriptionService',
             };
         };
 
-        var waitForRemoteVideo = function(localVideoObject, remoteVideoObject, remoteClientId) {
+        var waitForRemoteVideo = function(remoteVideoObject, remoteClientId) {
             var innerWaitForRemoteVideo = function() {
 
                 var videoTracks = lxPeerService.remoteStream[remoteClientId].getVideoTracks();
@@ -298,7 +298,7 @@ webRtcServices.factory('lxSessionDescriptionService',
                     // By now all addstream events for the setRemoteDescription have fired.
                     // So we can know if the peer is sending any stream or is only receiving.
                     if (lxPeerService.remoteStream[remoteClientId]) {
-                        waitForRemoteVideo(localVideoObject, remoteVideoObject, remoteClientId);
+                        waitForRemoteVideo(remoteVideoObject, remoteClientId);
                     } else {
                         $log.log('Not receiving any stream.');
                     }
@@ -416,7 +416,7 @@ webRtcServices.factory('lxPeerService',
             return contents;
         };
 
-        var onRemoteStreamAdded = function(localVideoObject, remoteVideoObject, videoSignalingObject, remoteClientId) {
+        var onRemoteStreamAdded = function(remoteVideoObject, videoSignalingObject, remoteClientId) {
             return function(mediaStreamEvent) {
                 $log.log('Remote stream added.');
                 $log.log('* remoteVideoObject.remoteHdVideoElem.src before: ' + remoteVideoObject.remoteHdVideoElem.src);
@@ -455,7 +455,7 @@ webRtcServices.factory('lxPeerService',
         var self =  {
             pc : {},
             remoteStream : {},
-            createPeerConnection : function(localVideoObject, remoteVideoObject, videoSignalingObject, clientId, remoteClientId) {
+            createPeerConnection : function(remoteVideoObject, videoSignalingObject, clientId, remoteClientId) {
 
                 $log.log('**************** createPeerConnection ************');
                 try {
@@ -475,7 +475,7 @@ webRtcServices.factory('lxPeerService',
                 }
 
 
-                self.pc[remoteClientId].onaddstream = onRemoteStreamAdded(localVideoObject, remoteVideoObject, videoSignalingObject, remoteClientId);
+                self.pc[remoteClientId].onaddstream = onRemoteStreamAdded(remoteVideoObject, videoSignalingObject, remoteClientId);
                 self.pc[remoteClientId].onremovestream = onRemoteStreamRemoved(remoteClientId);
                 self.pc[remoteClientId].onsignalingstatechange = onSignalingStateChanged(self.pc[remoteClientId]);
                 self.pc[remoteClientId].oniceconnectionstatechange = onIceConnectionStateChanged(self.pc[remoteClientId]);
@@ -658,7 +658,7 @@ webRtcServices.factory('lxCallService',
 
                     $log.debug('Starting webRtc services!!');
 
-                    lxPeerService.createPeerConnection(localVideoObject, remoteVideoObject,
+                    lxPeerService.createPeerConnection(remoteVideoObject,
                         videoSignalingObject, clientId, remoteClientId);
 
                     if (self.hasAudioOrVideoMediaConstraints) {
