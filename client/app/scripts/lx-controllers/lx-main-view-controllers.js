@@ -192,12 +192,6 @@ angular.module('lxMainView.controllers', [])
         };
 
 
-        $scope.videoDisplaySelection = {
-            // currentlySelectedVideoElement will either be remoteClientId or the string 'localVideoIsSelected'
-            currentlySelectedVideoElement: 'localVideoIsSelected'
-        };
-
-
         // receivedChatMessageObject will have a unique key corresponding to the chatRoomId of each room the the current
         // client is a member of. The value of each key will be an object that contains the name of the room
         // and a listing of all of the clients that are in each room.
@@ -246,6 +240,7 @@ angular.module('lxMainView.controllers', [])
         };
 
         lxChannelService.initializeChannel($scope, clientId);
+
 
         // handle case when a route change promise is not resolved
         $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {

@@ -48,18 +48,6 @@ $hangup-button-space: 35px;
 }
 
 
-.cl-username-overlay {
-  @extend %cl-overlay-common;
-  color: white;
-  padding: 0px;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: $username-overlay-height;
-  text-align: center;
-  z-index: $video-wrapper-zindex + 2;
-}
-
 .cl-selected-icon-status-overlay {
   @extend %cl-overlay-common;
   padding: 5px;
@@ -80,11 +68,16 @@ $hangup-button-space: 35px;
   @extend %cl-overlay-common;
   top: 0;
   left: 0;
-  width: 50%;
+  width: 100px;
   padding: $overlay-buttons-col-padding;
   z-index: $video-wrapper-zindex + 6;
   opacity: $button-overlay-opacity;
   text-align: left;
+}
+
+.cl-video-text-overlay {
+  // place the text over top of
+  z-index: $video-wrapper-zindex + 7;
 }
 
 .cl-video-buttons-overlay.cl-hangup-button-overlay {
@@ -104,26 +97,4 @@ $hangup-button-space: 35px;
   padding: $video-control-button-padding;
   line-height: 1.5;
   font-size: 12px;
-}
-
-.cl-video-exchange-info-overlay {
-  @extend %cl-overlay-common;
-  height: 100%;
-  left: 0;
-  right: 0;
-  background: black;
-  text-align: center;
-  z-index: $video-wrapper-zindex + 4;
-}
-
-span.cl-video-overlay-text-span {
-  z-index: $chat-bubble-zindex + 1;
-}
-
-
-$lighten-link-color: lighten($link-color, 15%) !default;
-
-span.cl-video-overlay-text-span a:hover {
-  text-decoration: none;
-  color:  $lighten-link-color;
 }

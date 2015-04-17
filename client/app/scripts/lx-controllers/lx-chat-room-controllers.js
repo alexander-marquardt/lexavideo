@@ -110,9 +110,6 @@ angular.module('lxUseChatRoom.controllers', [])
                 return;
             }
 
-            // Display the new remote video element.
-            $scope.videoDisplaySelection.currentlySelectedVideoElement = remoteClientId;
-
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
             if (!(remoteClientId in $scope.videoExchangeObjectsDict)) {
@@ -180,6 +177,7 @@ angular.module('lxUseChatRoom.controllers', [])
         lxAccessCameraAndMicrophoneService,
         lxCallService,
         lxCheckIfSystemSupportsWebRtcService,
+        lxPeerService,
         lxVideoParamsService) {
 
         $scope.accessCameraAndMicrophoneObject = {
@@ -191,6 +189,12 @@ angular.module('lxUseChatRoom.controllers', [])
             // for each modal).
             modalsCurrentlyShown: []
         };
+
+        $scope.videoDisplaySelection = {
+            // currentlySelectedVideoElement will either be remoteClientId or the string 'localVideoIsSelected'
+            currentlySelectedVideoElement: 'localVideoIsSelected'
+        };
+
 
         $scope.showCameraAndMicrophoneInstructions = function() {
 

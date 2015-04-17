@@ -9,11 +9,7 @@ var lxSelectVideoTypePreferenceDirectives = angular.module('lxVideoExchangeUserF
 
 var  showMessageInVideoWindow = function(scope, overlayElem, message, $compile) {
     overlayElem.removeClass('ng-hide');
-    overlayElem.html('');
-    var el = angular.element('<span class="cl-overlay-text-span cl-video-overlay-text-span"/>');
-    el.html(message);
-    var compiledEl = $compile(el)(scope);
-    overlayElem.append(compiledEl);
+    overlayElem.html(message);
     scope.videoExchangeDisplayOverlayTrackerObject.currentlyShown = true;
 };
 
@@ -32,10 +28,9 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
 
     return {
         restrict: 'A',
-        template: '<div class="cl-video-exchange-info-overlay cl-show-hide-fade ng-hide" ></div>',
         link : function(scope, elem) {
             var message;
-            var overlayElem = angular.element(elem).find('div.cl-video-exchange-info-overlay');
+            var overlayElem = elem;
 
 
             // If the remote user hangs up, the remoteVideoEnabledSetting will be received before the
@@ -112,10 +107,9 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayLocalVideoStatus',
 
     return {
         restrict: 'A',
-        template: '<div class="cl-video-exchange-info-overlay cl-show-hide-fade ng-hide" ></div>',
         link: function (scope, elem) {
             var message;
-            var overlayElem = angular.element(elem).find('div.cl-video-exchange-info-overlay');
+            var overlayElem = elem;
 
             var watchLocalStream = function() {
                 return !!lxStreamService.localStream;

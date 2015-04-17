@@ -9,10 +9,5 @@ angular.module('lxDebuggingInfo.controllers', [])
         )
     {
 
-        function getRemoteStreamBoolean() {
-            return !!lxPeerService.remoteStream[$scope.remoteClientId];
-        }
-        $scope.$watch(getRemoteStreamBoolean, function(newVal) {
-            $scope.remoteStreamActive = newVal;
-        });
+
     });
