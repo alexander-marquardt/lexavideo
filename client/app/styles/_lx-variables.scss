@@ -1,5 +1,7 @@
 $slide-main-menu-duration: 0.4s;
 
+$title-row-height: 32px;
+
 $xs-container-margin: 2px;
 
 $deep-red : #ff0000;
@@ -90,7 +92,7 @@ $video-widths-list: ();
 
 $viewport-heights-list: ();
 @each $viewport-width in $viewport-widths-list {
-  $viewport-heights-list: append($viewport-heights-list, $viewport-width * $video-aspect-ratio);
+  $viewport-heights-list: append($viewport-heights-list, $viewport-width * $video-aspect-ratio + $title-row-height + $chat-panel-heading-height +  $chat-panel-footer-height + 2px);
 }
 
 $chat-panel-body-height-list: ();
