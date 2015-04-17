@@ -15,6 +15,30 @@ $video-wrapper-zindex: 10;
   text-align: center;
 }
 
+.cl-main-video-wrapper-div {
+  position: absolute;
+  bottom: 0;
+  background: $gray;
+  border: none;
+  position: relative;
+  z-index: $video-wrapper-zindex;
+  text-align: center;
+
+  left: 0;
+  // The following code will center the video in the
+  @for $idx_viewport_width from 1 through length($viewport-widths-list) {
+    @for $idx_viewport_height from 1 through length($viewport-heights-list) {
+      $left-offset: (nth($viewport-widths-list, $idx_viewport_width) - nth($video-widths-list, $idx_viewport_height)) / 2;
+      @if  $left-offset > 0 {
+        @media (min-width: nth($viewport-widths-list, $idx_viewport_width)) and (min-height: nth($viewport-heights-list, $idx_viewport_height)) {
+          left: $left-offset;
+        }
+      }
+    }
+  }
+}
+
+
 .cl-video {
   opacity: 1;
   display: block; // remove 5 px gap at bottom

@@ -133,16 +133,15 @@
 
             <div class="row cl-video-inside-chat-panel">
                 <div class="col-xs-12 cl-col-no-padding cl-full-height">
-                    <div class="row cl-row-no-margins cl-center-overlay-outer-div cl-full-height cl-video-sizing-width-only">
+                    <div class="row cl-row-no-margins cl-full-height cl-video-sizing-width-only">
 
                          <!--The following wraps the remote video windows-->
-                        <div class="cl-transition-opacity col-xs-12 text-center cl-col-no-padding cl-center-overlay-middle-div cl-full-height"
+                        <div class="cl-transition-opacity col-xs-12 text-center cl-col-no-padding cl-full-height"
                              ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
                              ng-show="videoDisplaySelection.currentlySelectedVideoElement == remoteClientId"
-                             ng-style="{clear: $even ? 'left': 'none'}"
                             >
 
-                            <div class="cl-video-wrapper-div" ng-controller="lxRemoteVideoWrapperCtrl" style="position: absolute; bottom: 0;">
+                            <div class="cl-main-video-wrapper-div" ng-controller="lxRemoteVideoWrapperCtrl" style="position: absolute; bottom: 0;">
 
                                 {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
 
@@ -166,10 +165,9 @@
 
                             (Note: this comment is removing the whitespace between the div's and is necessary for the layout
                             to work correctly)
-                     --><div class="col-xs-12 text-center cl-col-no-padding cl-center-overlay-middle-div cl-full-height cl-video-sizing-width-only"
-                                 ng-show="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'"
-                                 ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
-                            <div class="cl-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl" style="position: absolute; bottom: 0;">
+                     --><div class="col-xs-12 text-center cl-col-no-padding cl-full-height cl-video-sizing-width-only"
+                                 ng-show="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'">
+                            <div class="cl-main-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl" style="position: absolute; bottom: 0;">
                                 {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
                                 <div class="cl-center-overlay-outer-div cl-video-text-overlay">
                                     <div class="cl-center-overlay-middle-div">
