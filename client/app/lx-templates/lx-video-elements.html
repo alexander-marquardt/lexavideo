@@ -1,10 +1,6 @@
 {% raw %}
     <div ng-if="videoStateInfoObject.numOpenVideoExchanges >= 1" class="cl-transition-opacity">
-        <div ng-controller="lxMainVideoCtrl">
-            {% endraw %}{% include "lx-templates/lx-tc-check-if-system-supports-web-rtc.html" %}{% raw %}
-            <div lx-check-if-system-supports-web-rtc-directive></div>
-            {% endraw %}{% include "lx-templates/lx-tc-access-camera.html" %}{% raw %}
-            <div lx-access-camera-and-microphone-directive></div>
+        <div >
 
             <div class="row cl-row-no-margins">
                 <div class="col-xs-12 cl-col-no-padding">
@@ -28,63 +24,6 @@
                 </div>
             </div>
 
-            <div class="row cl-row-no-margins">
-                <div class="col-xs-12 cl-col-no-padding">
-                    <div class="row cl-row-no-margins">
-                        <!-- The following wraps the remote video windows -->
-                        <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
-                             ng-show="videoDisplaySelection.currentlySelectedVideoElement == remoteClientId"
-                             class="cl-transition-opacity col-xs-12 text-center cl-col-no-padding cl-vertical-align-inline-block"
-                             ng-style="{clear: $even ? 'left': 'none'}">
-
-                            <div class="cl-video-wrapper-div" ng-controller="lxRemoteVideoWrapperCtrl">
-
-                                {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
-
-                                <!-- only show the message in the video window if a modal is not currently being shown - this is
-                                     just so that we don't confuse the user by showing them two different messages at once -->
-
-                                <div class="cl-center-overlay-outer-div cl-video-text-overlay">
-                                    <div class="cl-center-overlay-middle-div">
-                                        <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ remoteClientId }}</span>
-                                        <span ng-show="!remoteStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                                             class="cl-overlay-text-span cl-transition-opacity"
-                                             lx-display-remote-video-status>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div lx-remote-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
-                            </div>
-                        </div><!--
-                            The following wraps the local video window
-
-                            (Note: this comment is removing the whitespace between the div's and is necessary for the layout
-                            to work correctly)
-                     --><div class="col-xs-12 text-center cl-col-no-padding cl-vertical-align-inline-block"
-                                 ng-show="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'"
-                                 ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
-                            <div class="cl-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl" >
-                                {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
-                                <div class="cl-center-overlay-outer-div cl-video-text-overlay">
-                                    <div class="cl-center-overlay-middle-div">
-                                        <span ng-show="localStreamIsActive"
-                                              class="cl-overlay-text-span cl-transition-opacity">Local Video
-                                        </span>
-
-                                        <span ng-show="!localStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                                             class="cl-overlay-text-span cl-transition-opacity"
-                                             lx-display-local-video-status>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div lx-local-video-element-directive></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div> <!-- lxMainVideoController -->
     </div>
 {% endraw %}

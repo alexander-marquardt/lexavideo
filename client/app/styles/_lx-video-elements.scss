@@ -98,3 +98,17 @@ div.cl-video-text-overlay {
   line-height: 1.5;
   font-size: 12px;
 }
+
+.cl-video-inside-chat-panel {
+  position: absolute;
+  top: $chat-panel-heading-height;
+  height: nth($chat-panel-body-height-list, 1);
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($chat-panel-body-height-list, $idx);
+    }
+  }
+
+  display: inline-block;
+  vertical-align: bottom;
+}
