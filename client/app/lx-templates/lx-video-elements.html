@@ -12,13 +12,15 @@
                         <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
                              class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
                                 ng-class="videoStateInfoObject.numOpenVideoExchanges > 5?'col-xs-1':'col-xs-2'">
-                            <div class="cl-video-wrapper-div">
+                            <div class="cl-video-wrapper-div"
+                                 ng-click="videoDisplaySelection.currentlySelectedVideoElement = remoteClientId">
                                 <div lx-remote-small-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
                             </div>
                         </div><!--
                      --><div class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
                             ng-class="videoStateInfoObject.numOpenVideoExchanges > 5?'col-xs-1':'col-xs-2'">
-                            <div class="cl-video-wrapper-div">
+                            <div class="cl-video-wrapper-div"
+                                 ng-click="videoDisplaySelection.currentlySelectedVideoElement = 'localVideoIsSelected'">
                                 <div lx-local-small-video-element-directive></div>
                             </div>
                         </div>
@@ -31,6 +33,7 @@
                     <div class="row cl-row-no-margins">
                         <!-- The following wraps the remote video windows -->
                         <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
+                             ng-show="videoDisplaySelection.currentlySelectedVideoElement == remoteClientId"
                              class="cl-transition-opacity col-xs-12 text-center cl-col-no-padding cl-vertical-align-inline-block"
                              ng-style="{clear: $even ? 'left': 'none'}">
 
@@ -54,6 +57,7 @@
                             (Note: this comment is removing the whitespace between the div's and is necessary for the layout
                             to work correctly)
                      --><div class="col-xs-12 text-center cl-col-no-padding cl-vertical-align-inline-block"
+                                 ng-show="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'"
                                  ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
                             <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl" >
                                 {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}

@@ -110,6 +110,8 @@ angular.module('lxUseChatRoom.controllers', [])
                 return;
             }
 
+            // Display the new remote video element.
+            $scope.videoDisplaySelection.currentlySelectedVideoElement = remoteClientId;
 
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
@@ -198,7 +200,6 @@ angular.module('lxUseChatRoom.controllers', [])
             if (lxCheckIfSystemSupportsWebRtcService.checkBrowserVersionToSeeIfGetUserMediaSupported($scope)) {
                 lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess($scope);
             }
-
         };
 
         $scope.toggleWebcamMuteInterfaceFn = function() {
