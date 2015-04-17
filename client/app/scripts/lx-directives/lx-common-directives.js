@@ -64,11 +64,12 @@ commonDirectives.factory('clickAnywhereButHereService', function($document){
   };
 });
 
-commonDirectives.directive('clickAnywhereButHere', function($document, clickAnywhereButHereService){
+commonDirectives.directive('clickAnywhereButHere', function($log, clickAnywhereButHereService){
   return {
     restrict: 'A',
     link: function(scope, elem, attr) {
       var handler = function(e) {
+        $log.log('clickAnywhereButHere stopping click propagation.');
         e.stopPropagation();
       };
       elem.on('click', handler);
