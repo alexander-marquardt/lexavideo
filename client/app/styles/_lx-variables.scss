@@ -93,9 +93,10 @@ $video-widths-list: ();
 $panel-border-compensation: 2px;
 
 $viewport-heights-list: ();
-@each $viewport-width in $viewport-widths-list {
-  $viewport-heights-list: append($viewport-heights-list, $viewport-width * $video-aspect-ratio + $title-row-height +
-                                 $chat-panel-heading-height +  $chat-panel-footer-height + $sticky-footer-height +
+@for $idx from 1 through length($video-widths-list) {
+  $video-width: nth($video-widths-list, $idx);
+  $viewport-heights-list: append($viewport-heights-list, $video-width * $video-aspect-ratio + $title-row-height +
+                                 $chat-panel-heading-height +  $chat-panel-footer-height + 2*$sticky-footer-height +
                                  $panel-border-compensation);
 }
 
