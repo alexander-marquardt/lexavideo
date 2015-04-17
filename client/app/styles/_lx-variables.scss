@@ -73,11 +73,11 @@ $viewport-widths-list: join($viewports-xs-list, $viewports-standard-sizes-list);
 $chat-panel-name-size: ();
 $content-widths-list: ();
 @each $viewport-width in $viewports-xs-list {
-  $content-widths-list: append($content-widths-list, $viewport-width - $xs-container-margin);
+  $content-widths-list: append($content-widths-list, $viewport-width - $xs-container-margin - $scrollbar-width);
   $chat-panel-name-size: append($chat-panel-name-size, 1em);
 }
 @each $viewport-width in $viewports-standard-sizes-list {
-  $content-widths-list: append($content-widths-list, $viewport-width - $grid-gutter-width);
+  $content-widths-list: append($content-widths-list, $viewport-width - $grid-gutter-width - $scrollbar-width);
   $chat-panel-name-size: append($chat-panel-name-size, 2em);
 }
 
