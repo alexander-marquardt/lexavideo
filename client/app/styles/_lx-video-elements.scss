@@ -23,26 +23,6 @@ $video-wrapper-zindex: 10;
   position: relative;
   z-index: $video-wrapper-zindex;
   text-align: center;
-
-  left: 0;
-  // The following code will center the video in the horizontal-middle of the chat panel
-   @for $idx_viewport_width from 1 through length($viewport-widths-list) {
-     // set default values for extremely short displays
-     @media (min-width: nth($viewport-widths-list, $idx_viewport_width)) {
-       left: (nth($viewport-widths-list, $idx_viewport_width) - nth($video-widths-list, 1)) / 2;
-     }
-   }
-
-  @for $idx_viewport_width from 1 through length($viewport-widths-list) {
-    @for $idx_viewport_height from 1 through length($viewport-heights-list) {
-      $left-offset: (nth($viewport-widths-list, $idx_viewport_width) - nth($video-widths-list, $idx_viewport_height)) / 2;
-      @if  $left-offset > 0 {
-        @media (min-width: nth($viewport-widths-list, $idx_viewport_width)) and (min-height: nth($viewport-heights-list, $idx_viewport_height)) {
-          left: $left-offset;
-        }
-      }
-    }
-  }
 }
 
 
@@ -68,7 +48,7 @@ $video-wrapper-zindex: 10;
   box-sizing: border-box;
   width: nth($video-widths-list, 1);
   @for $idx from 1 through length($viewport-widths-list) {
-    @media (min-width: nth($viewport-widths-list, $idx)) {
+     @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
       width: nth($video-widths-list, $idx);
     }
   }
