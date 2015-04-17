@@ -311,10 +311,10 @@ span.cl-chat-panel-overlay-text-span {
   position: relative;
   // Note $line-height-computed in the following calculation is the margin
   // at the bottom that is used in the bootstrap css panel definition.
-  height: nth($common-display-area-height-list, 1) + $line-height-computed/4;
+  height: nth($common-display-area-height-list, 1) + $vertical-spacing-between-major-sections;
   @for $idx from 1 through length($viewport-heights-list) {
     @media (min-height: nth($viewport-heights-list, $idx)) {
-      height: nth($common-display-area-height-list, $idx) + $line-height-computed/4;
+      height: nth($common-display-area-height-list, $idx) + $vertical-spacing-between-major-sections;
     }
   }
 }

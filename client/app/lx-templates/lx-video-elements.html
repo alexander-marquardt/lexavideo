@@ -10,12 +10,14 @@
                 <div class="col-xs-12 cl-col-no-padding">
                     <div class="well cl-mini-video-well row cl-row-no-margins">
                         <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
-                             class="cl-transition-opacity col-xs-2 text-center cl-col-no-padding cl-vertical-align-inline-block">
+                             class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
+                                ng-class="videoStateInfoObject.numOpenVideoExchanges > 5?'col-xs-1':'col-xs-2'">
                             <div class="cl-video-wrapper-div">
                                 <div lx-remote-small-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
                             </div>
                         </div><!--
-                     --><div class="cl-transition-opacity col-xs-2 text-center cl-col-no-padding cl-vertical-align-inline-block">
+                     --><div class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
+                            ng-class="videoStateInfoObject.numOpenVideoExchanges > 5?'col-xs-1':'col-xs-2'">
                             <div class="cl-video-wrapper-div">
                                 <div lx-local-small-video-element-directive></div>
                             </div>

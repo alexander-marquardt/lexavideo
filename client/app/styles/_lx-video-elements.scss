@@ -23,7 +23,7 @@ $video-wrapper-zindex: 10;
 
 .cl-mini-video-well {
   padding: 2px;
-  margin-bottom: 2px;
+  margin-bottom: $vertical-spacing-between-major-sections;
 }
 
 %cl-overlay-common {
