@@ -33,6 +33,16 @@ $video-wrapper-zindex: 10;
   }
 }
 
+.cl-video-sizing-width-only {
+  box-sizing: border-box;
+  width: nth($video-widths-list, 1);
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) {
+      width: nth($video-widths-list, $idx);
+    }
+  }
+}
+
 .cl-mini-video-well {
   padding: 2px;
   margin-bottom: $vertical-spacing-between-major-sections;
@@ -128,3 +138,4 @@ div.cl-video-text-overlay {
     }
   }
 }
+
