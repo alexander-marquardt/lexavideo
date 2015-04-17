@@ -63,7 +63,7 @@ $hangup-button-space: 35px;
 .cl-selected-icon-status-overlay {
   @extend %cl-overlay-common;
   padding: 5px;
-  bottom: 0px;
+  top: 0px;
   right: 0;
   left: 0px;
   text-align: right;
@@ -78,7 +78,7 @@ $hangup-button-space: 35px;
 
 .cl-video-buttons-overlay {
   @extend %cl-overlay-common;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 50%;
   padding: $overlay-buttons-col-padding;
