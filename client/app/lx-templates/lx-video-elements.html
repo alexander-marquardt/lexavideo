@@ -46,13 +46,11 @@
 
                                 <div class="cl-center-overlay-outer-div cl-video-text-overlay">
                                     <div class="cl-center-overlay-middle-div">
-                                        <div class="cl-center-overlay-inner-div">
-                                            <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ remoteClientId }}</span>
-                                            <span ng-show="!remoteStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                                                 class="cl-overlay-text-span cl-transition-opacity"
-                                                 lx-display-remote-video-status>
-                                            </span>
-                                        </div>
+                                        <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ remoteClientId }}</span>
+                                        <span ng-show="!remoteStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                             class="cl-overlay-text-span cl-transition-opacity"
+                                             lx-display-remote-video-status>
+                                        </span>
                                     </div>
                                 </div>
 
@@ -70,15 +68,14 @@
                                 {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
                                 <div class="cl-center-overlay-outer-div cl-video-text-overlay">
                                     <div class="cl-center-overlay-middle-div">
-                                        <div class="cl-center-overlay-inner-div">
-                                            <span ng-show="localStreamIsActive"
-                                                  class="cl-overlay-text-span cl-transition-opacity">Local Video</span>
+                                        <span ng-show="localStreamIsActive"
+                                              class="cl-overlay-text-span cl-transition-opacity">Local Video
+                                        </span>
 
-                                            <span ng-show="!localStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                                                 class="cl-overlay-text-span cl-transition-opacity"
-                                                 lx-display-local-video-status>
-                                            </span>
-                                        </div>
+                                        <span ng-show="!localStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                             class="cl-overlay-text-span cl-transition-opacity"
+                                             lx-display-local-video-status>
+                                        </span>
                                     </div>
                                 </div>
 

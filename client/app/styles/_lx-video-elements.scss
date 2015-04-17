@@ -75,9 +75,9 @@ $hangup-button-space: 35px;
   text-align: left;
 }
 
-.cl-video-text-overlay {
+div.cl-video-text-overlay {
   // place the text over top of
-  z-index: $video-wrapper-zindex + 7;
+  z-index: $video-wrapper-zindex + 5;
 }
 
 .cl-video-buttons-overlay.cl-hangup-button-overlay {
