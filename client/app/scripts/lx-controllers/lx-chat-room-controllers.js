@@ -101,14 +101,6 @@ angular.module('lxUseChatRoom.controllers', [])
                'waitingForPermissionToEnableVideoExchange'
              */
 
-            /* If the "partial" notification menu is shown, then treat the click as an indication that the user wants
-               to see the entire notification menu. This is done so that if the user clicks on a button that
-               is shown in the partial-menu, that the entire menu will be shown instead of acting on the button click.
-               (This will likely cause problems with normal video buttons, and should be re-visited)
-             */
-            if ($scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention) {
-                return;
-            }
 
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
