@@ -26,7 +26,7 @@ $video-wrapper-zindex: 10;
   width: nth($video-widths-list, 1);
   height: nth($video-widths-list, 1) * $video-aspect-ratio;
   @for $idx from 1 through length($viewport-widths-list) {
-    @media (min-width: nth($viewport-widths-list, $idx)) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
       width: nth($video-widths-list, $idx);
       height: nth($video-widths-list, $idx) * $video-aspect-ratio;
     }

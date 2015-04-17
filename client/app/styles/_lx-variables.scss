@@ -1,3 +1,5 @@
+$slide-main-menu-duration: 0.4s;
+
 $xs-container-margin: 2px;
 
 $deep-red : #ff0000;
@@ -45,20 +47,7 @@ $chat-groups-members-margin: 15px;
 
 $vertical-spacing-between-major-sections: 2px;
 
-// since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
-// it does not overflow the bottom of the div. Subtract 2px for outer panel border.
 
-$viewport-heights-list: 400px, 500px, 600px, 700px, 800px, 900px, 1000px, 1250px, 1500px;
-
-$chat-panel-body-height-list: ();
-$common-display-area-height-list: ();
-$notification-panel-body-height-list: ();
-
-@for $idx from 1 through length($viewport-heights-list) {
-  $common-display-area-height-list: append($common-display-area-height-list, nth($viewport-heights-list, $idx)/2);
-  $chat-panel-body-height-list: append($chat-panel-body-height-list, nth($common-display-area-height-list, $idx) - $chat-panel-heading-height - $chat-panel-footer-height - 2px);
-  $notification-panel-body-height-list: append($notification-panel-body-height-list, nth($chat-panel-body-height-list, $idx) + $chat-panel-footer-height);
-}
 
 // $estimated-bubble-height is used for computing the offset required in the first div to push the first
 // message to the bottom of the chat panel.
@@ -92,9 +81,25 @@ $content-widths-list: ();
 $video-aspect-ratio : 3/4;
 // setup the video window sizes that are associated with the viewport sizes.
 $video-widths-list: ();
-@each $viewport-width in $viewport-widths-list {
-  $video-width: ($viewport-width) * 0.75;
+@each $video-width in $content-widths-list {
   $video-widths-list: append($video-widths-list, $video-width);
 }
 
-$slide-main-menu-duration: 0.4s;
+// since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
+// it does not overflow the bottom of the div. Subtract 2px for outer panel border.
+
+$viewport-heights-list: ();
+@each $viewport-width in $viewport-widths-list {
+  $viewport-heights-list: append($viewport-heights-list, $viewport-width * $video-aspect-ratio);
+}
+
+$chat-panel-body-height-list: ();
+$common-display-area-height-list: ();
+$notification-panel-body-height-list: ();
+
+@for $idx from 1 through length($viewport-heights-list) {
+  $common-display-area-height-list: append($common-display-area-height-list, nth($viewport-heights-list, $idx));
+  $chat-panel-body-height-list: append($chat-panel-body-height-list, nth($common-display-area-height-list, $idx) - $chat-panel-heading-height - $chat-panel-footer-height - 2px);
+  $notification-panel-body-height-list: append($notification-panel-body-height-list, nth($chat-panel-body-height-list, $idx) + $chat-panel-footer-height);
+}
+
