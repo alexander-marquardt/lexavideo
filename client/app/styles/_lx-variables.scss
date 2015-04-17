@@ -44,6 +44,7 @@ $lighten-link-color: lighten($link-color, 15%) !default;
 
 $chat-panel-heading-height: 50px;
 $chat-panel-footer-height: 50px;
+$sticky-footer-height: $chat-panel-heading-height;
 
 $chat-groups-members-margin: 15px;
 
@@ -89,10 +90,13 @@ $video-widths-list: ();
 
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
 // it does not overflow the bottom of the div. Subtract 2px for outer panel border.
+$panel-border-compensation: 2px;
 
 $viewport-heights-list: ();
 @each $viewport-width in $viewport-widths-list {
-  $viewport-heights-list: append($viewport-heights-list, $viewport-width * $video-aspect-ratio + $title-row-height + $chat-panel-heading-height +  $chat-panel-footer-height + 2px);
+  $viewport-heights-list: append($viewport-heights-list, $viewport-width * $video-aspect-ratio + $title-row-height +
+                                 $chat-panel-heading-height +  $chat-panel-footer-height + $sticky-footer-height +
+                                 $panel-border-compensation);
 }
 
 $chat-panel-body-height-list: ();
@@ -100,8 +104,11 @@ $common-display-area-height-list: ();
 $notification-panel-body-height-list: ();
 
 @for $idx from 1 through length($viewport-heights-list) {
-  $common-display-area-height-list: append($common-display-area-height-list, nth($viewport-heights-list, $idx));
-  $chat-panel-body-height-list: append($chat-panel-body-height-list, nth($common-display-area-height-list, $idx) - $chat-panel-heading-height - $chat-panel-footer-height - 2px);
-  $notification-panel-body-height-list: append($notification-panel-body-height-list, nth($chat-panel-body-height-list, $idx) + $chat-panel-footer-height);
+  $common-display-area-height-list: append($common-display-area-height-list, nth($viewport-heights-list, $idx) -
+                                           2*$sticky-footer-height );
+  $chat-panel-body-height-list: append($chat-panel-body-height-list, nth($common-display-area-height-list, $idx) -
+                                       $chat-panel-heading-height - $chat-panel-footer-height - $panel-border-compensation);
+  $notification-panel-body-height-list: append($notification-panel-body-height-list,
+                                               nth($chat-panel-body-height-list, $idx) + $chat-panel-footer-height);
 }
 
