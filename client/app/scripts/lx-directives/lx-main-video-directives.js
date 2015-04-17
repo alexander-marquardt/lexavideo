@@ -47,7 +47,7 @@ videoAppDirectives.directive('lxRemoteSmallVideoElementDirective',
 
                 // only
                 if (!(remoteClientId in scope.remoteHdVideoElementsDict)) {
-                    e = angular.element('<video class="cl-video cl-video-sizing cl-show-hide-fade" autoplay="autoplay"></video>');
+                    e = angular.element('<video class="cl-video  cl-show-hide-fade" autoplay="autoplay"></video>');
                     scope.remoteSmallVideoElementsDict[remoteClientId] = e[0];
                     elem.append(e);
                 }
@@ -63,7 +63,7 @@ videoAppDirectives.directive('lxLocalVideoElementDirective',
             restrict : 'A',
             link: function(scope, elem) {
                 var e;
-                e = angular.element('<video class="cl-video cl-show-hide-fade" autoplay="autoplay" muted="true"></video>');
+                e = angular.element('<video class="cl-video cl-video-sizing cl-show-hide-fade" autoplay="autoplay" muted="true"></video>');
                 scope.localVideoObject.localHdVideoElem = e[0];
 
                 elem.append(e);

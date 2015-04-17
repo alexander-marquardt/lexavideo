@@ -79,6 +79,15 @@ $content-widths-list: 320px - $xs-container-margin, 360px - $xs-container-margin
                       480px - $xs-container-margin, 600px - $xs-container-margin, $screen-sm - $grid-gutter-width,
                       $screen-md - $grid-gutter-width, $screen-lg - $grid-gutter-width;
 
+$video-aspect-ratio : 3/4;
+// setup the video window sizes that are associated with the viewport sizes.
+$video-widths-list: ();
+@each $viewport-width in $viewport-widths-list {
+  $video-width: ($viewport-width) * 0.75;
+  $video-widths-list: append($video-widths-list, $video-width);
+}
+
+
 // vary the size of the chat panel name
 $chat-panel-name-size: 1em, 1em, 1em, 1.25em, 1.5em, 1.5em, 1.5em, 1.5em;
 

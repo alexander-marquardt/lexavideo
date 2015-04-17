@@ -132,13 +132,13 @@
 
 
             <div class="row cl-video-inside-chat-panel">
-                <div class="col-xs-12 cl-col-no-padding"  style="height: 100%; position: relative;">
-                    <div class="row cl-row-no-margins" style="position: absolute; bottom: 0; height: 200px; width: 200px;">
+                <div class="col-xs-12 cl-col-no-padding">
+                    <div class="row cl-row-no-margins cl-center-overlay-outer-div">
 
                          <!--The following wraps the remote video windows-->
                         <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
                              ng-show="videoDisplaySelection.currentlySelectedVideoElement == remoteClientId"
-                             class="cl-transition-opacity col-xs-12 text-center cl-col-no-padding cl-vertical-align-inline-block"
+                             class="cl-transition-opacity col-xs-12 text-center cl-col-no-padding cl-center-overlay-middle-div"
                              ng-style="{clear: $even ? 'left': 'none'}">
 
                             <div class="cl-video-wrapper-div" ng-controller="lxRemoteVideoWrapperCtrl">
@@ -165,7 +165,7 @@
 
                             (Note: this comment is removing the whitespace between the div's and is necessary for the layout
                             to work correctly)
-                     --><div class="col-xs-12 text-center cl-col-no-padding cl-vertical-align-inline-block"
+                     --><div class="col-xs-12 text-center cl-col-no-padding cl-center-overlay-middle-div"
                                  ng-show="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'"
                                  ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
                             <div class="cl-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl" >
