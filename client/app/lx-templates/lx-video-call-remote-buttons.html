@@ -15,7 +15,7 @@
 
     <div class="cl-video-buttons-overlay">
         <!-- enable/disable remote audio -->
-        <button ng-show="remoteVideoElementsDict[remoteClientId].isAudioMuted"
+        <button ng-show="remoteHdVideoElementsDict[remoteClientId].isAudioMuted"
                 type="button" class="btn btn-sm btn-primary cl-video-control-button"
                 ng-click="toggleAudioMuteInterfaceFn(remoteClientId)">
 
@@ -25,7 +25,7 @@
             </span>
         </button>
 
-        <button ng-show="!remoteVideoElementsDict[remoteClientId].isAudioMuted"
+        <button ng-show="!remoteHdVideoElementsDict[remoteClientId].isAudioMuted"
                 type="button" class="btn btn-sm btn-primary cl-video-control-button"
                 ng-click="toggleAudioMuteInterfaceFn(remoteClientId)">
             <span class="cl-lx-call-control-wrapper-cfg">
@@ -38,7 +38,7 @@
     </div>
 
     <div ng-show='!videoExchangeDisplayOverlayTrackerObject.currentlyShown'  class="cl-selected-icon-status-overlay cl-status-beside-hangup-overlay">
-        <div ng-show="remoteVideoElementsDict[remoteClientId].isAudioMuted">
+        <div ng-show="remoteHdVideoElementsDict[remoteClientId].isAudioMuted">
             <span class="cl-video-status-icon">
                 <span class="cl-lx-call-control-wrapper-cfg">
                     <span class="icon-lx-volume-high-cfg cl-text-shadow"></span>

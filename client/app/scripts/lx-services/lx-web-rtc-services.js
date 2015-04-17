@@ -416,11 +416,12 @@ webRtcServices.factory('lxPeerService',
             return contents;
         };
 
-        var onRemoteStreamAdded = function(remoteVideoObject, videoSignalingObject, remoteClientId) {
+        var onRemoteStreamAdded = function(remoteVideoObject, remoteSmallVideoElement, videoSignalingObject, remoteClientId) {
             return function(mediaStreamEvent) {
                 $log.log('Remote stream added.');
                 $log.log('* remoteVideoObject.remoteHdVideoElem.src before: ' + remoteVideoObject.remoteHdVideoElem.src);
                 lxAdapterService.attachMediaStream(remoteVideoObject.remoteHdVideoElem, mediaStreamEvent.stream);
+                lxAdapterService.attachMediaStream(remoteSmallVideoElement, mediaStreamEvent.stream);
                 $log.log('* remoteVideoObject.remoteHdVideoElem.src after: ' + remoteVideoObject.remoteHdVideoElem.src);
 
                 self.remoteStream[remoteClientId] = mediaStreamEvent.stream;
@@ -455,7 +456,7 @@ webRtcServices.factory('lxPeerService',
         var self =  {
             pc : {},
             remoteStream : {},
-            createPeerConnection : function(remoteVideoObject, videoSignalingObject, clientId, remoteClientId) {
+            createPeerConnection : function(remoteVideoObject, remoteSmallVideoElement, videoSignalingObject, clientId, remoteClientId) {
 
                 $log.log('**************** createPeerConnection ************');
                 try {
@@ -475,7 +476,7 @@ webRtcServices.factory('lxPeerService',
                 }
 
 
-                self.pc[remoteClientId].onaddstream = onRemoteStreamAdded(remoteVideoObject, videoSignalingObject, remoteClientId);
+                self.pc[remoteClientId].onaddstream = onRemoteStreamAdded(remoteVideoObject, remoteSmallVideoElement, videoSignalingObject, remoteClientId);
                 self.pc[remoteClientId].onremovestream = onRemoteStreamRemoved(remoteClientId);
                 self.pc[remoteClientId].onsignalingstatechange = onSignalingStateChanged(self.pc[remoteClientId]);
                 self.pc[remoteClientId].oniceconnectionstatechange = onIceConnectionStateChanged(self.pc[remoteClientId]);
@@ -533,7 +534,7 @@ webRtcServices.factory('lxMediaService',
                 $log.log('User has granted access to local media.');
                 // Call the polyfill wrapper to attach the media stream to this element.
                 lxAdapterService.attachMediaStream(localVideoObject.localHdVideoElem, stream);
-                localVideoObject.localHdVideoElem.style.opacity = 1;
+                lxAdapterService.attachMediaStream(localVideoObject.localSmallVideoElem, stream);
 
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
 
@@ -649,7 +650,8 @@ webRtcServices.factory('lxCallService',
                 $log.log('************ Entering maybeStart *************');
 
                 var localVideoObject = scope.localVideoObject;
-                var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId];
+                var remoteVideoObject = scope.remoteHdVideoElementsDict[remoteClientId];
+                var remoteSmallVideoElement = scope.remoteSmallVideoElementsDict[remoteClientId] ;
                 var videoSignalingObject = scope.videoSignalingObject;
                 var clientId = scope.lxMainViewCtrl.clientId;
 
@@ -658,7 +660,7 @@ webRtcServices.factory('lxCallService',
 
                     $log.debug('Starting webRtc services!!');
 
-                    lxPeerService.createPeerConnection(remoteVideoObject,
+                    lxPeerService.createPeerConnection(remoteVideoObject, remoteSmallVideoElement,
                         videoSignalingObject, clientId, remoteClientId);
 
                     if (self.hasAudioOrVideoMediaConstraints) {

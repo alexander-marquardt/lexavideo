@@ -8,47 +8,64 @@
 
             <div class="row cl-row-no-margins">
                 <div class="col-xs-12 cl-col-no-padding">
+                    <div class="row cl-row-no-margins">
+                        <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
+                             class="cl-transition-opacity col-xs-1 text-center cl-col-no-padding cl-vertical-align-inline-block">
+                            <div class="cl-video-wrapper-div">
+                                <div lx-remote-small-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
+                            </div>
+                        </div><!--
+                     --><div class="cl-transition-opacity col-xs-1 text-center cl-col-no-padding cl-vertical-align-inline-block">
+                            <div class="cl-video-wrapper-div">
+                                <div lx-local-small-video-element-directive></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="row cl-row-no-margins">
-                            <!-- The following wraps the remote video windows -->
-                            <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
-                                    class="cl-transition-opacity col-xs-6 text-center cl-col-no-padding cl-vertical-align-inline-block"
-                                    ng-style="{clear: $even ? 'left': 'none'}">
+            <div class="row cl-row-no-margins">
+                <div class="col-xs-12 cl-col-no-padding">
+                    <div class="row cl-row-no-margins">
+                        <!-- The following wraps the remote video windows -->
+                        <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
+                             class="cl-transition-opacity col-xs-6 text-center cl-col-no-padding cl-vertical-align-inline-block"
+                             ng-style="{clear: $even ? 'left': 'none'}">
 
-                                    <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl">
+                            <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl">
 
-                                        {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
-                                        <div class="cl-username-overlay">
-                                            <span class="cl-overlay-text-span">{{ remoteClientId }}</span>
-                                        </div>
-                                        <!-- only show the message in the video window if a modal is not currently being shown - this is
-                                             just so that we don't confuse the user by showing them two different messages at once -->
-                                        <div ng-show="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                                             class="cl-transition-opacity"
-                                             lx-display-remote-video-status>
-                                        </div>
-                                        <div lx-remote-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
-                                    </div>
-                            </div><!--
+                                {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
+                                <div class="cl-username-overlay">
+                                    <span class="cl-overlay-text-span">{{ remoteClientId }}</span>
+                                </div>
+                                <!-- only show the message in the video window if a modal is not currently being shown - this is
+                                     just so that we don't confuse the user by showing them two different messages at once -->
+                                <div ng-show="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                     class="cl-transition-opacity"
+                                     lx-display-remote-video-status>
+                                </div>
+                                <div lx-remote-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
+                            </div>
+                        </div><!--
                             The following wraps the local video window
 
                             (Note: this comment is removing the whitespace between the div's and is necessary for the layout
                             to work correctly)
-                         --><div class="col-xs-6 text-center cl-col-no-padding cl-vertical-align-inline-block"
+                     --><div class="col-xs-6 text-center cl-col-no-padding cl-vertical-align-inline-block"
                                  ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
-                                <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl" >
-                                    {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
-                                    <div class="cl-username-overlay">
-                                        <span class="cl-overlay-text-span">Local Video</span>
-                                    </div>
-                                    <div ng-show="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                                             class="cl-transition-opacity"
-                                             lx-display-local-video-status>
-                                    </div>
-                                    <div lx-local-video-element-directive></div>
+                            <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl" >
+                                {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
+                                <div class="cl-username-overlay">
+                                    <span class="cl-overlay-text-span">Local Video</span>
                                 </div>
+                                <div ng-show="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                     class="cl-transition-opacity"
+                                     lx-display-local-video-status>
+                                </div>
+                                <div lx-local-video-element-directive></div>
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div> <!-- lxMainVideoController -->

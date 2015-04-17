@@ -24,14 +24,16 @@ angular.module('lxMainView.controllers', [])
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
-        // remoteVideoElementsDict will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoElementsObject
+        // remoteHdVideoElementsDict will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoElementsObject
         // There will be one object for each remote client that the local user is exchanging video with.
-        // remoteVideoElementsDict[remoteClientId] = {
+        // remoteHdVideoElementsDict[remoteClientId] = {
         //    remoteHdVideoElem: the dom element that will display the remote video,
         //    isAudioMuted: boolean
         // }
-        $scope.remoteVideoElementsDict = {};
+        $scope.remoteHdVideoElementsDict = {};
 
+        // remoteSmallVideoElementsDict[remoteClientId] = remoteVideoElement
+        $scope.remoteSmallVideoElementsDict = {};
 
         // Keeps track of which chat room the user has selected, pulled from the URL that is set by ngRoute
         // and ngView.
@@ -92,7 +94,7 @@ angular.module('lxMainView.controllers', [])
 
         $scope.localVideoObject = {
             localHdVideoElem: undefined,  // set in lxVideoElementDirective
-            localVideoWrapper: undefined, // set in lxVideoWrapperDirective
+            localSmallVideoElem: undefined,
             isWebcamMuted: false,
             isMicrophoneMuted: false
         };
