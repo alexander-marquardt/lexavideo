@@ -10,12 +10,10 @@ var lxSelectVideoTypePreferenceDirectives = angular.module('lxVideoExchangeUserF
 var  showMessageInVideoWindow = function(scope, overlayElem, message, $compile) {
     overlayElem.removeClass('ng-hide');
     overlayElem.html(message);
-    scope.videoExchangeDisplayOverlayTrackerObject.currentlyShown = true;
 };
 
 var hideMessageInVideoWindow = function(scope, overlayElem) {
     overlayElem.addClass('ng-hide');
-    scope.videoExchangeDisplayOverlayTrackerObject.currentlyShown = false;
 };
 
 

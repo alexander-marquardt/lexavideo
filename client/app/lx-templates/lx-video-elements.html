@@ -37,7 +37,7 @@
                              class="cl-transition-opacity col-xs-12 text-center cl-col-no-padding cl-vertical-align-inline-block"
                              ng-style="{clear: $even ? 'left': 'none'}">
 
-                            <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl">
+                            <div class="cl-video-wrapper-div" ng-controller="lxRemoteVideoWrapperCtrl">
 
                                 {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
 
@@ -48,7 +48,7 @@
                                     <div class="cl-center-overlay-middle-div">
                                         <div class="cl-center-overlay-inner-div">
                                             <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ remoteClientId }}</span>
-                                            <span ng-show="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                            <span ng-show="!remoteStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
                                                  class="cl-overlay-text-span cl-transition-opacity"
                                                  lx-display-remote-video-status>
                                             </span>
@@ -66,15 +66,15 @@
                      --><div class="col-xs-12 text-center cl-col-no-padding cl-vertical-align-inline-block"
                                  ng-show="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'"
                                  ng-style="{clear:(videoStateInfoObject.currentOpenVideoSessionsList.length % 2  ? 'none': 'left')}">
-                            <div class="cl-video-wrapper-div" ng-controller="lxVideoWrapperCtrl" >
+                            <div class="cl-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl" >
                                 {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
                                 <div class="cl-center-overlay-outer-div cl-video-text-overlay">
                                     <div class="cl-center-overlay-middle-div">
                                         <div class="cl-center-overlay-inner-div">
-                                            <span ng-show="remoteStreamIsActive"
+                                            <span ng-show="localStreamIsActive"
                                                   class="cl-overlay-text-span cl-transition-opacity">Local Video</span>
 
-                                            <span ng-show="!accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                            <span ng-show="!localStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
                                                  class="cl-overlay-text-span cl-transition-opacity"
                                                  lx-display-local-video-status>
                                             </span>

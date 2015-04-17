@@ -48,12 +48,7 @@
     </button>
 </div>
 
-
-<!-- if the overlay information is already shown (ie. "we are connecting to remote user"), then don't show
-the status of the users buttons (ie. "microphone is muted") - this is necessary because on small screens there
-is not enough space to show both messages without them overlapping. -->
-<div ng-show='!videoExchangeDisplayOverlayTrackerObject.currentlyShown'
-     class="cl-selected-icon-status-overlay">
+<div class="cl-selected-icon-status-overlay">
     <div style="float:right">
         <div style="display: inline-block">
             <span ng-show="localVideoObject.isMicrophoneMuted">

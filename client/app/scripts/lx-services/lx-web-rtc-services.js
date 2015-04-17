@@ -505,7 +505,11 @@ webRtcServices.factory('lxStreamService', function() {
         localStream: null,
         getLocalStream: function() {
             return self.localStream;
+        },
+        getLocalStreamBoolean: function() {
+            return !!self.localStream;
         }
+
     };
 
     return self;
