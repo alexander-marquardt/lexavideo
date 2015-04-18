@@ -46,7 +46,7 @@ videoAppDirectives.directive('lxRemoteSmallVideoElementDirective',
                 var remoteClientId = attrs.remoteClientId;
 
                 // only
-                if (!(remoteClientId in scope.remoteHdVideoElementsDict)) {
+                if (!(remoteClientId in scope.remoteSmallVideoElementsDict)) {
                     e = angular.element('<video class="cl-video  cl-show-hide-fade" autoplay="autoplay"></video>');
                     scope.remoteSmallVideoElementsDict[remoteClientId] = e[0];
                     elem.append(e);
