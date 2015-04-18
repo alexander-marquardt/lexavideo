@@ -20,7 +20,6 @@ $video-wrapper-zindex: 10;
   bottom: 0;
   left: 50%;
   background: $gray;
-  border: none;
   z-index: $video-wrapper-zindex;
   text-align: center;
 
@@ -32,11 +31,27 @@ $video-wrapper-zindex: 10;
   }
 }
 
+.cl-main-video-wrapper-box-shadow-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: $video-wrapper-zindex + 2;
+  text-align: center;
+
+  margin-left: - nth($video-widths-list, 1) / 2;
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      margin-left: - nth($video-widths-list, $idx) / 2;
+    }
+  }
+  @include box-shadow(inset 0px 0px 10px 5px $chat-panel-body-background);
+}
 
 .cl-video {
   opacity: 1;
   display: block; // remove 5 px gap at bottom
   width: 100%;
+
 }
 
 .cl-video-sizing {

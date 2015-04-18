@@ -165,6 +165,9 @@
                      --><div class="cl-transition-opacity col-xs-12 text-center cl-col-no-padding cl-full-height"
                                  ng-show="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'">
                             <div class="cl-main-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl">
+                                <div lx-local-video-element-directive></div>
+                            </div>
+                            <div class="cl-main-video-wrapper-box-shadow-overlay cl-video-sizing">
                                 {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
                                 <div class="cl-center-overlay-outer-div cl-video-text-overlay">
                                     <div class="cl-center-overlay-middle-div">
@@ -178,8 +181,6 @@
                                         </span>
                                     </div>
                                 </div>
-
-                                <div lx-local-video-element-directive></div>
                             </div>
                         </div>
 
