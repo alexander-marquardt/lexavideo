@@ -9,11 +9,13 @@
   text-align: center;
 }
 
+$video-wrapper-text-mode-opacity: 0.5;
 .cl-main-video-wrapper-div {
+  opacity: $video-wrapper-text-mode-opacity;
   position: absolute;
   bottom: 0;
   left: 50%;
-  background: $chat-panel-body-background;
+  background: $chat-panel-body-background-text-mode;
   z-index: $video-wrapper-zindex;
   text-align: center;
 
@@ -23,6 +25,16 @@
       margin-left: - nth($video-widths-list, $idx) / 2;
     }
   }
+}
+
+div.cl-main-video-wrapper-video-mode {
+  opacity: 1;
+  background: $chat-panel-body-background-video-mode;
+}
+
+div.cl-main-video-wrapper-text-mode {
+  opacity: $video-wrapper-text-mode-opacity;
+  background: $chat-panel-body-background-text-mode;
 }
 
 .cl-main-video-wrapper-box-shadow-overlay {
@@ -38,7 +50,15 @@
       margin-left: - nth($video-widths-list, $idx) / 2;
     }
   }
-  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
+  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background-text-mode);
+}
+
+div.cl-main-video-wrapper-box-shadow-overlay-video-mode {
+  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background-text-mode);
+}
+
+div.cl-main-video-wrapper-box-shadow-overlay-video-mode {
+  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background-video-mode);
 }
 
 .cl-video {

@@ -175,7 +175,9 @@ angular.module('lxMainView.controllers', [])
             currentOpenVideoSessionsList: []
         };
 
-
+       $scope.chatboxInputElementObject = {
+           isFocused: true
+       };
 
         // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
         // here because information received on the channel needs to be written into these objects.
