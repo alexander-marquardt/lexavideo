@@ -1,7 +1,7 @@
 
 
 
-.cl-video-wrapper-div {
+.cl-mini-video-wrapper-div {
   background: #000;
   border: 1px solid $standard-border-color;
   position: relative;
@@ -65,7 +65,6 @@ div.cl-main-video-wrapper-box-shadow-overlay-video-mode {
   opacity: 1;
   display: block; // remove 5 px gap at bottom
   width: 100%;
-
 }
 
 .cl-video-sizing {
@@ -85,7 +84,7 @@ div.cl-main-video-wrapper-box-shadow-overlay-video-mode {
   padding: 2px;
   margin-bottom: $vertical-spacing-between-major-sections;
 
-  & .cl-video-wrapper-div:hover {
+  & .cl-mini-video-wrapper-div:hover {
     cursor: pointer;
   }
 }
