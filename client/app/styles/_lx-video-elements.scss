@@ -18,11 +18,18 @@ $video-wrapper-zindex: 10;
 .cl-main-video-wrapper-div {
   position: absolute;
   bottom: 0;
+  left: 50%;
   background: $gray;
   border: none;
-  position: relative;
   z-index: $video-wrapper-zindex;
   text-align: center;
+
+  margin-left: - nth($video-widths-list, 1) / 2;
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      margin-left: - nth($video-widths-list, $idx) / 2;
+    }
+  }
 }
 
 
@@ -44,15 +51,6 @@ $video-wrapper-zindex: 10;
   }
 }
 
-.cl-video-sizing-width-only {
-  box-sizing: border-box;
-  width: nth($video-widths-list, 1);
-  @for $idx from 1 through length($viewport-widths-list) {
-     @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
-      width: nth($video-widths-list, $idx);
-    }
-  }
-}
 
 .cl-mini-video-well {
   padding: 2px;
