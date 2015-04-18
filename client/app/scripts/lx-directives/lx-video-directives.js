@@ -83,17 +83,11 @@ videoAppDirectives.directive('lxDisplayLocalVideoElementDirective',
         return {
             restrict : 'A',
             link: function(scope, elem) {
-                scope.$watch(function() {
-                        return !!lxStreamService.localStream;
-                    },
-                function(localStreamBool) {
-                    if (localStreamBool) {
 
-                        var e = angular.element('<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>');
-                        lxAdapterService.attachMediaStream(e[0], lxStreamService.localStream);
-                        elem.replaceWith(e);
-                    }
-                });
+
+                var e = angular.element('<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>');
+                lxAdapterService.attachMediaStream(e[0], lxStreamService.localStream);
+                elem.replaceWith(e);
             }
         };
     }
