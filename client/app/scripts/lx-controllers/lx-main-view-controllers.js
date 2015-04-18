@@ -176,7 +176,7 @@ angular.module('lxMainView.controllers', [])
         };
 
        $scope.chatboxInputElementObject = {
-           isFocused: true
+           inputIsFocused: true
        };
 
         // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
