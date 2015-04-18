@@ -59,10 +59,7 @@ $estimated-bubble-height: 30px;
 $chat-bubble-zindex: 10;
 
 
-/* The following section defines the width of the video elements for various viewport sizes.
-   note that for sm and larger devices, two video elements are shown side-by-side. This means that
-   we also have to account for two gutter widths (1/2 on left and right side of screen, and 1 between
-   the video elements */
+/* The following section defines the width of the video elements for various viewport sizes. */
 
 $scrollbar-width: 15px; // this is an assumption, and can vary between browsers
 
@@ -78,10 +75,9 @@ $content-widths-list: ();
   $content-widths-list: append($content-widths-list, $viewport-width - $xs-container-margin - 2 * $scrollbar-width);
   $chat-panel-name-size: append($chat-panel-name-size, 1em);
 }
-@each $viewport-width in $viewports-standard-sizes-list {
-  $content-widths-list: append($content-widths-list, $viewport-width - $grid-gutter-width - 2 * $scrollbar-width);
-  $chat-panel-name-size: append($chat-panel-name-size, 2em);
-}
+
+$content-widths-list: join($content-widths-list, ($container-sm - $scrollbar-width, $container-md - $scrollbar-width, $container-lg - $scrollbar-width));
+$chat-panel-name-size: join($chat-panel-name-size, (1.5em, 2em, 2em));
 
 $video-aspect-ratio : 3/4;
 // setup the video window sizes that are associated with the viewport sizes.
