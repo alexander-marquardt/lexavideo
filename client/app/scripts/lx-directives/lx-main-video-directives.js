@@ -31,7 +31,7 @@ videoAppDirectives.directive('lxRemoteVideoElementDirective',
     }
 );
 
-videoAppDirectives.directive('lxRemoteSmallVideoElementDirective',
+videoAppDirectives.directive('lxRemoteMiniVideoElementDirective',
     function(
         $log,
         lxCallService,
@@ -46,9 +46,9 @@ videoAppDirectives.directive('lxRemoteSmallVideoElementDirective',
                 var remoteClientId = attrs.remoteClientId;
 
                 // only
-                if (!(remoteClientId in scope.remoteSmallVideoElementsDict)) {
+                if (!(remoteClientId in scope.remoteMiniVideoElementsDict)) {
                     e = angular.element('<video class="cl-video  cl-show-hide-fade" autoplay="autoplay"></video>');
-                    scope.remoteSmallVideoElementsDict[remoteClientId] = e[0];
+                    scope.remoteMiniVideoElementsDict[remoteClientId] = e[0];
                     elem.append(e);
                 }
             }
@@ -73,7 +73,7 @@ videoAppDirectives.directive('lxLocalVideoElementDirective',
 );
 
 
-videoAppDirectives.directive('lxLocalSmallVideoElementDirective',
+videoAppDirectives.directive('lxLocalMiniVideoElementDirective',
     function( )
     {
         return {

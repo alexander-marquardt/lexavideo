@@ -655,7 +655,7 @@ webRtcServices.factory('lxCallService',
 
                 var localVideoObject = scope.localVideoObject;
                 var remoteVideoObject = scope.remoteHdVideoElementsDict[remoteClientId];
-                var remoteSmallVideoElement = scope.remoteSmallVideoElementsDict[remoteClientId] ;
+                var remoteSmallVideoElement = scope.remoteMiniVideoElementsDict[remoteClientId] ;
                 var videoSignalingObject = scope.videoSignalingObject;
                 var clientId = scope.lxMainViewCtrl.clientId;
 

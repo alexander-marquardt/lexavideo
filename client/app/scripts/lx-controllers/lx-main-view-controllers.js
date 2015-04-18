@@ -32,8 +32,8 @@ angular.module('lxMainView.controllers', [])
         // }
         $scope.remoteHdVideoElementsDict = {};
 
-        // remoteSmallVideoElementsDict[remoteClientId] = remoteVideoElement
-        $scope.remoteSmallVideoElementsDict = {};
+        // remoteMiniVideoElementsDict[remoteClientId] = remoteVideoElement
+        $scope.remoteMiniVideoElementsDict = {};
 
         // Keeps track of which chat room the user has selected, pulled from the URL that is set by ngRoute
         // and ngView.
