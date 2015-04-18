@@ -101,7 +101,7 @@ $viewport-heights-list: ();
   $video-width: nth($video-widths-list, $idx);
   $mini-video-height: nth($mini-video-heights-list, $idx);
   $viewport-heights-list: append($viewport-heights-list, $video-width * $video-aspect-ratio + $title-row-height +
-                                 $chat-panel-heading-height +  $chat-panel-footer-height + 2*$sticky-footer-height +
+                                 $chat-panel-heading-height +  $chat-panel-footer-height + 1.5*$sticky-footer-height +
                                  $mini-video-height + $panel-border-compensation);
 }
 
