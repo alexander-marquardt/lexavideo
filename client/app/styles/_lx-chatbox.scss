@@ -50,19 +50,19 @@
   background: $chat-panel-body-background-video-mode;
 
   & .cl-chat-message-div {
-    opacity: 0.1;
   }
 }
 
 .cl-chat-panel-body-chat-mode {
   background: $chat-panel-body-background-chat-mode;
 
-  & .cl-chat-message-div {
-    opacity: 1;
+  & .cl-chat-message-div[style] {
+    opacity: 1!important;
   }
 }
 
 .cl-chat-message-div {
+  position: relative; // necessary for z-index to work
   z-index: $chat-bubble-zindex;
 }
 

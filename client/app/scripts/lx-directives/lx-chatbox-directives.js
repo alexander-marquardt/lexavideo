@@ -27,14 +27,45 @@ angular.module('lxChatbox.directives', [])
                 var chatRoomId = scope.roomOccupancyObject.chatRoomId;
                 var channelDeadMsgPayload;
 
+
                 var addMessageToDisplay = function(messagePayload, bubbleSide, transmittedSuccessBoolean) {
                     // message: The text that will be displayed to the user
                     // bubbleSide: 'left' (message sent) or 'right' (message received)
                     // transmittedSuccessBoolean: true or false. true if message sent/received correctly, false otherwise.
 
+                    var defaultNumMessagesToShow = 3;
+                    var messageElement;
+                    for (var idx=defaultNumMessagesToShow; idx > 0; idx--) {
+                        var messageDivId = 'id-most-recent-message-div-' + idx;
+
+                        // Find previous element that has the id, and if it exists, then remove the old ID
+                        // and give it a new one that is one numer higher
+                        messageElement = elem.find('#' + messageDivId);
+                        if (messageElement.length > 0) {
+
+                            // Check if this message will be pushed out of the current "default" messages displayed
+                            if (idx == defaultNumMessagesToShow) {
+                                messageElement.removeAttr('id');
+                                messageElement.css('opacity', 0);
+                            }
+
+                            // This message is already in the display, but we need to give it a new id and
+                            // to change it's opacity to a lower value than what it previously had.
+                            else {
+                                var NewId = 'id-most-recent-message-div-' + (idx + 1);
+                                messageElement.attr('id', NewId);
+                                messageElement.css('opacity', 1 - (idx / defaultNumMessagesToShow));
+                            }
+                        }
+                    }
+
+                    // create a new message element
+                    messageDivId = 'id-most-recent-message-div-1';
+                    messageElement = angular.element('<div  class="row cl-chat-row cl-chat-message-div">');
+                    messageElement.attr('id', messageDivId);
+                    messageElement.css('opacity', 1);
 
 
-                    var messageElement = angular.element('<div  class="row cl-chat-row">');
                     var bubbleErrorClass = '';
                     if (!transmittedSuccessBoolean) {
                         bubbleErrorClass = 'bubble-error';
@@ -60,7 +91,7 @@ angular.module('lxChatbox.directives', [])
 //                    var messageIdHtml = 'id="id-msg-' + messagePayload.messageUniqueId + '"';
                     timeString = lxTimeService.getTimeString();
 
-                    messageElement.append(angular.element('<div class="col-xs-12 cl-chat-message-div">')
+                    messageElement.append(angular.element('<div class="col-xs-12">')
                             .append(angular.element('<div class="bubble bubble-' + bubbleSide + ' ' + bubbleErrorClass + '"><i></i>')
 //                                .append(angular.element('<div ' + messageIdHtml + '>')
                                     .append(messagePayload.messageString)
