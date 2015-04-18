@@ -30,26 +30,28 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
 
     return {
         restrict: 'A',
-        link : function(scope, elem) {
+        link : function(scope, elem, attrs) {
             var message;
             var overlayElem = elem;
+
+            var selectedVideoElement = attrs.selectedVideoElement;
 
 
             // If the remote user hangs up, the remoteVideoEnabledSetting will be received before the
             // remoteStreamIsActive status is updated. Therefore we need to check both in order to ensure
             // that user feedback is accurate.
             function checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting() {
-                return scope.videoExchangeObjectsDict[scope.remoteClientId].remoteVideoEnabledSetting + (!!lxPeerService.remoteStream[scope.remoteClientId]).toString();
+                return scope.videoExchangeObjectsDict[selectedVideoElement].remoteVideoEnabledSetting + (!!lxPeerService.remoteStream[selectedVideoElement]).toString();
             }
 
             scope.$watch(checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting, function() {
 
-                var remoteStreamIsActive = !!lxPeerService.remoteStream[scope.remoteClientId];
+                var remoteStreamIsActive = !!lxPeerService.remoteStream[selectedVideoElement];
 
                 // hide any messages so we are at at known default state.
                 hideMessageInVideoWindow(scope, overlayElem);
 
-                var remoteVideoSetting = scope.videoExchangeObjectsDict[scope.remoteClientId].remoteVideoEnabledSetting;
+                var remoteVideoSetting = scope.videoExchangeObjectsDict[selectedVideoElement].remoteVideoEnabledSetting;
                 if (!remoteStreamIsActive) {
                     switch (remoteVideoSetting) {
                         case 'waitingForPermissionToEnableVideoExchange':
@@ -77,7 +79,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
 
             function getIceConnectionState() {
                 try {
-                    return lxPeerService.pc[scope.remoteClientId].iceConnectionState;
+                    return lxPeerService.pc[selectedVideoElement].iceConnectionState;
                 }
 
                 // This error can occur right after the user enables their video elements, but before they
