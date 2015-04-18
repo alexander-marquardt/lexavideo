@@ -41,38 +41,45 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
             // remoteStreamIsActive status is updated. Therefore we need to check both in order to ensure
             // that user feedback is accurate.
             function checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting() {
-                return scope.videoExchangeObjectsDict[selectedVideoElement].remoteVideoEnabledSetting + (!!lxPeerService.remoteStream[selectedVideoElement]).toString();
+                try {
+                    return scope.videoExchangeObjectsDict[selectedVideoElement].remoteVideoEnabledSetting + (!!lxPeerService.remoteStream[selectedVideoElement]).toString();
+                }
+                catch(err) {
+                    return null;
+                }
             }
 
-            scope.$watch(checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting, function() {
+            scope.$watch(checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting, function(returnVal) {
 
-                var remoteStreamIsActive = !!lxPeerService.remoteStream[selectedVideoElement];
+                if (returnVal !== null) {
+                    var remoteStreamIsActive = !!lxPeerService.remoteStream[selectedVideoElement];
 
-                // hide any messages so we are at at known default state.
-                hideMessageInVideoWindow(scope, overlayElem);
+                    // hide any messages so we are at at known default state.
+                    hideMessageInVideoWindow(scope, overlayElem);
 
-                var remoteVideoSetting = scope.videoExchangeObjectsDict[selectedVideoElement].remoteVideoEnabledSetting;
-                if (!remoteStreamIsActive) {
-                    switch (remoteVideoSetting) {
-                        case 'waitingForPermissionToEnableVideoExchange':
-                            message = 'Waiting for remote user to agree to exchange video';
-                            showMessageInVideoWindow(scope, overlayElem, message, $compile);
-                            break;
+                    var remoteVideoSetting = scope.videoExchangeObjectsDict[selectedVideoElement].remoteVideoEnabledSetting;
+                    if (!remoteStreamIsActive) {
+                        switch (remoteVideoSetting) {
+                            case 'waitingForPermissionToEnableVideoExchange':
+                                message = 'Waiting for remote user to agree to exchange video';
+                                showMessageInVideoWindow(scope, overlayElem, message, $compile);
+                                break;
 
-                        case 'denyVideoExchange':
-                            message = 'Remote user has denied your request to exchange video';
-                            showMessageInVideoWindow(scope, overlayElem, message, $compile);
-                            break;
+                            case 'denyVideoExchange':
+                                message = 'Remote user has denied your request to exchange video';
+                                showMessageInVideoWindow(scope, overlayElem, message, $compile);
+                                break;
 
-                        case 'hangupVideoExchange':
-                            message = 'Remote user has closed this video exchange';
-                            showMessageInVideoWindow(scope, overlayElem, message, $compile);
-                            break;
+                            case 'hangupVideoExchange':
+                                message = 'Remote user has closed this video exchange';
+                                showMessageInVideoWindow(scope, overlayElem, message, $compile);
+                                break;
 
-                        case 'doVideoExchange':
-                            message = 'Establishing video connection';
-                            showMessageInVideoWindow(scope, overlayElem, message, $compile);
-                            break;
+                            case 'doVideoExchange':
+                                message = 'Establishing video connection';
+                                showMessageInVideoWindow(scope, overlayElem, message, $compile);
+                                break;
+                        }
                     }
                 }
             });
