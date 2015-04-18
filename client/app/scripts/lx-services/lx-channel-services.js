@@ -75,7 +75,7 @@ angular.module('lxChannel.services', [])
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message.data);
                     var remoteClientId = messageObject.fromClientId;
-                    var remoteVideoObject = scope.remoteHdVideoElementsDict[remoteClientId];
+                    var remoteVideoObject = scope.remoteMiniVideoElementsDict[remoteClientId];
                     var chatRoomId = null;
                     var receivedChatMessageObject;
 
