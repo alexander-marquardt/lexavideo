@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div lx-display-remote-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
+            <div lx-display-video-element-directive selected-video-element ='{{ remoteClientId }}'></div>
         </div>
     </div><!--
         The following wraps the local video window
@@ -34,7 +34,7 @@
  --><div class="col-xs-12 text-center cl-col-no-padding cl-full-height"
              ng-if="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'">
         <div class="cl-main-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl">
-            <div lx-display-local-video-element-directive></div>
+            <div lx-display-video-element-directive selected-video-element = '{{ videoDisplaySelection.currentlySelectedVideoElement }}'></div>
         </div>
         <div class="cl-main-video-wrapper-box-shadow-overlay cl-video-sizing">
             {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
