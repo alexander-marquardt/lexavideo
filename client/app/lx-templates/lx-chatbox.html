@@ -122,7 +122,7 @@
 
                             <div class="panel-body cl-chat-panel-body cl-chat-panel-body-height cl-transition-background-color"
                                  scroll-glue="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsGlued"
-                                 ng-class="videoStateInfoObject.numOpenVideoExchanges == 0 || chatboxInputElementObject.inputIsFocused ? 'cl-chat-panel-body-chat-mode': 'cl-chat-panel-body-video-mode'">
+                                 ng-class="videoStateInfoObject.numOpenVideoExchanges == 0 || chatboxInputElementObject.mouseIsDown ? 'cl-chat-panel-body-chat-mode': 'cl-chat-panel-body-video-mode'">
                                 <div class="cl-dummy-blank-div-in-short-chat-panel"></div>
                                 <div lx-show-chat-messages-directive></div>
 
@@ -147,6 +147,8 @@
                                                        ng-click="gluePanel()"
                                                        ng-focus="chatboxInputElementObject.inputIsFocused = true"
                                                        ng-blur="chatboxInputElementObject.inputIsFocused = false"
+                                                       ng-mousedown="chatboxInputElementObject.mouseIsDown = true"
+                                                       ng-mouseup="chatboxInputElementObject.mouseIsDown = false"
                                                        required
                                                         />
 
