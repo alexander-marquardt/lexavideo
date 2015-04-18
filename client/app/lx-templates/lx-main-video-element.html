@@ -5,11 +5,15 @@
 
     <div class="col-xs-12 text-center cl-col-no-padding cl-full-height">
         <div class="cl-main-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl"
-                ng-class="chatboxInputElementObject.inputIsFocused?'cl-main-video-wrapper-text-mode':'cl-main-video-wrapper-video-mode'">
+            ng-class="videoStateInfoObject.numOpenVideoExchanges == 0 ||
+                    chatboxInputElementObject.inputIsFocused?'cl-main-video-wrapper-chat-mode':
+                    'cl-main-video-wrapper-video-mode'">
             <div lx-display-video-element-directive selected-video-element = '{{ videoDisplaySelection.currentlySelectedVideoElement }}'></div>
         </div>
         <div class="cl-main-video-wrapper-box-shadow-overlay cl-video-sizing"
-                ng-class="chatboxInputElementObject.inputIsFocused?'cl-main-video-wrapper-box-shadow-overlay-text-mode':'cl-main-video-wrapper-box-shadow-overlay-video-mode'">
+            ng-class="videoStateInfoObject.numOpenVideoExchanges == 0 ||
+                    chatboxInputElementObject.inputIsFocused?'cl-main-video-wrapper-box-shadow-overlay-text-mode':
+                    'cl-main-video-wrapper-box-shadow-overlay-video-mode'">
             <div ng-if="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'">
                 {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
 

@@ -43,7 +43,7 @@
   padding: 0px 15px 0px 15px;
   overflow-y: auto;
 
-  background: $chat-panel-body-background-text-mode;
+  background: $chat-panel-body-background-chat-mode;
 }
 
 .cl-chat-panel-body-video-mode {
@@ -54,8 +54,8 @@
   }
 }
 
-.cl-chat-panel-body-text-mode {
-  background: $chat-panel-body-background-text-mode;
+.cl-chat-panel-body-chat-mode {
+  background: $chat-panel-body-background-chat-mode;
 
   & .cl-chat-message-div {
     opacity: 1;
