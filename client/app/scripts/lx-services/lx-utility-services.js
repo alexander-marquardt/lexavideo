@@ -62,22 +62,22 @@ angular.module('lxUtility.services', [])
 
     .factory('lxWindowFocus', function() {
 
-        var isFocused = true;
+        var windowIsFocused = true;
 
-        // Monitor the window to see if it has focus, and set the windowWatcher.isFocused
-        // variable appropriately. $scope.windowWatcher.isFocused can then be watched by child scopes.
+        // Monitor the window to see if it has focus, and set the windowWatcher.windowIsFocused
+        // variable appropriately. $scope.windowWatcher.windowIsFocused can then be watched by child scopes.
         $(window).focus(function() {
-            isFocused = true;
+            windowIsFocused = true;
         }).blur(function() {
-            isFocused = false;
+            windowIsFocused = false;
         });
 
-        function isFocusedFn() {
-            return isFocused;
+        function windowIsFocusedFn() {
+            return windowIsFocused;
         }
 
         return {
-            'isFocusedFn': isFocusedFn
+            'windowIsFocusedFn': windowIsFocusedFn
         };
     })
 
@@ -125,7 +125,7 @@ angular.module('lxUtility.services', [])
                     // flashing, we stop the flashing. It should only start to flash again in the case
                     // that the user focus is away from the page, and that the number of unseen messages has increased
                     // in the time that the user was not focused.
-                    if (lxWindowFocus.isFocusedFn()) {
+                    if (lxWindowFocus.windowIsFocusedFn()) {
                         self.stopFlashingTitle();
                     }
 

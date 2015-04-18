@@ -50,15 +50,13 @@ angular.module('lxChatRoom.directives', [])
             link: function(scope) {
 
                 // If the user is not focused on the current window, and then comes back to look at the current window
-                // then the messages shown in the chat panel that is open in the window will be considered to have been
-                // viewed, and the message counts will be adjusted accordingly.
+                // then we stop flashing the title.
                 scope.$watch(
                     function() {
-                        return lxWindowFocus.isFocusedFn();
+                        return lxWindowFocus.windowIsFocusedFn();
                     },
                     function(windowIsFocused) {
-                        var chatPanelObject = scope.chatRoomDisplayObject.chatPanelObject;
-                        if (windowIsFocused === true && chatPanelObject) {
+                        if (windowIsFocused === true) {
                             lxShowNumMessagesService.stopFlashingTitle();
                             lxShowNumMessagesService.showNumMessagesInDocumentTitle(scope.trackUnseenMessageCountObject);
                         }
