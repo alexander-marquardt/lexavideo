@@ -34,7 +34,6 @@ angular.module('lxChatbox.directives', [])
 
 
 
-                    var outerElement = angular.element('<div class="cl-fade-in-chat-bubble-element">');
                     var messageElement = angular.element('<div  class="row cl-chat-row">');
                     var bubbleErrorClass = '';
                     if (!transmittedSuccessBoolean) {
@@ -61,7 +60,7 @@ angular.module('lxChatbox.directives', [])
 //                    var messageIdHtml = 'id="id-msg-' + messagePayload.messageUniqueId + '"';
                     timeString = lxTimeService.getTimeString();
 
-                    messageElement.append(angular.element('<div class="col-xs-12 chat-body">')
+                    messageElement.append(angular.element('<div class="col-xs-12 cl-chat-message-div">')
                             .append(angular.element('<div class="bubble bubble-' + bubbleSide + ' ' + bubbleErrorClass + '"><i></i>')
 //                                .append(angular.element('<div ' + messageIdHtml + '>')
                                     .append(messagePayload.messageString)
@@ -71,9 +70,8 @@ angular.module('lxChatbox.directives', [])
                             )
                         )
                     );
-                    outerElement.append(messageElement);
 
-                    elem.append(outerElement);
+                    elem.append(messageElement);
 //                    $timeout(function() {
 //                        // only if this message is not waiting for an ack should we show it immediately. Otherwise,
 //                        // we should wait for the ack signal, which comes in the form of a messageUniqueId value.
@@ -82,9 +80,6 @@ angular.module('lxChatbox.directives', [])
 //                        }
 //
 //                    });
-                    $timeout(function() {
-                        outerElement.addClass('cl-show-new-chat-bubble-element');
-                    });
                 };
 
                 // Find the message that has been acknowledged, and update it to show the time instead of the clock

@@ -24,7 +24,7 @@ $notification-panel-border-color: $gray-light;
 $notification-panel-header-background: $gray;
 $chat-notification-body-background: $gray-light-more;
 
-$chat-panel-body-background: $gray-lighter-more;
+$chat-panel-body-background: black;
 
 $btn-gray-border: $gray-light;
 $btn-gray-bg: $gray-light-more;
@@ -51,12 +51,14 @@ $chat-groups-members-margin: 15px;
 $vertical-spacing-between-major-sections: 2px;
 
 
+$video-wrapper-zindex: 10;
+$video-wrapper-box-shadow-overlay-zindex: 11;
+$chat-bubble-zindex: 12;
 
 // $estimated-bubble-height is used for computing the offset required in the first div to push the first
 // message to the bottom of the chat panel.
 $estimated-bubble-height: 30px;
 
-$chat-bubble-zindex: 10;
 
 
 /* The following section defines the width of the video elements for various viewport sizes. */

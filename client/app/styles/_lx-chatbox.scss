@@ -103,6 +103,10 @@
   display:inline-block;
   vertical-align: middle;
 }
+.cl-chat-message-div {
+  opacity: 0.9;
+  z-index: $chat-bubble-zindex;
+}
 
 .bubble {
   display: block;
@@ -118,7 +122,6 @@
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
-  z-index: $chat-bubble-zindex;
 }
 
 
@@ -266,20 +269,6 @@
   color: $gray-light;
   font-size: 75%;
   vertical-align: sub;
-}
-
-
-.cl-fade-in-chat-bubble-element {
-  opacity:0.5;
-  -webkit-transition: opacity 0.6s ease-out;
-  -moz-transition: opacity 0.6s ease-out;
-  -ms-transition: opacity 0.6s ease-out;
-  -o-transition: opacity 0.6s ease-out;
-  transition: opacity 0.6s ease-out;
-}
-
-.cl-fade-in-chat-bubble-element.cl-show-new-chat-bubble-element {
-  opacity: 1;
 }
 
 .cl-prompt-for-video-access {

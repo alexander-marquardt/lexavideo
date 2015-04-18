@@ -1,12 +1,6 @@
 
 
 
-$mini-video-width-percentage : 30%;
-
-$video-aspect-ratio : 3/4;
-$characters-per-row : 80;
-$video-wrapper-zindex: 10;
-
 .cl-video-wrapper-div {
   background: #000;
   border: 1px solid $standard-border-color;
@@ -19,7 +13,7 @@ $video-wrapper-zindex: 10;
   position: absolute;
   bottom: 0;
   left: 50%;
-  background: $gray;
+  background: $chat-panel-body-background;
   z-index: $video-wrapper-zindex;
   text-align: center;
 
@@ -35,7 +29,7 @@ $video-wrapper-zindex: 10;
   position: absolute;
   bottom: 0;
   left: 50%;
-  z-index: $video-wrapper-zindex + 2;
+  z-index: $video-wrapper-box-shadow-overlay-zindex;
   text-align: center;
 
   margin-left: - nth($video-widths-list, 1) / 2;
@@ -44,7 +38,7 @@ $video-wrapper-zindex: 10;
       margin-left: - nth($video-widths-list, $idx) / 2;
     }
   }
-  @include box-shadow(inset 0px 0px 10px 5px $chat-panel-body-background);
+  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
 }
 
 .cl-video {
