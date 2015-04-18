@@ -84,9 +84,13 @@ $chat-panel-name-size: join($chat-panel-name-size, (1.5em, 2em, 2em));
 $video-aspect-ratio : 3/4;
 // setup the video window sizes that are associated with the viewport sizes.
 $video-widths-list: ();
+$mini-video-heights-list: ();
 @each $video-width in $content-widths-list {
   $video-widths-list: append($video-widths-list, $video-width);
+  $mini-video-height: $video-width / 6 * $video-aspect-ratio;
+  $mini-video-heights-list: append($mini-video-heights-list, $mini-video-height);
 }
+@debug $mini-video-heights-list;
 
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
 // it does not overflow the bottom of the div. Subtract 2px for outer panel border.
@@ -95,9 +99,10 @@ $panel-border-compensation: 2px;
 $viewport-heights-list: ();
 @for $idx from 1 through length($video-widths-list) {
   $video-width: nth($video-widths-list, $idx);
+  $mini-video-height: nth($mini-video-heights-list, $idx);
   $viewport-heights-list: append($viewport-heights-list, $video-width * $video-aspect-ratio + $title-row-height +
                                  $chat-panel-heading-height +  $chat-panel-footer-height + 2*$sticky-footer-height +
-                                 $panel-border-compensation);
+                                 $mini-video-height + $panel-border-compensation);
 }
 
 $chat-panel-body-height-list: ();
@@ -106,7 +111,7 @@ $notification-panel-body-height-list: ();
 
 @for $idx from 1 through length($viewport-heights-list) {
   $common-display-area-height-list: append($common-display-area-height-list, nth($viewport-heights-list, $idx) -
-                                           2*$sticky-footer-height );
+                                           2*$sticky-footer-height -  nth($mini-video-heights-list, $idx));
   $chat-panel-body-height-list: append($chat-panel-body-height-list, nth($common-display-area-height-list, $idx) -
                                        $chat-panel-heading-height - $chat-panel-footer-height - $panel-border-compensation);
   $notification-panel-body-height-list: append($notification-panel-body-height-list,
