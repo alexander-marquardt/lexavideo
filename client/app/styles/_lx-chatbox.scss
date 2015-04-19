@@ -44,6 +44,9 @@
   overflow-y: auto;
 
   background: $chat-panel-body-background-chat-mode;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
 }
 
 .cl-chat-panel-body-video-mode {
