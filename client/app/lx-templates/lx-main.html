@@ -19,7 +19,10 @@
 
                 <!-- ng-view will call in the appropriate template for the current URL location -->
                 <div class="row cl-row-no-margins cl-hide-row-overflow">
-                    <div class="cl-main-ng-view-area-wrapper">
+                    <div class="cl-main-ng-view-area-wrapper"
+                     ng-swipe-left="handleSwipeLeft($event)"
+                     ng-swipe-right="handleSwipeRight($event)"
+                     >
 
 
                         <!-- lx-main-menu.html contains the "main" menu that displays website controls -->

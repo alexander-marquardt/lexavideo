@@ -10,7 +10,7 @@
 
     <div class="panel panel-default cl-notification-panel"
          ng-class="notificationMenuObject.partialShowNotificationMenuAndGetAttention?'cl-notification-panel-attention': ''"
-         ng-click="notificationMenuObject.partialShowNotificationMenuAndGetAttention? toggleNotificationMenu($event): ''"
+         ng-click="notificationMenuObject.partialShowNotificationMenuAndGetAttention? displayNotificationMenu($event, true): ''"
          click-anywhere-but-here="notificationMenuObject.showNotificationMenu = false">
 
         <div class="panel-heading cl-panel-heading-behind-notification-nav-tabs">

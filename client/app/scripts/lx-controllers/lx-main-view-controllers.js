@@ -15,8 +15,10 @@ angular.module('lxMainView.controllers', [])
         $route,
         $scope,
         $window,
+        $timeout,
         lxAppWideConstantsService,
-        lxChannelService) {
+        lxChannelService,
+        clickAnywhereButHereService) {
 
 
         // Copy information embedded in the Html into an angular service.
@@ -102,13 +104,9 @@ angular.module('lxMainView.controllers', [])
             partialShowNotificationMenuAndGetAttention: false
         };
 
-        $scope.toggleNotificationMenu = function(event) {
-            // we don't want a click inside the notfication menu to propagate, because clicks outside
-            // of the notification menu will close the menu (due to clickAnywhereButHere directive)
+        $scope.displayNotificationMenu = function(event, showNotificationBoolean) {
             event.stopPropagation();
-
-
-            $scope.notificationMenuObject.showNotificationMenu = !$scope.notificationMenuObject.showNotificationMenu;
+            $scope.notificationMenuObject.showNotificationMenu = showNotificationBoolean;
 
             // if notification menu is now shown, then get ride of the main menu
             if ($scope.notificationMenuObject.showNotificationMenu) {
@@ -120,14 +118,22 @@ angular.module('lxMainView.controllers', [])
             $scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention = false;
         };
 
+        $scope.toggleNotificationMenu = function(event) {
+            // we don't want a click inside the notfication menu to propagate, because clicks outside
+            // of the notification menu will close the menu (due to clickAnywhereButHere directive)
+
+            $scope.displayNotificationMenu(event, !$scope.notificationMenuObject.showNotificationMenu);
+
+        };
+
         $scope.mainMenuObject = {
             showMainMenu: false
         };
 
-        $scope.toggleMainMenu = function($event) {
+        $scope.displayMainMenu = function($event, showHideMainMenuBoolean) {
             $event.stopPropagation();
 
-            $scope.mainMenuObject.showMainMenu = !$scope.mainMenuObject.showMainMenu;
+            $scope.mainMenuObject.showMainMenu = showHideMainMenuBoolean;
 
             // if main menu is now shown, then remove the notification menu (this needs to be done manually
             // since we have stopped propagation of this click event, and so code that detects a click outside
@@ -137,11 +143,44 @@ angular.module('lxMainView.controllers', [])
             }
         };
 
-        $document.on('click', function() {
-            $scope.$apply(function(){
-                $scope.mainMenuObject.showMainMenu = false;
-            });
-        });
+        function ignoreClickAnywhereButHereHandlerOnSwipe() {
+           clickAnywhereButHereService.temporarilyDisableHandleOuterClick();
+        }
+        // on a right swipe, if the notification menu is shown then hide it. Otherwise, show the main menu.
+        $scope.handleSwipeRight = function($event) {
+            ignoreClickAnywhereButHereHandlerOnSwipe();
+
+            // hide notification menu
+            if ($scope.notificationMenuObject.showNotificationMenu) {
+                $scope.displayNotificationMenu($event, false)
+            }
+
+            // show main menu
+            else {
+                $scope.displayMainMenu($event, true)
+            }
+
+        };
+
+        // on a left swipe, if the main menu is shown then hide it, otherwise show the notification menu.
+        $scope.handleSwipeLeft = function($event) {
+            ignoreClickAnywhereButHereHandlerOnSwipe();
+
+            // hide main menu
+            if ($scope.mainMenuObject.showMainMenu) {
+                $scope.displayMainMenu($event, false)
+            }
+
+            // show notification menu
+            else {
+                $scope.displayNotificationMenu($event, true)
+            }
+
+        };
+
+        $scope.toggleMainMenu = function($event) {
+            $scope.displayMainMenu($event, !$scope.mainMenuObject.showMainMenu);
+        };
 
 
         // videoExchangeObjectsDict will be populated by calling

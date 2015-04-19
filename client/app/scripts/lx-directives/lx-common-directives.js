@@ -50,18 +50,41 @@ commonDirectives.directive('lxClickOnceDirective', function ($timeout) {
     };
 });
 
-commonDirectives.factory('clickAnywhereButHereService', function($document){
+commonDirectives.factory('clickAnywhereButHereService', function(
+    $document,
+    $timeout){
 
-  return function($scope, expr) {
-    var handler = function() {
-      $scope.$apply(expr);
-    };
+    var handlerClosure = null;
+    var disabled = false;
 
-    $document.on('click', handler);
+    return {
+        handleOuterClick: function($scope, expr) {
+            var handler = function() {
+                $scope.$apply(expr);
+            };
 
-    // IMPORTANT! Tear down this event handler when the scope is destroyed.
-    $scope.$on('$destroy', function(){$document.off('click', handler);});
-  };
+            if (!disabled) {
+                $document.on('click.clickAnywhereButHereDocument', handler);
+            }
+
+            // IMPORTANT! Tear down this event handler when the scope is destroyed.
+            $scope.$on('$destroy', function(){$document.off('click.clickAnywhereButHereDocument', handler);});
+
+            handlerClosure = handler;
+        },
+
+        // In some rare cases, we may need to temporarily disable the clickAnywhereButHere directive. In particular
+        // this is needed when we detect a swipe event, and need to prevent the click from triggering and undoing
+        // the swipe action.
+        temporarilyDisableHandleOuterClick: function() {
+            $document.off('click.clickAnywhereButHereDocument', handlerClosure);
+            disabled = true;
+            $timeout(function() {
+                $document.on('click.clickAnywhereButHereDocument', handlerClosure);
+                disabled = false;
+            }, 50)
+        }
+    }
 });
 
 commonDirectives.directive('clickAnywhereButHere', function($log, clickAnywhereButHereService){
@@ -72,13 +95,13 @@ commonDirectives.directive('clickAnywhereButHere', function($log, clickAnywhereB
         $log.log('clickAnywhereButHere stopping click propagation.');
         e.stopPropagation();
       };
-      elem.on('click', handler);
+      elem.on('click.clickAnywhereButHereElem', handler);
 
       scope.$on('$destroy', function(){
-        elem.off('click', handler);
+        elem.off('click.clickAnywhereButHereElem', handler);
       });
 
-      clickAnywhereButHereService(scope, attr.clickAnywhereButHere);
+      clickAnywhereButHereService.handleOuterClick(scope, attr.clickAnywhereButHere);
     }
   };
 });

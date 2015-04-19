@@ -6,7 +6,8 @@ the "menu-button" icon
 {% raw %}
 
     <div ng-if="mainMenuObject.showMainMenu"
-        class="col-xs-4 col-sm-3 col-md-2 cl-animate-main-control-menu cl-col-no-padding">
+        class="col-xs-4 col-sm-3 col-md-2 cl-animate-main-control-menu cl-col-no-padding"
+            click-anywhere-but-here="mainMenuObject.showMainMenu = false">
 
         <div class="btn-group-vertical well cl-main-control-menu" role="group">
             <a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}" class="btn btn-default">My chats</a>
