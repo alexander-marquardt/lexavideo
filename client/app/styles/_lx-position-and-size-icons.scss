@@ -67,6 +67,20 @@
   @extend .icon-lx-microphone;
 }
 
+.icon-lx-panel-bubble-cfg {
+  @extend %call-control-icon-common;
+  margin-top: -0.55em;
+  margin-left: -0.55em; //relative to the new font-size of 3em
+  @extend .icon-lx-panel-bubble;
+}
+
+.icon-lx-panel-bubble-outline-cfg {
+  @extend %call-control-icon-common;
+  margin-top: -0.55em;
+  margin-left: -0.55em; //relative to the new font-size of 3em
+  @extend .icon-lx-panel-bubble-outline;
+}
+
 .icon-lx-video-camera-filled-cfg {
   @extend %call-control-icon-common;
   margin-top: -0.55em;

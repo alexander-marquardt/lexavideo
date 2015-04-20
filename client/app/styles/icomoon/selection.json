@@ -4,6 +4,74 @@
 		{
 			"icon": {
 				"paths": [
+					"M914.367 3.413h-552.165c-59.501 0-107.909 48.408-107.909 107.909v254.256l-254.382 146.422 254.382 146.418v254.256c0 59.505 48.408 107.913 107.909 107.913h552.165c59.505 0 107.909-48.408 107.909-107.909v-801.355c0-59.501-48.408-107.909-107.909-107.909zM954.010 912.678c0 21.859-17.783 39.642-39.642 39.642h-552.165c-21.859 0-39.642-17.783-39.642-39.642v-292.065l-54.74-31.505v-0.553l-132.99-76.554 132.99-76.547v-0.556l54.74-31.505v-292.069c0-21.859 17.783-39.642 39.642-39.642h552.165c21.859 0 39.642 17.783 39.642 39.642v801.355z"
+				],
+				"attrs": [
+					{}
+				],
+				"isMulticolor": false,
+				"grid": 0,
+				"tags": [
+					"panel-bubble-outline"
+				]
+			},
+			"attrs": [
+				{}
+			],
+			"properties": {
+				"order": 42,
+				"id": 3,
+				"prevSize": 32,
+				"code": 58902,
+				"name": "panel-bubble-outline"
+			},
+			"setIdx": 0,
+			"setId": 8,
+			"iconIdx": 0
+		},
+		{
+			"icon": {
+				"paths": [
+					"M447.136 174.281h382.293v68.267h-382.293v-68.267z",
+					"M447.136 376.675h382.293v68.267h-382.293v-68.267z",
+					"M447.136 579.058h382.293v68.267h-382.293v-68.267z",
+					"M447.136 781.452h382.293v68.267h-382.293v-68.267z",
+					"M914.367 3.413h-552.165c-59.501 0-107.909 48.408-107.909 107.909v254.256l-254.382 146.422 254.382 146.418v254.256c0 59.505 48.408 107.913 107.909 107.913h552.165c59.505 0 107.909-48.408 107.909-107.909v-801.355c0-59.501-48.408-107.909-107.909-107.909zM954.010 912.678c0 21.859-17.783 39.642-39.642 39.642h-552.165c-21.859 0-39.642-17.783-39.642-39.642v-292.065l-54.74-31.505v-0.553l-132.99-76.554 132.99-76.547v-0.556l54.74-31.505v-292.069c0-21.859 17.783-39.642 39.642-39.642h552.165c21.859 0 39.642 17.783 39.642 39.642v801.355z"
+				],
+				"attrs": [
+					{},
+					{},
+					{},
+					{},
+					{}
+				],
+				"isMulticolor": false,
+				"grid": 0,
+				"tags": [
+					"panel-bubble-outline"
+				]
+			},
+			"attrs": [
+				{},
+				{},
+				{},
+				{},
+				{}
+			],
+			"properties": {
+				"order": 43,
+				"id": 2,
+				"prevSize": 32,
+				"code": 58903,
+				"name": "panel-bubble"
+			},
+			"setIdx": 0,
+			"setId": 8,
+			"iconIdx": 1
+		},
+		{
+			"icon": {
+				"paths": [
 					"M4.794 929.802l925.005-925.005 89.391 89.391-925.005 925.005-89.391-89.391z"
 				],
 				"attrs": [
@@ -31,7 +99,7 @@
 				"name": "thin-forward-slash",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 0
 		},
@@ -65,7 +133,7 @@
 				"name": "thick-forward-slash",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 1
 		},
@@ -91,7 +159,7 @@
 				"name": "video-camera-line",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 2
 		},
@@ -117,7 +185,7 @@
 				"name": "3-vert-dots",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 3
 		},
@@ -143,7 +211,7 @@
 				"name": "x-symbol",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 4
 		},
@@ -169,7 +237,7 @@
 				"name": "check-mark",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 5
 		},
@@ -195,7 +263,7 @@
 				"name": "arrow-up",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 6
 		},
@@ -221,7 +289,7 @@
 				"name": "video-camera-filled",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 7
 		},
@@ -248,7 +316,7 @@
 				"name": "microphone",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 8
 		},
@@ -273,7 +341,7 @@
 				"code": 58889,
 				"name": "chat-bubble-left"
 			},
-			"setIdx": 1,
+			"setIdx": 2,
 			"setId": 7,
 			"iconIdx": 112
 		},
@@ -298,7 +366,7 @@
 				"code": 58890,
 				"name": "chat-bubble-right"
 			},
-			"setIdx": 1,
+			"setIdx": 2,
 			"setId": 7,
 			"iconIdx": 113
 		},
@@ -323,7 +391,7 @@
 				"code": 58891,
 				"name": "time"
 			},
-			"setIdx": 3,
+			"setIdx": 4,
 			"setId": 5,
 			"iconIdx": 22
 		},
@@ -348,7 +416,7 @@
 				"code": 58892,
 				"name": "chevron-up"
 			},
-			"setIdx": 3,
+			"setIdx": 4,
 			"setId": 5,
 			"iconIdx": 112
 		},
@@ -373,7 +441,7 @@
 				"code": 58893,
 				"name": "chevron-down"
 			},
-			"setIdx": 3,
+			"setIdx": 4,
 			"setId": 5,
 			"iconIdx": 113
 		},
@@ -398,7 +466,7 @@
 				"code": 61641,
 				"name": "3-horiz-bars"
 			},
-			"setIdx": 3,
+			"setIdx": 4,
 			"setId": 5,
 			"iconIdx": 177
 		},
@@ -424,7 +492,7 @@
 				"code": 61762,
 				"name": "uniF142"
 			},
-			"setIdx": 3,
+			"setIdx": 4,
 			"setId": 5,
 			"iconIdx": 288
 		},
@@ -440,8 +508,10 @@
 					"support",
 					"call"
 				],
-				"grid": 16
+				"grid": 16,
+				"attrs": []
 			},
+			"attrs": [],
 			"properties": {
 				"order": 9,
 				"id": 12,
@@ -450,7 +520,7 @@
 				"name": "phone",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 9
 		},
@@ -466,8 +536,10 @@
 					"support",
 					"call"
 				],
-				"grid": 16
+				"grid": 16,
+				"attrs": []
 			},
+			"attrs": [],
 			"properties": {
 				"order": 4,
 				"id": 13,
@@ -476,7 +548,7 @@
 				"name": "phone-hang-up",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 10
 		},
@@ -492,8 +564,10 @@
 					"media control",
 					"audio"
 				],
-				"grid": 16
+				"grid": 16,
+				"attrs": []
 			},
+			"attrs": [],
 			"properties": {
 				"order": 5,
 				"id": 15,
@@ -502,7 +576,7 @@
 				"name": "volume-high",
 				"ligatures": ""
 			},
-			"setIdx": 0,
+			"setIdx": 1,
 			"setId": 6,
 			"iconIdx": 11
 		},
@@ -517,8 +591,10 @@
 					"team",
 					"people"
 				],
-				"grid": 16
+				"grid": 16,
+				"attrs": []
 			},
+			"attrs": [],
 			"properties": {
 				"id": 14,
 				"order": 19,
@@ -526,7 +602,7 @@
 				"code": 58897,
 				"name": "users"
 			},
-			"setIdx": 6,
+			"setIdx": 7,
 			"setId": 0,
 			"iconIdx": 15
 		},
@@ -538,8 +614,10 @@
 				"tags": [
 					"user-add"
 				],
-				"grid": 16
+				"grid": 16,
+				"attrs": []
 			},
+			"attrs": [],
 			"properties": {
 				"id": 15,
 				"order": 20,
@@ -547,7 +625,7 @@
 				"code": 58898,
 				"name": "user-add"
 			},
-			"setIdx": 6,
+			"setIdx": 7,
 			"setId": 0,
 			"iconIdx": 16
 		},
@@ -564,8 +642,10 @@
 					"conversation",
 					"discussion"
 				],
-				"grid": 16
+				"grid": 16,
+				"attrs": []
 			},
+			"attrs": [],
 			"properties": {
 				"id": 31,
 				"order": 16,
@@ -573,7 +653,7 @@
 				"code": 58901,
 				"name": "chat-bubble-dual"
 			},
-			"setIdx": 6,
+			"setIdx": 7,
 			"setId": 0,
 			"iconIdx": 32
 		},
@@ -588,8 +668,10 @@
 					"alert",
 					"notification"
 				],
-				"grid": 16
+				"grid": 16,
+				"attrs": []
 			},
+			"attrs": [],
 			"properties": {
 				"id": 39,
 				"order": 25,
@@ -597,7 +679,7 @@
 				"code": 58899,
 				"name": "bell"
 			},
-			"setIdx": 6,
+			"setIdx": 7,
 			"setId": 0,
 			"iconIdx": 40
 		},
@@ -610,8 +692,10 @@
 					"flag",
 					"report"
 				],
-				"grid": 16
+				"grid": 16,
+				"attrs": []
 			},
+			"attrs": [],
 			"properties": {
 				"id": 41,
 				"order": 24,
@@ -619,7 +703,7 @@
 				"code": 58900,
 				"name": "flag"
 			},
-			"setIdx": 6,
+			"setIdx": 7,
 			"setId": 0,
 			"iconIdx": 42
 		}
