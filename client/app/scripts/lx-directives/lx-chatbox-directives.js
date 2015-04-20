@@ -48,6 +48,30 @@ angular.module('lxChatbox.directives', [])
         };
     })
 
+.directive('lxFocusOnInputOnClick',
+
+    function(
+
+        ) {
+
+
+        return {
+            restrict: 'A',
+            link: function (scope, elem) {
+
+                var handler = function() {
+                    elem.parent().parent().find('input').focus();
+                };
+
+                elem.on('click.lxFocusOnInputOnClick', handler);
+
+                // IMPORTANT! Tear down this event handler when the scope is destroyed.
+                scope.$on('$destroy', function(){elem.off('click.lxFocusOnInputOnClick', handler);});
+
+                }
+        }
+    })
+
 .directive('lxShowChatMessagesDirective',
 
     function(
