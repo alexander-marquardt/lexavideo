@@ -6,8 +6,9 @@
     <div class="col-xs-12 text-center cl-col-no-padding cl-full-height">
         <div class="cl-main-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl"
             ng-class="videoStateInfoObject.numOpenVideoExchanges == 0 ||
-                    chatboxPanelElementObject.mouseIsDown?'cl-main-video-wrapper-chat-mode':
-                    'cl-main-video-wrapper-video-mode'">
+                    chatboxPanelElementObject.mouseIsDown ||
+                    chatboxPanelElementObject.showFullChatHistory ?
+                    'cl-main-video-wrapper-show-full-chat-history':''">
             <div lx-display-video-element-directive selected-video-element = '{{ videoDisplaySelection.currentlySelectedVideoElement }}'></div>
         </div>
         <div class="cl-main-video-wrapper-box-shadow-overlay cl-video-sizing"
