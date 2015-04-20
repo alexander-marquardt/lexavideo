@@ -121,14 +121,11 @@
                             </div>
 
                             <div class="panel-body cl-chat-panel-body cl-chat-panel-body-height cl-transition-background-color"
+                                 lx-set-chat-panel-message-visibility-directive
                                  scroll-glue="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsGlued"
-                                 ng-class="videoStateInfoObject.numOpenVideoExchanges == 0 ||
-                                             chatPanelElementObject.mouseIsDown ? 'cl-chat-panel-body-chat-mode':
-                                             'cl-chat-panel-body-video-mode'"
-                                 ng-mousedown="chatPanelElementObject.mouseIsDown = true"
-                                 ng-mouseup="chatPanelElementObject.mouseIsDown = false"
-                                 lx-touchstart="chatPanelElementObject.mouseIsDown = true"
-                                 lx-touchend="chatPanelElementObject.mouseIsDown = false"
+                                 ng-mousedown="chatboxPanelElementObject.mouseIsDown = true"
+                                 lx-touchstart="chatboxPanelElementObject.mouseIsDown = true"
+                                 lx-touchend="chatboxPanelElementObject.mouseIsDown = false"
                                  unselectable="on">
                                 <div class="cl-dummy-blank-div-in-short-chat-panel"></div>
                                 <div lx-show-chat-messages-directive></div>
@@ -154,19 +151,18 @@
                                                        ng-click="gluePanel()"
                                                        ng-focus="chatboxInputElementObject.inputIsFocused = true"
                                                        ng-blur="chatboxInputElementObject.inputIsFocused = false"
-
                                                        required
                                                         />
 
 
 
-                                        <span class="input-group-btn">
-                                            <button ng-click="sendChatMessageFn(roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].chatRoomId)"
-                                                    class="btn  btn-sm pull-right btn-gray"
-                                                    ng-disabled="sendMessageForm.$invalid">
-                                                Send
-                                            </button>
-                                        </span>
+                                                <span class="input-group-btn">
+                                                    <button ng-click="sendChatMessageFn(roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].chatRoomId)"
+                                                            class="btn  btn-sm pull-right btn-gray"
+                                                            ng-disabled="sendMessageForm.$invalid">
+                                                        Send
+                                                    </button>
+                                                </span>
                                             </div>
                                         </form>
                                     </div>

@@ -24,8 +24,7 @@ $notification-panel-border-color: $gray-light;
 $notification-panel-header-background: $gray;
 $chat-notification-body-background: $gray-light-more;
 
-$chat-panel-body-background-video-mode: $gray-lighter-more;
-$chat-panel-body-background-chat-mode: $gray-lighter-more;
+$chat-panel-body-background: $gray-lighter-more;
 
 $btn-gray-border: $gray-light;
 $btn-gray-bg: $gray-light-more;
@@ -91,7 +90,6 @@ $mini-video-heights-list: ();
   $mini-video-height: $video-width / 6 * $video-aspect-ratio;
   $mini-video-heights-list: append($mini-video-heights-list, $mini-video-height);
 }
-@debug $mini-video-heights-list;
 
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
 // it does not overflow the bottom of the div. Subtract 2px for outer panel border.

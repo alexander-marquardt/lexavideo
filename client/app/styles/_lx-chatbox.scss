@@ -43,24 +43,25 @@
   padding: 0px 15px 0px 15px;
   overflow-y: auto;
 
-  background: $chat-panel-body-background-chat-mode;
+  background: $chat-panel-body-background;
 
   -webkit-user-select: none;
   -moz-user-select: none;
 }
 
-.cl-chat-panel-body-video-mode {
-  background: $chat-panel-body-background-video-mode;
-
-  & .cl-chat-message-div {
-  }
+.cl-chat-panel-show-partial-chat-history {
 }
 
-.cl-chat-panel-body-chat-mode {
-  background: $chat-panel-body-background-chat-mode;
+.cl-chat-panel-show-full-chat-history {
 
   & .cl-chat-message-div[style] {
     opacity: 1!important;
+  }
+}
+
+.cl-chat-panel-hide-entire-chat-history {
+  & .cl-chat-message-div[style] {
+    opacity: 0!important;
   }
 }
 

@@ -5,6 +5,49 @@
 
 angular.module('lxChatbox.directives', [])
 
+
+
+.directive('lxSetChatPanelMessageVisibilityDirective',
+
+    function(
+
+        ) {
+
+
+        return {
+            restrict: 'A',
+            link: function (scope, elem) {
+
+                scope.$watch(function() {
+                    return scope.chatboxPanelElementObject.mouseIsDown.toString() +
+                        scope.chatboxInputElementObject.inputIsFocused.toString() +
+                        scope.videoStateInfoObject.numOpenVideoExchanges.toString();
+                },
+                function(watchVal) {
+
+                    var showFullHistoryCssClass = 'cl-chat-panel-show-full-chat-history';
+                    var showPartialHistoryCssClass = 'cl-chat-panel-show-partial-chat-history';
+                    var hideEntireHistoryCssClass = 'cl-chat-panel-hide-entire-chat-history';
+
+                    elem.removeClass(showFullHistoryCssClass);
+                    elem.removeClass(showPartialHistoryCssClass);
+                    elem.removeClass(hideEntireHistoryCssClass);
+
+                    // Figures out which css class to apply to the chat panel, based on the users current activity.
+                    if (scope.videoStateInfoObject.numOpenVideoExchanges == 0 || scope.chatboxPanelElementObject.mouseIsDown) {
+                        elem.addClass(showFullHistoryCssClass);
+                    }
+                    else if (scope.chatboxInputElementObject.inputIsFocused) {
+                        elem.addClass(showPartialHistoryCssClass)
+                    }
+                    else {
+                        elem.addClass(hideEntireHistoryCssClass)
+                    }
+                });
+            }
+        };
+    })
+
 .directive('lxShowChatMessagesDirective',
 
     function(
@@ -13,8 +56,7 @@ angular.module('lxChatbox.directives', [])
         $timeout,
         lxShowNumMessagesService,
         lxSoundService,
-        lxTimeService,
-        lxWindowFocus
+        lxTimeService
         ) {
 
 

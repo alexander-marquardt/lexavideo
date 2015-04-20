@@ -15,7 +15,7 @@ $video-wrapper-chat-mode-opacity: 0.5;
   position: absolute;
   bottom: 0;
   left: 50%;
-  background: $chat-panel-body-background-chat-mode;
+  background: $chat-panel-body-background;
   z-index: $video-wrapper-zindex;
   text-align: center;
 
@@ -29,12 +29,12 @@ $video-wrapper-chat-mode-opacity: 0.5;
 
 div.cl-main-video-wrapper-video-mode {
   opacity: 1;
-  background: $chat-panel-body-background-video-mode;
+  background: $chat-panel-body-background;
 }
 
 div.cl-main-video-wrapper-chat-mode {
   opacity: $video-wrapper-chat-mode-opacity;
-  background: $chat-panel-body-background-chat-mode;
+  background: $chat-panel-body-background;
 }
 
 .cl-main-video-wrapper-box-shadow-overlay {
@@ -50,15 +50,15 @@ div.cl-main-video-wrapper-chat-mode {
       margin-left: - nth($video-widths-list, $idx) / 2;
     }
   }
-  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background-chat-mode);
+  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
 }
 
 div.cl-main-video-wrapper-box-shadow-overlay-video-mode {
-  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background-chat-mode);
+  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
 }
 
 div.cl-main-video-wrapper-box-shadow-overlay-video-mode {
-  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background-video-mode);
+  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
 }
 
 .cl-video {
