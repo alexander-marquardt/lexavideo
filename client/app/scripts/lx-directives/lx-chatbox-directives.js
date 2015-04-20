@@ -21,6 +21,7 @@ angular.module('lxChatbox.directives', [])
                 scope.$watch(function() {
                     return scope.chatboxPanelElementObject.mouseIsDown.toString() +
                         scope.chatboxInputElementObject.inputIsFocused.toString() +
+                        scope.chatboxPanelElementObject.showFullChatHistory.toString() +
                         scope.videoStateInfoObject.numOpenVideoExchanges.toString();
                 },
                 function(watchVal) {
@@ -34,7 +35,7 @@ angular.module('lxChatbox.directives', [])
                     elem.removeClass(hideEntireHistoryCssClass);
 
                     // Figures out which css class to apply to the chat panel, based on the users current activity.
-                    if (scope.videoStateInfoObject.numOpenVideoExchanges == 0 || scope.chatboxPanelElementObject.mouseIsDown) {
+                    if (scope.chatboxPanelElementObject.showFullChatHistory || scope.videoStateInfoObject.numOpenVideoExchanges == 0 || scope.chatboxPanelElementObject.mouseIsDown) {
                         elem.addClass(showFullHistoryCssClass);
                     }
                     else if (scope.chatboxInputElementObject.inputIsFocused) {

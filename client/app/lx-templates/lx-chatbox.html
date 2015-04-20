@@ -140,7 +140,7 @@
                                 <div class="row">
 
                                     <!-- Chat message input and send message button -->
-                                    <div class="col-xs-12">
+                                    <div ng-class="videoStateInfoObject.numOpenVideoExchanges? 'col-xs-8 col-sm-10': 'col-xs-12'">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -154,8 +154,6 @@
                                                        required
                                                         />
 
-
-
                                                 <span class="input-group-btn">
                                                     <button ng-click="sendChatMessageFn(roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].chatRoomId)"
                                                             class="btn  btn-sm pull-right btn-gray"
@@ -166,6 +164,17 @@
                                                 </span>
                                             </div>
                                         </form>
+                                    </div>
+                                    <div ng-hide="videoStateInfoObject.numOpenVideoExchanges < 1"
+                                            class="col-xs-4 col-sm-2">
+                                            <span class="btn-group pull-right">
+                                                <button type="button" class="btn btn-sm btn-gray"
+                                                        ng-click="chatboxPanelElementObject.showFullChatHistory = false"
+                                                        ng-class="{'active': !chatboxPanelElementObject.showFullChatHistory}" >AA</button>
+                                                <button type="button" class="btn btn-sm btn-gray"
+                                                        ng-click="chatboxPanelElementObject.showFullChatHistory = true"
+                                                        ng-class="{'active': chatboxPanelElementObject.showFullChatHistory}">BB</button>
+                                            </span>
                                     </div>
                                 </div>
                             </div>
