@@ -215,10 +215,10 @@ angular.module('lxMainView.controllers', [])
         };
 
        $scope.chatboxInputElementObject = {
-           inputIsFocused: true
+           inputIsFocused: true,
+           userIsScrolling: false
        };
        $scope.chatboxPanelElementObject = {
-           mouseIsDown: false,
            showFullChatHistory: false
        };
         // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
