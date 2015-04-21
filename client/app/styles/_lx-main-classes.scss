@@ -6,7 +6,7 @@ body{
 .cl-sticky-footer {
 
   // hide the footer on short displays
-  @media (max-height: 300px) {
+  @media (max-height: $hide-sticky-footer-max-height) {
     display: none;
   }
 
@@ -158,6 +158,10 @@ span.cl-chat-panel-overlay-text-span {
 
 .cl-title-row-height {
   height: $title-row-height;
+
+  @media (max-height: $hide-title-row-max-height) {
+    display:none;
+  }
 }
 
 .cl-title-row-top-bottom-margin {
