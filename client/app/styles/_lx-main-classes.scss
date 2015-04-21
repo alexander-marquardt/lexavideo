@@ -158,10 +158,6 @@ span.cl-chat-panel-overlay-text-span {
 
 .cl-title-row-height {
   height: $title-row-height;
-
-  @media (max-height: $hide-title-row-max-height) {
-    display:none;
-  }
 }
 
 .cl-title-row-top-bottom-margin {
