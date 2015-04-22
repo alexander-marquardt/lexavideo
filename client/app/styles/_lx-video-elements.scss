@@ -14,7 +14,7 @@
   position: absolute;
   bottom: 0;
   left: 50%;
-  background: $chat-panel-body-background;
+  background: black;
   z-index: $video-wrapper-zindex;
   text-align: center;
 
@@ -26,8 +26,8 @@
   }
 }
 
-div.cl-main-video-wrapper-show-full-chat-history {
-  opacity: 0.25;
+.cl-bring-main-video-wrapper-to-front-div {
+  z-index: $video-wrapper-in-front-zindex;
 }
 
 .cl-main-video-wrapper-box-shadow-overlay {
@@ -46,12 +46,8 @@ div.cl-main-video-wrapper-show-full-chat-history {
   @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
 }
 
-div.cl-main-video-wrapper-box-shadow-overlay-video-mode {
-  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
-}
-
-div.cl-main-video-wrapper-box-shadow-overlay-video-mode {
-  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
+.cl-bring-main-video-wrapper-to-front-box-shadow-overlay {
+  z-index: $video-wrapper-in-front-box-shadow-overlay-zindex;
 }
 
 .cl-video {

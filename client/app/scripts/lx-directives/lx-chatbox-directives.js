@@ -5,8 +5,6 @@
 
 angular.module('lxChatbox.directives', [])
 
-
-
 .directive('lxSetChatPanelMessageVisibilityDirective',
 
     function(
@@ -62,7 +60,7 @@ angular.module('lxChatbox.directives', [])
             link: function (scope, elem) {
 
                 var handler = function() {
-                    elem.parent().parent().find('input').focus();
+                    elem.parent().parent().parent().parent().find('input').focus();
                 };
 
                 elem.on('click.lxFocusOnInputOnClick', handler);

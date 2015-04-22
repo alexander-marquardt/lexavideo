@@ -53,9 +53,14 @@ $chat-groups-members-margin: 15px;
 $vertical-spacing-between-major-sections: 2px;
 
 
-$video-wrapper-zindex: 10;
-$video-wrapper-box-shadow-overlay-zindex: 11;
-$chat-bubble-zindex: 12;
+$video-wrapper-zindex: 50;
+$video-wrapper-box-shadow-overlay-zindex: 51;
+
+$video-wrapper-in-front-zindex: 150;
+$video-wrapper-in-front-box-shadow-overlay-zindex: 151;
+
+$chat-message-zindex: 100;
+$chat-bubble-zindex: 110;
 
 // $estimated-bubble-height is used for computing the offset required in the first div to push the first
 // message to the bottom of the chat panel.

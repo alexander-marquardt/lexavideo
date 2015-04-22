@@ -30,7 +30,7 @@ span.cl-overlay-text-span {
 }
 
 span.cl-chat-panel-overlay-text-span {
-  z-index: $chat-bubble-zindex + 1;
+  z-index: $chat-message-zindex;
 }
 
 .cl-landing-page-well {

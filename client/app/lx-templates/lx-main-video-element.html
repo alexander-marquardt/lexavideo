@@ -4,13 +4,14 @@
      <!--The following wraps the remote video windows-->
 
     <div class="col-xs-12 text-center cl-col-no-padding cl-full-height">
-        <div class="cl-main-video-wrapper-div" ng-controller="lxLocalVideoWrapperCtrl"
-            ng-class="videoStateInfoObject.numOpenVideoExchanges == 0 ||
-                    chatboxPanelElementObject.showFullChatHistory ?
-                    'cl-main-video-wrapper-show-full-chat-history':''">
+        <div class="cl-main-video-wrapper-div"
+             ng-controller="lxLocalVideoWrapperCtrl"
+             ng-class="{'cl-bring-main-video-wrapper-to-front-div': !chatboxInputElementObject.inputIsFocused}"
+             lx-set-video-transparency>
             <div lx-display-video-element-directive selected-video-element = '{{ videoDisplaySelection.currentlySelectedVideoElement }}'></div>
         </div>
-        <div class="cl-main-video-wrapper-box-shadow-overlay cl-video-sizing">
+        <div class="cl-main-video-wrapper-box-shadow-overlay cl-video-sizing"
+                ng-class="{'cl-bring-main-video-wrapper-to-front-box-shadow-overlay': !chatboxInputElementObject.inputIsFocused}">
             <div ng-if="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'">
                 {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
 

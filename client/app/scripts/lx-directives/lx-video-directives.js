@@ -86,3 +86,4 @@ videoAppDirectives.directive('lxLocalMiniVideoElementDirective',
         };
     }
 );
+
