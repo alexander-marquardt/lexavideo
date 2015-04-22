@@ -97,13 +97,9 @@
 }
 
 
-.cl-mini-video-well {
-  padding: 2px;
-  margin-bottom: $vertical-spacing-between-major-sections;
 
-  & .cl-mini-video-wrapper-div:hover {
-    cursor: pointer;
-  }
+.cl-mini-video-wrapper-div:hover {
+  cursor: pointer;
 }
 
 %cl-overlay-common {
