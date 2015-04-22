@@ -1,5 +1,16 @@
 
 
+.cl-mini-video-row  {
+  width: 100%;
+  position: absolute;
+  bottom: $chat-panel-footer-height;
+  z-index: $video-wrapper-zindex;
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($mini-video-widths-list, $idx) * $video-aspect-ratio;
+    }
+  }
+}
 
 .cl-mini-video-wrapper-div {
   background: #000;
@@ -12,14 +23,17 @@
 .cl-main-video-wrapper-div {
   opacity: 1;
   position: absolute;
-  bottom: 0;
   left: 50%;
   background: black;
   z-index: $video-wrapper-zindex;
   text-align: center;
 
   margin-left: - nth($video-widths-list, 1) / 2;
+  bottom: nth($mini-video-widths-list, 1) * $video-aspect-ratio;
   @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      bottom: nth($mini-video-widths-list, $idx) * $video-aspect-ratio;
+    }
     @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
       margin-left: - nth($video-widths-list, $idx) / 2;
     }
@@ -32,13 +46,15 @@
 
 .cl-main-video-wrapper-box-shadow-overlay {
   position: absolute;
-  bottom: 0;
   left: 50%;
   z-index: $video-wrapper-box-shadow-overlay-zindex;
   text-align: center;
-
   margin-left: - nth($video-widths-list, 1) / 2;
+  bottom: nth($mini-video-widths-list, 1) * $video-aspect-ratio;
   @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      bottom: nth($mini-video-widths-list, $idx) * $video-aspect-ratio;
+    }
     @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
       margin-left: - nth($video-widths-list, $idx) / 2;
     }
@@ -54,6 +70,18 @@
   opacity: 1;
   display: block; // remove 5 px gap at bottom
   width: 100%;
+}
+
+.cl-mini-video-sizing {
+  box-sizing: border-box;
+  width: nth($mini-video-widths-list, 1);
+  height: nth($mini-video-widths-list, 1) * $video-aspect-ratio;
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      width: nth($mini-video-widths-list, $idx);
+      height: nth($mini-video-widths-list, $idx) * $video-aspect-ratio;
+    }
+  }
 }
 
 .cl-video-sizing {
