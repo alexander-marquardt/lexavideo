@@ -21,7 +21,10 @@ body{
   background: $brand-danger-lighter;
 }
 
-
+.cl-panel-header-btn {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
 span.cl-overlay-text-span {
   background: rgba(0, 0, 0, 0.15);
   color:rgba(255, 255, 255, 0.9);
