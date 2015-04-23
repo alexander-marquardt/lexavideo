@@ -4,40 +4,42 @@
      <!--The following wraps the remote video windows-->
 
     <div class="col-xs-12 text-center cl-col-no-padding cl-full-height">
-        <div class="cl-main-video-wrapper-div"
+        <div class="cl-main-video-bottom-offset-div"
              ng-controller="lxLocalVideoWrapperCtrl"
              ng-class="{'cl-bring-main-video-wrapper-to-front-div': !chatboxInputElementObject.inputIsFocused}">
             <div lx-display-video-element-directive selected-video-element = '{{ videoDisplaySelection.currentlySelectedVideoElement }}'></div>
         </div>
-        <div class="cl-main-video-wrapper-box-shadow-overlay cl-video-sizing"
-                ng-class="{'cl-bring-main-video-wrapper-to-front-box-shadow-overlay': !chatboxInputElementObject.inputIsFocused}">
-            <div ng-if="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'">
-                {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
+        <div class="cl-main-video-bottom-offset-div"
+             ng-class="{'cl-bring-main-video-wrapper-to-front-box-shadow-overlay': !chatboxInputElementObject.inputIsFocused}">
+            <div class="cl-main-video-wrapper-box-shadow-overlay cl-video-sizing cl-video">
+                <div ng-if="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoIsSelected'">
+                    {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
 
-                <div class="cl-center-overlay-outer-div cl-video-text-overlay">
-                    <div class="cl-center-overlay-middle-div">
-                        <span ng-show="localStreamIsActive"
-                              class="cl-overlay-text-span cl-transition-opacity">Local Video
-                        </span>
+                    <div class="cl-center-overlay-outer-div cl-video-text-overlay">
+                        <div class="cl-center-overlay-middle-div">
+                            <span ng-show="localStreamIsActive"
+                                  class="cl-overlay-text-span cl-transition-opacity">Local Video
+                            </span>
 
-                        <span ng-show="!localStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                             class="cl-overlay-text-span cl-transition-opacity"
-                             lx-display-local-video-status>
-                        </span>
+                            <span ng-show="!localStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                 class="cl-overlay-text-span cl-transition-opacity"
+                                 lx-display-local-video-status>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div ng-if="videoDisplaySelection.currentlySelectedVideoElement && videoDisplaySelection.currentlySelectedVideoElement != 'localVideoIsSelected'">
-                {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
+                <div ng-if="videoDisplaySelection.currentlySelectedVideoElement && videoDisplaySelection.currentlySelectedVideoElement != 'localVideoIsSelected'">
+                    {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
 
-                <div class="cl-center-overlay-outer-div cl-video-text-overlay">
-                    <div class="cl-center-overlay-middle-div">
-                        <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ remoteClientId }}</span>
-                        <span ng-show="!remoteStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
-                             class="cl-overlay-text-span cl-transition-opacity"
-                             lx-display-remote-video-status selected-video-element = '{{ videoDisplaySelection.currentlySelectedVideoElement }}'>
-                        </span>
+                    <div class="cl-center-overlay-outer-div cl-video-text-overlay">
+                        <div class="cl-center-overlay-middle-div">
+                            <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ remoteClientId }}</span>
+                            <span ng-show="!remoteStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
+                                 class="cl-overlay-text-span cl-transition-opacity"
+                                 lx-display-remote-video-status selected-video-element = '{{ videoDisplaySelection.currentlySelectedVideoElement }}'>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
