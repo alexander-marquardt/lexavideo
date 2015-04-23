@@ -91,11 +91,14 @@ $chat-panel-name-size: join($chat-panel-name-size, (1.5em, 2em, 2em));
 $video-aspect-ratio : 3/4;
 // setup the video window sizes that are associated with the viewport sizes.
 $video-widths-list: ();
+$video-heights-list: ();
 $mini-video-widths-list: ();
 $mini-video-heights-list: ();
 @each $video-width in $content-widths-list {
   $video-widths-list: append($video-widths-list, $video-width);
+  $video-heights-list:  append($video-heights-list, $video-width * $video-aspect-ratio);
   $mini-video-widths-list:  append($mini-video-widths-list, $video-width / 6);
+  $mini-video-heights-list: append($mini-video-heights-list, ($video-width / 6) * $video-aspect-ratio);
 }
 
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
