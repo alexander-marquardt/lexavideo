@@ -9,8 +9,8 @@
                          class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
                             ng-class="videoStateInfoObject.numOpenVideoExchanges > 5?'col-xs-1':'col-xs-2'">
                         <div class="cl-mini-video-wrapper-div"
-                             ng-click="videoDisplaySelection.currentlySelectedVideoElement = remoteClientId">
-                            <div lx-remote-mini-video-element-directive remote-client-id='{{ remoteClientId }}'></div>
+                             ng-click="videoDisplaySelection.currentlySelectedVideoElement = remoteClientId"
+                             lx-remote-mini-video-element-directive remote-client-id='{{ remoteClientId }}'>
                         </div>
                     </div><!--
                  --><div class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
