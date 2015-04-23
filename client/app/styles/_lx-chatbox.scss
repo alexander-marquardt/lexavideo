@@ -47,6 +47,14 @@
 
   -webkit-user-select: none;
   -moz-user-select: none;
+
+  height: nth($chat-panel-body-height-list, 1);
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($chat-panel-body-height-list, $idx);
+    }
+  }
+  box-sizing: border-box;
 }
 
 .cl-chat-panel-show-partial-chat-history {
@@ -68,16 +76,6 @@
 .cl-chat-message-div {
   position: relative; // necessary for z-index to work
   z-index: $chat-bubble-zindex;
-}
-
-.cl-chat-panel-body-height {
-  height: nth($chat-panel-body-height-list, 1);
-  @for $idx from 1 through length($viewport-heights-list) {
-    @media (min-height: nth($viewport-heights-list, $idx)) {
-      height: nth($chat-panel-body-height-list, $idx);
-    }
-  }
-  box-sizing: border-box;
 }
 
 .cl-chat-panel-dropdown {

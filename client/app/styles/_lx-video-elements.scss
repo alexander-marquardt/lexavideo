@@ -1,9 +1,9 @@
 
 
-.cl-mini-video-row  {
+.cl-mini-video-absolute-row {
   width: 100%;
   position: absolute;
-  bottom: $chat-panel-footer-height;
+  bottom: $mini-video-bottom-offset;
   z-index: $video-wrapper-zindex;
   height: nth($mini-video-row-heights-list, 1);
   @for $idx from 1 through length($viewport-widths-list) {

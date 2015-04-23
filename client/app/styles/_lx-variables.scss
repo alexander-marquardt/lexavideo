@@ -94,6 +94,8 @@ $video-aspect-ratio : 3/4;
 $panel-border-compensation: 2px;
 $mini-video-border-compensation: 2px;
 
+
+$mini-video-bottom-offset: $chat-panel-footer-height + $panel-border-compensation;
 // setup the video window sizes that are associated with the viewport sizes.
 $video-widths-list: ();
 $video-heights-list: ();
