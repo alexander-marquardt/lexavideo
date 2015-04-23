@@ -125,13 +125,8 @@
                                  unselectable="on">
                                 <div class="cl-dummy-blank-div-in-short-chat-panel"></div>
                                 <div lx-show-chat-messages-directive></div>
-
-                                <!-- for efficiency, only include video elements in the panel that is currently shown -->
-                                <div ng-if="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible">
-                                    {% endraw %}{% include 'lx-templates/lx-main-video-element.html' %}{% raw %}
-                                </div>
-
                             </div>
+
                             <div class="panel-footer cl-chat-panel-footer">
                                 <div class="row">
 
