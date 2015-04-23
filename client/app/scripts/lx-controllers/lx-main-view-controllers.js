@@ -92,8 +92,8 @@ angular.module('lxMainView.controllers', [])
         };
 
         $scope.localVideoObject = {
-            localHdVideoElem: undefined,  // set in lxVideoElementDirective
-            localSmallVideoElem: undefined,
+            localHdVideoElem: null,  // set in lxVideoElementDirective
+            localSmallVideoElem: null,
             isWebcamMuted: false,
             isMicrophoneMuted: false
         };

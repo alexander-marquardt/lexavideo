@@ -20,7 +20,7 @@ videoAppDirectives.directive('lxRemoteMiniVideoElementDirective',
                 var e;
                 var remoteClientId = attrs.remoteClientId;
 
-                // only
+                // only create the video element if it doesn't already exist.
                 if (!(remoteClientId in scope.remoteMiniVideoElementsDict)) {
                     e = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay"></video>');
                     scope.remoteMiniVideoElementsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(e[0]);
