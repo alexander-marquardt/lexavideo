@@ -1,4 +1,6 @@
-
+video {
+  background: black;
+}
 
 .cl-mini-video-absolute-row {
   width: 100%;
@@ -51,7 +53,6 @@
 
 .cl-video {
   opacity: 1;
-  background: black;
   display: block; // remove 5 px gap at bottom
   width: 100%;
   margin-left: auto;
