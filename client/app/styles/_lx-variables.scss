@@ -46,7 +46,7 @@ $lighten-link-color: lighten($link-color, 15%) !default;
 
 $chat-panel-heading-height: 36px;
 $chat-panel-footer-height: 50px;
-$sticky-footer-height: $chat-panel-heading-height;
+$sticky-footer-height: 50px;
 
 $chat-groups-members-margin: 15px;
 
@@ -86,7 +86,7 @@ $content-widths-list: ();
 }
 
 $content-widths-list: join($content-widths-list, ($container-sm - $scrollbar-width, $container-md - $scrollbar-width, $container-lg - $scrollbar-width));
-$chat-panel-name-size: join($chat-panel-name-size, (1.5em, 2em, 2em));
+$chat-panel-name-size: join($chat-panel-name-size, (1em, 1em, 1em));
 
 $video-aspect-ratio : 3/4;
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
