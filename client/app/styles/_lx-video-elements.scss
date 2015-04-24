@@ -13,6 +13,11 @@ video {
       height: nth($mini-video-row-heights-list, $idx);
     }
   }
+  z-index: $video-panel-zindex;
+}
+
+.cl-mini-video-absolute-row-to-back {
+  z-index: $video-panel-in-back-zindex;
 }
 
 .cl-mini-video-wrapper-div {
