@@ -215,8 +215,7 @@ angular.module('lxMainView.controllers', [])
         };
 
        $scope.chatboxInputElementObject = {
-           inputIsFocused: true,
-           userIsScrolling: false
+           inputIsFocused: false
        };
        $scope.chatboxPanelElementObject = {
            showFullChatHistory: false
