@@ -6,7 +6,7 @@ video {
   width: 100%;
   position: absolute;
   bottom: $mini-video-bottom-offset;
-  z-index: $video-wrapper-zindex;
+  z-index: $video-panel-zindex;
   height: nth($mini-video-row-heights-list, 1);
   @for $idx from 1 through length($viewport-widths-list) {
     @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
@@ -19,7 +19,7 @@ video {
   background: #000;
   border: 1px solid $standard-border-color;
   position: relative;
-  z-index: $video-wrapper-zindex;
+  z-index: $video-panel-zindex;
   text-align: center;
 }
 
@@ -28,7 +28,6 @@ video {
   position: absolute;
   width: 100%;
   background: transparent;
-  z-index: $video-wrapper-zindex;
   text-align: center;
   bottom: nth($mini-video-heights-list, 1);
   @for $idx from 1 through length($viewport-widths-list) {
@@ -38,17 +37,8 @@ video {
   }
 }
 
-.cl-bring-main-video-wrapper-to-front-div {
-  z-index: $video-wrapper-in-front-zindex;
-}
-
 .cl-main-video-wrapper-box-shadow-overlay {
-  z-index: $video-wrapper-box-shadow-overlay-zindex;
   @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
-}
-
-.cl-bring-main-video-wrapper-to-front-box-shadow-overlay {
-  z-index: $video-wrapper-in-front-box-shadow-overlay-zindex;
 }
 
 .cl-video {
@@ -114,7 +104,7 @@ $hangup-button-space: 35px;
   right: 0;
   left: 0px;
   text-align: right;
-  z-index: $video-wrapper-zindex + 5;
+  z-index: $video-panel-zindex + 5;
   white-space: nowrap;
   opacity: $button-overlay-opacity;
 }
@@ -129,14 +119,14 @@ $hangup-button-space: 35px;
   left: 0;
   width: 100px;
   padding: $overlay-buttons-col-padding;
-  z-index: $video-wrapper-zindex + 6;
+  z-index: $video-panel-zindex + 6;
   opacity: $button-overlay-opacity;
   text-align: left;
 }
 
 div.cl-video-text-overlay {
   // place the text over top of
-  z-index: $video-wrapper-zindex + 5;
+  z-index: $video-panel-zindex + 5;
 }
 
 .cl-video-buttons-overlay.cl-hangup-button-overlay {
@@ -160,6 +150,7 @@ div.cl-video-text-overlay {
 
 .cl-video-inside-chat-panel {
   position: absolute;
+  background: $chat-panel-body-background;
   top: $chat-panel-heading-height;
   height: nth($chat-panel-body-height-list, 1);
   @for $idx from 1 through length($viewport-heights-list) {
@@ -167,12 +158,10 @@ div.cl-video-text-overlay {
       height: nth($chat-panel-body-height-list, $idx);
     }
   }
-
-  width: nth($content-widths-list, 1);
-  @for $idx from 1 through length($viewport-widths-list) {
-    @media (min-width: nth($viewport-widths-list, $idx)) {
-      width: nth($content-widths-list, $idx);
-    }
-  }
+  z-index: $video-panel-zindex;
+  width: 100%;
 }
 
+.cl-send-video-inside-chat-panel-to-back {
+  z-index: $video-panel-in-back-zindex;
+}

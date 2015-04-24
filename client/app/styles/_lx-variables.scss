@@ -27,6 +27,7 @@ $notification-panel-header-background: $gray;
 $chat-notification-body-background: $gray-light-more;
 
 $chat-panel-body-background: $gray-lighter-more;
+$chat-panel-body-background-transparent: rgba($gray-lighter-more, 0.25);
 
 $btn-gray-border: $gray-light;
 $btn-gray-bg: $gray-light-more;
@@ -53,12 +54,10 @@ $chat-groups-members-margin: 15px;
 $vertical-spacing-between-major-sections: 2px;
 
 
-$video-wrapper-zindex: 50;
-$video-wrapper-box-shadow-overlay-zindex: 51;
+$video-panel-zindex: 150;
+$video-panel-in-back-zindex: 50;
 
-$video-wrapper-in-front-zindex: 150;
-$video-wrapper-in-front-box-shadow-overlay-zindex: 151;
-
+$chat-panel-zindex: 100;
 $chat-message-zindex: 100;
 $chat-bubble-zindex: 110;
 

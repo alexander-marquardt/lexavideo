@@ -27,11 +27,11 @@ angular.module('lxChatbox.directives', [])
 
                     var showFullHistoryCssClass = 'cl-chat-panel-show-full-chat-history';
                     var showPartialHistoryCssClass = 'cl-chat-panel-show-partial-chat-history';
-                    var hideEntireHistoryCssClass = 'cl-chat-panel-hide-entire-chat-history';
+                    //var hideEntireHistoryCssClass = 'cl-chat-panel-hide-entire-chat-history';
 
                     elem.removeClass(showFullHistoryCssClass);
                     elem.removeClass(showPartialHistoryCssClass);
-                    elem.removeClass(hideEntireHistoryCssClass);
+                    //elem.removeClass(hideEntireHistoryCssClass);
 
                     // Figures out which css class to apply to the chat panel, based on the users current activity.
                     if (scope.chatboxPanelElementObject.showFullChatHistory || scope.videoStateInfoObject.numOpenVideoExchanges == 0) {
@@ -41,7 +41,7 @@ angular.module('lxChatbox.directives', [])
                         elem.addClass(showPartialHistoryCssClass)
                     }
                     else {
-                        elem.addClass(hideEntireHistoryCssClass)
+                        //elem.addClass(hideEntireHistoryCssClass)
                     }
                 });
             }

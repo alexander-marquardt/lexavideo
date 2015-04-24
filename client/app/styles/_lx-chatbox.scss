@@ -45,7 +45,7 @@
   padding: 0px 15px 0px 15px;
   overflow-y: auto;
 
-  background: $chat-panel-body-background;
+  background: $chat-panel-body-background-transparent;
 
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -57,6 +57,9 @@
     }
   }
   box-sizing: border-box;
+
+  position: relative;
+  z-index: $chat-panel-zindex;
 }
 
 .cl-chat-panel-show-partial-chat-history {
