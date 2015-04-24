@@ -151,6 +151,8 @@ div.cl-video-text-overlay {
 .cl-video-inside-chat-panel {
   position: absolute;
   background: $chat-panel-body-background;
+  border-left: 1px solid $panel-primary-border;
+  border-right: 1px solid $panel-primary-border;
   top: $chat-panel-heading-height;
   height: nth($chat-panel-body-height-list, 1);
   @for $idx from 1 through length($viewport-heights-list) {
