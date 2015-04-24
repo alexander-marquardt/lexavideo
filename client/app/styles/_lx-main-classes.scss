@@ -273,7 +273,7 @@ span.cl-overlay-text-span {
 .cl-pulse {
   -webkit-animation-name: pulse;
   animation-name: pulse;
-  animation-duration: 2s;
+  animation-duration: $pulse-animation-duration;
   animation-iteration-count: infinite;
 
 }

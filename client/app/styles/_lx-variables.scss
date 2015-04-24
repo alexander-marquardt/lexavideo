@@ -16,6 +16,7 @@ $gray-lighter-more: mix($gray-lighter, #FFF, 50%) !default;
 $brand-primary-little-darker: darken($brand-primary, 7.5%) !default;
 $brand-primary-darker: darken($brand-primary, 15%) !default;
 
+
 $main-control-background: $gray-light-more;
 $main-control-hover-background: $gray-dark;
 $main-control-color: black;
@@ -44,6 +45,10 @@ $panel-waiting-border: $standard-border-color !default;
 $panel-waiting-heading-bg: $brand-danger;
 
 $lighten-link-color: lighten($link-color, 15%) !default;
+
+
+$pulse-animation-duration: 2s;
+
 
 $chat-panel-heading-height: 36px;
 $chat-panel-footer-height: 50px;

@@ -273,6 +273,15 @@
   }
 }
 
+@-webkit-keyframes cycle-background-color {
+  0%,100%   {background:$chat-notification-body-background;}
+  50% {background: $brand-danger-lighter}
+}
+
+@keyframes cycle-background-color {
+  0%,100%   {background:$chat-notification-body-background;}
+  50% {background: $brand-danger-lighter}
+}
 
 
 $fast-easing-delay: 0.35s;
