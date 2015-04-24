@@ -72,12 +72,6 @@
   }
 }
 
-.cl-chat-panel-hide-entire-chat-history {
-  & .cl-chat-message-div[style] {
-    opacity: 0!important;
-  }
-}
-
 .cl-chat-message-div {
   position: relative; // necessary for z-index to work
   z-index: $chat-bubble-zindex;
