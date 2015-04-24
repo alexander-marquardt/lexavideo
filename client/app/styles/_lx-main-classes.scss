@@ -32,10 +32,6 @@ span.cl-overlay-text-span {
   border-radius: 4px;
 }
 
-span.cl-chat-panel-overlay-text-span {
-  z-index: $chat-message-zindex;
-}
-
 .cl-landing-page-well {
   height: nth($common-display-area-height-list, 1);
   @for $idx from 1 through length($viewport-heights-list) {
