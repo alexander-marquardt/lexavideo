@@ -121,10 +121,14 @@
 
                             <div class="panel-body cl-chat-panel-body cl-transition-background-color"
                                  lx-set-chat-panel-message-visibility-directive
-                                 scroll-glue="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsGlued"
-                                 unselectable="on">
-                                <div class="cl-dummy-blank-div-in-short-chat-panel"></div>
-                                <div lx-show-chat-messages-directive></div>
+                                 scroll-glue="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsGlued">
+
+                                <div lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = true">
+                                    <div lx-handle-mouse-events-in-main-panel>
+                                        <div class="cl-dummy-blank-div-in-short-chat-panel"></div>
+                                        <div lx-show-chat-messages-directive></div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="panel-footer cl-chat-panel-footer">
@@ -140,16 +144,15 @@
                                                        ng-model="sendMessageFormScope.inputMessageString"
                                                        maxlength="{{ maxMsgLength }}"
                                                        ng-click="gluePanel()"
-                                                       ng-focus="chatboxInputElementObject.inputIsFocused = true"
-                                                       ng-blur="chatboxInputElementObject.inputIsFocused = false"
                                                        required
+                                                       lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false"
                                                         />
 
                                                 <span class="input-group-btn">
                                                     <button ng-click="sendChatMessageFn(roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].chatRoomId)"
                                                             class="btn  btn-sm pull-right btn-gray"
                                                             ng-disabled="sendMessageForm.$invalid"
-                                                            lx-focus-on-input-on-click>
+                                                            >
                                                         Send
                                                     </button>
                                                 </span>
@@ -162,7 +165,7 @@
                                                 <button type="button" class="btn btn-sm btn-gray"
                                                         ng-click="chatboxPanelElementObject.showFullChatHistory = false"
                                                         ng-class="{'active': !chatboxPanelElementObject.showFullChatHistory}"
-                                                        lx-focus-on-input-on-click>
+                                                        lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false">
                                                             <span class="cl-lx-call-control-wrapper-cfg">
                                                                 <span class="icon-lx-panel-bubble-outline-cfg"></span>
                                                             </span>
@@ -170,7 +173,7 @@
                                                 <button type="button" class="btn btn-sm btn-gray"
                                                         ng-click="chatboxPanelElementObject.showFullChatHistory = true"
                                                         ng-class="{'active': chatboxPanelElementObject.showFullChatHistory}"
-                                                        lx-focus-on-input-on-click>
+                                                        lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false">
                                                             <span class="cl-lx-call-control-wrapper-cfg">
                                                                 <span class="icon-lx-panel-bubble-cfg"></span>
                                                             </span>

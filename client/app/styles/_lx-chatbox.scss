@@ -47,9 +47,6 @@
 
   background: $chat-panel-body-background-transparent;
 
-  -webkit-user-select: none;
-  -moz-user-select: none;
-
   height: nth($chat-panel-body-height-list, 1);
   @for $idx from 1 through length($viewport-heights-list) {
     @media (min-height: nth($viewport-heights-list, $idx)) {
@@ -275,7 +272,7 @@
   background: $bubble-right-background !important;
 }
 
-.cl-chat-time-display {
+.cl-chat-message-time {
   color: $gray-light;
   font-size: 75%;
   vertical-align: sub;

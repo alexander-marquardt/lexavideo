@@ -52,6 +52,7 @@ commonDirectives.directive('lxClickOnceDirective', function ($timeout) {
 
 commonDirectives.factory('clickAnywhereButHereService', function(
     $document,
+    $log,
     $timeout){
 
     var handlerClosure = null;
@@ -60,6 +61,7 @@ commonDirectives.factory('clickAnywhereButHereService', function(
     return {
         handleOuterClick: function($scope, expr) {
             var handler = function() {
+                $log.log('executing handleOuterClick: ' +  expr);
                 $scope.$apply(expr);
             };
 
@@ -88,22 +90,42 @@ commonDirectives.factory('clickAnywhereButHereService', function(
 });
 
 commonDirectives.directive('clickAnywhereButHere', function($log, clickAnywhereButHereService){
-  return {
-    restrict: 'A',
-    link: function(scope, elem, attr) {
-      var handler = function(e) {
-        $log.log('clickAnywhereButHere stopping click propagation.');
-        e.stopPropagation();
-      };
-      elem.on('click.clickAnywhereButHereElem', handler);
+    return {
+        restrict: 'A',
+        link: function(scope, elem, attr) {
+            var handler = function(e) {
+                $log.log('clickAnywhereButHere stopping click propagation.');
+                e.stopPropagation();
+            };
+            elem.on('click.clickAnywhereButHereElem', handler);
 
-      scope.$on('$destroy', function(){
-        elem.off('click.clickAnywhereButHereElem', handler);
-      });
+            scope.$on('$destroy', function(){
+                elem.off('click.clickAnywhereButHereElem', handler);
+            });
 
-      clickAnywhereButHereService.handleOuterClick(scope, attr.clickAnywhereButHere);
+            $log.log('executing clickAnywhereButHere' +  attr.clickAnywhereButHere);
+            clickAnywhereButHereService.handleOuterClick(scope, attr.clickAnywhereButHere);
+        }
+    };
+});
+
+commonDirectives.directive('lxClickHereDirective', function($log) {
+    return {
+        restrict: 'A',
+        link: function (scope, elem, attr) {
+            var handler = function() {
+                $log.log('executing lxClickHereDirective: ' +  attr.lxClickHereDirective);
+                scope.$apply(attr.lxClickHereDirective);
+            };
+
+            $log.log('executing lxClickHereDirective' +  attr.lxClickHereDirective);
+
+            elem.on('click.lxClickHereDirective', handler);
+            scope.$on('$destroy', function(){
+                elem.off('click.lxClickHereDirective', handler);
+            });
+        }
     }
-  };
 });
 
 commonDirectives.directive('setClassesForCommonArea', function(){

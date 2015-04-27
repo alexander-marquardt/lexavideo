@@ -18,7 +18,7 @@ angular.module('lxChatbox.directives', [])
 
                 scope.$watch(function() {
                         var returnVal =
-                        scope.chatboxInputElementObject.inputIsFocused.toString() +
+                        scope.chatboxPanelElementObject.videoIsFocused.toString() +
                         scope.chatboxPanelElementObject.showFullChatHistory.toString() +
                         scope.videoStateInfoObject.numOpenVideoExchanges.toString();
                         return returnVal;
@@ -35,7 +35,7 @@ angular.module('lxChatbox.directives', [])
                     if (scope.chatboxPanelElementObject.showFullChatHistory || scope.videoStateInfoObject.numOpenVideoExchanges == 0) {
                         elem.addClass(showFullHistoryCssClass);
                     }
-                    else if (scope.chatboxInputElementObject.inputIsFocused) {
+                    else if (!scope.chatboxPanelElementObject.videoIsFocused) {
                         elem.addClass(showPartialHistoryCssClass)
                     }
                 });
@@ -43,27 +43,31 @@ angular.module('lxChatbox.directives', [])
         };
     })
 
-.directive('lxFocusOnInputOnClick',
+
+/* We want the user to be able to click / select text in the chat bubbles without the event bubbling up
+   to outer layers, as this would cause the video to immediately be shown and the chat messages to be hidden.
+     */
+.directive('lxHandleMouseEventsInMainPanel',
 
     function(
-
+            $log
         ) {
-
-
         return {
             restrict: 'A',
             link: function (scope, elem) {
+                elem.on('click', function(event) {
 
-                var handler = function() {
-                    elem.parent().parent().parent().parent().find('input').focus();
-                };
-
-                elem.on('click.lxFocusOnInputOnClick', handler);
-
-                // IMPORTANT! Tear down this event handler when the scope is destroyed.
-                scope.$on('$destroy', function(){elem.off('click.lxFocusOnInputOnClick', handler);});
-
-                }
+                    var $target = $(event.target);
+                    $log.log($target.attr('class'));
+                    if ($target.hasClass('bubble') || $target.hasClass('cl-chat-message-time')) {
+                        $log.log('bubble event detected');
+                        event.stopPropagation();
+                    }
+                    else {
+                        scope.chatboxPanelElementObject.videoIsFocused = true;
+                    }
+                });
+            }
         }
     })
 
@@ -154,11 +158,9 @@ angular.module('lxChatbox.directives', [])
 
                     messageElement.append(angular.element('<div class="col-xs-12">')
                             .append(angular.element('<div class="bubble bubble-' + bubbleSide + ' ' + bubbleErrorClass + '"><i></i>')
-//                                .append(angular.element('<div ' + messageIdHtml + '>')
-                                    .append(messagePayload.messageString)
-                                    .append(angular.element('<span class="cl-chat-time-display">')
-                                        .append('&nbsp;&nbsp;' + timeString)
-//                                )
+                                .append(messagePayload.messageString)
+                                .append(angular.element('<span class="cl-chat-message-time">')
+                                    .append('&nbsp;&nbsp;' + timeString)
                             )
                         )
                     );
@@ -203,7 +205,7 @@ angular.module('lxChatbox.directives', [])
                         // The following code will keep track of "un-noticed" messages that the user has received.
                         // All messages received while the user is not "focused" on the input element of the associated
                         // chat panel are considered un-noticed.
-                        if (!scope.chatPanelDict[chatRoomId].chatPanelIsCurrentlyVisible || !scope.chatboxInputElementObject.inputIsFocused) {
+                        if (!scope.chatPanelDict[chatRoomId].chatPanelIsCurrentlyVisible || scope.chatboxPanelElementObject.videoIsFocused) {
 
                             scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed ++;
                             scope.trackUnseenMessageCountObject.unseenMessageCount++;

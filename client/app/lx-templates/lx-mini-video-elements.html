@@ -3,7 +3,7 @@
     <div ng-if="videoStateInfoObject.numOpenVideoExchanges >= 1">
 
         <div class="row cl-row-no-margins cl-mini-video-absolute-row"
-                ng-class="{'cl-mini-video-absolute-row-to-back': chatboxInputElementObject.inputIsFocused}">
+                ng-class="{'cl-mini-video-absolute-row-to-back': !chatboxPanelElementObject.videoIsFocused}">
             <div class="col-xs-12 cl-col-no-padding">
                 <div class="row cl-row-no-margins">
                     <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
