@@ -135,7 +135,7 @@
                                 <div class="row">
 
                                     <!-- Chat message input and send message button -->
-                                    <div ng-class="videoStateInfoObject.numOpenVideoExchanges? 'col-xs-8 col-sm-10': 'col-xs-12'">
+                                    <div ng-class="videoStateInfoObject.numOpenVideoExchanges? 'col-xs-7 col-sm-9': 'col-xs-12'">
                                         <form name="sendMessageForm" role="form" novalidate>
                                             <div class="input-group">
                                                 <input class="form-control input-sm"
@@ -160,19 +160,20 @@
                                         </form>
                                     </div>
                                     <div ng-hide="videoStateInfoObject.numOpenVideoExchanges < 1"
-                                            class="col-xs-4 col-sm-2">
+                                            class="col-xs-5 col-sm-3">
                                             <span class="btn-group pull-right">
                                                 <button type="button" class="btn btn-sm btn-gray"
                                                         ng-click="chatboxPanelElementObject.showFullChatHistory = false"
-                                                        ng-class="{'active': !chatboxPanelElementObject.showFullChatHistory}"
-                                                        lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false">
+                                                        ng-class="{'active': chatboxPanelElementObject.videoIsFocused}"
+                                                        lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = true">
                                                             <span class="cl-lx-call-control-wrapper-cfg">
                                                                 <span class="icon-lx-panel-bubble icon-lx-panel-bubble-empty"></span>
                                                             </span>
                                                 </button>
                                                 <button type="button" class="btn btn-sm btn-gray"
                                                         ng-click="chatboxPanelElementObject.showFullChatHistory = false"
-                                                        ng-class="{'active': chatboxPanelElementObject.showFullChatHistory}"
+                                                        ng-class="{'active': !chatboxPanelElementObject.showFullChatHistory &&
+                                                                            !chatboxPanelElementObject.videoIsFocused}"
                                                         lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false">
                                                             <span class="cl-lx-call-control-wrapper-cfg">
                                                                 <span class="icon-lx-panel-bubble icon-lx-panel-bubble-fading"></span>
@@ -180,7 +181,8 @@
                                                 </button>
                                                 <button type="button" class="btn btn-sm btn-gray"
                                                         ng-click="chatboxPanelElementObject.showFullChatHistory = true"
-                                                        ng-class="{'active': chatboxPanelElementObject.showFullChatHistory}"
+                                                        ng-class="{'active': chatboxPanelElementObject.showFullChatHistory &&
+                                                                            !chatboxPanelElementObject.videoIsFocused}"
                                                         lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false">
                                                             <span class="cl-lx-call-control-wrapper-cfg">
                                                                 <span class="icon-lx-panel-bubble icon-lx-panel-bubble-full"></span>
