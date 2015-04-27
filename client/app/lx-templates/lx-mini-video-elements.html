@@ -4,21 +4,23 @@
 
         <div class="row cl-row-no-margins cl-mini-video-absolute-row"
                 ng-class="{'cl-mini-video-absolute-row-to-back': !chatboxPanelElementObject.videoIsFocused}">
-            <div class="col-xs-12 cl-col-no-padding">
-                <div class="row cl-row-no-margins">
-                    <div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
-                         class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
-                            ng-class="videoStateInfoObject.numOpenVideoExchanges > 5?'col-xs-1':'col-xs-2'">
-                        <div class="cl-mini-video-wrapper-div"
-                             ng-click="videoDisplaySelection.currentlySelectedVideoElement = remoteClientId"
-                             lx-remote-mini-video-element-directive remote-client-id='{{ remoteClientId }}'>
-                        </div>
-                    </div><!--
-                 --><div class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
-                        ng-class="videoStateInfoObject.numOpenVideoExchanges > 5?'col-xs-1':'col-xs-2'">
-                        <div class="cl-mini-video-wrapper-div"
-                             ng-click="videoDisplaySelection.currentlySelectedVideoElement = 'localVideoIsSelected'">
-                            <div lx-local-mini-video-element-directive></div>
+            <div class="cl-mini-video-make-width-same-as-video">
+                <div class="col-xs-12 cl-col-no-padding">
+                    <div class="row cl-row-no-margins">
+                        <div class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
+                            ng-class="videoStateInfoObject.numOpenVideoExchanges > 5?'col-xs-1':'col-xs-3'">
+                            <div class="cl-mini-video-wrapper-div"
+                                 ng-click="videoDisplaySelection.currentlySelectedVideoElement = 'localVideoIsSelected'">
+                                <div lx-local-mini-video-element-directive></div>
+                            </div>
+                        </div><!--
+                     --><div ng-repeat="remoteClientId in videoStateInfoObject.currentOpenVideoSessionsList"
+                             class="cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block"
+                                ng-class="videoStateInfoObject.numOpenVideoExchanges > 5?'col-xs-1':'col-xs-3'">
+                            <div class="cl-mini-video-wrapper-div"
+                                 ng-click="videoDisplaySelection.currentlySelectedVideoElement = remoteClientId"
+                                 lx-remote-mini-video-element-directive remote-client-id='{{ remoteClientId }}'>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -8,12 +8,26 @@ video {
   bottom: $mini-video-bottom-offset;
   z-index: $video-panel-zindex;
   height: nth($mini-video-row-heights-list, 1);
+  text-align: center;
   @for $idx from 1 through length($viewport-widths-list) {
     @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
       height: nth($mini-video-row-heights-list, $idx);
     }
   }
   z-index: $video-panel-zindex;
+}
+
+
+.cl-mini-video-make-width-same-as-video {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  width: nth($video-widths-list, 1);
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      width: nth($video-widths-list, $idx);
+    }
+  }
 }
 
 .cl-mini-video-absolute-row-to-back {
@@ -26,6 +40,10 @@ video {
   position: relative;
   z-index: $video-panel-zindex;
   text-align: center;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .cl-main-video-bottom-offset-div {
@@ -80,9 +98,6 @@ video {
 
 
 
-.cl-mini-video-wrapper-div:hover {
-  cursor: pointer;
-}
 
 %cl-overlay-common {
   box-sizing: border-box;

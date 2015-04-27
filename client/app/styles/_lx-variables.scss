@@ -92,6 +92,7 @@ $content-widths-list: join($content-widths-list, ($container-sm - $scrollbar-wid
 $chat-panel-name-size: join($chat-panel-name-size, (1em, 1em, 1em));
 
 $video-aspect-ratio : 3/4;
+$num-mini-videos-per-row: 4;
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
 // it does not overflow the bottom of the div. Subtract 2px for outer panel border.
 $panel-border-compensation: 2px;
@@ -108,9 +109,9 @@ $mini-video-row-heights-list: ();
 @each $video-width in $content-widths-list {
   $video-widths-list: append($video-widths-list, $video-width);
   $video-heights-list:  append($video-heights-list, $video-width * $video-aspect-ratio);
-  $mini-video-widths-list:  append($mini-video-widths-list, ($video-width / 6) - $mini-video-border-compensation);
-  $mini-video-heights-list: append($mini-video-heights-list, ($video-width / 6) * $video-aspect-ratio - $mini-video-border-compensation);
-  $mini-video-row-heights-list: append($mini-video-row-heights-list, ($video-width / 6) * $video-aspect-ratio);
+  $mini-video-widths-list:  append($mini-video-widths-list, ($video-width / $num-mini-videos-per-row) - $mini-video-border-compensation);
+  $mini-video-heights-list: append($mini-video-heights-list, ($video-width / $num-mini-videos-per-row) * $video-aspect-ratio - $mini-video-border-compensation);
+  $mini-video-row-heights-list: append($mini-video-row-heights-list, ($video-width / $num-mini-videos-per-row) * $video-aspect-ratio);
 }
 
 
