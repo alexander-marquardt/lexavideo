@@ -6,7 +6,7 @@ var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 
 
 
-videoAppDirectives.directive('lxRemoteMiniVideoElementDirective',
+videoAppDirectives.directive('lxMiniVideoElementDirective',
     function(
         $log,
         lxCallService,
@@ -18,35 +18,30 @@ videoAppDirectives.directive('lxRemoteMiniVideoElementDirective',
 
             link: function(scope, elem, attrs) {
                 var e;
-                var remoteClientId = attrs.remoteClientId;
+                var clientId = attrs.lxMiniVideoElementDirective;
 
-                // only create the video element if it doesn't already exist.
-                if (!(remoteClientId in scope.remoteMiniVideoElementsDict)) {
-                    e = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay"></video>');
-                    scope.remoteMiniVideoElementsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(e[0]);
-                    elem.append(e);
+                if (clientId !== 'localVideoElement') {
+                    // only create the video element if it doesn't already exist.
+                    if (!(clientId in scope.remoteMiniVideoElementsDict)) {
+                        e = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay"></video>');
+                        scope.remoteMiniVideoElementsDict[clientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(e[0]);
+                        elem.append(e);
+                    }
+                }
+
+                // Else, this is the local video element
+                else {
+                    if (!scope.localVideoObject.localSmallVideoElem) {
+                        e = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
+                        scope.localVideoObject.localSmallVideoElem = e[0];
+                        elem.append(e);
+                    }
                 }
             }
         };
     }
 );
 
-
-videoAppDirectives.directive('lxLocalMiniVideoElementDirective',
-    function( )
-    {
-        return {
-            restrict : 'A',
-            link: function(scope, elem) {
-                var e;
-                e = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
-                scope.localVideoObject.localSmallVideoElem = e[0];
-
-                elem.append(e);
-            }
-        };
-    }
-);
 
 videoAppDirectives.directive('lxDisplayVideoElementDirective',
     function(
@@ -70,7 +65,7 @@ videoAppDirectives.directive('lxDisplayVideoElementDirective',
                     elem.empty();
 
                     e = angular.element('<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>');
-                    if (selectedVideoElement !== 'localVideoIsSelected') {
+                    if (selectedVideoElement !== 'localVideoElement') {
                         lxAdapterService.attachMediaStream(e[0], lxPeerService.remoteStream[selectedVideoElement]);
                         elem.append(e);
                     }

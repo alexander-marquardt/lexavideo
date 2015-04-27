@@ -543,7 +543,7 @@ webRtcServices.factory('lxMediaService',
 
                 lxStreamService.localStream = stream;
 
-                scope.videoDisplaySelection.currentlySelectedVideoElement = 'localVideoIsSelected';
+                scope.videoDisplaySelection.currentlySelectedVideoElement = 'localVideoElement';
 
                 // since microphone and/or webcam may have been muted before localStream was set, we now make sure that
                 // the audioTracks settings for the current audio/video stream reflect the current value.
