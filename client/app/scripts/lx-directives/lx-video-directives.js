@@ -62,7 +62,7 @@ videoAppDirectives.directive('lxDisplayVideoElementDirective',
             link: function(scope, elem, attrs) {
 
                 scope.$watch(function() {
-                    return attrs.selectedVideoElement
+                    return attrs.selectedVideoElement;
                 }, function() {
                     var e;
                     var selectedVideoElement = attrs.selectedVideoElement;

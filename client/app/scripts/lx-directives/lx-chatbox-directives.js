@@ -3,6 +3,8 @@
  */
 'use strict';
 
+/* global $ */
+
 angular.module('lxChatbox.directives', [])
 
 .directive('lxSetChatPanelMessageVisibilityDirective',
@@ -23,7 +25,7 @@ angular.module('lxChatbox.directives', [])
                         scope.videoStateInfoObject.numOpenVideoExchanges.toString();
                         return returnVal;
                 },
-                function(watchVal) {
+                function() {
 
                     var showFullHistoryCssClass = 'cl-chat-panel-show-full-chat-history';
                     var showPartialHistoryCssClass = 'cl-chat-panel-show-partial-chat-history';
@@ -32,11 +34,11 @@ angular.module('lxChatbox.directives', [])
                     elem.removeClass(showPartialHistoryCssClass);
 
                     // Figures out which css class to apply to the chat panel, based on the users current activity.
-                    if (scope.chatboxPanelElementObject.showFullChatHistory || scope.videoStateInfoObject.numOpenVideoExchanges == 0) {
+                    if (scope.chatboxPanelElementObject.showFullChatHistory || scope.videoStateInfoObject.numOpenVideoExchanges === 0) {
                         elem.addClass(showFullHistoryCssClass);
                     }
                     else if (!scope.chatboxPanelElementObject.videoIsFocused) {
-                        elem.addClass(showPartialHistoryCssClass)
+                        elem.addClass(showPartialHistoryCssClass);
                     }
                 });
             }
@@ -80,7 +82,7 @@ angular.module('lxChatbox.directives', [])
                     handler(event);
                 });
             }
-        }
+        };
     })
 
 .directive('lxShowChatMessagesDirective',
@@ -110,10 +112,12 @@ angular.module('lxChatbox.directives', [])
                     // bubbleSide: 'left' (message sent) or 'right' (message received)
                     // transmittedSuccessBoolean: true or false. true if message sent/received correctly, false otherwise.
 
+                    var messageDivId;
+
                     var defaultNumMessagesToShow = 3;
                     var messageElement;
                     for (var idx=defaultNumMessagesToShow; idx > 0; idx--) {
-                        var messageDivId = 'id-most-recent-message-div-' + idx;
+                        messageDivId = 'id-most-recent-message-div-' + idx;
 
                         // Find previous element that has the id, and if it exists, then remove the old ID
                         // and give it a new one that is one numer higher
@@ -121,7 +125,7 @@ angular.module('lxChatbox.directives', [])
                         if (messageElement.length > 0) {
 
                             // Check if this message will be pushed out of the current "default" messages displayed
-                            if (idx == defaultNumMessagesToShow) {
+                            if (idx === defaultNumMessagesToShow) {
                                 messageElement.removeAttr('id');
                                 messageElement.css('display', 'none');
                             }

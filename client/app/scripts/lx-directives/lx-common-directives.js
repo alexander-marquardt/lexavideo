@@ -84,9 +84,9 @@ commonDirectives.factory('clickAnywhereButHereService', function(
             $timeout(function() {
                 $document.on('click.clickAnywhereButHereDocument', handlerClosure);
                 disabled = false;
-            }, 50)
+            }, 50);
         }
-    }
+    };
 });
 
 commonDirectives.directive('clickAnywhereButHere', function($log, clickAnywhereButHereService){
@@ -125,7 +125,7 @@ commonDirectives.directive('lxClickHereDirective', function($log) {
                 elem.off('click.lxClickHereDirective', handler);
             });
         }
-    }
+    };
 });
 
 commonDirectives.directive('setClassesForCommonArea', function(){

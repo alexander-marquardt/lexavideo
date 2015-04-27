@@ -152,12 +152,12 @@ angular.module('lxMainView.controllers', [])
 
             // hide notification menu
             if ($scope.notificationMenuObject.showNotificationMenu) {
-                $scope.displayNotificationMenu($event, false)
+                $scope.displayNotificationMenu($event, false);
             }
 
             // show main menu
             else {
-                $scope.displayMainMenu($event, true)
+                $scope.displayMainMenu($event, true);
             }
 
         };
@@ -168,12 +168,12 @@ angular.module('lxMainView.controllers', [])
 
             // hide main menu
             if ($scope.mainMenuObject.showMainMenu) {
-                $scope.displayMainMenu($event, false)
+                $scope.displayMainMenu($event, false);
             }
 
             // show notification menu
             else {
-                $scope.displayNotificationMenu($event, true)
+                $scope.displayNotificationMenu($event, true);
             }
 
         };
