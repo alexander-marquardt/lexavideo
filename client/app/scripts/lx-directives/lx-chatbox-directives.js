@@ -64,7 +64,9 @@ angular.module('lxChatbox.directives', [])
                         event.stopPropagation();
                     }
                     else {
-                        scope.chatboxPanelElementObject.videoIsFocused = true;
+                        scope.$apply(function() {
+                            scope.chatboxPanelElementObject.videoIsFocused = true;
+                        });
                     }
                 };
                 // catch mousedown events so that the ng-swipe events are not triggered if the user is trying to
