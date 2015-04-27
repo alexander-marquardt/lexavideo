@@ -174,26 +174,4 @@ commonDirectives.directive('setClassesForCommonArea', function(){
             });
         }
     };
-})
-
-.directive('lxTouchstart', function($log) {
-    return function(scope, element, attr) {
-
-        element.on('touchstart', function() {
-            scope.$apply(function() {
-                scope.$eval(attr.lxTouchstart);
-            });
-        });
-    };
-})
-
-.directive('lxTouchend', function($log) {
-    return function (scope, element, attr) {
-
-        element.on('touchend', function () {
-            scope.$apply(function () {
-                scope.$eval(attr.lxTouchend);
-            });
-        });
-    };
 });
