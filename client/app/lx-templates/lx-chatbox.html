@@ -124,7 +124,7 @@
                                  scroll-glue="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsGlued">
 
                                 <div lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = true">
-                                    <div lx-handle-mouse-events-in-main-panel>
+                                    <div lx-handle-mouse-events-in-chat-panel>
                                         <div class="cl-dummy-blank-div-in-short-chat-panel"></div>
                                         <div lx-show-chat-messages-directive></div>
                                     </div>
@@ -167,7 +167,15 @@
                                                         ng-class="{'active': !chatboxPanelElementObject.showFullChatHistory}"
                                                         lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false">
                                                             <span class="cl-lx-call-control-wrapper-cfg">
-                                                                <span class="icon-lx-panel-bubble-outline-cfg"></span>
+                                                                <span class="icon-lx-panel-bubble icon-lx-panel-bubble-empty"></span>
+                                                            </span>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-gray"
+                                                        ng-click="chatboxPanelElementObject.showFullChatHistory = false"
+                                                        ng-class="{'active': chatboxPanelElementObject.showFullChatHistory}"
+                                                        lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false">
+                                                            <span class="cl-lx-call-control-wrapper-cfg">
+                                                                <span class="icon-lx-panel-bubble icon-lx-panel-bubble-fading"></span>
                                                             </span>
                                                 </button>
                                                 <button type="button" class="btn btn-sm btn-gray"
@@ -175,7 +183,7 @@
                                                         ng-class="{'active': chatboxPanelElementObject.showFullChatHistory}"
                                                         lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false">
                                                             <span class="cl-lx-call-control-wrapper-cfg">
-                                                                <span class="icon-lx-panel-bubble-cfg"></span>
+                                                                <span class="icon-lx-panel-bubble icon-lx-panel-bubble-full"></span>
                                                             </span>
                                                 </button>
                                             </span>

@@ -47,7 +47,7 @@ angular.module('lxChatbox.directives', [])
 /* We want the user to be able to click / select text in the chat bubbles without the event bubbling up
    to outer layers, as this would cause the video to immediately be shown and the chat messages to be hidden.
      */
-.directive('lxHandleMouseEventsInMainPanel',
+.directive('lxHandleMouseEventsInChatPanel',
 
     function(
             $log
@@ -55,17 +55,27 @@ angular.module('lxChatbox.directives', [])
         return {
             restrict: 'A',
             link: function (scope, elem) {
-                elem.on('click', function(event) {
 
-                    var $target = $(event.target);
+                var handler = function(event) {
+                   var $target = $(event.target);
                     $log.log($target.attr('class'));
                     if ($target.hasClass('bubble') || $target.hasClass('cl-chat-message-time')) {
-                        $log.log('bubble event detected');
+                        $log.debug('bubble event detected');
                         event.stopPropagation();
                     }
                     else {
                         scope.chatboxPanelElementObject.videoIsFocused = true;
                     }
+                };
+                // catch mousedown events so that the ng-swipe events are not triggered if the user is trying to
+                // copy text from the chat bubble.
+                elem.on('mousedown', function(event) {
+                    handler(event);
+                });
+                // catch click events so that if user clicks on the chat bubble, that we don't treat it as a click
+                // on the video element.
+                elem.on('click', function(event) {
+                    handler(event);
                 });
             }
         }
