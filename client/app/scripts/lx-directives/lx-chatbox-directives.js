@@ -111,7 +111,7 @@ angular.module('lxChatbox.directives', [])
                             // Check if this message will be pushed out of the current "default" messages displayed
                             if (idx == defaultNumMessagesToShow) {
                                 messageElement.removeAttr('id');
-                                messageElement.css('opacity', 0);
+                                messageElement.css('display', 'none');
                             }
 
                             // This message is already in the display, but we need to give it a new id and

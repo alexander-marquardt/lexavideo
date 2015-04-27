@@ -65,6 +65,7 @@
 .cl-chat-panel-show-full-chat-history {
 
   & .cl-chat-message-div[style] {
+    display: block!important;
     opacity: 1!important;
   }
 }
