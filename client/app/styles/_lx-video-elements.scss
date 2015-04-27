@@ -60,10 +60,6 @@ video {
   }
 }
 
-.cl-main-video-wrapper-box-shadow-overlay {
-  @include box-shadow(inset 0px 0px 6px 2px $chat-panel-body-background);
-}
-
 .cl-video {
   opacity: 1;
   display: block; // remove 5 px gap at bottom
