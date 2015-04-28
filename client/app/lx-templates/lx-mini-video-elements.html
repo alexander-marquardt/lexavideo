@@ -5,16 +5,14 @@
         <div class="row cl-row-no-margins cl-mini-video-absolute-row"
                 ng-class="{'cl-mini-video-absolute-row-to-back': !chatboxPanelElementObject.videoIsFocused}">
             <div class="cl-mini-video-make-width-same-as-video">
-                <div class="col-xs-12 cl-col-no-padding">
-                    <div class="row cl-row-no-margins" ng-controller="lxMiniVideoRepeatWrapper">
+                <div ng-controller="lxMiniVideoRepeatWrapper">
 
-                        <div ng-repeat="innerList in miniVideoElementsWrappedForRepeat">
-                            <div ng-repeat="clientId in innerList"
-                                 class="col-xs-3 cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block">
-                                <div class="cl-mini-video-wrapper-div"
-                                     ng-click="videoDisplaySelection.currentlySelectedVideoElement = clientId"
-                                     lx-mini-video-element-directive>
-                                </div>
+                    <div ng-repeat="innerList in miniVideoElementsWrappedForRepeat">
+                        <div ng-repeat="clientId in innerList"
+                             class="col-xs-3 cl-transition-opacity text-center cl-col-no-padding cl-vertical-align-inline-block">
+                            <div class="cl-mini-video-wrapper-div"
+                                 ng-click="videoDisplaySelection.currentlySelectedVideoElement = clientId"
+                                 lx-mini-video-element-directive>
                             </div>
                         </div>
                     </div>
