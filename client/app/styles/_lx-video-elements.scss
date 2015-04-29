@@ -21,6 +21,31 @@ video {
 }
 
 
+.cl-mini-video-absolute-row-to-back {
+  z-index: $video-panel-in-back-zindex;
+  & .carousel-indicators{
+    z-index:  $video-panel-in-back-zindex + 1;
+  }
+}
+
+.carousel-indicators {
+  bottom: 0px;
+  left: 50%;
+  width: 30%;
+  margin-left: -15%;
+  height: 15px;
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      margin-bottom: nth($mini-video-row-heights-list, $idx) + 3px;
+    }
+  }
+  & > li {
+    box-shadow: 0.5px 0px 1px gray, -0.5px 0px 1px gray, 0px 0.5px 1px gray, 0px 0.5px 1px gray;
+  }
+}
+
+
+
 .cl-mini-video-make-width-same-as-video {
   margin-left: auto;
   margin-right: auto;
@@ -30,13 +55,6 @@ video {
     @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
       width: nth($video-widths-list, $idx);
     }
-  }
-}
-
-.cl-mini-video-absolute-row-to-back {
-  z-index: $video-panel-in-back-zindex;
-  & .carousel-indicators {
-    z-index:  $video-panel-in-back-zindex + 1;
   }
 }
 
