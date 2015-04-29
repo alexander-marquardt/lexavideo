@@ -308,9 +308,9 @@ module.exports = function (grunt) {
                     src: ['generated/*']
                 }, {
                     expand: true,
-                    cwd: '<%= yeoman.app %>',
-                    src: 'bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/*',
-                    dest: '<%= yeoman.dist %>'
+                    cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap',
+                    src: '**/*',
+                    dest: '<%= yeoman.dist %>/styles/bootstrap'
                 }, {
                     expand: true,
                     options: {
@@ -335,6 +335,15 @@ module.exports = function (grunt) {
                 cwd: '<%= yeoman.app %>/styles/icomoon/fonts',
                 src: '**/*',
                 dest: '.tmp/styles/fonts'
+            },
+            glyphiconFontsTmp : {
+                expand: true,
+                options: {
+                    processContentExclude: ['**/*.{png,gif,jpg,ico,svg,ttf,eot,woff}']
+                },
+                cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/',
+                src: '**/*',
+                dest: '.tmp/styles/bootstrap'
             }
         },
 
@@ -375,6 +384,7 @@ module.exports = function (grunt) {
             //'connect:livereload',
             'shell:killLivereload',
             'copy:icomoonFontsTmp',
+            'copy:glyphiconFontsTmp',
             'watch'
         ]);
     });
