@@ -15,6 +15,9 @@ video {
     }
   }
   z-index: $video-panel-zindex;
+  & .carousel-indicators {
+    z-index:  $video-panel-zindex + 1;
+  }
 }
 
 
@@ -32,6 +35,9 @@ video {
 
 .cl-mini-video-absolute-row-to-back {
   z-index: $video-panel-in-back-zindex;
+  & .carousel-indicators {
+    z-index:  $video-panel-in-back-zindex + 1;
+  }
 }
 
 .cl-mini-video-wrapper-div {
