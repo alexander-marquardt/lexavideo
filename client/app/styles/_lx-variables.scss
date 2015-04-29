@@ -92,7 +92,7 @@ $content-widths-list: join($content-widths-list, ($container-sm - $scrollbar-wid
 $chat-panel-name-size: join($chat-panel-name-size, (1em, 1em, 1em));
 
 $video-aspect-ratio : 3/4;
-$num-mini-videos-per-row: 4;
+$num-mini-videos-per-row: 3;
 // since we are using an absolute div to contain the chat panel, we need to compute how tall the panel can be so that
 // it does not overflow the bottom of the div. Subtract 2px for outer panel border.
 $panel-border-compensation: 2px;

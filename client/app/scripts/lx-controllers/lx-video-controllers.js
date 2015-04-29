@@ -32,7 +32,7 @@ angular.module('lxVideo.controllers', [])
         ) {
 
         function updateMiniVideoElementsWrappedForRepeat() {
-            var maxNumMiniVideoElementsToShow = 4;
+            var maxNumMiniVideoElementsToShow = 3;
             var arrayOfMiniVideoElementsIdentifiers = ['localVideoElement'].concat($scope.videoStateInfoObject.currentOpenVideoSessionsList);
             var outerList = [];
             for (var i = 0; i < arrayOfMiniVideoElementsIdentifiers.length; i += maxNumMiniVideoElementsToShow) {
