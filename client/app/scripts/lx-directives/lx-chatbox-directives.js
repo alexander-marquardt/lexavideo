@@ -61,7 +61,7 @@ angular.module('lxChatbox.directives', [])
                 var handler = function(event) {
                    var $target = $(event.target);
                     $log.log($target.attr('class'));
-                    if ($target.hasClass('bubble') || $target.hasClass('cl-chat-message-time')) {
+                    if ($target.hasClass('cl-bubble') || $target.hasClass('cl-chat-message-time')) {
                         $log.debug('bubble event detected');
                         event.stopPropagation();
                     }
@@ -149,7 +149,7 @@ angular.module('lxChatbox.directives', [])
 
                     var bubbleErrorClass = '';
                     if (!transmittedSuccessBoolean) {
-                        bubbleErrorClass = 'bubble-error';
+                        bubbleErrorClass = 'cl-bubble-error';
                     }
 
 
@@ -173,7 +173,7 @@ angular.module('lxChatbox.directives', [])
                     timeString = lxTimeService.getTimeString();
 
                     messageElement.append(angular.element('<div class="col-xs-12">')
-                            .append(angular.element('<div class="bubble bubble-' + bubbleSide + ' ' + bubbleErrorClass + '"><i></i>')
+                            .append(angular.element('<div class="cl-bubble cl-bubble-' + bubbleSide + ' ' + bubbleErrorClass + '"><i></i>')
                                 .append(messagePayload.messageString)
                                 .append(angular.element('<span class="cl-chat-message-time">')
                                     .append('&nbsp;&nbsp;' + timeString)

@@ -115,7 +115,7 @@
   vertical-align: middle;
 }
 
-.bubble {
+.cl-bubble {
   display: block;
   position: relative;
   padding: 0px 5px 0px 5px;
@@ -133,19 +133,19 @@
 }
 
 
-.bubble.bubble-left {
+.cl-bubble.cl-bubble-left {
   float: left;
   text-align: left;
   background: $bubble-left-background;
 }
 
-.bubble.bubble-right {
+.cl-bubble.cl-bubble-right {
   float: right;
   text-align: left;
   background: $bubble-right-background;
 }
 
-.bubble.bubble-error {
+.cl-bubble.cl-bubble-error {
     border: $brand-danger solid 1px;
     background: $brand-danger-lighter;
 }
@@ -159,7 +159,7 @@
    can be changed to another tag if necessary by modifying the css and html. */
 
 // the dark part of the "arrow"
-%bubble-arrow-common {
+%cl-bubble-arrow-common {
   vertical-align: top;
   position: absolute;
   display: block;
@@ -168,39 +168,39 @@
 }
 
 // the dark part of the "arrow" on the left side of the bubble
-.bubble.bubble-left>i {
+.cl-bubble.cl-bubble-left>i {
   left: -10px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $gray-light transparent transparent;
   z-index: $chat-bubble-zindex + 1;
-  @extend %bubble-arrow-common;
+  @extend %cl-bubble-arrow-common;
 }
 
 // the dark part of the right arrow on the right side of the chat bubble
-.bubble.bubble-right>i {
+.cl-bubble.cl-bubble-right>i {
   left: 100%;
   border-width: 5px 0px 5px 10px;
   border-color: transparent transparent transparent $gray-light;
   z-index: $chat-bubble-zindex + 1;
-  @extend %bubble-arrow-common;
+  @extend %cl-bubble-arrow-common;
 }
 
-.bubble.bubble-right.cl-message-count-bubble-override>i {
+.cl-bubble.cl-bubble-right.cl-message-count-bubble-override>i {
   top: 4px;
   border-width: 3px 0px 3px 6px;
 }
 
-.bubble.bubble-left.cl-notification-count-bubble-override>i {
+.cl-bubble.cl-bubble-left.cl-notification-count-bubble-override>i {
   top: 4px;
   left: -6px;
   border-width: 3px 6px 3px 0px;
 }
 
-.bubble.bubble-left.bubble-error>i {
+.cl-bubble.cl-bubble-left.cl-bubble-error>i {
   border-color: transparent $brand-danger transparent transparent;
 }
 
-.bubble.bubble-right.bubble-error>i {
+.cl-bubble.cl-bubble-right.cl-bubble-error>i {
   border-color: transparent transparent transparent $brand-danger;
 }
 
@@ -215,8 +215,8 @@
 }
 
 // the light part of the "arrow" on the left side of the bubble
-// :after is treated as the last child of .bubble-left-arrow
-.bubble.bubble-left>i:after {
+// :after is treated as the last child of .cl-bubble-left-arrow
+.cl-bubble.cl-bubble-left>i:after {
   left: 2px;
   border-width: 5px 10px 5px 0;
   border-color: transparent $bubble-left-background transparent transparent;
@@ -225,8 +225,8 @@
 }
 
 // the light part of the right arrow on the right side of the chat bubble
-// :after is treated as the last child of .bubble-right-arrow
-.bubble.bubble-right>i:after {
+// :after is treated as the last child of .cl-bubble-right-arrow
+.cl-bubble.cl-bubble-right>i:after {
   left: -12px;
   border-width: 5px 0px 5px 10px;
   border-color: transparent  transparent transparent $bubble-right-background;
@@ -234,25 +234,25 @@
   @extend %arrow-overlay-common;
 }
 
-.bubble.bubble-right.cl-message-count-bubble-override>i:after {
+.cl-bubble.cl-bubble-right.cl-message-count-bubble-override>i:after {
   left: -8px;
   top: -3px;
   border-width: 3px 0px 3px 6px;
   border-color: transparent transparent transparent $bubble-left-background;
 }
 
-.bubble.bubble-left.cl-notification-count-bubble-override>i:after {
+.cl-bubble.cl-bubble-left.cl-notification-count-bubble-override>i:after {
   left: 2px;
   top: -3px;
   border-width: 3px 6px 3px 0px;
   border-color: transparent $bubble-right-background transparent transparent;
 }
 
-.bubble.bubble-left.bubble-error>i:after {
+.cl-bubble.cl-bubble-left.cl-bubble-error>i:after {
   border-color: transparent $brand-danger-lighter transparent transparent;
 }
 
-.bubble.bubble-right.bubble-error>i:after {
+.cl-bubble.cl-bubble-right.cl-bubble-error>i:after {
   border-color: transparent  transparent transparent $brand-danger-lighter;
 }
 
