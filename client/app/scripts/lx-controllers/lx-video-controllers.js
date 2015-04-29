@@ -38,7 +38,7 @@ angular.module('lxVideo.controllers', [])
             for (var i = 0; i < arrayOfMiniVideoElementsIdentifiers.length; i += maxNumMiniVideoElementsToShow) {
                 var innerList = [];
                 for (var j = 0; j < maxNumMiniVideoElementsToShow; j++) {
-                    var idx = i * maxNumMiniVideoElementsToShow + j;
+                    var idx = i + j;
                     if (arrayOfMiniVideoElementsIdentifiers[idx] !== undefined) {
                         innerList.push(arrayOfMiniVideoElementsIdentifiers[idx]);
                     }
