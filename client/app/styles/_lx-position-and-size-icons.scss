@@ -150,25 +150,3 @@
 .btn-danger:hover .icon-lx-deny-start-video-camera-thick-forward-slash-cfg {
   color: darken($brand-danger, 10%);
 }
-
-
-
-// Chatbox icons
-
-%chatbox-chat-bubble-icons-common {
-  font-size: 1.5em;
-}
-
-.icon-lx-chat-bubble-left-cfg {
-  color: $gray-light;
-  @extend %chatbox-chat-bubble-icons-common;
-  @extend .icon-lx-chat-bubble-left;
-}
-
-
-.icon-lx-chat-bubble-right-cfg {
-  color: $gray-light;
-  @extend %chatbox-chat-bubble-icons-common;
-  @extend .icon-lx-chat-bubble-right;
-}
-
