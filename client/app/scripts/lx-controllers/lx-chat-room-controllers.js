@@ -184,7 +184,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
         $scope.videoDisplaySelection = {
             // currentlySelectedVideoElement will either be remoteClientId or the string 'localVideoElement'
-            currentlySelectedVideoElement: null
+            currentlySelectedVideoElement: 'localVideoElement'
         };
 
 
