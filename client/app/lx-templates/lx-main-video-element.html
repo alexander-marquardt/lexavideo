@@ -32,7 +32,7 @@
 
                     <div class="cl-center-overlay-outer-div cl-video-text-overlay">
                         <div class="cl-center-overlay-middle-div">
-                            <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ remoteClientId }}</span>
+                            <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ videoDisplaySelection.currentlySelectedVideoElement }}</span>
                             <span ng-show="!remoteStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
                                  class="cl-overlay-text-span cl-transition-opacity"
                                  lx-display-remote-video-status selected-video-element = '{{ videoDisplaySelection.currentlySelectedVideoElement }}'>
