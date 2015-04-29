@@ -1,10 +1,11 @@
 'use strict';
 angular.module('lxVideo.controllers', [])
 
-.controller('lxRemoteVideoWrapperCtrl',
+.controller('lxMainVideoWrapperCtrl',
     function(
         $scope,
-        lxPeerService
+        lxPeerService,
+        lxStreamService
         ) {
 
         $scope.$watch(function() {
@@ -12,20 +13,10 @@ angular.module('lxVideo.controllers', [])
         }, function(newVal) {
             $scope.remoteStreamIsActive = newVal;
         });
-
-    })
-
-.controller('lxLocalVideoWrapperCtrl',
-    function(
-        $scope,
-        lxStreamService
-        ) {
-
         $scope.$watch(lxStreamService.getLocalStreamBoolean, function(newVal) {
             $scope.localStreamIsActive = newVal;
         });
     })
-
 
 .controller('lxMiniVideoRepeatWrapper', function(
         $scope
