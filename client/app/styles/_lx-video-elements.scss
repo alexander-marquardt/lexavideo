@@ -126,6 +126,7 @@ $carousel-control-height: 20px;
 }
 
 .cl-video-sizing {
+  position: relative;
   box-sizing: border-box;
   width: nth($video-widths-list, 1);
   height: nth($video-heights-list, 1);
@@ -161,7 +162,7 @@ $hangup-button-space: 35px;
 .cl-selected-icon-status-overlay {
   @extend %cl-overlay-common;
   padding: 5px;
-  top: 0px;
+  bottom: 0;
   right: 0;
   left: 0px;
   text-align: right;
@@ -176,7 +177,7 @@ $hangup-button-space: 35px;
 
 .cl-video-buttons-overlay {
   @extend %cl-overlay-common;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100px;
   padding: $overlay-buttons-col-padding;
