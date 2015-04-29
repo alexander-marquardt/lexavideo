@@ -25,6 +25,7 @@ body{
   padding-top: 2px;
   padding-bottom: 2px;
 }
+
 span.cl-overlay-text-span {
   background: rgba(0, 0, 0, 0.15);
   color:rgba(255, 255, 255, 0.9);
@@ -358,7 +359,14 @@ div.cl-center-overlay-outer-div {
   position: absolute;
   left: 50%;
   text-align: center;
+}
+
+div.cl-center-overlay-outer-div-bottom {
   bottom: 15px;
+}
+
+div.cl-center-overlay-outer-div-top {
+  top: 5px;
 }
 
 div.cl-center-overlay-middle-div {

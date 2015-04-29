@@ -13,7 +13,7 @@
                 <div ng-if="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoElement'">
                     {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
 
-                    <div class="cl-center-overlay-outer-div cl-video-text-overlay">
+                    <div class="cl-center-overlay-outer-div cl-center-overlay-outer-div-bottom cl-video-text-overlay">
                         <div class="cl-center-overlay-middle-div">
                             <span ng-show="localStreamIsActive"
                                   class="cl-overlay-text-span cl-transition-opacity">Local Video
@@ -30,7 +30,7 @@
                 <div ng-if="videoDisplaySelection.currentlySelectedVideoElement && videoDisplaySelection.currentlySelectedVideoElement != 'localVideoElement'">
                     {% endraw %}{% include "lx-templates/lx-video-call-remote-buttons.html" %}{% raw %}
 
-                    <div class="cl-center-overlay-outer-div cl-video-text-overlay">
+                    <div class="cl-center-overlay-outer-div cl-center-overlay-outer-div-bottom cl-video-text-overlay">
                         <div class="cl-center-overlay-middle-div">
                             <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ videoDisplaySelection.currentlySelectedVideoElement }}</span>
                             <span ng-show="!remoteStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
