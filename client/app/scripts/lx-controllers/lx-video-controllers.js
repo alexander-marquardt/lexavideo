@@ -55,6 +55,6 @@ angular.module('lxVideo.controllers', [])
         $scope.$watch(function(){
             return $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
         }, updateMiniVideoElementsWrappedForRepeat);
-    })
+    });
 
 

@@ -71,11 +71,11 @@ angular.module('lxChatbox.directives', [])
                         });
                     }
                 };
-                // 1) catch mousedown events so that the ng-swipe events are not triggered if the user is trying to
+                // 1) catch mousedown/touchstart events so that the ng-swipe events are not triggered if the user is trying to
                 // copy text from the chat bubble.
                 // 2) catch click events so that if user clicks on the chat bubble, that we don't treat it as a click
                 // on the video element.
-                var events = 'mousedown.lxHandleMouseEventsInChatPanel click.lxHandleMouseEventsInChatPanel';
+                var events = 'mousedown.lxHandleMouseEventsInChatPanel  touchstart.lxHandleMouseEventsInChatPanel click.lxHandleMouseEventsInChatPanel';
                 elem.on(events, handler);
 
                 scope.$on('$destroy', function() {
