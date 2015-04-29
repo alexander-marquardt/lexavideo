@@ -7,13 +7,15 @@
             <div class="cl-mini-video-make-width-same-as-video">
                 <div ng-controller="lxMiniVideoRepeatWrapper">
 
-                    <div carousel interval="-1" lx-disable-ng-animate>
-                        <div slide ng-repeat="innerList in miniVideoElementsWrappedForRepeat" active="slide.active">
-                            <div ng-repeat="clientId in innerList"
-                                 class="col-xs-3 text-center cl-col-no-padding cl-vertical-align-inline-block">
-                                <div class="cl-mini-video-wrapper-div"
-                                     ng-click="videoDisplaySelection.currentlySelectedVideoElement = clientId"
-                                     lx-mini-video-element-directive>
+                    <div lx-no-swipe-propagation>
+                        <div carousel interval="-1" lx-disable-ng-animate>
+                            <div slide ng-repeat="innerList in miniVideoElementsWrappedForRepeat" active="slide.active">
+                                <div ng-repeat="clientId in innerList"
+                                     class="col-xs-3 text-center cl-col-no-padding cl-vertical-align-inline-block">
+                                    <div class="cl-mini-video-wrapper-div"
+                                         ng-click="videoDisplaySelection.currentlySelectedVideoElement = clientId"
+                                         lx-mini-video-element-directive>
+                                    </div>
                                 </div>
                             </div>
                         </div>

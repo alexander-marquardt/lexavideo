@@ -184,3 +184,28 @@ commonDirectives.directive('lxDisableNgAnimate', function($animate) {
     }
   };
 });
+
+commonDirectives.directive('lxNoSwipePropagation',
+
+    function(
+            $log
+        ) {
+        return {
+            restrict: 'A',
+            link: function (scope, elem) {
+
+                var handler = function(event) {
+                    event.stopPropagation();
+                };
+
+                // Catch mousedown events so that the ng-swipe events are not propagated outside
+                // of the mini-video carousel.
+                var events = 'mousedown.lxNoSwipePropagation mousemove.lxNoSwipePropagation touchstart.lxNoSwipePropagation touchend.lxNoSwipePropagation';
+                elem.on(events, handler);
+
+                scope.$on('$destroy', function() {
+                    elem.off(events, handler);
+                });
+            }
+        };
+    });
