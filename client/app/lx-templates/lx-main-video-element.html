@@ -10,7 +10,7 @@
         <div class="cl-main-video-bottom-offset-div"
              ng-controller="lxMainVideoWrapperCtrl">
             <div class="cl-video-sizing cl-video">
-                <div ng-if="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoElement'">
+                <div ng-if="videoDisplaySelection.currentlySelectedVideoElement == 'localVideoElement' || !videoDisplaySelection.currentlySelectedVideoElement">
                     {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}
 
                     <div class="cl-center-overlay-outer-div cl-center-overlay-outer-div-bottom cl-video-text-overlay">

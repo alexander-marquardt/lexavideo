@@ -34,15 +34,16 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
             var message;
             var overlayElem = elem;
 
-            var selectedVideoElement = attrs.selectedVideoElement;
 
 
             // If the remote user hangs up, the remoteVideoEnabledSetting will be received before the
             // remoteStreamIsActive status is updated. Therefore we need to check both in order to ensure
             // that user feedback is accurate.
             function checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting() {
+                var selectedVideoElement = attrs.selectedVideoElement;
+
                 try {
-                    return scope.videoExchangeObjectsDict[selectedVideoElement].remoteVideoEnabledSetting + (!!lxPeerService.remoteStream[selectedVideoElement]).toString();
+                    return selectedVideoElement + scope.videoExchangeObjectsDict[selectedVideoElement].remoteVideoEnabledSetting + (!!lxPeerService.remoteStream[selectedVideoElement]).toString();
                 }
                 catch(err) {
                     return null;
@@ -52,6 +53,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
             scope.$watch(checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting, function(returnVal) {
 
                 if (returnVal !== null) {
+                    var selectedVideoElement = attrs.selectedVideoElement;
                     var remoteStreamIsActive = !!lxPeerService.remoteStream[selectedVideoElement];
 
                     // hide any messages so we are at at known default state.
@@ -61,7 +63,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                     if (!remoteStreamIsActive) {
                         switch (remoteVideoSetting) {
                             case 'waitingForPermissionToEnableVideoExchange':
-                                message = 'Waiting for remote user to agree to exchange video';
+                                message = 'Waiting for user ' + selectedVideoElement + ' to agree to exchange video';
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
 
