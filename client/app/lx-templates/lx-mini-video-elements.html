@@ -15,6 +15,24 @@
                                     <div class="cl-mini-video-wrapper-div"
                                          ng-click="videoDisplaySelection.currentlySelectedVideoElement = clientId"
                                          lx-mini-video-element-directive>
+
+
+                                        <div ng-if="clientId == 'localVideoElement'">
+                                            {% endraw %}{% include "lx-templates/lx-video-call-local-buttons-status.html" %}{% raw %}
+                                        </div>
+                                        <div ng-if="clientId != 'localVideoElement'">
+                                            <div class="cl-selected-icon-status-overlay">
+                                                <div ng-show="remoteMiniVideoElementsDict[clientId].isAudioMuted">
+                                                    <span class="cl-video-status-icon">
+                                                        <span class="cl-lx-call-control-wrapper-cfg">
+                                                            <span class="icon-lx-volume-high-cfg cl-text-shadow"></span>
+                                                            <span class="icon-lx-thick-forward-slash-cfg"></span>
+                                                            <span class="icon-lx-thin-forward-slash-cfg"></span>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
