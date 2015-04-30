@@ -87,7 +87,20 @@ videoAppDirectives.directive('lxDisplayVideoElementDirective',
 
                 scope.$watch(
                     function() {
-                        return attrs.selectedVideoElement;
+                        var selectedVideoElement = attrs.selectedVideoElement;
+                        var videoStreamActive;
+                        try {
+                            if (selectedVideoElement === 'localVideoElement') {
+                                videoStreamActive = lxStreamService.localStream.active;
+                            }
+                            else {
+                                videoStreamActive = lxPeerService.remoteStream[selectedVideoElement].active;
+                            }
+                        }
+                        catch(err) {
+                            videoStreamActive = false;
+                        }
+                        return selectedVideoElement + videoStreamActive.toString();
                     },
                     function() {
                         var e;
