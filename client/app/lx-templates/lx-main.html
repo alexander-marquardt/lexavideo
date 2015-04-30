@@ -8,7 +8,7 @@
 
         {% include "lx-templates/lx-title-row.html" %}
 
-        <div ng-controller="lxChatRoomCtrl" lx-watch-for-error-entering-into-room>
+        <div lx-watch-for-error-entering-into-room>
             <div ng-controller="lxMainVideoCtrl">
                 <div ng-if="videoStateInfoObject.numOpenVideoExchanges >= 1">
                     {% include "lx-templates/lx-tc-check-if-system-supports-web-rtc.html" %}

@@ -78,21 +78,60 @@ angular.module('lxUseChatRoom.controllers', [])
 
     })
 
-    .controller('lxChatRoomCtrl',
-    function($scope,
-             $log,
-             $timeout,
-             $window,
-             lxAccessVideoElementsAndAccessCameraService,
-             lxAppWideConstantsService,
-             lxCallService,
-             lxCreateChatRoomObjectsService,
-             lxChatRoomVarsService,
-             lxJs
-             ) {
+    .controller('lxMainVideoCtrl',
+    function (
+        $log,
+        $scope,
+        lxAccessCameraAndMicrophoneService,
+        lxAccessVideoElementsAndAccessCameraService,
+        lxCallService,
+        lxCreateChatRoomObjectsService,
+        lxCheckIfSystemSupportsWebRtcService,
+        lxJs,
+        lxPeerService,
+        lxVideoParamsService) {
+
+        $scope.accessCameraAndMicrophoneObject = {
+            // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
+            // a single modal should be shown at once, due to the asynchronous callback nature of the .close() function,
+            // we cannot guarantee that the current modal is closed before a new one is opened.
+            // This variable should be used as follows:
+            // accessCameraAndMicrophoneObject.modalsCurrentlyShown[modal-index#] = templateUrl (where template Url is unique
+            // for each modal).
+            modalsCurrentlyShown: []
+        };
+
+        $scope.videoDisplaySelection = {
+            // currentlySelectedVideoElement will either be remoteClientId or the string 'localVideoElement'
+            currentlySelectedVideoElement: null
+        };
 
 
-// TODO - move this function into a service.
+        $scope.showCameraAndMicrophoneInstructions = function() {
+
+            // checkBrowserVersionToSeeIfGetUserMediaSupported will show a modal to the user if their browser/device is
+            // not supported. If it is supported, then it will return true and the prompt for access to camera and mic
+            // will be presented.
+            if (lxCheckIfSystemSupportsWebRtcService.checkBrowserVersionToSeeIfGetUserMediaSupported($scope)) {
+                lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess($scope);
+            }
+        };
+
+        $scope.toggleWebcamMuteInterfaceFn = function() {
+            lxCallService.toggleWebcamMute($scope.localVideoObject);
+        };
+
+        $scope.toggleMicrophoneMuteInterfaceFn = function() {
+            lxCallService.toggleMicrophoneMute($scope.localVideoObject);
+        };
+
+        $scope.toggleAudioMuteInterfaceFn = function(remoteClientId) {
+            lxCallService.toggleAudioMute($scope.remoteMiniVideoElementsDict[remoteClientId]);
+        };
+
+        $scope.myUsername = lxVideoParamsService.myUsername;
+
+        // TODO - move this function into a service.
         $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting,
                                                            remoteClientId) {
 
@@ -118,6 +157,8 @@ angular.module('lxUseChatRoom.controllers', [])
             if (indexOfRemoteIdOpenSessions === -1) {
                 // "push" to the front of the array, so that most recent additions appear first in the video section
                 $scope.videoStateInfoObject.currentOpenVideoSessionsList.unshift(remoteClientId);
+                $scope.videoDisplaySelection.currentlySelectedVideoElement = remoteClientId;
+
             }
 
             // Remove remoteClientId from *pending* requests if it is there
@@ -161,54 +202,4 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers = $scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.length;
 
         };
-    })
-
-    .controller('lxMainVideoCtrl',
-    function (
-        $scope,
-        lxAccessCameraAndMicrophoneService,
-        lxCallService,
-        lxCheckIfSystemSupportsWebRtcService,
-        lxPeerService,
-        lxVideoParamsService) {
-
-        $scope.accessCameraAndMicrophoneObject = {
-            // modalIsShown will contain the templateUrl for each modal that is currently open. Note that while only
-            // a single modal should be shown at once, due to the asynchronous callback nature of the .close() function,
-            // we cannot guarantee that the current modal is closed before a new one is opened.
-            // This variable should be used as follows:
-            // accessCameraAndMicrophoneObject.modalsCurrentlyShown[modal-index#] = templateUrl (where template Url is unique
-            // for each modal).
-            modalsCurrentlyShown: []
-        };
-
-        $scope.videoDisplaySelection = {
-            // currentlySelectedVideoElement will either be remoteClientId or the string 'localVideoElement'
-            currentlySelectedVideoElement: null
-        };
-
-
-        $scope.showCameraAndMicrophoneInstructions = function() {
-
-            // checkBrowserVersionToSeeIfGetUserMediaSupported will show a modal to the user if their browser/device is
-            // not supported. If it is supported, then it will return true and the prompt for access to camera and mic
-            // will be presented.
-            if (lxCheckIfSystemSupportsWebRtcService.checkBrowserVersionToSeeIfGetUserMediaSupported($scope)) {
-                lxAccessCameraAndMicrophoneService.showModalsAndArrowsForGrantingCameraAndMicrophoneAccess($scope);
-            }
-        };
-
-        $scope.toggleWebcamMuteInterfaceFn = function() {
-            lxCallService.toggleWebcamMute($scope.localVideoObject);
-        };
-
-        $scope.toggleMicrophoneMuteInterfaceFn = function() {
-            lxCallService.toggleMicrophoneMute($scope.localVideoObject);
-        };
-
-        $scope.toggleAudioMuteInterfaceFn = function(remoteClientId) {
-            lxCallService.toggleAudioMute($scope.remoteMiniVideoElementsDict[remoteClientId]);
-        };
-
-        $scope.myUsername = lxVideoParamsService.myUsername;
     });
