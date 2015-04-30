@@ -36,6 +36,7 @@ var videoApp = angular.module('videoApp', [
     'lxVideoSetup.services',
     'lxModalSupport.services',
     'lxUtility.services',
+    'lxVideo.services',
     'lxVideoNegotiation.services',
 
     // vendor directives
