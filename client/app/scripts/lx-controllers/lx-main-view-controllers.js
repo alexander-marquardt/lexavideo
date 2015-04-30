@@ -29,7 +29,7 @@ angular.module('lxMainView.controllers', [])
         // remoteMiniVideoElementsDict will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoElementsObject
         // There will be one object for each remote client that the local user is exchanging video with.
         // remoteMiniVideoElementsDict[remoteClientId] = {
-        //    remoteHdVideoElem: the dom element that will display the remote video,
+        //    remoteMiniVideoElem: the dom element that will display the remote video,
         //    isAudioMuted: boolean
         // }
         $scope.remoteMiniVideoElementsDict = {};

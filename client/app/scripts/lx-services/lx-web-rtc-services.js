@@ -269,7 +269,7 @@ webRtcServices.factory('lxSessionDescriptionService',
             var innerWaitForRemoteVideo = function() {
 
                 var videoTracks = lxPeerService.remoteStream[remoteClientId].getVideoTracks();
-                if (!(videoTracks.length === 0 || remoteVideoObject.remoteHdVideoElem.currentTime > 0)) {
+                if (!(videoTracks.length === 0 || remoteVideoObject.remoteMiniVideoElem.currentTime > 0)) {
                     $timeout(innerWaitForRemoteVideo, 100);
                 }
             };
@@ -419,10 +419,10 @@ webRtcServices.factory('lxPeerService',
         var onRemoteStreamAdded = function(remoteVideoObject, videoSignalingObject, remoteClientId) {
             return function(mediaStreamEvent) {
                 $log.log('Remote stream added.');
-                $log.log('* remoteVideoObject.remoteHdVideoElem.src before: ' + remoteVideoObject.remoteHdVideoElem.src);
-                lxAdapterService.attachMediaStream(remoteVideoObject.remoteHdVideoElem, mediaStreamEvent.stream);
+                $log.log('* remoteVideoObject.remoteMiniVideoElem.src before: ' + remoteVideoObject.remoteMiniVideoElem.src);
+                lxAdapterService.attachMediaStream(remoteVideoObject.remoteMiniVideoElem, mediaStreamEvent.stream);
 
-                $log.log('* remoteVideoObject.remoteHdVideoElem.src after: ' + remoteVideoObject.remoteHdVideoElem.src);
+                $log.log('* remoteVideoObject.remoteMiniVideoElem.src after: ' + remoteVideoObject.remoteMiniVideoElem.src);
 
                 self.remoteStream[remoteClientId] = mediaStreamEvent.stream;
             };
@@ -798,7 +798,7 @@ webRtcServices.factory('lxCallService',
 
             setAudioMute: function(remoteVideoObject, newIsMutedValue) {
                 remoteVideoObject.isAudioMuted = newIsMutedValue;
-                remoteVideoObject.remoteHdVideoElem.muted = remoteVideoObject.isAudioMuted;
+                remoteVideoObject.remoteMiniVideoElem.muted = remoteVideoObject.isAudioMuted;
             },
 
             toggleAudioMute: function(remoteVideoObject) {
