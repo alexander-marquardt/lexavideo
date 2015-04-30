@@ -189,6 +189,11 @@ angular.module('lxUseChatRoom.controllers', [])
                 indexOfRemoteIdOpenSessions = $scope.videoStateInfoObject.currentOpenVideoSessionsList.indexOf(remoteClientId);
                 $scope.videoStateInfoObject.currentOpenVideoSessionsList.splice(indexOfRemoteIdOpenSessions, 1);
 
+                // we just removed the remoteClientId from currentOpenVideoSessionsList, therefore
+                // we need to decide which video element to display. We select the local video element, since we know
+                // that it will always exist, and any selection is somewhat arbitrary so this is as good as any.
+                $scope.videoDisplaySelection.currentlySelectedVideoElement = 'localVideoElement';
+
                 var numOpenVideoExchanges = $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
 
                 lxCallService.doHangup(remoteClientId, numOpenVideoExchanges);
