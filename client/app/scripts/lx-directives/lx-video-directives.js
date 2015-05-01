@@ -91,10 +91,10 @@ videoAppDirectives.directive('lxDisplayVideoElementDirective',
                         var videoStreamActive;
                         try {
                             if (selectedVideoElement === 'localVideoElement') {
-                                videoStreamActive = lxStreamService.localStream.active;
+                                videoStreamActive = !!lxStreamService.localStream;
                             }
                             else {
-                                videoStreamActive = lxPeerService.remoteStream[selectedVideoElement].active;
+                                videoStreamActive = !!lxPeerService.remoteStream[selectedVideoElement];
                             }
                         }
                         catch(err) {
