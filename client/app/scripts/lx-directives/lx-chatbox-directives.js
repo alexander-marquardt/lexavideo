@@ -114,7 +114,8 @@ angular.module('lxChatbox.directives', [])
 
                     var messageDivId;
 
-                    var defaultNumMessagesToShow = 3;
+                    var defaultNumMessagesToShow = 2;
+                    var maxOpacity = 0.5;
                     var messageElement;
                     for (var idx=defaultNumMessagesToShow; idx > 0; idx--) {
                         messageDivId = 'id-most-recent-message-div-' + idx;
@@ -135,7 +136,7 @@ angular.module('lxChatbox.directives', [])
                             else {
                                 var NewId = 'id-most-recent-message-div-' + (idx + 1);
                                 messageElement.attr('id', NewId);
-                                messageElement.css('opacity', 1 - (idx / defaultNumMessagesToShow));
+                                messageElement.css('opacity', maxOpacity *  (1 - (idx / defaultNumMessagesToShow)));
                             }
                         }
                     }
@@ -144,7 +145,7 @@ angular.module('lxChatbox.directives', [])
                     messageDivId = 'id-most-recent-message-div-1';
                     messageElement = angular.element('<div  class="row cl-chat-row cl-chat-message-div">');
                     messageElement.attr('id', messageDivId);
-                    messageElement.css('opacity', 1);
+                    messageElement.css('opacity', maxOpacity);
 
 
                     var bubbleErrorClass = '';

@@ -215,7 +215,7 @@ angular.module('lxMainView.controllers', [])
         };
 
        $scope.chatboxPanelElementObject = {
-           showFullChatHistory: false,
+           showFullChatHistory: true,
            videoIsFocused: true
        };
         // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
