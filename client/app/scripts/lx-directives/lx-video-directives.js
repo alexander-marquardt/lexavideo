@@ -13,7 +13,9 @@ videoAppDirectives.directive('lxMiniVideoElementDirective',
             restrict : 'A',
 
             link: function(scope, elem) {
-                var e;
+
+                elem.empty();
+
                 var clientId = scope.clientId;
 
                  if (clientId === 'localVideoElement') {
