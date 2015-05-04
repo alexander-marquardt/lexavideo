@@ -10,7 +10,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
 
             // Define the maximum amount of time that the channel has to respond to a heartbeat message, before
             // we decide that the channel is down and needs to be re-initialized.
-            msToWaitForHeartbeatResponse: 5000
+            msToWaitForHeartbeatResponse: 7500
         };
         return self;
     })
