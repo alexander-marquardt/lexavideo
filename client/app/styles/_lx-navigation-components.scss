@@ -134,3 +134,15 @@
 .nav-tabs.cl-notifications-nav-tabs {
   border-bottom: 1px solid $notification-panel-header-background !important;;
 }
+
+
+.caret-up {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-bottom:   $caret-width-base solid;
+  border-right: $caret-width-base solid transparent;
+  border-left:  $caret-width-base solid transparent;
+}

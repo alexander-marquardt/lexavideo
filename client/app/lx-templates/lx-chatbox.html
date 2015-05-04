@@ -61,7 +61,7 @@
                                             <span ng-if="trackUnseenMessageCountObject.unseenMessageCount">
                                                 {{ trackUnseenMessageCountObject.unseenMessageCount }}
                                             </span>
-                                            <span class="caret"></span>
+                                            <span ng-class="dropdownMenusStatuses.openChatsDropdownIsOpen? 'caret-up': 'caret'"></span>
                                         </button>
                                         <ul class="dropdown-menu cl-chat-panel-dropdown" role="menu" lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false">
                                             <li ng-repeat="normalizedChatRoomNameInDropdown in normalizedOpenRoomNamesList | orderBy: simpleArrayOrderByFn">
@@ -97,7 +97,7 @@
                                             <span style="display:inline-block;line-height:1em;">
                                                 <span class="icon-lx-users" style="display:inline-block;line-height:1em;"></span>
                                             </span>
-                                            <span class="caret"></span>
+                                            <span ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen? 'caret-up': 'caret'"></span>
                                         </button>
                                         <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu">
                                             <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'userName'">
