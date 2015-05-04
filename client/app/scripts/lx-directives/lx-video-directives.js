@@ -6,7 +6,7 @@ var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 
 
 
-videoAppDirectives.directive('lxMiniVideoElementDirective',
+videoAppDirectives.directive('lxShowMiniVideoElementDirective',
     function()
     {
         return {
@@ -25,17 +25,6 @@ videoAppDirectives.directive('lxMiniVideoElementDirective',
                 else {
                     elem.append(scope.remoteMiniVideoElementsDict[clientId].remoteMiniVideoElem);
                 }
-//
-//
-//
-//                scope.$on('$destroy', function() {
-//                    if (clientId === 'localVideoElement') {
-//                        scope.localVideoObject.localSmallVideoElem = null;
-//                    }
-//                    else {
-//                        delete scope.remoteMiniVideoElementsDict[clientId];
-//                    }
-//                });
             }
         };
     }
