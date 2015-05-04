@@ -19,11 +19,11 @@ videoAppDirectives.directive('lxShowMiniVideoElementDirective',
                 var clientId = scope.clientId;
 
                  if (clientId === 'localVideoElement') {
-                    elem.append(scope.localVideoObject.localSmallVideoElem);
+                    elem.append(scope.localVideoObject.localMiniVideoElem);
                 }
                 // otherwise this is a remote video element.
                 else {
-                    elem.append(scope.remoteMiniVideoElementsDict[clientId].remoteMiniVideoElem);
+                    elem.append(scope.remoteVideoElementsDict[clientId].remoteMiniVideoElem);
                 }
             }
         };
@@ -32,51 +32,19 @@ videoAppDirectives.directive('lxShowMiniVideoElementDirective',
 
 
 videoAppDirectives.directive('lxDisplayVideoElementDirective',
-    function(
-        $log,
-        lxAdapterService,
-        lxPeerService,
-        lxStreamService
-        )
+    function()
     {
         return {
             restrict : 'A',
 
             link: function(scope, elem, attrs) {
-
-                scope.$watch(
-                    function() {
-                        var selectedVideoElement = attrs.selectedVideoElement;
-                        var videoStreamActive;
-                        try {
-                            if (selectedVideoElement === 'localVideoElement') {
-                                videoStreamActive = !!lxStreamService.localStream;
-                            }
-                            else {
-                                videoStreamActive = !!lxPeerService.remoteStream[selectedVideoElement];
-                            }
-                        }
-                        catch(err) {
-                            videoStreamActive = false;
-                        }
-                        return selectedVideoElement + videoStreamActive.toString();
-                    },
-                    function() {
-                        var e;
-                        var selectedVideoElement = attrs.selectedVideoElement;
-
-                        elem.empty();
-
-                        e = angular.element('<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>');
-                        if (selectedVideoElement === 'localVideoElement') {
-                            lxAdapterService.attachMediaStream(e[0], lxStreamService.localStream);
-                        }
-                        else {
-                            lxAdapterService.attachMediaStream(e[0], lxPeerService.remoteStream[selectedVideoElement]);
-                        }
-                        elem.append(e);
-                    }
-                );
+                var selectedVideoElementId = attrs.selectedVideoElementId;
+                elem.empty();
+                if (selectedVideoElementId === 'localVideoElement') {
+                    elem.append(scope.localVideoObject.localBigVideoElem);
+                } else {
+                    elem.append(scope.remoteVideoElementsDict[selectedVideoElementId].remoteBigVideoElem);
+                }
             }
         };
     }

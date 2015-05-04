@@ -99,8 +99,8 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         $scope.videoDisplaySelection = {
-            // currentlySelectedVideoElement will either be remoteClientId or the string 'localVideoElement'
-            currentlySelectedVideoElement: null
+            // currentlySelectedVideoElementId will either be remoteClientId or the string 'localVideoElement'
+            currentlySelectedVideoElementId: null
         };
 
 
@@ -123,7 +123,7 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
         $scope.toggleAudioMuteInterfaceFn = function(remoteClientId) {
-            lxCallService.toggleAudioMute($scope.remoteMiniVideoElementsDict[remoteClientId]);
+            lxCallService.toggleAudioMute($scope.remoteVideoElementsDict[remoteClientId]);
         };
 
         $scope.myUsername = lxVideoParamsService.myUsername;

@@ -27,7 +27,7 @@
                     </td>
                 </tr>
 
-                <tr ng-repeat="(remoteClientId, remoteElementObject) in remoteMiniVideoElementsDict" ng-controller="lxDebuggingRemoteStreamController">
+                <tr ng-repeat="(remoteClientId, remoteElementObject) in remoteVideoElementsDict" ng-controller="lxDebuggingRemoteStreamController">
 
                     <td>remoteVideoElement {{ remoteClientId }}</td>
                     <td>Audio muted: {{ remoteElementObject.isAudioMuted }}<br>

@@ -9,7 +9,7 @@ angular.module('lxVideo.controllers', [])
         ) {
 
         $scope.$watch(function() {
-            return !!lxPeerService.remoteStream[$scope.videoDisplaySelection.currentlySelectedVideoElement];
+            return !!lxPeerService.remoteStream[$scope.videoDisplaySelection.currentlySelectedVideoElementId];
         }, function(newVal) {
             $scope.remoteStreamIsActive = newVal;
         });

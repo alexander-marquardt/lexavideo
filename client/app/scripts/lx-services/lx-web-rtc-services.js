@@ -421,6 +421,7 @@ webRtcServices.factory('lxPeerService',
                 $log.log('Remote stream added.');
                 $log.log('* remoteVideoObject.remoteMiniVideoElem.src before: ' + remoteVideoObject.remoteMiniVideoElem.src);
                 lxAdapterService.attachMediaStream(remoteVideoObject.remoteMiniVideoElem, mediaStreamEvent.stream);
+                lxAdapterService.reattachMediaStream(remoteVideoObject.remoteBigVideoElem, remoteVideoObject.remoteMiniVideoElem);
 
                 $log.log('* remoteVideoObject.remoteMiniVideoElem.src after: ' + remoteVideoObject.remoteMiniVideoElem.src);
 
@@ -537,7 +538,8 @@ webRtcServices.factory('lxMediaService',
             return function(stream) {
                 $log.log('User has granted access to local media.');
                 // Call the polyfill wrapper to attach the media stream to this element.
-                lxAdapterService.attachMediaStream(localVideoObject.localSmallVideoElem, stream);
+                lxAdapterService.attachMediaStream(localVideoObject.localMiniVideoElem, stream);
+                lxAdapterService.reattachMediaStream(localVideoObject.localBigVideoElem, localVideoObject.localMiniVideoElem);
 
                 videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'allowAccess';
 
@@ -653,7 +655,7 @@ webRtcServices.factory('lxCallService',
                 $log.log('************ Entering maybeStart *************');
 
                 var localVideoObject = scope.localVideoObject;
-                var remoteVideoObject = scope.remoteMiniVideoElementsDict[remoteClientId] ;
+                var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId] ;
                 var videoSignalingObject = scope.videoSignalingObject;
                 var clientId = scope.lxMainViewCtrl.clientId;
 

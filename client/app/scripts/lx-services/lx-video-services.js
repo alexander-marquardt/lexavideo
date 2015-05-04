@@ -13,14 +13,19 @@ angular.module('lxVideo.services', [])
     function createMiniVideoElements($scope, remoteClientId) {
 
         // This function is called each time
-        if (!$scope.localVideoObject.localSmallVideoElem) {
-            var e = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
-            $scope.localVideoObject.localSmallVideoElem = e[0];
+        if (!$scope.localVideoObject.localMiniVideoElem) {
+            var miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
+            var bigVideoElem = angular.element('<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>');
+
+            $scope.localVideoObject.localMiniVideoElem = miniVideoElem[0];
+            $scope.localVideoObject.localBigVideoElem = bigVideoElem[0];
         }
 
-        if (!(remoteClientId in $scope.remoteMiniVideoElementsDict)) {
-            e = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay"></video>');
-            $scope.remoteMiniVideoElementsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(e[0]);
+        if (!(remoteClientId in $scope.remoteVideoElementsDict)) {
+            miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay"></video>');
+            bigVideoElem = angular.element('<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>');
+            $scope.remoteVideoElementsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(
+                miniVideoElem[0], bigVideoElem[0]);
         }
     }
 
@@ -48,7 +53,7 @@ angular.module('lxVideo.services', [])
             if (indexOfRemoteIdOpenSessions === -1) {
                 // "push" to the front of the array, so that most recent additions appear first in the video section
                 $scope.videoStateInfoObject.currentOpenVideoSessionsList.unshift(remoteClientId);
-                $scope.videoDisplaySelection.currentlySelectedVideoElement = remoteClientId;
+                $scope.videoDisplaySelection.currentlySelectedVideoElementId = remoteClientId;
 
             }
 
@@ -83,12 +88,12 @@ angular.module('lxVideo.services', [])
                 // we just removed the remoteClientId from currentOpenVideoSessionsList, therefore
                 // we need to decide which video element to display. We select the local video element, since we know
                 // that it will always exist, and any selection is somewhat arbitrary so this is as good as any.
-                $scope.videoDisplaySelection.currentlySelectedVideoElement = 'localVideoElement';
+                $scope.videoDisplaySelection.currentlySelectedVideoElementId = 'localVideoElement';
 
                 var numOpenVideoExchanges = $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
 
                 lxCallService.doHangup(remoteClientId, numOpenVideoExchanges);
-                delete $scope.remoteMiniVideoElementsDict[remoteClientId];
+                delete $scope.remoteVideoElementsDict[remoteClientId];
                 delete $scope.videoExchangeObjectsDict[remoteClientId];
 
             }

@@ -13,7 +13,7 @@
                                 <div ng-repeat="clientId in innerList"
                                      class="col-xs-4 text-center cl-col-no-padding cl-vertical-align-inline-block">
                                     <div class="cl-mini-video-wrapper-div"
-                                         ng-click="videoDisplaySelection.currentlySelectedVideoElement = clientId"
+                                         ng-click="videoDisplaySelection.currentlySelectedVideoElementId = clientId"
                                          lx-show-mini-video-element-directive>
 
 
@@ -22,7 +22,7 @@
                                         </div>
                                         <div ng-if="clientId != 'localVideoElement'">
                                             <div class="cl-selected-icon-status-overlay">
-                                                <div ng-show="remoteMiniVideoElementsDict[clientId].isAudioMuted">
+                                                <div ng-show="remoteVideoElementsDict[clientId].isAudioMuted">
                                                     <span class="cl-video-status-icon">
                                                         <span class="cl-lx-call-control-wrapper-cfg">
                                                             <span class="icon-lx-volume-high-cfg cl-text-shadow"></span>
