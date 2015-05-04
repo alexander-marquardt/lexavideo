@@ -116,6 +116,7 @@ class MessageRoom(webapp2.RequestHandler):
         for to_client_id in to_client_ids_list:
             channel.send_message(to_client_id, json.dumps(message_obj))
 
+        http_helpers.set_http_ok_json_response(self.response, {})
 
     @handle_exceptions
     def post(self):
@@ -133,6 +134,7 @@ class MessageRoom(webapp2.RequestHandler):
                 logging.error('Unknown room_id %d' % room_id)
                 raise Exception('unknownRoomId')
 
+            http_helpers.set_http_ok_json_response(self.response, {})
 
         except:
             status_string = 'Server error'
@@ -175,6 +177,7 @@ class MessageClient(webapp2.RequestHandler):
 
         logging.info('\n***\nSending message to client %s: %s\n' % (to_client_id,  json.dumps(message_obj)))
         channel.send_message(to_client_id, json.dumps(message_obj))
+        http_helpers.set_http_ok_json_response(self.response, {})
 
     @handle_exceptions
     def post(self):
@@ -184,6 +187,7 @@ class MessageClient(webapp2.RequestHandler):
 
         try:
             self.handle_message_client(from_client_id, message_obj)
+            http_helpers.set_http_ok_json_response(self.response, {})
 
         except:
             status_string = 'Unknown server error'

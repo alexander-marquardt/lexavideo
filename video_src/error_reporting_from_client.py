@@ -2,9 +2,9 @@
 import webapp2, logging, json
 
 from video_src import constants
+from video_src import http_helpers
+
 from video_src.error_handling import handle_exceptions
-
-
 
 
 class LogClientError(webapp2.RequestHandler):
@@ -39,4 +39,5 @@ class LogClientError(webapp2.RequestHandler):
         
         client_error_string = self.format_main_response()
         logging.error(client_error_string)
+        http_helpers.set_http_ok_json_response(self.response, {})
 

@@ -101,6 +101,7 @@ class AddClientToRoom(webapp2.RequestHandler):
 
         self.add_client_to_room(client_id, room_id, user_id)
 
+        http_helpers.set_http_ok_json_response(self.response, {})
 
 class SynClientHeartbeat(webapp2.RequestHandler):
     """Receives a "synchronization heartbeat" from the client, which we respond to on the channel."""
@@ -119,7 +120,7 @@ class SynClientHeartbeat(webapp2.RequestHandler):
         #              'Synchronization acknowledgement returned to same client on channel api' % (client_id))
         channel.send_message(client_id, json.dumps(response_message_obj))
 
-
+        http_helpers.set_http_ok_json_response(self.response, {})
 
 class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
     """
@@ -158,7 +159,7 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         # client an updated list of the room members.
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(currently_open_chat_room_id)
         messaging.send_room_occupancy_to_clients(chat_room_obj, [client_id,], recompute_members_from_scratch=False)
-
+        http_helpers.set_http_ok_json_response(self.response, {})
 
 class RequestChannelToken(webapp2.RequestHandler):
 
@@ -252,6 +253,7 @@ class DisconnectClient(webapp2.RequestHandler):
                 # this branch to be executed.
                 logging.info('Room %s (%d) does not have client %s - probably already removed' % (chat_room_obj.normalized_chat_room_name, chat_room_obj.key.id(), client_id))
 
+        http_helpers.set_http_ok_json_response(self.response, {})
 
 class AutoDisconnectClient(DisconnectClient):
     def post(self):
