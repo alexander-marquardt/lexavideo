@@ -37,14 +37,17 @@ videoAppDirectives.directive('lxDisplayVideoElementDirective',
         return {
             restrict : 'A',
 
-            link: function(scope, elem, attrs) {
-                var selectedVideoElementId = attrs.selectedVideoElementId;
-                elem.empty();
-                if (selectedVideoElementId === 'localVideoElement') {
-                    elem.append(scope.localVideoObject.localBigVideoElem);
-                } else {
-                    elem.append(scope.remoteVideoElementsDict[selectedVideoElementId].remoteBigVideoElem);
-                }
+            link: function(scope, elem) {
+                scope.$watch('videoDisplaySelection.currentlySelectedVideoElementId',
+                    function(selectedVideoElementId) {
+                        elem.empty();
+                        if (selectedVideoElementId === 'localVideoElement') {
+                            elem.append(scope.localVideoObject.localBigVideoElem);
+                        } else {
+                            elem.append(scope.remoteVideoElementsDict[selectedVideoElementId].remoteBigVideoElem);
+                        }
+                    }
+                );
             }
         };
     }
