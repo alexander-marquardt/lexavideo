@@ -19,21 +19,22 @@
                 type="button" class="btn btn-sm btn-primary cl-video-control-button"
                 ng-click="toggleAudioMuteInterfaceFn(videoDisplaySelection.currentlySelectedVideoElement)">
 
+
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-volume-high-cfg"></span>
-
+                <span class="icon-lx-thick-forward-slash-cfg"></span>
+                <span class="icon-lx-thin-forward-slash-cfg"></span>
             </span>
         </button>
 
         <button ng-show="!remoteMiniVideoElementsDict[videoDisplaySelection.currentlySelectedVideoElement].isAudioMuted"
                 type="button" class="btn btn-sm btn-primary cl-video-control-button"
                 ng-click="toggleAudioMuteInterfaceFn(videoDisplaySelection.currentlySelectedVideoElement)">
+
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-volume-high-cfg"></span>
-                <span class="icon-lx-thick-forward-slash-cfg"></span>
-                <span class="icon-lx-thin-forward-slash-cfg"></span>
             </span>
-
+            
         </button>
     </div>
 
