@@ -275,12 +275,12 @@
 
 @-webkit-keyframes cycle-background-color {
   0%,100%   {background:$chat-notification-body-background;}
-  50% {background: $brand-danger-lighter}
+  50% {background: $brand-danger}
 }
 
 @keyframes cycle-background-color {
   0%,100%   {background:$chat-notification-body-background;}
-  50% {background: $brand-danger-lighter}
+  50% {background: $brand-danger}
 }
 
 

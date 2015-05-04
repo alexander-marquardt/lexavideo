@@ -151,7 +151,7 @@ angular.module('lxMainView.controllers', [])
             ignoreClickAnywhereButHereHandlerOnSwipe();
 
             // hide notification menu
-            if ($scope.notificationMenuObject.showNotificationMenu) {
+            if ($scope.notificationMenuObject.showNotificationMenu || $scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention) {
                 $scope.displayNotificationMenu($event, false);
             }
 
