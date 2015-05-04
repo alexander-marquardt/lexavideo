@@ -82,6 +82,7 @@ angular.module('lxUseChatRoom.controllers', [])
     function (
         $log,
         $scope,
+        lxAccessCameraAndMicrophoneService,
         lxCallService,
         lxCheckIfSystemSupportsWebRtcService,
         lxVideoService,

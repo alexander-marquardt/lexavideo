@@ -28,31 +28,6 @@ $arrow-stem-height : 50px;
   font-size: 8em;
 }
 
-.cl-arrow-mac-chrome {
-  /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
-     the class .cl-show-arrow is added to an element */
-  top: 100px;
-  right : 15px;
-}
-
-.cl-arrow-mac-chrome.camera-access-was-denied {
-  /* if the user has denied access to their camera, then we move the arrow to point to the camera icon instead
-     of pointing to the allow button. */
-  right: 50px;
-}
-
-.cl-arrow-desktop-default-chrome {
-  /* starts arrow out at a lower point, and uses css transitions to move the arrow up when
-     the class .cl-show-arrow is added to an element */
-  top: 200px;
-  left : 15px;
-}
-
-.cl-arrow-desktop-default-chrome.camera-access-was-denied {
-  right: 15px;
-  left: auto;
-
-}
 
 .cl-arrow-mozilla {
   /* Hides the arrow behind the firefox camera dialog box */

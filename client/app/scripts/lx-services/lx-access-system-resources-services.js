@@ -42,14 +42,6 @@ angular.module('lxAccessSystemResources.services', [])
             var timeoutInMilliseconds = 0;
             var arrowElem = null;
 
-            if ($.browser.name === 'chrome') {
-                if ($.browser.platform === 'mac') {
-                    arrowClass = 'cl-arrow-mac-chrome';
-                }
-                else if ($.browser.desktop) {
-                    arrowClass = 'cl-arrow-desktop-default-chrome';
-                }
-            }
             if ($.browser.name === 'mozilla') {
 
                 if ($.browser.desktop) {
@@ -80,12 +72,7 @@ angular.module('lxAccessSystemResources.services', [])
                 $('body').append(arrowElem);
                 arrowElem.addClass(arrowClass);
 
-                if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'denyAccess') {
-                    arrowElem.addClass('camera-access-was-denied');
-                }
-
                 if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus !== 'allowAccess') {
-
 
                     if (showArrowTimerId) {
                         $log.debug('removing old arrow timer');
@@ -333,7 +320,6 @@ angular.module('lxAccessSystemResources.services', [])
 
                             if (videoSignalingObject.localUserAccessCameraAndMicrophoneStatus === 'allowAccess') {
                                 removeModalWatcher();
-                                arrowElem.remove(); // take the arrow out of the dom completely
                                 lxModalSupportService.closeModal(currentModalInstance); // remove most recent modal box
                             }
                             else {
