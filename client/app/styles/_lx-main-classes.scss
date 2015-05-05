@@ -104,12 +104,12 @@ span.cl-overlay-text-span {
   }
 }
 
-.cl-transition-margin_and_color {
-    -webkit-transition: margin color;
-    -moz-transition: margin color;
-    -ms-transition: margin color;
-    -o-transition: margin color;
-    transition: margin color;
+.cl-transition-margin {
+    -webkit-transition: margin ;
+    -moz-transition: margin ;
+    -ms-transition: margin ;
+    -o-transition: margin ;
+    transition: margin ;
     transition-duration: $slide-main-menu-duration;
 }
 
