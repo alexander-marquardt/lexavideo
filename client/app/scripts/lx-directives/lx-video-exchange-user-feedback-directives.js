@@ -69,17 +69,20 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                                 break;
 
                             case 'denyVideoExchange':
-                                message = 'Remote user has denied your request to exchange video';
+                                message = selectedVideoElementId +  ' has denied your request to exchange video';
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
 
                             case 'hangupVideoExchange':
-                                message = 'Remote user has closed this video exchange';
+                                message = selectedVideoElementId + ' has closed this video exchange. ' +
+                                          'However, a new video session will start immediately if they ' +
+                                          'call you again. If you do not want this to happen, you should ' +
+                                          'press the hang-up button now.';
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
 
                             case 'doVideoExchange':
-                                message = 'Establishing video connection';
+                                message = 'Establishing video connection with ' + selectedVideoElementId;
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
                         }
