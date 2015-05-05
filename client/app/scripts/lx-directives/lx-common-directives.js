@@ -135,7 +135,7 @@ commonDirectives.directive('setClassesForCommonArea', function(){
 
             var standardClasses = 'col-xs-12';
             var mainMenuShownClasses = 'col-xs-12 col-xs-offset-4 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2';
-            var partialNotificationMenuShown = 'col-xs-11 cl-col-remove-right-padding';
+            var partialNotificationMenuShown = 'col-xs-9 cl-col-remove-right-padding';
 
             function resizeCommonArea() {
                 if (!scope.mainMenuObject.showMainMenu && !scope.notificationMenuObject.partialShowNotificationMenuAndGetAttention) {
