@@ -30,7 +30,6 @@ angular.module('lxMainView.controllers', [])
         // There will be one object for each remote client that the local user is exchanging video with.
         // remoteVideoElementsDict[remoteClientId] = {
         //    remoteMiniVideoElem: the dom element that will display the miniature version of the remote video,
-        //    remoteBigVideoElem: the dom element that will display the large version of the remote video
         //    isAudioMuted: boolean
         // }
         $scope.remoteVideoElementsDict = {};
@@ -98,7 +97,6 @@ angular.module('lxMainView.controllers', [])
             isWebcamMuted: false,
             isMicrophoneMuted: false
         };
-
 
         $scope.notificationMenuObject = {
             showNotificationMenu: false,

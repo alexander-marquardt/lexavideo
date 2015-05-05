@@ -92,10 +92,9 @@ angular.module('lxChatRoom.services', [])
                     rtcInitiator: false
                 };
             },
-            createRemoteVideoElementsObject: function(remoteMiniVideoElem, remoteBigVideoElem) {
+            createRemoteVideoElementsObject: function(remoteMiniVideoElem) {
                 return {
                     remoteMiniVideoElem: remoteMiniVideoElem,
-                    remoteBigVideoElem: remoteBigVideoElem,
                     isAudioMuted: false
                 };
             }

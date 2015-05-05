@@ -10,22 +10,19 @@ angular.module('lxVideo.services', [])
         lxJs
         ) {
 
-    function createMiniVideoElements($scope, remoteClientId) {
+    function createMiniVideoElement($scope, remoteClientId) {
 
         // This function is called each time
         if (!$scope.localVideoObject.localMiniVideoElem) {
             var miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
-            var bigVideoElem = angular.element('<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>');
-
             $scope.localVideoObject.localMiniVideoElem = miniVideoElem[0];
-            $scope.localVideoObject.localBigVideoElem = bigVideoElem[0];
+
         }
 
         if (!(remoteClientId in $scope.remoteVideoElementsDict)) {
             miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay"></video>');
-            bigVideoElem = angular.element('<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>');
             $scope.remoteVideoElementsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(
-                miniVideoElem[0], bigVideoElem[0]);
+                miniVideoElem[0]);
         }
     }
 
@@ -35,7 +32,7 @@ angular.module('lxVideo.services', [])
             /* localVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
              */
 
-            createMiniVideoElements($scope, remoteClientId);
+            createMiniVideoElement($scope, remoteClientId);
 
             lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
