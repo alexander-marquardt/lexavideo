@@ -98,11 +98,14 @@
   &:hover {
     cursor: pointer;
   }
+}
 
-  & >.cl-notification-panel-body {
+.cl-pulse-background-attention {
     animation: cycle-background-color $pulse-animation-duration linear infinite;
     -webkit-animation: cycle-background-color $pulse-animation-duration linear infinite;
-  }
+    &:hover {
+      cursor: pointer;
+    }
 }
 
 .cl-panel-heading-behind-notification-nav-tabs {

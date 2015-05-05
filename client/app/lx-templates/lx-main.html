@@ -1,4 +1,10 @@
 
+<!--
+This file is loaded directly from index.html, and is the wrapper for the entire application.
+Different "views" are loaded by the ng-view call (although chat views is a special case that
+is explained in the comments).
+ -->
+
 <div ng-controller="lxVideoChatAppViewCtrl">
     <div class="container cl-container-padding-and-margins">
 
@@ -58,6 +64,8 @@
     </div>
 
 {% raw %}
+    <!-- This is the "footer" that appears at the bottom of every page. It contains control buttons and is intended
+         to make the user's navigation of the site faster. -->
     <div class="cl-sticky-footer">
         <div class="container cl-container-padding-and-margins">
             <div class="row cl-row-no-margins">
@@ -74,7 +82,9 @@
                             <!--<li><a href="/">Friends</a>-->
                             <!--<li><a href="/">Profile</a>-->
                             <!--<li class="active"><a href="/">Settings</a>-->
-                            <li><a lx-notification-menu-button-directive lx-click-once-directive></a>
+                            <li ng-class="notificationMenuObject.partialShowNotificationMenuAndGetAttention?'cl-pulse-background-attention': ''">
+                                <a lx-notification-menu-button-directive lx-click-once-directive></a>
+                            </li>
                         </ul>
                     </nav>
                 </div>
