@@ -34,7 +34,7 @@ videoAppDirectives.directive('lxShowMiniVideoElementDirective',
 );
 
 
-videoAppDirectives.directive('lxAttachStreamToVideoElementDirective',
+videoAppDirectives.directive('lxMainVideoElementDirective',
     function(
         lxAdapterService
         )
@@ -43,14 +43,18 @@ videoAppDirectives.directive('lxAttachStreamToVideoElementDirective',
             restrict : 'A',
 
             link: function(scope, elem) {
-                var videoElem = elem.find('video')[0];
+                var html = '<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>';
+                var videoElem = angular.element(html);
+                var domVideoElem = videoElem[0];
+                elem.append(videoElem);
+
                 scope.$watch('videoDisplaySelection.currentlySelectedVideoElementId',
                     function(selectedVideoElementId) {
                         if (selectedVideoElementId === 'localVideoElement') {
-                            lxAdapterService.reattachMediaStream(videoElem, scope.localVideoObject.localMiniVideoElem);
+                            lxAdapterService.reattachMediaStream(domVideoElem, scope.localVideoObject.localMiniVideoElem);
                         } else {
                             var remoteVideoObject = scope.remoteVideoElementsDict[selectedVideoElementId];
-                            lxAdapterService.reattachMediaStream(videoElem, remoteVideoObject.remoteMiniVideoElem)
+                            lxAdapterService.reattachMediaStream(domVideoElem, remoteVideoObject.remoteMiniVideoElem)
                         }
                     }
                 );
