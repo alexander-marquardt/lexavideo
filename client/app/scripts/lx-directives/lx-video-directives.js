@@ -8,24 +8,26 @@ var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 
 videoAppDirectives.directive('lxShowMiniVideoElementDirective',
     function(
+        $compile,
         lxAdapterService
         )
     {
         return {
             restrict : 'A',
-
+            transclude: true,
+            template: '<div ng-transclude></div>',
             link: function(scope, elem) {
 
                 var clientId = scope.clientId;
 
                 if (clientId === 'localVideoElement') {
-                    elem.html(scope.localVideoObject.localMiniVideoElem);
+                    elem.append(scope.localVideoObject.localMiniVideoElem);
                     lxAdapterService.reattachMediaStream(scope.localVideoObject.localMiniVideoElem, scope.localVideoObject.localMiniVideoElem);
                 }
                 // otherwise this is a remote video element.
                 else {
                     var remoteVideoObject = scope.remoteVideoElementsDict[clientId];
-                    elem.html(remoteVideoObject.remoteMiniVideoElem);
+                    elem.append(remoteVideoObject.remoteMiniVideoElem);
                     lxAdapterService.reattachMediaStream(remoteVideoObject.remoteMiniVideoElem, remoteVideoObject.remoteMiniVideoElem)
                 }
             }
