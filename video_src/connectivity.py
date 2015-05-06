@@ -246,7 +246,8 @@ class DisconnectClient(webapp2.RequestHandler):
 
                 # The 'active' user has disconnected from the room, so we want to send an update to the remote
                 # user informing them of the new status.
-                messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids, recompute_from_scratch=True)
+                messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
+                                                         recompute_members_from_scratch=True)
 
             else:
                 # This is probably not really an error. Change it later once we understand which conditions can trigger
