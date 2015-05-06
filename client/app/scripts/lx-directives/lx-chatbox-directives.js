@@ -115,8 +115,8 @@ angular.module('lxChatbox.directives', [])
 
                     var messageDivId;
 
-                    var defaultNumMessagesToShow = 2;
-                    var maxOpacity = 0.5;
+                    var defaultNumMessagesToShow = 3;
+                    var maxOpacity = 0.75;
                     var messageElement;
                     for (var idx=defaultNumMessagesToShow; idx > 0; idx--) {
                         messageDivId = 'id-most-recent-message-div-' + idx;
