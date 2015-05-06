@@ -15,8 +15,12 @@ the "menu-button" icon
                 <span class="icon-lx-chat-bubble-dual"></span> My open chats
             </a>
             <a href="/" class="btn btn-default"><span class="icon-lx-new-chat"></span> New chat</a>
-            <a href="" class="btn btn-default" lx-notification-menu-button-directive lx-click-once-directive>
-                <span class="icon-lx-flag"></span> Notifications
+            <a href="" class="btn btn-default">
+                <span class="icon-lx-flag"></span>
+                <span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">
+                    [{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}]
+                </span>
+                Notifications
             </a>
             <a href="/" class="btn btn-default"><span class="icon-lx-power-switch"></span> Logout</a>
 

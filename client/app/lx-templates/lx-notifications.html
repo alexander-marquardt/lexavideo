@@ -28,7 +28,8 @@
         </div>
 
         <!-- Define the contents of the tab. -->
-        <div class="panel-body cl-notification-panel-body">
+        <div class="panel-body cl-notification-panel-body"
+                ng-class="{'cl-pulse-background-attention': notificationMenuObject.partialShowNotificationMenuAndGetAttention}">
 
             <h4 ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" >The following people would like to exchange live video.</h4>
             <h4 ng-if="!videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">You do not have any pending requests to exchange live video.</h4>

@@ -67,17 +67,11 @@ angular.module('lxChatRoom.directives', [])
     })
 
 
-    .directive('lxNotificationMenuButtonDirective',
+    .directive('lxPartialShowNotificationMenuDirective',
     function(){
 
         return {
             restrict: 'A',
-            transclude: true,
-            template: '' +
-                '<span ng-transclude></span>' +
-                '<span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">' +
-                    '&nbsp;{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}' +
-                '</span>',
 
             link: function(scope, elem) {
 
