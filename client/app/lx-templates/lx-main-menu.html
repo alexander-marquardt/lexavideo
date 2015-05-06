@@ -15,7 +15,9 @@ the "menu-button" icon
                 <span class="icon-lx-chat-bubble-dual"></span> My open chats
             </a>
             <a href="/" class="btn btn-default"><span class="icon-lx-new-chat"></span> New chat</a>
-            <a href="" class="btn btn-default">
+            <a href="" class="btn btn-default"
+                ng-click="toggleNotificationMenu($event)">
+                
                 <span class="icon-lx-flag"></span>
                 <span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">
                     [{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}]
