@@ -72,12 +72,11 @@ angular.module('lxChatRoom.directives', [])
 
         return {
             restrict: 'A',
+            transclude: true,
             template: '' +
-                '<span style="white-space: nowrap">' +
-                    '<span class="icon-lx-flag"></span>' +
-                    '<span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">' +
-                        '&nbsp;{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}' +
-                    '</span>'+
+                '<span ng-transclude></span>' +
+                '<span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">' +
+                    '&nbsp;{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}' +
                 '</span>',
 
             link: function(scope, elem) {

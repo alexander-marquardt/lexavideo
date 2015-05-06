@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?lqu3cg');
-	src:url('fonts/icomoon.eot?#iefixlqu3cg') format('embedded-opentype'),
-		url('fonts/icomoon.woff?lqu3cg') format('woff'),
-		url('fonts/icomoon.ttf?lqu3cg') format('truetype'),
-		url('fonts/icomoon.svg?lqu3cg#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?p2mryn');
+	src:url('fonts/icomoon.eot?#iefixp2mryn') format('embedded-opentype'),
+		url('fonts/icomoon.woff?p2mryn') format('woff'),
+		url('fonts/icomoon.ttf?p2mryn') format('truetype'),
+		url('fonts/icomoon.svg?p2mryn#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -113,5 +113,9 @@
 
 .icon-lx-panel-bubble-fading:before {
 	content: "\e618";
+}
+
+.icon-lx-power-switch:before {
+	content: "\e60c";
 }
 
