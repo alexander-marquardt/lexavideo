@@ -52,7 +52,6 @@ $pulse-animation-duration: 1s;
 
 $chat-panel-heading-height: 36px;
 $chat-panel-footer-height: 50px;
-$sticky-footer-height: 50px;
 
 $chat-groups-members-margin: 15px;
 
@@ -121,7 +120,7 @@ $viewport-heights-list: ();
   $video-height: nth($video-widths-list, $idx) * $video-aspect-ratio;
   $mini-video-height: nth($mini-video-widths-list, $idx) * $video-aspect-ratio;
   $viewport-height:  $video-height + $title-row-height +
-                     $chat-panel-heading-height +  $chat-panel-footer-height + 1.5*$sticky-footer-height +
+                     $chat-panel-heading-height +  $chat-panel-footer-height +
                      $mini-video-height + $panel-border-compensation;
   $viewport-heights-list: append($viewport-heights-list, $viewport-height);
 }
@@ -131,8 +130,7 @@ $common-display-area-height-list: ();
 $notification-panel-body-height-list: ();
 
 @for $idx from 1 through length($viewport-heights-list) {
-  $common-display-area-height-list: append($common-display-area-height-list, nth($viewport-heights-list, $idx) -
-                                           2*$sticky-footer-height);
+  $common-display-area-height-list: append($common-display-area-height-list, nth($viewport-heights-list, $idx));
   $chat-panel-body-height-list: append($chat-panel-body-height-list, nth($common-display-area-height-list, $idx) -
                                        $chat-panel-heading-height - $chat-panel-footer-height - $panel-border-compensation);
   $notification-panel-body-height-list: append($notification-panel-body-height-list,

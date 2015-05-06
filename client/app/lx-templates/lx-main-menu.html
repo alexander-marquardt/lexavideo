@@ -10,7 +10,11 @@ the "menu-button" icon
             click-anywhere-but-here="mainMenuObject.showMainMenu = false">
 
         <div class="btn-group-vertical well cl-main-control-menu" role="group">
-            <a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}" class="btn btn-default"><span class="icon-lx-chat-bubble-dual"></span> My open chats</a>
+            <a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}"
+               class="btn btn-default"
+               ng-class="chatRoomDisplayObject.lastChatRoomNameFromUrl?'':'disabled'">
+                <span class="icon-lx-chat-bubble-dual"></span> My open chats
+            </a>
             <a href="/" class="btn btn-default"><span class="icon-lx-new-chat"></span> New chat</a>
             <a href="" class="btn btn-default" lx-notification-menu-button-directive lx-click-once-directive>
                 <span class="icon-lx-flag"></span> Notifications

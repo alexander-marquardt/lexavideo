@@ -62,41 +62,4 @@ is explained in the comments).
         {% include "lx-templates/lx-debugging-info.html" %}
 
     </div>
-
-{% raw %}
-    <!-- This is the "footer" that appears at the bottom of every page. It contains control buttons and is intended
-         to make the user's navigation of the site faster. -->
-    <div class="cl-sticky-footer">
-        <div class="container cl-container-padding-and-margins">
-            <div class="row cl-row-no-margins">
-                <div class="col-xs-12 cl-col-no-padding">
-                    <nav class="navbar navbar-default cl-navbar">
-
-                        <ul class="nav navbar-nav cl-navbar-nav cl-navbar-nav-left">
-                            <li><a href="/"><span class="icon-lx-power-switch cl-text-size-1_5em"></span></a>
-                        </ul>
-
-                        <ul class="nav navbar-nav cl-navbar-nav cl-navbar-nav-right">
-                            <li><a href="/"><span class="icon-lx-new-chat cl-text-size-1_5em"></span></a>
-                            <li ng-if="chatRoomDisplayObject.lastChatRoomNameFromUrl">
-                                <a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}">
-                                    <span class="icon-lx-chat-bubble-dual cl-text-size-1_5em"></span>
-                                </a>
-                            </li>
-                            <!--<li><a href="/">Friends</a>-->
-                            <!--<li><a href="/">Profile</a>-->
-                            <!--<li class="active"><a href="/">Settings</a>-->
-                            <li ng-class="notificationMenuObject.partialShowNotificationMenuAndGetAttention?'cl-pulse-background-attention': ''">
-                                <a href="" lx-notification-menu-button-directive lx-click-once-directive>
-                                    <span class="icon-lx-flag cl-text-size-1_5em"></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endraw %}
-
 </div>

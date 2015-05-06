@@ -1,22 +1,4 @@
 
-body{
-  margin-bottom: $sticky-footer-height;
-}
-
-.cl-sticky-footer {
-
-  // hide the footer on short displays
-  @media (max-height: $hide-sticky-footer-max-height) {
-    display: none;
-  }
-
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: $sticky-footer-height;
-  z-index: $zindex-navbar-fixed;
-}
-
 .cl-body-notification-pending {
   background: $brand-danger-lighter;
 }
