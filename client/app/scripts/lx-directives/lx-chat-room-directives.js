@@ -74,9 +74,7 @@ angular.module('lxChatRoom.directives', [])
             restrict: 'A',
             template: '' +
                 '<span style="white-space: nowrap">' +
-                    '<span style="vertical-align:middle">' +
-                        '<span class="icon-lx-flag"></span>' +
-                    '</span>' +
+                    '<span class="icon-lx-flag"></span>' +
                     '<span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">' +
                         '&nbsp;{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}' +
                     '</span>'+
