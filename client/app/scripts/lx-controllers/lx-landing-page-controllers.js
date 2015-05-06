@@ -20,7 +20,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
         angular.extend(lxLandingPageConstantsService, lxLandingPageConstantsEmbeddedInHtml);
 
-
+        $scope.videoStateInfoObject.enableShowVideoElements = false;
         /*
          The following regular expressions are used for detecting if a user has entered a dis-allowed character into th
          input box. These values are passed from the server so that the server and client are guaranteed to always be

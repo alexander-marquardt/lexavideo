@@ -42,9 +42,10 @@ is explained in the comments).
                              Read comments in lx-chatbox.html for more details. -->
                         {% include 'lx-templates/lx-chatbox.html' %}
 
-
-                        {% include 'lx-templates/lx-main-video-element.html' %}
-                        {% include "lx-templates/lx-mini-video-elements.html" %}
+                        <div ng-show="videoStateInfoObject.enableShowVideoElements">
+                            {% include 'lx-templates/lx-main-video-element.html' %}
+                            {% include "lx-templates/lx-mini-video-elements.html" %}
+                        </div>
 
                         <!-- End the "common display area" -->
 

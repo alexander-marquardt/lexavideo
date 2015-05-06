@@ -1,4 +1,4 @@
-$slide-main-menu-duration: 0.4s;
+$slide-main-menu-duration: 0.3s;
 
 $title-row-height: 32px;
 
@@ -63,6 +63,8 @@ $video-panel-in-back-zindex: 50;
 
 $chat-panel-zindex: 100;
 $chat-bubble-zindex: 110;
+
+$landing-page-well-zindex: 200;
 
 // $estimated-bubble-height is used for computing the offset required in the first div to push the first
 // message to the bottom of the chat panel.

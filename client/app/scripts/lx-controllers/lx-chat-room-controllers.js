@@ -17,6 +17,8 @@ angular.module('lxUseChatRoom.controllers', [])
         lxShowNumMessagesService
         ) {
 
+        $scope.videoStateInfoObject.enableShowVideoElements = true;
+
         $scope.lxChatRoomCtrl = {
             userSuccessfullyEnteredRoom: false,
             clientId: null
