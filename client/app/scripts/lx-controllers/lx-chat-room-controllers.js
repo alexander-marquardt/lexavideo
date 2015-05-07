@@ -7,7 +7,10 @@
 
 angular.module('lxUseChatRoom.controllers', [])
 
-
+    // *** WARNING ***
+    // *** WARNING *** because we are "faking" the chat panel views, lxChatViewCtrl does not wrap the chat panels
+    // *** WARNING ***
+ 
     .controller('lxChatViewCtrl', function(
         $location,
         $scope,
@@ -26,12 +29,6 @@ angular.module('lxUseChatRoom.controllers', [])
             });
         });
 
-        $scope.lxChatRoomCtrl = {
-            userSuccessfullyEnteredRoom: false,
-            clientId: null
-        };
-
-
         var addClientToRoomWhenChannelReady = function(chatRoomId) {
             var innerWaitForChannelReady = function() {
                 if (!$scope.channelObject.channelIsAlive) {
@@ -45,13 +42,9 @@ angular.module('lxUseChatRoom.controllers', [])
             innerWaitForChannelReady();
         };
 
-
         lxChatRoomMembersService.createOrGetRoom().then(function(data) {
-
-            $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
             $scope.receivedChatMessageObject[data.chatRoomId] = {};
 
-            
             addClientToRoomWhenChannelReady(data.chatRoomId);
 
             // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
@@ -76,9 +69,6 @@ angular.module('lxUseChatRoom.controllers', [])
             }
 
         }, function(errorEnteringIntoRoomInfoObj) {
-
-            $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = false;
-
             // The following sets an error on a global object that will be picked up by the javascript
             // when the user is sent back to the main landing page, at which point the user will
             // be shown a message indicating that there was an error, and another chance to go into

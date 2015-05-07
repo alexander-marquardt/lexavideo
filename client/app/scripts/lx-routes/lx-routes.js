@@ -25,6 +25,8 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
         templateUrl: function(){
                 return '/_lx/lx-templates/lx-dummy-chatbox-view.html';
             },
+
+        // Warning, because we are "faking" the chat panel views, this controller does not wrap the chat panels
         controller: 'lxChatViewCtrl'
     });
 

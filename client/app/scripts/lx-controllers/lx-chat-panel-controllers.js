@@ -32,10 +32,16 @@ angular.module('lxChatbox.controllers', [])
 
         $scope.maxMsgLength = 5000;
 
-
         $scope.sendMessageFormScope = {};
         $scope.sendMessagePayload = {};
 
+        $scope.removeClientFromRoomInterfaceFn = function(chatRoomId) {
+            $log.info('removeClientFromRoomInterfaceFn executing');
+            lxHttpChannelService.removeClientFromRoom(
+                $scope.lxMainViewCtrl.clientId,
+                $scope.lxMainViewCtrl.userId,
+                chatRoomId);
+        };
 
         /* sendChatMessageFn:
          *      Sends a chat message to other users.
