@@ -5,7 +5,6 @@ import logging
 import webapp2
 
 from google.appengine.api import channel
-from google.appengine.ext import ndb
 
 from video_src import clients
 from video_src import http_helpers
@@ -24,10 +23,11 @@ class AddClientToRoom(webapp2.RequestHandler):
     """Handles when a user explicitly enters into a room by going to a URL for a given room."""
     
     @staticmethod
-    def add_client_to_room(client_id, room_id, user_id):
+    def add_client_to_room(room_id, client_id, user_id):
         # logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
-        new_client_has_been_added = chat_room_module.ChatRoomModel.txn_add_client_to_room(room_id, client_id)
-        chat_room_obj = chat_room_module.ChatRoomModel.txn_add_room_to_user_status_tracker(room_id, user_id)
+        chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
+        (new_client_has_been_added, chat_room_obj) = chat_room_obj.txn_add_client_to_room(client_id)
+        chat_room_obj.txn_add_room_key_to_user_status_tracker(user_id)
 
 
         if new_client_has_been_added:
@@ -74,8 +74,8 @@ class AddClientToRoom(webapp2.RequestHandler):
             list_of_open_chat_rooms_keys = user_obj.track_rooms_key.get().list_of_open_chat_rooms_keys
 
             # Loop over all rooms that the user currently has open.
-            for open_room_key in list_of_open_chat_rooms_keys:
-                room_id = open_room_key.id()
+            for room_key in list_of_open_chat_rooms_keys:
+                room_id = room_key.id()
                 chat_room_obj = chat_room_module.ChatRoomModel.get_room_by_id(room_id)
                 room_members_client_ids = chat_room_obj.room_members_client_ids
 
@@ -83,7 +83,7 @@ class AddClientToRoom(webapp2.RequestHandler):
                 # is also verified inside the transaction, but we don't want to tie-up the transaction
                 # with un-necessary calls)
                 if client_id not in room_members_client_ids:
-                    AddClientToRoom.add_client_to_room(client_id, room_id, user_id)
+                    AddClientToRoom.add_client_to_room(room_id, client_id, user_id)
                     AddClientToRoom.tell_client_they_were_re_added_to_room_after_they_have_been_absent(client_id, room_id)
 
         else:
@@ -99,7 +99,7 @@ class AddClientToRoom(webapp2.RequestHandler):
         client_id = data_object['clientId']
         room_id = data_object['chatRoomId']
 
-        self.add_client_to_room(client_id, room_id, user_id)
+        self.add_client_to_room(room_id, client_id, user_id)
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
@@ -114,8 +114,7 @@ class RemoveClientFromRoom(webapp2.RequestHandler):
         room_id = data_object['chatRoomId']
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
-        chat_room_obj.txn_remove_client_from_room(client_id)
-
+        chat_room_obj = chat_room_obj.txn_remove_client_from_room(client_id)
         chat_room_obj.txn_remove_room_from_user_status_tracker(user_id)
         messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
                                                  recompute_members_from_scratch=True)

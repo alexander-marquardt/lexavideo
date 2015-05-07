@@ -163,14 +163,14 @@ class ChatRoomModel(ndb.Model):
 
     # The following function adds a given user to a chat room. Since multiple clients may be attempting to enter
     # the room at the same time, it is ran in a transaction to prevent conflicts.
-    @classmethod
     @ndb.transactional
-    def txn_add_client_to_room(cls, room_id, client_id):
+    def txn_add_client_to_room(self, client_id):
 
+        room_key = self.key
         new_client_has_been_added = False
 
-        logging.info('Adding client %s to room %d ' % (client_id, room_id))
-        chat_room_obj = cls.get_room_by_id(room_id)
+        logging.info('Adding client %s to room %s ' % (client_id, room_key))
+        chat_room_obj = room_key.get()
 
 
         if chat_room_obj:
@@ -180,56 +180,48 @@ class ChatRoomModel(ndb.Model):
                 if not client_id in chat_room_obj.room_members_client_ids:
                     chat_room_obj.room_members_client_ids.append(client_id)
                     chat_room_obj.put()
-                    logging.info('Client %s has joined room %d ' % (client_id, room_id))
+                    logging.info('Client %s has joined room %s ' % (client_id, room_key))
                     new_client_has_been_added = True
                 else:
-                    logging.info('Client %s was already in room %d ' % (client_id, room_id))
+                    logging.info('Client %s was already in room %s ' % (client_id, room_key))
 
             # If the user cannot be added to the room, then an exception will be generated - let the client
             # know that the server had a problem.
             except:
                 status_reporting.log_call_stack_and_traceback(logging.error)
-                raise Exception('Error adding client %s to room %s' % (client_id, room_id))
+                raise Exception('Error adding client %s to room %s' % (client_id, room_key))
 
         else:
-            error_message = 'Invalid room id: %d' % room_id
+            error_message = 'Invalid room id: %s' % room_key
             logging.error(error_message)
             raise Exception(error_message)
 
-        return new_client_has_been_added
+        return (new_client_has_been_added, chat_room_obj)
 
-    @classmethod
     @ndb.transactional(xg=True)
-    def txn_add_room_to_user_status_tracker(cls, room_id, user_id):
+    def txn_add_room_key_to_user_status_tracker(self, user_id):
 
+        room_key = self.key
         # Now we need to add the room to the user status tracker model (ie. track which rooms the user currently has open)
-        logging.info('Adding room %s to user_status_tracker for user %s' % (room_id, user_id))
+        logging.info('Adding room %s to user_status_tracker for user %s' % (room_key, user_id))
 
-        chat_room_obj = cls.get_room_by_id(room_id)
 
         user_obj = users.UserModel.get_by_id(user_id)
         track_rooms_obj = user_obj.track_rooms_key.get()
-        if chat_room_obj.key not in track_rooms_obj.list_of_open_chat_rooms_keys:
-            track_rooms_obj.list_of_open_chat_rooms_keys.append(chat_room_obj.key)
+        if room_key not in track_rooms_obj.list_of_open_chat_rooms_keys:
+            track_rooms_obj.list_of_open_chat_rooms_keys.append(room_key)
             track_rooms_obj.put()
 
-
-        # Notice that we pass back chat_room_obj - this is necessary because we have pulled out a "new" copy from
-        # the database and may have updated it. We want any enclosing functions to use the updated version.
-        return chat_room_obj
 
     @ndb.transactional(xg=True)
     def txn_remove_room_from_user_status_tracker(self, user_id):
-        room_id = self.key.id()
-        logging.info('Removing room %s from user_status_tracker for user %s' % (room_id, user_id))
-        chat_room_obj = self.get_room_by_id(room_id)
+        chat_room_key = self.key
+        logging.info('Removing room %s from user_status_tracker for user %s' % (chat_room_key, user_id))
         user_obj = users.UserModel.get_by_id(user_id)
         track_rooms_obj = user_obj.track_rooms_key.get()
-        if chat_room_obj.key in track_rooms_obj.list_of_open_chat_rooms_keys:
-            track_rooms_obj.list_of_open_chat_rooms_keys.remove(chat_room_obj.key)
+        if chat_room_key in track_rooms_obj.list_of_open_chat_rooms_keys:
+            track_rooms_obj.list_of_open_chat_rooms_keys.remove(chat_room_key)
             track_rooms_obj.put()
-
-        self = chat_room_obj
 
 
     def get_dict_of_client_objects(self, recompute_members_from_scratch):
