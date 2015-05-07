@@ -45,3 +45,13 @@
   min-height: 20px;
 }
 
+.cl-landing-page-absolute-position-footer {
+  box-sizing: border-box;
+  position: absolute;
+  // add one to the height because it is not inside of a panel, which would have pushed it up by one px.
+  height: $chat-panel-footer-height + 1px;
+  width: 100%;
+  bottom: 0;
+  border: 1px solid $standard-border-color;
+  border-top:1px solid $panel-inner-border;
+}
