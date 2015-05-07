@@ -53,7 +53,7 @@
                                     <!-- define the open chats button -->
                                     <div class="btn-group pull-left"
                                          ng-class="dropdownMenusStatuses.openChatsDropdownIsOpen ? 'open': ''">
-                                        <button type="button" class="btn btn-primary cl-panel-header-btn"
+                                        <button type="button" class="btn btn-primary cl-btn-primary-darker cl-panel-header-btn"
                                                 ng-click="dropdownMenusStatuses.openChatsDropdownIsOpen=!dropdownMenusStatuses.openChatsDropdownIsOpen">
                                             <span style="display:inline-block;line-height:1em;">
                                                 <span class="icon-lx-chat-bubble-dual" style="display:inline-block;line-height:1em;"></span>
@@ -79,6 +79,7 @@
                                                 <span style="white-space:nowrap;">
                                                     &nbsp;{{ roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomNameAsWritten }}&nbsp
                                                 </span>
+
                                                 </a>
                                             </li>
                                         </ul>
@@ -88,11 +89,14 @@
                                     <span class="cl-chat-panel-name-size">
                                         {{ chatRoomDisplayObject.chatRoomNameFromUrl }}
                                     </span>
+                                    <button type="button" class="btn btn-primary cl-btn-primary-darker cl-btn-circle cl-btn-primary-darker">
+                                        <span class="icon-lx-x-symbol"></span>
+                                    </button>
 
                                     <!-- define the group members button -->
                                     <div class="btn-group pull-right"
                                          ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen ? 'open': ''">
-                                        <button type="button" class="btn btn-primary cl-panel-header-btn"
+                                        <button type="button" class="btn btn-primary cl-btn-primary-darker cl-panel-header-btn"
                                                 ng-click="dropdownMenusStatuses.groupMembersDropdownIsOpen=!dropdownMenusStatuses.groupMembersDropdownIsOpen">
                                             <span style="display:inline-block;line-height:1em;">
                                                 <span class="icon-lx-users" style="display:inline-block;line-height:1em;"></span>

@@ -366,3 +366,28 @@ span.cl-overlay-text-span a:hover {
 .cl-full-height {
   height: 100%;
 }
+
+.cl-btn-circle {
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  padding: 0px 0;
+  font-size: 12px;
+  border-radius: 10px;
+  line-height: 1em;
+}
+
+.cl-btn-primary-darker {
+  @include button-variant($btn-primary-color, $brand-primary-little-darker, $brand-primary-darker);
+
+  // The following code ensures that after the user clicks on a button, that it doesn't stay dark while
+  // it still has focus.
+  &:focus {
+    background-color: $brand-primary-little-darker;
+    border-color: $brand-primary-darker;
+  }
+  &:hover {
+    background-color: darken($brand-primary-little-darker, 10%);
+    border-color: darken($brand-primary-darker, 12%);
+  }
+}
