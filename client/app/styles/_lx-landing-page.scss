@@ -44,13 +44,3 @@
 .cl-feedback-on-input-validity-div {
   min-height: 20px;
 }
-
-.cl-landing-page-absolute-position-footer {
-  box-sizing: border-box;
-  position: absolute;
-  height: $chat-panel-footer-height + 1px;
-  width: 100%;
-  bottom: 0;
-  border: 1px solid $standard-border-color;
-  border-top:1px solid $panel-inner-border;
-}
