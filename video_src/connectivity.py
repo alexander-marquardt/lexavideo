@@ -103,6 +103,28 @@ class AddClientToRoom(webapp2.RequestHandler):
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
+
+class RemoveClientFromRoom(webapp2.RequestHandler):
+
+    @handle_exceptions
+    def post(self):
+        data_object = json.loads(self.request.body)
+        user_id = data_object['userId']
+        client_id = data_object['clientId']
+        room_id = data_object['chatRoomId']
+
+        chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
+        chat_room_obj.txn_remove_client_from_room(client_id)
+
+        chat_room_obj.txn_remove_room_from_user_status_tracker(room_id, user_id)
+        messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
+                                                 recompute_members_from_scratch=True)
+
+        # TODO - need to notify all clients associated with the user that this client belongs to, that they have left this room
+
+        http_helpers.set_http_ok_json_response(self.response, {})
+
+
 class SynClientHeartbeat(webapp2.RequestHandler):
     """Receives a "synchronization heartbeat" from the client, which we respond to on the channel."""
 

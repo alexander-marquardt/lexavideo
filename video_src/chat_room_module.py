@@ -218,6 +218,19 @@ class ChatRoomModel(ndb.Model):
         # the database and may have updated it. We want any enclosing functions to use the updated version.
         return chat_room_obj
 
+    @ndb.transactional(xg=True)
+    def txn_remove_room_from_user_status_tracker(self, user_id):
+        room_id = self.key.id()
+        logging.info('Removing room %s from user_status_tracker for user %s' % (room_id, user_id))
+        chat_room_obj = self.get_room_by_id(room_id)
+        user_obj = users.UserModel.get_by_id(user_id)
+        track_rooms_obj = user_obj.track_rooms_key.get()
+        if user_id in track_rooms_obj.list_of_open_chat_rooms_keys:
+            track_rooms_obj.list_of_open_chat_rooms_keys.remove(chat_room_obj.key)
+            track_rooms_obj.put()
+
+        self = chat_room_obj
+
 
     def get_dict_of_client_objects(self, recompute_members_from_scratch):
         """
@@ -312,7 +325,7 @@ class CheckIfChatRoomExists(webapp2.RequestHandler):
 
             http_helpers.set_http_ok_json_response(self.response, rooms_list)
             
-class EnterIntoRoom(webapp2.RequestHandler):
+class CreateNewRoomIfDoesNotExist(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         try:
