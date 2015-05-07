@@ -82,7 +82,8 @@ angular.module('lxMainView.controllers', [])
         $scope.lxMainViewCtrl = {
             clientId: clientId,
             userId: lxAppWideConstantsService.userId,
-            userName: lxAppWideConstantsService.userName
+            userName: lxAppWideConstantsService.userName,
+            currentView: null
         };
 
         $scope.channelObject = {

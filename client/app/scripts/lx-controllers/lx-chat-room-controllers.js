@@ -20,6 +20,8 @@ angular.module('lxUseChatRoom.controllers', [])
         lxShowNumMessagesService
         ) {
 
+        $scope.lxMainViewCtrl.currentView = 'lxChatViewCtrl';
+
         // we wait for the ng-view animation to end before we show the video elements. This
         // is necessary because the video interferes with the animations.
         // Note: the "one" handler is unbound after it's first invocation, which is exactly what we want.

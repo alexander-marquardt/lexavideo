@@ -229,3 +229,8 @@ div.cl-video-text-overlay {
 .cl-send-video-inside-chat-panel-to-back {
   z-index: $video-panel-in-back-zindex;
 }
+
+.cl-remove-borders-and-background {
+  border:none;
+  background: none;
+}

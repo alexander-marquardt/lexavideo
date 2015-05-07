@@ -1,7 +1,8 @@
 {% raw %}
     <div
      class="row cl-row-no-margins cl-video-inside-chat-panel"
-     ng-class="{'cl-send-video-inside-chat-panel-to-back': !chatboxPanelElementObject.videoIsFocused}">
+     ng-class="{'cl-send-video-inside-chat-panel-to-back': !chatboxPanelElementObject.videoIsFocused,
+                'cl-remove-borders-and-background': lxMainViewCtrl.currentView == 'lxLandingPageCtrl'}">
      <!--The following wraps the remote video windows-->
     <div class="col-xs-12 text-center cl-col-no-padding cl-full-height">
         <div class="cl-main-video-bottom-offset-div">

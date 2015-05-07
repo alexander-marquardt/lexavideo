@@ -20,6 +20,8 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
         angular.extend(lxLandingPageConstantsService, lxLandingPageConstantsEmbeddedInHtml);
 
+        $scope.lxMainViewCtrl.currentView = 'lxLandingPageCtrl';
+
         $scope.videoStateInfoObject.enableShowVideoElements = false;
         $scope.chatboxPanelElementObject.videoIsFocused = false;
         $(".cl-ng-view").one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
