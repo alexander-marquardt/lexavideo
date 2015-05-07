@@ -13,7 +13,7 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope,
         $timeout,
         lxHttpChannelService,
-        lxInitializeRoomService,
+        lxChatRoomMembersService,
         lxShowNumMessagesService
         ) {
 
@@ -46,11 +46,13 @@ angular.module('lxUseChatRoom.controllers', [])
         };
 
 
-        lxInitializeRoomService.addUserToRoom().then(function(data) {
+        lxChatRoomMembersService.createOrGetRoom().then(function(data) {
 
             $scope.lxChatRoomCtrl.userSuccessfullyEnteredRoom  = true;
-            addClientToRoomWhenChannelReady(data.chatRoomId);
             $scope.receivedChatMessageObject[data.chatRoomId] = {};
+
+            
+            addClientToRoomWhenChannelReady(data.chatRoomId);
 
             // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
             // from the "global" unseenMessageCount before zeroing it.

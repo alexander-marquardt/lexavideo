@@ -5,7 +5,7 @@
 
 angular.module('lxChatRoom.services', [])
 
-    .factory('lxInitializeRoomService',
+    .factory('lxChatRoomMembersService',
 
     function(
         $log,
@@ -32,7 +32,7 @@ angular.module('lxChatRoom.services', [])
 
         return {
 
-            addUserToRoom : function() {
+            createOrGetRoom : function() {
 
                 // For now, we pull the room name from the URL - this will likely change in future versions
                 // of our code.
@@ -49,7 +49,7 @@ angular.module('lxChatRoom.services', [])
                 // enter a given room name, then they will be stored as the "creator" of that room
                 roomObj.userId = lxAppWideConstantsService.userId;
 
-                lxHttpHandleRoomService.enterIntoRoom(roomObj).then(
+                lxHttpHandleRoomService.createOrGetRoomOnServer(roomObj).then(
                     function(response){
                         if (response.data.statusString === 'roomJoined') {
                             // everything OK
@@ -61,8 +61,8 @@ angular.module('lxChatRoom.services', [])
                         }
                     },
                     function(response) {
-                        // Failed to enter into the room. The 'data' returned from the reject is actually an object
-                        // containing another object called 'data'.
+                        // Failed to enter into the room. The 'response' returned from the reject is actually an object
+                        // containing a field called 'data'.
                         failedToEnterRoom($log.error, roomObj.chatRoomNameAsWritten, response.data.statusString, deferredUserSuccessfullyEnteredRoom);
                     }
                 );

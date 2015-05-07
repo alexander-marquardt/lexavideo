@@ -10,12 +10,12 @@ angular.module('lxHttp.services', [])
 
 
         return {
-            enterIntoRoom : function(roomObj) {
+            createOrGetRoomOnServer : function(roomObj) {
                 // this will either create a room object on the server, or enter into an existing room corresponding
                 // to chatRoomName.
                 // Note: the returned value is a promise that will be fulfilled once the resource
                 // has been created on the server.
-                var url = '/_lx/handle_room/';
+                var url = '/_lx/create_new_room_if_does_not_exist/';
                 var httpPromise = $http.post(url, roomObj);
                 return httpPromise;
             },
@@ -101,6 +101,15 @@ angular.module('lxHttp.services', [])
                     'chatRoomId': chatRoomId
                 };
                 $http.post('/_lx/add_client_to_room/', postData);
+            },
+
+            removeClientFromRoom: function(clientId, userId, chatRoomId) {
+                var postData = {
+                    'clientId': clientId,
+                    'userId': userId,
+                    'chatRoomId': chatRoomId
+                };
+                $http.post('/_lx/remove_client_from_room/', postData);
             },
 
             // Function that will initialize the channel and get the token from the server
