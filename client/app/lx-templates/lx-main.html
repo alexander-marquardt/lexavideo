@@ -43,8 +43,10 @@ is explained in the comments).
                         {% include 'lx-templates/lx-chatbox.html' %}
 
                         <div ng-show="videoStateInfoObject.enableShowVideoElements">
-                            {% include 'lx-templates/lx-main-video-element.html' %}
-                            {% include "lx-templates/lx-mini-video-elements.html" %}
+                            <div ng-if="videoStateInfoObject.numOpenVideoExchanges >= 1">
+                                {% include 'lx-templates/lx-main-video-element.html' %}
+                                {% include "lx-templates/lx-mini-video-elements.html" %}
+                            </div>
                         </div>
 
                         <!-- End the "common display area" -->
