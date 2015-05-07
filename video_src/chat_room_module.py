@@ -60,6 +60,14 @@ class ChatRoomModel(ndb.Model):
         return is_unique
 
 
+    @classmethod
+    def get_chat_room_by_name(cls, normalized_chat_room_name):
+        chat_room_obj = cls.query(cls.normalized_chat_room_name == normalized_chat_room_name).get()
+        if not chat_room_obj:
+            raise Exception('normalized_chat_room_name %s does not exist in the ChatRoomModel data structure' % normalized_chat_room_name)
+
+        return chat_room_obj
+
     # The ChatRoomName has been added to the chatRoomName structure. Now create a new Room object
     # for the new room.
     @classmethod
@@ -79,9 +87,7 @@ class ChatRoomModel(ndb.Model):
             chat_room_obj = cls(**chat_room_obj_dict)
             chat_room_obj.put()
         else:
-            chat_room_obj = cls.query(cls.normalized_chat_room_name == normalized_chat_room_name).get()
-            if not chat_room_obj:
-                raise Exception('normalized_chat_room_name %s does not exist in the ChatRoomModel data structure' % normalized_chat_room_name)
+            chat_room_obj = cls.get_chat_room_by_name(normalized_chat_room_name)
 
         return chat_room_obj
 
