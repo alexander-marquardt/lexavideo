@@ -40,6 +40,19 @@
   }
 }
 
+.cl-overlay-mini-video-elements-when-video-open {
+  position: absolute;
+  box-sizing: border-box;
+  bottom: $chat-panel-footer-height;
+  width: 100%;
+  z-index: $landing-page-well-zindex;
+  height: nth($mini-video-row-heights-list, 1);
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($mini-video-row-heights-list, $idx);
+    }
+  }
+}
 
 .cl-feedback-on-input-validity-div {
   min-height: 20px;
