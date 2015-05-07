@@ -367,13 +367,23 @@ span.cl-overlay-text-span a:hover {
   height: 100%;
 }
 
-.cl-btn-circle {
-  width: 20px;
-  height: 20px;
+.cl-btn-circle-24 {
+  width: 24px;
+  height: 24px;
   text-align: center;
   padding: 0px 0;
   font-size: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
+  line-height: 1em;
+}
+
+.cl-btn-square-24 {
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  padding: 0px 0;
+  font-size: 12px;
+  border-radius: 2px;
   line-height: 1em;
 }
 
