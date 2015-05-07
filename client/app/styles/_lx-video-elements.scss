@@ -97,10 +97,10 @@ $carousel-control-height: 20px;
   width: 100%;
   background: transparent;
   text-align: center;
-  bottom: nth($mini-video-heights-list, 1);
+  bottom: nth($mini-video-heights-list, 1) + 1px;
   @for $idx from 1 through length($viewport-widths-list) {
     @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
-      bottom: nth($mini-video-heights-list, $idx);
+      bottom: nth($mini-video-heights-list, $idx) + 1px;
     }
   }
 }
@@ -215,7 +215,7 @@ div.cl-video-text-overlay {
   background: $chat-panel-body-background;
   border-left: 1px solid $panel-primary-border;
   border-right: 1px solid $panel-primary-border;
-  top: $chat-panel-heading-height;
+  top: $chat-panel-heading-height + 1px;
   height: nth($chat-panel-body-height-list, 1);
   @for $idx from 1 through length($viewport-heights-list) {
     @media (min-height: nth($viewport-heights-list, $idx)) {

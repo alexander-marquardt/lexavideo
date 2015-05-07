@@ -32,10 +32,10 @@
   height: auto;
   margin: 0;
   top: 0;
-  bottom: nth($mini-video-row-heights-list, 1) + $chat-panel-footer-height;
+  bottom: nth($mini-video-row-heights-list, 1) + $chat-panel-footer-height - $panel-border-compensation;
   @for $idx from 1 through length($viewport-widths-list) {
     @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
-      bottom: nth($mini-video-row-heights-list, $idx) + $chat-panel-footer-height;
+      bottom: nth($mini-video-row-heights-list, $idx) + $chat-panel-footer-height - $panel-border-compensation;
     }
   }
 }
@@ -48,7 +48,6 @@
 .cl-landing-page-absolute-position-footer {
   box-sizing: border-box;
   position: absolute;
-  // add one to the height because it is not inside of a panel, which would have pushed it up by one px.
   height: $chat-panel-footer-height + 1px;
   width: 100%;
   bottom: 0;
