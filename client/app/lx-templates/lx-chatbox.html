@@ -69,14 +69,6 @@
                                             <li ng-repeat="normalizedChatRoomNameInDropdown in normalizedOpenRoomNamesList | orderBy: simpleArrayOrderByFn">
 
                                                 <span style="white-space:nowrap;">
-                                                    <span  class='cl-chat-icon-container'>
-                                                        <button type="button" class="btn btn-primary cl-btn-circle-24">
-                                                            <span class="icon-lx-x-symbol"></span>
-                                                        </button>
-                                                    </span>
-
-
-
                                                     <a href="/{{ roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomNameAsWritten }}"
                                                        ng-click="normalizedChatRoomNameInDropdown == normalizedChatRoomName? gluePanel(): ''">
                                                         <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
