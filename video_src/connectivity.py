@@ -116,7 +116,7 @@ class RemoveClientFromRoom(webapp2.RequestHandler):
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
         chat_room_obj.txn_remove_client_from_room(client_id)
 
-        chat_room_obj.txn_remove_room_from_user_status_tracker(room_id, user_id)
+        chat_room_obj.txn_remove_room_from_user_status_tracker(user_id)
         messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
                                                  recompute_members_from_scratch=True)
 

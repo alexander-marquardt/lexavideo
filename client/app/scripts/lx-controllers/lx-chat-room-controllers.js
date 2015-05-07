@@ -10,7 +10,7 @@ angular.module('lxUseChatRoom.controllers', [])
     // *** WARNING ***
     // *** WARNING *** because we are "faking" the chat panel views, lxChatViewCtrl does not wrap the chat panels
     // *** WARNING ***
- 
+
     .controller('lxChatViewCtrl', function(
         $location,
         $scope,

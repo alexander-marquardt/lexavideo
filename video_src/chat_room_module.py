@@ -209,7 +209,7 @@ class ChatRoomModel(ndb.Model):
 
         user_obj = users.UserModel.get_by_id(user_id)
         track_rooms_obj = user_obj.track_rooms_key.get()
-        if user_id not in track_rooms_obj.list_of_open_chat_rooms_keys:
+        if chat_room_obj.key not in track_rooms_obj.list_of_open_chat_rooms_keys:
             track_rooms_obj.list_of_open_chat_rooms_keys.append(chat_room_obj.key)
             track_rooms_obj.put()
 
@@ -225,7 +225,7 @@ class ChatRoomModel(ndb.Model):
         chat_room_obj = self.get_room_by_id(room_id)
         user_obj = users.UserModel.get_by_id(user_id)
         track_rooms_obj = user_obj.track_rooms_key.get()
-        if user_id in track_rooms_obj.list_of_open_chat_rooms_keys:
+        if chat_room_obj.key in track_rooms_obj.list_of_open_chat_rooms_keys:
             track_rooms_obj.list_of_open_chat_rooms_keys.remove(chat_room_obj.key)
             track_rooms_obj.put()
 
