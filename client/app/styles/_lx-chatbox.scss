@@ -272,30 +272,33 @@
      @include my-mixin-border-glow($brand-primary,  1, 2)
 }
 
-.cl-chat-panel-dropdown .cl-message-count-bubble-override {
-  padding: 0px 3px 0px 3px;
-  margin: 0px 5px 0px 3px;
-  font-size: 0.8em;
-  background: $bubble-left-background !important;
-  float: none;
-  text-align: none;
-  display: inline-block;
-}
 
+.cl-chat-panel-dropdown {
 
-.cl-chat-panel-dropdown a {
-  color: $text-color;
-  text-decoration: none;
-  &:hover {
-    text-decoration: none;
+  & .cl-message-count-bubble-override {
+    padding: 0px 3px 0px 3px;
+    margin: 0px 5px 0px 3px;
+    font-size: 0.8em;
+    background: $bubble-left-background !important;
+    float: none;
+    text-align: none;
+    display: inline-block;
   }
-}
 
-.cl-chat-panel-dropdown > li {
-  padding-top: 1px;
-  padding-bottom: 1px;
-  &:hover {
-    background-color: $dropdown-link-hover-bg;
+  & a {
+    color: $text-color;
+    text-decoration: none;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  & > li {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    &:hover {
+      background-color: $dropdown-link-hover-bg;
+    }
   }
 }
 
