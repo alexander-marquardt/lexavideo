@@ -1,0 +1,47 @@
+
+
+.cl-landing-page-common-area {
+  position: relative;
+  box-sizing: border-box;
+  background: transparent;
+  height: nth($common-display-area-height-list, 1);
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($common-display-area-height-list, $idx);
+    }
+  }
+}
+
+.cl-landing-page-well {
+  position: absolute;
+  boxo-sizing: border-box;
+  height: nth($common-display-area-height-list, 1);
+  @for $idx from 1 through length($viewport-heights-list) {
+    @media (min-height: nth($viewport-heights-list, $idx)) {
+      height: nth($common-display-area-height-list, $idx);
+    }
+  }
+  z-index: $landing-page-well-zindex;
+}
+
+// If the client has video window(s) open, then we do not want to overly on top of the mini-video windows.
+// Therefore, we size the well to be the same size as the video window.
+.cl-landing-page-well-when-video-open {
+  position: absolute;
+  box-sizing: border-box;
+  height: auto;
+  margin: 0;
+  top: 0;
+  bottom: nth($mini-video-row-heights-list, 1) + $chat-panel-footer-height;
+  @for $idx from 1 through length($viewport-widths-list) {
+    @media (min-width: nth($viewport-widths-list, $idx)) and (min-height: nth($viewport-heights-list, $idx)) {
+      bottom: nth($mini-video-row-heights-list, $idx) + $chat-panel-footer-height;
+    }
+  }
+}
+
+
+.cl-feedback-on-input-validity-div {
+  min-height: 20px;
+}
+

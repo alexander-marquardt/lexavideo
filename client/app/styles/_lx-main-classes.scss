@@ -15,16 +15,6 @@ span.cl-overlay-text-span {
   border-radius: 4px;
 }
 
-.cl-landing-page-well {
-  height: nth($common-display-area-height-list, 1);
-  @for $idx from 1 through length($viewport-heights-list) {
-    @media (min-height: nth($viewport-heights-list, $idx)) {
-      height: nth($common-display-area-height-list, $idx);
-    }
-  }
-  z-index: $landing-page-well-zindex;
-}
-
 .cl-main-control-menu {
   position: absolute;
   height: nth($common-display-area-height-list, 1);
@@ -262,9 +252,6 @@ span.cl-overlay-text-span {
 
 }
 
-.cl-feedback-on-input-validity-div {
-  min-height: 20px;
-}
 
 .cl-text-shadow {
     text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);

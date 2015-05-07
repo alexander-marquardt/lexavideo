@@ -23,6 +23,7 @@ angular.module('lxUseChatRoom.controllers', [])
         // we wait for the ng-view animation to end before we show the video elements. This
         // is necessary because the video interferes with the animations.
         // Note: the "one" handler is unbound after it's first invocation, which is exactly what we want.
+        $scope.videoStateInfoObject.enableShowVideoElements = false;
         $(".cl-ng-view").one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
             $scope.$apply(function() {
                 $scope.videoStateInfoObject.enableShowVideoElements = true;

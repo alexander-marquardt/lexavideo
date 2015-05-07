@@ -21,6 +21,13 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         angular.extend(lxLandingPageConstantsService, lxLandingPageConstantsEmbeddedInHtml);
 
         $scope.videoStateInfoObject.enableShowVideoElements = false;
+        $scope.chatboxPanelElementObject.videoIsFocused = false;
+        $(".cl-ng-view").one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+            $scope.$apply(function() {
+                $scope.videoStateInfoObject.enableShowVideoElements = true;
+            });
+        });
+
         /*
          The following regular expressions are used for detecting if a user has entered a dis-allowed character into th
          input box. These values are passed from the server so that the server and client are guaranteed to always be
