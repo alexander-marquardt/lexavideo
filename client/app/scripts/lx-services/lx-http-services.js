@@ -34,8 +34,9 @@ angular.module('lxHttp.services', [])
     })
     .factory('lxHttpChannelService',
     function (
-        $log,
         $http,
+        $location,
+        $log,
         lxJs
         ) {
 
@@ -109,7 +110,14 @@ angular.module('lxHttp.services', [])
                     'userId': userId,
                     'chatRoomId': chatRoomId
                 };
-                $http.post('/_lx/remove_client_from_room/', postData);
+                $http.post('/_lx/remove_client_from_room/', postData).then(function() {
+                    $log.info('Removed clientId: ' + clientId + ' from room: ' + chatRoomId);
+                    $location.path('/:none:');
+
+                }, function(response) {
+                    $log.error('Failed to remove client from room. clientId: ' + clientId +'\nStatus: ' + response.statusText +
+                    '\ndata: ' + angular.toJson(response.data));
+                });
             },
 
             // Function that will initialize the channel and get the token from the server
