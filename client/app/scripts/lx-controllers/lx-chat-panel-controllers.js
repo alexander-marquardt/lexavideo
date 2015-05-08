@@ -12,6 +12,7 @@ angular.module('lxChatbox.controllers', [])
         $location,
         $log,
         $scope,
+        lxChatRoomMembersService,
         lxHttpChannelService,
         lxMessageService,
         lxShowNumMessagesService
@@ -35,12 +36,16 @@ angular.module('lxChatbox.controllers', [])
         $scope.sendMessageFormScope = {};
         $scope.sendMessagePayload = {};
 
-        $scope.removeClientFromRoomInterfaceFn = function(chatRoomId) {
-            $log.info('removeClientFromRoomInterfaceFn executing');
-            lxHttpChannelService.removeClientFromRoom(
+        $scope.removeClientFromRoomInterfaceFn = function(normalizedChatRoomName) {
+
+            var roomOccupancyObject = $scope.roomOccupancyDict[normalizedChatRoomName];
+
+            lxChatRoomMembersService.removeClientFromRoomClientSide($scope, normalizedChatRoomName);
+
+            lxHttpChannelService.removeClientFromRoomOnServer(
                 $scope.lxMainViewCtrl.clientId,
                 $scope.lxMainViewCtrl.userId,
-                chatRoomId);
+                roomOccupancyObject.chatRoomId);
         };
 
         /* sendChatMessageFn:

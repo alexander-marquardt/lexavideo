@@ -1,9 +1,11 @@
 'use strict';
 
+/* global $ */
+
 angular.module('lxBasicFunctionality.services', [])
 
 .factory('lxJs',
-function() {
+function($log) {
 
     return {
         assert: function (condition, message) {
@@ -13,6 +15,14 @@ function() {
                     throw new Error(message);
                 }
                 throw message; // Fallback
+            }
+        },
+
+        removeItemFromList: function(itemToRemove, listToModify) {
+
+            if ($.inArray(itemToRemove, listToModify) !== -1) {
+                var idx = listToModify.indexOf(itemToRemove);
+                listToModify.splice(idx, 1);
             }
         }
     };

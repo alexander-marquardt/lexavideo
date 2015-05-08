@@ -55,16 +55,19 @@ angular.module('lxMainView.controllers', [])
         // roomOccupancyDict will have a unique key corresponding to the chatRoomName of each room the the current
         // client is a member of. The value of each key will be an object that contains the name of the room
         // and a listing of all of the clients that are in each room.
-        // eg. roomOccupancyDict[chatRoomName] = {
+        // eg. roomOccupancyDict[normalizedChatRoomName] = {
         //      chatRoomId: chatRoomId,
         //      listOfClientObjects: [],
         //      dictOfClientObjects: {},
+        //      chatRoomNameAsWritten: string
         // }
         $scope.roomOccupancyDict = {};
 
         // The following structure contains a list of the room names, and is used for displaying a sorted list
-        // of room names. Eg, it would contain ['room1', 'room5', 'room2', etc.]. Note, it is stored un-sorted,
-        // and we use angular filters to do the sorting.
+        // of room names. Eg, it would contain ['room1', 'room5', 'room2', etc.]. Note, it is stored as a stack
+        // with the most recent room at position 0, and the oldest room at the end of the list. This is done
+        // so that when a user closes a room, we can easily direct them to the previous room that they had viewed.
+        // When we are displaying a list of rooms in the html, we use angular filters to do the sorting.
         $scope.normalizedOpenRoomNamesList = [];
 
         $scope.simpleArrayOrderByFn = function(x) {

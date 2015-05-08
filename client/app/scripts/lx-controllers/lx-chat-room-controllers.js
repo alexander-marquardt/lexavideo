@@ -17,7 +17,8 @@ angular.module('lxUseChatRoom.controllers', [])
         $timeout,
         lxHttpChannelService,
         lxChatRoomMembersService,
-        lxShowNumMessagesService
+        lxShowNumMessagesService,
+        lxJs
         ) {
 
         $scope.lxMainViewCtrl.currentView = 'lxChatViewCtrl';
@@ -67,10 +68,9 @@ angular.module('lxUseChatRoom.controllers', [])
             $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[data.chatRoomId];
             $scope.chatRoomDisplayObject.chatRoomId = data.chatRoomId;
 
-            // Add the normalizedRoomName to normalizedOpenRoomNamesList, but only if it is not already there.
-            if ($.inArray(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList) === -1) {
-                $scope.normalizedOpenRoomNamesList.push(data.normalizedChatRoomName);
-            }
+            // Push the normalizedRoomName to to first location in normalizedOpenRoomNamesList.
+            lxJs.removeItemFromList(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList);
+            $scope.normalizedOpenRoomNamesList.unshift(data.normalizedChatRoomName);
 
         }, function(errorEnteringIntoRoomInfoObj) {
             // The following sets an error on a global object that will be picked up by the javascript

@@ -104,20 +104,21 @@ angular.module('lxHttp.services', [])
                 $http.post('/_lx/add_client_to_room/', postData);
             },
 
-            removeClientFromRoom: function(clientId, userId, chatRoomId) {
+            removeClientFromRoomOnServer: function(clientId, userId, chatRoomId) {
                 var postData = {
                     'clientId': clientId,
                     'userId': userId,
                     'chatRoomId': chatRoomId
                 };
-                $http.post('/_lx/remove_client_from_room/', postData).then(function() {
-                    $log.info('Removed clientId: ' + clientId + ' from room: ' + chatRoomId);
-                    $location.path('/:none:');
 
+                var httpPromise = $http.post('/_lx/remove_client_from_room/', postData);
+                httpPromise.then(function() {
+                    $log.info('Removed clientId: ' + clientId + ' from room: ' + chatRoomId);
                 }, function(response) {
                     $log.error('Failed to remove client from room. clientId: ' + clientId +'\nStatus: ' + response.statusText +
                     '\ndata: ' + angular.toJson(response.data));
                 });
+                return httpPromise;
             },
 
             // Function that will initialize the channel and get the token from the server

@@ -16,7 +16,8 @@ angular.module('lxChatRoom.services', [])
         lxChannelService,
         lxHttpChannelService,
         lxHttpHandleRoomService,
-        lxAppWideConstantsService
+        lxAppWideConstantsService,
+        lxJs
         ) {
 
         var failedToEnterRoom = function(errorLogFn, chatRoomName, statusString, deferredUserSuccessfullyEnteredRoom) {
@@ -31,6 +32,23 @@ angular.module('lxChatRoom.services', [])
         };
 
         return {
+
+            removeClientFromRoomClientSide: function(scope, normalizedChatRoomName) {
+
+                // remove the room name from normalizedOpenRoomNamesList
+                lxJs.removeItemFromList(normalizedChatRoomName, scope.normalizedOpenRoomNamesList);
+
+                delete scope.roomOccupancyDict[normalizedChatRoomName];
+
+                if (angular.equals({}, scope.roomOccupancyDict)) {
+                    $location.path('/:none:');
+                }
+                else {
+                    normalizedChatRoomName = scope.normalizedOpenRoomNamesList[0];
+                    var chatRoomNameAsWritten = scope.roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten;
+                    $location.path('/' + chatRoomNameAsWritten);
+                }
+            },
 
             createOrGetRoom : function() {
 
