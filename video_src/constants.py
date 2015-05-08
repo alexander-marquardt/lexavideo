@@ -16,7 +16,7 @@ pickle_protocol = 2
 Make sure that unicode characters don't cause crashes.
 Try testing the javascript and the server with the following string: Iñtërnâtiônàlizætiøn☃💩
 
-The following characters are reserved with speacial meaning in the URL, and should not be allowed in room names.
+The following characters are reserved with special meaning in the URL, and should not be allowed in room names.
          $&+,/:;=?@"<>#%{}|\^~[]
 
 We also forbid the following characters because they may confuse the server
