@@ -37,7 +37,7 @@ angular.module('lxVideo.controllers', [])
                         break;
                     }
                 }
-                outerList.push(innerList)
+                outerList.push(innerList);
             }
 
             $scope.miniVideoElementsWrappedForRepeat = outerList;

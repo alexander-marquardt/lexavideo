@@ -28,7 +28,7 @@ videoAppDirectives.directive('lxShowMiniVideoElementDirective',
                 else {
                     var remoteVideoObject = scope.remoteVideoElementsDict[clientId];
                     elem.append(remoteVideoObject.remoteMiniVideoElem);
-                    lxAdapterService.reattachMediaStream(remoteVideoObject.remoteMiniVideoElem, remoteVideoObject.remoteMiniVideoElem)
+                    lxAdapterService.reattachMediaStream(remoteVideoObject.remoteMiniVideoElem, remoteVideoObject.remoteMiniVideoElem);
                 }
             }
         };
@@ -72,7 +72,7 @@ videoAppDirectives.directive('lxMainVideoElementDirective',
                             lxAdapterService.reattachMediaStream(domVideoElem, scope.localVideoObject.localMiniVideoElem);
                         } else {
                             var remoteVideoObject = scope.remoteVideoElementsDict[selectedVideoElementId];
-                            lxAdapterService.reattachMediaStream(domVideoElem, remoteVideoObject.remoteMiniVideoElem)
+                            lxAdapterService.reattachMediaStream(domVideoElem, remoteVideoObject.remoteMiniVideoElem);
                         }
                     }
                 );

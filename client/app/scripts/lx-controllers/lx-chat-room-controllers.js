@@ -27,7 +27,7 @@ angular.module('lxUseChatRoom.controllers', [])
         // is necessary because the video interferes with the animations.
         // Note: the "one" handler is unbound after it's first invocation, which is exactly what we want.
         $scope.videoStateInfoObject.enableShowVideoElements = false;
-        $(".cl-ng-view").one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+        $('.cl-ng-view').one('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function(){
             $scope.$apply(function() {
                 $scope.videoStateInfoObject.enableShowVideoElements = true;
             });
@@ -134,6 +134,6 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope.myUsername = lxVideoParamsService.myUsername;
 
         $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting, remoteClientId) {
-            lxVideoService.showVideoElementsAndStartVideoFn($scope, localVideoEnabledSetting, remoteClientId)
-        }
+            lxVideoService.showVideoElementsAndStartVideoFn($scope, localVideoEnabledSetting, remoteClientId);
+        };
     });

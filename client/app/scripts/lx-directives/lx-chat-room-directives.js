@@ -73,7 +73,7 @@ angular.module('lxChatRoom.directives', [])
         return {
             restrict: 'A',
 
-            link: function(scope, elem) {
+            link: function(scope) {
 
                 // if the user gets a new notification then we want to draw attention to the button.
                 scope.$watch('videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers', function(numPendingRequests, prevNumPendingRequests) {

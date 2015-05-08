@@ -12,9 +12,11 @@ angular.module('lxVideo.services', [])
 
     function createMiniVideoElement($scope, remoteClientId) {
 
+        var miniVideoElem;
+
         // This function is called each time
         if (!$scope.localVideoObject.localMiniVideoElem) {
-            var miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
+            miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
             $scope.localVideoObject.localMiniVideoElem = miniVideoElem[0];
 
         }
@@ -95,10 +97,8 @@ angular.module('lxVideo.services', [])
 
             }
 
-
             $scope.videoStateInfoObject.numOpenVideoExchanges = $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
             $scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers = $scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.length;
-
         }
-    }
+    };
 });

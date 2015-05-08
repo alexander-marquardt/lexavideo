@@ -4,6 +4,7 @@
 'use strict';
 
 // define externally defined variables so that jshint doesn't give warnings
+/* global $ */
 /* global lxLandingPageConstantsEmbeddedInHtml */
 
 angular.module('lxLandingPage.controllers', ['ngResource'])
@@ -25,7 +26,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
 
         $scope.videoStateInfoObject.enableShowVideoElements = false;
         $scope.chatboxPanelElementObject.videoIsFocused = false;
-        $(".cl-ng-view").one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+        $('.cl-ng-view').one('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function(){
             $scope.$apply(function() {
                 $scope.videoStateInfoObject.enableShowVideoElements = true;
             });

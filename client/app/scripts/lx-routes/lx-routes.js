@@ -39,7 +39,8 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
 lxMainRoutes.controller('lxWatchRouteChangesCtrl',
     function (
         $log,
-        $rootScope
+        $rootScope,
+        $route
         ) {
 
         // handle case when a route change promise is not resolved

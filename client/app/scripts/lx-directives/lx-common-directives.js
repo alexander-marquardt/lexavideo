@@ -187,9 +187,7 @@ commonDirectives.directive('lxDisableNgAnimate', function($animate) {
 
 commonDirectives.directive('lxNoSwipePropagation',
 
-    function(
-            $log
-        ) {
+    function() {
         return {
             restrict: 'A',
             link: function (scope, elem) {
