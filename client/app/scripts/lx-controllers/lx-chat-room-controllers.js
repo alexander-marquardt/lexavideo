@@ -21,6 +21,7 @@ angular.module('lxUseChatRoom.controllers', [])
         ) {
 
         $scope.lxMainViewCtrl.currentView = 'lxChatViewCtrl';
+        $scope.mainMenuObject.showMainMenu = false;
 
         // we wait for the ng-view animation to end before we show the video elements. This
         // is necessary because the video interferes with the animations.

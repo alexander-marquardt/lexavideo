@@ -281,37 +281,7 @@ angular.module('lxMainView.controllers', [])
         lxChannelService.initializeChannel($scope, clientId);
 
 
-        // handle case when a route change promise is not resolved
-        $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
-            $log.error('Error: $routeChangeError failure in lxMain.routes. ' + rejection);
-        });
 
-        $rootScope.$on('$locationChangeStart', function(event, next, current) {
-            $log.debug('Next route: ' + next);
-            $log.debug('Current route: ' + current);
-        });
-
-        $rootScope.$on('$locationChangeSuccess', function() {
-            $log.debug('$locationChangeSuccess called');
-        });
-
-        $rootScope.$on('$routeChangeSuccess', function() {
-            $scope.mainMenuObject.showMainMenu = false;
-
-            // set the values on chatRoomDisplayObject
-            var chatRoomNameFromUrl = $route.current.params.chatRoomName;
-
-            if (chatRoomNameFromUrl) {
-                $rootScope.chatRoomDisplayObject.chatRoomNameFromUrl = chatRoomNameFromUrl;
-                $rootScope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl = chatRoomNameFromUrl.toLowerCase();
-                $rootScope.chatRoomDisplayObject.lastChatRoomNameFromUrl = chatRoomNameFromUrl;
-            }
-            else {
-                $rootScope.chatRoomDisplayObject.chatRoomNameFromUrl = null;
-                $rootScope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl = null;
-                // Note: do not null lastChatRoomNameFromUrl as it "remembers" the last chat room
-            }
-        });
     });
 
 

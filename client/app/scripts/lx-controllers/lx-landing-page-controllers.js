@@ -21,6 +21,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         angular.extend(lxLandingPageConstantsService, lxLandingPageConstantsEmbeddedInHtml);
 
         $scope.lxMainViewCtrl.currentView = 'lxLandingPageCtrl';
+        $scope.mainMenuObject.showMainMenu = false;
 
         $scope.videoStateInfoObject.enableShowVideoElements = false;
         $scope.chatboxPanelElementObject.videoIsFocused = false;
