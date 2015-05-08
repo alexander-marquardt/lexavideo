@@ -35,10 +35,12 @@ angular.module('lxChatRoom.services', [])
 
             removeClientFromRoomClientSide: function(scope, normalizedChatRoomName) {
 
+                var chatRoomId = scope.roomOccupancyDict[normalizedChatRoomName].chatRoomId;
+                delete scope.chatPanelDict[chatRoomId];
+                delete scope.roomOccupancyDict[normalizedChatRoomName];
+
                 // remove the room name from normalizedOpenRoomNamesList
                 lxJs.removeItemFromList(normalizedChatRoomName, scope.normalizedOpenRoomNamesList);
-
-                delete scope.roomOccupancyDict[normalizedChatRoomName];
 
                 if (angular.equals({}, scope.roomOccupancyDict)) {
                     $location.path('/:none:');
