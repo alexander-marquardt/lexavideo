@@ -272,6 +272,19 @@ class LoginHandler(BaseHandler):
 
 
 class CreateTemporaryUserHandler(BaseHandler):
+
+    def _serve_page(self, failed=False):
+        user_name = self.request.get('user_name')
+        params = {
+            'user_name': user_name,
+            'failed': failed
+        }
+
+        template = jinja_environment.get_template('/lx-templates/temp-login.html')
+        content = template.render(params)
+        self.response.out.write(content)
+
+
     def get(self):
         self._serve_page()
 
@@ -304,16 +317,6 @@ class CreateTemporaryUserHandler(BaseHandler):
             logging.info('Failed to create user_name %s', user_name)
             self._serve_page(failed=True)
 
-    def _serve_page(self, failed=False):
-        user_name = self.request.get('user_name')
-        params = {
-            'user_name': user_name,
-            'failed': failed
-        }
-
-        template = jinja_environment.get_template('/lx-templates/temp-login.html')
-        content = template.render(params)
-        self.response.out.write(content)
 
 
 class LogoutHandler(BaseHandler):
