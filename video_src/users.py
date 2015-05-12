@@ -32,7 +32,8 @@ class UserTrackRoomsModel(ndb.Model):
 #    },
 #
 # This model inherits from the webapp2 models.User and so has additional properties and methods that are
-# not shown here.
+# not shown here. See the webapp2 models.User to better understand the functionality that this class
+# inherits.
 class UserModel(webapp2_extras.appengine.auth.models.User):
 
     unique_model = UniqueUserModel
