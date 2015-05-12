@@ -12,27 +12,34 @@
             <div class="well col-xs-12 text-left cl-landing-page-well"
                 ng-class="{'cl-landing-page-well-when-video-open':videoStateInfoObject.numOpenVideoExchanges >= 1}">
 
-                <h3>Enter into a chat room</h3>
                 <div class="clearfix">
                     <form name="createRoomForm" role="form" novalidate>
-                        <div class="cl-room-name-input">
+                        <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4">
                             <div class="form-group">
 
+                                <label for="id-inputRoomName">Enter into a chat room</label>
+                                <div class="input-group">
+                                    <input class=" form-control"
+                                           id="id-inputRoomName"
+                                           placeholder="Name of chat room to create and/or join"
+                                           name="chatRoomNameInputElem"
+                                           ng-model="roomObj.chatRoomName"
+                                           ng-minlength="{{ minInputLength }}"
+                                           maxlength = "{{ maxInputLength }}"
+                                           ng-class="highlightInput(createRoomForm.chatRoomNameInputElem)"
+                                           ng-pattern="validRoomNamesPattern"
+                                           ng-trim="false"
+                                           check-for-room-occupancy-directive
+                                           required
+                                            />
 
-                                <label for="id-inputRoomName">Chat room name</label>
-                                <input class=" form-control"
-                                       id="id-inputRoomName"
-                                       placeholder="Name of chat room to create and/or join"
-                                       name="chatRoomNameInputElem"
-                                       ng-model="roomObj.chatRoomName"
-                                       ng-minlength="{{ minInputLength }}"
-                                       maxlength = "{{ maxInputLength }}"
-                                       ng-class="highlightInput(createRoomForm.chatRoomNameInputElem)"
-                                       ng-pattern="validRoomNamesPattern"
-                                       ng-trim="false"
-                                       check-for-room-occupancy-directive
-                                       required
-                                        />
+                                    <span class="input-group-btn">
+                                        <button ng-click="goToRoomUrl(roomObj.chatRoomName)" class="btn btn-primary"
+                                                ng-disabled="createRoomForm.$invalid || createRoomForm.chatRoomNameInputElem.userIsWaitingForRoomStatus">
+                                            {{ createRoomForm.chatRoomNameInputElem.submitButtonText }}</button>
+                                    </span>
+                                </div>
+
                                 <div class="cl-feedback-on-input-validity-div"
                                      ng-show="createRoomForm.chatRoomNameInputElem.$dirty || createRoomForm.$valid">
                                     <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
@@ -53,16 +60,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-
-                        <div class="form-group">
-                            <div>
-                                <button ng-click="goToRoomUrl(roomObj.chatRoomName)" class="btn btn-primary"
-                                        ng-disabled="createRoomForm.$invalid || createRoomForm.chatRoomNameInputElem.userIsWaitingForRoomStatus">
-                                    {{ createRoomForm.chatRoomNameInputElem.submitButtonText }}</button>
-                            </div>
-
                         </div>
                     </form>
                 </div>
