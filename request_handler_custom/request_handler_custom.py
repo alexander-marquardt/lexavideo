@@ -34,14 +34,15 @@ class BaseHandler(webapp2.RequestHandler):
     def user(self):
         """Shortcut to access the current logged in user.
 
-        Unlike user_info, it fetches information from the persistence layer and
+        Fetches information from the persistence layer and
         returns an instance of the underlying model.
 
         :returns
           The instance of the user model associated to the logged in user.
         """
-        u = self.user_info
-        return self.user_model.get_by_id(u['user_id']) if u else None
+        user_id = self.session['user_id']
+        user_obj = self.user_model.get_by_id(user_id)
+        return user_obj
 
     @webapp2.cached_property
     def user_model(self):
@@ -51,21 +52,6 @@ class BaseHandler(webapp2.RequestHandler):
         """
         return self.auth.store.user_model
 
-
-    def render_template(self, view_filename, params=None):
-        if not params:
-            params = {}
-        user = self.user_info
-        params['user'] = user
-        path = os.path.join(os.path.dirname(__file__), 'views', view_filename)
-        self.response.out.write(template.render(path, params))
-
-    def display_message(self, message):
-        """Utility function to display a template with a simple message."""
-        params = {
-            'message': message
-        }
-        self.render_template('message.html', params)
 
     # this is needed for webapp2 sessions to work. Note, we use gaesessions instead of webapp2 sessions
     # to track our user sessions.
