@@ -41,14 +41,14 @@
                              lx-dummy-chatbox-view.html is shown until a new chatbox is loaded.
                              -->
                         <div class="panel cl-chat-panel panel-primary"
-                             ng-show="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible">
+                             ng-show="chatRoomDisplayObject.normalizedChatRoomNameFromUrl == currentNormalizedChatRoomNameFromRepeat">
 
                             <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
 
                                 <!-- if this chat panel is not currently shown, then remove the code that updates the
                                      list of groups and the group members. This removes watchers and ng-repeats that
                                      could slow down the app -->
-                                <div ng-if="chatPanelDict[roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible">
+                                <div ng-if="chatRoomDisplayObject.normalizedChatRoomNameFromUrl == currentNormalizedChatRoomNameFromRepeat">
 
                                     <!-- define the open chats button -->
                                     <div class="btn-group pull-left"

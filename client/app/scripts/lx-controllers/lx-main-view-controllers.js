@@ -254,7 +254,7 @@ angular.module('lxMainView.controllers', [])
         //    // initially keep the chat panel glued so that the most recent messages are shown.
         //    chatPanelIsGlued: true,
         //    numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
-        //    chatPanelIsCurrentlyVisible: false
+        //    normalizedChatRoomName: string
         // };
         $scope.chatPanelDict = {};
 

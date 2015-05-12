@@ -82,7 +82,7 @@ angular.module('lxChatRoom.services', [])
             innerWaitForChannelReady();
         };
 
-        function setChatPanelDictAndChatRoomDisplay($scope, chatRoomId) {
+        function setChatPanelDictAndChatRoomDisplay($scope, chatRoomId, normalizedChatRoomName) {
 
             // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
             // from the "global" unseenMessageCount before zeroing it.
@@ -94,7 +94,7 @@ angular.module('lxChatRoom.services', [])
             $scope.chatPanelDict[chatRoomId] = {
                 chatPanelIsGlued: true,
                 numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
-                chatPanelIsCurrentlyVisible: true
+                normalizedChatRoomName: normalizedChatRoomName
             };
 
             $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[chatRoomId];
@@ -144,7 +144,7 @@ angular.module('lxChatRoom.services', [])
 
                         addClientToRoomWhenChannelReady($scope, data.chatRoomId);
 
-                        setChatPanelDictAndChatRoomDisplay($scope, data.chatRoomId);
+                        setChatPanelDictAndChatRoomDisplay($scope, data.chatRoomId, data.normalizedChatRoomName);
 
                         // Push the normalizedRoomName to to first location in normalizedOpenRoomNamesList.
                         lxJs.removeItemFromList(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList);
