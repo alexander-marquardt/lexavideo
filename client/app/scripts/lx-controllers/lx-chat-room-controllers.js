@@ -13,6 +13,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
     .controller('lxChatViewCtrl', function(
         $location,
+        $routeParams,
         $scope,
         $timeout,
         lxHttpChannelService,
@@ -47,40 +48,54 @@ angular.module('lxUseChatRoom.controllers', [])
             innerWaitForChannelReady();
         };
 
-        lxChatRoomMembersService.createOrGetRoom().then(function(data) {
-            $scope.receivedChatMessageObject[data.chatRoomId] = {};
-
-            addClientToRoomWhenChannelReady(data.chatRoomId);
+        function setChatPanelDictAndChatRoomDisplay($scope, chatRoomId) {
 
             // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
             // from the "global" unseenMessageCount before zeroing it.
-            if (data.chatRoomId in $scope.chatPanelDict) {
+            if (chatRoomId in $scope.chatPanelDict) {
                 lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject,
-                    $scope.chatPanelDict[data.chatRoomId]);
+                    $scope.chatPanelDict[chatRoomId]);
             }
 
-            $scope.chatPanelDict[data.chatRoomId] = {
+            $scope.chatPanelDict[chatRoomId] = {
                 chatPanelIsGlued: true,
                 numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
                 chatPanelIsCurrentlyVisible: true
             };
 
-            $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[data.chatRoomId];
-            $scope.chatRoomDisplayObject.chatRoomId = data.chatRoomId;
+            $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[chatRoomId];
+            $scope.chatRoomDisplayObject.chatRoomId = chatRoomId;
+        }
 
-            // Push the normalizedRoomName to to first location in normalizedOpenRoomNamesList.
-            lxJs.removeItemFromList(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList);
-            $scope.normalizedOpenRoomNamesList.unshift(data.normalizedChatRoomName);
+        function clearChatRoomDisplayObject($scope) {
+            $scope.chatRoomDisplayObject.chatPanelObject = null;
+            $scope.chatRoomDisplayObject.chatRoomId = null;
+        }
 
-        }, function(errorEnteringIntoRoomInfoObj) {
-            // The following sets an error on a global object that will be picked up by the javascript
-            // when the user is sent back to the main landing page, at which point the user will
-            // be shown a message indicating that there was an error, and another chance to go into
-            // a different room.
-            $scope.mainGlobalControllerObj.errorEnteringIntoRoomInfoObj = errorEnteringIntoRoomInfoObj;
-            $location.path('/');
-        });
+        if ($routeParams.chatRoomName !== ':none:') {
+            lxChatRoomMembersService.createOrGetRoom().then(function (data) {
+                $scope.receivedChatMessageObject[data.chatRoomId] = {};
 
+                addClientToRoomWhenChannelReady(data.chatRoomId);
+
+                setChatPanelDictAndChatRoomDisplay($scope, data.chatRoomId);
+
+                // Push the normalizedRoomName to to first location in normalizedOpenRoomNamesList.
+                lxJs.removeItemFromList(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList);
+                $scope.normalizedOpenRoomNamesList.unshift(data.normalizedChatRoomName);
+
+            }, function (errorEnteringIntoRoomInfoObj) {
+                // The following sets an error on a global object that will be picked up by the javascript
+                // when the user is sent back to the main landing page, at which point the user will
+                // be shown a message indicating that there was an error, and another chance to go into
+                // a different room.
+                $scope.mainGlobalControllerObj.errorEnteringIntoRoomInfoObj = errorEnteringIntoRoomInfoObj;
+                $location.path('/');
+            });
+        }
+        else {
+            clearChatRoomDisplayObject($scope);
+        }
     })
 
     .controller('lxMainVideoCtrl',

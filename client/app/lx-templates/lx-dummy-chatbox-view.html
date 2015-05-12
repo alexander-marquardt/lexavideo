@@ -12,10 +12,15 @@
              set-classes-for-common-area>
             <div class="cl-transition-margins-and-width">
 
-                <div class="panel cl-chat-panel panel-primary">
+                <div ng-if="chatRoomDisplayObject.chatRoomNameFromUrl != ':none:'" class="panel cl-chat-panel panel-primary">
                     <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center"></div>
                     <div class="panel-body cl-chat-panel-body cl-chat-panel-body-height"></div>
                     <div class="panel-footer cl-chat-panel-footer"></div>
+                </div>
+                <div ng-if="chatRoomDisplayObject.chatRoomNameFromUrl == ':none:'" class="panel cl-chat-panel panel-primary">
+                    <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">No chats are open</div>
+                    <div class="panel-body cl-chat-panel-body cl-chat-panel-body-height"></div>
+                    <div class="panel-footer cl-chat-panel-footer"><a href="/" class="btn btn-default pull-right"><span class="icon-lx-new-chat"></span> New chat</a></div>
                 </div>
             </div>
         </div>

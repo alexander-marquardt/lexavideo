@@ -43,9 +43,17 @@ angular.module('lxChatRoom.services', [])
                 lxJs.removeItemFromList(normalizedChatRoomName, scope.normalizedOpenRoomNamesList);
 
                 if (angular.equals({}, scope.roomOccupancyDict)) {
-                    $location.path('/:none:');
+                    if (scope.videoStateInfoObject.numOpenVideoExchanges >= 1) {
+                        $location.path('/:none:');
+                    }
+                    else {
+                        $location.path('/');
+                    }
                 }
                 else {
+                    // If there are chat rooms available, then we open the one in the first position in
+                    // normalizedOpenRoomNamesList, since it is used as a stack (see comment
+                    // above normalizedOpenRoomNamesList for more info).
                     normalizedChatRoomName = scope.normalizedOpenRoomNamesList[0];
                     var chatRoomNameAsWritten = scope.roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten;
                     $location.path('/' + chatRoomNameAsWritten);

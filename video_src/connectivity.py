@@ -165,7 +165,11 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
 
         # We only update the user presence in the case that this is posted to as an acknowledgement
         # of a heartbeat. If we were to update presence state in other cases, then the memcache and other timeouts
-        # that are synchronized to the heartbeat timing would be incorrect.
+        # that are synchronized to the heartbeat timing would be incorrect (eg. This function is also called when
+        # the user changes rooms so that they receive an updated list of room members, but that doesn't mean
+        # that their channel is currently up an running -- the channel is only proven to be up if we have received
+        # an ackHeartBeat message from the client, as the client sends ackHeartBeat as a response to a
+        # synAckHeartBeat message that is sent on the channel)
         if message_type == 'ackHeartbeat':
             client_obj = clients.ClientModel.get_by_id(client_id)
             client_obj.store_current_presence_state(presence_state_name)
@@ -178,8 +182,10 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         # Chat room that the client is currently looking at needs an up-to-date view of
         # clients and their activity. Other rooms do not need to be updated as often. Send the 
         # client an updated list of the room members.
-        chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(currently_open_chat_room_id)
-        messaging.send_room_occupancy_to_clients(chat_room_obj, [client_id,], recompute_members_from_scratch=False)
+        if currently_open_chat_room_id is not None:
+            chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(currently_open_chat_room_id)
+            messaging.send_room_occupancy_to_clients(chat_room_obj, [client_id,], recompute_members_from_scratch=False)
+
         http_helpers.set_http_ok_json_response(self.response, {})
 
 class RequestChannelToken(webapp2.RequestHandler):
