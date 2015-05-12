@@ -94,7 +94,17 @@ angular.module('lxUseChatRoom.controllers', [])
             });
         }
         else {
-            clearChatRoomDisplayObject($scope);
+            if ($scope.videoStateInfoObject.numOpenVideoExchanges >= 1) {
+                // We should only ever get to the ":none:" room if the user is still viewing video after closing
+                // all of their open chats. Therefore, set videoIsFocused to true.
+                $scope.chatboxPanelElementObject.videoIsFocused = true;
+                clearChatRoomDisplayObject($scope);
+            }
+            else {
+                // Otherwise, this use has attempted to directly enter into the ":none:" room, which is never allowed
+                // redirect them back to the landing page.
+                $location.path('/');
+            }
         }
     })
 
