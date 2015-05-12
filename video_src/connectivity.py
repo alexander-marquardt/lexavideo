@@ -31,11 +31,9 @@ class AddClientToRoom(webapp2.RequestHandler):
 
 
         if new_client_has_been_added:
-            # Send a notification to other room members that a new client has joined the room
-            # Note: we don't send the status to the current client, because the client-side javascript already
-            # requests an updated room occupancy whenever a new room is opened and/or brought to the foreground.
+            # Send a notification to all room members that a new client has joined the room
             messaging.send_room_occupancy_to_clients(chat_room_obj,
-                                                          chat_room_obj.get_list_of_other_client_ids(client_id),
+                                                          chat_room_obj.room_members_client_ids,
                                                           recompute_members_from_scratch=True)
 
 
