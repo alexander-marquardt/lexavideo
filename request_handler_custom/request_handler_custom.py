@@ -29,17 +29,6 @@ class BaseHandler(webapp2.RequestHandler):
         """Shortcut to access the auth instance as a property."""
         return auth.get_auth()
 
-    @webapp2.cached_property
-    def user_info(self):
-        """Shortcut to access a subset of the user attributes that are stored
-        in the session.
-
-        The list of attributes to store in the session is specified in
-          config['webapp2_extras.auth']['user_attributes'].
-        :returns
-          A dictionary with most user information
-        """
-        return self.auth.get_user_by_session()
 
     @webapp2.cached_property
     def user(self):
@@ -78,7 +67,8 @@ class BaseHandler(webapp2.RequestHandler):
         }
         self.render_template('message.html', params)
 
-    # this is needed for webapp2 sessions to work
+    # this is needed for webapp2 sessions to work. Note, we use gaesessions instead of webapp2 sessions
+    # to track our user sessions.
     def dispatch(self):
         lifetime = datetime.timedelta(minutes=60)
 
