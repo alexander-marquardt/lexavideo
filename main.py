@@ -49,8 +49,14 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/', views.MainPage, name='main'),
 
     # Don't use webapp2.Route for the following "catch-all" -- for some reason it doesn't work correctly if used
-    (r'/.*', views.MainPage),
-    ], debug=vidsetup.DEBUG_BUILD, config=registration_and_login.config)
+    (r'/.*', views.MainPage),],
+    debug=vidsetup.DEBUG_BUILD,
+    config = {
+        'webapp2_extras.auth': {
+            'user_model': 'video_src.users.UserModel',
+            },
+    }
+)
 
 
 from video_src import http_helpers

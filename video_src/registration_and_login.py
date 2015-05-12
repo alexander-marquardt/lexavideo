@@ -232,10 +232,4 @@ class AuthenticatedHandler(BaseHandler):
     def get(self):
         self.render_template('authenticated.html')
 
-config = {
-    'webapp2_extras.auth': {
-        'user_model': 'video_src.users.UserModel',
-    },
-    'webapp2_extras.sessions': constants.session_settings
-}
 

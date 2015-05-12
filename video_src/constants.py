@@ -36,15 +36,6 @@ long_star_separator = '*'*80
 
 password_pepper = u'Pepper:Iñtërnâtiônàlizætiøn'
 
-session_settings = {
-        'secret_key': 'FooBar123$%^%%%QQQQQQ',
-        'cookie_name': 'ChatSurfing',
-        'session_max_age': 600,
-        'cookie_args': {
-            'max_age': 600,
-        }
-}
-
 cookie_key = '13f2xi^7170a0a564fc2a26b8ffae123-5a17'
 
 # The client periodically updates that server with their status, and if a heartbeat is missed then we can
