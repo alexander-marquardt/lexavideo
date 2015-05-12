@@ -19,7 +19,7 @@
         <div class=" cl-col-no-padding cl-main-ng-view-area-absolute-div cl-transition-margins-and-width"
              set-classes-for-common-area>
             <div class="cl-transition-margins-and-width">
-                <div ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
+                <div ng-repeat="(currentNormalizedChatRoomNameFromRepeat, roomOccupancyObject) in roomOccupancyDict">
                     <div ng-controller="lxChatPanelCtrl">
 
 
@@ -70,7 +70,7 @@
 
                                                 <span style="white-space:nowrap;">
                                                     <a href="/{{ roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomNameAsWritten }}"
-                                                       ng-click="normalizedChatRoomNameInDropdown == normalizedChatRoomName? gluePanel(): ''">
+                                                       ng-click="normalizedChatRoomNameInDropdown == currentNormalizedChatRoomNameFromRepeat? gluePanel(): ''">
                                                         <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
                                                             <span class="cl-bubble cl-bubble-right cl-message-count-bubble-override"><i></i>
                                                                 {{ chatPanelDict[roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
@@ -91,7 +91,7 @@
                                     </span>
                                     <button type="button"
                                             class="btn btn-primary cl-btn-primary-darker cl-btn-circle-24 cl-btn-primary-darker"
-                                            ng-click="removeClientFromRoomInterfaceFn(normalizedChatRoomName)">
+                                            ng-click="removeClientFromRoomInterfaceFn(currentNormalizedChatRoomNameFromRepeat)">
                                         <span class="icon-lx-x-symbol"></span>
                                     </button>
 

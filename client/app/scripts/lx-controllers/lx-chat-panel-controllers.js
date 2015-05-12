@@ -6,6 +6,7 @@
 
 angular.module('lxChatbox.controllers', [])
 
+    // Note: each panel has it's own lxChatPanelCtrl.
     .controller('lxChatPanelCtrl',
     function (
         $anchorScroll,
@@ -113,9 +114,13 @@ angular.module('lxChatbox.controllers', [])
 
         $scope.$watch('chatRoomDisplayObject.normalizedChatRoomNameFromUrl', function() {
 
-            // Check if the chat room name has changed - if so, update appropriate structures.
-            if ($scope.normalizedChatRoomName && $scope.chatRoomDisplayObject &&
-                $scope.normalizedChatRoomName === $scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl) {
+            // Check if the chat room name has changed - if so, update appropriate structures. Remember that
+            // each panel has it's own chatPanelCtrl controller, and it's own scope. Only one of these should
+            // have chatPanelIsCurrentlyVisible set to true. Additionally, it is expected that this controller
+            // has appeared inside a repeat over the items in chatPanelDict, and that is where the
+            // currentNormalizedChatRoomNameFromRepeat gets placed on the scope.
+            if ($scope.currentNormalizedChatRoomNameFromRepeat && $scope.chatRoomDisplayObject &&
+                $scope.currentNormalizedChatRoomNameFromRepeat === $scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl) {
 
                 $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId].chatPanelIsCurrentlyVisible = true;
                 $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[$scope.roomOccupancyObject.chatRoomId];
