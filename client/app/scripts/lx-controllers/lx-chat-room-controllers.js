@@ -17,9 +17,7 @@ angular.module('lxUseChatRoom.controllers', [])
         $scope,
         $timeout,
         lxHttpChannelService,
-        lxChatRoomMembersService,
-        lxShowNumMessagesService,
-        lxJs
+        lxChatRoomMembersService
         ) {
 
         $scope.lxMainViewCtrl.currentView = 'lxChatViewCtrl';
@@ -35,77 +33,7 @@ angular.module('lxUseChatRoom.controllers', [])
             });
         });
 
-        var addClientToRoomWhenChannelReady = function(chatRoomId) {
-            var innerWaitForChannelReady = function() {
-                if (!$scope.channelObject.channelIsAlive) {
-                    $timeout(innerWaitForChannelReady, 100);
-                } else {
-                    // Add the user to the room, now that the channel is open
-                    lxHttpChannelService.addClientToRoom($scope.lxMainViewCtrl.clientId,
-                        $scope.lxMainViewCtrl.userId, chatRoomId);
-                }
-            };
-            innerWaitForChannelReady();
-        };
-
-        function setChatPanelDictAndChatRoomDisplay($scope, chatRoomId) {
-
-            // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
-            // from the "global" unseenMessageCount before zeroing it.
-            if (chatRoomId in $scope.chatPanelDict) {
-                lxShowNumMessagesService.subtractNumMessagesSeen($scope.trackUnseenMessageCountObject,
-                    $scope.chatPanelDict[chatRoomId]);
-            }
-
-            $scope.chatPanelDict[chatRoomId] = {
-                chatPanelIsGlued: true,
-                numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
-                chatPanelIsCurrentlyVisible: true
-            };
-
-            $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[chatRoomId];
-            $scope.chatRoomDisplayObject.chatRoomId = chatRoomId;
-        }
-
-        function clearChatRoomDisplayObject($scope) {
-            $scope.chatRoomDisplayObject.chatPanelObject = null;
-            $scope.chatRoomDisplayObject.chatRoomId = null;
-        }
-
-        if ($routeParams.chatRoomName !== ':none:') {
-            lxChatRoomMembersService.createOrGetRoom().then(function (data) {
-                $scope.receivedChatMessageObject[data.chatRoomId] = {};
-
-                addClientToRoomWhenChannelReady(data.chatRoomId);
-
-                setChatPanelDictAndChatRoomDisplay($scope, data.chatRoomId);
-
-                // Push the normalizedRoomName to to first location in normalizedOpenRoomNamesList.
-                lxJs.removeItemFromList(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList);
-                $scope.normalizedOpenRoomNamesList.unshift(data.normalizedChatRoomName);
-
-            }, function (errorEnteringIntoRoomInfoObj) {
-                // The following sets an error on a global object that will be picked up by the javascript
-                // when the user is sent back to the main landing page, at which point the user will
-                // be shown a message indicating that there was an error, and another chance to go into
-                // a different room.
-                $scope.mainGlobalControllerObj.errorEnteringIntoRoomInfoObj = errorEnteringIntoRoomInfoObj;
-                $location.path('/');
-            });
-        }
-        else {
-            if ($scope.videoStateInfoObject.numOpenVideoExchanges >= 1) {
-                // We should only ever get to the ":none:" room if the user is still viewing video after closing
-                // all of their open chats. Therefore, set videoIsFocused to true.
-                $scope.chatboxPanelElementObject.videoIsFocused = true;
-                clearChatRoomDisplayObject($scope);
-            }
-            else {
-                // Otherwise, this use has attempted to directly enter into the ":none:" room, which is never allowed
-                // redirect them back to the landing page.
-                $location.path('/');
-            }
-        }
+        lxChatRoomMembersService.handleChatRoomNameFromUrl($scope)
     })
 
     .controller('lxMainVideoCtrl',

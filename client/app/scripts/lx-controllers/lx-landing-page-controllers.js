@@ -14,6 +14,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $location,
         $log,
         $scope,
+        lxChatRoomMembersService,
         lxLandingPageConstantsService,
         lxHttpHandleRoomService,
         lxAppWideConstantsService) {
@@ -53,12 +54,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
              $location.path('/' +  chatRoomName);
         };
 
-        // TODO - refactor this - combine with code in chat-room-controller
-        function clearChatRoomDisplayObject($scope) {
-            $scope.chatRoomDisplayObject.chatPanelObject = null;
-            $scope.chatRoomDisplayObject.chatRoomId = null;
-        }
-        clearChatRoomDisplayObject($scope);
+        lxChatRoomMembersService.clearChatRoomDisplayObject($scope);
 
         $scope.roomStatus = {};
 
