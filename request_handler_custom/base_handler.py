@@ -52,8 +52,9 @@ class BaseHandler(webapp2.RequestHandler):
         return self.auth.store.user_model
 
 
-    # this is needed for webapp2 sessions to work. Note, we use gaesessions instead of webapp2 sessions
-    # to track our user sessions.
+    # This inserts the session into the request handler ("self"). Note, we use our own custom token-based
+    # sessions instead of webapp2 sessions. In order to access the session, classes must inherit from
+    # this class (BaseHandler) instead of the standard webapp2.RequestHandler.
     def dispatch(self):
 
         authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')

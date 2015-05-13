@@ -21,8 +21,6 @@ from video_src import registration_and_login
 from video_src import messaging
 from video_src import views
 
-import gaesessions
-
 # Note: there is an inconsistency in using trailing slashes due to the fact that the google api uses trailing
 # slashes on their channel URLs, but the angular resource api generates URLs that do not contain trailing
 # slashes (ie. the handle_room URL below). We have decided to use both styles, as it really doesn't matter much.
@@ -41,7 +39,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/channel/update_client_status_and_request_updated_room_info/', connectivity.UpdateClientStatusAndRequestUpdatedRoomInfo),
     webapp2.Route(r'/_lx/channel/request_channel_token/', connectivity.RequestChannelToken),
     webapp2.Route(r'/_lx/channel/manual_disconnect/', connectivity.ManuallyDisconnectClient),
-    webapp2.Route(r'/_lx/admin/cleanup_sessions', gaesessions.SessionAdmin, handler_method='cleanup_sessions'),
     webapp2.Route(r'/_ah/channel/connected/',  connectivity.ConnectClient),
     webapp2.Route(r'/_ah/channel/disconnected/',  connectivity.AutoDisconnectClient),
 
