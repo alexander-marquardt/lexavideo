@@ -37,6 +37,7 @@ long_star_separator = '*'*80
 password_pepper = u'Pepper:Iñtërnâtiônàlizætiøn'
 
 secret_key = '13f2xi^7170a0a564fc2a26b8ffae123-5a17'
+token_session_expiry_days = 30
 
 # The client periodically updates that server with their status, and if a heartbeat is missed then we can
 # presume that the user has closed the connection to our website.
