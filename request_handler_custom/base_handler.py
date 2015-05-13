@@ -7,6 +7,7 @@ import webapp2
 from webapp2_extras import auth
 
 import gaesessions
+import jwt
 from video_src import constants
 
 def user_required(handler):
@@ -57,6 +58,11 @@ class BaseHandler(webapp2.RequestHandler):
     # to track our user sessions.
     def dispatch(self):
         lifetime = datetime.timedelta(minutes=60)
+
+        authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
+        if authorization_header:
+            (bearer_txt, split_char, token) = authorization_header.partition(' ')
+            payload = jwt.decode(token, constants.secret_key)
 
         # Get a session for this request
         # Since we are not passing an "sid" to Session, the session will be read from a cookie.
