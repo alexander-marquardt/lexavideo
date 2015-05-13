@@ -39,9 +39,8 @@ class GetView(BaseHandler):
     @handle_exceptions
     def get(self, current_template):
 
-        params = {}
         target_page = current_template
-        write_jinja_response(self.response, target_page, params)
+        write_jinja_response(self.response, target_page, {})
 
 
 class LandingPageMain(webapp2.RequestHandler):

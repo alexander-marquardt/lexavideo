@@ -57,28 +57,16 @@ class BaseHandler(webapp2.RequestHandler):
     # this is needed for webapp2 sessions to work. Note, we use gaesessions instead of webapp2 sessions
     # to track our user sessions.
     def dispatch(self):
-        lifetime = datetime.timedelta(minutes=60)
 
         authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
         if authorization_header:
             (bearer_txt, split_char, token) = authorization_header.partition(' ')
-            payload = jwt.decode(token, constants.secret_key)
+            token_payload = jwt.decode(token, constants.secret_key)
+            self.session = token_payload
+        else:
+            self.session = {}
 
-        # Get a session for this request
-        # Since we are not passing an "sid" to Session, the session will be read from a cookie.
-        # If there is no session associated with the cookie, then the session will remain unset until
-        # it is written (eg. by executing "self.session['user_id'] = user_id"), at which point
-        # a new session id will be assigned and the session is created.
-        self.session = gaesessions.Session(lifetime=lifetime, cookie_key=constants.secret_key)
+        # Dispatch the request.
+        webapp2.RequestHandler.dispatch(self)
 
-        try:
-            # Dispatch the request.
-            webapp2.RequestHandler.dispatch(self)
-        finally:
-            # Save the session
-            self.session.save()
-
-            # update the response to contain the cookie
-            for ch in self.session.make_cookie_headers():
-                self.response.headers.add('Set-Cookie', ch)
 
