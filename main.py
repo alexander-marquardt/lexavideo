@@ -27,7 +27,6 @@ import gaesessions
 # slashes on their channel URLs, but the angular resource api generates URLs that do not contain trailing
 # slashes (ie. the handle_room URL below). We have decided to use both styles, as it really doesn't matter much.
 app = webapp2.WSGIApplication([
-    webapp2.Route(r'/_lx<current_template:/lx-templates/lx-chatbox.html>/<chat_room_name_from_url:.+>', views.ChatBox),
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-landing-page-main.html>', views.LandingPageMain),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
     webapp2.Route(r'/_lx/create_new_room_if_does_not_exist/', chat_room_module.CreateNewRoomIfDoesNotExist),

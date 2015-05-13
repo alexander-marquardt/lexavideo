@@ -9,10 +9,9 @@ import jinja2
 from webapp2_extras.auth import InvalidAuthIdError
 from webapp2_extras.auth import InvalidPasswordError
 
-from request_handler_custom.request_handler_custom import BaseHandler
-from request_handler_custom.request_handler_custom import user_required
+from request_handler_custom.base_handler import BaseHandler
+from request_handler_custom.base_handler import user_required
 import vidsetup
-from video_src import constants
 
 
 jinja_environment = jinja2.Environment(

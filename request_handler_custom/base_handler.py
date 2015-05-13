@@ -1,10 +1,10 @@
+# Much of this code is originally from:
+# http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
 
 import datetime
-import os.path
 
 import webapp2
 from webapp2_extras import auth
-from google.appengine.ext.webapp import template
 
 import gaesessions
 from video_src import constants
@@ -31,7 +31,7 @@ class BaseHandler(webapp2.RequestHandler):
 
 
     @webapp2.cached_property
-    def user(self):
+    def user_obj(self):
         """Shortcut to access the current logged in user.
 
         Fetches information from the persistence layer and

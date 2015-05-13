@@ -2,8 +2,11 @@
 
 import jinja2
 import json
+import logging
 import vidsetup
 import webapp2
+
+from request_handler_custom.base_handler import BaseHandler
 
 from video_src import constants
 from video_src import registration_and_login
@@ -32,38 +35,23 @@ def write_response(response, response_type, target_page, params):
 
 
 
-class GetView(webapp2.RequestHandler):
+class GetView(BaseHandler):
     """ Render whatever template the client has requested """
     
     @handle_exceptions
-    def get(self, current_template):   
+    def get(self, current_template):
+
+        if 'user_id' in self.session:
+            user_obj = self.user_obj
+            logging.debug('************* user_obj is %s'  % user_obj)
+        else:
+            logging.debug('************* Not logged in!!! ')
+
+
         response_type = 'jinja'
         params = {}
         target_page = current_template
         write_response(self.response, response_type, target_page, params)
-
-
-class ChatBox(webapp2.RequestHandler):
-    
-    @handle_exceptions
-    def get(self, current_template, chat_room_name_from_url):
-        user_agent = self.request.headers['User-Agent']
-
-
-        # if 'user_id' in self.session:
-        #     user_id = self.session['user_id']
-        #     logging.debug('************* user_id is %s'  % user_id)
-        # else:
-        #     logging.debug('************* Not logged in!!! ')
-
-        params = {
-            'site_name_dot_com': constants.site_name_dot_com
-        }
-        
-        # update the self.response with the current view
-        template = jinja_environment.get_template(current_template)
-        content = template.render(params)
-        self.response.out.write(content)
 
 
 class LandingPageMain(webapp2.RequestHandler):
