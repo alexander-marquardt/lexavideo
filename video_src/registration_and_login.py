@@ -10,14 +10,16 @@ import logging
 from webapp2_extras.auth import InvalidAuthIdError
 from webapp2_extras.auth import InvalidPasswordError
 
-from request_handler_custom.base_handler import BaseHandler
-from request_handler_custom.base_handler import user_required
 
 import vidsetup
 import jwt
 
 from video_src import constants
 from video_src import http_helpers
+
+from request_handler_custom import token_sessions
+from request_handler_custom.base_handler import BaseHandler
+from request_handler_custom.base_handler import user_required
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(vidsetup.BASE_STATIC_DIR),
@@ -207,7 +209,7 @@ class TempLogin(BaseHandler):
             # self.session['user_id'] = user_obj.key.id()
             #
             # self.redirect(self.uri_for('main'))
-            jwt_token = jwt.encode({'user_id': user_obj.key.id()}, constants.secret_key, algorithm='HS256')
+            jwt_token = token_sessions.generate_jwt_token(user_obj)
             response_dict = {
                 'token': jwt_token,
             }

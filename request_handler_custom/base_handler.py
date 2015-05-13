@@ -6,9 +6,7 @@ import datetime
 import webapp2
 from webapp2_extras import auth
 
-import gaesessions
-import jwt
-from video_src import constants
+from . import token_sessions
 
 def user_required(handler):
     """
@@ -59,12 +57,7 @@ class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
 
         authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
-        if authorization_header:
-            (bearer_txt, split_char, token) = authorization_header.partition(' ')
-            token_payload = jwt.decode(token, constants.secret_key)
-            self.session = token_payload
-        else:
-            self.session = {}
+        self.session = token_sessions.get_jwt_token_payload(authorization_header)
 
         # Dispatch the request.
         webapp2.RequestHandler.dispatch(self)
