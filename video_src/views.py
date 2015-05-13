@@ -25,12 +25,10 @@ jinja_environment = jinja2.Environment(
     undefined=jinja2.StrictUndefined)
 
 
-def write_response(response, response_type, target_page, params):
-    if response_type == 'json':
-        content = json.dumps(params)
-    else:
-        template = jinja_environment.get_template(target_page)
-        content = template.render(params)
+def write_jinja_response(response, target_page, params):
+
+    template = jinja_environment.get_template(target_page)
+    content = template.render(params)
     response.out.write(content)
 
 
@@ -48,10 +46,9 @@ class GetView(BaseHandler):
             logging.debug('************* Not logged in!!! ')
 
 
-        response_type = 'jinja'
         params = {}
         target_page = current_template
-        write_response(self.response, response_type, target_page, params)
+        write_jinja_response(self.response, target_page, params)
 
 
 class LandingPageMain(webapp2.RequestHandler):
@@ -59,7 +56,6 @@ class LandingPageMain(webapp2.RequestHandler):
     
     @handle_exceptions
     def get(self, current_template):
-        response_type = 'jinja'
 
         params = {
             # The following is an object that passes variables to the javascript code.
@@ -71,7 +67,7 @@ class LandingPageMain(webapp2.RequestHandler):
             }
 
         target_page = current_template
-        write_response(self.response, response_type, target_page, params)
+        write_jinja_response(self.response, target_page, params)
 
 
 class MainPage(registration_and_login.BaseHandler):
@@ -86,7 +82,6 @@ class MainPage(registration_and_login.BaseHandler):
         user_obj = users.txn_create_new_user()
 
         target_page = 'index.html'
-        response_type = 'jinja'
         params = {
             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
             'site_name_dot_com': constants.site_name_dot_com,
@@ -102,5 +97,5 @@ class MainPage(registration_and_login.BaseHandler):
             'enable_live_reload': vidsetup.ENABLE_LIVE_RELOAD,
             }
 
-        write_response(self.response, response_type, target_page, params)        
+        write_jinja_response(self.response, target_page, params)        
 
