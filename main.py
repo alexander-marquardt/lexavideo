@@ -35,6 +35,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/remove_client_from_room/', connectivity.RemoveClientFromRoom),
     webapp2.Route(r'/_lx/message_room', messaging.MessageRoom),
     webapp2.Route(r'/_lx/message_client', messaging.MessageClient),
+    webapp2.Route(r'/_lx/temp_login', registration_and_login.TempLogin),
     webapp2.Route(r'/_lx/log_error', error_reporting_from_client.LogClientError),
     webapp2.Route(r'/_lx/channel/syn_user_heartbeat/', connectivity.SynClientHeartbeat),
     webapp2.Route(r'/_lx/channel/update_client_status_and_request_updated_room_info/', connectivity.UpdateClientStatusAndRequestUpdatedRoomInfo),
@@ -43,7 +44,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/admin/cleanup_sessions', gaesessions.SessionAdmin, handler_method='cleanup_sessions'),
     webapp2.Route(r'/_ah/channel/connected/',  connectivity.ConnectClient),
     webapp2.Route(r'/_ah/channel/disconnected/',  connectivity.AutoDisconnectClient),
-    webapp2.Route(r'/temp-login', registration_and_login.CreateTemporaryUserHandler, name='temp-login'),
 
     webapp2.Route(r'/', views.MainPage, name='main'),
 

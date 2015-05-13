@@ -11,8 +11,12 @@ from webapp2_extras.auth import InvalidPasswordError
 
 from request_handler_custom.base_handler import BaseHandler
 from request_handler_custom.base_handler import user_required
-import vidsetup
 
+import vidsetup
+import jwt
+
+from video_src import constants
+from video_src import http_helpers
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(vidsetup.BASE_STATIC_DIR),
@@ -173,22 +177,7 @@ class LoginHandler(BaseHandler):
 
 
 
-class CreateTemporaryUserHandler(BaseHandler):
-
-    def _serve_page(self, failed=False):
-        user_name = self.request.get('user_name')
-        params = {
-            'user_name': user_name,
-            'failed': failed
-        }
-
-        template = jinja_environment.get_template('/lx-templates/temp-login.html')
-        content = template.render(params)
-        self.response.out.write(content)
-
-
-    def get(self):
-        self._serve_page()
+class TempLogin(BaseHandler):
 
     def post(self):
         user_name = self.request.get('user_name')
@@ -207,17 +196,24 @@ class CreateTemporaryUserHandler(BaseHandler):
 
         if user_created_bool:
             # close any active session the user has since he is trying to login
-            if self.session.is_active():
-                self.session.terminate()
-
-            # Writing a value to the session causes a new session to be created.
-            self.session['user_id'] = user_obj.key.id()
-
-            self.redirect(self.uri_for('main'))
+            # if self.session.is_active():
+            #     self.session.terminate()
+            #
+            # # Writing a value to the session causes a new session to be created.
+            # self.session['user_id'] = user_obj.key.id()
+            #
+            # self.redirect(self.uri_for('main'))
+            jwt_token = jwt.encode({'user_id': user_obj.key.id()}, constants.secret_key, algorithm='HS256')
+            response_dict = {
+                'token': jwt_token,
+            }
+            http_helpers.set_http_ok_json_response(self.response, response_dict)
 
         else:
-            logging.info('Failed to create user_name %s', user_name)
-            self._serve_page(failed=True)
+            err_msg = 'Failed to create user_name %s', user_name
+            logging.info(err_msg)
+            http_helpers.set_http_error_json_response(self.response, err_msg, http_status_code=401)
+
 
 
 

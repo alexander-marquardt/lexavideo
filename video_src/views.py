@@ -39,13 +39,6 @@ class GetView(BaseHandler):
     @handle_exceptions
     def get(self, current_template):
 
-        if 'user_id' in self.session:
-            user_obj = self.user_obj
-            logging.debug('************* user_obj is %s'  % user_obj)
-        else:
-            logging.debug('************* Not logged in!!! ')
-
-
         params = {}
         target_page = current_template
         write_jinja_response(self.response, target_page, params)

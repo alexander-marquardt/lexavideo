@@ -63,7 +63,7 @@ class BaseHandler(webapp2.RequestHandler):
         # If there is no session associated with the cookie, then the session will remain unset until
         # it is written (eg. by executing "self.session['user_id'] = user_id"), at which point
         # a new session id will be assigned and the session is created.
-        self.session = gaesessions.Session(lifetime=lifetime, cookie_key=constants.cookie_key)
+        self.session = gaesessions.Session(lifetime=lifetime, cookie_key=constants.secret_key)
 
         try:
             # Dispatch the request.
