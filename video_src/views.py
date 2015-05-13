@@ -30,7 +30,7 @@ def write_jinja_response(response, target_page, params):
     template = jinja_environment.get_template(target_page)
     content = template.render(params)
     response.out.write(content)
-
+    response.set_status(200)
 
 
 class GetView(BaseHandler):

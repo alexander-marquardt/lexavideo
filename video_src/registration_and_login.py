@@ -3,9 +3,10 @@
 # http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
 
 
+import jinja2
+import json
 import logging
 
-import jinja2
 from webapp2_extras.auth import InvalidAuthIdError
 from webapp2_extras.auth import InvalidPasswordError
 
@@ -180,7 +181,10 @@ class LoginHandler(BaseHandler):
 class TempLogin(BaseHandler):
 
     def post(self):
-        user_name = self.request.get('user_name')
+
+        data_object = json.loads(self.request.body)
+
+        user_name = data_object['user_name']
         user_model = self.user_model
 
         # The following line creates the user object and the first parameter will be stored as
@@ -191,7 +195,7 @@ class TempLogin(BaseHandler):
 
         # Not necessary to include user_name in the unique_properties, since it will be included
         # in the "auth_id" in the create_user function, which will ensure that it is unique.
-        unique_properties = []
+        unique_properties = None
         user_created_bool, user_obj = user_model.create_user(user_name, unique_properties, user_name=user_name)
 
         if user_created_bool:

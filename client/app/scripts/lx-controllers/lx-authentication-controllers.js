@@ -12,11 +12,11 @@ angular.module('lxAuthentication.controllers', [])
         )
 
     {
-        $scope.user = {username: null, password: null};
+        $scope.login_info = {user_name: null, password: null};
         $scope.message = '';
         $scope.submit = function () {
             $http
-                .post('/_lx/temp_login', $scope.user)
+                .post('/_lx/temp_login', $scope.login_info)
                 .success(function (data, status, headers, config) {
                     $window.sessionStorage.token = data.token;
                     $scope.message = 'Welcome';
