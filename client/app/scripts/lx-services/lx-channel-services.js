@@ -354,7 +354,8 @@ angular.module('lxChannel.services', [])
         // If we have not received a response on the channel within a few seconds of sending the heartbeat to the
         // server, then we assume that the channel has died, and that a new one is needed.
         var reInitializeChannelIfResponseNotReceived = function(scope) {
-            $log.error('Heartbeat not received within ' + lxJavascriptConstants.msToWaitForHeartbeatResponse + ' ms. Re-initializing channel.');
+            $log.error('Heartbeat not received within ' + lxJavascriptConstants.msToWaitForHeartbeatResponse +
+                ' ms. Re-initializing channel. clientId: ' + scope.lxMainViewCtrl.clientId);
             self.initializeChannel(scope);
         };
 
