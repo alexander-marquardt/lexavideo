@@ -1,13 +1,18 @@
 
 """
 This module tracks the presence state of each user. States that may be sent from the client
-are ACTIVE, IDLE, and AWAY.
+are PRESENCE_ACTIVE, PRESENCE_IDLE, and PRESENCE_AWAY.
 
-Values that may be returned from this module are ACTIVE, IDLE, AWAY, and OFFLINE(*).
+Values that may be returned from this module are PRESENCE_ACTIVE, PRESENCE_IDLE, PRESENCE_AWAY, PRESENCE_UNKNOWN (*)
+and PRESENCE_OFFLINE(**).
 
-(*) If the client does not send a presence state within
+(*) PRESENCE_UNKNOWN is only used if the client's channel has died and they then rejoin a room. This state prevents
+an PRESENCE_OFFLINE status from remaining as the client's status, which would otherwise cause the client to be
+immediately removed from the rooms that we add them back into when the channel is re-started.
+
+(**) If the client does not send a presence state within
 a certain amount of time (eg. a value that is 1.5 * heartbeat_interval_seconds), then the user is
-determined to be OFFLINE.
+determined to be PRESENCE_OFFLINE.
 """
 
 import constants
@@ -38,8 +43,8 @@ class ClientModel(ndb.Model):
     # Note: if these are cleared out, they should also be removed from UserTrackClientsModel's client_models_list_of_keys.
     last_db_write = ndb.DateTimeProperty(auto_now=True)
 
-    # most_recent_presence_state should be ACTIVE, IDLE, AWAY, or OFFLINE
-    most_recent_presence_state_stored_in_db = ndb.StringProperty(default='ACTIVE')
+    # most_recent_presence_state should be PRESENCE_ACTIVE, PRESENCE_IDLE, PRESENCE_AWAY, or PRESENCE_OFFLINE
+    most_recent_presence_state_stored_in_db = ndb.StringProperty(default='PRESENCE_ACTIVE')
 
     # Track information about the rooms that the client has open
     list_of_open_chat_rooms_keys = ndb.KeyProperty(kind='ChatRoomModel', repeated=True)
@@ -79,12 +84,12 @@ class ClientModel(ndb.Model):
             # client_memcache_key))
 
             # memcache is active, therefore we make sure that the client presence status has been updated recently,
-            # otherwise the client will be considered OFFLINE
+            # otherwise the client will be considered PRESENCE_OFFLINE
             if client_memcache_dict['stored_datetime'] + datetime.timedelta(seconds=HEARTBEAT_INTERVAL_TIMEOUT_SECONDS) < datetime.datetime.now():
 
-                # logging.debug('Client %s is set to OFFLINE due to timeout' % client_id)
+                # logging.debug('Client %s is set to PRESENCE_OFFLINE due to timeout' % client_id)
                 # Memcache has not been updated within the expected time, therefore the user is considered offline.
-                presence_state_name = 'OFFLINE'
+                presence_state_name = 'PRESENCE_OFFLINE'
             else:
                 presence_state_name = client_memcache_dict['presence_state_name']
 
@@ -95,7 +100,7 @@ class ClientModel(ndb.Model):
     # Reading presence from the database should only be done in the case that memcache has failed.
     # This should happen very rarely, and is only a backup.
     # Note that since we write to the database with a much lower frequency than memcache, we must take
-    # this into consideration when determining if the client should be considered OFFLINE.
+    # this into consideration when determining if the client should be considered PRESENCE_OFFLINE.
     def _get_current_presence_state_from_database(self):
 
         try:
@@ -107,16 +112,16 @@ class ClientModel(ndb.Model):
             if (self.last_db_write + datetime.timedelta(seconds=DATABASE_PRESENCE_UPDATE_INTERVAL_TIMEOUT_SECONDS) <
                 datetime.datetime.now()):
 
-                # logging.debug('Client %s is set to OFFLINE due to timeout' % client_id)
-                return 'OFFLINE'
+                # logging.debug('Client %s is set to PRESENCE_OFFLINE due to timeout' % client_id)
+                return 'PRESENCE_OFFLINE'
 
             else:
                 return self.most_recent_presence_state_stored_in_db
 
         except:
-            err_message = '_get_current_presence_state_from_database returning OFFLINE due to internal error'
+            err_message = '_get_current_presence_state_from_database returning PRESENCE_OFFLINE due to internal error'
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_message)
-            return 'OFFLINE'
+            return 'PRESENCE_OFFLINE'
 
     def store_current_presence_state(self, presence_state_name):
 

@@ -4,14 +4,14 @@
 angular.module('lxPresence.services', ['presenceModule'])
     .factory('presenceStatus', function($presence) {
         return $presence.init({
-            ACTIVE : {
+            PRESENCE_ACTIVE : {
                 enter: 0,
                 initial: true
             },
-            IDLE : {
+            PRESENCE_IDLE : {
                 enter: 30 * 1000 // 30 seconds
             },
-            AWAY : {
+            PRESENCE_AWAY : {
                 enter: 5 * 60 * 1000 // 5 minutes
             }
         });

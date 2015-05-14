@@ -10,11 +10,11 @@ angular.module('lxPresence.controllers', [])
             $log.log('onChange: ' + state.name);
         });
 
-        presenceStatus.ACTIVE.onEnter(function() {
-           $log.log('Entering ACTIVE');
+        presenceStatus.PRESENCE_ACTIVE.onEnter(function() {
+           $log.log('Entering PRESENCE_ACTIVE');
         });
 
-        presenceStatus.ACTIVE.onLeave(function() {
-            $log.log('Leaving ACTIVE');
+        presenceStatus.PRESENCE_ACTIVE.onLeave(function() {
+            $log.log('Leaving PRESENCE_ACTIVE');
         });
     });

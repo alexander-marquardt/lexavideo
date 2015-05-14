@@ -216,6 +216,15 @@ class ConnectClient(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         client_id = self.request.get('from')
+
+        # We need to set the presence of the client so that it is not 'OFFLINE', as this would cause the
+        # client to be removed from the rooms that we are going to put the client back into. However,
+        # as we don't actually know the state of the user, we just set it to 'PRESENCE_UNKNOWN' which
+        # will prevent and inadvertent 'OFFLINE' status from causing the user to be immediately
+        # cleared out of the rooms that we are trying to add the user back into.
+        client_obj = clients.ClientModel.get_by_id(client_id)
+        client_obj.store_current_presence_state('PRESENCE_UNKNOWN')
+
         # Make sure that this client is a member of all of the rooms that he previously had open. This should
         # only needed for the case that the channel has died and started again (this can happen
         # for many reason, one of them being a browser refresh)
