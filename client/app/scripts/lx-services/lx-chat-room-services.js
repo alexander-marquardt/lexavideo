@@ -11,6 +11,7 @@ angular.module('lxChatRoom.services', [])
         $log,
         $location,
         $routeParams,
+        $timeout,
         $window,
         $q,
         lxAppWideConstantsService,
