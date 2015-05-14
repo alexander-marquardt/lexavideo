@@ -23,11 +23,13 @@ class AddClientToRoom(webapp2.RequestHandler):
     """Handles when a user explicitly enters into a room by going to a URL for a given room."""
     
     @staticmethod
-    def add_client_to_room(room_id, client_id, user_id):
+    def add_client_to_room(room_id, client_id):
         # logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
         (new_client_has_been_added, chat_room_obj) = chat_room_obj.txn_add_client_to_room(client_id)
-        chat_room_obj.txn_add_room_key_to_user_status_tracker(user_id)
+
+        client_obj = clients.ClientModel(id=client_id)
+        client_obj.txn_add_room_key_to_client_status_tracker(chat_room_obj.key)
 
 
         if new_client_has_been_added:
@@ -57,7 +59,7 @@ class AddClientToRoom(webapp2.RequestHandler):
 
 
     @staticmethod
-    def add_client_to_all_users_rooms(client_id, user_id):
+    def add_client_to_all_previously_open_rooms(client_id):
         """
         Useful for cases where the channel has died, and we wish to ensure that the new client_id
         associated with a user is placed in all of the rooms that the user has open once the client re-joins the room.
@@ -65,11 +67,11 @@ class AddClientToRoom(webapp2.RequestHandler):
 
         # logging.debug('add_client_to_all_users_rooms called for user_id %s' % user_id)
 
-        # Add this "client" in to all of the rooms that the "user" currently has open
-        user_obj = users.get_user_by_id(user_id)
+        # Add this "client" in to all of the rooms that the client previously had open
+        client_obj = clients.ClientModel.get_by_id(client_id)
 
-        if user_obj:
-            list_of_open_chat_rooms_keys = user_obj.track_rooms_key.get().list_of_open_chat_rooms_keys
+        if client_obj:
+            list_of_open_chat_rooms_keys = client_obj.list_of_open_chat_rooms_keys
 
             # Loop over all rooms that the user currently has open.
             for room_key in list_of_open_chat_rooms_keys:
@@ -81,11 +83,11 @@ class AddClientToRoom(webapp2.RequestHandler):
                 # is also verified inside the transaction, but we don't want to tie-up the transaction
                 # with un-necessary calls)
                 if client_id not in room_members_client_ids:
-                    AddClientToRoom.add_client_to_room(room_id, client_id, user_id)
+                    AddClientToRoom.add_client_to_room(room_id, client_id)
                     AddClientToRoom.tell_client_they_were_re_added_to_room_after_they_have_been_absent(client_id, room_id)
 
         else:
-            status_string = 'user_id %s user object not found.' % user_id
+            status_string = 'client_id %s client object not found.' % client_id
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
 
 
@@ -93,11 +95,11 @@ class AddClientToRoom(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         data_object = json.loads(self.request.body)
-        user_id = data_object['userId']
+        # user_id = data_object['userId']
         client_id = data_object['clientId']
         room_id = data_object['chatRoomId']
 
-        self.add_client_to_room(room_id, client_id, user_id)
+        self.add_client_to_room(room_id, client_id)
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
@@ -113,11 +115,12 @@ class RemoveClientFromRoom(webapp2.RequestHandler):
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
         chat_room_obj = chat_room_obj.txn_remove_client_from_room(client_id)
-        chat_room_obj.txn_remove_room_from_user_status_tracker(user_id)
+
+        client_obj = clients.ClientModel.get_by_id(client_id)
+        client_obj.txn_remove_room_from_client_status_tracker(chat_room_obj.key)
+
         messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
                                                  recompute_members_from_scratch=True)
-
-        # TODO - need to notify all clients associated with the user that this client belongs to, that they have left this room
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
@@ -174,9 +177,6 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
 
         # logging.debug('%s received from client_id %s with presence %s' % (message_type, client_id, presence_state_name))
 
-        # Make sure that this client is a member of all of the rooms that the associated user is a member of
-        AddClientToRoom.add_client_to_all_users_rooms(client_id, user_id)
-
         # Chat room that the client is currently looking at needs an up-to-date view of
         # clients and their activity. Other rooms do not need to be updated as often. Send the 
         # client an updated list of the room members.
@@ -196,8 +196,9 @@ class RequestChannelToken(webapp2.RequestHandler):
         client_id = data_object['clientId']
         channel_token = channel.create_channel(str(client_id), token_timeout)
 
-        client_obj = clients.ClientModel(id=client_id)
-        client_obj.put()
+        # TODO - Move The creation of the client object somewhere else -- this is not the right place for it.
+        clients.ClientModel.txn_create_new_client_object(client_id)
+
 
         # logging.debug('Wrote client_obj %s' % client_obj)
 
@@ -215,17 +216,11 @@ class ConnectClient(webapp2.RequestHandler):
 
     @handle_exceptions
     def post(self):
-        # client_id = self.request.get('from')
-        # room_id, user_id = [int(n) for n in client_id.split('/')]
-        #
-        # # Add user to the room. If they have a channel open to the room then they are by definition in the room
-        # # This is necessary for the dev server, since the channel disconnects each time that the
-        # # client-side javascript is paused. Therefore, it is quite helpful to automatically put the user back in the
-        # # room if the user still has a channel open and wishes to connect to the current room.
-        # (chat_room_obj, dummy_status_string) = room_module.ChatRoomModel.txn_add_user_to_room(room_id, user_id)
-        #
-        # send_room_occupancy_to_room_members(chat_room_obj, user_id)
-        pass
+        client_id = self.request.get('from')
+        # Make sure that this client is a member of all of the rooms that he previously had open. This should
+        # only needed for the case that the channel has died and started again (this can happen
+        # for many reason, one of them being a browser refresh)
+        AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
 
 
 
@@ -244,33 +239,23 @@ class DisconnectClient(webapp2.RequestHandler):
     def post(self):
 
         client_id = self.request.get('from')
-        user_id, unique_client_postfix = [int(n) for n in client_id.split('|')]
-
         client_obj = clients.ClientModel.get_by_id(client_id)
 
         if client_obj:
             video_setup.VideoSetup.remove_video_setup_objects_containing_client_id(client_id)
 
-
-        user_obj = users.UserModel.get_by_id(user_id)
-        track_rooms_obj = user_obj.track_rooms_key.get()
-
-        # We only have a single structure for tracking the chat rooms that the user (user_id) currently has open
-        # (as opposed to having a structure for each client_id that the user currently has), however,
-        # since we synchronize the clients so that the user is in the same rooms on all clients
-        # in general we should expect that every room that the user is currently in
-        # for any given client, he will also be in that room for all other clients.
-        for chat_room_obj_key in track_rooms_obj.list_of_open_chat_rooms_keys:
+        for chat_room_obj_key in client_obj.list_of_open_chat_rooms_keys:
             chat_room_obj = chat_room_obj_key.get()
 
             if chat_room_obj.has_client(client_id):
 
+                # Remove the client from the room. However, notice that we don't remove the room from the client's
+                # list_of_open_chat_rooms_keys, because if the channel comes back, we want the client to automatically
+                # join the rooms that he previously had open.
                 chat_room_obj = chat_room_obj.txn_remove_client_from_room(client_id)
 
-                # logging.debug('Client %s' % client_id + ' removed from room %d state: %s' % (chat_room_obj.key.id(), str(chat_room_obj)))
-
-                # The 'active' user has disconnected from the room, so we want to send an update to the remote
-                # user informing them of the new status.
+                # This client has disconnected from the room, so we want to send an update to the remote
+                # clients informing them of the new room status.
                 messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
                                                          recompute_members_from_scratch=True)
 

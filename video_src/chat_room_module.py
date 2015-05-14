@@ -198,30 +198,8 @@ class ChatRoomModel(ndb.Model):
 
         return (new_client_has_been_added, chat_room_obj)
 
-    @ndb.transactional(xg=True)
-    def txn_add_room_key_to_user_status_tracker(self, user_id):
-
-        room_key = self.key
-        # Now we need to add the room to the user status tracker model (ie. track which rooms the user currently has open)
-        logging.info('Adding room %s to user_status_tracker for user %s' % (room_key, user_id))
 
 
-        user_obj = users.UserModel.get_by_id(user_id)
-        track_rooms_obj = user_obj.track_rooms_key.get()
-        if room_key not in track_rooms_obj.list_of_open_chat_rooms_keys:
-            track_rooms_obj.list_of_open_chat_rooms_keys.append(room_key)
-            track_rooms_obj.put()
-
-
-    @ndb.transactional(xg=True)
-    def txn_remove_room_from_user_status_tracker(self, user_id):
-        chat_room_key = self.key
-        logging.info('Removing room %s from user_status_tracker for user %s' % (chat_room_key, user_id))
-        user_obj = users.UserModel.get_by_id(user_id)
-        track_rooms_obj = user_obj.track_rooms_key.get()
-        if chat_room_key in track_rooms_obj.list_of_open_chat_rooms_keys:
-            track_rooms_obj.list_of_open_chat_rooms_keys.remove(chat_room_key)
-            track_rooms_obj.put()
 
 
     def get_dict_of_client_objects(self, recompute_members_from_scratch):

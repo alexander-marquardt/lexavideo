@@ -25,6 +25,8 @@ CLIENT_PRESENCE_MEMCACHE_PREFIX = 'client-presence-'
 HEARTBEAT_INTERVAL_TIMEOUT_SECONDS = constants.heartbeat_interval_seconds + constants.leeway_seconds_for_determining_timeout
 DATABASE_PRESENCE_UPDATE_INTERVAL_TIMEOUT_SECONDS = constants.db_presence_update_interval_seconds + constants.leeway_seconds_for_determining_timeout
 
+
+
 # ClientModel is complementary to UserModel. Each user will only have a single associated UserModel
 # but they will have a unique ClientModel object for each unique browser window/channel that they
 # connect to the website with.
@@ -39,6 +41,8 @@ class ClientModel(ndb.Model):
     # most_recent_presence_state should be ACTIVE, IDLE, AWAY, or OFFLINE
     most_recent_presence_state_stored_in_db = ndb.StringProperty(default='ACTIVE')
 
+    # Track information about the rooms that the client has open
+    list_of_open_chat_rooms_keys = ndb.KeyProperty(kind='ChatRoomModel', repeated=True)
 
     def _periodically_store_current_presence_state_to_db(self, presence_state_name):
 
@@ -132,3 +136,35 @@ class ClientModel(ndb.Model):
 
         assert presence_state_name
         return presence_state_name
+
+
+    @ndb.transactional
+    def txn_add_room_key_to_client_status_tracker(self, chat_room_key):
+        # Keep track of the rooms that this client has open.
+
+        client_key = self.key
+        client_obj = client_key.get()
+        # Now we need to add the room to the user status tracker model (ie. track which rooms the user currently has open)
+        logging.info('Adding chat_room_key %s to list_of_open_chat_rooms_keys for client %s' % (chat_room_key, client_key))
+
+        if chat_room_key not in client_obj.list_of_open_chat_rooms_keys:
+            client_obj.list_of_open_chat_rooms_keys.append(chat_room_key)
+            client_obj.put()
+
+
+    @ndb.transactional
+    def txn_remove_room_from_client_status_tracker(self, chat_room_key):
+
+        client_key = self.key
+        client_obj = client_key.get()
+        logging.info('Removing room %s from list_of_open_chat_rooms_keys for client %s' % (chat_room_key, client_key))
+
+        if chat_room_key in client_obj.list_of_open_chat_rooms_keys:
+            client_obj.list_of_open_chat_rooms_keys.remove(chat_room_key)
+            client_obj.put()
+
+    @classmethod
+    @ndb.transactional
+    def txn_create_new_client_object(cls, client_id):
+        client_obj = cls(id=client_id)
+        client_obj.put()

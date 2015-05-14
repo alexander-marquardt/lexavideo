@@ -79,8 +79,16 @@ angular.module('lxMainView.controllers', [])
         // window/device that they connect from). In order to create a unique clientID, we append the userId with
         // a randomly generated number with a billion possibilities. This should prevent the user
         // from being assigned two clientIds that clash.
-        var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
-        var clientId = lxAppWideConstantsService.userId + '|' + uniqueClientIdentifier;
+        // We attempt to pull clientId out of sessionStorage so that the "client" will see the same open chats
+        // and other UI even if they reload a tab/window. Read about sessionStorage for more information.
+        var clientId;
+        if ($window.sessionStorage.clientId) {
+            clientId = $window.sessionStorage.clientId;
+        } else {
+            var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
+            clientId = lxAppWideConstantsService.userId + '|' + uniqueClientIdentifier;
+            $window.sessionStorage.clientId = clientId;
+        }
 
         $scope.lxMainViewCtrl = {
             clientId: clientId,

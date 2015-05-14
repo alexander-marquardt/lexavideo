@@ -18,12 +18,6 @@ from video_src import clients
 # datastore. 
 class UniqueUserModel(webapp2_extras.appengine.auth.models.Unique): pass
 
-# Track information about what the user is doing right now. For example, what
-# rooms are they participating in.
-class UserTrackRoomsModel(ndb.Model):
-    # Track the chats that the user is currently participating in.
-    list_of_open_chat_rooms_keys = ndb.KeyProperty(kind='ChatRoomModel', repeated=True)
-
 
 # UserModel is accessed from the webapp2 auth module, and is accessed/included with the following
 # statements that appear inside the config object that is passed to the wsgi application handler.
@@ -50,9 +44,6 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
     user_is_registered = ndb.BooleanProperty(default=False)
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
-
-    # Track information about the user activity/status of the user
-    track_rooms_key = ndb.KeyProperty(kind='UserTrackRoomsModel')
 
     """
     Each user can have multiple "clients" (one for each browser/window), and each client can (in the future) have
@@ -105,12 +96,7 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 @ndb.transactional(xg=True)
 def txn_create_new_user():
 
-    track_rooms_obj = UserTrackRoomsModel()
-    track_rooms_obj.put()
-
     new_user_obj = UserModel()
-    new_user_obj.track_rooms_key = track_rooms_obj.key
-
     # use the key as the user_name until they decide to create their own user_name.
     new_user_name = "Not set"
     new_user_obj.user_name = str(new_user_name)
