@@ -1,7 +1,7 @@
 # Much of this code is originally from:
 # http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
 
-import datetime
+import logging
 
 import webapp2
 from webapp2_extras import auth
@@ -59,6 +59,7 @@ class BaseHandler(webapp2.RequestHandler):
 
         authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
         self.session = token_sessions.get_jwt_token_payload(authorization_header)
+        logging.info('***** Session data: %s' % self.session)
 
         # Dispatch the request.
         webapp2.RequestHandler.dispatch(self)
