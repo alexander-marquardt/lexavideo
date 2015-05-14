@@ -162,7 +162,6 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         message_type = message_obj['messageType']
         presence_state_name = message_obj['messagePayload']['presenceStateName']
         currently_open_chat_room_id = message_obj['messagePayload']['currentlyOpenChatRoomId']
-        user_id, unique_client_postfix = [int(n) for n in client_id.split('|')]
 
         # We only update the user presence in the case that this is posted to as an acknowledgement
         # of a heartbeat. If we were to update presence state in other cases, then the memcache and other timeouts

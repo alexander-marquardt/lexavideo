@@ -26,6 +26,7 @@ from video_src import views
 # slashes (ie. the handle_room URL below). We have decided to use both styles, as it really doesn't matter much.
 app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/lx-landing-page-main.html>', views.LandingPageMain),
+    webapp2.Route(r'/_lx<current_template:/lx-templates/zz-temp-login.html>', views.GetRegistrationView),
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
     webapp2.Route(r'/_lx/create_new_room_if_does_not_exist/', chat_room_module.CreateNewRoomIfDoesNotExist),
     webapp2.Route(r'/_lx/check_if_chat_room_exists/<chat_room_name_from_url:.+>', chat_room_module.CheckIfChatRoomExists),

@@ -6,16 +6,16 @@
 import jinja2
 import json
 import logging
+import webapp2
 
 from webapp2_extras.auth import InvalidAuthIdError
 from webapp2_extras.auth import InvalidPasswordError
 
 
 import vidsetup
-import jwt
 
-from video_src import constants
 from video_src import http_helpers
+from video_src import users
 
 from request_handler_custom import token_sessions
 from request_handler_custom.base_handler import BaseHandler
@@ -180,14 +180,13 @@ class LoginHandler(BaseHandler):
 
 
 
-class TempLogin(BaseHandler):
+class TempLogin(webapp2.RequestHandler):
 
     def post(self):
 
         data_object = json.loads(self.request.body)
 
         user_name = data_object['user_name']
-        user_model = self.user_model
 
         # The following line creates the user object and the first parameter will be stored as
         # an auth_id (we currently pass in user_name as auth_id), and we also pass in user_name so that we can easily
@@ -198,9 +197,10 @@ class TempLogin(BaseHandler):
         # Not necessary to include user_name in the unique_properties, since it will be included
         # in the "auth_id" in the create_user function, which will ensure that it is unique.
         unique_properties = None
-        user_created_bool, user_obj = user_model.create_user(user_name, unique_properties, user_name=user_name)
+        user_created_bool, user_obj = users.UserModel.create_user(user_name, unique_properties, user_name=user_name)
 
         if user_created_bool:
+            logging.info('New user object created. user_id: %d' % user_obj.key.id())
             # close any active session the user has since he is trying to login
             # if self.session.is_active():
             #     self.session.terminate()

@@ -18,11 +18,48 @@ angular.module('lxMainView.controllers', [])
         $timeout,
         lxAppWideConstantsService,
         lxChannelService,
-        clickAnywhereButHereService) {
+        clickAnywhereButHereService,
+        jwtHelper) {
 
 
         // Copy information embedded in the Html into an angular service.
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
+
+
+        var token_payload = jwtHelper.decodeToken($window.localStorage.token);
+        lxAppWideConstantsService.userId = token_payload['user_id'];
+        lxAppWideConstantsService.userName = 'Not-yet-set';
+
+        function generateNewUniqueClientId(userId) {
+            var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
+            clientId = userId + '|' + uniqueClientIdentifier;
+            return clientId;
+        }
+
+        // The clientId is unique for each connection that a user makes to the server (ie. each new browser
+        // window/device that they connect from). In order to create a unique clientID, we append the userId with
+        // a randomly generated number with a billion possibilities. This should prevent the user
+        // from being assigned two clientIds that clash.
+        // We attempt to pull clientId out of sessionStorage so that the "client" will see the same open chats
+        // and other UI even if they reload a tab/window. Read about sessionStorage for more information.
+        var userId;
+        var clientId;
+        if ($window.sessionStorage.clientId) {
+            clientId = $window.sessionStorage.clientId;
+            var splitArr = clientId.split('|');
+            userId = parseInt(splitArr[0]);
+
+            // If the userId pulled from the clientId in sessionStorage doesn't match the userId located in the
+            // localStorage, then the localStorage userId wins. In this case,
+            // generate a new clientId from the userId. This can happen if a new user logs in, but there is
+            // still old client data in the sessionStorage.
+            if (userId !== lxAppWideConstantsService.userId) {
+                $window.sessionStorage.clientId = generateNewUniqueClientId(lxAppWideConstantsService.userId);
+            }
+        } else {
+            $window.sessionStorage.clientId = generateNewUniqueClientId(lxAppWideConstantsService.userId);
+        }
+
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
@@ -74,21 +111,6 @@ angular.module('lxMainView.controllers', [])
             return x;
         };
 
-
-        // The clientId is unique for each connection that a user makes to the server (ie. each new browser
-        // window/device that they connect from). In order to create a unique clientID, we append the userId with
-        // a randomly generated number with a billion possibilities. This should prevent the user
-        // from being assigned two clientIds that clash.
-        // We attempt to pull clientId out of sessionStorage so that the "client" will see the same open chats
-        // and other UI even if they reload a tab/window. Read about sessionStorage for more information.
-        var clientId;
-        if ($window.sessionStorage.clientId) {
-            clientId = $window.sessionStorage.clientId;
-        } else {
-            var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
-            clientId = lxAppWideConstantsService.userId + '|' + uniqueClientIdentifier;
-            $window.sessionStorage.clientId = clientId;
-        }
 
         $scope.lxMainViewCtrl = {
             clientId: clientId,

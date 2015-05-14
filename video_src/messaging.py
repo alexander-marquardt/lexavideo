@@ -56,7 +56,7 @@ def send_room_occupancy_to_clients(chat_room_obj, list_of_clients_to_update, rec
         client_id = list_of_clients_to_update[i]
         message_obj['messagePayload']['dictOfClientObjects'] = dict_of_client_objects
 
-        logging.info('Sending roomOccupancy to %s: %s' % (client_id, json.dumps(message_obj)))
+        logging.info('Sending message to client %s. message_obj %s' % (client_id, json.dumps(message_obj)))
         channel.send_message(client_id, json.dumps(message_obj))
 
 # Sends information about video settings, and which client should be designated as the 'rtcInitiator'

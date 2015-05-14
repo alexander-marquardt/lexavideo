@@ -43,6 +43,16 @@ class GetView(BaseHandler):
         write_jinja_response(self.response, target_page, {})
 
 
+class GetRegistrationView(webapp2.RequestHandler):
+    """ Render whatever template the client has requested """
+
+    @handle_exceptions
+    def get(self, current_template):
+
+        target_page = current_template
+        write_jinja_response(self.response, target_page, {})
+
+
 class LandingPageMain(webapp2.RequestHandler):
     """ Render whatever template the client has requested """
     
@@ -62,16 +72,12 @@ class LandingPageMain(webapp2.RequestHandler):
         write_jinja_response(self.response, target_page, params)
 
 
-class MainPage(registration_and_login.BaseHandler):
+class MainPage(webapp2.RequestHandler):
     """The main UI page, renders the 'index.html' template."""
     
     @handle_exceptions
     def get(self):
 
-
-
-        # When a user first enters into our website, we will assign them a unique user id.
-        user_obj = users.txn_create_new_user()
 
         target_page = 'index.html'
         params = {
@@ -80,11 +86,9 @@ class MainPage(registration_and_login.BaseHandler):
             'site_name_for_display': constants.site_name_for_display,
             'userInfoEmbeddedInHtmlJson': json.dumps(
                 {
-                    'userName': user_obj.user_name,
-                    'userId': user_obj.key.id(),
                     'debugBuildEnabled': vidsetup.DEBUG_BUILD,
                     'heartbeatIntervalMilliseconds': constants.heartbeat_interval_seconds * 1000
-                    }
+                }
             ),
             'enable_live_reload': vidsetup.ENABLE_LIVE_RELOAD,
             }

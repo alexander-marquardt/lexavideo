@@ -7,6 +7,7 @@ import webapp2
 from webapp2_extras import auth
 
 from . import token_sessions
+from video_src import users
 
 def user_required(handler):
     """
@@ -60,6 +61,14 @@ class BaseHandler(webapp2.RequestHandler):
         authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
         self.session = token_sessions.get_jwt_token_payload(authorization_header)
         logging.info('***** Session data: %s' % self.session)
+
+        if self.session:
+            user_id = self.session['user_id']
+            user_obj = users.UserModel.get_by_id(user_id)
+            assert(user_obj)
+        else:
+            # Each user will be assigned a user_obj when they access our website
+            raise Exception('no user found. Make sure that the user logs in first')
 
         # Dispatch the request.
         webapp2.RequestHandler.dispatch(self)
