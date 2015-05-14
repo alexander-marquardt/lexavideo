@@ -135,7 +135,11 @@ webRtcServices.factory('lxTurnService',
                     }
 
                     // No TURN server. Get one from computeengineondemand.appspot.com.
-                    $http.get(turnUrl).then(onTurnResult, onTurnError).then(afterTurnRequest());
+                    $http({
+                        url: turnUrl,
+                        skipAuthorization: true,
+                        method: 'GET'
+                    }).then(onTurnResult, onTurnError).then(afterTurnRequest());
                 }
 
                 // otherwise, the browser does not support WebRtc - we do not try to setup video
