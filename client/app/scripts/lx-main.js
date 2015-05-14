@@ -47,7 +47,8 @@ var videoApp = angular.module('videoApp', [
     // angular services
     'ngAnimate',
     'ngTouch',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'angular-jwt'
 ]);
 
 videoApp.run(function() {
