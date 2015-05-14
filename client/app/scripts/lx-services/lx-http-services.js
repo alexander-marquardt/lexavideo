@@ -1,34 +1,14 @@
 'use strict';
 
-angular.module('lxHttp.services', [])
+angular.module('lxHttp.services', ['angular-jwt'])
 
-
-    .factory('authInterceptor', function (
-        $log,
-        $rootScope,
-        $q,
-        $window)
-
-    {
-        return {
-            request: function (config) {
-                config.headers = config.headers || {};
-                if ($window.localStorage.token) {
-                    config.headers.Authorization = 'Bearer ' + $window.localStorage.token;
-                }
-                return config;
-            },
-            response: function (response) {
-                if (response.status === 401) {
-                    $log.warn('user is not authenticated');
-                }
-                return response || $q.when(response);
-            }
+    .config(function Config($httpProvider, jwtInterceptorProvider) {
+        // Please note we're annotating the function so that the $injector works when the file is minified
+        jwtInterceptorProvider.tokenGetter = function() {
+            return localStorage.getItem('token');
         };
-    })
 
-    .config(function ($httpProvider) {
-        $httpProvider.interceptors.push('authInterceptor');
+        $httpProvider.interceptors.push('jwtInterceptor');
     })
 
     .factory('lxHttpHandleRoomService',
