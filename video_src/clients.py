@@ -3,12 +3,8 @@
 This module tracks the presence state of each user. States that may be sent from the client
 are PRESENCE_ACTIVE, PRESENCE_IDLE, and PRESENCE_AWAY.
 
-Values that may be returned from this module are PRESENCE_ACTIVE, PRESENCE_IDLE, PRESENCE_AWAY, PRESENCE_UNKNOWN (*)
+Values that may be returned from this module are PRESENCE_ACTIVE, PRESENCE_IDLE, PRESENCE_AWAY,
 and PRESENCE_OFFLINE(**).
-
-(*) PRESENCE_UNKNOWN is only used if the client's channel has died and they then rejoin a room. This state prevents
-an PRESENCE_OFFLINE status from remaining as the client's status, which would otherwise cause the client to be
-immediately removed from the rooms that we add them back into when the channel is re-started.
 
 (**) If the client does not send a presence state within
 a certain amount of time (eg. a value that is 1.5 * heartbeat_interval_seconds), then the user is
