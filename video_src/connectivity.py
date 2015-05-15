@@ -185,6 +185,37 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
+
+class ConnectClient(webapp2.RequestHandler):
+
+    @handle_exceptions
+    def post(self):
+
+        data_object = json.loads(self.request.body)
+        client_id = data_object['clientId']
+        logging.debug('ConnectClient called for client_id: %s' % client_id)
+
+        # check if a client object associated with this client_id already exists, and if it does, then
+        # don't create a new one. We need to access the old client object because it contains the list
+        # of rooms that the client currently has open.
+        client_obj = clients.ClientModel.get_by_id(client_id)
+        if not client_obj:
+            client_obj = clients.ClientModel.txn_create_new_client_object(client_id)
+
+        # We need to set the presence of the client so that it is not 'OFFLINE', as this would cause the
+        # client to be removed from the rooms that we are going to put the client back into. However,
+        # as we don't actually know the state of the user, we just set it to 'PRESENCE_AWAY' which
+        # will prevent and inadvertent 'OFFLINE' status from causing the user to be immediately
+        # cleared out of the rooms that we are trying to add the user back into.
+        if client_obj.get_current_presence_state() == 'PRESENCE_OFFLINE':
+            client_obj.store_current_presence_state('PRESENCE_AWAY')
+
+        # Make sure that this client is a member of all of the rooms that he previously had open. This should
+        # only needed for the case that the channel has died and started again (Channel can die
+        # for many reasons, one of them being a browser refresh)
+        AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
+
+
 class RequestChannelToken(webapp2.RequestHandler):
 
     @handle_exceptions
@@ -195,11 +226,9 @@ class RequestChannelToken(webapp2.RequestHandler):
         client_id = data_object['clientId']
         channel_token = channel.create_channel(str(client_id), token_timeout)
 
-        # TODO - Move The creation of the client object somewhere else -- this is not the right place for it.
-        clients.ClientModel.txn_create_new_client_object(client_id)
+        logging.debug('New channel token created for client_id: %s' % client_id)
 
 
-        # logging.debug('Wrote client_obj %s' % client_obj)
 
         response_dict = {
             'channelToken': channel_token,
@@ -208,29 +237,6 @@ class RequestChannelToken(webapp2.RequestHandler):
 
         # Finally, send the http response.
         http_helpers.set_http_ok_json_response(self.response, response_dict)
-
-
-
-class ConnectClient(webapp2.RequestHandler):
-
-    @handle_exceptions
-    def post(self):
-        client_id = self.request.get('from')
-
-        # We need to set the presence of the client so that it is not 'OFFLINE', as this would cause the
-        # client to be removed from the rooms that we are going to put the client back into. However,
-        # as we don't actually know the state of the user, we just set it to 'PRESENCE_AWAY' which
-        # will prevent and inadvertent 'OFFLINE' status from causing the user to be immediately
-        # cleared out of the rooms that we are trying to add the user back into.
-        client_obj = clients.ClientModel.get_by_id(client_id)
-        client_obj.store_current_presence_state('PRESENCE_AWAY')
-
-        # Make sure that this client is a member of all of the rooms that he previously had open. This should
-        # only needed for the case that the channel has died and started again (this can happen
-        # for many reason, one of them being a browser refresh)
-        AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
-
-
 
 
 """
@@ -248,6 +254,8 @@ class DisconnectClient(webapp2.RequestHandler):
 
         client_id = self.request.get('from')
         client_obj = clients.ClientModel.get_by_id(client_id)
+
+        logging.debug('$$$CHANNEL client_id: %s has been disconnected' % client_id)
 
         if client_obj:
             video_setup.VideoSetup.remove_video_setup_objects_containing_client_id(client_id)

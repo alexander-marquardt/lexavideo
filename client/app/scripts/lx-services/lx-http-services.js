@@ -113,6 +113,10 @@ angular.module('lxHttp.services', ['angular-jwt'])
                 $http.post('/_lx/add_client_to_room/', postData);
             },
 
+            connectClient: function(clientId) {
+                $http.post('/_lx/connect_client/', {'clientId': clientId});
+            },
+
             removeClientFromRoomOnServer: function(clientId, userId, chatRoomId) {
                 var postData = {
                     'clientId': clientId,
