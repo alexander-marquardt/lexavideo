@@ -238,6 +238,7 @@ class ChatRoomModel(ndb.Model):
                 # If client is OFFLINE, then don't include them in dict_of_client_objects *and* also remove the client
                 # from the room (if they later start their heartbeat, then they will be added back to the room)
                 if presence_state_name == 'PRESENCE_OFFLINE':
+                    logging.warning('*** Removing client_id %s from room %s due to PRESENCE_OFFLINE.' % (client_id, self.key.id()))
                     self.txn_remove_client_from_room(client_id)
 
                 # Client is not PRESENCE_OFFLINE, include them in dict_of_client_objects

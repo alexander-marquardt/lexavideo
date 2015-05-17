@@ -172,15 +172,32 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         # synAckHeartBeat message that is sent on the channel)
         if message_type == 'ackHeartbeat':
             client_obj = clients.ClientModel.get_by_id(client_id)
+
+            previous_presence_state = client_obj.get_current_presence_state()
+            if previous_presence_state == 'PRESENCE_OFFLINE':
+                # Since the client was offline, they (should) have already been removed from all rooms that they
+                # previously had open. Add them back to all rooms since we now know that they are alive.
+                logging.info('Client %s had state %s, and is now getting added back to all previously '
+                             'open rooms. New client state is %s' %
+                             (client_id, previous_presence_state, presence_state_name))
+                AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
+
             client_obj.store_current_presence_state(presence_state_name)
 
-        # logging.debug('%s received from client_id %s with presence %s' % (message_type, client_id, presence_state_name))
-
         # Chat room that the client is currently looking at needs an up-to-date view of
-        # clients and their activity. Other rooms do not need to be updated as often. Send the 
-        # client an updated list of the room members.
+        # clients and their activity. Other rooms do not need to be updated as often since the client is not looking
+        # at these other rooms right now. Send the client an updated list of the currently viewed room members.
         if currently_open_chat_room_id is not None:
             chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(currently_open_chat_room_id)
+
+            if message_type == 'ackHeartbeat' and client_id not in chat_room_obj.room_members_client_ids:
+                # This should not happen, as the above code should have added the client back to any rooms
+                # that they opened as soon as he sent a message during a time when his state was
+                # considered PRESENCE_OFFLINE.
+                logging.error("client_id %s not in chat room %s even though he is requesting an update for that "
+                                "room." % (client_id, currently_open_chat_room_id))
+
+
             messaging.send_room_occupancy_to_clients(chat_room_obj, [client_id,], recompute_members_from_scratch=False)
 
         http_helpers.set_http_ok_json_response(self.response, {})
@@ -255,7 +272,7 @@ class DisconnectClient(webapp2.RequestHandler):
         client_id = self.request.get('from')
         client_obj = clients.ClientModel.get_by_id(client_id)
 
-        logging.debug('$$$CHANNEL client_id: %s has been disconnected' % client_id)
+        logging.warning('client_id: %s has been disconnected' % client_id)
 
         if client_obj:
             video_setup.VideoSetup.remove_video_setup_objects_containing_client_id(client_id)
