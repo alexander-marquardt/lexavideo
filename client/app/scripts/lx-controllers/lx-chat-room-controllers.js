@@ -33,7 +33,7 @@ angular.module('lxUseChatRoom.controllers', [])
             });
         });
 
-        lxChatRoomMembersService.handleChatRoomNameFromUrl($scope)
+        lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
     })
 
     .controller('lxMainVideoCtrl',

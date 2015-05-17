@@ -5,7 +5,7 @@
 angular.module('lxBasicFunctionality.services', [])
 
 .factory('lxJs',
-function($log) {
+function() {
 
     return {
         assert: function (condition, message) {

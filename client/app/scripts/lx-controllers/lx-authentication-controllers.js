@@ -12,16 +12,16 @@ angular.module('lxAuthentication.controllers', [])
         )
 
     {
-        $scope.login_info = {user_name: null, password: null};
+        $scope.loginInfo = {userName: null, password: null};
         $scope.message = '';
         $scope.submit = function () {
             $http
-                .post('/_lx/temp_login', $scope.login_info)
-                .success(function (data, status, headers, config) {
+                .post('/_lx/temp_login', $scope.loginInfo)
+                .success(function (data/*, status, headers, config */) {
                     $window.localStorage.token = data.token;
                     $scope.message = 'Welcome';
                 })
-                .error(function (data, status, headers, config) {
+                .error(function (/*data, status, headers, config*/) {
                     // Erase the token if the user fails to log in
                     delete $window.localStorage.token;
 

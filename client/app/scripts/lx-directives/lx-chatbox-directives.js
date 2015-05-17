@@ -223,9 +223,9 @@ angular.module('lxChatbox.directives', [])
                         // The following code will keep track of "un-noticed" messages that the user has received.
                         // All messages received while the user is not "focused" on the input element of the associated
                         // chat panel are considered un-noticed.
-                        if (scope.chatPanelDict[chatRoomId].normalizedChatRoomName !== scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl
-                            || scope.chatboxPanelElementObject.videoIsFocused
-                            || !lxWindowFocus.windowIsFocusedFn()) {
+                        if (scope.chatPanelDict[chatRoomId].normalizedChatRoomName !== scope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl ||
+                            scope.chatboxPanelElementObject.videoIsFocused ||
+                            !lxWindowFocus.windowIsFocusedFn()) {
 
                             scope.chatPanelDict[chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed ++;
                             scope.trackUnseenMessageCountObject.unseenMessageCount++;

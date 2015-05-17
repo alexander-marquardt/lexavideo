@@ -26,8 +26,8 @@ angular.module('lxMainView.controllers', [])
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
 
-        var token_payload = jwtHelper.decodeToken($window.localStorage.token);
-        lxAppWideConstantsService.userId = token_payload['user_id'];
+        var tokenPayload = jwtHelper.decodeToken($window.localStorage.token);
+        lxAppWideConstantsService.userId = tokenPayload.userId;
         lxAppWideConstantsService.userName = 'Not-yet-set';
 
         function generateNewUniqueClientId(userId) {
