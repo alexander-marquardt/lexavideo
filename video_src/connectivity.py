@@ -11,7 +11,6 @@ from video_src import http_helpers
 from video_src import messaging
 from video_src import chat_room_module
 from video_src import status_reporting
-from video_src import users
 from video_src import video_setup
 
 from error_handling import handle_exceptions
@@ -173,7 +172,16 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         if message_type == 'ackHeartbeat':
             client_obj = clients.ClientModel.get_by_id(client_id)
 
+            # Get the previous presence state, so that we can detect if a user was offline, which would mean
+            # that they need to be added back to all of the rooms that they previously had open.
             previous_presence_state = client_obj.get_current_presence_state()
+
+            # Important to update the presence state before adding the client to the rooms, so that they will not
+            # be immediately removed from the rooms in the event that we generate a new room members list (which
+            # would remove offline clients) at the same time that we are attempting to add the client back to all of the
+            # rooms that he previously had open.
+            client_obj.store_current_presence_state(presence_state_name)
+
             if previous_presence_state == 'PRESENCE_OFFLINE':
                 # Since the client was offline, they (should) have already been removed from all rooms that they
                 # previously had open. Add them back to all rooms since we now know that they are alive.
@@ -181,8 +189,6 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
                              'open rooms. New client state is %s' %
                              (client_id, previous_presence_state, presence_state_name))
                 AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
-
-            client_obj.store_current_presence_state(presence_state_name)
 
         # Chat room that the client is currently looking at needs an up-to-date view of
         # clients and their activity. Other rooms do not need to be updated as often since the client is not looking
@@ -195,7 +201,7 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
                 # that they opened as soon as he sent a message during a time when his state was
                 # considered PRESENCE_OFFLINE.
                 logging.error("client_id %s not in chat room %s even though he is requesting an update for that "
-                                "room." % (client_id, currently_open_chat_room_id))
+                              "room." % (client_id, currently_open_chat_room_id))
 
 
             messaging.send_room_occupancy_to_clients(chat_room_obj, [client_id,], recompute_members_from_scratch=False)
