@@ -24,6 +24,11 @@ def user_required(handler):
     return check_login
 
 class BaseHandler(webapp2.RequestHandler):
+
+    def __init__(self, request, response):
+        self.session = {}
+        webapp2.RequestHandler.__init__(self, request, response)
+
     @webapp2.cached_property
     def auth(self):
         """Shortcut to access the auth instance as a property."""
@@ -59,7 +64,7 @@ class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
 
         authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
-        self.session = token_sessions.get_jwt_token_payload(authorization_header)
+        self.session['user_id'] = token_sessions.get_jwt_token_payload(authorization_header)['userId']
         logging.info('***** Session data: %s' % self.session)
 
         if self.session:

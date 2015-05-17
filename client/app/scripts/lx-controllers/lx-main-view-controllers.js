@@ -25,10 +25,14 @@ angular.module('lxMainView.controllers', [])
         // Copy information embedded in the Html into an angular service.
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
-
-        var tokenPayload = jwtHelper.decodeToken($window.localStorage.token);
-        lxAppWideConstantsService.userId = tokenPayload.userId;
-        lxAppWideConstantsService.userName = 'Not-yet-set';
+        if ($window.localStorage.token) {
+            var tokenPayload = jwtHelper.decodeToken($window.localStorage.token);
+            lxAppWideConstantsService.userId = tokenPayload.userId;
+        }
+        else {
+            lxAppWideConstantsService.userId = null;
+        }
+        lxAppWideConstantsService.userName = null;
 
         function generateNewUniqueClientId(userId) {
             var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
@@ -57,7 +61,11 @@ angular.module('lxMainView.controllers', [])
                 $window.sessionStorage.clientId = generateNewUniqueClientId(lxAppWideConstantsService.userId);
             }
         } else {
-            $window.sessionStorage.clientId = generateNewUniqueClientId(lxAppWideConstantsService.userId);
+            if (lxAppWideConstantsService.userId) {
+                $window.sessionStorage.clientId = generateNewUniqueClientId(lxAppWideConstantsService.userId);
+            } else {
+                $window.sessionStorage.clientId = null;
+            }
         }
 
 

@@ -367,21 +367,27 @@ angular.module('lxChannel.services', [])
 
         var self = {
             initializeChannel: function(scope) {
-                lxHttpChannelService.requestChannelToken(scope.lxMainViewCtrl.clientId, lxAppWideConstantsService.userId).then(function (response) {
-                    scope.channelObject.channelToken = response.data.channelToken;
+                if (scope.lxMainViewCtrl.clientId) {
+                    lxHttpChannelService.requestChannelToken(scope.lxMainViewCtrl.clientId, lxAppWideConstantsService.userId).then(function (response) {
+                        scope.channelObject.channelToken = response.data.channelToken;
 
-                    openChannel(scope);
+                        openChannel(scope);
 
-                    $window.onbeforeunload = function () {
-                        $log.debug('Manually disconnecting channel on window unload event.');
-                        lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainViewCtrl.clientId, scope.channelObject);
-                    };
+                        $window.onbeforeunload = function () {
+                            $log.debug('Manually disconnecting channel on window unload event.');
+                            lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainViewCtrl.clientId, scope.channelObject);
+                        };
 
 
-                }, function () {
-                    scope.channelObject.channelToken = 'Failed to get channelToken';
+                    }, function () {
+                        scope.channelObject.channelToken = 'Failed to get channelToken';
+                        scope.channelObject.channelIsAlive = false;
+                    });
+                }
+                else {
+                    scope.channelObject.channelToken = 'Cannot channelToken for undefined clientId';
                     scope.channelObject.channelIsAlive = false;
-                });
+                }
             }
         };
 

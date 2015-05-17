@@ -186,7 +186,7 @@ class TempLogin(webapp2.RequestHandler):
 
         data_object = json.loads(self.request.body)
 
-        user_name = data_object['user_name']
+        user_name = data_object['userName']
 
         # The following line creates the user object and the first parameter will be stored as
         # an auth_id (we currently pass in user_name as auth_id), and we also pass in user_name so that we can easily
