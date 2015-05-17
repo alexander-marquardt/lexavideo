@@ -193,7 +193,10 @@ angular.module('lxChannel.services', [])
                         case 'clientReAddedToRoomAfterAbsence':
                             chatRoomId = messageObject.chatRoomId;
                             receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
-                            receivedChatMessageObject.messageString = '**** WARNING *** Due to connectivity problems, you may have missed some messages';
+                            receivedChatMessageObject.messageString =
+                                'It appears that you have disconnected and re-connected to ChatSurfing. ' +
+                                'Messages sent to your currently open chat rooms while you were absent will not be ' +
+                                'delivered to you.';
                             // receivedMessageTime is used for triggering the watcher
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
 
