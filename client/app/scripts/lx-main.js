@@ -23,6 +23,7 @@ var videoApp = angular.module('videoApp', [
     'lxVideoExchangeUserFeedback.directives',
 
     // proprietary services
+    'lxAuthentication.services',
     'lxAccessSystemResources.services',
     'lxBasicFunctionality.services',
     'lxChannel.services',
