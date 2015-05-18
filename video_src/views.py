@@ -33,7 +33,7 @@ def write_jinja_response(response, target_page, params):
     response.set_status(200)
 
 
-class GetView(BaseHandler):
+class GetView(webapp2.RequestHandler):
     """ Render whatever template the client has requested """
     
     @handle_exceptions
