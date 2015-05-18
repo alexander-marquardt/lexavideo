@@ -197,7 +197,7 @@ angular.module('lxChannel.services', [])
                             chatRoomId = messageObject.chatRoomId;
                             receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
                             receivedChatMessageObject.messageString =
-                                'It appears that you have disconnected and re-connected to ChatSurfing. ' +
+                                'It appears that you have been disconnected and re-connected to ChatSurfing. ' +
                                 'Messages sent to your currently open chat rooms while you were absent will not be ' +
                                 'delivered to you.';
                             // receivedMessageTime is used for triggering the watcher

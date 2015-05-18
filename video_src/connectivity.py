@@ -72,7 +72,7 @@ class AddClientToRoom(webapp2.RequestHandler):
         associated with a user is placed in all of the rooms that the user has open once the client re-joins the room.
         """
 
-        # logging.debug('add_client_to_all_users_rooms called for user_id %s' % user_id)
+        logging.debug('add_client_to_all_users_rooms called for client_id %s' % client_id)
 
         # Add this "client" in to all of the rooms that the client previously had open
         client_obj = clients.ClientModel.get_by_id(client_id)
