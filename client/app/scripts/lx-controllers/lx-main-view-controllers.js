@@ -63,8 +63,6 @@ angular.module('lxMainView.controllers', [])
         } else {
             if (lxAppWideConstantsService.userId) {
                 $window.sessionStorage.clientId = generateNewUniqueClientId(lxAppWideConstantsService.userId);
-            } else {
-                $window.sessionStorage.clientId = null;
             }
         }
 
@@ -129,8 +127,8 @@ angular.module('lxMainView.controllers', [])
 
         $scope.channelObject = {
             channelToken: null,
-            channelIsAlive: null,
-            socket: null
+            channelIsAlive: false,
+            socket: null // socket returned from channel.open and is remembereed so we can later close the channel
         };
 
         $scope.localVideoObject = {
