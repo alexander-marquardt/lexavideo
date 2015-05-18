@@ -32,13 +32,13 @@ angular.module('lxChatRoom.services', [])
             errorLogFn(errorObject);
         };
 
-        var createOrGetRoom = function(chatRoomNameAsWritten) {
+        var createOrGetRoom = function(chatRoomNameAsWritten, userId) {
 
             // For now, we pull the room name from the URL - this will likely change in future versions
             // of our code.
             var deferredUserSuccessfullyEnteredRoom = $q.defer();
 
-            $log.log('addUserToRoom called: ' + chatRoomNameAsWritten + '. Adding userId: ' + lxAppWideConstantsService.userId);
+            $log.log('addUserToRoom called: ' + chatRoomNameAsWritten + '. Adding userId: ' + userId);
 
 
             var roomObj = {};
@@ -46,7 +46,7 @@ angular.module('lxChatRoom.services', [])
 
             // Pass userId when creating/entering into the room, because if this is the first user to
             // enter a given room name, then they will be stored as the "creator" of that room
-            roomObj.userId = lxAppWideConstantsService.userId;
+            roomObj.userId = userId;
 
             lxHttpHandleRoomService.createOrGetRoomOnServer(roomObj).then(
                 function(response){
@@ -173,7 +173,7 @@ angular.module('lxChatRoom.services', [])
             handleChatRoomNameFromUrl: function($scope) {
                 var chatRoomNameAsWritten = $routeParams.chatRoomName;
                 if (chatRoomNameAsWritten !== ':none:') {
-                    createOrGetRoom(chatRoomNameAsWritten).then(function (data) {
+                    createOrGetRoom(chatRoomNameAsWritten, $scope.lxMainViewCtrl.userId).then(function (data) {
                         $scope.receivedChatMessageObject[data.chatRoomId] = {};
 
                         addClientToRoomWhenChannelReady($scope, data.chatRoomId);

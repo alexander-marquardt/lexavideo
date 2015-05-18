@@ -371,7 +371,7 @@ angular.module('lxChannel.services', [])
         var self = {
             initializeChannel: function(scope) {
                 if (scope.lxMainViewCtrl.clientId) {
-                    lxHttpChannelService.requestChannelToken(scope.lxMainViewCtrl.clientId, lxAppWideConstantsService.userId).then(function (response) {
+                    lxHttpChannelService.requestChannelToken(scope.lxMainViewCtrl.clientId, scope.lxMainViewCtrl.userId).then(function (response) {
                         scope.channelObject.channelToken = response.data.channelToken;
 
                         openChannel(scope);

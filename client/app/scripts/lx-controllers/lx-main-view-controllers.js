@@ -28,8 +28,8 @@ angular.module('lxMainView.controllers', [])
 
         var userIdClientIdObj = lxAuthenticationHelper.lxUserIdAndClientIdInLocalStorage();
         var clientId = userIdClientIdObj['clientId'];
-        lxAppWideConstantsService.userId = userIdClientIdObj['userId'];
-        lxAppWideConstantsService.userName = null;
+        var userId = userIdClientIdObj['userId'];
+        var userName = null;
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
@@ -84,8 +84,8 @@ angular.module('lxMainView.controllers', [])
 
         $scope.lxMainViewCtrl = {
             clientId: clientId,
-            userId: lxAppWideConstantsService.userId,
-            userName: lxAppWideConstantsService.userName,
+            userId: userId,
+            userName: userName,
             currentView: null
         };
 
@@ -281,10 +281,9 @@ angular.module('lxMainView.controllers', [])
             openChatsDropdownIsOpen: true
         };
 
-        lxChannelService.initializeChannel($scope, clientId);
-
-
-
+        if (clientId) {
+            lxChannelService.initializeChannel($scope, clientId);
+        }
     });
 
 
