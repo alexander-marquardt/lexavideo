@@ -22,12 +22,17 @@ class AddClientToRoom(webapp2.RequestHandler):
     """Handles when a user explicitly enters into a room by going to a URL for a given room."""
     
     @staticmethod
-    def add_client_to_room(room_id, client_id):
+    def add_client_to_room(chat_room_obj, client_id):
         # logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
-        chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
+
+        client_obj = clients.ClientModel.get_by_id(client_id)
+        if chat_room_obj.key in client_obj.list_of_open_chat_rooms_keys:
+            client_was_previously_in_this_room = True
+        else:
+            client_was_previously_in_this_room = False
+
         (new_client_has_been_added, chat_room_obj) = chat_room_obj.txn_add_client_to_room(client_id)
 
-        client_obj = clients.ClientModel(id=client_id)
         client_obj.txn_add_room_key_to_client_status_tracker(chat_room_obj.key)
 
 
@@ -37,10 +42,12 @@ class AddClientToRoom(webapp2.RequestHandler):
                                                           chat_room_obj.room_members_client_ids,
                                                           recompute_members_from_scratch=True)
 
+            if client_was_previously_in_this_room:
+                AddClientToRoom.tell_client_they_were_re_added_to_room_after_they_have_been_absent(client_id, chat_room_obj)
 
 
     @staticmethod
-    def tell_client_they_were_re_added_to_room_after_they_have_been_absent(client_id, room_id):
+    def tell_client_they_were_re_added_to_room_after_they_have_been_absent(client_id, chat_room_obj):
         """
         Used for notifying the client that they have be re-added to
         a room that they had previously been in. This will allow us to show them a message
@@ -49,10 +56,11 @@ class AddClientToRoom(webapp2.RequestHandler):
 
         message_obj = {
             'fromClientId': client_id,
-            'chatRoomId': room_id,
+            'chatRoomId': chat_room_obj.key.id(),
             'messageType': 'clientReAddedToRoomAfterAbsence',
             'messagePayload': {},
             }
+        logging.debug('Telling client that they were added to room after absence. message_obj: %s' % message_obj)
         channel.send_message(client_id, json.dumps(message_obj))
 
 
@@ -82,8 +90,7 @@ class AddClientToRoom(webapp2.RequestHandler):
                 # is also verified inside the transaction, but we don't want to tie-up the transaction
                 # with un-necessary calls)
                 if client_id not in room_members_client_ids:
-                    AddClientToRoom.add_client_to_room(room_id, client_id)
-                    AddClientToRoom.tell_client_they_were_re_added_to_room_after_they_have_been_absent(client_id, room_id)
+                    AddClientToRoom.add_client_to_room(chat_room_obj, client_id)
 
         else:
             status_string = 'client_id %s client object not found.' % client_id
@@ -98,7 +105,8 @@ class AddClientToRoom(webapp2.RequestHandler):
         client_id = data_object['clientId']
         room_id = data_object['chatRoomId']
 
-        self.add_client_to_room(room_id, client_id)
+        chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
+        self.add_client_to_room(chat_room_obj, client_id)
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
@@ -269,6 +277,11 @@ class ConnectClient(webapp2.RequestHandler):
 
         client_id = self.request.get('from')
         logging.info('ConnectClient called for client_id: %s' % client_id)
+        # Make sure that this client is a member of all of the rooms that he previously had open. This should
+        # only needed for the case that the channel has died and started again. We have seen cases where
+        # /_ah/channel/connected may be called after the channel dies and comes back, but where the javascript
+        # client didn't know that the channel had died. Therefore, this should not be removed even though it
+        # appears redundant with the code that executes in the ClientChannelOpened class.
         AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
 
 
