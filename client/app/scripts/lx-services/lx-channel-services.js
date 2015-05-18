@@ -50,6 +50,7 @@ angular.module('lxChannel.services', [])
              lxAppWideConstantsService,
              lxCallService,
              lxChannelMessageService,
+             lxChatRoomMembersService,
              lxCreateChatRoomObjectsService,
              lxHttpChannelService,
              lxJavascriptConstants,
@@ -144,6 +145,8 @@ angular.module('lxChannel.services', [])
                                 clientObject.clientId = clientId;
                                 roomOccupancyDict[normalizedChatRoomName].listOfClientObjects.push(clientObject);
                             });
+
+                            lxChatRoomMembersService.handleChatRoomIdFromServerUpdate(scope, chatRoomId, normalizedChatRoomName);
 
                             break;
 

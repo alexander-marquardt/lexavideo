@@ -15,7 +15,6 @@ angular.module('lxChatRoom.services', [])
         $window,
         $q,
         lxAppWideConstantsService,
-        lxChannelService,
         lxHttpChannelService,
         lxHttpHandleRoomService,
         lxShowNumMessagesService,
@@ -135,6 +134,40 @@ angular.module('lxChatRoom.services', [])
             clearChatRoomDisplayObject: function($scope) {
                 $scope.chatRoomDisplayObject.chatPanelObject = null;
                 $scope.chatRoomDisplayObject.chatRoomId = null;
+            },
+
+
+            /* handleChatRoomIdFromServerUpdate makes sure that the client has the same chat panels open as
+               the server thinks that the client has open. If the client doesn't have a chat panel open and
+               receives an update from the server that indicates that the server thinks that the client has
+               a given chat panel open, then that chat panel will be added to the list of open chat panels for
+               the client. This will only be added if it is not already in the chatPanelDict.
+               Note that we don't switch the view to the panel that is opened because this is all happening in the
+               background based on server to client communications received over the channel.
+             */
+            handleChatRoomIdFromServerUpdate: function(scope, chatRoomId, normalizedChatRoomName) {
+
+                // Only add and initialize the chatRoomId to chatPanelDict if it is not already there.
+                if (!(chatRoomId in scope.chatPanelDict)) {
+                    scope.chatPanelDict[chatRoomId] = {
+                        chatPanelIsGlued: true,
+                        numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
+                        normalizedChatRoomName: normalizedChatRoomName
+                    };
+
+                    // This "if" is probably not totally necessary, but doesn't cost much and guarantees that
+                    // we don't add the same room twice.
+                    if ($.inArray(normalizedChatRoomName, scope.normalizedOpenRoomNamesList) === -1) {
+
+                        // Push the chat room to the end of this list because we don't necessarily receive
+                        // them in any particular oder from the server.
+                        scope.normalizedOpenRoomNamesList.push(normalizedChatRoomName)
+                    }
+
+                    if ($.inArray(chatRoomId, scope.receivedChatMessageObject) === -1) {
+                        scope.receivedChatMessageObject[chatRoomId] = {};
+                    }
+                }
             },
 
             handleChatRoomNameFromUrl: function($scope) {
