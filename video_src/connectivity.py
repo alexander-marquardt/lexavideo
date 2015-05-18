@@ -209,14 +209,14 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class ConnectClient(webapp2.RequestHandler):
+class ClientChannelOpened(webapp2.RequestHandler):
 
     @handle_exceptions
     def post(self):
 
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
-        logging.debug('ConnectClient called for client_id: %s' % client_id)
+        logging.debug('ClientChannelOpened called for client_id: %s' % client_id)
 
         # check if a client object associated with this client_id already exists, and if it does, then
         # don't create a new one. We need to access the old client object because it contains the list
@@ -260,6 +260,16 @@ class RequestChannelToken(webapp2.RequestHandler):
 
         # Finally, send the http response.
         http_helpers.set_http_ok_json_response(self.response, response_dict)
+
+
+class ConnectClient(webapp2.RequestHandler):
+
+    @handle_exceptions
+    def post(self):
+
+        client_id = self.request.get('from')
+        logging.info('ConnectClient called for client_id: %s' % client_id)
+        AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
 
 
 """

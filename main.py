@@ -30,7 +30,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
     webapp2.Route(r'/_lx/create_new_room_if_does_not_exist/', chat_room_module.CreateNewRoomIfDoesNotExist),
     webapp2.Route(r'/_lx/check_if_chat_room_exists/<chat_room_name_from_url:.+>', chat_room_module.CheckIfChatRoomExists),
-    webapp2.Route(r'/_lx/connect_client/',  connectivity.ConnectClient),
+    webapp2.Route(r'/_lx/tell_server_client_channel_opened/',  connectivity.ClientChannelOpened),
     webapp2.Route(r'/_lx/add_client_to_room/', connectivity.AddClientToRoom),
     webapp2.Route(r'/_lx/remove_client_from_room/', connectivity.RemoveClientFromRoom),
     webapp2.Route(r'/_lx/message_room', messaging.MessageRoom),
@@ -42,6 +42,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/channel/request_channel_token/', connectivity.RequestChannelToken),
     webapp2.Route(r'/_lx/channel/manual_disconnect/', connectivity.ManuallyDisconnectClient),
     webapp2.Route(r'/_ah/channel/disconnected/',  connectivity.AutoDisconnectClient),
+    webapp2.Route(r'/_ah/channel/connected/',  connectivity.ConnectClient),
 
     webapp2.Route(r'/', views.MainPage, name='main'),
 

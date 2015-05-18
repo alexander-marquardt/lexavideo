@@ -274,7 +274,7 @@ angular.module('lxChannel.services', [])
                 $log.log('Channel opened.');
                 scope.channelObject.channelIsAlive = true;
 
-                lxHttpChannelService.connectClient(scope.lxMainViewCtrl.clientId);
+                lxHttpChannelService.tellServerClientChannelOpened(scope.lxMainViewCtrl.clientId);
 
                 // Heartbeat updates the server so that it knows that the current user is still connected.
                 // It also initiates a handshake that results in the server being updated with the client's
