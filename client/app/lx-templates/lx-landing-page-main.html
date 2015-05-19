@@ -26,7 +26,7 @@
                                            ng-model="inputRoomObj.chatRoomName"
                                            ng-minlength="{{ minInputLength }}"
                                            maxlength = "{{ maxInputLength }}"
-                                           ng-class="highlightInput(createRoomForm.chatRoomNameInputElem)"
+                                           ng-class="createRoomForm.chatRoomNameInputElem.inputCssClass"
                                            ng-pattern="validRoomNamesPattern"
                                            ng-trim="false"
                                            check-for-room-occupancy-directive

@@ -19,6 +19,7 @@ from video_src import error_reporting_from_client
 from video_src import chat_room_module
 from video_src import registration_and_login
 from video_src import messaging
+from video_src import users
 from video_src import views
 
 # Note: there is an inconsistency in using trailing slashes due to the fact that the google api uses trailing
@@ -30,6 +31,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx<current_template:/lx-templates/.+>', views.GetView),
     webapp2.Route(r'/_lx/create_new_room_if_does_not_exist/', chat_room_module.CreateNewRoomIfDoesNotExist),
     webapp2.Route(r'/_lx/check_if_chat_room_exists/<chat_room_name_from_url:.+>', chat_room_module.CheckIfChatRoomExists),
+    webapp2.Route(r'/_lx/check_if_username_available/<username_from_url:.+>', users.CheckIfUsernameAvailable),
     webapp2.Route(r'/_lx/tell_server_client_channel_opened/',  connectivity.ClientChannelOpened),
     webapp2.Route(r'/_lx/add_client_to_room/', connectivity.AddClientToRoom),
     webapp2.Route(r'/_lx/remove_client_from_room/', connectivity.RemoveClientFromRoom),

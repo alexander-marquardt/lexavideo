@@ -14,7 +14,7 @@ def set_http_ok_json_response(response, response_dict, http_status_code = 200):
     set_http_json_response(response, response_dict , http_status_code)    
     
     
-def set_http_error_json_response(response, status_string, http_status_code):
+def set_http_error_json_response(response, status_string, http_status_code=400):
     response_content = {
         'statusString' : status_string
     }    

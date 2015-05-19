@@ -41,6 +41,29 @@ angular.module('lxHttp.services', ['angular-jwt'])
             }
         };
     })
+
+    .factory('lxHttpHandleLoginService',
+    function (
+        $log,
+        $http
+        ) {
+
+
+        return {
+
+            checkIfUsernameAvailable : function(usernameAsWritten) {
+
+                var httpPromise = null;
+                if (usernameAsWritten) {
+                    var url = '/_lx/check_if_username_available/' + usernameAsWritten;
+                    httpPromise = $http.get(url);
+                }
+                return httpPromise;
+            }
+        };
+    })
+
+
     .factory('lxHttpChannelService',
     function (
         $http,

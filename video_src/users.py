@@ -2,13 +2,17 @@
 import logging
 import time
 
+import webapp2
 import webapp2_extras.appengine.auth.models
-
 from webapp2_extras import security
+
 from google.appengine.ext import ndb
 
 from video_src import constants
 from video_src import clients
+from video_src import http_helpers
+from video_src import status_reporting
+from video_src.error_handling import handle_exceptions
 
 # UniqueUserModel is used for ensuring that UserModel "auth_id" is unique. It also
 # keeps track of any other properties that are specified as requiring a unique value
@@ -32,10 +36,12 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 
     unique_model = UniqueUserModel
 
-    # This may look strange, but unless the user specifically enters in a user name, then
-    # we will assign the entity key as the username. This guarantees that each user name is
-    # unique, while being easy to implement.
-    username = ndb.StringProperty(default=None)
+    # Store the username as the user originall wrote it.
+    username_as_written = ndb.StringProperty(default=None)
+
+    # Store the "normalized" (all lowercase) username. This will be used for string comparisons
+    # when searching for usernames.
+    username_normalized = ndb.StringProperty(default=None)
 
     # We will assign new user entities to each person who visits the page, but only some of these users
     # will actually create a permanent account by registering and by creating their own user name.
@@ -118,3 +124,36 @@ def delete_user_by_id(user_id):
     # removes  particular user from the database
     user_obj = UserModel.get_by_id(user_id)
     user_obj.key.delete()
+
+
+class CheckIfUsernameAvailable(webapp2.RequestHandler):
+    @handle_exceptions
+    def get(self, username_from_url=None):
+        username_from_url = username_from_url.decode('utf8')
+        username_normalized = username_from_url.lower()
+
+        if username_normalized:
+            logging.info('Query for username: ' + username_normalized)
+            user_obj = UserModel.query(UserModel.username_normalized == username_normalized).get()
+
+            if user_obj:
+                response_dict = {
+                    'usernameNormalized': username_normalized,
+                    'usernameAvailable': False,
+                }
+                logging.info('Username taken: ' + repr(user_obj))
+
+            else:
+                response_dict = {
+                    'usernameNormalized': username_normalized,
+                    'usernameAvailable': True,
+                }
+                logging.info('Username is available: ' + username_normalized)
+
+            http_helpers.set_http_ok_json_response(self.response, response_dict)
+
+        else:
+            err_status = 'ErrorUsernameRequired'
+            # log this error for further analysis
+            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
+            http_helpers.set_http_error_json_response(self.response, {'statusString': err_status})

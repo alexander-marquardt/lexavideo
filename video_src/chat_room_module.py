@@ -13,7 +13,6 @@ from video_src import constants
 from video_src import http_helpers
 from video_src.memcache_wrapper import memcache
 from video_src import status_reporting
-from video_src import users
 from video_src import utils
 
 from video_src.error_handling import handle_exceptions
@@ -286,16 +285,11 @@ class CheckIfChatRoomExists(webapp2.RequestHandler):
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
         else:
-            room_query = ChatRoomModel.query()
-            rooms_list = []
+            err_status = 'ErrorChatRoomNameRequired'
+            # log this error for further analysis
+            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
+            http_helpers.set_http_error_json_response(self.response, {'statusString': err_status})
 
-            for room_obj in room_query:
-                room_dict = room_obj.to_dict()
-                room_dict['chatRoomName'] = room_obj.key.id()
-                rooms_list.append(room_dict)
-
-            http_helpers.set_http_ok_json_response(self.response, rooms_list)
-            
 class CreateNewRoomIfDoesNotExist(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):

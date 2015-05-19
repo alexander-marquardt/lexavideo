@@ -4,34 +4,34 @@
 
     <div ng-controller="lxLoginModalCtrl">
         <div class="modal-header">
-            <h3 class="modal-title"> Please select a Name </h3>
+            <h3 class="modal-title"> Please select a Username </h3>
             <div class="modal-body">
-                Select a unique name that will be used to identify you to other ChatSurfing members
                 <div class="clearfix">
                     <form name="loginUserForm" role="form" novalidate>
-                        <div class="col-xs-10">
+                        <div class="col-xs-12">
                             <div class="form-group">
 
-                                <label for="id-inputRoomName">User Name</label>
+                                <!--<label for="id-inputRoomName">User Name</label>-->
                                 <div class="input-group">
                                     <input class=" form-control"
                                            id="id-inputRoomName"
-                                           placeholder="Your username"
+                                           placeholder="Type your desired username"
                                            name="usernameInputElem"
                                            ng-model="inputUsernameObj.Username"
                                            ng-minlength="{{ usernameMinChars }}"
                                            maxlength = "{{ usernameMaxChars }}"
-                                           ng-class="highlightInput(loginUserForm.usernameInputElem)"
+                                           ng-class="loginUserForm.usernameInputElem.inputCssClass"
                                            ng-pattern="validUsernamesPattern"
                                            ng-trim="false"
                                            check-for-existing-username-directive
                                            required
+                                           autofocus
                                             />
 
                                     <span class="input-group-btn">
                                         <button ng-click="goToRoomUrl(roomObj.chatRoomName)" class="btn btn-primary"
-                                                ng-disabled="loginUserForm.$invalid || loginUserForm.usernameInputElem.userIsWaitingForRoomStatus">
-                                            {{ loginUserForm.usernameInputElem.submitButtonText }}</button>
+                                                ng-disabled="loginUserForm.$invalid || loginUserForm.usernameInputElem.userIsWaitingForUsernameStatus">
+                                            Enter!</button>
                                     </span>
                                 </div>
 
@@ -48,19 +48,14 @@
                                         <small  ng-show="loginUserForm.usernameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
                                     </div>
                                     <div  ng-show="loginUserForm.$valid">
-                                        <small ng-show="loginUserForm.usernameInputElem.roomNumOccupantsMessage">
-                                            {{ loginUserForm.usernameInputElem.roomNumOccupantsMessage }}</small>
-                                        <small ng-show="loginUserForm.usernameInputElem.roomIsEmptyMessage">
-                                            {{ loginUserForm.usernameInputElem.roomIsEmptyMessage }} </small>
+                                        <small ng-show="loginUserForm.usernameInputElem.usernameIsAvailableMessage">
+                                            {{ loginUserForm.usernameInputElem.usernameIsAvailableMessage }} </small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="modalOkFn()">Close</button>
             </div>
         </div>
     </div>

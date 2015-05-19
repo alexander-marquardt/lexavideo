@@ -8,19 +8,20 @@ var videoApp = angular.module('videoApp', [
     'lxAuthentication.controllers',
     'lxChatbox.controllers',
     'lxDebuggingInfo.controllers',
-    'lxUseChatRoom.controllers',
     'lxLandingPage.controllers',
     'lxLogin.controllers',
     'lxMainView.controllers',
-    'lxVideo.controllers',
     'lxPresence.controllers',
+    'lxUseChatRoom.controllers',
+    'lxVideo.controllers',
 
     // proprietary directives
     'lxChatbox.directives',
     'lxChatRoom.directives',
     'lxCommon.directives',
-    'lxMainVideo.directives',
     'lxLandingPage.directives',
+    'lxLogin.directives',
+    'lxMainVideo.directives',
     'lxVideoExchangeUserFeedback.directives',
 
     // proprietary services
@@ -36,12 +37,12 @@ var videoApp = angular.module('videoApp', [
     'lxForms.services',
     'lxGlobalVarsAndConstants.services',
     'lxHttp.services',
-    'lxPresence.services',
-    'lxVideoSetup.services',
     'lxModalSupport.services',
+    'lxPresence.services',
     'lxUtility.services',
     'lxVideo.services',
     'lxVideoNegotiation.services',
+    'lxVideoSetup.services',
 
     // vendor directives
     'scrollGlue.directives',
