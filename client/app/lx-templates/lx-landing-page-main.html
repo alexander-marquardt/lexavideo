@@ -23,7 +23,7 @@
                                            id="id-inputRoomName"
                                            placeholder="Name of chat room to create and/or join"
                                            name="chatRoomNameInputElem"
-                                           ng-model="roomObj.chatRoomName"
+                                           ng-model="inputRoomObj.chatRoomName"
                                            ng-minlength="{{ minInputLength }}"
                                            maxlength = "{{ maxInputLength }}"
                                            ng-class="highlightInput(createRoomForm.chatRoomNameInputElem)"
@@ -34,7 +34,7 @@
                                             />
 
                                     <span class="input-group-btn">
-                                        <button ng-click="goToRoomUrl(roomObj.chatRoomName)" class="btn btn-primary"
+                                        <button ng-click="goToRoomUrl(inputRoomObj.chatRoomName)" class="btn btn-primary"
                                                 ng-disabled="createRoomForm.$invalid || createRoomForm.chatRoomNameInputElem.userIsWaitingForRoomStatus">
                                             {{ createRoomForm.chatRoomNameInputElem.submitButtonText }}</button>
                                     </span>

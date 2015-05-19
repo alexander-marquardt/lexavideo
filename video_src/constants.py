@@ -28,8 +28,25 @@ We also forbid the following characters, just in case we want to use them for in
 (note that in the regexp below, that '\', '[', ']', '/', '*', and ''' are escaped with '\')
 """     
 chat_room_name_invalid_chars_regex = r'$&+,/:;=?@"<>#%{}|\\^~\[\]\/\s\*\''
+
+"""
+valid_chat_room_name_regex - The initial caret means that the regexp must match starting at the beginning
+of the string. The ending $ means that the regexp must match all the way to the end of the string.
+The characters between the '[' and the ']' is the set of characters that we are matching against, however
+because the first symbol is '^' this is a negative match, which means that we are matching all characters
+not in this set.
+The '+' symbol before the '$' means that we must match at least one or more characters
+"""
 valid_chat_room_name_regex = r'^[^' + chat_room_name_invalid_chars_regex + r']+$'
 valid_chat_room_name_regex_compiled = re.compile(valid_chat_room_name_regex)
+
+
+username_min_chars = 3
+username_max_chars = 20
+username_invalid_chars_regex = r'$&+,/:;=?@"<>#%|\\^~\s\*\''
+valid_username_regex = r'^[^' + chat_room_name_invalid_chars_regex + r']+$'
+valid_username_regex_compiled = re.compile(valid_chat_room_name_regex)
+
 
 star_separator = '*'*20
 long_star_separator = '*'*80

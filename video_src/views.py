@@ -87,7 +87,10 @@ class MainPage(webapp2.RequestHandler):
             'userInfoEmbeddedInHtmlJson': json.dumps(
                 {
                     'debugBuildEnabled': vidsetup.DEBUG_BUILD,
-                    'heartbeatIntervalMilliseconds': constants.heartbeat_interval_seconds * 1000
+                    'heartbeatIntervalMilliseconds': constants.heartbeat_interval_seconds * 1000,
+                    'usernameMaxChars': constants.username_max_chars,
+                    'usernameMinChars': constants.username_min_chars,
+                    'usernameInvalidCharsForRegex': constants.username_invalid_chars_regex,
                 }
             ),
             'enable_live_reload': vidsetup.ENABLE_LIVE_RELOAD,

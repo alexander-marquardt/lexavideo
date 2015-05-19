@@ -35,7 +35,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         });
 
         /*
-         The following regular expressions are used for detecting if a user has entered a dis-allowed character into th
+         The following regular expressions are used for detecting if a user has entered a dis-allowed character into the
          input box. These values are passed from the server so that the server and client are guaranteed to always be
          evaluating the same regex for validity.
          */
@@ -46,8 +46,9 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $scope.minInputLength = lxLandingPageConstantsService.minRoomChars;
         $scope.maxInputLength = lxLandingPageConstantsService.maxRoomChars;
 
-        $scope.roomObj = {};
-        $scope.roomObj.userName = lxAppWideConstantsService.userName;
+        $scope.inputRoomObj = {
+            chatRoomName: null
+        };
 
         // enterIntoRoom is the function that will be executed when the user clicks the submit button
         $scope.goToRoomUrl = function(chatRoomName) {

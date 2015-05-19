@@ -1,14 +1,68 @@
 
+{% raw %}
 <script type="text/ng-template" id="lx-template-cache/lx-login-modal.html">
 
-    <div class="modal-header">
-        <h3 class="modal-title"> Please select a Name </h3>
-        <div class="modal-body">
-            Select a unique name that will be used to identify you to other ChatSurfig members
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="modalOkFn()">Close</button>
+    <div ng-controller="lxLoginModalCtrl">
+        <div class="modal-header">
+            <h3 class="modal-title"> Please select a Name </h3>
+            <div class="modal-body">
+                Select a unique name that will be used to identify you to other ChatSurfing members
+
+                <form name="loginUserForm" role="form" novalidate>
+                    <div class="col-xs-10">
+                        <div class="form-group">
+
+                            <label for="id-inputRoomName">User Name</label>
+                            <div class="input-group">
+                                <input class=" form-control"
+                                       id="id-inputRoomName"
+                                       placeholder="Name of chat room to create and/or join"
+                                       name="userNameInputElem"
+                                       ng-model="inputUsernameObj.Username"
+                                       ng-minlength="{{ minUserNameLength }}"
+                                       maxlength = "{{ maxUserNameLength }}"
+                                       ng-class="highlightInput(loginUserForm.userNameInputElem)"
+                                       ng-pattern="validUserNamesPattern"
+                                       ng-trim="false"
+                                       check-for-existing-username-directive
+                                       required
+                                        />
+
+                                <span class="input-group-btn">
+                                    <button ng-click="goToRoomUrl(roomObj.chatRoomName)" class="btn btn-primary"
+                                            ng-disabled="loginUserForm.$invalid || loginUserForm.userNameInputElem.userIsWaitingForRoomStatus">
+                                        {{ loginUserForm.userNameInputElem.submitButtonText }}</button>
+                                </span>
+                            </div>
+
+                            <div class="cl-feedback-on-input-validity-div"
+                                 ng-show="loginUserForm.userNameInputElem.$dirty || loginUserForm.$valid">
+                                <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
+                                added and removed from the DOM -->
+                                <div class="text-danger" ng-show="loginUserForm.userNameInputElem.$dirty">
+                                    <small  ng-show="loginUserForm.userNameInputElem.$error.required">Please input a chat name</small>
+                                    <small  ng-show="loginUserForm.userNameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
+                                    <!--<small  ng-show="loginUserForm.userNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
+                                    <small  ng-show="loginUserForm.userNameInputElem.$error.pattern">
+                                        {{ invalidCharacterFeedback }}</small>
+                                    <small  ng-show="loginUserForm.userNameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
+                                </div>
+                                <div  ng-show="loginUserForm.$valid">
+                                    <small ng-show="loginUserForm.userNameInputElem.roomNumOccupantsMessage">
+                                        {{ loginUserForm.userNameInputElem.roomNumOccupantsMessage }}</small>
+                                    <small ng-show="loginUserForm.userNameInputElem.roomIsEmptyMessage">
+                                        {{ loginUserForm.userNameInputElem.roomIsEmptyMessage }} </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="modalOkFn()">Close</button>
+            </div>
         </div>
     </div>
 
 </script>
+{% endraw %}
