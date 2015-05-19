@@ -186,7 +186,8 @@ class TempLogin(webapp2.RequestHandler):
 
         data_object = json.loads(self.request.body)
 
-        username = data_object['username']
+        username_as_written = data_object['usernameAsWritten']
+        username_normalized = username_as_written.lower()
 
         # The following line creates the user object and the first parameter will be stored as
         # an auth_id (we currently pass in username as auth_id), and we also pass in username so that we can easily
@@ -197,7 +198,9 @@ class TempLogin(webapp2.RequestHandler):
         # Not necessary to include username in the unique_properties, since it will be included
         # in the "auth_id" in the create_user function, which will ensure that it is unique.
         unique_properties = None
-        user_created_bool, user_obj = users.UserModel.create_user(username, unique_properties, username=username)
+        user_created_bool, user_obj = users.UserModel.create_user(username_normalized, unique_properties,
+                                                                  username_normalized=username_normalized,
+                                                                  username_as_written=username_as_written)
 
         if user_created_bool:
             logging.info('New user object created. user_id: %d' % user_obj.key.id())
