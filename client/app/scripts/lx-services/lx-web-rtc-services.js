@@ -116,7 +116,7 @@ webRtcServices.factory('lxTurnService',
                 if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
 
                     var turnUrl = 'https://computeengineondemand.appspot.com/' + 'turn?' + 'username=' +
-                        lxAppWideConstantsService.userName + '&key=4080218913';
+                        lxAppWideConstantsService.username + '&key=4080218913';
 
 
                     for (var i = 0, len = lxVideoParamsService.pcConfig.iceServers.length; i < len; i++) {

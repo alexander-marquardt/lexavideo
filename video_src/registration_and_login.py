@@ -30,20 +30,20 @@ class SignupHandler(BaseHandler):
         self.render_template('signup.html')
 
     def post(self):
-        user_name = self.request.get('user_name')
+        username = self.request.get('username')
         email = self.request.get('email')
         name = self.request.get('name')
         password = self.request.get('password')
         last_name = self.request.get('lastname')
 
         unique_properties = ['email_address']
-        user_data = self.user_model.create_user(user_name,
+        user_data = self.user_model.create_user(username,
                                                 unique_properties,
                                                 email_address=email, name=name, password_raw=password,
                                                 last_name=last_name, verified=False)
         if not user_data[0]: #user_data is a tuple
             self.display_message('Unable to create user for email %s because of \
-        duplicate keys %s' % (user_name, user_data[1]))
+        duplicate keys %s' % (username, user_data[1]))
             return
 
         user = user_data[1]
@@ -64,11 +64,11 @@ class ForgotPasswordHandler(BaseHandler):
         self._serve_page()
 
     def post(self):
-        user_name = self.request.get('user_name')
+        username = self.request.get('username')
 
-        user = self.user_model.get_by_auth_id(user_name)
+        user = self.user_model.get_by_auth_id(username)
         if not user:
-            logging.info('Could not find any user entry for user_name %s', user_name)
+            logging.info('Could not find any user entry for username %s', username)
             self._serve_page(not_found=True)
             return
 
@@ -84,9 +84,9 @@ class ForgotPasswordHandler(BaseHandler):
         self.display_message(msg.format(url=verification_url))
 
     def _serve_page(self, not_found=False):
-        user_name = self.request.get('user_name')
+        username = self.request.get('username')
         params = {
-            'user_name': user_name,
+            'username': username,
             'not_found': not_found
         }
         self.render_template('forgot.html', params)
@@ -186,18 +186,18 @@ class TempLogin(webapp2.RequestHandler):
 
         data_object = json.loads(self.request.body)
 
-        user_name = data_object['userName']
+        username = data_object['username']
 
         # The following line creates the user object and the first parameter will be stored as
-        # an auth_id (we currently pass in user_name as auth_id), and we also pass in user_name so that we can easily
-        # display the user_name that will be displayed to other users (we can't rely on auth_id because it is a list
+        # an auth_id (we currently pass in username as auth_id), and we also pass in username so that we can easily
+        # display the username that will be displayed to other users (we can't rely on auth_id because it is a list
         # containing various logins that the user may wish to use - such as email address, user name, perhaps
         # a facebook login token, etc.
 
-        # Not necessary to include user_name in the unique_properties, since it will be included
+        # Not necessary to include username in the unique_properties, since it will be included
         # in the "auth_id" in the create_user function, which will ensure that it is unique.
         unique_properties = None
-        user_created_bool, user_obj = users.UserModel.create_user(user_name, unique_properties, user_name=user_name)
+        user_created_bool, user_obj = users.UserModel.create_user(username, unique_properties, username=username)
 
         if user_created_bool:
             logging.info('New user object created. user_id: %d' % user_obj.key.id())
@@ -216,7 +216,7 @@ class TempLogin(webapp2.RequestHandler):
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
         else:
-            err_msg = 'Failed to create user_name %s', user_name
+            err_msg = 'Failed to create username %s', username
             logging.info(err_msg)
             http_helpers.set_http_error_json_response(self.response, err_msg, http_status_code=401)
 

@@ -30,7 +30,7 @@ angular.module('lxMainView.controllers', [])
         $scope.lxMainViewCtrl = {
             clientId: userIdClientIdObj['clientId'],
             userId: userIdClientIdObj['userId'],
-            userName: null,
+            username: null,
             currentView: null
         };
 

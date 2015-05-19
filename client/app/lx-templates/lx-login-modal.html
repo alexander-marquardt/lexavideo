@@ -17,12 +17,12 @@
                                 <input class=" form-control"
                                        id="id-inputRoomName"
                                        placeholder="Name of chat room to create and/or join"
-                                       name="userNameInputElem"
+                                       name="usernameInputElem"
                                        ng-model="inputUsernameObj.Username"
-                                       ng-minlength="{{ minUserNameLength }}"
-                                       maxlength = "{{ maxUserNameLength }}"
-                                       ng-class="highlightInput(loginUserForm.userNameInputElem)"
-                                       ng-pattern="validUserNamesPattern"
+                                       ng-minlength="{{ minUsernameLength }}"
+                                       maxlength = "{{ maxUsernameLength }}"
+                                       ng-class="highlightInput(loginUserForm.usernameInputElem)"
+                                       ng-pattern="validUsernamesPattern"
                                        ng-trim="false"
                                        check-for-existing-username-directive
                                        required
@@ -30,28 +30,28 @@
 
                                 <span class="input-group-btn">
                                     <button ng-click="goToRoomUrl(roomObj.chatRoomName)" class="btn btn-primary"
-                                            ng-disabled="loginUserForm.$invalid || loginUserForm.userNameInputElem.userIsWaitingForRoomStatus">
-                                        {{ loginUserForm.userNameInputElem.submitButtonText }}</button>
+                                            ng-disabled="loginUserForm.$invalid || loginUserForm.usernameInputElem.userIsWaitingForRoomStatus">
+                                        {{ loginUserForm.usernameInputElem.submitButtonText }}</button>
                                 </span>
                             </div>
 
                             <div class="cl-feedback-on-input-validity-div"
-                                 ng-show="loginUserForm.userNameInputElem.$dirty || loginUserForm.$valid">
+                                 ng-show="loginUserForm.usernameInputElem.$dirty || loginUserForm.$valid">
                                 <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
                                 added and removed from the DOM -->
-                                <div class="text-danger" ng-show="loginUserForm.userNameInputElem.$dirty">
-                                    <small  ng-show="loginUserForm.userNameInputElem.$error.required">Please input a chat name</small>
-                                    <small  ng-show="loginUserForm.userNameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
-                                    <!--<small  ng-show="loginUserForm.userNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
-                                    <small  ng-show="loginUserForm.userNameInputElem.$error.pattern">
+                                <div class="text-danger" ng-show="loginUserForm.usernameInputElem.$dirty">
+                                    <small  ng-show="loginUserForm.usernameInputElem.$error.required">Please input a chat name</small>
+                                    <small  ng-show="loginUserForm.usernameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
+                                    <!--<small  ng-show="loginUserForm.usernameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
+                                    <small  ng-show="loginUserForm.usernameInputElem.$error.pattern">
                                         {{ invalidCharacterFeedback }}</small>
-                                    <small  ng-show="loginUserForm.userNameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
+                                    <small  ng-show="loginUserForm.usernameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
                                 </div>
                                 <div  ng-show="loginUserForm.$valid">
-                                    <small ng-show="loginUserForm.userNameInputElem.roomNumOccupantsMessage">
-                                        {{ loginUserForm.userNameInputElem.roomNumOccupantsMessage }}</small>
-                                    <small ng-show="loginUserForm.userNameInputElem.roomIsEmptyMessage">
-                                        {{ loginUserForm.userNameInputElem.roomIsEmptyMessage }} </small>
+                                    <small ng-show="loginUserForm.usernameInputElem.roomNumOccupantsMessage">
+                                        {{ loginUserForm.usernameInputElem.roomNumOccupantsMessage }}</small>
+                                    <small ng-show="loginUserForm.usernameInputElem.roomIsEmptyMessage">
+                                        {{ loginUserForm.usernameInputElem.roomIsEmptyMessage }} </small>
                                 </div>
                             </div>
                         </div>

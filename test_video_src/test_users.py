@@ -10,7 +10,7 @@ from video_src import users
 
 class TestUtils(unittest.TestCase):
 
-    new_lx_user_name = None
+    new_lx_username = None
 
     def setUp(self):
         # First, create an instance of the Testbed class.
@@ -27,16 +27,16 @@ class TestUtils(unittest.TestCase):
     # def step1(self):
     #     user_obj = users.create_new_user()
     #     self.assertIsNotNone(user_obj)
-    #     self.assertEqual(user_obj.user_name, str(user_obj.key.id()))
-    #     self.new_lx_user_name = user_obj.user_name
+    #     self.assertEqual(user_obj.username, str(user_obj.key.id()))
+    #     self.new_lx_username = user_obj.username
 
     def step2(self):
-        user_obj = users.get_user_by_name(self.new_lx_user_name)
-        self.assertEqual(user_obj.user_name, str(user_obj.key.id()))
+        user_obj = users.get_user_by_name(self.new_lx_username)
+        self.assertEqual(user_obj.username, str(user_obj.key.id()))
 
     def step3(self):
-        users.delete_user_by_id(int(self.new_lx_user_name))
-        user_obj = users.get_user_by_name(self.new_lx_user_name)
+        users.delete_user_by_id(int(self.new_lx_username))
+        user_obj = users.get_user_by_name(self.new_lx_username)
         self.assertIsNone(user_obj)
 
     def test_one(self):

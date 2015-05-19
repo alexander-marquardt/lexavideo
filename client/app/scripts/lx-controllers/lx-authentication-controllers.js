@@ -12,7 +12,7 @@ angular.module('lxAuthentication.controllers', [])
         )
 
     {
-        $scope.loginInfo = {userName: null, password: null};
+        $scope.loginInfo = {username: null, password: null};
         $scope.message = '';
         $scope.submit = function () {
             $http

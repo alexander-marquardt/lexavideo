@@ -14,12 +14,12 @@ angular.module('lxLogin.controllers', [])
         // For now, we just use the same patterns and lengths for user names, as we do for room names. This should
         // probably be changed at some point in the future. More extensive documentation of these regular expressions
         // is available in constants.py.
-        var invalidUserNamesPattern = new RegExp('[' + lxAppWideConstantsService.usernameInvalidCharsForRegex + ']', 'g');
-        $scope.validUserNamesPattern  = new RegExp('^[^' + lxAppWideConstantsService.usernameInvalidCharsForRegex + ']+$');
+        var invalidUsernamesPattern = new RegExp('[' + lxAppWideConstantsService.usernameInvalidCharsForRegex + ']', 'g');
+        $scope.validUsernamesPattern  = new RegExp('^[^' + lxAppWideConstantsService.usernameInvalidCharsForRegex + ']+$');
 
         // The following values are passed from the server and are validated both on the client and on the server.
-        $scope.minUserNameLength = lxAppWideConstantsService.usernameMinChars;
-        $scope.maxUserNameLength = lxAppWideConstantsService.usernameMaxChars;
+        $scope.minUsernameLength = lxAppWideConstantsService.usernameMinChars;
+        $scope.maxUsernameLength = lxAppWideConstantsService.usernameMaxChars;
 
         $scope.inputUsernameObj = {
             username: null
@@ -27,11 +27,11 @@ angular.module('lxLogin.controllers', [])
 
         $scope.highlightInput = lxFormsInputService.highlightInput;
 
-        $scope.$watch('loginUserForm.userNameInputElem.$viewValue',
+        $scope.$watch('loginUserForm.usernameInputElem.$viewValue',
             function(inputValue) {
 
                 var invalidCharacterFeedbackArray = lxFormsInputService.checkForInvalidCharacters(
-                    $scope.loginUserForm.userNameInputElem, invalidUserNamesPattern);
+                    $scope.loginUserForm.usernameInputElem, invalidUsernamesPattern);
                 var invalidCharacterCount = invalidCharacterFeedbackArray.length;
 
                 if (invalidCharacterCount > 0) {

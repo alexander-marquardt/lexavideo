@@ -35,7 +35,7 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
     # This may look strange, but unless the user specifically enters in a user name, then
     # we will assign the entity key as the username. This guarantees that each user name is
     # unique, while being easy to implement.
-    user_name = ndb.StringProperty(default=None)
+    username = ndb.StringProperty(default=None)
 
     # We will assign new user entities to each person who visits the page, but only some of these users
     # will actually create a permanent account by registering and by creating their own user name.
@@ -97,17 +97,17 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 def txn_create_new_user():
 
     new_user_obj = UserModel()
-    # use the key as the user_name until they decide to create their own user_name.
-    new_user_name = "Not set"
-    new_user_obj.user_name = str(new_user_name)
+    # use the key as the username until they decide to create their own username.
+    new_username = "Not set"
+    new_user_obj.username = str(new_username)
     new_user_obj.put()
 
     logging.info('new user object with user_id %s written' % new_user_obj.key.id())
     return new_user_obj
 
-def get_user_by_name(user_name):
+def get_user_by_name(username):
     # queries database for user and returns the user object
-    user_obj = UserModel.query(UserModel.user_name == user_name).get()
+    user_obj = UserModel.query(UserModel.username == username).get()
     return user_obj
 
 def get_user_by_id(user_id):

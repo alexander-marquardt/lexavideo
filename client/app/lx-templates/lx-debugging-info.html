@@ -4,7 +4,7 @@
         <div ng-if="debugBuildEnabled">
             <table class="table table-bordered table-striped">
                 <tr>
-                    <td>User Name: {{ lxMainViewCtrl.userName }}</td>
+                    <td>User Name: {{ lxMainViewCtrl.username }}</td>
                     <td>Client Id: {{ lxMainViewCtrl.clientId }}</td>
                 </tr>
 
@@ -13,8 +13,8 @@
                     <td>Room Id:   {{ roomOccupancyObject.chatRoomId }}</td>
                 </tr>
 
-                <tr ng-repeat="user in roomOccupancyObject.listOfClientObjects | filter:{userName: '!'+ roomOccupancyObject.userName}">
-                    <td>Remote User Name: {{ user.userName }}</td>
+                <tr ng-repeat="user in roomOccupancyObject.listOfClientObjects | filter:{username: '!'+ roomOccupancyObject.username}">
+                    <td>Remote User Name: {{ user.username }}</td>
                     <td>Remote User Id: {{ user.userId }}</td>
                 </tr>
                 <tr ng-repeat="(remoteClientId, videoExchangeObject) in videoExchangeObjectsDict">
