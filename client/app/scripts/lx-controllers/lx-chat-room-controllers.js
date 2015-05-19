@@ -33,7 +33,24 @@ angular.module('lxUseChatRoom.controllers', [])
             });
         });
 
-        lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
+        // We need to wait for the clientId to be set before we can enter the client into the room.
+        // We have a "hidden" assumption that if clientId is set, then userId should also be set. This is
+        // by construction, and should be a valid assumption.
+        var watchClientId = $scope.$watch(function() {
+            return $scope.lxMainViewCtrl.clientId;
+        },
+        function(clientId, previousClientId) {
+            if (clientId) {
+                $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl due to change in clientId from ' +
+                    previousClientId + 'to ' + clientId);
+
+                lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
+
+                // Kill this watcher once we have handled getting into the room
+                watchClientId();
+            }
+        });
+
     })
 
     .controller('lxMainVideoCtrl',

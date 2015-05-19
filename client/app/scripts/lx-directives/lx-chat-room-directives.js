@@ -100,6 +100,18 @@ angular.module('lxChatRoom.directives', [])
         };
     })
 
+    .directive('lxMakeSureClientIdHasBeenAllocated',
+    function(lxModalSupportService) {
+        return {
+            restrict: 'A',
+            link: function(scope) {
+
+                if (!scope.lxMainViewCtrl.clientId) {
+                    lxModalSupportService.showStandardModalWindowFromTemplateUrl("lx-template-cache/lx-login-modal.html");
+                }
+            }
+        }
+    })
 
     .directive('lxWatchForErrorEnteringIntoRoom',
     function(

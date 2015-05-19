@@ -27,9 +27,12 @@ angular.module('lxMainView.controllers', [])
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
         var userIdClientIdObj = lxAuthenticationHelper.lxUserIdAndClientIdInLocalStorage();
-        var clientId = userIdClientIdObj['clientId'];
-        var userId = userIdClientIdObj['userId'];
-        var userName = null;
+        $scope.lxMainViewCtrl = {
+            clientId: userIdClientIdObj['clientId'],
+            userId: userIdClientIdObj['userId'],
+            userName: null,
+            currentView: null
+        };
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
@@ -82,12 +85,6 @@ angular.module('lxMainView.controllers', [])
         };
 
 
-        $scope.lxMainViewCtrl = {
-            clientId: clientId,
-            userId: userId,
-            userName: userName,
-            currentView: null
-        };
 
         $scope.channelObject = {
             channelToken: null,
@@ -281,9 +278,19 @@ angular.module('lxMainView.controllers', [])
             openChatsDropdownIsOpen: true
         };
 
-        if (clientId) {
-            lxChannelService.initializeChannel($scope, clientId);
-        }
+        var watchClientId = $scope.$watch(function() {
+            return $scope.lxMainViewCtrl.clientId;
+        },
+        function(clientId, previousClientId) {
+            if (clientId) {
+                $log.info('Calling lxChannelService.initializeChannel due to change in clientId from ' +
+                    previousClientId + 'to ' + clientId);
+                lxChannelService.initializeChannel($scope);
+
+                // Kill this watch once we have initialized the channel
+                watchClientId();
+            }
+        });
     });
 
 
