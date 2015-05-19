@@ -14,6 +14,7 @@ angular.module('lxUseChatRoom.controllers', [])
     .controller('lxChatViewCtrl', function(
         $location,
         $routeParams,
+        $log,
         $scope,
         $timeout,
         lxHttpChannelService,
