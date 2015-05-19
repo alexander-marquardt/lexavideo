@@ -26,13 +26,21 @@ angular.module('lxMainView.controllers', [])
         // Copy information embedded in the Html into an angular service.
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
-        var userIdClientIdObj = lxAuthenticationHelper.lxUserIdAndClientIdInLocalStorage();
+        var userId = lxAuthenticationHelper.lxGetUserIdInLocalStorage();
+        var clientId;
+        if (userId) {
+            clientId = lxAuthenticationHelper.lxGetOrGenerateClientId(userId);
+        } else {
+            clientId = null;
+        }
+
         $scope.lxMainViewCtrl = {
-            clientId: userIdClientIdObj['clientId'],
-            userId: userIdClientIdObj['userId'],
+            clientId: clientId,
+            userId: userId,
             username: null,
             currentView: null
         };
+
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
 
