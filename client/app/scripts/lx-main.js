@@ -32,6 +32,7 @@ var videoApp = angular.module('videoApp', [
     'lxCodecs.services',
     'lxCheckCompatibility.services',
     'lxErrorHandling.services',
+    'lxForms.services',
     'lxGlobalVarsAndConstants.services',
     'lxHttp.services',
     'lxPresence.services',

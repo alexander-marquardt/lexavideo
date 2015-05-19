@@ -15,6 +15,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $log,
         $scope,
         lxChatRoomMembersService,
+        lxFormsInputService,
         lxLandingPageConstantsService,
         lxHttpHandleRoomService,
         lxAppWideConstantsService) {
@@ -62,28 +63,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
             $log.debug($scope);
         };
 
-        $scope.highlightInput =
-            function(inputElement) {
-
-                var cssClass;
-                if (inputElement.$invalid  && inputElement.$dirty ) {
-                    cssClass = 'cl-invalid-input-glow';
-                }
-                else if (inputElement.$valid && inputElement.$dirty) {
-
-                    // the roomIsEmptyMessage and roomNotFullMessage are set in the checkForRoomOccupancy directive.
-                    if (inputElement.roomIsEmptyMessage) {
-                        cssClass = 'cl-valid-input-glow';
-                    }
-                    if (inputElement.roomNotFullMessage) {
-                        cssClass = 'cl-warning-input-glow';
-                    }
-                }
-                else {
-                    cssClass = '';
-                }
-                return cssClass;
-            };
+        $scope.highlightInput = lxFormsInputService.highlightInput;
 
         $scope.$watch('createRoomForm.chatRoomNameInputElem.$viewValue',
             function(inputValue) {
