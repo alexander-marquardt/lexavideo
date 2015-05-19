@@ -17,7 +17,7 @@
                                            id="id-inputRoomName"
                                            placeholder="Type your desired username"
                                            name="usernameInputElem"
-                                           ng-model="inputUsernameObj.Username"
+                                           ng-model="inputUsernameObj.usernameAsWritten"
                                            ng-minlength="{{ usernameMinChars }}"
                                            maxlength = "{{ usernameMaxChars }}"
                                            ng-class="loginUserForm.usernameInputElem.inputCssClass"
@@ -29,7 +29,7 @@
                                             />
 
                                     <span class="input-group-btn">
-                                        <button ng-click="goToRoomUrl(roomObj.chatRoomName)" class="btn btn-primary"
+                                        <button ng-click="submitUsername(inputUsernameObj.usernameAsWritten)" class="btn btn-primary"
                                                 ng-disabled="loginUserForm.$invalid || loginUserForm.usernameInputElem.userIsWaitingForUsernameStatus">
                                             Enter!</button>
                                     </span>

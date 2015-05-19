@@ -8,8 +8,11 @@ import json
 import logging
 import webapp2
 
-from webapp2_extras.auth import InvalidAuthIdError
-from webapp2_extras.auth import InvalidPasswordError
+from video_src import status_reporting
+from video_src.error_handling import handle_exceptions
+
+# from webapp2_extras.auth import InvalidAuthIdError
+# from webapp2_extras.auth import InvalidPasswordError
 
 
 import vidsetup
@@ -155,32 +158,64 @@ class SetPasswordHandler(BaseHandler):
 
         self.display_message('Password updated')
 
-class LoginHandler(BaseHandler):
-    def get(self):
-        self._serve_page()
+# class LoginHandler(BaseHandler):
+#     def get(self):
+#         self._serve_page()
+#
+#     def post(self):
+#         username = self.request.get('username')
+#         password = self.request.get('password')
+#         try:
+#             u = self.auth.get_user_by_password(username, password, remember=True,
+#                                                save_session=True)
+#             self.redirect(self.uri_for('home'))
+#         except (InvalidAuthIdError, InvalidPasswordError) as e:
+#             logging.info('Login failed for user %s because of %s', username, type(e))
+#             self._serve_page(True)
+#
+#     def _serve_page(self, failed=False):
+#         username = self.request.get('username')
+#         params = {
+#             'username': username,
+#             'failed': failed
+#         }
+#         self.render_template('login.html', params)
 
-    def post(self):
-        username = self.request.get('username')
-        password = self.request.get('password')
-        try:
-            u = self.auth.get_user_by_password(username, password, remember=True,
-                                               save_session=True)
-            self.redirect(self.uri_for('home'))
-        except (InvalidAuthIdError, InvalidPasswordError) as e:
-            logging.info('Login failed for user %s because of %s', username, type(e))
-            self._serve_page(True)
 
-    def _serve_page(self, failed=False):
-        username = self.request.get('username')
-        params = {
-            'username': username,
-            'failed': failed
-        }
-        self.render_template('login.html', params)
+class CheckIfUsernameAvailable(webapp2.RequestHandler):
+    @handle_exceptions
+    def get(self, username_from_url=None):
+        username_from_url = username_from_url.decode('utf8')
+        username_normalized = username_from_url.lower()
+
+        if username_normalized:
+            logging.info('Query for username: ' + username_normalized)
+            user_obj = users.UserModel.query(users.UserModel.username_normalized == username_normalized).get()
+
+            if user_obj:
+                response_dict = {
+                    'usernameNormalized': username_normalized,
+                    'usernameAvailable': False,
+                }
+                logging.info('Username taken: ' + repr(user_obj))
+
+            else:
+                response_dict = {
+                    'usernameNormalized': username_normalized,
+                    'usernameAvailable': True,
+                }
+                logging.info('Username is available: ' + username_normalized)
+
+            http_helpers.set_http_ok_json_response(self.response, response_dict)
+
+        else:
+            err_status = 'ErrorUsernameRequired'
+            # log this error for further analysis
+            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
+            http_helpers.set_http_error_json_response(self.response, {'statusString': err_status})
 
 
-
-class TempLogin(webapp2.RequestHandler):
+class LoginUser(webapp2.RequestHandler):
 
     def post(self):
 

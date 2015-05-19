@@ -6,7 +6,8 @@ angular.module('lxLogin.controllers', [])
     function(
         $scope,
         lxFormsInputService,
-        lxAppWideConstantsService
+        lxAppWideConstantsService,
+        lxHttpHandleLoginService
         ) {
 
         // For now, we just use the same patterns and lengths for user names, as we do for room names. This should
@@ -20,7 +21,7 @@ angular.module('lxLogin.controllers', [])
         $scope.usernameMaxChars = lxAppWideConstantsService.usernameMaxChars;
 
         $scope.inputUsernameObj = {
-            username: null
+            usernameAsWritten: null
         };
 
         $scope.highlightInput = lxFormsInputService.highlightInput;
@@ -43,4 +44,7 @@ angular.module('lxLogin.controllers', [])
                 }
             }
         );
+
+        $scope.submitUsername = lxHttpHandleLoginService.createUsernameOnServer;
+
     });

@@ -10,9 +10,7 @@ from google.appengine.ext import ndb
 
 from video_src import constants
 from video_src import clients
-from video_src import http_helpers
-from video_src import status_reporting
-from video_src.error_handling import handle_exceptions
+
 
 # UniqueUserModel is used for ensuring that UserModel "auth_id" is unique. It also
 # keeps track of any other properties that are specified as requiring a unique value
@@ -125,35 +123,3 @@ def delete_user_by_id(user_id):
     user_obj = UserModel.get_by_id(user_id)
     user_obj.key.delete()
 
-
-class CheckIfUsernameAvailable(webapp2.RequestHandler):
-    @handle_exceptions
-    def get(self, username_from_url=None):
-        username_from_url = username_from_url.decode('utf8')
-        username_normalized = username_from_url.lower()
-
-        if username_normalized:
-            logging.info('Query for username: ' + username_normalized)
-            user_obj = UserModel.query(UserModel.username_normalized == username_normalized).get()
-
-            if user_obj:
-                response_dict = {
-                    'usernameNormalized': username_normalized,
-                    'usernameAvailable': False,
-                }
-                logging.info('Username taken: ' + repr(user_obj))
-
-            else:
-                response_dict = {
-                    'usernameNormalized': username_normalized,
-                    'usernameAvailable': True,
-                }
-                logging.info('Username is available: ' + username_normalized)
-
-            http_helpers.set_http_ok_json_response(self.response, response_dict)
-
-        else:
-            err_status = 'ErrorUsernameRequired'
-            # log this error for further analysis
-            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
-            http_helpers.set_http_error_json_response(self.response, {'statusString': err_status})

@@ -45,7 +45,8 @@ angular.module('lxHttp.services', ['angular-jwt'])
     .factory('lxHttpHandleLoginService',
     function (
         $log,
-        $http
+        $http,
+        $window
         ) {
 
 
@@ -59,6 +60,21 @@ angular.module('lxHttp.services', ['angular-jwt'])
                     httpPromise = $http.get(url);
                 }
                 return httpPromise;
+            },
+
+
+            createUsernameOnServer: function(usernameAsWritten) {
+                var userObj = {usernameAsWritten: usernameAsWritten};
+                $http.post('/_lx/temp_login', userObj)
+                    .success(function (data/*, status, headers, config */) {
+                        $log.info('User ' + usernameAsWritten + ' successfully created');
+                        $window.localStorage.token = data.token;
+                    })
+                    .error(function (/*data, status, headers, config*/) {
+                        // Erase the token if the user fails to log in
+                        $log.error('User ' + usernameAsWritten + ' failed to be created');
+                        delete $window.localStorage.token;
+                    });
             }
         };
     })
