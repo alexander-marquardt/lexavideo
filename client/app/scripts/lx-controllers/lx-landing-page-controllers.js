@@ -68,37 +68,19 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $scope.$watch('createRoomForm.chatRoomNameInputElem.$viewValue',
             function(inputValue) {
 
-                // Get the last character that was entered when $error.pattern changed to true.
-                // The will set invalidCharacter to the first invalid character in the sequence.
-                if ($scope.createRoomForm.chatRoomNameInputElem.$error.pattern) {
+                var invalidCharacterFeedbackArray = lxFormsInputService.checkForInvalidCharacters(
+                    $scope.createRoomForm.chatRoomNameInputElem, invalidRoomNamesPattern);
+                var invalidCharacterCount = invalidCharacterFeedbackArray.length;
 
-                    var invalidCharacterFeedbackArray = [];
-                    var invalidCharacterSet = {}; // used to ensure that we report each character only once
-                    var invalidCharacterCount = 0;
-
-                    var invalidCharactersArray = inputValue.match(invalidRoomNamesPattern);
-
-                    angular.forEach(invalidCharactersArray, function(invalidCharacter) {
-                        if (!(invalidCharacter in invalidCharacterSet)) {
-                            invalidCharacterSet[invalidCharacter] = 'In';
-                            invalidCharacterCount ++;
-
-                            if (invalidCharacter.match(/\s/)) {
-                                var blankStr = 'blank space';
-                                invalidCharacterFeedbackArray.push(blankStr);
-                            } else {
-                                invalidCharacterFeedbackArray.push(invalidCharacter);
-                            }
-                        }
-                    });
-
+                if (invalidCharacterCount > 0) {
                     if (invalidCharacterCount === 1) {
                         $scope.invalidCharacterFeedback = invalidCharacterFeedbackArray[0] + ' is not allowed in the chat room name';
                     }
-                    else  {
-                        $scope.invalidCharacterFeedback =  invalidCharacterFeedbackArray.slice(0, invalidCharacterFeedbackArray.length-1).join(',') + ' and ' +
+                    else {
+                        $scope.invalidCharacterFeedback = invalidCharacterFeedbackArray.slice(0, invalidCharacterFeedbackArray.length - 1).join(',') + ' and ' +
                             invalidCharacterFeedbackArray.slice(-1) + ' are not allowed in the chat room name';
                     }
                 }
-        });
+            }
+        );
     });
