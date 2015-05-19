@@ -16,9 +16,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $scope,
         lxChatRoomMembersService,
         lxFormsInputService,
-        lxLandingPageConstantsService,
-        lxHttpHandleRoomService,
-        lxAppWideConstantsService) {
+        lxLandingPageConstantsService) {
 
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
         angular.extend(lxLandingPageConstantsService, lxLandingPageConstantsEmbeddedInHtml);
@@ -67,7 +65,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         $scope.highlightInput = lxFormsInputService.highlightInput;
 
         $scope.$watch('createRoomForm.chatRoomNameInputElem.$viewValue',
-            function(inputValue) {
+            function() {
 
                 var invalidCharacterFeedbackArray = lxFormsInputService.checkForInvalidCharacters(
                     $scope.createRoomForm.chatRoomNameInputElem, invalidRoomNamesPattern);

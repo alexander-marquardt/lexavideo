@@ -1,7 +1,5 @@
 'use strict';
 
-/* global $ */
-
 angular.module('lxLogin.controllers', [])
 
     .controller('lxLoginModalCtrl',
@@ -28,7 +26,7 @@ angular.module('lxLogin.controllers', [])
         $scope.highlightInput = lxFormsInputService.highlightInput;
 
         $scope.$watch('loginUserForm.usernameInputElem.$viewValue',
-            function(inputValue) {
+            function() {
 
                 var invalidCharacterFeedbackArray = lxFormsInputService.checkForInvalidCharacters(
                     $scope.loginUserForm.usernameInputElem, invalidUsernamesPattern);

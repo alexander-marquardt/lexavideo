@@ -1,11 +1,11 @@
 'use strict';
-/* global $ */
 
 angular.module('lxAuthentication.services', [])
 
 
     .factory('lxAuthenticationHelper',
     function(
+        $log,
         $window,
         jwtHelper
         ) {
@@ -72,5 +72,5 @@ angular.module('lxAuthentication.services', [])
 
                 return clientId;
             }
-        }
+        };
     });

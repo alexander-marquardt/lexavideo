@@ -3,6 +3,8 @@
  */
 'use strict';
 
+/* global $ */
+
 angular.module('lxChatRoom.services', [])
 
     .factory('lxChatRoomMembersService',
@@ -163,7 +165,7 @@ angular.module('lxChatRoom.services', [])
 
                         // Push the chat room to the end of this list because we don't necessarily receive
                         // them in any particular oder from the server.
-                        scope.normalizedOpenRoomNamesList.push(normalizedChatRoomName)
+                        scope.normalizedOpenRoomNamesList.push(normalizedChatRoomName);
                     }
 
                     if ($.inArray(chatRoomId, scope.receivedChatMessageObject) === -1) {

@@ -19,8 +19,7 @@ angular.module('lxUseChatRoom.controllers', [])
         $timeout,
         lxAuthenticationHelper,
         lxHttpChannelService,
-        lxChatRoomMembersService,
-        lxJs
+        lxChatRoomMembersService
         ) {
 
         $scope.lxMainViewCtrl.currentView = 'lxChatViewCtrl';

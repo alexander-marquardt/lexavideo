@@ -1,5 +1,4 @@
 'use strict';
-/* global $ */
 
 angular.module('lxForms.services', [])
 
@@ -60,5 +59,5 @@ angular.module('lxForms.services', [])
 
                 return invalidCharacterFeedbackArray;
             }
-        }
+        };
     });
