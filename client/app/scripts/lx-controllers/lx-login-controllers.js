@@ -18,8 +18,8 @@ angular.module('lxLogin.controllers', [])
         $scope.validUsernamesPattern  = new RegExp('^[^' + lxAppWideConstantsService.usernameInvalidCharsForRegex + ']+$');
 
         // The following values are passed from the server and are validated both on the client and on the server.
-        $scope.minUsernameLength = lxAppWideConstantsService.usernameMinChars;
-        $scope.maxUsernameLength = lxAppWideConstantsService.usernameMaxChars;
+        $scope.usernameMinChars = lxAppWideConstantsService.usernameMinChars;
+        $scope.usernameMaxChars = lxAppWideConstantsService.usernameMaxChars;
 
         $scope.inputUsernameObj = {
             username: null

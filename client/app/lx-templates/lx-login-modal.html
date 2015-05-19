@@ -19,8 +19,8 @@
                                        placeholder="Name of chat room to create and/or join"
                                        name="usernameInputElem"
                                        ng-model="inputUsernameObj.Username"
-                                       ng-minlength="{{ minUsernameLength }}"
-                                       maxlength = "{{ maxUsernameLength }}"
+                                       ng-minlength="{{ usernameMinChars }}"
+                                       maxlength = "{{ usernameMaxChars }}"
                                        ng-class="highlightInput(loginUserForm.usernameInputElem)"
                                        ng-pattern="validUsernamesPattern"
                                        ng-trim="false"
@@ -41,7 +41,7 @@
                                 added and removed from the DOM -->
                                 <div class="text-danger" ng-show="loginUserForm.usernameInputElem.$dirty">
                                     <small  ng-show="loginUserForm.usernameInputElem.$error.required">Please input a chat name</small>
-                                    <small  ng-show="loginUserForm.usernameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
+                                    <small  ng-show="loginUserForm.usernameInputElem.$error.minlength">Username must be at least {{ usernameMinChars }} characters</small>
                                     <!--<small  ng-show="loginUserForm.usernameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
                                     <small  ng-show="loginUserForm.usernameInputElem.$error.pattern">
                                         {{ invalidCharacterFeedback }}</small>
