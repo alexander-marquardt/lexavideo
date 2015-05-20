@@ -32,7 +32,7 @@ angular.module('lxLogin.directives', [])
                     // Define the function that returns the value that is being watched for changes
                     function() {
 
-                        return inputElement.value;
+                        return inputElement.value.toString() + scope.refreshLoginToggler.toString();
                     },
 
                     /*
