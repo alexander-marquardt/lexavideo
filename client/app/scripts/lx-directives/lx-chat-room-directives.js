@@ -100,7 +100,7 @@ angular.module('lxChatRoom.directives', [])
         };
     })
 
-    .directive('lxMakeSureClientIdHasBeenAllocated',
+    .directive('lxMakeSureUserIsLoggedIn',
     function(
         $log,
         $modal,
