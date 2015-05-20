@@ -275,9 +275,18 @@ angular.module('lxChannel.services', [])
         var onChannelOpened = function(scope) {
             return function () {
                 $log.log('Channel opened.');
-                scope.channelObject.channelIsAlive = true;
 
-                lxHttpChannelService.tellServerClientChannelOpened(scope.lxMainCtrlDataObj.clientId);
+                lxHttpChannelService.tellServerClientChannelOpened(scope.lxMainCtrlDataObj.clientId).then(
+                    function() {
+                        // wait until we are sure that the server has setup everything for dealing with the client/channel
+                        // before we set channelIsAlive. This is necessary to prevent lxHttpChannelService.addClientToRoom
+                        // being called before the client has been correctly setup on the server.
+                        scope.channelObject.channelIsAlive = true;
+                    },
+                    function() {
+                        $log.error('Problem encountered when executing tellServerClientChannelOpened');
+                    }
+                );
 
                 // Heartbeat updates the server so that it knows that the current user is still connected.
                 // It also initiates a handshake that results in the server being updated with the client's

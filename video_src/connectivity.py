@@ -23,9 +23,12 @@ class AddClientToRoom(webapp2.RequestHandler):
     
     @staticmethod
     def add_client_to_room(chat_room_obj, client_id):
-        # logging.debug('add_client_to_room client_id %s added to room_id %s' % (client_id, room_id))
 
+        logging.debug('add_client_to_room called for client_id %s and room %s' % (client_id, chat_room_obj))
         client_obj = clients.ClientModel.get_by_id(client_id)
+
+        assert client_obj
+
         if chat_room_obj.key in client_obj.list_of_open_chat_rooms_keys:
             client_was_previously_in_this_room = True
         else:

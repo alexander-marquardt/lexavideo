@@ -155,7 +155,8 @@ angular.module('lxHttp.services', ['angular-jwt'])
             },
 
             tellServerClientChannelOpened: function(clientId) {
-                $http.post('/_lx/tell_server_client_channel_opened/', {'clientId': clientId});
+                var httpPromise = $http.post('/_lx/tell_server_client_channel_opened/', {'clientId': clientId});
+                return httpPromise;
             },
 
             removeClientFromRoomOnServer: function(clientId, userId, chatRoomId) {

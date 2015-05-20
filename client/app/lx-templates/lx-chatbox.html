@@ -106,7 +106,7 @@
                                             <span ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen? 'caret-up': 'caret'"></span>
                                         </button>
                                         <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu" lx-no-swipe-propagation>
-                                            <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'username'">
+                                            <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'username_normalized'">
                                                 <span style="white-space:nowrap;">
                                                     <span  class='cl-chat-icon-container'>
                                                         <button type="button"
@@ -117,7 +117,7 @@
                                                             <span class="icon-lx-video-camera-filled"></span>
                                                         </button>
                                                     </span>
-                                                    {{ remoteClientObj.username }}
+                                                    {{ remoteClientObj.username_as_written }}
                                                 </span>
                                             </li>
                                         </ul>
