@@ -34,12 +34,13 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/check_if_chat_room_exists/<chat_room_name_from_url:.+>', chat_room_module.CheckIfChatRoomExists),
 
     webapp2.Route(r'/_lx/check_if_username_available/<username_from_url:.+>', registration_and_login.CheckIfUsernameAvailable),
-    webapp2.Route(r'/_lx/login_user', registration_and_login.LoginUser),
+    webapp2.Route(r'/_lx/login_user/', registration_and_login.LoginUser),
 
     webapp2.Route(r'/_lx/message_room', messaging.MessageRoom),
     webapp2.Route(r'/_lx/message_client', messaging.MessageClient),
 
     webapp2.Route(r'/_lx/add_client_to_room/', connectivity.AddClientToRoom),
+    webapp2.Route(r'/_lx/create_client_on_server/', connectivity.CreateClientOnServer),
     webapp2.Route(r'/_lx/remove_client_from_room/', connectivity.RemoveClientFromRoom),
     webapp2.Route(r'/_lx/tell_server_client_channel_opened/',  connectivity.ClientChannelOpened),
     webapp2.Route(r'/_lx/channel/syn_user_heartbeat/', connectivity.SynClientHeartbeat),

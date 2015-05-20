@@ -220,16 +220,34 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
+class CreateClientOnServer(webapp2.RequestHandler):
+
+    @handle_exceptions
+    def post(self):
+        data_object = json.loads(self.request.body)
+        client_id = data_object['clientId']
+        logging.debug('CreateClientOnServer called for client_id: %s' % client_id)
+
+        client_obj = clients.ClientModel.get_by_id(client_id)
+        if not client_obj:
+            client_obj = clients.ClientModel.txn_create_new_client_object(client_id)
+
+        http_helpers.set_http_ok_json_response(self.response, {})
+
 class ClientChannelOpened(webapp2.RequestHandler):
 
     @classmethod
     def make_sure_client_is_logged_in_correctly(cls, client_id):
+
+        logging.debug('Ensuring that client %s is logged in correctly' % client_id)
         # check if a client object associated with this client_id already exists, and if it does, then
         # don't create a new one. We need to access the old client object because it contains the list
         # of rooms that the client currently has open.
         client_obj = clients.ClientModel.get_by_id(client_id)
-        if not client_obj:
-            client_obj = clients.ClientModel.txn_create_new_client_object(client_id)
+
+        # This function should never be called before CreateClientOnServer, and therefore the client_obj should
+        # always exist
+        assert client_obj
 
         # We need to set the presence of the client so that it is not 'OFFLINE', as this would cause the
         # client to be removed from the rooms that we are going to put the client back into. However,
