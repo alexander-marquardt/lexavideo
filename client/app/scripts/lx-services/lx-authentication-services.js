@@ -31,10 +31,10 @@ angular.module('lxAuthentication.services', [])
                 return userId;
             },
 
-            lxGetOrGenerateClientId: function(userId) {
+            lxGetAndStoreClientId: function(userId) {
                 // Checks if a clientId is set in the sessionStorage and if it corresponds to the current userId.
                 // If a matching clientId is available it will be returned. If it is not available then a new
-                // clientId will be generated and written to sessionStorage and returned.
+                // clientId will be generated, written to sessionStorage, and returned.
 
 
                 // The clientId is unique for each connection that a user makes to the server (ie. each new browser
@@ -43,7 +43,7 @@ angular.module('lxAuthentication.services', [])
                 // from being assigned two clientIds that clash.
                 // We attempt to pull clientId out of sessionStorage so that the "client" will see the same open chats
                 // even if they reload a tab/window. Read about sessionStorage for more information.
-                var clientId;
+                var clientId = null;
 
                 if (userId) {
                     if ($window.sessionStorage.clientId) {
@@ -56,18 +56,19 @@ angular.module('lxAuthentication.services', [])
                         // generate a new clientId from the userId. This can happen if a new user logs in, but there is
                         // still old client data in the sessionStorage.
                         if (useIdFromClientId !== userId) {
-                            $window.sessionStorage.clientId = generateNewUniqueClientId(userId);
+                            clientId = generateNewUniqueClientId(userId);
                         }
                     } else {
-                        $window.sessionStorage.clientId = generateNewUniqueClientId(userId);
+                        clientId = generateNewUniqueClientId(userId);
 
                     }
+                    $window.sessionStorage.clientId = clientId;
                 }
                 else {
                     // Note: if there isn't a userId, don't write anything to sessionStorage (eg. don't do
                     // "else {sessionStorage.clientId = null;}"). This is because anything written is stored as strings
                     // and therefore "null" will be treated as a clientId string as opposed to a falsy value.
-                    $log.error('lxGetOrGenerateClientId called without a userId value');
+                    $log.error('lxGetAndStoreClientId called without a userId value');
                 }
 
                 return clientId;

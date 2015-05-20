@@ -42,9 +42,9 @@ angular.module('LxChatRoom.controllers', [])
         function(userId, previousUserId) {
             if (userId) {
                 $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl due to change in userId from ' +
-                    previousUserId + 'to ' + userId);
+                    previousUserId + ' to ' + userId);
 
-                $scope.lxMainCtrlDataObj.clientId = lxAuthenticationHelper.lxGetOrGenerateClientId(userId);
+                $scope.lxMainCtrlDataObj.clientId = lxAuthenticationHelper.lxGetAndStoreClientId(userId);
 
                 lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
 

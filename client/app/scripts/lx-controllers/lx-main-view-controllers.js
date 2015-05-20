@@ -29,7 +29,7 @@ angular.module('LxMainView.controllers', [])
         var userId = lxAuthenticationHelper.lxGetUserIdInLocalStorage();
         var clientId;
         if (userId) {
-            clientId = lxAuthenticationHelper.lxGetOrGenerateClientId(userId);
+            clientId = lxAuthenticationHelper.lxGetAndStoreClientId(userId);
         } else {
             clientId = null;
         }
