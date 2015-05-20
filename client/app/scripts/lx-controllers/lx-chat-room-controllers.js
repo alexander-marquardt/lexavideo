@@ -36,35 +36,17 @@ angular.module('LxChatRoom.controllers', [])
             });
         });
 
-        // We need to wait for the userId to be set before we can enter the client into the room.
-        var watchUserId = $scope.$watch(
+        // We need to wait for the clientId to be set before we can enter the client into the room.
+        var watchClientIdBeforeHandleRoomNameFromUrl = $scope.$watch(
             function() {
-                return $scope.lxMainCtrlDataObj.userId;
+                return $scope.lxMainCtrlDataObj.clientId;
             },
-            function(userId) {
-                if (userId) {
-
-                    if (!$scope.lxMainCtrlDataObj.clientId) {
-                        var createClientPromise = lxAuthenticationHelper.lxGetAndStoreClientId($scope, userId);
-                        createClientPromise.then(
-                            function () {
-                                $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl');
-                                lxJs.assert($scope.lxMainCtrlDataObj.clientId,
-                                    'clientId should be initialized if createClientPromise was successful');
-                                lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
-                            },
-                            function () {
-                                $log.error('Problem with createClientPromise');
-                            }
-                        );
-                    } else {
-                        // clientId was previously set, and therefore there is no need to interact with the server
-                        // to check if it is valid. Directly handle the room.
-                        lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
-                    }
+            function(clientId) {
+                if (clientId) {
+                    lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
 
                     // Kill this watcher once we have handled getting into the room
-                    watchUserId();
+                    watchClientIdBeforeHandleRoomNameFromUrl();
                 }
             }
         );

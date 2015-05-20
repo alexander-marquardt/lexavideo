@@ -19,6 +19,7 @@ angular.module('LxMainView.controllers', [])
         lxAppWideConstantsService,
         lxAuthenticationHelper,
         lxChannelService,
+        lxJs,
         clickAnywhereButHereService
         ) {
 
@@ -284,7 +285,40 @@ angular.module('LxMainView.controllers', [])
             openChatsDropdownIsOpen: true
         };
 
-        var watchClientId = $scope.$watch(
+        // We must wait for the userId to be set before we can create a clientId. If the userId is not set,
+        // then a popup will be triggered by the lxMakeSureUserIsLoggedIn directive, which checks the userId
+        // when a chat room page is loaded.
+        var watchUserId = $scope.$watch(
+            function() {
+                return $scope.lxMainCtrlDataObj.userId;
+            },
+            function(userId) {
+                if (userId) {
+
+                    if (!$scope.lxMainCtrlDataObj.clientId) {
+
+                        // the following will update $scope.lxMainCtrlDataObj.clientId
+                        var createClientPromise = lxAuthenticationHelper.lxGetAndStoreClientId($scope, userId);
+                        createClientPromise.then(
+                            function () {
+                                $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl');
+                                lxJs.assert($scope.lxMainCtrlDataObj.clientId,
+                                    'clientId should be initialized if createClientPromise was successful');
+                            },
+                            function () {
+                                $log.error('Problem with createClientPromise');
+                            }
+                        );
+                    }
+
+                    // Kill this watcher once we have handled getting into the room
+                    watchUserId();
+                }
+            }
+        );
+
+        // If clientId is set, then we can initialize the channel
+        var watchClientIdBeforeInitializeChannel = $scope.$watch(
             function() {
                 return $scope.lxMainCtrlDataObj.clientId;
             },
@@ -295,7 +329,7 @@ angular.module('LxMainView.controllers', [])
                     lxChannelService.initializeChannel($scope);
 
                     // Kill this watch once we have initialized the channel
-                    watchClientId();
+                    watchClientIdBeforeInitializeChannel();
                 }
             }
         );
