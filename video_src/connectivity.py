@@ -219,13 +219,8 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
 
 class ClientChannelOpened(webapp2.RequestHandler):
 
-    @handle_exceptions
-    def post(self):
-
-        data_object = json.loads(self.request.body)
-        client_id = data_object['clientId']
-        logging.debug('ClientChannelOpened called for client_id: %s' % client_id)
-
+    @classmethod
+    def make_sure_client_is_logged_in_correctly(cls, client_id):
         # check if a client object associated with this client_id already exists, and if it does, then
         # don't create a new one. We need to access the old client object because it contains the list
         # of rooms that the client currently has open.
@@ -245,6 +240,19 @@ class ClientChannelOpened(webapp2.RequestHandler):
         # only needed for the case that the channel has died and started again (Channel can die
         # for many reasons, one of them being a browser refresh)
         AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
+
+
+    # This is post called *manually* by the client-side javascript after it confirms that the channel is connected.
+    # Note that the functionality here overlaps with the post handler in ChannelConnected.
+    # This is redundant and intentional until we understand better if both of these functions are guaranteed
+    # to be correctly called every time the channel is opened.
+    @handle_exceptions
+    def post(self):
+
+        data_object = json.loads(self.request.body)
+        client_id = data_object['clientId']
+        logging.debug('ClientChannelOpened called for client_id: %s' % client_id)
+        ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_id)
 
 
 class RequestChannelToken(webapp2.RequestHandler):
@@ -270,19 +278,18 @@ class RequestChannelToken(webapp2.RequestHandler):
         http_helpers.set_http_ok_json_response(self.response, response_dict)
 
 
-class ConnectClient(webapp2.RequestHandler):
+class ChannelConnected(webapp2.RequestHandler):
 
+    # This is post called *automatically* by the AppEngine any time that the channel is connected.
+    # Note that the functionality here overlaps with the post handler in ClientChannelOpened.
+    # This is redundant and intentional until we understand better if both of these functions are guaranteed
+    # to be correctly called every time the channel is opened.
     @handle_exceptions
     def post(self):
 
         client_id = self.request.get('from')
-        logging.info('ConnectClient called for client_id: %s' % client_id)
-        # Make sure that this client is a member of all of the rooms that he previously had open. This should
-        # only needed for the case that the channel has died and started again. We have seen cases where
-        # /_ah/channel/connected may be called after the channel dies and comes back, but where the javascript
-        # client didn't know that the channel had died. Therefore, this should not be removed even though it
-        # appears redundant with the code that executes in the ClientChannelOpened class.
-        AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
+        logging.info('ChannelConnected called for client_id: %s' % client_id)
+        ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_id)
 
 
 """

@@ -101,7 +101,6 @@ class ClientModel(ndb.Model):
 
         try:
             client_id = self.key.id()
-            logging.warning('Reading presence state from database for client %s' % self.key.id())
 
             # Make sure that the value stored in the database was recently written, and if not then
             # the user is considered to be offline
@@ -112,6 +111,8 @@ class ClientModel(ndb.Model):
                 return 'PRESENCE_OFFLINE'
 
             else:
+                logging.info('Presence state of %s  retrieved from database for client %s' %
+                             (self.most_recent_presence_state_stored_in_db, self.key.id()))
                 return self.most_recent_presence_state_stored_in_db
 
         except:
@@ -169,3 +170,4 @@ class ClientModel(ndb.Model):
     def txn_create_new_client_object(cls, client_id):
         client_obj = cls(id=client_id)
         client_obj.put()
+        return client_obj
