@@ -324,7 +324,7 @@ class DisconnectClient(webapp2.RequestHandler):
             else:
                 # This is probably not really an error. Change it later once we understand which conditions can trigger
                 # this branch to be executed.
-                logging.info('Room %s (%d) does not have client %s - probably already removed' % (chat_room_obj.normalized_chat_room_name, chat_room_obj.key.id(), client_id))
+                logging.info('Room %s (%d) does not have client %s - probably already removed' % (chat_room_obj.chat_room_name_normalized, chat_room_obj.key.id(), client_id))
 
         http_helpers.set_http_ok_json_response(self.response, {})
 

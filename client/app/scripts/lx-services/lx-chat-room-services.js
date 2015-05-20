@@ -86,7 +86,7 @@ angular.module('lxChatRoom.services', [])
             innerWaitForChannelReady();
         };
 
-        function setChatPanelDictAndChatRoomDisplay($scope, chatRoomId, normalizedChatRoomName) {
+        function setChatPanelDictAndChatRoomDisplay($scope, chatRoomId, chatRoomNameNormalized) {
 
             // since we are resetting the number of unseen messages for this chat panel, we need to subtract it
             // from the "global" unseenMessageCount before zeroing it.
@@ -98,7 +98,7 @@ angular.module('lxChatRoom.services', [])
             $scope.chatPanelDict[chatRoomId] = {
                 chatPanelIsGlued: true,
                 numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
-                normalizedChatRoomName: normalizedChatRoomName
+                chatRoomNameNormalized: chatRoomNameNormalized
             };
 
             $scope.chatRoomDisplayObject.chatPanelObject = $scope.chatPanelDict[chatRoomId];
@@ -108,14 +108,14 @@ angular.module('lxChatRoom.services', [])
 
         var self = {
 
-            removeClientFromRoomClientSide: function(scope, normalizedChatRoomName) {
+            removeClientFromRoomClientSide: function(scope, chatRoomNameNormalized) {
 
-                var chatRoomId = scope.roomOccupancyDict[normalizedChatRoomName].chatRoomId;
+                var chatRoomId = scope.roomOccupancyDict[chatRoomNameNormalized].chatRoomId;
                 delete scope.chatPanelDict[chatRoomId];
-                delete scope.roomOccupancyDict[normalizedChatRoomName];
+                delete scope.roomOccupancyDict[chatRoomNameNormalized];
 
                 // remove the room name from normalizedOpenRoomNamesList
-                lxJs.removeItemFromList(normalizedChatRoomName, scope.normalizedOpenRoomNamesList);
+                lxJs.removeItemFromList(chatRoomNameNormalized, scope.normalizedOpenRoomNamesList);
 
                 if (angular.equals({}, scope.roomOccupancyDict)) {
                     if (scope.videoStateInfoObject.numOpenVideoExchanges >= 1) {
@@ -129,8 +129,8 @@ angular.module('lxChatRoom.services', [])
                     // If there are chat rooms available, then we open the one in the first position in
                     // normalizedOpenRoomNamesList, since it is used as a stack (see comment
                     // above normalizedOpenRoomNamesList for more info).
-                    normalizedChatRoomName = scope.normalizedOpenRoomNamesList[0];
-                    var chatRoomNameAsWritten = scope.roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten;
+                    chatRoomNameNormalized = scope.normalizedOpenRoomNamesList[0];
+                    var chatRoomNameAsWritten = scope.roomOccupancyDict[chatRoomNameNormalized].chatRoomNameAsWritten;
                     $location.path('/' + chatRoomNameAsWritten);
                 }
             },
@@ -149,23 +149,23 @@ angular.module('lxChatRoom.services', [])
                Note that we don't switch the view to the panel that is opened because this is all happening in the
                background based on server to client communications received over the channel.
              */
-            handleChatRoomIdFromServerUpdate: function(scope, chatRoomId, normalizedChatRoomName) {
+            handleChatRoomIdFromServerUpdate: function(scope, chatRoomId, chatRoomNameNormalized) {
 
                 // Only add and initialize the chatRoomId to chatPanelDict if it is not already there.
                 if (!(chatRoomId in scope.chatPanelDict)) {
                     scope.chatPanelDict[chatRoomId] = {
                         chatPanelIsGlued: true,
                         numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
-                        normalizedChatRoomName: normalizedChatRoomName
+                        chatRoomNameNormalized: chatRoomNameNormalized
                     };
 
                     // This "if" is probably not totally necessary, but doesn't cost much and guarantees that
                     // we don't add the same room twice.
-                    if ($.inArray(normalizedChatRoomName, scope.normalizedOpenRoomNamesList) === -1) {
+                    if ($.inArray(chatRoomNameNormalized, scope.normalizedOpenRoomNamesList) === -1) {
 
                         // Push the chat room to the end of this list because we don't necessarily receive
                         // them in any particular oder from the server.
-                        scope.normalizedOpenRoomNamesList.push(normalizedChatRoomName);
+                        scope.normalizedOpenRoomNamesList.push(chatRoomNameNormalized);
                     }
 
                     if ($.inArray(chatRoomId, scope.receivedChatMessageObject) === -1) {
@@ -185,11 +185,11 @@ angular.module('lxChatRoom.services', [])
 
                         addClientToRoomWhenChannelReady($scope, data.chatRoomId);
 
-                        setChatPanelDictAndChatRoomDisplay($scope, data.chatRoomId, data.normalizedChatRoomName);
+                        setChatPanelDictAndChatRoomDisplay($scope, data.chatRoomId, data.chatRoomNameNormalized);
 
                         // Push the normalizedRoomName to to first location in normalizedOpenRoomNamesList.
-                        lxJs.removeItemFromList(data.normalizedChatRoomName, $scope.normalizedOpenRoomNamesList);
-                        $scope.normalizedOpenRoomNamesList.unshift(data.normalizedChatRoomName);
+                        lxJs.removeItemFromList(data.chatRoomNameNormalized, $scope.normalizedOpenRoomNamesList);
+                        $scope.normalizedOpenRoomNamesList.unshift(data.chatRoomNameNormalized);
 
                     }, function (errorEnteringIntoRoomInfoObj) {
                         // The following sets an error on a global object that will be picked up by the javascript

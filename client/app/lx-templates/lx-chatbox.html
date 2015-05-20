@@ -41,14 +41,14 @@
                              lx-dummy-chatbox-view.html is shown until a new chatbox is loaded.
                              -->
                         <div class="panel cl-chat-panel panel-primary"
-                             ng-show="chatRoomDisplayObject.normalizedChatRoomNameFromUrl == currentNormalizedChatRoomNameFromRepeat">
+                             ng-show="chatRoomDisplayObject.chatRoomNameNormalizedFromUrl == currentNormalizedChatRoomNameFromRepeat">
 
                             <div class="col-xs-12 panel-heading  cl-chat-panel-heading text-center">
 
                                 <!-- if this chat panel is not currently shown, then remove the code that updates the
                                      list of groups and the group members. This removes watchers and ng-repeats that
                                      could slow down the app -->
-                                <div ng-if="chatRoomDisplayObject.normalizedChatRoomNameFromUrl == currentNormalizedChatRoomNameFromRepeat">
+                                <div ng-if="chatRoomDisplayObject.chatRoomNameNormalizedFromUrl == currentNormalizedChatRoomNameFromRepeat">
 
                                     <!-- define the open chats button -->
                                     <div class="btn-group pull-left"
@@ -66,18 +66,18 @@
                                         <ul class="dropdown-menu cl-chat-panel-dropdown" role="menu"
                                             lx-click-here-directive="chatboxPanelElementObject.videoIsFocused = false"
                                             lx-no-swipe-propagation>
-                                            <li ng-repeat="normalizedChatRoomNameInDropdown in normalizedOpenRoomNamesList | orderBy: simpleArrayOrderByFn">
+                                            <li ng-repeat="chatRoomNameNormalizedInDropdown in normalizedOpenRoomNamesList | orderBy: simpleArrayOrderByFn">
 
                                                 <span style="white-space:nowrap;">
-                                                    <a href="/{{ roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomNameAsWritten }}" style="display:block"
-                                                       ng-click="normalizedChatRoomNameInDropdown == currentNormalizedChatRoomNameFromRepeat? gluePanel(): ''">
-                                                        <span ng-if="chatPanelDict[roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
+                                                    <a href="/{{ roomOccupancyDict[chatRoomNameNormalizedInDropdown].chatRoomNameAsWritten }}" style="display:block"
+                                                       ng-click="chatRoomNameNormalizedInDropdown == currentNormalizedChatRoomNameFromRepeat? gluePanel(): ''">
+                                                        <span ng-if="chatPanelDict[roomOccupancyDict[chatRoomNameNormalizedInDropdown].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed">
                                                             <span class="cl-bubble cl-bubble-right cl-message-count-bubble-override"><i></i>
-                                                                {{ chatPanelDict[roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
+                                                                {{ chatPanelDict[roomOccupancyDict[chatRoomNameNormalizedInDropdown].chatRoomId].numMessagesSinceLastTimeBottomOfPanelWasViewed }}
                                                             </span>
                                                         </span>
                                                         <span style="white-space:nowrap;">
-                                                            &nbsp;{{ roomOccupancyDict[normalizedChatRoomNameInDropdown].chatRoomNameAsWritten }}&nbsp
+                                                            &nbsp;{{ roomOccupancyDict[chatRoomNameNormalizedInDropdown].chatRoomNameAsWritten }}&nbsp
                                                         </span>
                                                     </a>
                                                 </span>
@@ -153,7 +153,7 @@
                                                         />
 
                                                 <span class="input-group-btn">
-                                                    <button ng-click="sendChatMessageFn(roomOccupancyDict[chatRoomDisplayObject.normalizedChatRoomNameFromUrl].chatRoomId)"
+                                                    <button ng-click="sendChatMessageFn(roomOccupancyDict[chatRoomDisplayObject.chatRoomNameNormalizedFromUrl].chatRoomId)"
                                                             class="btn  btn-sm pull-right btn-gray"
                                                             ng-disabled="sendMessageForm.$invalid"
                                                             >

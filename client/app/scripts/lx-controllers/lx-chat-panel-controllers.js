@@ -37,11 +37,11 @@ angular.module('LxChatPanel.controllers', [])
         $scope.sendMessageFormScope = {};
         $scope.sendMessagePayload = {};
 
-        $scope.removeClientFromRoomInterfaceFn = function(normalizedChatRoomName) {
+        $scope.removeClientFromRoomInterfaceFn = function(chatRoomNameNormalized) {
 
-            var roomOccupancyObject = $scope.roomOccupancyDict[normalizedChatRoomName];
+            var roomOccupancyObject = $scope.roomOccupancyDict[chatRoomNameNormalized];
 
-            lxChatRoomMembersService.removeClientFromRoomClientSide($scope, normalizedChatRoomName);
+            lxChatRoomMembersService.removeClientFromRoomClientSide($scope, chatRoomNameNormalized);
 
             lxHttpChannelService.removeClientFromRoomOnServer(
                 $scope.lxMainCtrlDataObj.clientId,

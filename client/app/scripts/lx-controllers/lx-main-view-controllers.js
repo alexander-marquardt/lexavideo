@@ -56,7 +56,7 @@ angular.module('LxMainView.controllers', [])
         // and ngView.
         $rootScope.chatRoomDisplayObject = {
             chatRoomNameFromUrl: null,
-            normalizedChatRoomNameFromUrl: null,
+            chatRoomNameNormalizedFromUrl: null,
 
             // If the user leaves the chat-room view and then comes back, they will be shown the last chat
             // room that they were participating in.
@@ -73,7 +73,7 @@ angular.module('LxMainView.controllers', [])
         // roomOccupancyDict will have a unique key corresponding to the chatRoomName of each room the the current
         // client is a member of. The value of each key will be an object that contains the name of the room
         // and a listing of all of the clients that are in each room.
-        // eg. roomOccupancyDict[normalizedChatRoomName] = {
+        // eg. roomOccupancyDict[chatRoomNameNormalized] = {
         //      chatRoomId: chatRoomId,
         //      listOfClientObjects: [],
         //      dictOfClientObjects: {},
@@ -259,7 +259,7 @@ angular.module('LxMainView.controllers', [])
         //    // initially keep the chat panel glued so that the most recent messages are shown.
         //    chatPanelIsGlued: true,
         //    numMessagesSinceLastTimeBottomOfPanelWasViewed: 0,
-        //    normalizedChatRoomName: string
+        //    chatRoomNameNormalized: string
         // };
         $scope.chatPanelDict = {};
 

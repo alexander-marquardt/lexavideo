@@ -65,12 +65,12 @@ lxMainRoutes.controller('lxWatchRouteChangesCtrl',
 
             if (chatRoomNameFromUrl) {
                 $rootScope.chatRoomDisplayObject.chatRoomNameFromUrl = chatRoomNameFromUrl;
-                $rootScope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl = chatRoomNameFromUrl.toLowerCase();
+                $rootScope.chatRoomDisplayObject.chatRoomNameNormalizedFromUrl = chatRoomNameFromUrl.toLowerCase();
                 $rootScope.chatRoomDisplayObject.lastChatRoomNameFromUrl = chatRoomNameFromUrl;
             }
             else {
                 $rootScope.chatRoomDisplayObject.chatRoomNameFromUrl = null;
-                $rootScope.chatRoomDisplayObject.normalizedChatRoomNameFromUrl = null;
+                $rootScope.chatRoomDisplayObject.chatRoomNameNormalizedFromUrl = null;
                 // Note: do not null lastChatRoomNameFromUrl as it "remembers" the last chat room
             }
         });

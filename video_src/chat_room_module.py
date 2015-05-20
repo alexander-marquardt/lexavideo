@@ -31,12 +31,12 @@ class ChatRoomModel(ndb.Model):
     Tracks all the data necessary for keeping track of room names and occupancy etc.
     """
 
-    unique_normalized_chat_room_name_model = UniqueChatRoomName
+    unique_chat_room_name_normalized_model = UniqueChatRoomName
 
     room_creator_user_key = ndb.KeyProperty(kind='UserModel')
 
     # This is the lower case room name - ie. user wrote 'Alex', but it will be stored as 'alex'
-    normalized_chat_room_name = ndb.StringProperty(default = None)
+    chat_room_name_normalized = ndb.StringProperty(default = None)
 
     # The following is used for showing/remembering the room nam as it was written i.e.
     # if the room creator wrote 'aLeX', it will be stored here as 'aLeX'
@@ -48,34 +48,34 @@ class ChatRoomModel(ndb.Model):
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
     @classmethod
-    def get_unique_normalized_chat_room_name_model_key_string(cls, normalized_chat_room_name):
-        return '%s.%s:%s' % (cls.__name__, 'normalized_chat_room_name', normalized_chat_room_name)
+    def get_unique_chat_room_name_normalized_model_key_string(cls, chat_room_name_normalized):
+        return '%s.%s:%s' % (cls.__name__, 'chat_room_name_normalized', chat_room_name_normalized)
 
 
     @classmethod
-    def check_if_room_name_is_unique(cls, normalized_chat_room_name):
-        key_string = cls.get_unique_normalized_chat_room_name_model_key_string(normalized_chat_room_name)
-        is_unique = cls.unique_normalized_chat_room_name_model.create(key_string)
+    def check_if_room_name_is_unique(cls, chat_room_name_normalized):
+        key_string = cls.get_unique_chat_room_name_normalized_model_key_string(chat_room_name_normalized)
+        is_unique = cls.unique_chat_room_name_normalized_model.create(key_string)
         return is_unique
 
 
     @classmethod
-    def get_chat_room_by_name(cls, normalized_chat_room_name):
-        chat_room_obj = cls.query(cls.normalized_chat_room_name == normalized_chat_room_name).get()
+    def get_chat_room_by_name(cls, chat_room_name_normalized):
+        chat_room_obj = cls.query(cls.chat_room_name_normalized == chat_room_name_normalized).get()
         if not chat_room_obj:
-            raise Exception('normalized_chat_room_name %s does not exist in the ChatRoomModel data structure' % normalized_chat_room_name)
+            raise Exception('chat_room_name_normalized %s does not exist in the ChatRoomModel data structure' % chat_room_name_normalized)
 
         return chat_room_obj
 
     # The ChatRoomName has been added to the chatRoomName structure. Now create a new Room object
     # for the new room.
     @classmethod
-    def create_or_get_room(cls, normalized_chat_room_name, room_dict, room_creator_user_key):
+    def create_or_get_room(cls, chat_room_name_normalized, room_dict, room_creator_user_key):
 
         # make a copy of room_dict, so that our modifications don't accidentally change it for other functions
         chat_room_obj_dict = copy.copy(room_dict)
 
-        room_name_is_unique = cls.check_if_room_name_is_unique(normalized_chat_room_name)
+        room_name_is_unique = cls.check_if_room_name_is_unique(chat_room_name_normalized)
 
         if room_name_is_unique:
 
@@ -86,7 +86,7 @@ class ChatRoomModel(ndb.Model):
             chat_room_obj = cls(**chat_room_obj_dict)
             chat_room_obj.put()
         else:
-            chat_room_obj = cls.get_chat_room_by_name(normalized_chat_room_name)
+            chat_room_obj = cls.get_chat_room_by_name(chat_room_name_normalized)
 
         return chat_room_obj
 
@@ -260,15 +260,15 @@ class CheckIfChatRoomExists(webapp2.RequestHandler):
     @handle_exceptions
     def get(self, chat_room_name_from_url=None):
         chat_room_name_from_url = chat_room_name_from_url.decode('utf8')
-        normalized_chat_room_name = chat_room_name_from_url.lower()
+        chat_room_name_normalized = chat_room_name_from_url.lower()
 
-        if normalized_chat_room_name:
-            logging.info('Query for room name: ' + normalized_chat_room_name)
-            chat_room_obj = ChatRoomModel.query(ChatRoomModel.normalized_chat_room_name == normalized_chat_room_name).get()
+        if chat_room_name_normalized:
+            logging.info('Query for room name: ' + chat_room_name_normalized)
+            chat_room_obj = ChatRoomModel.query(ChatRoomModel.chat_room_name_normalized == chat_room_name_normalized).get()
 
             if chat_room_obj:
                 response_dict = {
-                    'chatRoomName': normalized_chat_room_name,
+                    'chatRoomName': chat_room_name_normalized,
                     'roomIsRegistered': True,
                     'numInRoom': chat_room_obj.get_occupancy(),
                 }
@@ -276,11 +276,11 @@ class CheckIfChatRoomExists(webapp2.RequestHandler):
 
             else:
                 response_dict = {
-                    'chatRoomName': normalized_chat_room_name,
+                    'chatRoomName': chat_room_name_normalized,
                     'roomIsRegistered' : False,
                     'numInRoom': 0
                 }
-                logging.info('Room name is available: ' + normalized_chat_room_name)
+                logging.info('Room name is available: ' + chat_room_name_normalized)
 
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
@@ -302,8 +302,8 @@ class CreateNewRoomIfDoesNotExist(webapp2.RequestHandler):
             room_dict = utils.convert_dict(room_dict, utils.camel_to_underscore)
 
             chat_room_name_as_written = room_dict['chat_room_name_as_written']
-            normalized_chat_room_name = chat_room_name_as_written.lower()
-            room_dict['normalized_chat_room_name'] = normalized_chat_room_name
+            chat_room_name_normalized = chat_room_name_as_written.lower()
+            room_dict['chat_room_name_normalized'] = chat_room_name_normalized
 
 
             # Make sure that the room name is valid before continuing.
@@ -322,10 +322,10 @@ class CreateNewRoomIfDoesNotExist(webapp2.RequestHandler):
             # If this is a new room, then the room_creator_user_key will be stored in the room
             # object as the "creator" of the room
             room_creator_user_key = ndb.Key('UserModel', user_id)
-            chat_room_obj = ChatRoomModel.create_or_get_room(normalized_chat_room_name, room_dict,
+            chat_room_obj = ChatRoomModel.create_or_get_room(chat_room_name_normalized, room_dict,
                                                             room_creator_user_key)
 
-            response_dict['normalizedChatRoomName'] = normalized_chat_room_name
+            response_dict['chatRoomNameNormalized'] = chat_room_name_normalized
             response_dict['chatRoomId'] = chat_room_obj.key.id()
             response_dict['statusString'] = 'roomJoined'
 

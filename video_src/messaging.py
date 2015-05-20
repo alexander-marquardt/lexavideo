@@ -44,7 +44,7 @@ def send_room_occupancy_to_clients(chat_room_obj, list_of_clients_to_update, rec
         'fromClientId': 'msgSentFromServer',
         'messageType': 'roomOccupancyMsg',
         'messagePayload': {
-            'normalizedChatRoomName': chat_room_obj.normalized_chat_room_name,
+            'chatRoomNameNormalized': chat_room_obj.chat_room_name_normalized,
             'chatRoomNameAsWritten': chat_room_obj.chat_room_name_as_written,
             'chatRoomId': chat_room_obj.key.id(),
             },

@@ -124,29 +124,29 @@ angular.module('lxChannel.services', [])
 
 
                         case 'roomOccupancyMsg':
-                            var normalizedChatRoomName = messageObject.messagePayload.normalizedChatRoomName;
+                            var chatRoomNameNormalized = messageObject.messagePayload.chatRoomNameNormalized;
                             var chatRoomNameAsWritten = messageObject.messagePayload.chatRoomNameAsWritten;
                             chatRoomId = messageObject.messagePayload.chatRoomId;
                             var roomOccupancyDict = scope.roomOccupancyDict;
-                            roomOccupancyDict[normalizedChatRoomName] = {};
+                            roomOccupancyDict[chatRoomNameNormalized] = {};
 
-                            roomOccupancyDict[normalizedChatRoomName].chatRoomNameAsWritten = chatRoomNameAsWritten;
-                            roomOccupancyDict[normalizedChatRoomName].chatRoomId = chatRoomId;
+                            roomOccupancyDict[chatRoomNameNormalized].chatRoomNameAsWritten = chatRoomNameAsWritten;
+                            roomOccupancyDict[chatRoomNameNormalized].chatRoomId = chatRoomId;
 
                             // status of who is currently in the room.
                             $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
-                            roomOccupancyDict[normalizedChatRoomName].dictOfClientObjects = messageObject.messagePayload.dictOfClientObjects;
+                            roomOccupancyDict[chatRoomNameNormalized].dictOfClientObjects = messageObject.messagePayload.dictOfClientObjects;
 
                             // copy the dictOfClientObjects into a listOfClientObjects, which is more convenient
                             // for some functions.
-                            roomOccupancyDict[normalizedChatRoomName].listOfClientObjects = [];
-                            angular.forEach(roomOccupancyDict[normalizedChatRoomName].dictOfClientObjects, function(clientObject, clientId) {
+                            roomOccupancyDict[chatRoomNameNormalized].listOfClientObjects = [];
+                            angular.forEach(roomOccupancyDict[chatRoomNameNormalized].dictOfClientObjects, function(clientObject, clientId) {
                                 // manually add the clientId into the clientObject
                                 clientObject.clientId = clientId;
-                                roomOccupancyDict[normalizedChatRoomName].listOfClientObjects.push(clientObject);
+                                roomOccupancyDict[chatRoomNameNormalized].listOfClientObjects.push(clientObject);
                             });
 
-                            lxChatRoomMembersService.handleChatRoomIdFromServerUpdate(scope, chatRoomId, normalizedChatRoomName);
+                            lxChatRoomMembersService.handleChatRoomIdFromServerUpdate(scope, chatRoomId, chatRoomNameNormalized);
 
                             break;
 

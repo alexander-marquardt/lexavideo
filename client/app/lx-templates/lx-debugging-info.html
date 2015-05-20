@@ -11,8 +11,8 @@
                     <td>Client Id: {{ lxMainCtrlDataObj.clientId }}</td>
                 </tr>
 
-                <tr ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">
-                    <td>Room Name: {{ normalizedChatRoomName }}</td>
+                <tr ng-repeat="(chatRoomNameNormalized, roomOccupancyObject) in roomOccupancyDict">
+                    <td>Room Name: {{ chatRoomNameNormalized }}</td>
                     <td>Room Id:   {{ roomOccupancyObject.chatRoomId }}</td>
                 </tr>
 
