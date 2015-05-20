@@ -65,7 +65,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
 
             createUsernameOnServer: function(scope, usernameAsWritten) {
                 var userObj = {usernameAsWritten: usernameAsWritten};
-                var httpPromise = $http.post('/_lx/temp_login', userObj);
+                var httpPromise = $http.post('/_lx/login_user', userObj);
                 httpPromise.success(function (data/*, status, headers, config */) {
                         $log.info('User ' + usernameAsWritten + ' successfully created with userId: ' + data.userId);
                         $window.localStorage.token = data.token;

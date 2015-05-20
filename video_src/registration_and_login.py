@@ -257,8 +257,8 @@ class LoginUser(webapp2.RequestHandler):
 
         else:
             err_msg = 'Failed to create username %s', username_normalized
-            logging.info(err_msg)
-            http_helpers.set_http_error_json_response(self.response, err_msg, http_status_code=401)
+            logging.error(err_msg)
+            http_helpers.set_http_error_json_response(self.response, err_msg, http_status_code=403)
 
 
 
