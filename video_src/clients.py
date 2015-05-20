@@ -39,6 +39,9 @@ class ClientModel(ndb.Model):
     # Note: if these are cleared out, they should also be removed from UserTrackClientsModel's client_models_list_of_keys.
     last_db_write = ndb.DateTimeProperty(auto_now=True)
 
+    # userobject
+    user_obj_key = ndb.KeyProperty(kind='UserModel')
+
     # most_recent_presence_state should be PRESENCE_ACTIVE, PRESENCE_IDLE, PRESENCE_AWAY, or PRESENCE_OFFLINE
     most_recent_presence_state_stored_in_db = ndb.StringProperty(default='PRESENCE_ACTIVE')
 
@@ -168,6 +171,8 @@ class ClientModel(ndb.Model):
     @classmethod
     @ndb.transactional
     def txn_create_new_client_object(cls, client_id):
+        user_id = int(client_id.split('|')[0])
         client_obj = cls(id=client_id)
+        client_obj.user_obj_key = ndb.Key('UserModel', user_id)
         client_obj.put()
         return client_obj

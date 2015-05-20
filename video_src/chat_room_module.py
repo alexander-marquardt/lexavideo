@@ -243,8 +243,9 @@ class ChatRoomModel(ndb.Model):
                 # Client is not PRESENCE_OFFLINE, include them in dict_of_client_objects
                 else:
                     # Send relevant data to the client, which includes the client_id, username, and presence state.
+                    user_obj = client_obj.user_obj_key.get()
                     dict_of_client_objects[client_id] =  {
-                        'username': client_id,
+                        'username': user_obj.username_normalized,
                         'presenceStateName': presence_state_name
                         }
 

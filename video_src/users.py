@@ -2,7 +2,6 @@
 import logging
 import time
 
-import webapp2
 import webapp2_extras.appengine.auth.models
 from webapp2_extras import security
 
@@ -43,9 +42,9 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
 
     # We will assign new user entities to each person who visits the page, but only some of these users
     # will actually create a permanent account by registering and by creating their own user name.
-    # Other users will be cleared out of the database periodically, and the following flag wehn combined
+    # Other users will be cleared out of the database periodically, and the following flag when combined
     # with the creation_date of the user object will allow us to determine which users to remove.
-    user_is_registered = ndb.BooleanProperty(default=False)
+    registered_user = ndb.BooleanProperty(default=False)
 
     creation_date = ndb.DateTimeProperty(auto_now_add=True)
 
