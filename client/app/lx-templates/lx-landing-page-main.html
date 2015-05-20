@@ -50,7 +50,7 @@
                                         <!--<small  ng-show="createRoomForm.chatRoomNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
                                         <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.pattern">
                                             {{ invalidCharacterFeedback }}</small>
-                                        <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
+                                        <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.checkForRoomOccupancyIsOk">Error: unable to contact server (is your network working?)</small>
                                     </div>
                                     <div  ng-show="createRoomForm.$valid">
                                         <small ng-show="createRoomForm.chatRoomNameInputElem.roomNumOccupantsMessage">

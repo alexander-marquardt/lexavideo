@@ -50,11 +50,11 @@ angular.module('lxLandingPage.directives', [])
                         var checkIfRoomExistsPromise = null;
 
                         /*
-                         Note: there is a confusing naming scheme used for the validity values, and in the html the $error.networkOrServerError
-                         that is accessed is the negation of the 'isValid' value that is set here (ie. if networkOrServerError is
+                         Note: there is a confusing naming scheme used for the validity values, and in the html the $error.checkForRoomOccupancyIsOk
+                         that is accessed is the negation of the 'isValid' value that is set here (ie. if checkForRoomOccupancyIsOk is
                          set to false, then the $error value will be true, and the user will be shown the error message).
                          */
-                        ctrl.$setValidity('networkOrServerError', true);
+                        ctrl.$setValidity('checkForRoomOccupancyIsOk', true);
 
                         /*
                         Keep track of if the user is still typing or not, and while they are typing we disable the
@@ -108,7 +108,7 @@ angular.module('lxLandingPage.directives', [])
                                         }
 
                                     }, function(response) {
-                                        ctrl.$setValidity('networkOrServerError', false);
+                                        ctrl.$setValidity('checkForRoomOccupancyIsOk', false);
                                         $log.error('checkForRoomOccupancy - Error: ' + response.statusText);
                                     })
                                     ['finally'](function () {
