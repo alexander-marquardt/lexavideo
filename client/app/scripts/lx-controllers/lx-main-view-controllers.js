@@ -286,19 +286,21 @@ angular.module('LxMainView.controllers', [])
             openChatsDropdownIsOpen: true
         };
 
-        var watchClientId = $scope.$watch(function() {
-            return $scope.lxMainCtrlDataObj.clientId;
-        },
-        function(clientId, previousClientId) {
-            if (clientId) {
-                $log.info('Calling lxChannelService.initializeChannel due to change in clientId from ' +
-                    previousClientId + 'to ' + clientId);
-                lxChannelService.initializeChannel($scope);
+        var watchClientId = $scope.$watch(
+            function() {
+                return $scope.lxMainCtrlDataObj.clientId;
+            },
+            function(clientId, previousClientId) {
+                if (clientId) {
+                    $log.info('Calling lxChannelService.initializeChannel due to change in clientId from ' +
+                        previousClientId + 'to ' + clientId);
+                    lxChannelService.initializeChannel($scope);
 
-                // Kill this watch once we have initialized the channel
-                watchClientId();
+                    // Kill this watch once we have initialized the channel
+                    watchClientId();
+                }
             }
-        });
+        );
     });
 
 
