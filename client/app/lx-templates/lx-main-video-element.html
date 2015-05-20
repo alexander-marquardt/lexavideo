@@ -2,14 +2,14 @@
     <div
      class="row cl-row-no-margins cl-video-inside-chat-panel"
      ng-class="{'cl-send-video-inside-chat-panel-to-back': !chatboxPanelElementObject.videoIsFocused,
-                'cl-remove-borders-and-background': lxMainViewCtrl.currentView == 'lxLandingPageCtrl'}">
+                'cl-remove-borders-and-background': lxMainCtrlDataObj.currentView == 'LxLandingPageView'}">
      <!--The following wraps the remote video windows-->
     <div class="col-xs-12 text-center cl-col-no-padding cl-full-height">
         <div class="cl-main-video-bottom-offset-div">
             <div lx-main-video-element-directive></div>
         </div>
         <div class="cl-main-video-bottom-offset-div"
-             ng-controller="lxMainVideoWrapperCtrl">
+             ng-controller="LxVideoMainController">
             <div class="cl-video-sizing cl-video">
                 <div ng-if="videoDisplaySelection.currentlySelectedVideoElementId == 'localVideoElement' || !videoDisplaySelection.currentlySelectedVideoElementId">
                     {% endraw %}{% include "lx-templates/lx-video-call-local-buttons.html" %}{% raw %}

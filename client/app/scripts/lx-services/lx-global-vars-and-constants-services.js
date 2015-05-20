@@ -128,7 +128,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
     .factory('lxAppWideConstantsService', function() {
         // constants that are loaded in the main page, and that will be used by all views.
         return {
-            /* this object will be loaded with variables from server once lxVideoChatAppViewCtrl is executed
+            /* this object will be loaded with variables from server once LxMainController is executed
              */
         };
     })

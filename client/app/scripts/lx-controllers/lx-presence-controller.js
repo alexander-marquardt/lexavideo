@@ -1,8 +1,8 @@
 
 'use strict';
 
-angular.module('lxPresence.controllers', [])
-    .controller('lxPresenceCtrl', function($log, $scope, presenceStatus) {
+angular.module('LxPresence.controllers', [])
+    .controller('LxPresenceController', function($log, $scope, presenceStatus) {
         $scope.presenceStatus = presenceStatus;
 
         presenceStatus.onChange(function(state) {

@@ -5,13 +5,13 @@
 
 /* global $ */
 
-angular.module('lxUseChatRoom.controllers', [])
+angular.module('LxChatRoom.controllers', [])
 
     // *** WARNING ***
-    // *** WARNING *** because we are "faking" the chat panel views, lxChatViewCtrl does not wrap the chat panels
+    // *** WARNING *** because we are "faking" the chat panel views, LxChatMainController does not wrap the chat panels
     // *** WARNING ***
 
-    .controller('lxChatViewCtrl', function(
+    .controller('LxChatMainController', function(
         $location,
         $routeParams,
         $log,
@@ -22,7 +22,7 @@ angular.module('lxUseChatRoom.controllers', [])
         lxChatRoomMembersService
         ) {
 
-        $scope.lxMainViewCtrl.currentView = 'lxChatViewCtrl';
+        $scope.lxMainCtrlDataObj.currentView = 'LxChatMainView';
         $scope.mainMenuObject.showMainMenu = false;
 
         // we wait for the ng-view animation to end before we show the video elements. This
@@ -37,14 +37,14 @@ angular.module('lxUseChatRoom.controllers', [])
 
         // We need to wait for the userId to be set before we can enter the client into the room.
         var watchClientId = $scope.$watch(function() {
-            return $scope.lxMainViewCtrl.userId;
+            return $scope.lxMainCtrlDataObj.userId;
         },
         function(userId, previousUserId) {
             if (userId) {
                 $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl due to change in userId from ' +
                     previousUserId + 'to ' + userId);
 
-                $scope.lxMainViewCtrl.clientId = lxAuthenticationHelper.lxGetOrGenerateClientId(userId);
+                $scope.lxMainCtrlDataObj.clientId = lxAuthenticationHelper.lxGetOrGenerateClientId(userId);
 
                 lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
 
@@ -55,7 +55,7 @@ angular.module('lxUseChatRoom.controllers', [])
 
     })
 
-    .controller('lxMainVideoCtrl',
+    .controller('LxVideoController',
     function (
         $log,
         $scope,

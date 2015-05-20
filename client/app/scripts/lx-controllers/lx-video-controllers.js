@@ -1,7 +1,7 @@
 'use strict';
-angular.module('lxVideo.controllers', [])
+angular.module('LxVideo.controllers', [])
 
-.controller('lxMainVideoWrapperCtrl',
+.controller('LxVideoMainController',
     function(
         $scope,
         lxPeerService,
@@ -18,7 +18,7 @@ angular.module('lxVideo.controllers', [])
         });
     })
 
-.controller('lxMiniVideoRepeatWrapper', function(
+.controller('LxMiniVideoRepeatController', function(
         $scope
         ) {
 

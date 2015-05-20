@@ -78,9 +78,9 @@ angular.module('lxChatRoom.services', [])
                     $timeout(innerWaitForChannelReady, 100);
                 } else {
                     // Add the user to the room, now that the channel is open
-                    lxJs.assert($scope.lxMainViewCtrl.clientId, 'clientId must be set before adding user to a room');
-                    lxHttpChannelService.addClientToRoom($scope.lxMainViewCtrl.clientId,
-                        $scope.lxMainViewCtrl.userId, chatRoomId);
+                    lxJs.assert($scope.lxMainCtrlDataObj.clientId, 'clientId must be set before adding user to a room');
+                    lxHttpChannelService.addClientToRoom($scope.lxMainCtrlDataObj.clientId,
+                        $scope.lxMainCtrlDataObj.userId, chatRoomId);
                 }
             };
             innerWaitForChannelReady();
@@ -178,9 +178,9 @@ angular.module('lxChatRoom.services', [])
                 var chatRoomNameAsWritten = $routeParams.chatRoomName;
                 if (chatRoomNameAsWritten !== ':none:') {
 
-                    lxJs.assert($scope.lxMainViewCtrl.userId, 'userId must be set before creating or getting room');
+                    lxJs.assert($scope.lxMainCtrlDataObj.userId, 'userId must be set before creating or getting room');
 
-                    createOrGetRoom(chatRoomNameAsWritten, $scope.lxMainViewCtrl.userId).then(function (data) {
+                    createOrGetRoom(chatRoomNameAsWritten, $scope.lxMainCtrlDataObj.userId).then(function (data) {
                         $scope.receivedChatMessageObject[data.chatRoomId] = {};
 
                         addClientToRoomWhenChannelReady($scope, data.chatRoomId);

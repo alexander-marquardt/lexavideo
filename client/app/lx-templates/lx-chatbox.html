@@ -20,7 +20,7 @@
              set-classes-for-common-area>
             <div class="cl-transition-margins-and-width">
                 <div ng-repeat="(currentNormalizedChatRoomNameFromRepeat, roomOccupancyObject) in roomOccupancyDict">
-                    <div ng-controller="lxChatPanelCtrl">
+                    <div ng-controller="LxChatPanelController">
 
 
                         <!-- The following ng-show ensures that only the currently selected chatbox is visible to the
@@ -112,7 +112,7 @@
                                                         <button type="button"
                                                                 class="btn btn-primary cl-btn-square-24 "
                                                                 ng-click="showVideoElementsAndStartVideoFn('doVideoExchange', remoteClientObj.clientId)"
-                                                                ng-class="{'invisible disabled' : remoteClientObj.clientId == lxMainViewCtrl.clientId,
+                                                                ng-class="{'invisible disabled' : remoteClientObj.clientId == lxMainCtrlDataObj.clientId,
                                                                        'disabled' : videoExchangeObjectsDict[remoteClientObj.clientId].localVideoEnabledSetting == 'doVideoExchange'}">
                                                             <span class="icon-lx-video-camera-filled"></span>
                                                         </button>

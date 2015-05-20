@@ -1,7 +1,7 @@
 
 'use strict';
 
-angular.module('lxDebuggingInfo.controllers', [])
+angular.module('LxDebuggingInfo.controllers', [])
 
     .controller('lxDebuggingRemoteStreamController', function(
         )

@@ -31,7 +31,7 @@ lxSelectVideoTypePreferenceServices.factory('lxAccessVideoElementsAndAccessCamer
                 lxMessageService.sendMessageToClientFn(
                     'videoExchangeStatusMsg',
                     messagePayload,
-                    scope.lxMainViewCtrl.clientId,
+                    scope.lxMainCtrlDataObj.clientId,
                     toClientId
                 );
             }

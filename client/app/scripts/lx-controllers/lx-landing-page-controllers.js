@@ -7,9 +7,9 @@
 /* global $ */
 /* global lxLandingPageConstantsEmbeddedInHtml */
 
-angular.module('lxLandingPage.controllers', ['ngResource'])
+angular.module('LxLandingPage.controllers', ['ngResource'])
 
-    .controller('lxLandingPageCtrl',
+    .controller('LxLandingPageController',
     function (
         $location,
         $log,
@@ -21,7 +21,7 @@ angular.module('lxLandingPage.controllers', ['ngResource'])
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
         angular.extend(lxLandingPageConstantsService, lxLandingPageConstantsEmbeddedInHtml);
 
-        $scope.lxMainViewCtrl.currentView = 'lxLandingPageCtrl';
+        $scope.lxMainCtrlDataObj.currentView = 'LxLandingPageView';
         $scope.mainMenuObject.showMainMenu = false;
 
         $scope.videoStateInfoObject.enableShowVideoElements = false;

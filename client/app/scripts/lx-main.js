@@ -5,14 +5,14 @@ var videoApp = angular.module('videoApp', [
     'lxMain.routes',
 
     // proprietary controllers
-    'lxChatbox.controllers',
-    'lxDebuggingInfo.controllers',
-    'lxLandingPage.controllers',
-    'lxLogin.controllers',
-    'lxMainView.controllers',
-    'lxPresence.controllers',
-    'lxUseChatRoom.controllers',
-    'lxVideo.controllers',
+    'LxChatPanel.controllers',
+    'LxDebuggingInfo.controllers',
+    'LxLandingPage.controllers',
+    'LxLogin.controllers',
+    'LxMainView.controllers',
+    'LxPresence.controllers',
+    'LxChatRoom.controllers',
+    'LxVideo.controllers',
 
     // proprietary directives
     'lxChatbox.directives',

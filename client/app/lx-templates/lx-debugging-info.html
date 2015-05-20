@@ -4,11 +4,11 @@
         <div ng-if="debugBuildEnabled">
             <table class="table table-bordered table-striped">
                 <tr>
-                    <td>User Name: {{ lxMainViewCtrl.username }}</td>
+                    <td>User Name: {{ lxMainCtrlDataObj.username }}</td>
                 </tr>
                 <tr>
-                    <td>User Id: {{ lxMainViewCtrl.userId }}</td>
-                    <td>Client Id: {{ lxMainViewCtrl.clientId }}</td>
+                    <td>User Id: {{ lxMainCtrlDataObj.userId }}</td>
+                    <td>Client Id: {{ lxMainCtrlDataObj.clientId }}</td>
                 </tr>
 
                 <tr ng-repeat="(normalizedChatRoomName, roomOccupancyObject) in roomOccupancyDict">

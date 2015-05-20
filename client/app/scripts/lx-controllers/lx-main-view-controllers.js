@@ -4,9 +4,9 @@
 // define externally defined variables so that jshint doesn't give warnings
 /* global userInfoEmbeddedInHtml */
 
-angular.module('lxMainView.controllers', [])
+angular.module('LxMainView.controllers', [])
 
-.controller('lxVideoChatAppViewCtrl',
+.controller('LxMainController',
     function(
         $document,
         $rootScope,
@@ -34,7 +34,7 @@ angular.module('lxMainView.controllers', [])
             clientId = null;
         }
 
-        $scope.lxMainViewCtrl = {
+        $scope.lxMainCtrlDataObj = {
             clientId: clientId,
             userId: userId,
             username: null,
@@ -227,7 +227,7 @@ angular.module('lxMainView.controllers', [])
            showFullChatHistory: true,
            videoIsFocused: true
        };
-        // The following declarations should only be used inside the lxMainVideoCtrl, however we need to declare them
+        // The following declarations should only be used inside the LxVideoController, however we need to declare them
         // here because information received on the channel needs to be written into these objects.
         $scope.videoSignalingObject = {
 
@@ -287,7 +287,7 @@ angular.module('lxMainView.controllers', [])
         };
 
         var watchClientId = $scope.$watch(function() {
-            return $scope.lxMainViewCtrl.clientId;
+            return $scope.lxMainCtrlDataObj.clientId;
         },
         function(clientId, previousClientId) {
             if (clientId) {

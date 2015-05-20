@@ -119,7 +119,7 @@ angular.module('lxChatRoom.directives', [])
                         var httpPromise = lxHttpHandleLoginService.createUsernameOnServer(outerScope, usernameAsWritten);
                         httpPromise.then(
                             function() {
-                                $log.debug('userId is: ' + outerScope.lxMainViewCtrl.userId);
+                                $log.debug('userId is: ' + outerScope.lxMainCtrlDataObj.userId);
                                 $modalInstance.close();
                             },
                             function() {
@@ -149,7 +149,7 @@ angular.module('lxChatRoom.directives', [])
             restrict: 'A',
             link: function(scope) {
 
-                if (!scope.lxMainViewCtrl.clientId) {
+                if (!scope.lxMainCtrlDataObj.clientId) {
                     showModalWindowFromTemplateUrl(scope, 'lx-template-cache/lx-login-modal.html');
                 }
             }

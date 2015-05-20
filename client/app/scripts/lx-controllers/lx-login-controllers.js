@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('lxLogin.controllers', [])
+angular.module('LxLogin.controllers', [])
 
-    .controller('lxLoginModalCtrl',
+    .controller('LxLoginModalController',
     function(
         $scope,
         lxFormsInputService,

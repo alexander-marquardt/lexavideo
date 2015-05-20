@@ -116,7 +116,7 @@ angular.module('lxChannel.services', [])
                                 }
                             } else {
                                 lxWebRtcSessionService.processSignalingMessage(sdpObject, localVideoObject,
-                                    remoteVideoObject, scope.lxMainViewCtrl.clientId, remoteClientId);
+                                    remoteVideoObject, scope.lxMainCtrlDataObj.clientId, remoteClientId);
                             }
                             break;
 
@@ -206,11 +206,11 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'synAckHeartBeat':
-                            lxJs.assert(remoteClientId === scope.lxMainViewCtrl.clientId, 'clientId mismatch');
+                            lxJs.assert(remoteClientId === scope.lxMainCtrlDataObj.clientId, 'clientId mismatch');
                             $log.log('Received heartbeat syn acknowledgement: ' + JSON.stringify(messageObject));
                             scope.channelObject.channelIsAlive = true;
                             $timeout.cancel(reInitializeChannelTimerId);
-                            lxHttpChannelService.sendAckHeartbeatToServer(scope.lxMainViewCtrl.clientId,
+                            lxHttpChannelService.sendAckHeartbeatToServer(scope.lxMainCtrlDataObj.clientId,
                                 scope.presenceStatus, scope.chatRoomDisplayObject.chatRoomId);
                             break;
 
@@ -277,7 +277,7 @@ angular.module('lxChannel.services', [])
                 $log.log('Channel opened.');
                 scope.channelObject.channelIsAlive = true;
 
-                lxHttpChannelService.tellServerClientChannelOpened(scope.lxMainViewCtrl.clientId);
+                lxHttpChannelService.tellServerClientChannelOpened(scope.lxMainCtrlDataObj.clientId);
 
                 // Heartbeat updates the server so that it knows that the current user is still connected.
                 // It also initiates a handshake that results in the server being updated with the client's
@@ -339,10 +339,10 @@ angular.module('lxChannel.services', [])
             // are cancelled before starting a new timer.
             stopSendingHeartbeat();
 
-            lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainViewCtrl.clientId);
+            lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainCtrlDataObj.clientId);
             var timeoutFn = function() {
                 sendHeartbeatTimerId = $timeout(function() {
-                    lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainViewCtrl.clientId);
+                    lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainCtrlDataObj.clientId);
                     timeoutFn();
 
                     // reInitializeChannelTimerId will be cancelled if a 'heartBeatMsg' is received on the chanel
@@ -363,22 +363,22 @@ angular.module('lxChannel.services', [])
         // server, then we assume that the channel has died, and that a new one is needed.
         var reInitializeChannelIfResponseNotReceived = function(scope) {
             $log.error('Heartbeat not received within ' + lxJavascriptConstants.msToWaitForHeartbeatResponse +
-                ' ms. Re-initializing channel. clientId: ' + scope.lxMainViewCtrl.clientId);
+                ' ms. Re-initializing channel. clientId: ' + scope.lxMainCtrlDataObj.clientId);
             self.initializeChannel(scope);
         };
 
 
         var self = {
             initializeChannel: function(scope) {
-                if (scope.lxMainViewCtrl.clientId) {
-                    lxHttpChannelService.requestChannelToken(scope.lxMainViewCtrl.clientId, scope.lxMainViewCtrl.userId).then(function (response) {
+                if (scope.lxMainCtrlDataObj.clientId) {
+                    lxHttpChannelService.requestChannelToken(scope.lxMainCtrlDataObj.clientId, scope.lxMainCtrlDataObj.userId).then(function (response) {
                         scope.channelObject.channelToken = response.data.channelToken;
 
                         openChannel(scope);
 
                         $window.onbeforeunload = function () {
                             $log.debug('Manually disconnecting channel on window unload event.');
-                            lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainViewCtrl.clientId, scope.channelObject);
+                            lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainCtrlDataObj.clientId, scope.channelObject);
                         };
 
 

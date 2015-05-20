@@ -13,7 +13,7 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
         templateUrl: function(){
                 return '/_lx/lx-templates/lx-landing-page-main.html';
             },
-        controller: 'lxLandingPageCtrl'
+        controller: 'LxLandingPageController'
     });
 
     $routeProvider.when('/:chatRoomName', {
@@ -25,7 +25,7 @@ lxMainRoutes.config(function ($routeProvider, $locationProvider) {
             },
 
         // Warning, because we are "faking" the chat panel views, this controller does not wrap the chat panels
-        controller: 'lxChatViewCtrl'
+        controller: 'LxChatMainController'
     });
 
 

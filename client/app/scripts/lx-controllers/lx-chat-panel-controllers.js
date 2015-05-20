@@ -4,10 +4,10 @@
 'use strict';
 
 
-angular.module('lxChatbox.controllers', [])
+angular.module('LxChatPanel.controllers', [])
 
-    // Note: each panel has it's own lxChatPanelCtrl.
-    .controller('lxChatPanelCtrl',
+    // Note: each panel has it's own LxChatPanelController.
+    .controller('LxChatPanelController',
     function (
         $anchorScroll,
         $location,
@@ -44,8 +44,8 @@ angular.module('lxChatbox.controllers', [])
             lxChatRoomMembersService.removeClientFromRoomClientSide($scope, normalizedChatRoomName);
 
             lxHttpChannelService.removeClientFromRoomOnServer(
-                $scope.lxMainViewCtrl.clientId,
-                $scope.lxMainViewCtrl.userId,
+                $scope.lxMainCtrlDataObj.clientId,
+                $scope.lxMainCtrlDataObj.userId,
                 roomOccupancyObject.chatRoomId);
         };
 
@@ -69,7 +69,7 @@ angular.module('lxChatbox.controllers', [])
             };
 
             var sendMessagePromise = lxMessageService.broadcastMessageToRoomFn(
-                messageType, $scope.sendMessagePayload, $scope.lxMainViewCtrl.clientId, chatRoomId);
+                messageType, $scope.sendMessagePayload, $scope.lxMainCtrlDataObj.clientId, chatRoomId);
 
             sendMessagePromise.then(
 
@@ -90,7 +90,7 @@ angular.module('lxChatbox.controllers', [])
                     // have sent a message to. Send a heartbeat to the server to try to update the server so it knows that this
                     // client is now active. This should help the client on the next attempt to send a message, if they
                     // are able to get connectivity back.
-                    lxHttpChannelService.sendSynHeartbeatToServer($scope.lxMainViewCtrl.clientId);
+                    lxHttpChannelService.sendSynHeartbeatToServer($scope.lxMainCtrlDataObj.clientId);
                 }
             )['finally'](function () {
                 // once the promise is resolved, update the sendMessageTime which will trigger some watchers.

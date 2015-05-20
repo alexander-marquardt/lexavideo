@@ -5,7 +5,7 @@ Different "views" are loaded by the ng-view call (although chat views is a speci
 is explained in the comments).
  -->
 
-<div ng-controller="lxVideoChatAppViewCtrl">
+<div ng-controller="LxMainController">
     <div class="container cl-container-padding-and-margins" ng-controller="lxWatchRouteChangesCtrl">
 
 
@@ -16,7 +16,7 @@ is explained in the comments).
         {% include "lx-templates/lx-login-modal.html" %}
 
         <div lx-watch-for-error-entering-into-room>
-            <div ng-controller="lxMainVideoCtrl">
+            <div ng-controller="LxVideoController">
                 <div ng-if="videoStateInfoObject.numOpenVideoExchanges >= 1">
                     {% include "lx-templates/lx-tc-check-if-system-supports-web-rtc.html" %}
                     <div lx-check-if-system-supports-web-rtc-directive></div>
