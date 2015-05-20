@@ -121,9 +121,6 @@ angular.module('lxChatRoom.directives', [])
                             function() {
                                 $log.debug('userId is: ' + outerScope.lxMainCtrlDataObj.userId);
                                 $modalInstance.close();
-                            },
-                            function() {
-                                $log.error('failed to create username '+ usernameAsWritten + ' on server');
                             }
                         )
                     };

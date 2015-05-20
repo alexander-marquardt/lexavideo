@@ -45,11 +45,11 @@ angular.module('lxLogin.directives', [])
                         var checkIfUsernameAvailablePromise = null;
 
                         /*
-                         Note: there is a confusing naming scheme used for the validity values, and in the html the $error.networkOrServerError
-                         that is accessed is the negation of the 'isValid' value that is set here (ie. if networkOrServerError is
+                         Note: there is a confusing naming scheme used for the validity values, and in the html the $error.checkForRoomOccupancyIsOk
+                         that is accessed is the negation of the 'isValid' value that is set here (ie. if checkForRoomOccupancyIsOk is
                          set to false, then the $error value will be true, and the user will be shown the error message).
                          */
-                        ctrl.$setValidity('networkOrServerError', true);
+                        ctrl.$setValidity('checkForExistingUsernameIsOk', true);
 
                         /*
                         Keep track of if the user is still typing or not, and while they are typing we disable the
@@ -57,6 +57,7 @@ angular.module('lxLogin.directives', [])
                         */
                         ctrl.userIsWaitingForUsernameStatus = true;
                         ctrl.usernameIsAvailableMessage = '';
+                        ctrl.usernameIsTakenMessage = '';
                         ctrl.inputCssClass = '';
 
                         if (ctrl.$valid) {
@@ -72,38 +73,42 @@ angular.module('lxLogin.directives', [])
                                     checkIfUsernameAvailablePromise = lxHttpHandleLoginService.checkIfUsernameAvailable(inputElement.value);
                                     $log.debug('checkIfUsernameAvailablePromise called for: ' + inputElement.value);
 
-                                    checkIfUsernameAvailablePromise.then(function(response) {
+                                    checkIfUsernameAvailablePromise.then(
+                                        function(response) {
 
-                                        // Modify validity and feedback only if this is a response to the most recently
-                                        // typed chatRoomName. This guards against a slow server response that could be
-                                        // out-of-date if the user has typed in a new chatRoomName before receiving the
-                                        // response.
-                                        if (response.data.usernameNormalized === inputElement.value.toLowerCase()) {
+                                            // Modify validity and feedback only if this is a response to the most recently
+                                            // typed chatRoomName. This guards against a slow server response that could be
+                                            // out-of-date if the user has typed in a new chatRoomName before receiving the
+                                            // response.
+                                            if (response.data.usernameNormalized === inputElement.value.toLowerCase()) {
 
-                                            if (response.data.usernameAvailable === true) {
-                                                ctrl.usernameIsAvailableMessage = 'Username is available!';
-                                                ctrl.inputCssClass = 'cl-valid-input-glow'
+                                                if (response.data.usernameAvailable === true) {
+                                                    ctrl.usernameIsAvailableMessage = 'Username is available!';
+                                                    ctrl.inputCssClass = 'cl-valid-input-glow'
+                                                }
+                                                else {
+                                                    ctrl.usernameIsTakenMessage = 'Username is taken';
+                                                    ctrl.inputCssClass = 'cl-invalid-input-glow';
+                                                }
                                             }
                                             else {
-                                                ctrl.usernameIsAvailableMessage = 'Username is taken';
-                                                ctrl.inputCssClass = 'cl-invalid-input-glow';
+                                                // This will likely occasionally happen, but if it happens too often then it is likely an indication
+                                                // that something is going wrong. This can occur because of server delay in responding
+                                                // to recent requests. It is not serious and can be ignored.
+                                                $log.warn('Warning: Username ' + response.data.usernameNormalized +
+                                                    ' returned from server does not match most recently typed username ' + inputElement.value);
                                             }
-                                        }
-                                        else {
-                                            // This will likely occasionally happen, but if it happens too often then it is likely an indication
-                                            // that something is going wrong. This can occur because of server delay in responding
-                                            // to recent requests. It is not serious and can be ignored.
-                                            $log.warn('Warning: Username ' + response.data.usernameNormalized +
-                                                ' returned from server does not match most recently typed username ' + inputElement.value);
-                                        }
 
-                                    }, function(response) {
-                                        ctrl.$setValidity('networkOrServerError', false);
-                                        $log.error('checkForRoomOccupancy - Error: ' + response.statusText);
-                                    })
-                                    ['finally'](function () {
-                                        ctrl.userIsWaitingForUsernameStatus = false;
-                                    });  // jshint ignore:line
+                                        },
+                                        function(response) {
+                                            ctrl.$setValidity('checkForExistingUsernameIsOk', false);
+                                            $log.error('checkForExistingUsername - Error: ' + response.statusText);
+                                        }
+                                    )['finally'](
+                                        function () {
+                                            ctrl.userIsWaitingForUsernameStatus = false;
+                                        }
+                                    );
 
                                 }, timeSinceLastKeypressBeforeHttpCall);
                             }

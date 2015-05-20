@@ -30,7 +30,9 @@
 
                                     <span class="input-group-btn">
                                         <button ng-click="submitUsername(inputUsernameObj.usernameAsWritten)" class="btn btn-primary"
-                                                ng-disabled="loginUserForm.$invalid || loginUserForm.usernameInputElem.userIsWaitingForUsernameStatus">
+                                                ng-disabled="loginUserForm.$invalid ||
+                                                loginUserForm.usernameInputElem.userIsWaitingForUsernameStatus ||
+                                                loginUserForm.usernameInputElem.usernameIsTakenMessage">
                                             Enter!</button>
                                     </span>
                                 </div>
@@ -45,11 +47,13 @@
                                         <!--<small  ng-show="loginUserForm.usernameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
                                         <small  ng-show="loginUserForm.usernameInputElem.$error.pattern">
                                             {{ invalidCharacterFeedback }}</small>
-                                        <small  ng-show="loginUserForm.usernameInputElem.$error.networkOrServerError">Error: unable to contact server (is your network working?)</small>
+                                        <small  ng-show="loginUserForm.usernameInputElem.$error.checkForExistingUsernameIsOk">Error: unable to contact server (is your network working?)</small>
                                     </div>
                                     <div  ng-show="loginUserForm.$valid">
                                         <small ng-show="loginUserForm.usernameInputElem.usernameIsAvailableMessage">
                                             {{ loginUserForm.usernameInputElem.usernameIsAvailableMessage }} </small>
+                                        <small ng-show="loginUserForm.usernameInputElem.usernameIsTakenMessage">
+                                            {{ loginUserForm.usernameInputElem.usernameIsTakenMessage }} </small>
                                     </div>
                                 </div>
                             </div>
