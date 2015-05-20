@@ -95,30 +95,3 @@ class UserModel(webapp2_extras.appengine.auth.models.User):
             return user, timestamp
 
         return None, None
-
-@ndb.transactional(xg=True)
-def txn_create_new_user():
-
-    new_user_obj = UserModel()
-    # use the key as the username until they decide to create their own username.
-    new_username = "Not set"
-    new_user_obj.username = str(new_username)
-    new_user_obj.put()
-
-    logging.info('new user object with user_id %s written' % new_user_obj.key.id())
-    return new_user_obj
-
-def get_user_by_name(username):
-    # queries database for user and returns the user object
-    user_obj = UserModel.query(UserModel.username == username).get()
-    return user_obj
-
-def get_user_by_id(user_id):
-    user_obj = UserModel.get_by_id(user_id)
-    return user_obj
-
-def delete_user_by_id(user_id):
-    # removes  particular user from the database
-    user_obj = UserModel.get_by_id(user_id)
-    user_obj.key.delete()
-
