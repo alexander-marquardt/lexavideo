@@ -101,13 +101,56 @@ angular.module('lxChatRoom.directives', [])
     })
 
     .directive('lxMakeSureClientIdHasBeenAllocated',
-    function(lxModalSupportService) {
+    function(
+        $log,
+        $modal,
+        lxHttpHandleLoginService) {
+
+        var showModalWindowFromTemplateUrl = function($scope, htmlTemplateUrl) {
+            // Remember the outerScope because the modal isolates the scope and I couldn't figure out how
+            // to get code inside the modal to modify values in the inheritance chain.
+            var outerScope = $scope;
+            var modalInstance = $modal.open({
+                templateUrl: htmlTemplateUrl,
+                scope: $scope,
+                backdrop: 'static',
+                controller: function ($scope, $log, $modalInstance) {
+                    $scope.submitUsername = function(usernameAsWritten) {
+                        var httpPromise = lxHttpHandleLoginService.createUsernameOnServer(outerScope, usernameAsWritten);
+                        httpPromise.then(
+                            function() {
+                                $log.debug('userId is: ' + outerScope.lxMainViewCtrl.userId);
+                                $modalInstance.close();
+                            },
+                            function() {
+                                $log.error('failed to create username '+ usernameAsWritten + ' on server');
+                            }
+                        )
+                    };
+                }
+            });
+
+            modalInstance.result.then(
+                function() {
+                    $log.log('modal closed ' + htmlTemplateUrl);
+                },
+                function() {
+                    $log.log('modal dismissed ' + htmlTemplateUrl);
+                }
+            )['finally'](
+                function () {
+                    $log.log('Closed the modal box for '+ htmlTemplateUrl);
+                }
+            );
+        };
+
+
         return {
             restrict: 'A',
             link: function(scope) {
 
                 if (!scope.lxMainViewCtrl.clientId) {
-                    lxModalSupportService.showStandardModalWindowFromTemplateUrl('lx-template-cache/lx-login-modal.html');
+                    showModalWindowFromTemplateUrl(scope, 'lx-template-cache/lx-login-modal.html');
                 }
             }
         };

@@ -238,7 +238,8 @@ class LoginUser(webapp2.RequestHandler):
                                                                   username_as_written=username_as_written)
 
         if user_created_bool:
-            logging.info('New user object created. user_id: %d' % user_obj.key.id())
+            user_id = user_obj.key.id()
+            logging.info('New user object created. user_id: %d' % user_id)
             # close any active session the user has since he is trying to login
             # if self.session.is_active():
             #     self.session.terminate()
@@ -249,12 +250,13 @@ class LoginUser(webapp2.RequestHandler):
             # self.redirect(self.uri_for('main'))
             jwt_token = token_sessions.generate_jwt_token(user_obj)
             response_dict = {
+                'userId': user_id,
                 'token': jwt_token,
             }
             http_helpers.set_http_ok_json_response(self.response, response_dict)
 
         else:
-            err_msg = 'Failed to create username %s', username
+            err_msg = 'Failed to create username %s', username_normalized
             logging.info(err_msg)
             http_helpers.set_http_error_json_response(self.response, err_msg, http_status_code=401)
 

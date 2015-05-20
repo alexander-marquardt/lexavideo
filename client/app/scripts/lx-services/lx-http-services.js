@@ -63,18 +63,20 @@ angular.module('lxHttp.services', ['angular-jwt'])
             },
 
 
-            createUsernameOnServer: function(usernameAsWritten) {
+            createUsernameOnServer: function(scope, usernameAsWritten) {
                 var userObj = {usernameAsWritten: usernameAsWritten};
-                $http.post('/_lx/temp_login', userObj)
-                    .success(function (data/*, status, headers, config */) {
-                        $log.info('User ' + usernameAsWritten + ' successfully created');
+                var httpPromise = $http.post('/_lx/temp_login', userObj);
+                httpPromise.success(function (data/*, status, headers, config */) {
+                        $log.info('User ' + usernameAsWritten + ' successfully created with userId: ' + data.userId);
                         $window.localStorage.token = data.token;
+                        scope.lxMainViewCtrl.userId = data.userId;
                     })
                     .error(function (/*data, status, headers, config*/) {
                         // Erase the token if the user fails to log in
                         $log.error('User ' + usernameAsWritten + ' failed to be created');
                         delete $window.localStorage.token;
                     });
+                return httpPromise;
             }
         };
     })
