@@ -152,7 +152,7 @@ angular.module('lxChatRoom.directives', [])
             restrict: 'A',
             link: function(scope) {
 
-                if (!scope.lxMainCtrlDataObj.clientId) {
+                if (!scope.lxMainCtrlDataObj.userId) {
                     showModalWindowFromTemplateUrl(scope, 'lx-template-cache/lx-login-modal.html');
                 }
             }

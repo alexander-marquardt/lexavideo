@@ -65,7 +65,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
 
             createUsernameOnServer: function(scope, usernameAsWritten) {
                 var userObj = {usernameAsWritten: usernameAsWritten};
-                var httpPromise = $http.post('/_lx/login_user', userObj);
+                var httpPromise = $http.post('/_lx/login_user/', userObj);
                 httpPromise.success(function (data/*, status, headers, config */) {
                         $log.info('User ' + usernameAsWritten + ' successfully created with userId: ' + data.userId);
                         $window.localStorage.token = data.token;
@@ -75,6 +75,18 @@ angular.module('lxHttp.services', ['angular-jwt'])
                         // Erase the token if the user fails to log in
                         $log.error('User ' + usernameAsWritten + ' failed to be created');
                         delete $window.localStorage.token;
+                    });
+                return httpPromise;
+            },
+
+            createClientOnServer: function(clientId) {
+                var clientObj = {clientId: clientId};
+                var httpPromise = $http.post('/_lx/create_client_on_server/', clientObj);
+                httpPromise.success(function (/*data, status, headers, config */) {
+                        $log.info('client created on server for clientId: ' + clientId);
+                    })
+                    .error(function (/*data, status, headers, config*/) {
+                        $log.error('clientId: ' + clientId + ' was not created');
                     });
                 return httpPromise;
             }

@@ -19,6 +19,7 @@ angular.module('LxChatRoom.controllers', [])
         $timeout,
         lxAuthenticationHelper,
         lxHttpChannelService,
+        lxJs,
         lxChatRoomMembersService
         ) {
 
@@ -40,14 +41,27 @@ angular.module('LxChatRoom.controllers', [])
             function() {
                 return $scope.lxMainCtrlDataObj.userId;
             },
-            function(userId, previousUserId) {
+            function(userId) {
                 if (userId) {
-                    $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl due to change in userId from ' +
-                        previousUserId + ' to ' + userId);
 
-                    $scope.lxMainCtrlDataObj.clientId = lxAuthenticationHelper.lxGetAndStoreClientId(userId);
-
-                    lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
+                    if (!$scope.lxMainCtrlDataObj.clientId) {
+                        var createClientPromise = lxAuthenticationHelper.lxGetAndStoreClientId($scope, userId);
+                        createClientPromise.then(
+                            function () {
+                                $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl');
+                                lxJs.assert($scope.lxMainCtrlDataObj.clientId,
+                                    'clientId should be initialized if createClientPromise was successful');
+                                lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
+                            },
+                            function () {
+                                $log.error('Problem with createClientPromise');
+                            }
+                        );
+                    } else {
+                        // clientId was previously set, and therefore there is no need to interact with the server
+                        // to check if it is valid. Directly handle the room.
+                        lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
+                    }
 
                     // Kill this watcher once we have handled getting into the room
                     watchUserId();

@@ -7,7 +7,10 @@ angular.module('lxAuthentication.services', [])
     function(
         $log,
         $window,
-        jwtHelper
+        $q,
+        lxHttpHandleLoginService,
+        jwtHelper,
+        lxJs
         ) {
 
         function generateNewUniqueClientId(userId) {
@@ -31,11 +34,13 @@ angular.module('lxAuthentication.services', [])
                 return userId;
             },
 
-            lxGetAndStoreClientId: function(userId) {
+            lxGetAndStoreClientId: function(scope, userId) {
                 // Checks if a clientId is set in the sessionStorage and if it corresponds to the current userId.
-                // If a matching clientId is available it will be returned. If it is not available then a new
-                // clientId will be generated, written to sessionStorage, and returned.
+                // If a matching clientId is stored it will be written to lxMainCtrlDataObj.clientId.
+                // If it is not available then a new clientId will be generated, written to sessionStorage, and
+                // also written to lxMainCtrlDataObj.clientId.
 
+                lxJs.assert(userId, 'userId must be passed into lxGetAndStoreClientId');
 
                 // The clientId is unique for each connection that a user makes to the server (ie. each new browser
                 // window/device that they connect from). In order to create a unique clientID, we append the userId with
@@ -45,33 +50,38 @@ angular.module('lxAuthentication.services', [])
                 // even if they reload a tab/window. Read about sessionStorage for more information.
                 var clientId = null;
 
-                if (userId) {
-                    if ($window.sessionStorage.clientId) {
-                        clientId = $window.sessionStorage.clientId;
-                        var splitArr = clientId.split('|');
-                        var useIdFromClientId = parseInt(splitArr[0]);
 
-                        // If the userId pulled from the clientId in sessionStorage doesn't match the userId located in the
-                        // localStorage, then the localStorage userId wins. In this case,
-                        // generate a new clientId from the userId. This can happen if a new user logs in, but there is
-                        // still old client data in the sessionStorage.
-                        if (useIdFromClientId !== userId) {
-                            clientId = generateNewUniqueClientId(userId);
-                        }
-                    } else {
+                if ($window.sessionStorage.clientId) {
+                    clientId = $window.sessionStorage.clientId;
+                    var splitArr = clientId.split('|');
+                    var useIdFromClientId = parseInt(splitArr[0]);
+
+                    // If the userId pulled from the clientId in sessionStorage doesn't match the userId located in the
+                    // localStorage, then the localStorage userId wins. In this case,
+                    // generate a new clientId from the userId. This can happen if a new user logs in, but there is
+                    // still old client data in the sessionStorage.
+                    if (useIdFromClientId !== userId) {
                         clientId = generateNewUniqueClientId(userId);
-
                     }
-                    $window.sessionStorage.clientId = clientId;
-                }
-                else {
-                    // Note: if there isn't a userId, don't write anything to sessionStorage (eg. don't do
-                    // "else {sessionStorage.clientId = null;}"). This is because anything written is stored as strings
-                    // and therefore "null" will be treated as a clientId string as opposed to a falsy value.
-                    $log.error('lxGetAndStoreClientId called without a userId value');
-                }
+                } else {
+                    clientId = generateNewUniqueClientId(userId);
 
-                return clientId;
+                }
+                $window.sessionStorage.clientId = clientId;
+
+                lxJs.assert(clientId, 'clientId is not set');
+                var createClientPromise = lxHttpHandleLoginService.createClientOnServer(clientId);
+                createClientPromise.then(
+                    function () {
+                        scope.lxMainCtrlDataObj.clientId = clientId;
+                    },
+                    function () {
+                        $log.error('clientId ' + clientId + ' was not written to server.');
+                        scope.lxMainCtrlDataObj.clientId = null;
+                    }
+                );
+
+                return createClientPromise;
             }
         };
     });
