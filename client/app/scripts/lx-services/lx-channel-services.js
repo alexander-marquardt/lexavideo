@@ -215,6 +215,7 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'videoExchangeStatusMsg':
+                            var remoteUsernameAsWritten = messageObject.fromUsernameAsWritten;
 
                             if (!(remoteClientId in scope.videoExchangeObjectsDict)) {
                                 $log.info('videoExchangeStatusMsg causing creation of new videoExchangeObjectsDict entry for client ' + remoteClientId);
@@ -223,6 +224,7 @@ angular.module('lxChannel.services', [])
 
                             var remoteVideoEnabledSetting = messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
                             scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting = remoteVideoEnabledSetting;
+                            scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId] = remoteUsernameAsWritten;
 
                             // If the remote user has hung-up then stop the remote stream
                             if (remoteVideoEnabledSetting === 'hangupVideoExchange') {
@@ -235,6 +237,7 @@ angular.module('lxChannel.services', [])
                                 // the remote client from videoExchangeObjectsDict.
                                 if (scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting === 'waitingForPermissionToEnableVideoExchange') {
                                     delete scope.videoExchangeObjectsDict[remoteClientId];
+                                    delete scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId];
                                 }
                             }
 

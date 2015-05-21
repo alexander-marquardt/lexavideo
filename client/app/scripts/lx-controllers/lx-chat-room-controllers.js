@@ -73,8 +73,8 @@ angular.module('LxChatRoom.controllers', [])
         };
 
         $scope.videoDisplaySelection = {
-            // currentlySelectedVideoElementId will either be remoteClientId or the string 'localVideoElement'
-            currentlySelectedVideoElementId: 'localVideoElement'
+            // currentlySelectedVideoElementClientId will either be remoteClientId or the string 'localVideoElement'
+            currentlySelectedVideoElementClientId: 'localVideoElement'
         };
 
 
@@ -102,7 +102,7 @@ angular.module('LxChatRoom.controllers', [])
 
         $scope.myUsername = lxVideoParamsService.myUsername;
 
-        $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting, remoteClientId) {
-            lxVideoService.showVideoElementsAndStartVideoFn($scope, localVideoEnabledSetting, remoteClientId);
+        $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting, remoteClientId, remoteUsernameAsWritten) {
+            lxVideoService.showVideoElementsAndStartVideoFn($scope, localVideoEnabledSetting, remoteClientId, remoteUsernameAsWritten);
         };
     });

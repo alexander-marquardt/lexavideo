@@ -548,7 +548,7 @@ webRtcServices.factory('lxMediaService',
                 // show the most recently added video element (even if it is not receiving video yet). In the case that
                 // we are waiting for video to start, the local user will see a message indicating the status of the
                 // video signalling.
-                scope.videoDisplaySelection.currentlySelectedVideoElementId = scope.videoStateInfoObject.currentOpenVideoSessionsList[0];
+                scope.videoDisplaySelection.currentlySelectedVideoElementClientId = scope.videoStateInfoObject.currentOpenVideoSessionsList[0];
 
                 lxStreamService.localStream = stream;
 

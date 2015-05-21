@@ -5,7 +5,10 @@
 
         <!-- "Hangup" video button -->
         <button type="button" class="btn btn-sm btn-danger cl-video-control-button"
-                ng-click="showVideoElementsAndStartVideoFn('hangupVideoExchange', videoDisplaySelection.currentlySelectedVideoElementId)">
+                ng-click="showVideoElementsAndStartVideoFn('hangupVideoExchange',
+                videoDisplaySelection.currentlySelectedVideoElementClientId,
+                videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[videoDisplaySelection.currentlySelectedVideoElementClientId])">
+
             <span class="icon-lx-start-video-camera-wrapper-cfg">
                 <span class="icon-lx-phone-hang-up-cfg"></span>
             </span>
@@ -15,9 +18,9 @@
 
     <div class="cl-video-buttons-overlay">
         <!-- enable/disable remote audio -->
-        <button ng-show="remoteVideoElementsDict[videoDisplaySelection.currentlySelectedVideoElementId].isAudioMuted"
+        <button ng-show="remoteVideoElementsDict[videoDisplaySelection.currentlySelectedVideoElementClientId].isAudioMuted"
                 type="button" class="btn btn-sm btn-primary cl-video-control-button"
-                ng-click="toggleAudioMuteInterfaceFn(videoDisplaySelection.currentlySelectedVideoElementId)">
+                ng-click="toggleAudioMuteInterfaceFn(videoDisplaySelection.currentlySelectedVideoElementClientId)">
 
 
             <span class="cl-lx-call-control-wrapper-cfg">
@@ -27,9 +30,9 @@
             </span>
         </button>
 
-        <button ng-show="!remoteVideoElementsDict[videoDisplaySelection.currentlySelectedVideoElementId].isAudioMuted"
+        <button ng-show="!remoteVideoElementsDict[videoDisplaySelection.currentlySelectedVideoElementClientId].isAudioMuted"
                 type="button" class="btn btn-sm btn-primary cl-video-control-button"
-                ng-click="toggleAudioMuteInterfaceFn(videoDisplaySelection.currentlySelectedVideoElementId)">
+                ng-click="toggleAudioMuteInterfaceFn(videoDisplaySelection.currentlySelectedVideoElementClientId)">
 
             <span class="cl-lx-call-control-wrapper-cfg">
                 <span class="icon-lx-volume-high-cfg"></span>
@@ -39,7 +42,7 @@
     </div>
 
     <div class="cl-selected-icon-status-overlay cl-status-beside-hangup-overlay">
-        <div ng-show="remoteVideoElementsDict[videoDisplaySelection.currentlySelectedVideoElementId].isAudioMuted">
+        <div ng-show="remoteVideoElementsDict[videoDisplaySelection.currentlySelectedVideoElementClientId].isAudioMuted">
             <span class="cl-video-status-icon">
                 <span class="cl-lx-call-control-wrapper-cfg">
                     <span class="icon-lx-volume-high-cfg cl-text-shadow"></span>

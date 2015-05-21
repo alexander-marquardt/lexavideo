@@ -55,23 +55,23 @@ videoAppDirectives.directive('lxMainVideoElementDirective',
                 scope.$watch(
                     function() {
                         var videoStreamActive;
-                        var selectedVideoElementId = scope.videoDisplaySelection.currentlySelectedVideoElementId;
-                        if (selectedVideoElementId === 'localVideoElement') {
+                        var selectedVideoElementClientId = scope.videoDisplaySelection.currentlySelectedVideoElementClientId;
+                        if (selectedVideoElementClientId === 'localVideoElement') {
                             videoStreamActive = !!lxStreamService.localStream;
                         }
                         else {
-                            videoStreamActive = !!lxPeerService.remoteStream[selectedVideoElementId];
+                            videoStreamActive = !!lxPeerService.remoteStream[selectedVideoElementClientId];
                         }
-                        return selectedVideoElementId + videoStreamActive.toString();
+                        return selectedVideoElementClientId + videoStreamActive.toString();
                     },
                     
                     function() {
-                        var selectedVideoElementId = scope.videoDisplaySelection.currentlySelectedVideoElementId;
+                        var selectedVideoElementClientId = scope.videoDisplaySelection.currentlySelectedVideoElementClientId;
 
-                        if (selectedVideoElementId === 'localVideoElement') {
+                        if (selectedVideoElementClientId === 'localVideoElement') {
                             lxAdapterService.reattachMediaStream(domVideoElem, scope.localVideoObject.localMiniVideoElem);
                         } else {
-                            var remoteVideoObject = scope.remoteVideoElementsDict[selectedVideoElementId];
+                            var remoteVideoObject = scope.remoteVideoElementsDict[selectedVideoElementClientId];
                             lxAdapterService.reattachMediaStream(domVideoElem, remoteVideoObject.remoteMiniVideoElem);
                         }
                     }

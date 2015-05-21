@@ -40,11 +40,11 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
             // remoteStreamIsActive status is updated. Therefore we need to check both in order to ensure
             // that user feedback is accurate.
             function checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting() {
-                var selectedVideoElementId = attrs.selectedVideoElementId;
+                var selectedVideoElementClientId = attrs.selectedVideoElementClientId;
 
                 try {
-                    return selectedVideoElementId + scope.videoExchangeObjectsDict[selectedVideoElementId].remoteVideoEnabledSetting +
-                        (!!lxPeerService.remoteStream[selectedVideoElementId]).toString();
+                    return selectedVideoElementClientId + scope.videoExchangeObjectsDict[selectedVideoElementClientId].remoteVideoEnabledSetting +
+                        (!!lxPeerService.remoteStream[selectedVideoElementClientId]).toString();
                 }
                 catch(err) {
                     return null;
@@ -54,27 +54,28 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
             scope.$watch(checkForChangeInRemoteStreamOrRemoteVideoEnabledSetting, function(returnVal) {
 
                 if (returnVal !== null) {
-                    var selectedVideoElementId = attrs.selectedVideoElementId;
-                    var remoteStreamIsActive = !!lxPeerService.remoteStream[selectedVideoElementId];
+                    var selectedVideoElementClientId = attrs.selectedVideoElementClientId;
+                    var remoteStreamIsActive = !!lxPeerService.remoteStream[selectedVideoElementClientId];
 
                     // hide any messages so we are at at known default state.
                     hideMessageInVideoWindow(scope, overlayElem);
 
-                    var remoteVideoSetting = scope.videoExchangeObjectsDict[selectedVideoElementId].remoteVideoEnabledSetting;
+                    var remoteVideoSetting = scope.videoExchangeObjectsDict[selectedVideoElementClientId].remoteVideoEnabledSetting;
+                    var remoteUsernameAsWritten = scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[selectedVideoElementClientId];
                     if (!remoteStreamIsActive) {
                         switch (remoteVideoSetting) {
                             case 'waitingForPermissionToEnableVideoExchange':
-                                message = 'Waiting for user ' + selectedVideoElementId + ' to agree to exchange video';
+                                message = 'Waiting for user ' + remoteUsernameAsWritten + ' to agree to exchange video';
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
 
                             case 'denyVideoExchange':
-                                message = selectedVideoElementId +  ' has denied your request to exchange video';
+                                message = remoteUsernameAsWritten +  ' has denied your request to exchange video';
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
 
                             case 'hangupVideoExchange':
-                                message = selectedVideoElementId + ' has closed this video exchange. ' +
+                                message = remoteUsernameAsWritten + ' has closed this video exchange. ' +
                                           'However, a new video session will start immediately if they ' +
                                           'call you again. If you do not want this to happen, you should ' +
                                           'press the hang-up button now.';
@@ -82,7 +83,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                                 break;
 
                             case 'doVideoExchange':
-                                message = 'Establishing video connection with ' + selectedVideoElementId;
+                                message = 'Establishing video connection with ' + remoteUsernameAsWritten;
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
                         }
@@ -92,8 +93,8 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
 
             function getIceConnectionState() {
                 try {
-                    var selectedVideoElementId = attrs.selectedVideoElementId;
-                    return lxPeerService.pc[selectedVideoElementId].iceConnectionState;
+                    var selectedVideoElementClientId = attrs.selectedVideoElementClientId;
+                    return lxPeerService.pc[selectedVideoElementClientId].iceConnectionState;
                 }
 
                 // This error can occur right after the user enables their video elements, but before they

@@ -29,7 +29,7 @@ angular.module('lxVideo.services', [])
     }
 
     return {
-        showVideoElementsAndStartVideoFn: function ($scope, localVideoEnabledSetting, remoteClientId) {
+        showVideoElementsAndStartVideoFn: function ($scope, localVideoEnabledSetting, remoteClientId, remoteUsernameAsWritten) {
 
             /* localVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
              */
@@ -44,7 +44,7 @@ angular.module('lxVideo.services', [])
             }
 
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
-
+            $scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId] = remoteUsernameAsWritten
 
             // Add remoteClientId to list of *currently open* list if it is not already there (Note: we
             // will even add 'hangup' and 'deny' settings here, as they will be removed by code below)
@@ -52,7 +52,7 @@ angular.module('lxVideo.services', [])
             if (indexOfRemoteIdOpenSessions === -1) {
                 // "push" to the front of the array, so that most recent additions appear first in the video section
                 $scope.videoStateInfoObject.currentOpenVideoSessionsList.unshift(remoteClientId);
-                $scope.videoDisplaySelection.currentlySelectedVideoElementId = remoteClientId;
+                $scope.videoDisplaySelection.currentlySelectedVideoElementClientId = remoteClientId;
 
             }
 
@@ -87,14 +87,14 @@ angular.module('lxVideo.services', [])
                 // we just removed the remoteClientId from currentOpenVideoSessionsList, therefore
                 // we need to decide which video element to display. We select the local video element, since we know
                 // that it will always exist, and any selection is somewhat arbitrary so this is as good as any.
-                $scope.videoDisplaySelection.currentlySelectedVideoElementId = 'localVideoElement';
+                $scope.videoDisplaySelection.currentlySelectedVideoElementClientId = 'localVideoElement';
 
                 var numOpenVideoExchanges = $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
 
                 lxCallService.doHangup(remoteClientId, numOpenVideoExchanges);
                 delete $scope.remoteVideoElementsDict[remoteClientId];
                 delete $scope.videoExchangeObjectsDict[remoteClientId];
-
+                delete $scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId];
             }
 
             $scope.videoStateInfoObject.numOpenVideoExchanges = $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;

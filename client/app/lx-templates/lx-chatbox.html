@@ -106,18 +106,18 @@
                                             <span ng-class="dropdownMenusStatuses.groupMembersDropdownIsOpen? 'caret-up': 'caret'"></span>
                                         </button>
                                         <ul class="dropdown-menu cl-chat-panel-dropdown " role="menu" lx-no-swipe-propagation>
-                                            <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'username_normalized'">
+                                            <li ng-repeat="remoteClientObj in roomOccupancyObject.listOfClientObjects | orderBy: 'usernameNormalized'">
                                                 <span style="white-space:nowrap;">
                                                     <span  class='cl-chat-icon-container'>
                                                         <button type="button"
                                                                 class="btn btn-primary cl-btn-square-24 "
-                                                                ng-click="showVideoElementsAndStartVideoFn('doVideoExchange', remoteClientObj.clientId)"
+                                                                ng-click="showVideoElementsAndStartVideoFn('doVideoExchange', remoteClientObj.clientId, remoteClientObj.usernameAsWritten)"
                                                                 ng-class="{'invisible disabled' : remoteClientObj.clientId == lxMainCtrlDataObj.clientId,
                                                                        'disabled' : videoExchangeObjectsDict[remoteClientObj.clientId].localVideoEnabledSetting == 'doVideoExchange'}">
                                                             <span class="icon-lx-video-camera-filled"></span>
                                                         </button>
                                                     </span>
-                                                    {{ remoteClientObj.username_as_written }}
+                                                    {{ remoteClientObj.usernameAsWritten }}
                                                 </span>
                                             </li>
                                         </ul>

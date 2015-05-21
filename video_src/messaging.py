@@ -4,6 +4,7 @@ import logging
 import webapp2
 
 from google.appengine.api import channel
+from google.appengine.ext import ndb
 
 from video_src import chat_room_module
 from video_src import http_helpers
@@ -161,14 +162,24 @@ class MessageClient(webapp2.RequestHandler):
 
         if message_type == 'videoExchangeStatusMsg':
 
-            logging.info('user %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
+            logging.info('clientId %s videoElementsEnabledAndCameraAccessRequested is: %s ' %
                          (from_client_id, message_payload['videoElementsEnabledAndCameraAccessRequested']))
 
             if message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'doVideoExchange':
 
                 video_setup.VideoSetup.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
                 send_video_call_settings_to_participants(from_client_id, to_client_id)
+
+                # We intentionally get the username from the database, as opposed to letting the user pass it in
+                # since the latter would allow the user to potentially manipulate the name sent to the remote client.
+                from_user_id = int(from_client_id.split('|')[0])
+                from_user_obj = ndb.Key('UserModel', from_user_id).get()
+                message_obj['fromUsernameAsWritten'] = from_user_obj.username_as_written
+
             else:
+                assert message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'hangupVideoExchange' or \
+                    message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'denyVideoExchange'
+
                 video_setup.VideoSetup.txn_remove_user_id_from_video_elements_enabled_client_ids(from_client_id, to_client_id )
 
             if message_type == 'sdp' and message_payload['type'] == 'offer':

@@ -219,8 +219,12 @@ angular.module('LxMainView.controllers', [])
 
             // Track the remote IDs that have pending requests for video sessions
             pendingRequestsForVideoSessionsList: [],
-            // Track the remote IDs that currently have open video sessions
-            currentOpenVideoSessionsList: []
+            // Track the remoteClientIds that currently have open video sessions
+            currentOpenVideoSessionsList: [],
+
+            // Track the usernames for each video session. This is a dictionary with the clientId as a key
+            // and the username as the value
+            currentOpenVideoSessionsUserNamesDict: {}
         };
 
        $scope.chatboxPanelElementObject = {

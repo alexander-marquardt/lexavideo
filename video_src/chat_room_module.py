@@ -245,8 +245,8 @@ class ChatRoomModel(ndb.Model):
                     # Send relevant data to the client, which includes the client_id, username, and presence state.
                     user_obj = client_obj.user_obj_key.get()
                     dict_of_client_objects[client_id] =  {
-                        'username_normalized': user_obj.username_normalized,
-                        'username_as_written': user_obj.username_as_written,
+                        'usernameNormalized': user_obj.username_normalized,
+                        'usernameAsWritten': user_obj.username_as_written,
                         'presenceStateName': presence_state_name
                         }
 

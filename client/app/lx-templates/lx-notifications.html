@@ -40,11 +40,11 @@
                         <div style="display:inline-block">
                             <hr class="cl-hr-in-chat-panel">
                             <strong>
-                                {{ remoteClientId }}
+                                {{ videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId] }}
                             </strong>
                             <button type="button"
                                     class="btn btn-sm btn-primary"
-                                    ng-click="showVideoElementsAndStartVideoFn('doVideoExchange', remoteClientId)">
+                                    ng-click="showVideoElementsAndStartVideoFn('doVideoExchange', remoteClientId, videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId])">
                                     <span class="icon-lx-start-video-camera-wrapper-cfg">
                                         <span class="icon-lx-start-video-camera-cfg"></span>
                                     </span>
@@ -52,7 +52,7 @@
                             </button>
                             <button type="button"
                                     class="btn btn-sm btn-primary"
-                                    ng-click="showVideoElementsAndStartVideoFn('denyVideoExchange', remoteClientId)">
+                                    ng-click="showVideoElementsAndStartVideoFn('denyVideoExchange', remoteClientId, videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId])">
                             <span class="icon-lx-start-video-camera-wrapper-cfg">
                                 <span class="icon-lx-start-video-camera-cfg"></span>
                                 <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
