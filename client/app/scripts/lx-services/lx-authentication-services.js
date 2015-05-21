@@ -36,8 +36,8 @@ angular.module('lxAuthentication.services', [])
 
             lxGetUsernameAsWrittenInLocalStorage: function() {
 
-                if ($window.localStorage.userNameAsWritten) {
-                    return $window.localStorage.userNameAsWritten;
+                if ($window.localStorage.usernameAsWritten) {
+                    return $window.localStorage.usernameAsWritten;
                 }
                 else {
                     return null;

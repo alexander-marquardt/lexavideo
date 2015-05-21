@@ -18,7 +18,7 @@
                     <div class="cl-center-overlay-outer-div cl-center-overlay-outer-div-bottom cl-video-text-overlay">
                         <div class="cl-center-overlay-middle-div">
                             <span ng-show="localStreamIsActive"
-                                  class="cl-overlay-text-span cl-transition-opacity">{{ lxMainCtrlDataObj.userNameAsWritten }} (You)
+                                  class="cl-overlay-text-span cl-transition-opacity">{{ lxMainCtrlDataObj.usernameAsWritten }} (You)
                             </span>
 
                             <span ng-show="!localStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
@@ -34,7 +34,9 @@
 
                     <div class="cl-center-overlay-outer-div cl-center-overlay-outer-div-bottom cl-video-text-overlay">
                         <div class="cl-center-overlay-middle-div">
-                            <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">{{ videoDisplaySelection.currentlySelectedVideoElementClientId }}</span>
+                            <span ng-show="remoteStreamIsActive" class="cl-overlay-text-span cl-transition-opacity">
+                                {{ videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[videoDisplaySelection.currentlySelectedVideoElementClientId] }}
+                            </span>
                             <span ng-show="!remoteStreamIsActive && !accessCameraAndMicrophoneObject.modalsCurrentlyShown.length"
                                  class="cl-overlay-text-span cl-transition-opacity"
                                  lx-display-remote-video-status selected-video-element-client-id = "{{ videoDisplaySelection.currentlySelectedVideoElementClientId }}">
