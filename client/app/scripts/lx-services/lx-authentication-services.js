@@ -34,6 +34,16 @@ angular.module('lxAuthentication.services', [])
                 return userId;
             },
 
+            lxGetUsernameAsWrittenInLocalStorage: function() {
+
+                if ($window.localStorage.userNameAsWritten) {
+                    return $window.localStorage.userNameAsWritten;
+                }
+                else {
+                    return null;
+                }
+            },
+
             lxGetAndStoreClientId: function(scope, userId) {
                 // Checks if a clientId is set in the sessionStorage and if it corresponds to the current userId.
                 // If a matching clientId is stored it will be written to lxMainCtrlDataObj.clientId.

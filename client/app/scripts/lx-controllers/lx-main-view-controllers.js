@@ -28,6 +28,7 @@ angular.module('LxMainView.controllers', [])
         angular.extend(lxAppWideConstantsService, userInfoEmbeddedInHtml);
 
         var userId = lxAuthenticationHelper.lxGetUserIdInLocalStorage();
+        var userNameAsWritten = lxAuthenticationHelper.lxGetUsernameAsWrittenInLocalStorage();
 
         // If userId is set, then the "watchUserId" watcher inside chat-room-controllers will detect that the
         // value is set, and will initiate the generation and storage of the clientId, which it will store into this
@@ -37,7 +38,7 @@ angular.module('LxMainView.controllers', [])
         $scope.lxMainCtrlDataObj = {
             clientId: null,
             userId: userId,
-            username: null,
+            usernameAsWritten: userNameAsWritten,
             currentView: null
         };
 
