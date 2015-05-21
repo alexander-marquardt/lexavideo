@@ -125,4 +125,63 @@ angular.module('lxLogin.directives', [])
                 );
             }
         };
+    })
+
+    .directive('lxMakeSureUserIsLoggedIn',
+    function(
+        $log,
+        $modal,
+        lxHttpHandleLoginService) {
+
+        var showModalWindowFromTemplateUrl = function($scope, htmlTemplateUrl) {
+            // Remember the outerScope because the modal isolates the scope and I couldn't figure out how
+            // to get code inside the modal to modify values in the inheritance chain.
+            var outerScope = $scope;
+            var modalInstance = $modal.open({
+                templateUrl: htmlTemplateUrl,
+                backdrop: 'static',
+                controller: function ($scope, $log, $modalInstance) {
+                    // refreshLoginToggler is a boolean that we toggle if there is an error creating user. This
+                    // will force a watch in a login directive to execute and update user feedback about the
+                    // status of the login/user creation.
+                    $scope.refreshLoginToggler = false;
+                    $scope.submitUsername = function(usernameAsWritten) {
+                        var httpPromise = lxHttpHandleLoginService.createUsernameOnServer(outerScope, usernameAsWritten);
+                        httpPromise.then(
+                            function() {
+                                $log.debug('userId is: ' + outerScope.lxMainCtrlDataObj.userId);
+                                $modalInstance.close();
+                            },
+                            function() {
+                                $scope.refreshLoginToggler = !$scope.refreshLoginToggler;
+                            }
+                        )
+                    };
+                }
+            });
+
+            modalInstance.result.then(
+                function() {
+                    $log.log('modal closed ' + htmlTemplateUrl);
+                },
+                function() {
+                    $log.log('modal dismissed ' + htmlTemplateUrl);
+                }
+            )['finally'](
+                function () {
+                    $log.log('Closed the modal box for '+ htmlTemplateUrl);
+                }
+            );
+        };
+
+
+        return {
+            restrict: 'A',
+            link: function(scope) {
+
+                if (!scope.lxMainCtrlDataObj.userId) {
+                    showModalWindowFromTemplateUrl(scope, 'lx-template-cache/lx-login-modal.html');
+                }
+            }
+        };
     });
