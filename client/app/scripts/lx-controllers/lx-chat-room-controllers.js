@@ -102,7 +102,7 @@ angular.module('LxChatRoom.controllers', [])
 
         $scope.myUsername = lxVideoParamsService.myUsername;
 
-        $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting, remoteClientId, remoteUsernameAsWritten) {
-            lxVideoService.showVideoElementsAndStartVideoFn($scope, localVideoEnabledSetting, remoteClientId, remoteUsernameAsWritten);
+        $scope.showVideoElementsAndStartVideoFn = function(localVideoEnabledSetting, remoteClientId) {
+            lxVideoService.showVideoElementsAndStartVideoFn($scope, localVideoEnabledSetting, remoteClientId);
         };
     });

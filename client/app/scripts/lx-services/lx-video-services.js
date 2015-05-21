@@ -29,7 +29,7 @@ angular.module('lxVideo.services', [])
     }
 
     return {
-        showVideoElementsAndStartVideoFn: function ($scope, localVideoEnabledSetting, remoteClientId, remoteUsernameAsWritten) {
+        showVideoElementsAndStartVideoFn: function ($scope, localVideoEnabledSetting, remoteClientId) {
 
             /* localVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
              */
@@ -44,7 +44,7 @@ angular.module('lxVideo.services', [])
             }
 
             $scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting = localVideoEnabledSetting;
-            $scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId] = remoteUsernameAsWritten
+
 
             // Add remoteClientId to list of *currently open* list if it is not already there (Note: we
             // will even add 'hangup' and 'deny' settings here, as they will be removed by code below)
