@@ -147,7 +147,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
                     'messageType': 'synHeartBeat', // use handshaking terminology for naming
                     'messagePayload': messagePayload
                 };
-                $http.post('/_lx/channel/syn_user_heartbeat/', messageObject);
+                $http.post('/_lx/channel/syn_client_heartbeat/', messageObject);
             },
 
 

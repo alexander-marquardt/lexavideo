@@ -43,7 +43,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/create_client_on_server/', connectivity.CreateClientOnServer),
     webapp2.Route(r'/_lx/remove_client_from_room/', connectivity.RemoveClientFromRoom),
     webapp2.Route(r'/_lx/tell_server_client_channel_opened/',  connectivity.ClientChannelOpened),
-    webapp2.Route(r'/_lx/channel/syn_user_heartbeat/', connectivity.SynClientHeartbeat),
+    webapp2.Route(r'/_lx/channel/syn_client_heartbeat/', connectivity.SynClientHeartbeat),
     webapp2.Route(r'/_lx/channel/update_client_status_and_request_updated_room_info/', connectivity.UpdateClientStatusAndRequestUpdatedRoomInfo),
     webapp2.Route(r'/_lx/channel/request_channel_token/', connectivity.RequestChannelToken),
     webapp2.Route(r'/_lx/channel/manual_disconnect/', connectivity.ManuallyDisconnectClient),
