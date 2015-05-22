@@ -2,12 +2,30 @@
 
 angular.module('lxHttp.services', ['angular-jwt'])
 
+    .factory('lxHttpRequestInterceptor', function(
+        $window,
+        $q,
+        $rootScope) {
+        return {
+            'responseError': function(response) {
+
+                if (response.status === 401) {
+                    delete $window.localStorage.token;
+                    delete $window.sessionStorage.clientId;
+                    $rootScope.$broadcast('lxUnauthorizedHttpRequest');
+                }
+                return $q.reject(response);
+            }
+        }
+    })
+
     .config(function Config($httpProvider, jwtInterceptorProvider) {
-        // Please note we're annotating the function so that the $injector works when the file is minified
+
         jwtInterceptorProvider.tokenGetter = function() {
             return localStorage.getItem('token');
         };
 
+        $httpProvider.interceptors.push('lxHttpRequestInterceptor');
         $httpProvider.interceptors.push('jwtInterceptor');
     })
 

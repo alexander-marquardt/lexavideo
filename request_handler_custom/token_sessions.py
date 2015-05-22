@@ -41,7 +41,7 @@ def generate_jwt_token(user_obj):
     token_payload = {
         'userId': user_obj.key.id(),
         'usernameAsWritten': user_obj.username_as_written,
-        'exp': int(time.mktime((token_session_obj.token_expiry).timetuple())),
+        # 'exp': int(time.mktime((token_session_obj.token_expiry).timetuple())),
         'jti': token_session_obj.key.id(), # jti (JWT ID) is a unique identifier for the token
     }
     jwt_token = jwt.encode(token_payload, constants.secret_key, algorithm='HS256')
@@ -70,14 +70,14 @@ def get_jwt_token_payload(authorization_header):
             except jwt.ExpiredSignatureError:
                 tmp_payload = jwt.decode(token_string, constants.secret_key, {'verify_exp': False})
                 logging.warning('Token for user_id %s has expired' % tmp_payload['user_id'])
-                token_payload = {}
+                token_payload = None
 
         except:
             # For some reason this token has triggered an error - may require more investigation
             extra_info = "token_string: %s" % token_string
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info=extra_info)
-            token_payload = {}
+            token_payload = None
     else:
-        token_payload = {}
+        token_payload = None
 
     return token_payload

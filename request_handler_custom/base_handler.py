@@ -65,19 +65,25 @@ class BaseHandler(webapp2.RequestHandler):
 
         authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
         token_payload = token_sessions.get_jwt_token_payload(authorization_header)
-        self.session['user_id'] = token_payload['userId']
-        self.session['username_as_written'] = token_payload['usernameAsWritten']
-        logging.info('***** Session data: %s' % self.session)
 
-        if self.session:
-            user_id = self.session['user_id']
-            user_obj = users.UserModel.get_by_id(user_id)
-            assert(user_obj)
+        if token_payload:
+            self.session['user_id'] = token_payload['userId']
+            self.session['username_as_written'] = token_payload['usernameAsWritten']
+            logging.info('***** Session data: %s' % self.session)
+
+            if self.session:
+                user_id = self.session['user_id']
+                user_obj = users.UserModel.get_by_id(user_id)
+                assert(user_obj)
+            else:
+                # Each user will be assigned a user_obj when they access our website
+                raise Exception('no user found. Make sure that the user logs in first')
+
+            # Dispatch the request.
+            webapp2.RequestHandler.dispatch(self)
+
         else:
-            # Each user will be assigned a user_obj when they access our website
-            raise Exception('no user found. Make sure that the user logs in first')
-
-        # Dispatch the request.
-        webapp2.RequestHandler.dispatch(self)
+            # send unauthorized 401 code as an error response.
+            webapp2.RequestHandler.error(self, 401)
 
 

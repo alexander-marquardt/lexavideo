@@ -292,51 +292,66 @@ angular.module('LxMainView.controllers', [])
         // We must wait for the userId to be set before we can create a clientId. If the userId is not set,
         // then a popup will be triggered by the lxMakeSureUserIsLoggedIn directive, which checks the userId
         // when a chat room page is loaded.
-        var watchUserId = $scope.$watch(
-            function() {
-                return $scope.lxMainCtrlDataObj.userId;
-            },
-            function(userId) {
-                if (userId) {
 
-                    if (!$scope.lxMainCtrlDataObj.clientId) {
+        function watchUserIdThenGetClientId() {
+            var watchUserId = $scope.$watch(
+                function () {
+                    return $scope.lxMainCtrlDataObj.userId;
+                },
+                function (userId) {
+                    if (userId) {
 
-                        // the following will update $scope.lxMainCtrlDataObj.clientId
-                        var createClientPromise = lxAuthenticationHelper.lxGetAndStoreClientId($scope, userId);
-                        createClientPromise.then(
-                            function () {
-                                $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl');
-                                lxJs.assert($scope.lxMainCtrlDataObj.clientId,
-                                    'clientId should be initialized if createClientPromise was successful');
-                            },
-                            function () {
-                                $log.error('Problem with createClientPromise');
-                            }
-                        );
+                        if (!$scope.lxMainCtrlDataObj.clientId) {
+
+                            // the following will update $scope.lxMainCtrlDataObj.clientId
+                            var createClientPromise = lxAuthenticationHelper.lxGetAndStoreClientId($scope, userId);
+                            createClientPromise.then(
+                                function () {
+                                    $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl');
+                                    lxJs.assert($scope.lxMainCtrlDataObj.clientId,
+                                        'clientId should be initialized if createClientPromise was successful');
+                                },
+                                function () {
+                                    $log.error('Problem with createClientPromise');
+                                }
+                            );
+                        }
+
+                        // Kill this watcher once we have handled getting into the room
+                        watchUserId();
                     }
-
-                    // Kill this watcher once we have handled getting into the room
-                    watchUserId();
                 }
-            }
-        );
+            );
+        }
+        watchUserIdThenGetClientId();
 
         // If clientId is set, then we can initialize the channel
-        var watchClientIdBeforeInitializeChannel = $scope.$watch(
-            function() {
-                return $scope.lxMainCtrlDataObj.clientId;
-            },
-            function(clientId, previousClientId) {
-                if (clientId) {
-                    $log.info('Calling lxChannelService.initializeChannel due to change in clientId from ' +
-                        previousClientId + 'to ' + clientId);
-                    lxChannelService.initializeChannel($scope);
+        function watchClientIdThenInitializeChannel() {
+            var watchClientIdBeforeInitializeChannel = $scope.$watch(
+                function () {
+                    return $scope.lxMainCtrlDataObj.clientId;
+                },
+                function (clientId, previousClientId) {
+                    if (clientId) {
+                        $log.info('Calling lxChannelService.initializeChannel due to change in clientId from ' +
+                            previousClientId + 'to ' + clientId);
+                        lxChannelService.initializeChannel($scope);
 
-                    // Kill this watch once we have initialized the channel
-                    watchClientIdBeforeInitializeChannel();
+                        // Kill this watch once we have initialized the channel
+                        watchClientIdBeforeInitializeChannel();
+                    }
                 }
-            }
-        );
+            );
+        }
+        watchClientIdThenInitializeChannel();
+
+        $scope.$on('lxUnauthorizedHttpRequest', function() {
+            $log.info('lxUnauthorizedHttpRequest received - user must log in again.');
+            $scope.lxMainCtrlDataObj.clientId = null;
+            $scope.lxMainCtrlDataObj.userId = null;
+            watchUserIdThenGetClientId();
+            watchClientIdThenInitializeChannel();
+        });
     });
 
 

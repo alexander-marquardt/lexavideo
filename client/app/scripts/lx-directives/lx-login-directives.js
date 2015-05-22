@@ -179,9 +179,12 @@ angular.module('lxLogin.directives', [])
             restrict: 'A',
             link: function(scope) {
 
-                if (!scope.lxMainCtrlDataObj.userId) {
-                    showModalWindowFromTemplateUrl(scope, 'lx-template-cache/lx-login-modal.html');
-                }
+                scope.$watch('lxMainCtrlDataObj.userId',
+                function(userId) {
+                    if (!userId) {
+                        showModalWindowFromTemplateUrl(scope, 'lx-template-cache/lx-login-modal.html');
+                    }
+                });
             }
         };
     });
