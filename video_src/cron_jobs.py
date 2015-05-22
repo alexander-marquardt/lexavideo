@@ -46,7 +46,7 @@ class CleanupExpiredUsers(webapp2.RequestHandler):
 
     def cleanup_expired_clients(self, user_obj_key):
         # When a user object is eliminated, we also remove all of the clients models that were created
-        # by that user. 
+        # by that user.
 
         # expire_models_last_used_date = datetime.datetime.utcnow() - datetime.timedelta(minutes=31)
         q = clients.ClientModel.query(clients.ClientModel.user_obj_key == user_obj_key)

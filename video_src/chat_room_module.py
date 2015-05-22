@@ -231,9 +231,15 @@ class ChatRoomModel(ndb.Model):
             dict_of_client_objects = {}
             for client_id in self.room_members_client_ids:
 
-                client_obj = clients.ClientModel.get_by_id(id=client_id)
-                # logging.debug('Getting presence state for client_obj %s' % client_obj)
-                presence_state_name = client_obj.get_current_presence_state()
+                try:
+                    client_obj = clients.ClientModel.get_by_id(id=client_id)
+                    # logging.debug('Getting presence state for client_obj %s' % client_obj)
+                    presence_state_name = client_obj.get_current_presence_state()
+                except:
+                    # We were not able to get a client object corresponding to the client_id, therefore
+                    # it may have been removed from the database already. In this case, make sure that the
+                    # client is also removed from the room by setting them to offline.
+                    presence_state_name = 'PRESENCE_OFFLINE'
 
                 # If client is OFFLINE, then don't include them in dict_of_client_objects *and* also remove the client
                 # from the room (if they later start their heartbeat, then they will be added back to the room)
