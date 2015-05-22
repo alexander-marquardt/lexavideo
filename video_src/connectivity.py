@@ -15,10 +15,11 @@ from video_src import video_setup
 
 from error_handling import handle_exceptions
 
+from request_handler_custom.base_handler import  BaseHandler
 
 
 
-class AddClientToRoom(webapp2.RequestHandler):
+class AddClientToRoom(BaseHandler):
     """Handles when a user explicitly enters into a room by going to a URL for a given room."""
     
     @staticmethod
@@ -104,8 +105,8 @@ class AddClientToRoom(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         data_object = json.loads(self.request.body)
-        # user_id = data_object['userId']
         client_id = data_object['clientId']
+        assert self.session['user_id'] == int(client_id.split('|')[0])
         room_id = data_object['chatRoomId']
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
@@ -114,13 +115,13 @@ class AddClientToRoom(webapp2.RequestHandler):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class RemoveClientFromRoom(webapp2.RequestHandler):
+class RemoveClientFromRoom(BaseHandler):
 
     @handle_exceptions
     def post(self):
         data_object = json.loads(self.request.body)
-        user_id = data_object['userId']
         client_id = data_object['clientId']
+        assert self.session['user_id'] == int(client_id.split('|')[0])
         room_id = data_object['chatRoomId']
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
@@ -135,13 +136,14 @@ class RemoveClientFromRoom(webapp2.RequestHandler):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class SynClientHeartbeat(webapp2.RequestHandler):
+class SynClientHeartbeat(BaseHandler):
     """Receives a "synchronization heartbeat" from the client, which we respond to on the channel."""
 
     @handle_exceptions
     def post(self):
         message_obj = json.loads(self.request.body)
         client_id = message_obj['clientId']
+        assert self.session['user_id'] == int(client_id.split('|')[0])
 
         # Just send a short simple response so that the client can verify if the channel is up.
         response_message_obj = {
@@ -154,7 +156,7 @@ class SynClientHeartbeat(webapp2.RequestHandler):
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
-class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
+class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandler):
     """
     Called by the client in the following cases:
     1) Acknowledgement to the 'synAckHeartBeat' response that we sent to the client over the channel. In this
@@ -169,6 +171,7 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
     def post(self):
         message_obj = json.loads(self.request.body)
         client_id = message_obj['clientId']
+        assert self.session['user_id'] == int(client_id.split('|')[0])
         message_type = message_obj['messageType']
         presence_state_name = message_obj['messagePayload']['presenceStateName']
         currently_open_chat_room_id = message_obj['messagePayload']['currentlyOpenChatRoomId']
@@ -220,12 +223,13 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(webapp2.RequestHandler):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class CreateClientOnServer(webapp2.RequestHandler):
+class CreateClientOnServer(BaseHandler):
 
     @handle_exceptions
     def post(self):
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
+        assert self.session['user_id'] == int(client_id.split('|')[0])
         logging.debug('CreateClientOnServer called for client_id: %s' % client_id)
 
         client_obj = clients.ClientModel.get_by_id(client_id)
@@ -234,7 +238,7 @@ class CreateClientOnServer(webapp2.RequestHandler):
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
-class ClientChannelOpened(webapp2.RequestHandler):
+class ClientChannelOpened(BaseHandler):
 
     @classmethod
     def make_sure_client_is_logged_in_correctly(cls, client_id):
@@ -272,11 +276,12 @@ class ClientChannelOpened(webapp2.RequestHandler):
 
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
+        assert self.session['user_id'] == int(client_id.split('|')[0])
         logging.debug('ClientChannelOpened called for client_id: %s' % client_id)
         ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_id)
 
 
-class RequestChannelToken(webapp2.RequestHandler):
+class RequestChannelToken(BaseHandler):
 
     @handle_exceptions
     def post(self):

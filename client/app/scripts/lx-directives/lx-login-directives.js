@@ -146,7 +146,7 @@ angular.module('lxLogin.directives', [])
                     // status of the login/user creation.
                     $scope.refreshLoginToggler = false;
                     $scope.submitUsername = function(usernameAsWritten) {
-                        var httpPromise = lxHttpHandleLoginService.createUsernameOnServer(outerScope, usernameAsWritten);
+                        var httpPromise = lxHttpHandleLoginService.loginUserOnServer(outerScope, usernameAsWritten);
                         httpPromise.then(
                             function() {
                                 $log.debug('userId is: ' + outerScope.lxMainCtrlDataObj.userId);

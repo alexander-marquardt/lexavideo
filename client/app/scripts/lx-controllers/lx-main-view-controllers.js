@@ -291,8 +291,7 @@ angular.module('LxMainView.controllers', [])
 
         // We must wait for the userId to be set before we can create a clientId. If the userId is not set,
         // then a popup will be triggered by the lxMakeSureUserIsLoggedIn directive, which checks the userId
-        // when a chat room page is loaded.
-
+        // when a chat room page is loaded and forces a login if it isn't set.
         function watchUserIdThenGetClientId() {
             var watchUserId = $scope.$watch(
                 function () {

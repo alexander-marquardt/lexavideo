@@ -82,7 +82,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
             },
 
 
-            createUsernameOnServer: function(scope, usernameAsWritten) {
+            loginUserOnServer: function(scope, usernameAsWritten) {
                 var userObj = {usernameAsWritten: usernameAsWritten};
                 var httpPromise = $http.post('/_lx/login_user/', userObj);
                 httpPromise.success(function (data/*, status, headers, config */) {
@@ -182,7 +182,6 @@ angular.module('lxHttp.services', ['angular-jwt'])
 
                 var postData = {
                     'clientId': clientId,
-                    'userId': userId,
                     'chatRoomId': chatRoomId
                 };
                 $http.post('/_lx/add_client_to_room/', postData);

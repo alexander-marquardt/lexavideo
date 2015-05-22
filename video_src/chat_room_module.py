@@ -17,6 +17,7 @@ from video_src import utils
 
 from video_src.error_handling import handle_exceptions
 
+from request_handler_custom.base_handler import BaseHandler
 
 DICT_OF_CLIENT_OBJECTS_MEMCACHE_PREFIX = 'dict_of_client_objects-'
 DICT_OF_CLIENT_OBJECTS_MEMCACHE_EXPIRY_IN_SECONDS = 5
@@ -292,7 +293,7 @@ class CheckIfChatRoomExists(webapp2.RequestHandler):
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
             http_helpers.set_http_error_json_response(self.response, {'statusString': err_status})
 
-class CreateNewRoomIfDoesNotExist(webapp2.RequestHandler):
+class CreateNewRoomIfDoesNotExist(BaseHandler):
     @handle_exceptions
     def post(self):
         try:
@@ -319,7 +320,8 @@ class CreateNewRoomIfDoesNotExist(webapp2.RequestHandler):
                 raise Exception('Room name length of %s is out of range' % len(chat_room_name_as_written))
 
             response_dict = {}
-            user_id = long(room_dict['user_id'])
+            user_id = int(room_dict['user_id'])
+            assert self.session['user_id'] == user_id
 
             # If this is a new room, then the room_creator_user_key will be stored in the room
             # object as the "creator" of the room
