@@ -15,12 +15,14 @@ from video_src.error_handling import handle_exceptions
 
 NUM_OBJECTS_TO_REMOVE_AT_A_TIME = 100
 
+
 class CleanupExpiredClients(webapp2.RequestHandler):
+    # For registered users, their userobject will never be cleared out of the database. Therefore, we need
+    # to periodically search for client models that the user has used in the past, and clear these out.
 
     def cleanup_expired_clients(self):
 
-        expire_models_last_used_date = datetime.datetime.utcnow() - datetime.timedelta(days=31)
-        # expire_models_last_used_date = datetime.datetime.utcnow() - datetime.timedelta(minutes=31)
+        expire_models_last_used_date = datetime.datetime.utcnow() - datetime.timedelta(days=60)
         q = clients.ClientModel.query(clients.ClientModel.last_db_write < expire_models_last_used_date)
         client_obj_keys = q.fetch(NUM_OBJECTS_TO_REMOVE_AT_A_TIME, keys_only=True)
 
@@ -41,6 +43,19 @@ class CleanupExpiredClients(webapp2.RequestHandler):
 
 
 class CleanupExpiredUsers(webapp2.RequestHandler):
+
+    def cleanup_expired_clients(self, user_obj_key):
+        # When a user object is eliminated, we also remove all of the clients models that were created
+        # by that user. 
+
+        # expire_models_last_used_date = datetime.datetime.utcnow() - datetime.timedelta(minutes=31)
+        q = clients.ClientModel.query(clients.ClientModel.user_obj_key == user_obj_key)
+        client_obj_keys = q.fetch(NUM_OBJECTS_TO_REMOVE_AT_A_TIME, keys_only=True)
+
+        num_client_objects = len(client_obj_keys)
+        ndb.delete_multi(client_obj_keys)
+        logging.info('Cleaned up %d expired clients associated with user %s' % (num_client_objects, user_obj_key.id()))
+        return num_client_objects
 
 
     def cleanup_expired_users(self):
