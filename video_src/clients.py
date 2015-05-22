@@ -50,7 +50,7 @@ class ClientModel(ndb.Model):
 
     def _periodically_store_current_presence_state_to_db(self, presence_state_name):
 
-        if (datetime.datetime.now() - self.last_db_write >
+        if (datetime.datetime.utcnow() - self.last_db_write >
                 datetime.timedelta(seconds=constants.db_presence_update_interval_seconds)):
 
             # logging.debug('Storing state %s to database for client_id %s' % (presence_state_name, self.key.id()))
@@ -64,7 +64,7 @@ class ClientModel(ndb.Model):
         client_memcache_key = CLIENT_PRESENCE_MEMCACHE_PREFIX + client_id
         client_memcache_dict = {
             'presence_state_name': presence_state_name,
-            'stored_datetime': datetime.datetime.now(),
+            'stored_datetime': datetime.datetime.utcnow(),
         }
         # logging.debug('Storing presence state %s to memcache key %s' % (presence_state_name, client_memcache_key))
         serialized_dict = pickle.dumps(client_memcache_dict, constants.pickle_protocol)
@@ -85,7 +85,7 @@ class ClientModel(ndb.Model):
             # memcache is active, therefore we make sure that the client presence status has been updated recently,
             # otherwise the client will be considered PRESENCE_OFFLINE
             if client_memcache_dict['stored_datetime'] + \
-                    datetime.timedelta(seconds=HEARTBEAT_INTERVAL_TIMEOUT_SECONDS) < datetime.datetime.now():
+                    datetime.timedelta(seconds=HEARTBEAT_INTERVAL_TIMEOUT_SECONDS) < datetime.datetime.utcnow():
 
                 logging.debug('Client %s is set to PRESENCE_OFFLINE due to timeout (memcache check)' % client_id)
                 presence_state_name = 'PRESENCE_OFFLINE'
@@ -108,7 +108,7 @@ class ClientModel(ndb.Model):
             # Make sure that the value stored in the database was recently written, and if not then
             # the user is considered to be offline
             if (self.last_db_write + datetime.timedelta(seconds=DATABASE_PRESENCE_UPDATE_INTERVAL_TIMEOUT_SECONDS) <
-                datetime.datetime.now()):
+                datetime.datetime.utcnow()):
 
                 logging.debug('Client %s is set to PRESENCE_OFFLINE due to timeout (database check)' % client_id)
                 return 'PRESENCE_OFFLINE'

@@ -3,11 +3,13 @@
 # http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
 
 
+import datetime
 import jinja2
 import json
 import logging
 import webapp2
 
+from video_src import constants
 from video_src import status_reporting
 from video_src.error_handling import handle_exceptions
 
@@ -81,9 +83,12 @@ class LoginUser(webapp2.RequestHandler):
         # Not necessary to include username in the unique_properties, since it will be included
         # in the "auth_id" in the create_user function, which will ensure that it is unique.
         unique_properties = None
+        expiration_datetime = datetime.datetime.utcnow() + datetime.timedelta(minutes=constants.unregistered_user_token_session_expiry_minutes)
         user_created_bool, user_obj = users.UserModel.create_user(username_normalized, unique_properties,
                                                                   username_normalized=username_normalized,
-                                                                  username_as_written=username_as_written)
+                                                                  username_as_written=username_as_written,
+                                                                  registered_user_bool=False,
+                                                                  expiration_datetime=expiration_datetime)
 
         if user_created_bool:
             user_id = user_obj.key.id()
@@ -96,7 +101,7 @@ class LoginUser(webapp2.RequestHandler):
             # self.session['user_id'] = user_obj.key.id()
             #
             # self.redirect(self.uri_for('main'))
-            jwt_token = token_sessions.generate_jwt_token(user_obj)
+            jwt_token = token_sessions.generate_jwt_token(user_obj.key.id(), user_obj.username_as_written, expiration_datetime)
             response_dict = {
                 'token': jwt_token,
             }

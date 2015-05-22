@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*- 
 
 import re
+import datetime
 
 site_name_dot_com = 'chatsurfing.com'
 site_name_for_display = 'ChatSurfing'
@@ -54,7 +55,12 @@ long_star_separator = '*'*80
 password_pepper = u'Pepper:Iñtërnâtiônàlizætiøn'
 
 secret_key = '13f2xi^7170a0a564fc2a26b8ffae123-5a17'
-token_session_expiry_days = 30
+
+# The token will expire very quickly, but if the user is still connected (ie. sending heartbeats)
+# then the session will be refreshed and given additional time before expiry.
+unregistered_user_token_session_expiry_minutes = 5
+registered_user_token_session_expiry_days = 365
+seconds_before_expiration_to_refresh_token = 60
 
 # The client periodically updates that server with their status, and if a heartbeat is missed then we can
 # presume that the user has closed the connection to our website.

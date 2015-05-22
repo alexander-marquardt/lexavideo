@@ -2,12 +2,13 @@
 # http://blog.abahgat.com/2013/01/07/user-authentication-with-webapp2-on-google-app-engine/
 
 import logging
-
+import datetime
 import webapp2
 from webapp2_extras import auth
 
 from . import token_sessions
 from video_src import users
+from video_src import constants
 
 def user_required(handler):
     """
@@ -64,26 +65,52 @@ class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
 
         authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
-        token_payload = token_sessions.get_jwt_token_payload(authorization_header)
 
-        if token_payload:
+        # Get the "now" before the session, so that in the case that the session is not expired,
+        # "now" is always <= session expiry. If we were to get "now" after getting the token
+        # then this inequality might not be valid in rare cases where the token has just expired
+        # within the past few milliseconds.
+        now = datetime.datetime.now()
+
+        token_payload, token_session_obj = token_sessions.get_jwt_token_payload_and_token_session_obj(authorization_header)
+
+        if token_payload and token_session_obj:
+            # This session is still valid. Continue processing.
             self.session['user_id'] = token_payload['userId']
             self.session['username_as_written'] = token_payload['usernameAsWritten']
             logging.info('***** Session data: %s' % self.session)
 
-            if self.session:
-                user_id = self.session['user_id']
-                user_obj = users.UserModel.get_by_id(user_id)
-                assert(user_obj)
-            else:
-                # Each user will be assigned a user_obj when they access our website
-                raise Exception('no user found. Make sure that the user logs in first')
+            user_id = self.session['user_id']
+            user_obj = users.UserModel.get_by_id(user_id)
+            assert(user_obj)
+
+            session_expiry = token_session_obj.token_expiration_datetime
+
+            # The session should not already be expired
+            assert(session_expiry >= now)
+            if (session_expiry - now <
+                    datetime.timedelta(seconds = constants.seconds_before_expiration_to_refresh_token)):
+                # The session will expire soon. However, because the client is still connected to the server
+                # we grant them an extension on their session.
+                token_session_obj.token_expiration_datetime = user_obj.get_token_expiration_datetime()
+                logging.warn('**** Session expiration date is being reset to %s' % token_session_obj.token_expiration_datetime)
+                token_session_obj.put()
+
+                if not user_obj.registered_user_bool:
+                    # only update the token_expiration_datetime on the userobject in the case that this is a non-registered
+                    # user. For registered users, this value is irrelevant and should be set to None, as the
+                    # user object will never expire (however, note that tokens for registered users will still
+                    # have expiry dates).
+                    user_obj.txn_update_expiration_datetime(token_session_obj.token_expiration_datetime)
+
 
             # Dispatch the request.
             webapp2.RequestHandler.dispatch(self)
 
         else:
-            # send unauthorized 401 code as an error response.
+            # This token is expired or invalid. User access denied.
+            # Send unauthorized 401 code as an error response.
+            logging.info('Invalid or expired token. Request denied. Header: %s' % authorization_header)
             webapp2.RequestHandler.error(self, 401)
 
 
