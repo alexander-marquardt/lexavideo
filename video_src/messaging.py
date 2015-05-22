@@ -10,6 +10,7 @@ from video_src import chat_room_module
 from video_src import http_helpers
 from video_src import video_setup
 
+from request_handler_custom.base_handler import BaseHandler
 
 from error_handling import handle_exceptions
 
@@ -146,7 +147,7 @@ class MessageRoom(webapp2.RequestHandler):
                                                                http_status_code, self.request)
 
 
-class MessageClient(webapp2.RequestHandler):
+class MessageClient(BaseHandler):
 
 
 
@@ -159,6 +160,7 @@ class MessageClient(webapp2.RequestHandler):
         to_client_id = message_obj['toClientId']
         message_type = message_obj['messageType']
         message_payload = message_obj['messagePayload']
+        message_obj['fromUsernameAsWritten'] = self.session['username_as_written']
 
         if message_type == 'videoExchangeStatusMsg':
 
@@ -169,13 +171,6 @@ class MessageClient(webapp2.RequestHandler):
 
                 video_setup.VideoSetup.txn_add_user_id_to_video_elements_enabled_client_ids(from_client_id, to_client_id )
                 send_video_call_settings_to_participants(from_client_id, to_client_id)
-
-                # We intentionally get the username from the database, as opposed to letting the user pass it in
-                # since the latter would allow the user to potentially manipulate the name sent to the remote client.
-                from_user_id = int(from_client_id.split('|')[0])
-                from_user_obj = ndb.Key('UserModel', from_user_id).get()
-                message_obj['fromUsernameAsWritten'] = from_user_obj.username_as_written
-
             else:
                 assert message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'hangupVideoExchange' or \
                     message_payload['videoElementsEnabledAndCameraAccessRequested'] == 'denyVideoExchange'

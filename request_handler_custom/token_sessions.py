@@ -40,6 +40,7 @@ def generate_jwt_token(user_obj):
 
     token_payload = {
         'userId': user_obj.key.id(),
+        'usernameAsWritten': user_obj.username_as_written,
         'exp': int(time.mktime((token_session_obj.token_expiry).timetuple())),
         'jti': token_session_obj.key.id(), # jti (JWT ID) is a unique identifier for the token
     }

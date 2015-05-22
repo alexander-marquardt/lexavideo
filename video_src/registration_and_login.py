@@ -98,7 +98,6 @@ class LoginUser(webapp2.RequestHandler):
             # self.redirect(self.uri_for('main'))
             jwt_token = token_sessions.generate_jwt_token(user_obj)
             response_dict = {
-                'userId': user_id,
                 'token': jwt_token,
             }
             http_helpers.set_http_ok_json_response(self.response, response_dict)

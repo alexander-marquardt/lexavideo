@@ -20,28 +20,25 @@ angular.module('lxAuthentication.services', [])
         }
 
         return {
-            lxGetUserIdInLocalStorage: function() {
+            lxGetUserInfoInLocalStorage: function() {
                 // Reads the userId from localStorage and returns the value found or null if not found.
 
-                var userId;
+                var userId,
+                    usernameAsWritten;
+
                 if ($window.localStorage.token) {
                     var tokenPayload = jwtHelper.decodeToken($window.localStorage.token);
                     userId = tokenPayload.userId;
+                    usernameAsWritten = tokenPayload.usernameAsWritten;
                 }
                 else {
                     userId = null;
+                    usernameAsWritten = null;
                 }
-                return userId;
-            },
-
-            lxGetUsernameAsWrittenInLocalStorage: function() {
-
-                if ($window.localStorage.usernameAsWritten) {
-                    return $window.localStorage.usernameAsWritten;
-                }
-                else {
-                    return null;
-                }
+                return {
+                    userId: userId,
+                    usernameAsWritten: usernameAsWritten
+                };
             },
 
             lxGetAndStoreClientId: function(scope, userId) {

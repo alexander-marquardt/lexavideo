@@ -46,7 +46,8 @@ angular.module('lxHttp.services', ['angular-jwt'])
     function (
         $log,
         $http,
-        $window
+        $window,
+        jwtHelper
         ) {
 
 
@@ -69,9 +70,10 @@ angular.module('lxHttp.services', ['angular-jwt'])
                 httpPromise.success(function (data/*, status, headers, config */) {
                         $log.info('User ' + usernameAsWritten + ' successfully created with userId: ' + data.userId);
                         $window.localStorage.token = data.token;
-                        $window.localStorage.usernameAsWritten = usernameAsWritten;
-                        scope.lxMainCtrlDataObj.userId = data.userId;
-                        scope.lxMainCtrlDataObj.usernameAsWritten = usernameAsWritten;
+
+                        var tokenPayload = jwtHelper.decodeToken(data.token);
+                        scope.lxMainCtrlDataObj.userId = tokenPayload.userId;
+                        scope.lxMainCtrlDataObj.usernameAsWritten = tokenPayload.usernameAsWritten;
                     })
                     .error(function (/*data, status, headers, config*/) {
                         // Erase the token if the user fails to log in

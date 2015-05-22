@@ -64,7 +64,9 @@ class BaseHandler(webapp2.RequestHandler):
     def dispatch(self):
 
         authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
-        self.session['user_id'] = token_sessions.get_jwt_token_payload(authorization_header)['userId']
+        token_payload = token_sessions.get_jwt_token_payload(authorization_header)
+        self.session['user_id'] = token_payload['userId']
+        self.session['username_as_written'] = token_payload['usernameAsWritten']
         logging.info('***** Session data: %s' % self.session)
 
         if self.session:
