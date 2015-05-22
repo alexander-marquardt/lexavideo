@@ -342,20 +342,26 @@ angular.module('lxChannel.services', [])
             stopSendingHeartbeat();
 
             lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainCtrlDataObj.clientId);
-            var timeoutFn = function() {
-                sendHeartbeatTimerId = $timeout(function() {
-                    lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainCtrlDataObj.clientId);
-                    timeoutFn();
+            var timeoutFn = function () {
+                sendHeartbeatTimerId = $timeout(function () {
 
-                    // reInitializeChannelTimerId will be cancelled if a 'heartBeatMsg' is received on the chanel
-                    // within msToWaitForHeartbeatResponse milliseconds.
-                    // This means that reInitializeChannelIfResponseNotReceived will
-                    // only be executed if the channel is down, or if the channel takes an unexpectedly long
-                    // time to reply to the heartbeat that this client has sent to the server.
-                    reInitializeChannelTimerId = $timeout(function() {
-                        reInitializeChannelIfResponseNotReceived(scope);
-                    }, lxJavascriptConstants.msToWaitForHeartbeatResponse);
+                    // If there is no clientId assigned, then don't continue pinging the server.
+                    if (scope.lxMainCtrlDataObj.clientId) {
+                        lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainCtrlDataObj.clientId);
+                        timeoutFn();
 
+                        // reInitializeChannelTimerId will be cancelled if a 'heartBeatMsg' is received on the chanel
+                        // within msToWaitForHeartbeatResponse milliseconds.
+                        // This means that reInitializeChannelIfResponseNotReceived will
+                        // only be executed if the channel is down, or if the channel takes an unexpectedly long
+                        // time to reply to the heartbeat that this client has sent to the server.
+                        reInitializeChannelTimerId = $timeout(function () {
+                            reInitializeChannelIfResponseNotReceived(scope);
+                        }, lxJavascriptConstants.msToWaitForHeartbeatResponse);
+                    }
+                    else {
+                        $log.error('Cannot send heartbeat if clientId is not set!');
+                    }
                 }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
             };
             timeoutFn();
@@ -364,9 +370,14 @@ angular.module('lxChannel.services', [])
         // If we have not received a response on the channel within a few seconds of sending the heartbeat to the
         // server, then we assume that the channel has died, and that a new one is needed.
         var reInitializeChannelIfResponseNotReceived = function(scope) {
-            $log.error('Heartbeat not received within ' + lxJavascriptConstants.msToWaitForHeartbeatResponse +
-                ' ms. Re-initializing channel. clientId: ' + scope.lxMainCtrlDataObj.clientId);
-            self.initializeChannel(scope);
+            if (scope.lxMainCtrlDataObj.clientId) {
+                $log.error('Heartbeat not received within ' + lxJavascriptConstants.msToWaitForHeartbeatResponse +
+                    ' ms. Re-initializing channel. clientId: ' + scope.lxMainCtrlDataObj.clientId);
+                self.initializeChannel(scope);
+            }
+            else {
+                $log.error('Unable to initialize channel if clientId is not set!')
+            }
         };
 
 
