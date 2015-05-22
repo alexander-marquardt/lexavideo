@@ -126,6 +126,10 @@ handlers:
 # End of favicons
 ##############################
 
+- url: /_lx/admin/.*
+  script: main.app
+  login: admin
+
 - url: /.*
   script: main.app
   #secure: always

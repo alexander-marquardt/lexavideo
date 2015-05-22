@@ -1,1 +1,21 @@
 queue:
+
+- name: default
+  rate: 200/s
+
+- name: fast-queue
+  rate: 200/s
+
+- name: mail-queue
+  rate: 100000/d
+  bucket_size: 10
+
+- name: background-processing-queue
+  rate: 100/s
+  bucket_size: 100
+
+- name: cleanup-sessions-queue
+  rate: 100000/d
+
+- name: backup-entities-queue
+  rate: 200/s

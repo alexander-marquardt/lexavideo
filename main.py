@@ -15,11 +15,11 @@ import webapp2
 import vidsetup
 
 from video_src import connectivity
-from video_src import error_reporting_from_client
 from video_src import chat_room_module
+from video_src import cron_jobs
+from video_src import error_reporting_from_client
 from video_src import registration_and_login
 from video_src import messaging
-from video_src import users
 from video_src import views
 
 # Note: there is an inconsistency in using trailing slashes due to the fact that the google api uses trailing
@@ -49,6 +49,10 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/channel/manual_disconnect/', connectivity.ManuallyDisconnectClient),
     webapp2.Route(r'/_ah/channel/disconnected/',  connectivity.AutoDisconnectClient),
     webapp2.Route(r'/_ah/channel/connected/',  connectivity.ChannelConnected),
+
+    webapp2.Route(r'/_lx/admin/cleanup_expired_sessions/', cron_jobs.CleanupExpiredSessions),
+    webapp2.Route(r'/_lx/admin/cleanup_expired_users/', cron_jobs.CleanupExpiredUsers),
+    webapp2.Route(r'/_lx/admin/cleanup_expired_clients/', cron_jobs.CleanupExpiredClients),
 
     webapp2.Route(r'/_lx/log_error', error_reporting_from_client.LogClientError),
 
