@@ -103,7 +103,7 @@ def send_video_call_settings_to_participants(from_client_id, to_client_id):
 
 
 
-class MessageRoom(webapp2.RequestHandler):
+class MessageRoom(BaseHandler):
 
     # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
     def handle_message_room(self, chat_room_obj, from_client_id, message_obj):
@@ -127,6 +127,7 @@ class MessageRoom(webapp2.RequestHandler):
 
         room_id = message_obj['chatRoomId']
         from_client_id = message_obj['fromClientId']
+        message_obj['fromUsernameAsWritten'] = self.session['username_as_written']
 
         try:
             chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
