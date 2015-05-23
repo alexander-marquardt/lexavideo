@@ -101,12 +101,17 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
                         # We expect all POSTs to contain a json object that contains a clientId
                         post_body_json = json.loads(self.request.body)
                         self.session.post_body_json = post_body_json
-                        client_id = post_body_json['clientId']
 
-                        assert self.session.user_id == int(client_id.split('|')[0])
+                        client_id = None
+                        if 'clientId' in post_body_json:
+                            client_id = post_body_json['clientId']
 
-                        client_obj = ndb.Key('ClientModel', client_id).get()
-                        self.session.client_obj = client_obj
+                            assert self.session.user_id == int(client_id.split('|')[0])
+
+                            client_obj = ndb.Key('ClientModel', client_id).get()
+                            self.session.client_obj = client_obj
+                        else:
+                            client_obj = None
 
                         if not client_obj:
                             error_key = 'invalidClientId'
@@ -157,7 +162,7 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
             # This token is expired or invalid. User access denied.
             # Send unauthorized 401 code as an error response.
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = error_message)
-            http_helpers.set_http_json_response(self, {error_key: error_message}, 401)
+            http_helpers.set_http_json_response(self.response, {error_key: error_message}, 401)
 
 
 
