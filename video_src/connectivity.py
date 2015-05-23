@@ -108,19 +108,23 @@ class AddClientToRoom(BaseHandlerClientVerified):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class RemoveClientFromRoom(BaseHandlerClientVerified):
 
+class RemoveClientFromRoom(BaseHandlerUserVerified):
+    # Note: we inherit from BaseHandlerUserVerified as opposed to BaseHandlerClientVerified because
+    # we are not totally sure that the client being removed is actually logged in.
     @handle_exceptions
     def post(self):
 
-        client_obj = self.session.client_obj
-        client_id = client_obj.key.id()
+        post_body_json = json.loads(self.request.body)
+        client_id = post_body_json['clientId']
         room_id = self.session.post_body_json['chatRoomId']
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
         chat_room_obj = chat_room_obj.txn_remove_client_from_room(client_id)
 
-        client_obj.txn_remove_room_from_client_status_tracker(chat_room_obj.key)
+        client_obj = clients.ClientModel.get_by_id(client_id)
+        if client_obj:
+            client_obj.txn_remove_room_from_client_status_tracker(chat_room_obj.key)
 
         messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
                                                  recompute_members_from_scratch=True)
