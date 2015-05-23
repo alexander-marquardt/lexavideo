@@ -23,7 +23,7 @@ from video_src import http_helpers
 from video_src import users
 
 from request_handler_custom import token_sessions
-from request_handler_custom.base_handler import BaseHandlerUserVerified
+from request_handler_custom.base_handler import BaseHandlerClientVerified
 from request_handler_custom.base_handler import user_required
 
 jinja_environment = jinja2.Environment(
@@ -112,12 +112,12 @@ class LoginUser(webapp2.RequestHandler):
             logging.error(err_msg)
             http_helpers.set_http_error_json_response(self.response, err_msg, http_status_code=403)
 
-class LogoutHandler(BaseHandlerUserVerified):
+class LogoutHandler(BaseHandlerClientVerified):
     def get(self):
         self.auth.unset_session()
         self.redirect(self.uri_for('home'))
 
-class AuthenticatedHandler(BaseHandlerUserVerified):
+class AuthenticatedHandler(BaseHandlerClientVerified):
     @user_required
     def get(self):
         self.render_template('authenticated.html')

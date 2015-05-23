@@ -36,6 +36,9 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
 
     def __init__(self, request, response):
         self.session = EmptyObject()
+
+        # Override this is sub-class if we wish to verify the client information
+        self.verify_client = False
         webapp2.RequestHandler.__init__(self, request, response)
 
     @webapp2.cached_property
@@ -69,14 +72,11 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
 
     # This inserts the session into the request handler ("self"). Note, we use our own custom token-based
     # sessions instead of webapp2 sessions. In order to access the session, classes must inherit from
-    # this class (BaseHandlerUserVerified) instead of the standard webapp2.RequestHandler.
+    # this class (BaseHandlerClientVerified) instead of the standard webapp2.RequestHandler.
     def dispatch(self):
 
-        authorization_header = None
-        token_payload = None
         error_key = 'unknownError'
         error_message = 'Unknown Error'
-        
 
         try:
             authorization_header = self.request.headers.environ.get('HTTP_AUTHORIZATION')
@@ -95,21 +95,23 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
                 self.session.username_as_written = token_payload['usernameAsWritten']
                 logging.info('***** Session data: %s' % self.session)
 
-                if self.request.method == 'POST':
-                    # We expect all POSTs to contain a json object that contains a clientId
-                    post_body_json = json.loads(self.request.body)
-                    self.session.post_body_json = post_body_json
-                    client_id = post_body_json['clientId']
+                if self.verify_client:
+                    logging.info('*** Verifying client information')
+                    if self.request.method == 'POST':
+                        # We expect all POSTs to contain a json object that contains a clientId
+                        post_body_json = json.loads(self.request.body)
+                        self.session.post_body_json = post_body_json
+                        client_id = post_body_json['clientId']
 
-                    assert self.session.user_id == int(client_id.split('|')[0])
+                        assert self.session.user_id == int(client_id.split('|')[0])
 
-                    client_obj = ndb.Key('ClientModel', client_id).get()
-                    self.session.client_obj = client_obj
+                        client_obj = ndb.Key('ClientModel', client_id).get()
+                        self.session.client_obj = client_obj
 
-                    if not client_obj:
-                        error_key = 'invalidClientId'
-                        error_message = 'Client object not found for clientId %s. Request denied. ' % client_id
-                        raise Exception(error_message)
+                        if not client_obj:
+                            error_key = 'invalidClientId'
+                            error_message = 'Client object not found for clientId %s. Request denied. ' % client_id
+                            raise Exception(error_message)
 
 
                 user_id = self.session.user_id
@@ -157,4 +159,11 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = error_message)
             http_helpers.set_http_json_response(self, {error_key: error_message}, 401)
 
+
+
+class BaseHandlerClientVerified(BaseHandlerUserVerified):
+
+    def __init__(self, request, response):
+        BaseHandlerUserVerified.__init__(self, request, response)
+        self.verify_client = True
 

@@ -299,7 +299,7 @@ class CheckIfChatRoomExists(webapp2.RequestHandler):
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
             http_helpers.set_http_error_json_response(self.response, err_status)
 
-class CreateNewRoomIfDoesNotExist(webapp2.RequestHandler):
+class CreateNewRoomIfDoesNotExist(BaseHandlerUserVerified):
     @handle_exceptions
     def post(self):
         try:
@@ -328,8 +328,7 @@ class CreateNewRoomIfDoesNotExist(webapp2.RequestHandler):
             response_dict = {}
             user_id = int(room_dict['user_id'])
 
-            # TODO add this check back
-            #assert self.session.user_id == user_id
+            assert self.session.user_id == user_id
 
             # If this is a new room, then the room_creator_user_key will be stored in the room
             # object as the "creator" of the room

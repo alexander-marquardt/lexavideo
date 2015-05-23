@@ -15,11 +15,11 @@ from video_src import video_setup
 
 from error_handling import handle_exceptions
 
-from request_handler_custom.base_handler import  BaseHandlerUserVerified
+from request_handler_custom.base_handler import  BaseHandlerClientVerified, BaseHandlerUserVerified
 
 
 
-class AddClientToRoom(BaseHandlerUserVerified):
+class AddClientToRoom(BaseHandlerClientVerified):
     """Handles when a user explicitly enters into a room by going to a URL for a given room."""
     
     @staticmethod
@@ -108,7 +108,7 @@ class AddClientToRoom(BaseHandlerUserVerified):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class RemoveClientFromRoom(BaseHandlerUserVerified):
+class RemoveClientFromRoom(BaseHandlerClientVerified):
 
     @handle_exceptions
     def post(self):
@@ -128,7 +128,7 @@ class RemoveClientFromRoom(BaseHandlerUserVerified):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class SynClientHeartbeat(BaseHandlerUserVerified):
+class SynClientHeartbeat(BaseHandlerClientVerified):
     """Receives a "synchronization heartbeat" from the client, which we respond to on the channel."""
 
     @handle_exceptions
@@ -146,7 +146,7 @@ class SynClientHeartbeat(BaseHandlerUserVerified):
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
-class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandlerUserVerified):
+class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandlerClientVerified):
     """
     Called by the client in the following cases:
     1) Acknowledgement to the 'synAckHeartBeat' response that we sent to the client over the channel. In this
@@ -213,7 +213,7 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandlerUserVerified):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class CreateClientOnServer(webapp2.RequestHandler):
+class CreateClientOnServer(BaseHandlerUserVerified):
 
     @handle_exceptions
     def post(self):
@@ -227,7 +227,7 @@ class CreateClientOnServer(webapp2.RequestHandler):
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
-class ClientChannelOpened(BaseHandlerUserVerified):
+class ClientChannelOpened(BaseHandlerClientVerified):
 
     @classmethod
     def make_sure_client_is_logged_in_correctly(cls, client_obj):
@@ -259,7 +259,7 @@ class ClientChannelOpened(BaseHandlerUserVerified):
         ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_obj)
 
 
-class RequestChannelToken(BaseHandlerUserVerified):
+class RequestChannelToken(BaseHandlerClientVerified):
 
     @handle_exceptions
     def post(self):
