@@ -9,7 +9,7 @@ from video_src import chat_room_module
 from video_src import http_helpers
 from video_src import video_setup
 
-from request_handler_custom.base_handler import BaseHandlerClientVerified
+from request_handler_custom.base_handler import BaseHandlerClientVerified, BaseHandlerUserVerified
 
 from error_handling import handle_exceptions
 
@@ -102,7 +102,7 @@ def send_video_call_settings_to_participants(from_client_id, to_client_id):
 
 
 
-class MessageRoom(BaseHandlerClientVerified):
+class MessageRoom(BaseHandlerUserVerified):
 
     # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
     def handle_message_room(self, chat_room_obj, from_client_id, message_obj):
@@ -121,11 +121,10 @@ class MessageRoom(BaseHandlerClientVerified):
 
     @handle_exceptions
     def post(self):
-        message_obj = self.session.post_body_json
-
-        room_id = message_obj['chatRoomId']
+        message_obj = json.loads(self.request.body)
         from_client_id = message_obj['fromClientId']
-        assert from_client_id == self.session.client_obj.key.id()
+        assert(self.session.user_id == int(from_client_id.split('|')[0]))
+        room_id = message_obj['chatRoomId']
         message_obj['fromUsernameAsWritten'] = self.session.username_as_written
 
         try:
@@ -147,9 +146,7 @@ class MessageRoom(BaseHandlerClientVerified):
                                                                http_status_code, self.request)
 
 
-class MessageClient(BaseHandlerClientVerified):
-
-
+class MessageClient(BaseHandlerUserVerified):
 
     # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
     def handle_message_client(self, from_client_id, message_obj):
@@ -187,8 +184,9 @@ class MessageClient(BaseHandlerClientVerified):
 
     @handle_exceptions
     def post(self):
-        message_obj = self.session.post_body_json
+        message_obj = json.loads(self.request.body)
         from_client_id = message_obj['fromClientId']
+        assert(self.session.user_id == int(from_client_id.split('|')[0]))
 
         try:
             self.handle_message_client(from_client_id, message_obj)
