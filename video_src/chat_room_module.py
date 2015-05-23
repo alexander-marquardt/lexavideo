@@ -327,7 +327,7 @@ class CreateNewRoomIfDoesNotExist(BaseHandler):
 
             response_dict = {}
             user_id = int(room_dict['user_id'])
-            assert self.session['user_id'] == user_id
+            assert self.session.user_id == user_id
 
             # If this is a new room, then the room_creator_user_key will be stored in the room
             # object as the "creator" of the room

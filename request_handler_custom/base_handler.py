@@ -24,10 +24,13 @@ def user_required(handler):
 
     return check_login
 
+class EmptyObject(object):
+    pass
+
 class BaseHandler(webapp2.RequestHandler):
 
     def __init__(self, request, response):
-        self.session = {}
+        self.session = EmptyObject()
         webapp2.RequestHandler.__init__(self, request, response)
 
     @webapp2.cached_property
@@ -46,7 +49,7 @@ class BaseHandler(webapp2.RequestHandler):
         :returns
           The instance of the user model associated to the logged in user.
         """
-        user_id = self.session['user_id']
+        user_id = self.session.user_id
         user_obj = self.user_model.get_by_id(user_id)
         return user_obj
 
@@ -76,11 +79,11 @@ class BaseHandler(webapp2.RequestHandler):
 
         if token_payload and token_session_obj:
             # This session is still valid. Continue processing.
-            self.session['user_id'] = token_payload['userId']
-            self.session['username_as_written'] = token_payload['usernameAsWritten']
+            self.session.user_id = token_payload['userId']
+            self.session.username_as_written = token_payload['usernameAsWritten']
             logging.info('***** Session data: %s' % self.session)
 
-            user_id = self.session['user_id']
+            user_id = self.session.user_id
             user_obj = users.UserModel.get_by_id(user_id)
             assert(user_obj)
 

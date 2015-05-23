@@ -127,7 +127,7 @@ class MessageRoom(BaseHandler):
 
         room_id = message_obj['chatRoomId']
         from_client_id = message_obj['fromClientId']
-        message_obj['fromUsernameAsWritten'] = self.session['username_as_written']
+        message_obj['fromUsernameAsWritten'] = self.session.username_as_written
 
         try:
             chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
@@ -161,7 +161,7 @@ class MessageClient(BaseHandler):
         to_client_id = message_obj['toClientId']
         message_type = message_obj['messageType']
         message_payload = message_obj['messagePayload']
-        message_obj['fromUsernameAsWritten'] = self.session['username_as_written']
+        message_obj['fromUsernameAsWritten'] = self.session.username_as_written
 
         if message_type == 'videoExchangeStatusMsg':
 

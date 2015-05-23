@@ -106,7 +106,7 @@ class AddClientToRoom(BaseHandler):
     def post(self):
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
-        assert self.session['user_id'] == int(client_id.split('|')[0])
+        assert self.session.user_id == int(client_id.split('|')[0])
         room_id = data_object['chatRoomId']
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
@@ -121,7 +121,7 @@ class RemoveClientFromRoom(BaseHandler):
     def post(self):
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
-        assert self.session['user_id'] == int(client_id.split('|')[0])
+        assert self.session.user_id == int(client_id.split('|')[0])
         room_id = data_object['chatRoomId']
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
@@ -143,7 +143,7 @@ class SynClientHeartbeat(BaseHandler):
     def post(self):
         message_obj = json.loads(self.request.body)
         client_id = message_obj['clientId']
-        assert self.session['user_id'] == int(client_id.split('|')[0])
+        assert self.session.user_id == int(client_id.split('|')[0])
 
         # Just send a short simple response so that the client can verify if the channel is up.
         response_message_obj = {
@@ -171,7 +171,7 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandler):
     def post(self):
         message_obj = json.loads(self.request.body)
         client_id = message_obj['clientId']
-        assert self.session['user_id'] == int(client_id.split('|')[0])
+        assert self.session.user_id == int(client_id.split('|')[0])
         message_type = message_obj['messageType']
         presence_state_name = message_obj['messagePayload']['presenceStateName']
         currently_open_chat_room_id = message_obj['messagePayload']['currentlyOpenChatRoomId']
@@ -229,7 +229,7 @@ class CreateClientOnServer(BaseHandler):
     def post(self):
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
-        assert self.session['user_id'] == int(client_id.split('|')[0])
+        assert self.session.user_id == int(client_id.split('|')[0])
         logging.debug('CreateClientOnServer called for client_id: %s' % client_id)
 
         client_obj = clients.ClientModel.get_by_id(client_id)
@@ -276,7 +276,7 @@ class ClientChannelOpened(BaseHandler):
 
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
-        assert self.session['user_id'] == int(client_id.split('|')[0])
+        assert self.session.user_id == int(client_id.split('|')[0])
         logging.debug('ClientChannelOpened called for client_id: %s' % client_id)
         ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_id)
 

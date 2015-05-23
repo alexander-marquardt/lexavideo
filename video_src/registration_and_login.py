@@ -98,7 +98,7 @@ class LoginUser(webapp2.RequestHandler):
             #     self.session.terminate()
             #
             # # Writing a value to the session causes a new session to be created.
-            # self.session['user_id'] = user_obj.key.id()
+            # self.session.user_id = user_obj.key.id()
             #
             # self.redirect(self.uri_for('main'))
             jwt_token = token_sessions.generate_jwt_token(user_obj.key.id(), user_obj.username_as_written, expiration_datetime)
