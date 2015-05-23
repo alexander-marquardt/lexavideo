@@ -10,9 +10,18 @@ angular.module('lxHttp.services', ['angular-jwt'])
             'responseError': function(response) {
 
                 if (response.status === 401) {
-                    delete $window.localStorage.token;
-                    delete $window.sessionStorage.clientId;
-                    $rootScope.$broadcast('lxUnauthorizedHttpRequest');
+
+                    if ('invalidClientId' in response.data) {
+                        delete $window.sessionStorage.clientId;
+                        $rootScope.$broadcast('invalidClientId');
+                    }
+
+                    if ('invalidUserId' in response.data) {
+                        delete $window.localStorage.token;
+                        delete $window.sessionStorage.clientId;
+                        $rootScope.$broadcast('invalidUserId');
+                    }
+
                 }
                 return $q.reject(response);
             }

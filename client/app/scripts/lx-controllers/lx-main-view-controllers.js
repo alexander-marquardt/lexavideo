@@ -301,23 +301,13 @@ angular.module('LxMainView.controllers', [])
                     if (userId) {
 
                         if (!$scope.lxMainCtrlDataObj.clientId) {
-
-                            // the following will update $scope.lxMainCtrlDataObj.clientId
-                            var createClientPromise = lxAuthenticationHelper.lxGetAndStoreClientId($scope, userId);
-                            createClientPromise.then(
-                                function () {
-                                    $log.info('Calling lxChatRoomMembersService.handleChatRoomNameFromUrl');
-                                    lxJs.assert($scope.lxMainCtrlDataObj.clientId,
-                                        'clientId should be initialized if createClientPromise was successful');
-                                },
-                                function () {
-                                    $log.error('Problem with createClientPromise');
-                                }
-                            );
+                            lxAuthenticationHelper.lxCallGetAndStoreClientId($scope, userId);
                         }
 
-                        // Kill this watcher once we have handled getting into the room
-                        watchUserId();
+                        // Kill this watcher once we have gotten the clientId
+                        if ($scope.lxMainCtrlDataObj.clientId) {
+                            watchUserId();
+                        }
                     }
                 }
             );
@@ -344,12 +334,19 @@ angular.module('LxMainView.controllers', [])
         }
         watchClientIdThenInitializeChannel();
 
-        $scope.$on('lxUnauthorizedHttpRequest', function() {
-            $log.info('lxUnauthorizedHttpRequest received - user must log in again.');
+        $scope.$on('invalidUserId', function() {
+            $log.info('invalidUserId broadcast received - user must log in again.');
             $scope.lxMainCtrlDataObj.clientId = null;
             $scope.lxMainCtrlDataObj.userId = null;
             watchUserIdThenGetClientId();
             watchClientIdThenInitializeChannel();
+        });
+
+        $scope.$on('invalidClientId', function() {
+            if ($scope.lxMainCtrlDataObj.userId) {
+                lxAuthenticationHelper.lxCallGetAndStoreClientId($scope, $scope.lxMainCtrlDataObj.userId);
+                watchClientIdThenInitializeChannel();
+            }
         });
     });
 
