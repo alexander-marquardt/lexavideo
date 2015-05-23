@@ -62,7 +62,7 @@ class CheckIfUsernameAvailable(webapp2.RequestHandler):
             err_status = 'ErrorUsernameRequired'
             # log this error for further analysis
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
-            http_helpers.set_http_error_json_response(self.response, {'statusString': err_status})
+            http_helpers.set_http_error_json_response(self.response, err_status)
 
 
 class LoginUser(webapp2.RequestHandler):

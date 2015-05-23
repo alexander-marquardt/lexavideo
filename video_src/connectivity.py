@@ -5,12 +5,12 @@ import logging
 import webapp2
 
 from google.appengine.api import channel
+from google.appengine.ext import ndb
 
 from video_src import clients
 from video_src import http_helpers
 from video_src import messaging
 from video_src import chat_room_module
-from video_src import status_reporting
 from video_src import video_setup
 
 from error_handling import handle_exceptions
@@ -28,7 +28,6 @@ class AddClientToRoom(BaseHandler):
         logging.debug('add_client_to_room called for client_id %s and room %s' % (client_id, chat_room_obj))
         client_obj = clients.ClientModel.get_by_id(client_id)
 
-        assert client_obj
 
         if chat_room_obj.key in client_obj.list_of_open_chat_rooms_keys:
             client_was_previously_in_this_room = True
@@ -70,35 +69,29 @@ class AddClientToRoom(BaseHandler):
 
 
     @staticmethod
-    def add_client_to_all_previously_open_rooms(client_id):
+    def add_client_to_all_previously_open_rooms(client_obj):
         """
         Useful for cases where the channel has died, and we wish to ensure that the new client_id
         associated with a user is placed in all of the rooms that the user has open once the client re-joins the room.
         """
 
+        client_id = client_obj.key.id()
         logging.debug('add_client_to_all_users_rooms called for client_id %s' % client_id)
 
-        # Add this "client" in to all of the rooms that the client previously had open
-        client_obj = clients.ClientModel.get_by_id(client_id)
+        list_of_open_chat_rooms_keys = client_obj.list_of_open_chat_rooms_keys
 
-        if client_obj:
-            list_of_open_chat_rooms_keys = client_obj.list_of_open_chat_rooms_keys
+        # Loop over all rooms that the user currently has open.
+        for room_key in list_of_open_chat_rooms_keys:
+            room_id = room_key.id()
+            chat_room_obj = chat_room_module.ChatRoomModel.get_room_by_id(room_id)
+            room_members_client_ids = chat_room_obj.room_members_client_ids
 
-            # Loop over all rooms that the user currently has open.
-            for room_key in list_of_open_chat_rooms_keys:
-                room_id = room_key.id()
-                chat_room_obj = chat_room_module.ChatRoomModel.get_room_by_id(room_id)
-                room_members_client_ids = chat_room_obj.room_members_client_ids
+            # Only add the client to the room if the client is not already in the room (Note: this
+            # is also verified inside the transaction, but we don't want to tie-up the transaction
+            # with un-necessary calls)
+            if client_id not in room_members_client_ids:
+                AddClientToRoom.add_client_to_room(chat_room_obj, client_id)
 
-                # Only add the client to the room if the client is not already in the room (Note: this
-                # is also verified inside the transaction, but we don't want to tie-up the transaction
-                # with un-necessary calls)
-                if client_id not in room_members_client_ids:
-                    AddClientToRoom.add_client_to_room(chat_room_obj, client_id)
-
-        else:
-            status_string = 'client_id %s client object not found.' % client_id
-            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = status_string)
 
 
 
@@ -119,15 +112,14 @@ class RemoveClientFromRoom(BaseHandler):
 
     @handle_exceptions
     def post(self):
-        data_object = json.loads(self.request.body)
-        client_id = data_object['clientId']
-        assert self.session.user_id == int(client_id.split('|')[0])
-        room_id = data_object['chatRoomId']
+
+        client_obj = self.session.client_obj
+        client_id = client_obj.key.id()
+        room_id = self.session.post_body_json['chatRoomId']
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
         chat_room_obj = chat_room_obj.txn_remove_client_from_room(client_id)
 
-        client_obj = clients.ClientModel.get_by_id(client_id)
         client_obj.txn_remove_room_from_client_status_tracker(chat_room_obj.key)
 
         messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
@@ -141,9 +133,7 @@ class SynClientHeartbeat(BaseHandler):
 
     @handle_exceptions
     def post(self):
-        message_obj = json.loads(self.request.body)
-        client_id = message_obj['clientId']
-        assert self.session.user_id == int(client_id.split('|')[0])
+        client_id = self.session.client_obj.key.id()
 
         # Just send a short simple response so that the client can verify if the channel is up.
         response_message_obj = {
@@ -169,12 +159,13 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandler):
 
     @handle_exceptions
     def post(self):
-        message_obj = json.loads(self.request.body)
-        client_id = message_obj['clientId']
-        assert self.session.user_id == int(client_id.split('|')[0])
+        message_obj = self.session.post_body_json
         message_type = message_obj['messageType']
         presence_state_name = message_obj['messagePayload']['presenceStateName']
         currently_open_chat_room_id = message_obj['messagePayload']['currentlyOpenChatRoomId']
+
+        client_obj = self.session.client_obj
+        client_id = client_obj.key.id()
 
         # We only update the user presence in the case that this is posted to as an acknowledgement
         # of a heartbeat. If we were to update presence state in other cases, then the memcache and other timeouts
@@ -184,7 +175,6 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandler):
         # an ackHeartBeat message from the client, as the client sends ackHeartBeat as a response to a
         # synAckHeartBeat message that is sent on the channel)
         if message_type == 'ackHeartbeat':
-            client_obj = clients.ClientModel.get_by_id(client_id)
 
             # Get the previous presence state, so that we can detect if a user was offline, which would mean
             # that they need to be added back to all of the rooms that they previously had open.
@@ -202,7 +192,7 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandler):
                 logging.info('Client %s had state %s, and is now getting added back to all previously '
                              'open rooms. New client state is %s' %
                              (client_id, previous_presence_state, presence_state_name))
-                AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
+                AddClientToRoom.add_client_to_all_previously_open_rooms(client_obj)
 
         # Chat room that the client is currently looking at needs an up-to-date view of
         # clients and their activity. Other rooms do not need to be updated as often since the client is not looking
@@ -223,35 +213,26 @@ class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandler):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class CreateClientOnServer(BaseHandler):
+class CreateClientOnServer(webapp2.RequestHandler):
 
     @handle_exceptions
     def post(self):
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
-        assert self.session.user_id == int(client_id.split('|')[0])
         logging.debug('CreateClientOnServer called for client_id: %s' % client_id)
 
         client_obj = clients.ClientModel.get_by_id(client_id)
         if not client_obj:
-            client_obj = clients.ClientModel.txn_create_new_client_object(client_id)
+            clients.ClientModel.txn_create_new_client_object(client_id)
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
 class ClientChannelOpened(BaseHandler):
 
     @classmethod
-    def make_sure_client_is_logged_in_correctly(cls, client_id):
+    def make_sure_client_is_logged_in_correctly(cls, client_obj):
 
-        logging.debug('Ensuring that client %s is logged in correctly' % client_id)
-        # check if a client object associated with this client_id already exists, and if it does, then
-        # don't create a new one. We need to access the old client object because it contains the list
-        # of rooms that the client currently has open.
-        client_obj = clients.ClientModel.get_by_id(client_id)
-
-        # This function should never be called before CreateClientOnServer, and therefore the client_obj should
-        # always exist
-        assert client_obj
+        logging.debug('Ensuring that client %s is logged in correctly' % client_obj.key.id())
 
         # We need to set the presence of the client so that it is not 'OFFLINE', as this would cause the
         # client to be removed from the rooms that we are going to put the client back into. However,
@@ -264,7 +245,7 @@ class ClientChannelOpened(BaseHandler):
         # Make sure that this client is a member of all of the rooms that he previously had open. This should
         # only needed for the case that the channel has died and started again (Channel can die
         # for many reasons, one of them being a browser refresh)
-        AddClientToRoom.add_client_to_all_previously_open_rooms(client_id)
+        AddClientToRoom.add_client_to_all_previously_open_rooms(client_obj)
 
 
     # This is post called *manually* by the client-side javascript after it confirms that the channel is connected.
@@ -273,12 +254,9 @@ class ClientChannelOpened(BaseHandler):
     # to be correctly called every time the channel is opened.
     @handle_exceptions
     def post(self):
-
-        data_object = json.loads(self.request.body)
-        client_id = data_object['clientId']
-        assert self.session.user_id == int(client_id.split('|')[0])
-        logging.debug('ClientChannelOpened called for client_id: %s' % client_id)
-        ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_id)
+        client_obj = self.session.client_obj
+        logging.debug('ClientChannelOpened called for client: %s' % client_obj.key.id())
+        ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_obj)
 
 
 class RequestChannelToken(BaseHandler):
@@ -286,19 +264,14 @@ class RequestChannelToken(BaseHandler):
     @handle_exceptions
     def post(self):
         token_timeout = 24 * 60 - 1  # minutes
-        #token_timeout = 1  # minutes
-        data_object = json.loads(self.request.body)
-        client_id = data_object['clientId']
+        client_id = self.session.client_obj.key.id()
         channel_token = channel.create_channel(str(client_id), token_timeout)
 
         logging.debug('New channel token created for client_id: %s' % client_id)
 
-
-
         response_dict = {
             'channelToken': channel_token,
         }
-
 
         # Finally, send the http response.
         http_helpers.set_http_ok_json_response(self.response, response_dict)
@@ -315,7 +288,8 @@ class ChannelConnected(webapp2.RequestHandler):
 
         client_id = self.request.get('from')
         logging.info('ChannelConnected called for client_id: %s' % client_id)
-        ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_id)
+        client_obj = ndb.Key('ClientModel', client_id).get()
+        ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_obj)
 
 
 """

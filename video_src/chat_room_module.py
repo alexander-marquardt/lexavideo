@@ -297,9 +297,9 @@ class CheckIfChatRoomExists(webapp2.RequestHandler):
             err_status = 'ErrorChatRoomNameRequired'
             # log this error for further analysis
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = err_status)
-            http_helpers.set_http_error_json_response(self.response, {'statusString': err_status})
+            http_helpers.set_http_error_json_response(self.response, err_status)
 
-class CreateNewRoomIfDoesNotExist(BaseHandler):
+class CreateNewRoomIfDoesNotExist(webapp2.RequestHandler):
     @handle_exceptions
     def post(self):
         try:
@@ -327,7 +327,9 @@ class CreateNewRoomIfDoesNotExist(BaseHandler):
 
             response_dict = {}
             user_id = int(room_dict['user_id'])
-            assert self.session.user_id == user_id
+
+            # TODO add this check back
+            #assert self.session.user_id == user_id
 
             # If this is a new room, then the room_creator_user_key will be stored in the room
             # object as the "creator" of the room

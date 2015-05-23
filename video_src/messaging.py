@@ -4,7 +4,6 @@ import logging
 import webapp2
 
 from google.appengine.api import channel
-from google.appengine.ext import ndb
 
 from video_src import chat_room_module
 from video_src import http_helpers
@@ -122,11 +121,11 @@ class MessageRoom(BaseHandler):
 
     @handle_exceptions
     def post(self):
-        message = self.request.body
-        message_obj = json.loads(message)
+        message_obj = self.session.post_body_json
 
         room_id = message_obj['chatRoomId']
         from_client_id = message_obj['fromClientId']
+        assert from_client_id == self.session.client_obj.key.id()
         message_obj['fromUsernameAsWritten'] = self.session.username_as_written
 
         try:
@@ -188,8 +187,7 @@ class MessageClient(BaseHandler):
 
     @handle_exceptions
     def post(self):
-        message = self.request.body
-        message_obj = json.loads(message)
+        message_obj = self.session.post_body_json
         from_client_id = message_obj['fromClientId']
 
         try:

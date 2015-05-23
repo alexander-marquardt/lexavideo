@@ -2,16 +2,10 @@
 
 import jinja2
 import json
-import logging
 import vidsetup
 import webapp2
 
-from request_handler_custom.base_handler import BaseHandler
-
 from video_src import constants
-from video_src import registration_and_login
-from video_src import users
-
 from video_src.error_handling import handle_exceptions
 
 
