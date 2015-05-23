@@ -9,7 +9,7 @@ from video_src import chat_room_module
 from video_src import http_helpers
 from video_src import video_setup
 
-from request_handler_custom.base_handler import BaseHandler
+from request_handler_custom.base_handler import BaseHandlerUserVerified
 
 from error_handling import handle_exceptions
 
@@ -102,7 +102,7 @@ def send_video_call_settings_to_participants(from_client_id, to_client_id):
 
 
 
-class MessageRoom(BaseHandler):
+class MessageRoom(BaseHandlerUserVerified):
 
     # Do not place @handle_exceptions here -- exceptions should be dealt with by the functions that call this function
     def handle_message_room(self, chat_room_obj, from_client_id, message_obj):
@@ -147,7 +147,7 @@ class MessageRoom(BaseHandler):
                                                                http_status_code, self.request)
 
 
-class MessageClient(BaseHandler):
+class MessageClient(BaseHandlerUserVerified):
 
 
 

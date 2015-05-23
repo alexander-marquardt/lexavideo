@@ -17,7 +17,7 @@ from video_src import utils
 
 from video_src.error_handling import handle_exceptions
 
-from request_handler_custom.base_handler import BaseHandler
+from request_handler_custom.base_handler import BaseHandlerUserVerified
 
 DICT_OF_CLIENT_OBJECTS_MEMCACHE_PREFIX = 'dict_of_client_objects-'
 DICT_OF_CLIENT_OBJECTS_MEMCACHE_EXPIRY_IN_SECONDS = 5

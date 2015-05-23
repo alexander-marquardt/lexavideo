@@ -32,7 +32,7 @@ def user_required(handler):
 class EmptyObject(object):
     pass
 
-class BaseHandler(webapp2.RequestHandler):
+class BaseHandlerUserVerified(webapp2.RequestHandler):
 
     def __init__(self, request, response):
         self.session = EmptyObject()
@@ -69,7 +69,7 @@ class BaseHandler(webapp2.RequestHandler):
 
     # This inserts the session into the request handler ("self"). Note, we use our own custom token-based
     # sessions instead of webapp2 sessions. In order to access the session, classes must inherit from
-    # this class (BaseHandler) instead of the standard webapp2.RequestHandler.
+    # this class (BaseHandlerUserVerified) instead of the standard webapp2.RequestHandler.
     def dispatch(self):
 
         authorization_header = None

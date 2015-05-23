@@ -15,11 +15,11 @@ from video_src import video_setup
 
 from error_handling import handle_exceptions
 
-from request_handler_custom.base_handler import  BaseHandler
+from request_handler_custom.base_handler import  BaseHandlerUserVerified
 
 
 
-class AddClientToRoom(BaseHandler):
+class AddClientToRoom(BaseHandlerUserVerified):
     """Handles when a user explicitly enters into a room by going to a URL for a given room."""
     
     @staticmethod
@@ -108,7 +108,7 @@ class AddClientToRoom(BaseHandler):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class RemoveClientFromRoom(BaseHandler):
+class RemoveClientFromRoom(BaseHandlerUserVerified):
 
     @handle_exceptions
     def post(self):
@@ -128,7 +128,7 @@ class RemoveClientFromRoom(BaseHandler):
         http_helpers.set_http_ok_json_response(self.response, {})
 
 
-class SynClientHeartbeat(BaseHandler):
+class SynClientHeartbeat(BaseHandlerUserVerified):
     """Receives a "synchronization heartbeat" from the client, which we respond to on the channel."""
 
     @handle_exceptions
@@ -146,7 +146,7 @@ class SynClientHeartbeat(BaseHandler):
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
-class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandler):
+class UpdateClientStatusAndRequestUpdatedRoomInfo(BaseHandlerUserVerified):
     """
     Called by the client in the following cases:
     1) Acknowledgement to the 'synAckHeartBeat' response that we sent to the client over the channel. In this
@@ -227,7 +227,7 @@ class CreateClientOnServer(webapp2.RequestHandler):
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
-class ClientChannelOpened(BaseHandler):
+class ClientChannelOpened(BaseHandlerUserVerified):
 
     @classmethod
     def make_sure_client_is_logged_in_correctly(cls, client_obj):
@@ -259,7 +259,7 @@ class ClientChannelOpened(BaseHandler):
         ClientChannelOpened.make_sure_client_is_logged_in_correctly(client_obj)
 
 
-class RequestChannelToken(BaseHandler):
+class RequestChannelToken(BaseHandlerUserVerified):
 
     @handle_exceptions
     def post(self):
