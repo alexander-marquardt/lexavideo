@@ -36,20 +36,16 @@ angular.module('LxChatRoom.controllers', [])
             });
         });
 
-        // We need to wait for the clientId to be set before we can enter the client into the room.
-        var watchClientIdBeforeHandleRoomNameFromUrl = $scope.$watch(
-            function() {
-                return $scope.lxMainCtrlDataObj.clientId;
-            },
-            function(clientId) {
-                if (clientId) {
-                    lxChatRoomMembersService.handleChatRoomName($scope, $routeParams.chatRoomName);
+        lxChatRoomMembersService.lifoQueueChatRoomNameOnNormalizedOpenRoomNamesList($routeParams.chatRoomName, $scope.normalizedOpenRoomNamesList);
+        // We need to make sure that clientId is set before we can enter the client into the room.
+        // If clientId is set, then we immediately setup everything required for this user to enter the room.
+        // If clientId is not currently set, then the watcher in LxMainController will ensure that
+        // the client gets correctly added to the room once the clientId is set.
+        if ($scope.lxMainCtrlDataObj.clientId) {
+            lxChatRoomMembersService.handleChatRoomName($scope, $routeParams.chatRoomName);
 
-                    // Kill this watcher once the client is in the room
-                    watchClientIdBeforeHandleRoomNameFromUrl();
-                }
-            }
-        );
+        }
+
     })
 
     .controller('LxVideoController',

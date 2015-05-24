@@ -174,7 +174,7 @@ angular.module('lxChatRoom.services', [])
                 }
             },
 
-            stackChatRoomNameOnNormalizedOpenRoomNamesList: function(chatRoomNameNormalized, normalizedOpenRoomNamesList) {
+            lifoQueueChatRoomNameOnNormalizedOpenRoomNamesList: function(chatRoomNameNormalized, normalizedOpenRoomNamesList) {
                 // Push the normalizedRoomName to to first location in normalizedOpenRoomNamesList.
                 lxJs.removeItemFromList(chatRoomNameNormalized, normalizedOpenRoomNamesList);
                 normalizedOpenRoomNamesList.unshift(chatRoomNameNormalized);
@@ -190,7 +190,6 @@ angular.module('lxChatRoom.services', [])
                         $scope.receivedChatMessageObject[data.chatRoomId] = {};
                         addClientToRoomWhenChannelReady($scope, data.chatRoomId);
                         setChatPanelDictAndChatRoomDisplay($scope, data.chatRoomId, data.chatRoomNameNormalized);
-                        self.stackChatRoomNameOnNormalizedOpenRoomNamesList(data.chatRoomNameNormalized, $scope.normalizedOpenRoomNamesList);
 
                     }, function (errorEnteringIntoRoomInfoObj) {
                         // The following sets an error on a global object that will be picked up by the javascript
