@@ -37,9 +37,6 @@ angular.module('LxChatRoom.controllers', [])
         });
 
         // We need to wait for the clientId to be set before we can enter the client into the room.
-        // Notice that we don't ever kill this watcher - this is intentional because there may be cases
-        // where the user session expires on the server, which causes a new clientId to be allocated which
-        // requires that the client be re-added to the room.
         var watchClientIdBeforeHandleRoomNameFromUrl = $scope.$watch(
             function() {
                 return $scope.lxMainCtrlDataObj.clientId;
@@ -47,6 +44,9 @@ angular.module('LxChatRoom.controllers', [])
             function(clientId) {
                 if (clientId) {
                     lxChatRoomMembersService.handleChatRoomName($scope, $routeParams.chatRoomName);
+
+                    // Kill this watcher once the client is in the room
+                    watchClientIdBeforeHandleRoomNameFromUrl();
                 }
             }
         );

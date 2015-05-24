@@ -19,6 +19,7 @@ angular.module('LxMainView.controllers', [])
         lxAppWideConstantsService,
         lxAuthenticationHelper,
         lxChannelService,
+        lxChatRoomMembersService,
         lxJs,
         clickAnywhereButHereService
         ) {
@@ -328,25 +329,50 @@ angular.module('LxMainView.controllers', [])
 
                         // Kill this watch once we have initialized the channel
                         watchClientIdBeforeInitializeChannel();
+
+                        // Since the previous clientId is no longer valid, we need to update the server to
+                        // ensure that the new clientId is placed into all of the rooms that the client
+                        // browser believes that he currently has open.
+                        // This will only be a single room when the client first logs onto the website, but
+                        // if a new clientId is allocated after the user already has a window open, then
+                        // all the rooms that they are in should be opened on the server as they are already
+                        // open in the client's data structures.
+                        // We loop over this list in reverse, so that the last room open will be in position 0
+                        // which will display that room as the currently viewed room.
+                        for (var i=$scope.normalizedOpenRoomNamesList.length-1; i>=0; i--) {
+                            lxChatRoomMembersService.handleChatRoomName($scope, $scope.normalizedOpenRoomNamesList[i]);
+                        }
                     }
                 }
             );
         }
         watchClientIdThenInitializeChannel();
 
-        $scope.$on('invalidUserAuthToken', function() {
-            $log.info('invalidUserAuthToken broadcast received - user must log in again.');
-            $scope.lxMainCtrlDataObj.clientId = null;
+
+        // If userId or clientId is invalid/unauthorized, then the dispatcher on the server will respond with a 401
+        // with data that will be handled by our client-side http interceptors. The interceptor
+        // then broadcasts a broadcastInvalid[InvalidAuthToken|ClientId] signal, which we monitor, and generate a
+        // new [userId|clientId] when necessary.
+        $scope.$on('broadcastInvalidUserAuthToken', function() {
+            $log.info('broadcastInvalidUserAuthToken broadcast received - user must log in again.');
+
+            // Setting userId to null will trigger a watcher in lxMakeSureUserIsLoggedIn which
+            // will prompt the user to log in again.
             $scope.lxMainCtrlDataObj.userId = null;
+            // If userId is not valid, then the clientId is not valid -- set it to null
+            $scope.lxMainCtrlDataObj.clientId = null;
+
             watchUserIdThenGetClientId();
             watchClientIdThenInitializeChannel();
         });
 
-        $scope.$on('invalidClientId', function() {
+        $scope.$on('broadcastInvalidClientId', function() {
+            $log.info('broadcastInvalidClientId broadcast received - generating a new clientId.');
             if ($scope.lxMainCtrlDataObj.userId) {
                 lxAuthenticationHelper.lxCallGetAndStoreClientId($scope, $scope.lxMainCtrlDataObj.userId).then(
                     function() {
                         watchClientIdThenInitializeChannel();
+
                     }
                 );
             }

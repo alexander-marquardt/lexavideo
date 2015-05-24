@@ -13,13 +13,13 @@ angular.module('lxHttp.services', ['angular-jwt'])
 
                     if ('invalidClientId' in response.data) {
                         delete $window.sessionStorage.clientId;
-                        $rootScope.$broadcast('invalidClientId');
+                        $rootScope.$broadcast('broadcastInvalidClientId');
                     }
 
                     if ('invalidUserAuthToken' in response.data) {
                         delete $window.localStorage.token;
                         delete $window.sessionStorage.clientId;
-                        $rootScope.$broadcast('invalidUserAuthToken');
+                        $rootScope.$broadcast('broadcastInvalidUserAuthToken');
                     }
 
                 }
