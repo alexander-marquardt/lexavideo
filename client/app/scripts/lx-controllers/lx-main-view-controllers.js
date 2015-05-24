@@ -252,6 +252,7 @@ angular.module('LxMainView.controllers', [])
         //      // if we just watch receivedMessageString for changes to trigger sending of the message, then the user will not be
         //      // able to send the same message twice.
         //      receivedMessageTime: time
+        //      remoteUsernameAsWritten: remote user name
         // }
         $scope.receivedChatMessageObject = {};
 

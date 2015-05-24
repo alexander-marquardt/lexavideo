@@ -178,7 +178,7 @@ angular.module('lxChatbox.directives', [])
                             .append(angular.element('<div class="cl-bubble cl-bubble-' + bubbleSide + ' ' + bubbleErrorClass + '"><i></i>')
                                 .append(messagePayload.messageString)
                                 .append(angular.element('<span class="cl-chat-message-time">')
-                                    .append('&nbsp;&nbsp;' + timeString)
+                                    .append('&nbsp;&nbsp;' + timeString + '&nbsp;&nbsp;' + messagePayload.senderNameAsWritten)
                             )
                         )
                     );
@@ -209,6 +209,7 @@ angular.module('lxChatbox.directives', [])
                 // watch to see if the local user has sent a new chat message to the remote user
                 scope.$watch('sendMessageTime', function() {
                     if (scope.sendMessagePayload.messageString) {
+                        scope.sendMessagePayload.senderNameAsWritten = scope.lxMainCtrlDataObj.usernameAsWritten;
                         addMessageToDisplay(scope.sendMessagePayload, 'right', scope.sendMessagePayload.transmittedToServer);
                     }
                 });
@@ -240,6 +241,7 @@ angular.module('lxChatbox.directives', [])
 
                     if (channelIsAlive === false) {
                         channelDeadMsgPayload = {
+                            senderNameAsWritten: 'ChatSurfing Admin',
                             messageString: 'Internet/Server error. ' +
                                 'Your connection to ChatSurfing is not functioning correctly. ' +
                                 'Messages sent to you while your connection is down are ' +
@@ -252,6 +254,7 @@ angular.module('lxChatbox.directives', [])
 
                     if (previousChannelIsAlive === false && channelIsAlive) {
                         channelDeadMsgPayload = {
+                            senderNameAsWritten: 'ChatSurfing Admin',
                             messageString: 'Your connection to ChatSurfing appears to be working again',
                             messageUniqueId: 'Not set',
                             transmittedToServer: true

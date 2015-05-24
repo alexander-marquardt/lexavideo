@@ -79,6 +79,7 @@ angular.module('lxChannel.services', [])
                     var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId];
                     var chatRoomId = null;
                     var receivedChatMessageObject;
+                    var remoteUsernameAsWritten;
 
                     lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
@@ -189,6 +190,7 @@ angular.module('lxChannel.services', [])
                             receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
 
                             receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
+                            receivedChatMessageObject.senderNameAsWritten = messageObject.fromUsernameAsWritten;
                             // receivedMessageTime is used for triggering the watcher
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
                             break;
@@ -196,6 +198,7 @@ angular.module('lxChannel.services', [])
                         case 'clientReAddedToRoomAfterAbsence':
                             chatRoomId = messageObject.chatRoomId;
                             receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
+                            receivedChatMessageObject.senderNameAsWritten = 'ChatSurfing Admin';
                             receivedChatMessageObject.messageString =
                                 'It appears that you have been disconnected and re-connected to ChatSurfing. ' +
                                 'Messages sent to your currently open chat rooms while you were absent will not be ' +
@@ -215,7 +218,7 @@ angular.module('lxChannel.services', [])
                             break;
 
                         case 'videoExchangeStatusMsg':
-                            var remoteUsernameAsWritten = messageObject.fromUsernameAsWritten;
+                            remoteUsernameAsWritten = messageObject.fromUsernameAsWritten;
 
                             if (!(remoteClientId in scope.videoExchangeObjectsDict)) {
                                 $log.info('videoExchangeStatusMsg causing creation of new videoExchangeObjectsDict entry for client ' + remoteClientId);
