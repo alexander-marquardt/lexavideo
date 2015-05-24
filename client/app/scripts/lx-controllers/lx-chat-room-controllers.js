@@ -46,7 +46,7 @@ angular.module('LxChatRoom.controllers', [])
             },
             function(clientId) {
                 if (clientId) {
-                    lxChatRoomMembersService.handleChatRoomNameFromUrl($scope);
+                    lxChatRoomMembersService.handleChatRoomName($scope, $routeParams.chatRoomName);
                 }
             }
         );

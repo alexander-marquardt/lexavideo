@@ -174,8 +174,7 @@ angular.module('lxChatRoom.services', [])
                 }
             },
 
-            handleChatRoomNameFromUrl: function($scope) {
-                var chatRoomNameAsWritten = $routeParams.chatRoomName;
+            handleChatRoomName: function($scope, chatRoomNameAsWritten) {
                 if (chatRoomNameAsWritten !== ':none:') {
 
                     lxJs.assert($scope.lxMainCtrlDataObj.userId, 'userId must be set before creating or getting room');
