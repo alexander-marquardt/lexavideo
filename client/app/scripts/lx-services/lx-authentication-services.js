@@ -58,6 +58,7 @@ angular.module('lxAuthentication.services', [])
             var createClientPromise = lxHttpHandleLoginService.createClientOnServer(clientId);
             createClientPromise.then(
                 function () {
+                    $log.info('New clientId ' + clientId + ' was written to server.');
                     scope.lxMainCtrlDataObj.clientId = clientId;
                 },
                 function () {
@@ -104,6 +105,7 @@ angular.module('lxAuthentication.services', [])
                         $log.error('Problem with createClientPromise');
                     }
                 );
+                return createClientPromise;
             }
         };
     });

@@ -124,7 +124,7 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
                 self.session.user_obj = user_obj
 
                 if not user_obj:
-                    error_key = 'invalidUserId'
+                    error_key = 'invalidUserAuthToken'
                     error_message = 'User object not found for userId %s. Request denied. ' % user_id
                     raise Exception(error_message)
 
@@ -153,13 +153,13 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
                 webapp2.RequestHandler.dispatch(self)
 
             else:
-                error_key = 'invalidToken'
+                error_key = 'invalidUserAuthToken'
                 error_message = 'Invalid or expired token with payload %s. Request denied. Header: %s' % \
                     (token_payload, authorization_header)
                 raise Exception(error_message)
 
         except:
-            # This token is expired or invalid. User access denied.
+            # This client/user has been denied access. 
             # Send unauthorized 401 code as an error response.
             status_reporting.log_call_stack_and_traceback(logging.error, extra_info = error_message)
             http_helpers.set_http_json_response(self.response, {error_key: error_message}, 401)

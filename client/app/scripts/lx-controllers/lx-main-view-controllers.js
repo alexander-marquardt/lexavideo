@@ -323,7 +323,7 @@ angular.module('LxMainView.controllers', [])
                 function (clientId, previousClientId) {
                     if (clientId) {
                         $log.info('Calling lxChannelService.initializeChannel due to change in clientId from ' +
-                            previousClientId + 'to ' + clientId);
+                            previousClientId + ' to ' + clientId);
                         lxChannelService.initializeChannel($scope);
 
                         // Kill this watch once we have initialized the channel
@@ -334,8 +334,8 @@ angular.module('LxMainView.controllers', [])
         }
         watchClientIdThenInitializeChannel();
 
-        $scope.$on('invalidUserId', function() {
-            $log.info('invalidUserId broadcast received - user must log in again.');
+        $scope.$on('invalidUserAuthToken', function() {
+            $log.info('invalidUserAuthToken broadcast received - user must log in again.');
             $scope.lxMainCtrlDataObj.clientId = null;
             $scope.lxMainCtrlDataObj.userId = null;
             watchUserIdThenGetClientId();
@@ -344,8 +344,11 @@ angular.module('LxMainView.controllers', [])
 
         $scope.$on('invalidClientId', function() {
             if ($scope.lxMainCtrlDataObj.userId) {
-                lxAuthenticationHelper.lxCallGetAndStoreClientId($scope, $scope.lxMainCtrlDataObj.userId);
-                watchClientIdThenInitializeChannel();
+                lxAuthenticationHelper.lxCallGetAndStoreClientId($scope, $scope.lxMainCtrlDataObj.userId).then(
+                    function() {
+                        watchClientIdThenInitializeChannel();
+                    }
+                );
             }
         });
     });
