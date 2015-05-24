@@ -49,7 +49,7 @@ def generate_jwt_token(user_id, username_as_written, expiration_datetime):
 def get_jwt_token_payload_and_token_session_obj(authorization_header):
 
     token_payload = None
-    token_session_object = None
+    token_session_obj = None
 
     if authorization_header:
         (bearer_txt, split_char, token_string) = authorization_header.partition(' ')
