@@ -74,6 +74,7 @@ class LoginUser(webapp2.RequestHandler):
         username_as_written = data_object['usernameAsWritten']
         username_normalized = username_as_written.lower()
 
+        auth_id = 'username:' + username_normalized
         # The following line creates the user object and the first parameter will be stored as
         # an auth_id (we currently pass in username as auth_id), and we also pass in username so that we can easily
         # display the username that will be displayed to other users (we can't rely on auth_id because it is a list
@@ -84,7 +85,7 @@ class LoginUser(webapp2.RequestHandler):
         # in the "auth_id" in the create_user function, which will ensure that it is unique.
         unique_properties = None
         expiration_datetime = datetime.datetime.utcnow() + datetime.timedelta(minutes=constants.unregistered_user_token_session_expiry_minutes)
-        user_created_bool, user_obj = users.UserModel.create_user(username_normalized, unique_properties,
+        user_created_bool, user_obj = users.UserModel.create_user(auth_id, unique_properties,
                                                                   username_normalized=username_normalized,
                                                                   username_as_written=username_as_written,
                                                                   registered_user_bool=False,
