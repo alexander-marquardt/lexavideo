@@ -57,6 +57,13 @@ class CleanupExpiredUsers(webapp2.RequestHandler):
         logging.info('Cleaned up %d expired clients associated with user %s' % (num_client_objects, user_obj_key.id()))
         return num_client_objects
 
+    def cleanup_expired_auth_ids(self, auth_id_key_name):
+        auth_id_obj = users.UniqueUserModel.get_by_id(auth_id_key_name)
+        if auth_id_obj:
+            auth_id_obj.key.delete()
+            logging.info('Cleaned up expired auth_id %s' % auth_id_key_name)
+        else:
+            logging.warning('Unable to remove auth_id %s' % auth_id_key_name)
 
     def cleanup_expired_users(self):
         q = users.UserModel.query(users.UserModel.expiration_datetime < datetime.datetime.now())
@@ -64,6 +71,10 @@ class CleanupExpiredUsers(webapp2.RequestHandler):
 
         for key in user_object_keys:
             self.cleanup_expired_clients(key)
+            user_obj = key.get()
+            for auth_id in user_obj.auth_ids:
+                auth_id_key_name = '%s.auth_id:%s' % (user_obj.__class__.__name__, auth_id)
+                self.cleanup_expired_auth_ids(auth_id_key_name)
 
         num_user_objects = len(user_object_keys)
         ndb.delete_multi(user_object_keys)
