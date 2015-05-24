@@ -372,7 +372,6 @@ angular.module('LxMainView.controllers', [])
                 lxAuthenticationHelper.lxCallGetAndStoreClientId($scope, $scope.lxMainCtrlDataObj.userId).then(
                     function() {
                         watchClientIdThenInitializeChannel();
-
                     }
                 );
             }
