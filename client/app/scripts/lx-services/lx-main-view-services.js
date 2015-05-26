@@ -8,6 +8,7 @@ angular.module('lxMainView.services', [])
     .factory('lxMainViewService',
 
     function(
+        $location,
         lxAuthenticationHelper,
         lxChatRoomMembersService,
         lxChannelService,
@@ -30,7 +31,7 @@ angular.module('lxMainView.services', [])
                 clientId = $scope.lxMainCtrlDataObj.clientId;
                 lxChannelService.stopSendingHeartbeat();
                 lxHttpChannelService.manuallyDisconnectChannel(clientId, $scope.channelObject);
-                
+
                 for (idx=0; idx<$scope.videoStateInfoObject.currentOpenVideoSessionsList.length; idx++) {
                     remoteClientId = $scope.videoStateInfoObject.currentOpenVideoSessionsList[idx];
                     lxVideoService.showVideoElementsAndStartVideoFn($scope, 'hangupVideoExchange', remoteClientId);
@@ -52,6 +53,9 @@ angular.module('lxMainView.services', [])
                         }
                     );
                 }
+                $scope.lxMainCtrlDataObj.clientId = null;
+                $scope.lxMainCtrlDataObj.userId = null;
+                $location.path('/');
             }
         }
     });
