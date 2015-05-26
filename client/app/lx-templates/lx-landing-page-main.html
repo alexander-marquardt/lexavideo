@@ -64,6 +64,12 @@
                     </form>
                 </div>
             </div>
+
+            <!--
+            If the user has one or more videos open, and they click on the video, then bring them to the last
+             chat room that they had open. If they do not have any chat rooms open, then this will take them
+             to the reserved room name ":none:" which displays video without being in any corresponding chat room.
+             -->
             <a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}">
                 <div ng-class="{'cl-overlay-mini-video-elements-when-video-open':videoStateInfoObject.numOpenVideoExchanges >= 1}">
                 </div>
