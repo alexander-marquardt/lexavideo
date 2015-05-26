@@ -10,58 +10,117 @@
 
         <div class="cl-landing-page-common-area">
             <div class="well col-xs-12 text-left cl-landing-page-well"
+                 style="overflow: scroll"
                 ng-class="{'cl-landing-page-well-when-video-open':videoStateInfoObject.numOpenVideoExchanges >= 1}">
 
-                <div class="clearfix">
-                    <form name="createRoomForm" role="form" novalidate>
-                        <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4">
-                            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-10 col-md-8">
+                        <h2>Join a chat room</h2>
+                        ChatSurfing is an easy way to <strong>chat</strong> and <strong>video conference</strong> with as many people as you like, without
+                        having to reveal your personal information -- simply join a chat room and start chatting and
+                        exchanging video with people that you authorize.
+                    </div>
+                    <div class="col-xs-12">&nbsp;
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-10 col-sm-8 col-md-6">
+                        <div class="clearfix">
+                            <form name="createRoomForm" role="form" novalidate>
+                                <div class="form-group">
 
-                                <label for="id-inputRoomName">Enter into a chat room</label>
-                                <div class="input-group">
-                                    <input class=" form-control"
-                                           id="id-inputRoomName"
-                                           placeholder="Name of chat room to create and/or join"
-                                           name="chatRoomNameInputElem"
-                                           ng-model="inputRoomObj.chatRoomName"
-                                           ng-minlength="{{ minInputLength }}"
-                                           maxlength = "{{ maxInputLength }}"
-                                           ng-class="createRoomForm.chatRoomNameInputElem.inputCssClass"
-                                           ng-pattern="validRoomNamesPattern"
-                                           ng-trim="false"
-                                           check-for-room-occupancy-directive
-                                           required
-                                            />
+                                    <label for="id-inputRoomName">Enter into a custom room</label>
+                                    <div class="input-group">
+                                        <input class=" form-control"
+                                               id="id-inputRoomName"
+                                               placeholder="Name of chat room to create and/or join"
+                                               name="chatRoomNameInputElem"
+                                               ng-model="inputRoomObj.chatRoomName"
+                                               ng-minlength="{{ minInputLength }}"
+                                               maxlength = "{{ maxInputLength }}"
+                                               ng-class="createRoomForm.chatRoomNameInputElem.inputCssClass"
+                                               ng-pattern="validRoomNamesPattern"
+                                               ng-trim="false"
+                                               check-for-room-occupancy-directive
+                                               required
+                                                />
 
-                                    <span class="input-group-btn">
-                                        <button ng-click="goToRoomUrl(inputRoomObj.chatRoomName)" class="btn btn-primary"
-                                                ng-disabled="createRoomForm.$invalid || createRoomForm.chatRoomNameInputElem.userIsWaitingForRoomStatus">
-                                            {{ createRoomForm.chatRoomNameInputElem.submitButtonText }}</button>
-                                    </span>
-                                </div>
-
-                                <div class="cl-feedback-on-input-validity-div"
-                                     ng-show="createRoomForm.chatRoomNameInputElem.$dirty || createRoomForm.$valid">
-                                    <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
-                                    added and removed from the DOM -->
-                                    <div class="text-danger" ng-show="createRoomForm.chatRoomNameInputElem.$dirty">
-                                        <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.required">Please input a chat name</small>
-                                        <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
-                                        <!--<small  ng-show="createRoomForm.chatRoomNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
-                                        <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.pattern">
-                                            {{ invalidCharacterFeedback }}</small>
-                                        <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.checkForRoomOccupancyIsOk">Error: unable to contact server (is your network working?)</small>
+                                        <span class="input-group-btn">
+                                            <button ng-click="goToRoomUrl(inputRoomObj.chatRoomName)" class="btn btn-primary"
+                                                    ng-disabled="createRoomForm.$invalid || createRoomForm.chatRoomNameInputElem.userIsWaitingForRoomStatus">
+                                                {{ createRoomForm.chatRoomNameInputElem.submitButtonText }}</button>
+                                        </span>
                                     </div>
-                                    <div  ng-show="createRoomForm.$valid">
-                                        <small ng-show="createRoomForm.chatRoomNameInputElem.roomNumOccupantsMessage">
-                                            {{ createRoomForm.chatRoomNameInputElem.roomNumOccupantsMessage }}</small>
-                                        <small ng-show="createRoomForm.chatRoomNameInputElem.roomIsEmptyMessage">
-                                            {{ createRoomForm.chatRoomNameInputElem.roomIsEmptyMessage }} </small>
+
+                                    <div class="cl-feedback-on-input-validity-div"
+                                         ng-show="createRoomForm.chatRoomNameInputElem.$dirty || createRoomForm.$valid">
+                                        <!-- by placing the feedback in a div that has a minimum height, we prevent UI flashing due to text being
+                                        added and removed from the DOM -->
+                                        <div class="text-danger" ng-show="createRoomForm.chatRoomNameInputElem.$dirty">
+                                            <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.required">Please input a chat name</small>
+                                            <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.minlength">Chat name must be at least {{ minInputLength }} characters</small>
+                                            <!--<small  ng-show="createRoomForm.chatRoomNameInputElem.$error.maxlength">Chat name cannot be longer than {{ maxInputLength }} characters</small>-->
+                                            <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.pattern">
+                                                {{ invalidCharacterFeedback }}</small>
+                                            <small  ng-show="createRoomForm.chatRoomNameInputElem.$error.checkForRoomOccupancyIsOk">Error: unable to contact server (is your network working?)</small>
+                                        </div>
+                                        <div  ng-show="createRoomForm.$valid">
+                                            <small ng-show="createRoomForm.chatRoomNameInputElem.roomNumOccupantsMessage">
+                                                {{ createRoomForm.chatRoomNameInputElem.roomNumOccupantsMessage }}</small>
+                                            <small ng-show="createRoomForm.chatRoomNameInputElem.roomIsEmptyMessage">
+                                                {{ createRoomForm.chatRoomNameInputElem.roomIsEmptyMessage }} </small>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6 col-sm-5 col-md-4">
+                        <label>Chats Populares en Español</label>
+                        <ul class="list-unstyled">
+                            <li><a href="/Bienvenido">Bienvenido</a></li>
+                            <li><a href="/Pasando_el_rato">Pasando el rato</a></li>
+                            <li><a href="Amigos">Amigos</a></li>
+                            <li><a href="Buscar_pareja">Buscar pareja</a></li>
+                            <li><a href="Romance_(Español)">Romance</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-6 col-sm-5 col-md-4">
+                        <label>Popular Chats in English</label>
+                        <ul class="list-unstyled">
+                            <li><a href="/Welcome">Welcome</a></li>
+                            <li><a href="/Hanging_out">Hanging out</a></li>
+                            <li><a href="/Friends">Friends</a></li>
+                            <li><a href="/Dating">Dating</a></li>
+                            <li><a href="Romance_(English)">Romance</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-10 col-md-8">
+                        <h2>How to use ChatSurfing</h2>
+                        <label>ChatSurfing is easy to use</label>
+                        <ul>
+                            <li>Type in the name the chat room you want to enter into, or click on the name of one of our "Popular chats".</li>
+                            <li>You will then be prompted to select a username that will uniquely identify you to other participants.</li>
+                            <li>Invite your friends to join the chat room that you have entered (send them an email,
+                                a phone message, a message on another website, etc.).</li>
+                            <li>Start chatting with everyone in the room.</li>
+                            <li>Click on the camera symbol beside a member's name to invite them to exchange video with you
+                                (You see each other only if they agree to exchange video)</li>
+                            <li>If the other person accepts your invitation to exchange video, then you will see each other!</li>
+                        </ul>
+                        <label>Advanced features</label>
+                        <ul>
+                            <li>You can open as many chats as you like. Just click on the "Menu" symbol in the top left corner beside
+                                the ChatSurfing logo to see the option for "New chat"</li>
+                            <li>You can open as many video sessions as you like.</li>
+                            <li>If you wish to see who has invited you to exchange video, click on the "Menu" symbol, and select "Notifications"</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
