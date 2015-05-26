@@ -341,7 +341,7 @@ angular.module('LxMainView.controllers', [])
                         // open in the client's data structures.
                         // We loop over this list in reverse, so that the last room open will be in position 0
                         // which will display that room as the currently viewed room.
-                        if (angular.equals({}, scope.roomOccupancyDict)) {
+                        if (angular.equals({}, $scope.roomOccupancyDict)) {
                             // roomOccupancyDict isn't yet set up, so we pull the chatRoomName directly from the URL.
                             lxChatRoomMembersService.handleChatRoomName($scope, $routeParams.chatRoomName);
                         }
