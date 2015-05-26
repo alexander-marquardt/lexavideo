@@ -118,6 +118,7 @@ angular.module('lxChatRoom.services', [])
                 lxJs.removeItemFromList(chatRoomNameNormalized, scope.normalizedOpenRoomNamesList);
 
                 if (angular.equals({}, scope.roomOccupancyDict)) {
+                    scope.chatRoomDisplayObject.lastChatRoomNameFromUrl = null;
                     if (scope.videoStateInfoObject.numOpenVideoExchanges >= 1) {
                         $location.path('/:none:');
                     }
