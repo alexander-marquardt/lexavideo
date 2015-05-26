@@ -55,13 +55,22 @@ angular.module('lxMainView.services', [])
                         }
                     );
                 }
-                $scope.lxMainCtrlDataObj.clientId = null;
-                $scope.lxMainCtrlDataObj.userId = null;
 
-                // re-start the userId and clientId watchers in case the user wishes to login again, without having
-                // to re-load the page.
-                self.watchUserIdThenGetClientId($scope);
-                self.watchClientIdThenInitializeChannel($scope);
+                // In order to prevent the username modal from immediately showing, we wait until
+                // the route has changed before clearing the clientId and userId.
+                var unbindRouteChange = $scope.$on('$routeChangeSuccess', function() {
+                    $scope.lxMainCtrlDataObj.clientId = null;
+                    $scope.lxMainCtrlDataObj.userId = null;
+
+                    // re-start the userId and clientId watchers in case the user wishes to login again, without having
+                    // to re-load the page.
+                    self.watchUserIdThenGetClientId($scope);
+                    self.watchClientIdThenInitializeChannel($scope);
+
+                    // Remove this route change event handler.
+                    unbindRouteChange();
+                });
+
 
                 $location.path('/');
             },
