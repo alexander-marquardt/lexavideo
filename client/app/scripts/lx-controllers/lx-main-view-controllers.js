@@ -300,70 +300,9 @@ angular.module('LxMainView.controllers', [])
             openChatsDropdownIsOpen: true
         };
 
-        // We must wait for the userId to be set before we can create a clientId. If the userId is not set,
-        // then a popup will be triggered by the lxMakeSureUserIsLoggedIn directive, which checks the userId
-        // when a chat room page is loaded and forces a login if it isn't set.
-        function watchUserIdThenGetClientId() {
-            var watchUserId = $scope.$watch(
-                function () {
-                    return $scope.lxMainCtrlDataObj.userId;
-                },
-                function (userId) {
-                    if (userId) {
 
-                        if (!$scope.lxMainCtrlDataObj.clientId) {
-                            lxAuthenticationHelper.lxCallGetAndStoreClientId($scope, userId);
-                        }
-
-                        // Kill this watcher once we have gotten the clientId
-                        if ($scope.lxMainCtrlDataObj.clientId) {
-                            watchUserId();
-                        }
-                    }
-                }
-            );
-        }
-        watchUserIdThenGetClientId();
-
-        // If clientId is set, then we can initialize the channel
-        function watchClientIdThenInitializeChannel() {
-            var watchClientIdBeforeInitializeChannel = $scope.$watch(
-                function () {
-                    return $scope.lxMainCtrlDataObj.clientId;
-                },
-                function (clientId, previousClientId) {
-                    if (clientId) {
-                        $log.info('Calling lxChannelService.initializeChannel due to change in clientId from ' +
-                            previousClientId + ' to ' + clientId);
-                        lxChannelService.initializeChannel($scope);
-
-                        // Kill this watch once we have initialized the channel
-                        watchClientIdBeforeInitializeChannel();
-
-                        // Since the previous clientId is no longer valid, we need to update the server to
-                        // ensure that the new clientId is placed into all of the rooms that the client
-                        // browser believes that he currently has open.
-                        // This will only be a single room when the client first logs onto the website, but
-                        // if a new clientId is allocated after the user already has a window open, then
-                        // all the rooms that they are in should be opened on the server as they are already
-                        // open in the client's data structures.
-                        // We loop over this list in reverse, so that the last room open will be in position 0
-                        // which will display that room as the currently viewed room.
-                        if (angular.equals({}, $scope.roomOccupancyDict) && $routeParams.chatRoomName) {
-                            // roomOccupancyDict isn't yet set up, so we pull the chatRoomName directly from the URL.
-                            lxChatRoomMembersService.handleChatRoomName($scope, $routeParams.chatRoomName);
-                        }
-                        else {
-                            for (var i = $scope.normalizedOpenRoomNamesList.length - 1; i >= 0; i--) {
-                                var chatRoomNameAsWritten = $scope.roomOccupancyDict[$scope.normalizedOpenRoomNamesList[i]].chatRoomNameAsWritten;
-                                lxChatRoomMembersService.handleChatRoomName($scope, chatRoomNameAsWritten);
-                            }
-                        }
-                    }
-                }
-            );
-        }
-        watchClientIdThenInitializeChannel();
+        lxMainViewService.watchUserIdThenGetClientId($scope);
+        lxMainViewService.watchClientIdThenInitializeChannel($scope);
 
 
         // If userId or clientId is invalid/unauthorized, then the dispatcher on the server will respond with a 401
