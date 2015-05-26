@@ -117,7 +117,7 @@ class RemoveClientFromRoom(BaseHandlerUserVerified):
 
         post_body_json = json.loads(self.request.body)
         client_id = post_body_json['clientId']
-        room_id = self.session.post_body_json['chatRoomId']
+        room_id = post_body_json['chatRoomId']
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
         chat_room_obj = chat_room_obj.txn_remove_client_from_room(client_id)

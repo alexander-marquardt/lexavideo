@@ -141,6 +141,19 @@ angular.module('lxChatRoom.services', [])
                 $scope.chatRoomDisplayObject.chatRoomId = null;
             },
 
+            removeClientFromRoom: function($scope, chatRoomNameNormalized) {
+
+                var roomOccupancyObject = $scope.roomOccupancyDict[chatRoomNameNormalized];
+
+                self.removeClientFromRoomClientSide($scope, chatRoomNameNormalized);
+
+                var httpPromise = lxHttpChannelService.removeClientFromRoomOnServer(
+                    $scope.lxMainCtrlDataObj.clientId,
+                    $scope.lxMainCtrlDataObj.userId,
+                    roomOccupancyObject.chatRoomId);
+
+                return httpPromise;
+            },
 
             /* handleChatRoomIdFromServerUpdate makes sure that the client has the same chat panels open as
                the server thinks that the client has open. If the client doesn't have a chat panel open and
@@ -184,8 +197,9 @@ angular.module('lxChatRoom.services', [])
             handleChatRoomName: function($scope, chatRoomNameAsWritten) {
                 if (chatRoomNameAsWritten !== ':none:') {
 
-                    lxJs.assert($scope.lxMainCtrlDataObj.userId, 'userId must be set before creating or getting room');
-                    lxJs.assert($scope.lxMainCtrlDataObj.clientId, 'clientId must be set before creating or getting room');
+                    lxJs.assert(chatRoomNameAsWritten, 'chatRoomNameAsWritten must be set before calling handleChatRoomName');
+                    lxJs.assert($scope.lxMainCtrlDataObj.userId, 'userId must be set before calling handleChatRoomName');
+                    lxJs.assert($scope.lxMainCtrlDataObj.clientId, 'clientId must be set before calling handleChatRoomName');
 
                     createOrGetRoom(chatRoomNameAsWritten, $scope.lxMainCtrlDataObj.userId).then(function (data) {
                         $scope.receivedChatMessageObject[data.chatRoomId] = {};

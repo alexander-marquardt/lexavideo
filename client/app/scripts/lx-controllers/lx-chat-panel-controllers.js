@@ -38,15 +38,7 @@ angular.module('LxChatPanel.controllers', [])
         $scope.sendMessagePayload = {};
 
         $scope.removeClientFromRoomInterfaceFn = function(chatRoomNameNormalized) {
-
-            var roomOccupancyObject = $scope.roomOccupancyDict[chatRoomNameNormalized];
-
-            lxChatRoomMembersService.removeClientFromRoomClientSide($scope, chatRoomNameNormalized);
-
-            lxHttpChannelService.removeClientFromRoomOnServer(
-                $scope.lxMainCtrlDataObj.clientId,
-                $scope.lxMainCtrlDataObj.userId,
-                roomOccupancyObject.chatRoomId);
+            lxChatRoomMembersService.removeClientFromRoom($scope, chatRoomNameNormalized);
         };
 
         /* sendChatMessageFn:

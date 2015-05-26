@@ -70,11 +70,6 @@ angular.module('LxChatRoom.controllers', [])
             modalsCurrentlyShown: []
         };
 
-        $scope.videoDisplaySelection = {
-            // currentlySelectedVideoElementClientId will either be remoteClientId or the string 'localVideoElement'
-            currentlySelectedVideoElementClientId: 'localVideoElement'
-        };
-
 
         $scope.showCameraAndMicrophoneInstructions = function() {
 

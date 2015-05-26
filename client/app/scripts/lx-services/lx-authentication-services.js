@@ -106,6 +106,11 @@ angular.module('lxAuthentication.services', [])
                     }
                 );
                 return createClientPromise;
+            },
+
+            lxRemoveTokenAndSession: function() {
+                delete $window.localStorage.token;
+                delete $window.sessionStorage.clientId;
             }
         };
     });

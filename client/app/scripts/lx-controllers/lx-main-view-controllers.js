@@ -21,6 +21,7 @@ angular.module('LxMainView.controllers', [])
         lxAuthenticationHelper,
         lxChannelService,
         lxChatRoomMembersService,
+        lxMainViewService,
         lxJs,
         clickAnywhereButHereService
         ) {
@@ -93,7 +94,9 @@ angular.module('LxMainView.controllers', [])
             return x;
         };
 
-
+        $scope.closeAllChatRoomsInterfaceFn = function() {
+            lxMainViewService.closeAllChatRoomsFn($scope);
+        };
 
         $scope.channelObject = {
             channelToken: null,
@@ -258,6 +261,11 @@ angular.module('LxMainView.controllers', [])
         $scope.receivedChatMessageObject = {};
 
 
+        $scope.videoDisplaySelection = {
+            // currentlySelectedVideoElementClientId will either be remoteClientId or the string 'localVideoElement'
+            currentlySelectedVideoElementClientId: 'localVideoElement'
+        };
+
 
         // chatPanelDict will have a unique key corresponding to the chatRoomId of each room that the client
         // is currently a member of.
@@ -341,7 +349,7 @@ angular.module('LxMainView.controllers', [])
                         // open in the client's data structures.
                         // We loop over this list in reverse, so that the last room open will be in position 0
                         // which will display that room as the currently viewed room.
-                        if (angular.equals({}, $scope.roomOccupancyDict)) {
+                        if (angular.equals({}, $scope.roomOccupancyDict) && $routeParams.chatRoomName) {
                             // roomOccupancyDict isn't yet set up, so we pull the chatRoomName directly from the URL.
                             lxChatRoomMembersService.handleChatRoomName($scope, $routeParams.chatRoomName);
                         }
