@@ -302,3 +302,14 @@
   }
 }
 
+.cl-presence-active {
+  color: $brand-primary-darker;
+}
+
+.cl-presence-idle {
+  color: $brand-warning-darker;
+}
+
+.cl-presence-away {
+  color: $brand-danger-darker;
+}

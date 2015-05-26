@@ -207,3 +207,34 @@ commonDirectives.directive('lxNoSwipePropagation',
             }
         };
     });
+
+commonDirectives.directive('lxGetPresenceColorCssClass',
+    function($log) {
+
+        var cssActive = 'cl-presence-active';
+        var cssIdle = 'cl-presence-idle';
+        var cssAway = 'cl-presence-away';
+        return {
+            restrict: 'A',
+            link: function(scope, element, attr) {
+                var presenceStateName = attr.presenceStateName;
+
+                element.removeClass(cssActive);
+                element.removeClass(cssIdle);
+                element.removeClass(cssAway);
+
+                if (presenceStateName === 'PRESENCE_ACTIVE') {
+                    element.addClass(cssActive);
+                }
+                else if (presenceStateName === 'PRESENCE_IDLE') {
+                    element.addClass(cssIdle);
+                }
+                else if (presenceStateName === 'PRESENCE_AWAY') {
+                    element.addClass(cssAway);
+                }
+                else {
+                    $log.error('Unknown presenceStateName: ' + presenceStateName);
+                }
+            }
+        }
+    });

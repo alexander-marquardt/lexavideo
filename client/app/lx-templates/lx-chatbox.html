@@ -78,6 +78,7 @@
                                                         </span>
                                                         <span style="white-space:nowrap;">
                                                             &nbsp;{{ roomOccupancyDict[chatRoomNameNormalizedInDropdown].chatRoomNameAsWritten }}&nbsp
+                                                            &nbsp;{{ roomOccupancyDict[chatRoomNameNormalizedInDropdsiown].chatRoomNameAsWritten }}&nbsp
                                                         </span>
                                                     </a>
                                                 </span>
@@ -119,7 +120,7 @@
                                                             <span class="icon-lx-video-camera-filled"></span>
                                                         </button>
                                                     </span>
-                                                    <span class="icon-lx-user"></span>{{ remoteClientObj.usernameAsWritten }}
+                                                    <span lx-get-presence-color-css-class presence-state-name="{{ remoteClientObj.presenceStateName }}" class="icon-lx-user"></span> {{ remoteClientObj.usernameAsWritten }}
                                                 </span>
                                             </li>
                                         </ul>
