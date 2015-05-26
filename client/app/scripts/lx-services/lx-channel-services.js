@@ -326,13 +326,7 @@ angular.module('lxChannel.services', [])
             }
         };
 
-        // Stop sending heartbeats to the server. Intended to be called before
-        // starting a new heartbeat, so that we don't have multiple timer loops
-        // running at the same time.
-        var stopSendingHeartbeat = function() {
-            $timeout.cancel(sendHeartbeatTimerId);
-            sendHeartbeatTimerId = null;
-        };
+
 
         // Send periodic updates to the server so that the server can track the presence status of each user.
         // Also, each time the server receives a heartbeat, it will respond with an acknowledgement on the channel,
@@ -342,7 +336,7 @@ angular.module('lxChannel.services', [])
 
             // In case this function is called multiple times, we want to make sure that previous heartbeat timers
             // are cancelled before starting a new timer.
-            stopSendingHeartbeat();
+            self.stopSendingHeartbeat();
 
             lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainCtrlDataObj.clientId);
             var timeoutFn = function () {
@@ -407,6 +401,13 @@ angular.module('lxChannel.services', [])
                     scope.channelObject.channelToken = 'Cannot channelToken for undefined clientId';
                     scope.channelObject.channelIsAlive = false;
                 }
+            },
+            // Stop sending heartbeats to the server. Intended to be called before
+            // starting a new heartbeat, so that we don't have multiple timer loops
+            // running at the same time.
+            stopSendingHeartbeat : function() {
+                $timeout.cancel(sendHeartbeatTimerId);
+                sendHeartbeatTimerId = null;
             }
         };
 

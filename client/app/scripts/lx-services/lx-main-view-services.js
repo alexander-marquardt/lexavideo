@@ -10,6 +10,8 @@ angular.module('lxMainView.services', [])
     function(
         lxAuthenticationHelper,
         lxChatRoomMembersService,
+        lxChannelService,
+        lxHttpChannelService,
         lxVideoService) {
 
         return {
@@ -22,11 +24,16 @@ angular.module('lxMainView.services', [])
             // 4) stopping the heartbeat to the server.
             // 5) close the channel.
             closeAllChatRoomsFn: function ($scope) {
-                var clientId;
+                var clientId, remoteClientId;
                 var idx;
+
+                clientId = $scope.lxMainCtrlDataObj.clientId;
+                lxChannelService.stopSendingHeartbeat();
+                lxHttpChannelService.manuallyDisconnectChannel(clientId, $scope.channelObject);
+                
                 for (idx=0; idx<$scope.videoStateInfoObject.currentOpenVideoSessionsList.length; idx++) {
-                    clientId = $scope.videoStateInfoObject.currentOpenVideoSessionsList[idx];
-                    lxVideoService.showVideoElementsAndStartVideoFn($scope, 'hangupVideoExchange', clientId);
+                    remoteClientId = $scope.videoStateInfoObject.currentOpenVideoSessionsList[idx];
+                    lxVideoService.showVideoElementsAndStartVideoFn($scope, 'hangupVideoExchange', remoteClientId);
                 }
 
                 // loop over the list of room names in reverse, because we are eliminating each element

@@ -159,7 +159,6 @@ angular.module('lxHttp.services', ['angular-jwt'])
                 $http.post('/_lx/channel/syn_client_heartbeat/', messageObject);
             },
 
-
             // Update the users activity status on the server, to which the server will send an updated
             // list of clients (and their presence state) in the currently open chat room.
             updateClientStatusOnServerAndRequestUpdatedRoomInfo: function(clientId, presenceStatus, currentlyOpenChatRoomId, messageType) {
