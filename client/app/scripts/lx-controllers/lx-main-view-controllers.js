@@ -341,7 +341,8 @@ angular.module('LxMainView.controllers', [])
                         // We loop over this list in reverse, so that the last room open will be in position 0
                         // which will display that room as the currently viewed room.
                         for (var i=$scope.normalizedOpenRoomNamesList.length-1; i>=0; i--) {
-                            lxChatRoomMembersService.handleChatRoomName($scope, $scope.normalizedOpenRoomNamesList[i]);
+                            var chatRoomNameAsWritten = $scope.roomOccupancyDict[$scope.normalizedOpenRoomNamesList[i]].chatRoomNameAsWritten;
+                            lxChatRoomMembersService.handleChatRoomName($scope, chatRoomNameAsWritten);
                         }
                     }
                 }

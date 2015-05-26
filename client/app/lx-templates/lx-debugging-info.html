@@ -12,7 +12,7 @@
                 </tr>
 
                 <tr ng-repeat="(chatRoomNameNormalized, roomOccupancyObject) in roomOccupancyDict">
-                    <td>Room Name: {{ chatRoomNameNormalized }}</td>
+                    <td>Room {{ chatRoomNameNormalized }} / {{ roomOccupancyDict[chatRoomNameNormalized].chatRoomNameAsWritten }}</td>
                     <td>Room Id:   {{ roomOccupancyObject.chatRoomId }}</td>
                 </tr>
 
