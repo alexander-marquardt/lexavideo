@@ -13,6 +13,7 @@ angular.module('LxMainView.controllers', [])
         $location,
         $log,
         $route,
+        $routeParams,
         $scope,
         $window,
         $timeout,
@@ -340,9 +341,15 @@ angular.module('LxMainView.controllers', [])
                         // open in the client's data structures.
                         // We loop over this list in reverse, so that the last room open will be in position 0
                         // which will display that room as the currently viewed room.
-                        for (var i=$scope.normalizedOpenRoomNamesList.length-1; i>=0; i--) {
-                            var chatRoomNameAsWritten = $scope.roomOccupancyDict[$scope.normalizedOpenRoomNamesList[i]].chatRoomNameAsWritten;
-                            lxChatRoomMembersService.handleChatRoomName($scope, chatRoomNameAsWritten);
+                        if (angular.equals({}, scope.roomOccupancyDict)) {
+                            // roomOccupancyDict isn't yet set up, so we pull the chatRoomName directly from the URL.
+                            lxChatRoomMembersService.handleChatRoomName($scope, $routeParams.chatRoomName);
+                        }
+                        else {
+                            for (var i = $scope.normalizedOpenRoomNamesList.length - 1; i >= 0; i--) {
+                                var chatRoomNameAsWritten = $scope.roomOccupancyDict[$scope.normalizedOpenRoomNamesList[i]].chatRoomNameAsWritten;
+                                lxChatRoomMembersService.handleChatRoomName($scope, chatRoomNameAsWritten);
+                            }
                         }
                     }
                 }
