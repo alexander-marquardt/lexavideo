@@ -40,3 +40,4 @@ client/build_settings.json
 .idea/*
 client/app/.idea/*
 client/.idea/*
+client/dist/*
