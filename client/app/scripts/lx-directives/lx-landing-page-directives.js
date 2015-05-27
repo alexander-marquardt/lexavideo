@@ -3,6 +3,27 @@
 
 angular.module('lxLandingPage.directives', [])
 
+    .directive('lxShowInstructionsModalOnClickDirective',
+    function(
+        lxModalSupportService
+        ){
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attrs) {
+
+                var handler = function(event) {
+                    lxModalSupportService.showStandardModalWindowFromTemplateUrl('lx-how-to-use-chatsurfing-template-cache.html');
+                };
+
+                elem.on('click', handler);
+
+                scope.$on('$destroy', function() {
+                    elem.off(events, handler);
+                });
+            }
+        }
+    })
+
     .directive('checkForRoomOccupancyDirective',
     function(
         $log,

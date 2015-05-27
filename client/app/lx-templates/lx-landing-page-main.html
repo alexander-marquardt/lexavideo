@@ -102,29 +102,9 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-10 col-md-8">
                         <h2>How to use ChatSurfing</h2>
-                        <label>ChatSurfing is easy to use</label>
-                        <ul>
-                            <li>Join a chat room from the main page by either typing in the name of a custom room, or by
-                                clicking on one of the "Popular Chats" that are listed.</li>
-                            <li>If you want to have a private conversation with someone, then pick a room name that is
-                                unlikely to be accidentally chosen by other people. Then invite your friends to join
-                                you by sharing the room name with them (send them an email, text message, etc.).</li>
-                            <li>If you have joined a "Popular chat" that has people, then just start chatting with
-                                people in the room (Note: to protect privacy, messages sent before you joined the
-                                room will not be displayed to you).</li>
-                            <li>If you want to request a video exchange with someone, then click on the camera symbol beside
-                                their name and wait for them to accept your offer.</li>
-                        </ul>
-                        <label>Advanced features</label>
-                        <ul>
-                            <li>You can open as many chats as you like. Just click on the "Menu" symbol in the top left corner beside
-                                the ChatSurfing logo to see the option for "New chat"</li>
-                            <li>You can open as many video sessions as you like.</li>
-                            <li>If you wish to see your current invitations to exchange video, click on the "Menu" symbol, and select "Notifications"</li>
-                        </ul>
+                        <label><a href="" lx-show-instructions-modal-on-click-directive>Click here for simple instructions</a></label>
                     </div>
                 </div>
-            </div>
 
             <!--
             If the user has one or more videos open, and they click on the video, then bring them to the last
@@ -138,5 +118,40 @@
         </div>
     </div>
 </div>
+
+
+<!-- How to use ChatSurfing instructions modal -->
+<script type="text/ng-template" id="lx-how-to-use-chatsurfing-template-cache.html">
+    <div class="modal-header">
+       <h3 class="modal-title">How to use ChatSurfing</h3>
+    </div>
+    <div class="modal-body">
+        <label>ChatSurfing is easy to use</label>
+        <ul>
+            <li>Join a chat room from the main page by either typing in the name of a custom room, or by
+                clicking on one of the "Popular Chats" that are listed.</li>
+            <li>If you want to have a private conversation with someone, then enter a unique room name that is
+                unlikely to be accidentally chosen by other people. Next, simply invite your friends to join
+                you by sharing your chosen room name (send them an email, text message, etc.).</li>
+            <li>If you have joined a "Popular chat" that already has people, then just start chatting with
+                people in the room. Please note that to protect privacy, messages sent before you joined the
+                room will not be displayed to you.</li>
+            <li>If you want to request a video exchange with someone, then click on the camera symbol beside
+                their name and wait for them to accept your offer.</li>
+        </ul>
+        <label>Advanced features</label>
+        <ul>
+            <li>You can open as many chats as you like. Just click on the "Menu" symbol in the top left corner beside
+                the ChatSurfing logo to see the option for "New chat"</li>
+            <li>You can open video sessions with as many people as you like, however if your computer starts to slow down
+                this is a sign that you have probably opened too many video sessions.</li>
+            <li>If you wish to see who has invited you to exchange video, click on the "Menu" symbol, and select "Notifications"</li>
+        </ul>
+    </div>
+
+    <div class="modal-footer">
+       <button class="btn btn-primary" ng-click="modalOkFn()">OK</button>
+    </div>
+</script>
 
 {% endraw %}
