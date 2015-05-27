@@ -127,16 +127,21 @@ angular.module('lxLogin.directives', [])
         };
     })
 
-    .controller('lxLoginModalInstanceController', function($scope, $log, $modalInstance) {
+    .controller('lxLoginModalInstanceController',
+    function(
+        $scope,
+        $log,
+        $modalInstance,
+        lxHttpHandleLoginService) {
         // refreshLoginToggler is a boolean that we toggle if there is an error creating user. This
         // will force a watch in a login directive to execute and update user feedback about the
         // status of the login/user creation.
         $scope.refreshLoginToggler = false;
         $scope.submitUsername = function(usernameAsWritten) {
-            var httpPromise = lxHttpHandleLoginService.loginUserOnServer(outerScope, usernameAsWritten);
+            var httpPromise = lxHttpHandleLoginService.loginUserOnServer($scope, usernameAsWritten);
             httpPromise.then(
                 function() {
-                    $log.debug('userId is: ' + outerScope.lxMainCtrlDataObj.userId);
+                    $log.debug('userId is: ' + $scope.lxMainCtrlDataObj.userId);
                     $modalInstance.close();
                 },
                 function() {
@@ -149,16 +154,16 @@ angular.module('lxLogin.directives', [])
     .directive('lxMakeSureUserIsLoggedIn',
     function(
         $log,
-        $modal,
-        lxHttpHandleLoginService) {
+        $modal
+        ) {
 
         var showModalWindowFromTemplateUrl = function($scope, htmlTemplateUrl) {
             // Remember the outerScope because the modal isolates the scope and I couldn't figure out how
             // to get code inside the modal to modify values in the inheritance chain.
-            var outerScope = $scope;
             var modalInstance = $modal.open({
                 templateUrl: htmlTemplateUrl,
                 backdrop: 'static',
+                scope: $scope,
                 controller: 'lxLoginModalInstanceController'
             });
 
