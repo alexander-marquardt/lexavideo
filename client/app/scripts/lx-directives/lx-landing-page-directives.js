@@ -18,7 +18,7 @@ angular.module('lxLandingPage.directives', [])
                 elem.on('click', handler);
 
                 scope.$on('$destroy', function() {
-                    elem.off(events, handler);
+                    elem.off('click', handler);
                 });
             }
         }
