@@ -318,8 +318,11 @@ angular.module('LxMainView.controllers', [])
             // If userId is not valid, then the clientId is not valid -- set it to null
             $scope.lxMainCtrlDataObj.clientId = null;
 
-            watchUserIdThenGetClientId();
-            watchClientIdThenInitializeChannel();
+
+            // The following watchers kill themselves once they are successful, therefore we need to re-start them
+            // here since we are forcing a new login.
+            lxMainViewService.watchUserIdThenGetClientId($scope);
+            lxMainViewService.watchClientIdThenInitializeChannel($scope);
         });
 
         $scope.$on('broadcastInvalidClientId', function() {
@@ -327,7 +330,7 @@ angular.module('LxMainView.controllers', [])
             if ($scope.lxMainCtrlDataObj.userId) {
                 lxAuthenticationHelper.lxCallGetAndStoreClientId($scope, $scope.lxMainCtrlDataObj.userId).then(
                     function() {
-                        watchClientIdThenInitializeChannel();
+                        lxMainViewService.watchClientIdThenInitializeChannel($scope);
                     }
                 );
             }

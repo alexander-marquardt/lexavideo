@@ -54,15 +54,15 @@ angular.module('lxAuthentication.services', [])
             }
             $window.sessionStorage.clientId = clientId;
 
-            lxJs.assert(clientId, 'clientId is not set');
+            lxJs.assert(clientId, 'lxGetAndStoreClientId: clientId is not set');
             var createClientPromise = lxHttpHandleLoginService.createClientOnServer(clientId);
             createClientPromise.then(
                 function () {
-                    $log.info('New clientId ' + clientId + ' was written to server.');
+                    $log.info('lxGetAndStoreClientId: New clientId ' + clientId + ' was written to server.');
                     scope.lxMainCtrlDataObj.clientId = clientId;
                 },
                 function () {
-                    $log.error('clientId ' + clientId + ' was not written to server.');
+                    $log.error('lxGetAndStoreClientId: clientId ' + clientId + ' was not written to server.');
                     scope.lxMainCtrlDataObj.clientId = null;
                 }
             );
@@ -99,10 +99,10 @@ angular.module('lxAuthentication.services', [])
                 createClientPromise.then(
                     function () {
                         lxJs.assert($scope.lxMainCtrlDataObj.clientId,
-                            'clientId should be initialized if createClientPromise was successful');
+                            'lxCallGetAndStoreClientId: clientId should be initialized if createClientPromise was successful');
                     },
                     function () {
-                        $log.error('Problem with createClientPromise');
+                        $log.error('lxCallGetAndStoreClientId: Problem with createClientPromise');
                     }
                 );
                 return createClientPromise;
