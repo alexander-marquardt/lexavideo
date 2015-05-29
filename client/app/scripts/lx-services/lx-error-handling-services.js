@@ -6,7 +6,7 @@
 var lxErrorHandlingServices = angular.module('lxErrorHandling.services', []);
 
 
-lxErrorHandlingServices.factory('errorLogService', function($window) {
+lxErrorHandlingServices.factory('serverLoggingService', function($window) {
 
     /* Logs an error to the server. This is executed by intercepting a call to $log.error.
      */
@@ -22,30 +22,29 @@ lxErrorHandlingServices.factory('errorLogService', function($window) {
     }
 
     return {
-        logErrorToServer : function(errorObjectOrMessage, extraInfo) {
+        logInformationToServer : function(infoObjectOrMessage, serviceUrl) {
+            // serviceUrl should be either '/_lx/log_error' or '/_lx/log_info'
 
             // if this is called in response to an exception, then the first parameter is an object,
             // otherwise it is just an error message.
 
             var data;
-            var serviceUrl = '/_lx/log_error';
 
             try {
                 var browserInfo = $.browser;
 
                 // This is the custom error content you send to server side
-                if (errorObjectOrMessage.message) {
+                if (infoObjectOrMessage.message) {
                     data = angular.toJson({
-                        errorMessage: errorObjectOrMessage.message,
-                        errorUrl: $window.location.href,
-                        stackTrace: errorObjectOrMessage.stack,
-                        extraInfo: extraInfo,
+                        logMessage: infoObjectOrMessage.message,
+                        infoUrl: $window.location.href,
+                        stackTrace: infoObjectOrMessage.stack,
                         browserInfo: browserInfo
                     });
                 } else {
                     data = angular.toJson({
-                        errorMessage: errorObjectOrMessage,
-                        errorUrl: $window.location.href,
+                        logMessage: infoObjectOrMessage,
+                        infoUrl: $window.location.href,
                         browserInfo: browserInfo
                     });
                 }
@@ -53,10 +52,10 @@ lxErrorHandlingServices.factory('errorLogService', function($window) {
                 ajaxPost(serviceUrl, data);
 
             } catch (e) {
-                console.log('Error in logErrorToServer: ' + e.message);
+                console.log('Error in logInformationToServer: ' + e.message);
                 try {
-                    data = angular.toJson({errorMessage: 'Serious error!!! logErrorToServer has an internal error.'});
-                    ajaxPost(serviceUrl, data);
+                    data = angular.toJson({logMessage: 'Serious error!!! logInformationToServer has an internal error.' + e.message});
+                    ajaxPost('/_lx/log_error', data);
                 } catch (e) {
                     console.log('Error in the error handler!!!');
                 }

@@ -9,7 +9,7 @@ angular.module('videoApp')
         /* This decorator will intercept all $log calls, and replace them with customized logging. This is primarily
            Intended for capturing error events and sending these events to the server.
          */
-        $provide.decorator('$log',['$delegate', 'errorLogService', function($delegate, errorLogService){
+        $provide.decorator('$log',['$delegate', 'serverLoggingService', function($delegate, serverLoggingService){
 
             var newLog = {};
 
@@ -20,9 +20,10 @@ angular.module('videoApp')
                 //  This call overrides $log.error
                 $delegate.error.apply(null, arguments);
 
+                var args = Array.prototype.slice.call(arguments);
+                args.push('/_lx/log_error');
                 // Execute function to log the error to the server
-
-                errorLogService.logErrorToServer.apply(null, arguments);
+                serverLoggingService.logInformationToServer.apply(null, args);
             };
 
             return newLog;

@@ -55,6 +55,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/_lx/admin/cleanup_expired_clients/', cron_jobs.CleanupExpiredClients),
 
     webapp2.Route(r'/_lx/log_error', error_reporting_from_client.LogClientError),
+    webapp2.Route(r'/_lx/log_info', error_reporting_from_client.LogClientInfo),
 
     webapp2.Route(r'/', views.MainPage, name='main'),
 
