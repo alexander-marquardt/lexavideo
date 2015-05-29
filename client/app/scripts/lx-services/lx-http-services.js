@@ -113,11 +113,13 @@ angular.module('lxHttp.services', ['angular-jwt'])
             createClientOnServer: function(clientId) {
                 var clientObj = {clientId: clientId};
                 var httpPromise = $http.post('/_lx/create_client_on_server/', clientObj);
-                httpPromise.success(function (/*data, status, headers, config */) {
-                        $log.info('client created on server for clientId: ' + clientId);
+                httpPromise.success(function (data, status/* , headers , config */) {
+                        $log.info('client created on server for clientId: ' + clientId + '. data: ' + JSON.stringify(data) +
+                            ' status: ' + status);
                     })
-                    .error(function (/*data, status, headers, config*/) {
-                        $log.error('clientId: ' + clientId + ' was not created');
+                    .error(function (data, status, headers/*, config*/) {
+                        $log.error('clientId: ' + clientId + ' was not created. data: ' + JSON.stringify(data) +
+                            ' status: ' + status + ' headers: ' + JSON.stringify(headers()));
                     });
                 return httpPromise;
             }

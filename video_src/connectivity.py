@@ -223,6 +223,7 @@ class CreateClientOnServer(BaseHandlerUserVerified):
     def post(self):
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
+        assert self.session.user_id == int(client_id.split('|')[0])
         logging.debug('CreateClientOnServer called for client_id: %s' % client_id)
 
         client_obj = clients.ClientModel.get_by_id(client_id)

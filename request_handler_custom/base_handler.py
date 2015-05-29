@@ -93,7 +93,7 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
                 # This session is still valid. Continue processing.
                 self.session.user_id = token_payload['userId']
                 self.session.username_as_written = token_payload['usernameAsWritten']
-                logging.info('***** Session data: %s' % self.session)
+                logging.info('******** SESSION user_id: %s username: %s ********' % (self.session.user_id, self.session.username_as_written))
 
                 if self.verify_client:
                     logging.info('*** Verifying client information')
