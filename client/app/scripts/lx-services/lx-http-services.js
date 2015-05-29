@@ -5,24 +5,37 @@ angular.module('lxHttp.services', ['angular-jwt'])
     .factory('lxHttpRequestInterceptor', function(
         $window,
         $q,
-        $rootScope) {
+        $rootScope,
+        $log) {
         return {
             'responseError': function(response) {
+                var reportingFunc;
 
                 if (response.status === 401) {
-
                     if ('invalidClientId' in response.data) {
+                        reportingFunc = $log.warn;
                         delete $window.sessionStorage.clientId;
                         $rootScope.$broadcast('broadcastInvalidClientId');
                     }
 
-                    if ('invalidUserAuthToken' in response.data) {
+                    else if ('invalidUserAuthToken' in response.data) {
+                        reportingFunc = $log.warn;
                         delete $window.localStorage.token;
                         delete $window.sessionStorage.clientId;
                         $rootScope.$broadcast('broadcastInvalidUserAuthToken');
                     }
-
+                    else {
+                        // Something strange has happened, so report this as a "real" error.
+                        reportingFunc = $log.error;
+                    }
                 }
+
+                else {
+                    // Http request failed with unknown status. Report as an error so that we can investigate.
+                    reportingFunc = $log.error;
+                }
+
+                reportingFunc('lxHttpRequestInterceptor responseError: ' + JSON.stringify(response));
                 return $q.reject(response);
             }
         }
@@ -118,8 +131,22 @@ angular.module('lxHttp.services', ['angular-jwt'])
                             ' status: ' + status);
                     })
                     .error(function (data, status, headers/*, config*/) {
-                        $log.error('clientId: ' + clientId + ' was not created. data: ' + JSON.stringify(data) +
-                            ' status: ' + status + ' headers: ' + JSON.stringify(headers()));
+
+                        var reportingFunc;
+                        // if invalidUserAuthToken, then we have captured this error in the http interceptor and
+                        // already initiated a new login prompt - this is therefore not reported as an "error",
+                        // since it is gracefully handled.
+                        if ('invalidUserAuthToken' in data) {
+                            reportingFunc = $log.warn;
+                        }
+
+                        // Otherwise, something strange happened and we need to report as an error so that it
+                        // gets logged back to the server.
+                        else {
+                            reportingFunc = $log.error;
+                        }
+                        reportingFunc('clientId: ' + clientId + ' was not created. data: ' + JSON.stringify(data) +
+                                ' status: ' + status + ' headers: ' + JSON.stringify(headers()));
                     });
                 return httpPromise;
             }

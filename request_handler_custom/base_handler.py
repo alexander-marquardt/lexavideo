@@ -138,7 +138,7 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
                     # The session will expire soon. However, because the client is still connected to the server
                     # we grant them an extension on their session.
                     token_session_obj.token_expiration_datetime = user_obj.get_token_expiration_datetime()
-                    logging.warn('**** Session expiration date is being reset to %s' % token_session_obj.token_expiration_datetime)
+                    logging.info('**** Session expiration date is being reset to %s' % token_session_obj.token_expiration_datetime)
                     token_session_obj.put()
 
                     if not user_obj.registered_user_bool:
@@ -161,7 +161,7 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
         except:
             # This client/user has been denied access. 
             # Send unauthorized 401 code as an error response.
-            status_reporting.log_call_stack_and_traceback(logging.error, extra_info = error_message)
+            status_reporting.log_call_stack_and_traceback(logging.warn, extra_info = error_message)
             http_helpers.set_http_json_response(self.response, {error_key: error_message}, 401)
 
 

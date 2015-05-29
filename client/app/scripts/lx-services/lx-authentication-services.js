@@ -62,7 +62,6 @@ angular.module('lxAuthentication.services', [])
                     scope.lxMainCtrlDataObj.clientId = clientId;
                 },
                 function () {
-                    $log.error('lxGetAndStoreClientId: clientId ' + clientId + ' was not written to server.');
                     scope.lxMainCtrlDataObj.clientId = null;
                 }
             );
@@ -100,9 +99,6 @@ angular.module('lxAuthentication.services', [])
                     function () {
                         lxJs.assert($scope.lxMainCtrlDataObj.clientId,
                             'lxCallGetAndStoreClientId: clientId should be initialized if createClientPromise was successful');
-                    },
-                    function () {
-                        $log.error('lxCallGetAndStoreClientId: Problem with createClientPromise');
                     }
                 );
                 return createClientPromise;

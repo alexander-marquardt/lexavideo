@@ -55,9 +55,9 @@ def get_jwt_token_payload_and_token_session_obj(authorization_header):
         (bearer_txt, split_char, token_string) = authorization_header.partition(' ')
 
         try:
-            tmp_payload = jwt.decode(token_string, constants.secret_key)
+            token_payload = jwt.decode(token_string, constants.secret_key)
 
-            token_session_id = tmp_payload['jti']
+            token_session_id = token_payload['jti']
             token_session_obj = TokenSessionModel.get_by_id(token_session_id)
 
             if token_session_obj:
@@ -65,18 +65,13 @@ def get_jwt_token_payload_and_token_session_obj(authorization_header):
                 if token_session_obj.token_expiration_datetime < datetime.datetime.utcnow():
                     # This token has expired. Set it to none
                     token_session_obj = None
-                    token_payload = None
-                else:
-                    # Token is valid
-                    token_payload = tmp_payload
-
             else:
-                raise LookupError('Session not found in the database: %s' % tmp_payload)
+                raise LookupError('Session not found in the database: %s' % token_payload)
 
         except:
             # For some reason this token has triggered an error - may require more investigation
             extra_info = "token_string: %s" % token_string
-            status_reporting.log_call_stack_and_traceback(logging.error, extra_info=extra_info)
+            status_reporting.log_call_stack_and_traceback(logging.warning, extra_info=extra_info)
 
 
     return token_payload, token_session_obj
