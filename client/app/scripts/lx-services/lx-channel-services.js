@@ -326,7 +326,15 @@ angular.module('lxChannel.services', [])
             }
         };
 
-
+        var handleUndefinedClientId = function(scope) {
+            // stop the heartbeat, since the clientId is not set, it is guaranteed to generate an error
+            // when posted to the server. Watchers in other parts of our code will notice that clientId is
+            // not set, and will try to get a new clientId.
+            self.stopSendingHeartbeat();
+            lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainCtrlDataObj.clientId, scope.channelObject);
+            $log.error('Unable to initialize channel if clientId is not set!. ' +
+                       'Closing channel and stopping heartbeat until clientId is set.');
+        };
 
         // Send periodic updates to the server so that the server can track the presence status of each user.
         // Also, each time the server receives a heartbeat, it will respond with an acknowledgement on the channel,
@@ -357,7 +365,7 @@ angular.module('lxChannel.services', [])
                         }, lxJavascriptConstants.msToWaitForHeartbeatResponse);
                     }
                     else {
-                        $log.error('Cannot send heartbeat if clientId is not set!');
+                        handleUndefinedClientId(scope);
                     }
                 }, lxAppWideConstantsService.heartbeatIntervalMilliseconds);
             };
@@ -373,7 +381,7 @@ angular.module('lxChannel.services', [])
                 self.initializeChannel(scope);
             }
             else {
-                $log.error('Unable to initialize channel if clientId is not set!')
+                handleUndefinedClientId(scope);
             }
         };
 
