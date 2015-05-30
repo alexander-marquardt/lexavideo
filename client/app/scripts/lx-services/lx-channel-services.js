@@ -56,6 +56,7 @@ angular.module('lxChannel.services', [])
              lxJavascriptConstants,
              lxJs,
              lxMessageService,
+             lxServerLoggingService,
              lxWebRtcSessionService
 
              ) {
@@ -330,7 +331,7 @@ angular.module('lxChannel.services', [])
             // stop the heartbeat, since the clientId is not set, it is guaranteed to generate an error
             // when posted to the server. Watchers in other parts of our code will notice that clientId is
             // not set, and will try to get a new clientId.
-            self.stopSendingHeartbeat();
+            self.stopSendingHeartbeat(scope.lxMainCtrlDataObj.clientId);
             lxHttpChannelService.manuallyDisconnectChannel(scope.lxMainCtrlDataObj.clientId, scope.channelObject);
             $log.error('Unable to initialize channel if clientId is not set!. ' +
                        'Closing channel and stopping heartbeat until clientId is set.');
@@ -344,7 +345,7 @@ angular.module('lxChannel.services', [])
 
             // In case this function is called multiple times, we want to make sure that previous heartbeat timers
             // are cancelled before starting a new timer.
-            self.stopSendingHeartbeat();
+            self.stopSendingHeartbeat(scope.lxMainCtrlDataObj.clientId);
 
             lxHttpChannelService.sendSynHeartbeatToServer(scope.lxMainCtrlDataObj.clientId);
             var timeoutFn = function () {
@@ -388,6 +389,9 @@ angular.module('lxChannel.services', [])
 
         var self = {
             initializeChannel: function(scope) {
+                lxServerLoggingService.logInformationToServer('initializeChannel executing for client: ' +
+                    scope.lxMainCtrlDataObj.clientId, '/_lx/log_info');
+
                 if (scope.lxMainCtrlDataObj.clientId) {
                     lxHttpChannelService.requestChannelToken(scope.lxMainCtrlDataObj.clientId, scope.lxMainCtrlDataObj.userId).then(function (response) {
                         scope.channelObject.channelToken = response.data.channelToken;
@@ -413,7 +417,9 @@ angular.module('lxChannel.services', [])
             // Stop sending heartbeats to the server. Intended to be called before
             // starting a new heartbeat, so that we don't have multiple timer loops
             // running at the same time.
-            stopSendingHeartbeat : function() {
+            stopSendingHeartbeat : function(clientId) {
+                lxServerLoggingService.logInformationToServer('stopSendingHeartbeat executing for client: ' +
+                    clientId, '/_lx/log_info');
                 $timeout.cancel(sendHeartbeatTimerId);
                 sendHeartbeatTimerId = null;
             }

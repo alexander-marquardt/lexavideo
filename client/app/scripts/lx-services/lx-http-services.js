@@ -159,6 +159,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
         $http,
         $location,
         $log,
+        lxServerLoggingService,
         lxJs
         ) {
 
@@ -268,6 +269,8 @@ angular.module('lxHttp.services', ['angular-jwt'])
                 // a message to the server immediately, so that the room will be vacated instantly. This
                 // is useful for cases where the user clicks on the reload button so that they are removed
                 // from the room before the attempt to reload the page is made.
+                lxServerLoggingService.logInformationToServer('manuallyDisconnectChannel executing for client: ' +
+                    clientId, '/_lx/log_info');
 
                 $http.post('/_lx/channel/manual_disconnect/', 'from=' + clientId, {
                     // post as form data, not as the default json

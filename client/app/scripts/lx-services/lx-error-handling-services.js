@@ -6,13 +6,17 @@
 var lxErrorHandlingServices = angular.module('lxErrorHandling.services', []);
 
 
-lxErrorHandlingServices.factory('serverLoggingService', function($window) {
+lxErrorHandlingServices.factory('lxServerLoggingService', function(
+    $window
+    ) {
 
     /* Logs an error to the server. This is executed by intercepting a call to $log.error.
      */
     function ajaxPost(serviceUrl, data) {
         // Log information to the server. Do not use angular to POST since angular
         // could itself be hosed.
+
+        console.log('Logging to server URL '+ serviceUrl + '\n' + JSON.stringify(data));
         $.ajax({
             type: 'POST',
             url: serviceUrl,
