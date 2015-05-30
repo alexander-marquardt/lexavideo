@@ -31,7 +31,7 @@ angular.module('lxMainView.services', [])
                 var idx;
 
                 clientId = $scope.lxMainCtrlDataObj.clientId;
-                lxChannelService.stopSendingHeartbeat(scope.lxMainCtrlDataObj.clientId);
+                lxChannelService.stopSendingHeartbeat();
                 lxHttpChannelService.manuallyDisconnectChannel(clientId, $scope.channelObject);
 
                 for (idx=0; idx<$scope.videoStateInfoObject.currentOpenVideoSessionsList.length; idx++) {

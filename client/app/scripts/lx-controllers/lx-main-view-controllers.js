@@ -319,6 +319,8 @@ angular.module('LxMainView.controllers', [])
             $scope.lxMainCtrlDataObj.clientId = null;
 
 
+            lxChannelService.stopHeartbeatAndCloseSocket($scope.channelObject);
+
             // The following watchers kill themselves once they are successful, therefore we need to re-start them
             // here since we are forcing a new login.
             lxMainViewService.watchUserIdThenGetClientId($scope);
@@ -327,6 +329,8 @@ angular.module('LxMainView.controllers', [])
 
         $scope.$on('broadcastInvalidClientId', function() {
             $log.info('broadcastInvalidClientId broadcast received - generating a new clientId.');
+            lxChannelService.stopHeartbeatAndCloseSocket($scope.channelObject);
+
             if ($scope.lxMainCtrlDataObj.userId) {
                 lxAuthenticationHelper.lxCallGetAndStoreClientId($scope, $scope.lxMainCtrlDataObj.userId).then(
                     function() {
