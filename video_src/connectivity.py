@@ -318,25 +318,25 @@ class DisconnectClient(webapp2.RequestHandler):
         if client_obj:
             video_setup.VideoSetup.remove_video_setup_objects_containing_client_id(client_id)
 
-        for chat_room_obj_key in client_obj.list_of_open_chat_rooms_keys:
-            chat_room_obj = chat_room_obj_key.get()
+            for chat_room_obj_key in client_obj.list_of_open_chat_rooms_keys:
+                chat_room_obj = chat_room_obj_key.get()
 
-            if chat_room_obj.has_client(client_id):
+                if chat_room_obj.has_client(client_id):
 
-                # Remove the client from the room. However, notice that we don't remove the room from the client's
-                # list_of_open_chat_rooms_keys, because if the channel comes back, we want the client to automatically
-                # join the rooms that he previously had open.
-                chat_room_obj = chat_room_obj.txn_remove_client_from_room(client_id)
+                    # Remove the client from the room. However, notice that we don't remove the room from the client's
+                    # list_of_open_chat_rooms_keys, because if the channel comes back, we want the client to automatically
+                    # join the rooms that he previously had open.
+                    chat_room_obj = chat_room_obj.txn_remove_client_from_room(client_id)
 
-                # This client has disconnected from the room, so we want to send an update to the remote
-                # clients informing them of the new room status.
-                messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
-                                                         recompute_members_from_scratch=True)
+                    # This client has disconnected from the room, so we want to send an update to the remote
+                    # clients informing them of the new room status.
+                    messaging.send_room_occupancy_to_clients(chat_room_obj, chat_room_obj.room_members_client_ids,
+                                                             recompute_members_from_scratch=True)
 
-            else:
-                # This is probably not really an error. Change it later once we understand which conditions can trigger
-                # this branch to be executed.
-                logging.info('Room %s (%d) does not have client %s - probably already removed' % (chat_room_obj.chat_room_name_normalized, chat_room_obj.key.id(), client_id))
+                else:
+                    # This is probably not really an error. Change it later once we understand which conditions can trigger
+                    # this branch to be executed.
+                    logging.info('Room %s (%d) does not have client %s - probably already removed' % (chat_room_obj.chat_room_name_normalized, chat_room_obj.key.id(), client_id))
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
