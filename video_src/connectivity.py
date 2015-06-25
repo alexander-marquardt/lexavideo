@@ -8,6 +8,7 @@ from google.appengine.api import channel
 from google.appengine.ext import ndb
 
 from video_src import clients
+from video_src import constants
 from video_src import http_helpers
 from video_src import messaging
 from video_src import chat_room_module
@@ -144,8 +145,10 @@ class SynClientHeartbeat(BaseHandlerClientVerified):
             'fromClientId': client_id, # channel-services expects fromClientId to be specified.
             'messageType': 'synAckHeartBeat' # use handshaking terminology for naming
         }
-        # logging.debug('Heartbeat synchronization received from client_id %s. '
-        #              'Synchronization acknowledgement returned to same client on channel api' % (client_id))
+
+        logging.debug('Heartbeat synchronization received from client_id %s. '
+                     'Synchronization acknowledgement returned to same client on channel api' % (client_id))
+
         channel.send_message(client_id, json.dumps(response_message_obj))
 
         http_helpers.set_http_ok_json_response(self.response, {})
@@ -268,9 +271,9 @@ class RequestChannelToken(BaseHandlerClientVerified):
 
     @handle_exceptions
     def post(self):
-        token_timeout = 24 * 60 - 1  # minutes
+        duration_minutes = constants.channel_duration_minutes
         client_id = self.session.client_obj.key.id()
-        channel_token = channel.create_channel(str(client_id), token_timeout)
+        channel_token = channel.create_channel(str(client_id), duration_minutes)
 
         logging.debug('New channel token created for client_id: %s' % client_id)
 
@@ -340,10 +343,14 @@ class DisconnectClient(webapp2.RequestHandler):
 
 class AutoDisconnectClient(DisconnectClient):
     def post(self):
-        # logging.debug('Executing AutoDisconnectClient')
-        super(AutoDisconnectClient, self).post()
+        logging.debug('Executing AutoDisconnectClient')
+
+        # There seem to be problems with the channel API calling disconnect while the channel is
+        # still connected. Therefore, don't run this code, and instead let the user timeout from
+        # the chat rooms that they are participating in.
+        #super(AutoDisconnectClient, self).post()
 
 class ManuallyDisconnectClient(DisconnectClient):
     def post(self):
-        # logging.debug('Executing ManuallyDisconnectClient')
+        logging.debug('Executing ManuallyDisconnectClient')
         super(ManuallyDisconnectClient, self).post()

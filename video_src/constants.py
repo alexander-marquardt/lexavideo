@@ -73,5 +73,5 @@ db_presence_update_interval_seconds = 5 * 60
 # following variable compensates for this uncertainty.
 leeway_seconds_for_determining_timeout = 5
 
-# maximum number of windows (clients) that a user can have open at once
-maximum_number_of_client_connections_per_user = 2
+
+channel_duration_minutes = 24 * 60 - 1  # minutes
