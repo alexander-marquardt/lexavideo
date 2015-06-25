@@ -55,6 +55,6 @@ class LogClientInfo(FormatInfo):
 
     @handle_exceptions
     def post(self):
-        super(LogClientInfo, self).post(logging.error)
+        super(LogClientInfo, self).post(logging.info)
 
 
