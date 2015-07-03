@@ -88,7 +88,7 @@ webRtcServices.factory('lxTurnService',
                 if (iceServers !== null) {
                     lxVideoParamsService.pcConfig.iceServers = lxVideoParamsService.pcConfig.iceServers.concat(iceServers);
                 }
-                $log.log('Got pcConfig.iceServers:' + lxVideoParamsService.pcConfig.iceServers + '\n');
+                $log.log('Got pcConfig.iceServers:' + angular.toJson(lxVideoParamsService.pcConfig.iceServers) + '\n');
             } catch(e) {
                 e.message = '\n\tError in onTurnResult\n\t' + e.message;
                 $log.error(e);
