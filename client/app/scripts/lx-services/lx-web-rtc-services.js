@@ -115,10 +115,6 @@ webRtcServices.factory('lxTurnService',
                 // If the broswer supports WebRTC, then setup a turn server
                 if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
 
-                    var turnUrl = 'https://computeengineondemand.appspot.com/' + 'turn?' + 'username=' +
-                        lxAppWideConstantsService.username + '&key=4080218913';
-
-
                     for (var i = 0, len = lxVideoParamsService.pcConfig.iceServers.length; i < len; i++) {
                         if (lxVideoParamsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
                             lxTurnSupportService.turnDone = true;
@@ -135,6 +131,9 @@ webRtcServices.factory('lxTurnService',
                     }
 
                     // No TURN server. Get one from computeengineondemand.appspot.com.
+                    var turnUrl = 'https://computeengineondemand.appspot.com/' + 'turn?' + 'username=' +
+                    lxAppWideConstantsService.username + '&key=4080218913';
+
                     $http({
                         url: turnUrl,
                         skipAuthorization: true,

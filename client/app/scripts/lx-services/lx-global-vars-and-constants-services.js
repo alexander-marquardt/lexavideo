@@ -87,8 +87,11 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             return constraints;
         }
 
+        // If we set the turnServer here, then turn servers will not be retrieved when maybeRequestTurn
+        // is executed.
         var turnServer = null;
         var tsPwd = null;
+
         var iceTransports = null;
 
         return {
