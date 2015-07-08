@@ -40,6 +40,17 @@ angular.module('lxGlobalVarsAndConstants.services', [])
      */
     .factory('lxVideoParamsService', function() {
 
+        var stunServer = 'stun.l.google.com:19302';
+        stunServer = null;
+
+        // If we set the turnServer here, then turn servers will not be retrieved when maybeRequestTurn
+        // is executed.
+        var turnServer = null;
+        var tsPwd = null;
+
+        var iceTransports = null;
+
+
         function getPreferredAudioSendCodec() {
             // Empty string means no preference.
             var preferredAudioSendCodec = '';
@@ -52,7 +63,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
 
         function getDefaultStunServer() {
             // others you can try: stun.services.mozilla.com, stunserver.org
-            return 'stun.l.google.com:19302';
+            return stunServer;
         }
 
 
@@ -86,13 +97,6 @@ angular.module('lxGlobalVarsAndConstants.services', [])
             constraints.optional.push({'googImprovedWifiBwe': true});
             return constraints;
         }
-
-        // If we set the turnServer here, then turn servers will not be retrieved when maybeRequestTurn
-        // is executed.
-        var turnServer = null;
-        var tsPwd = null;
-
-        var iceTransports = null;
 
         return {
             'audioReceiveCodec': 'opus/48000',

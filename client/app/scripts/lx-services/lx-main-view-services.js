@@ -15,6 +15,7 @@ angular.module('lxMainView.services', [])
         lxChatRoomMembersService,
         lxChannelService,
         lxHttpChannelService,
+        lxTurnService,
         lxVideoService) {
 
         var self = {
@@ -36,7 +37,8 @@ angular.module('lxMainView.services', [])
 
                 for (idx=0; idx<$scope.videoStateInfoObject.currentOpenVideoSessionsList.length; idx++) {
                     remoteClientId = $scope.videoStateInfoObject.currentOpenVideoSessionsList[idx];
-                    lxVideoService.showVideoElementsAndStartVideoFn($scope, 'hangupVideoExchange', remoteClientId);
+                    lxVideoService.showVideoElementsAndStartVideoFn($scope, 'hangupVideoExchange',
+                        $scope.lxMainCtrlDataObj.clientId , remoteClientId);
                 }
 
                 // loop over the list of room names in reverse, because we are eliminating each element

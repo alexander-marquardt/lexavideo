@@ -7,7 +7,8 @@ angular.module('lxVideo.services', [])
         lxAccessVideoElementsAndAccessCameraService,
         lxCallService,
         lxCreateChatRoomObjectsService,
-        lxJs
+        lxJs,
+        lxTurnService
         ) {
 
     function createMiniVideoElement($scope, remoteClientId) {
@@ -29,10 +30,24 @@ angular.module('lxVideo.services', [])
     }
 
     return {
-        showVideoElementsAndStartVideoFn: function ($scope, localVideoEnabledSetting, remoteClientId) {
+        showVideoElementsAndStartVideoFn: function (
+            $scope,
+            localVideoEnabledSetting,
+            clientId,
+            remoteClientId) {
 
             /* localVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
              */
+
+            // Get the turn credentials
+            try {
+                lxTurnService.maybeRequestTurn($scope, clientId, remoteClientId);
+            }
+            catch (e) {
+                e.message = '\n\tError in lxInitializeTurnDirective\n\t' + e.message;
+                $log.error(e);
+                return false;
+            }
 
             createMiniVideoElement($scope, remoteClientId);
 

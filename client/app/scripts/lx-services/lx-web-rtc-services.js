@@ -71,6 +71,7 @@ webRtcServices.factory('lxTurnService',
         lxAppWideConstantsService,
         lxCallService,
         lxCheckCompatibilityService,
+        lxJs,
         lxPeerService,
         lxTurnSupportService,
         lxVideoParamsService)
@@ -97,20 +98,24 @@ webRtcServices.factory('lxTurnService',
 
         var onTurnError = function() {
 
-            $log.error('No TURN server; unlikely that media will traverse networks.');
+            $log.error('Error getting TURN server; unlikely that media will traverse networks.');
         };
 
 
-        var afterTurnRequest = function() {
+        var afterTurnRequest = function(scope, remoteClientId) {
             return function () {
                 // Even if TURN request failed, continue the call with default STUN.
                 lxTurnSupportService.turnDone = true;
+
+                // We may have been waiting for a turn server to start the call.
+                lxJs.assert(remoteClientId);
+                lxCallService.maybeStart(scope, remoteClientId);
             };
         };
 
         return {
 
-            maybeRequestTurn : function() {
+            maybeRequestTurn : function(scope, clientId, remoteClientId) {
 
                 // If the broswer supports WebRTC, then setup a turn server
                 if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
@@ -130,15 +135,18 @@ webRtcServices.factory('lxTurnService',
                         return;
                     }
 
-                    // No TURN server. Get one from computeengineondemand.appspot.com.
-                    var turnUrl = 'https://computeengineondemand.appspot.com/' + 'turn?' + 'username=' +
-                    lxAppWideConstantsService.username + '&key=4080218913';
+                    // No TURN server. Get one
+                    var turnUrl = '/_lx/turn/request_rest_credentials/';
+
+                    var postData = {
+                        'clientId': clientId
+                    };
 
                     $http({
                         url: turnUrl,
-                        skipAuthorization: true,
-                        method: 'GET'
-                    }).then(onTurnResult, onTurnError).then(afterTurnRequest());
+                        method: 'POST',
+                        data: postData
+                    }).then(onTurnResult, onTurnError).then(afterTurnRequest(scope, remoteClientId));
                 }
 
                 // otherwise, the browser does not support WebRtc - we do not try to setup video
@@ -404,6 +412,7 @@ webRtcServices.factory('lxPeerService',
         lxChatRoomVarsService,
         lxIceService,
         lxJs,
+        lxTurnSupportService,
         lxVideoParamsService)
     {
 
@@ -465,6 +474,7 @@ webRtcServices.factory('lxPeerService',
                 try {
                     lxJs.assert(clientId, 'clientId is not set');
                     lxJs.assert(remoteClientId, 'remoteClientId is not set');
+                    lxJs.assert(lxTurnSupportService.turnDone, 'turn has not been setup');
 
                     // Create an RTCPeerConnection via the polyfill (adapter.js).
                     self.pc[remoteClientId] = new lxAdapterService.RTCPeerConnection(lxVideoParamsService.pcConfig, lxVideoParamsService.pcConstraints);

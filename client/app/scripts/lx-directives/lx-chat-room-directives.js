@@ -4,28 +4,6 @@
 
 angular.module('lxChatRoom.directives', [])
 
-    .directive('lxInitializeTurnDirective',
-    function(
-        $log,
-        lxTurnService
-        ) {
-
-        return {
-            restrict: 'A',
-            link: function() {
-                try {
-                    lxTurnService.maybeRequestTurn();
-                }
-                catch (e) {
-                    e.message = '\n\tError in lxInitializeTurnDirective\n\t' + e.message;
-                    $log.error(e);
-                    return false;
-                }
-            }
-        };
-    })
-
-
     .directive('lxAccessCameraAndMicrophoneDirective',
     function(
         lxAccessCameraAndMicrophoneService)
