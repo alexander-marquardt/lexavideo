@@ -127,21 +127,11 @@ webRtcServices.factory('lxTurnService',
                         }
                     }
 
-                    var currentDomain = document.domain;
-                    if (currentDomain.search('localhost') === -1 &&
-                        currentDomain.search('apprtc') === -1) {
-                        // Not authorized domain. Try with default STUN instead.
-                        lxTurnSupportService.turnDone = true;
-                        return;
-                    }
-
                     // No TURN server. Get one
                     var turnUrl = '/_lx/turn/request_rest_credentials/';
-
                     var postData = {
                         'clientId': clientId
                     };
-
                     $http({
                         url: turnUrl,
                         method: 'POST',
