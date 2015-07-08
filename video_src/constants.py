@@ -75,3 +75,7 @@ leeway_seconds_for_determining_timeout = 5
 
 
 channel_duration_minutes = 24 * 60 - 1  # minutes
+
+
+# If data is being relayed through the turn server, then we timeout after this number of minutes
+turn_relay_timeout_minutes = 60

@@ -1,7 +1,6 @@
 
 import json
 import logging
-import webapp2
 
 from google.appengine.api import channel
 
@@ -9,7 +8,7 @@ from video_src import chat_room_module
 from video_src import http_helpers
 from video_src import video_setup
 
-from request_handler_custom.base_handler import BaseHandlerClientVerified, BaseHandlerUserVerified
+from request_handler_custom.base_handler import BaseHandlerUserVerified
 
 from error_handling import handle_exceptions
 
