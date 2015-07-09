@@ -14,7 +14,8 @@ var webRtcServices = angular.module('lxVideoSetup.services', []);
 /* global attachMediaStream */
 /* global reattachMediaStream */
 
-
+// The following flag is only used for debugging, and should never be true for a production build
+var force_video_through_turn = true;
 
 
 webRtcServices.service('lxAdapterService', function ($log) {
@@ -179,6 +180,12 @@ webRtcServices.service('lxIceService', function($log, lxMessageService) {
     this.onIceCandidate = function(clientId, remoteClientId) {
         return function(event) {
             if (event.candidate) {
+
+                if (force_video_through_turn && self.iceCandidateType(event.candidate.candidate) !== 'TURN') {
+                    $log.error('We are forcing all video through the turn server. This should only be done for debugging.');
+                    return;
+                }
+
                 lxMessageService.sendMessageToClientFn('sdp', {type: 'candidate',
                     label: event.candidate.sdpMLineIndex,
                     id: event.candidate.sdpMid,
