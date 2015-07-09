@@ -41,7 +41,6 @@ angular.module('lxGlobalVarsAndConstants.services', [])
     .factory('lxVideoParamsService', function() {
 
         var stunServer = 'stun.l.google.com:19302';
-        stunServer = null;
 
         // If we set the turnServer here, then turn servers will not be retrieved when maybeRequestTurn
         // is executed.
@@ -80,7 +79,7 @@ angular.module('lxGlobalVarsAndConstants.services', [])
 
             if (turnServer) {
                 var turnConfig = 'turn:' + turnServer;
-                servers.push({'urls': turnConfig, 'credential': tsPwd});
+                servers.push({'urls': [turnConfig], 'credential': tsPwd});
             }
 
             config.iceServers = servers;
