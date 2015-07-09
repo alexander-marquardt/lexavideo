@@ -39,14 +39,16 @@ angular.module('lxVideo.services', [])
             /* localVideoEnabledSetting: [see createVideoExchangeSettingsObject for options]
              */
 
-            // Get the turn credentials
-            try {
-                lxTurnService.maybeRequestTurn($scope, clientId, remoteClientId);
-            }
-            catch (e) {
-                e.message = '\n\tError in lxInitializeTurnDirective\n\t' + e.message;
-                $log.error(e);
-                return false;
+            if (localVideoEnabledSetting !== 'hangupVideoExchange' && localVideoEnabledSetting !== 'denyVideoExchange') {
+                // Get the turn credentials
+                try {
+                    lxTurnService.maybeRequestTurn($scope, clientId, remoteClientId);
+                }
+                catch (e) {
+                    e.message = '\n\tError in lxInitializeTurnDirective\n\t' + e.message;
+                    $log.error(e);
+                    return false;
+                }
             }
 
             createMiniVideoElement($scope, remoteClientId);

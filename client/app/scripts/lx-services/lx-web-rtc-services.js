@@ -116,19 +116,16 @@ webRtcServices.factory('lxTurnService',
 
         return {
 
+            // Note, in the future if this is slowing down the start of the video, then we could
+            // pre-fetch the turn server and credentials rather than waiting for the user to request
+            // the video before getting the data.
             maybeRequestTurn : function(scope, clientId, remoteClientId) {
 
                 // If the broswer supports WebRTC, then setup a turn server
                 if (lxCheckCompatibilityService.userDeviceBrowserAndVersionSupported) {
 
-                    for (var i = 0, len = lxVideoParamsService.pcConfig.iceServers.length; i < len; i++) {
-                        if (lxVideoParamsService.pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
-                            lxTurnSupportService.turnDone = true;
-                            return;
-                        }
-                    }
-
-                    // No TURN server. Get one
+                    // Get a turn server with credentials
+                    lxTurnSupportService.turnDone = false;
                     var turnUrl = '/_lx/turn/request_rest_credentials/';
                     var postData = {
                         'clientId': clientId
