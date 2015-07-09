@@ -160,20 +160,8 @@ webRtcServices.service('lxIceService', function($log, lxMessageService) {
     var gatheredIceCandidateTypes = { Local: {}, Remote: {} };
 
     // self is necessary because some functions are called as methods of other objects which lose the
-    // referencd to "this".
+    // reference to "this".
     var self = this;
-
-
-    var updateLog = function() {
-//        var contents = 'Gathered ICE Candidates\n';
-//        for (var endpoint in gatheredIceCandidateTypes) {
-//            contents += endpoint + ':\n';
-//            for (var type in gatheredIceCandidateTypes[endpoint]) {
-//                contents += '  ' + type + '\n';
-//            }
-//        }
-//        $log.info(contents);
-    };
 
     this.iceCandidateType = function(candidateSDP) {
         if (candidateSDP.indexOf('typ relay ') >= 0) {
@@ -188,13 +176,6 @@ webRtcServices.service('lxIceService', function($log, lxMessageService) {
         return 'UNKNOWN';
     };
 
-    this.noteIceCandidate = function(location, type) {
-        if (gatheredIceCandidateTypes[location][type]) {
-            return;
-        }
-        gatheredIceCandidateTypes[location][type] = 1;
-        updateLog();
-    };
     this.onIceCandidate = function(clientId, remoteClientId) {
         return function(event) {
             if (event.candidate) {
@@ -205,7 +186,8 @@ webRtcServices.service('lxIceService', function($log, lxMessageService) {
                     clientId,
                     remoteClientId);
 
-                self.noteIceCandidate('Local', self.iceCandidateType(event.candidate.candidate));
+                $log.log('Local ICE Candidate: ' + self.iceCandidateType(event.candidate.candidate) +
+                    ' ' + angular.toJson(event.candidate));
             } else {
                 $log.log('End of candidates.');
             }
@@ -383,7 +365,9 @@ webRtcServices.service('lxWebRtcSessionService',
             } else if (message.type === 'candidate') {
                 var candidate = new lxAdapterService.RTCIceCandidate({sdpMLineIndex: message.label,
                     candidate: message.candidate});
-                lxIceService.noteIceCandidate('Remote', lxIceService.iceCandidateType(message.candidate));
+                $log.log('Remote ICE Candidate: ' + lxIceService.iceCandidateType(message.candidate) +
+                    ' ' + angular.toJson(message));
+
                 lxPeerService.pc[remoteClientId].addIceCandidate(candidate,
                     lxIceService.onAddIceCandidateSuccess, lxIceService.onAddIceCandidateError);
             } else if (message.type === 'bye') {
