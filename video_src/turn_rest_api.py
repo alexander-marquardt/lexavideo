@@ -13,7 +13,7 @@ from video_src import http_helpers
 from video_src.error_handling import handle_exceptions
 from request_handler_custom.base_handler import BaseHandlerClientVerified
 
-shared_secret = 'foobar'
+shared_secret = 'foobarBAM33ttXXvv99poo'
 turn_ip = '130.211.82.191'
 turn_uri_combinations = [('3478', 'udp'), ('3478', 'tcp'), ('3479', 'udp'), ('3479', 'tcp')]
 
