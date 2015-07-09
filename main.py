@@ -12,7 +12,7 @@ Main URL hander for Videochat Applications written by Alexander Marquardt - code
 
 
 import webapp2
-import vidsetup
+import build_config
 
 from video_src import connectivity
 from video_src import chat_room_module
@@ -66,7 +66,7 @@ app = webapp2.WSGIApplication([
 
     # Don't use webapp2.Route for the following "catch-all" -- for some reason it doesn't work correctly if used
     (r'/.*', views.MainPage),],
-    debug=vidsetup.DEBUG_BUILD,
+    debug=build_config.DEBUG_BUILD,
     config = {
         'webapp2_extras.auth': {
             'user_model': 'video_src.users.UserModel',

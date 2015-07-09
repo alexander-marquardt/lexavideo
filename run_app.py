@@ -2,10 +2,10 @@
 
 from build_support import prepare_build
 import sys
-import vidsetup
+import build_config
 
-if vidsetup.DEBUG_BUILD:
-    version_id = vidsetup.VERSION_ID
+if build_config.DEBUG_BUILD:
+    version_id = build_config.VERSION_ID
 else:
     version_id = prepare_build.get_version_identifier()
 prepare_build.customize_files(version_id)

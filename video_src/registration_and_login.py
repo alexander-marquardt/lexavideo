@@ -17,7 +17,7 @@ from video_src.error_handling import handle_exceptions
 # from webapp2_extras.auth import InvalidPasswordError
 
 
-import vidsetup
+import build_config
 
 from video_src import http_helpers
 from video_src import users
@@ -27,7 +27,7 @@ from request_handler_custom.base_handler import BaseHandlerClientVerified
 from request_handler_custom.base_handler import user_required
 
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(vidsetup.BASE_STATIC_DIR),
+    loader=jinja2.FileSystemLoader(build_config.BASE_STATIC_DIR),
     undefined=jinja2.StrictUndefined)
 
 

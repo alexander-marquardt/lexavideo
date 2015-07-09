@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-import vidsetup, sys, datetime
+import build_config, sys, datetime
 from build_support import prepare_build
 
 
-if vidsetup.DEBUG_BUILD:
+if build_config.DEBUG_BUILD:
     print "************************************"
     print "Error - DEBUG_BUILD must be false to perpare this app for uploading"
     print "************************************"

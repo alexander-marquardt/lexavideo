@@ -2,7 +2,7 @@
 
 import jinja2
 import json
-import vidsetup
+import build_config
 import webapp2
 
 from video_src import constants
@@ -15,7 +15,7 @@ from video_src.error_handling import handle_exceptions
 # not been defined - this is important for us because we may accidentaly attempt to use an angular template
 # variable inside of jinja code, and this will notify us of the error.
 jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(vidsetup.BASE_STATIC_DIR),
+    loader=jinja2.FileSystemLoader(build_config.BASE_STATIC_DIR),
     undefined=jinja2.StrictUndefined)
 
 
@@ -80,14 +80,14 @@ class MainPage(webapp2.RequestHandler):
             'site_name_for_display': constants.site_name_for_display,
             'userInfoEmbeddedInHtmlJson': json.dumps(
                 {
-                    'debugBuildEnabled': vidsetup.DEBUG_BUILD,
+                    'debugBuildEnabled': build_config.DEBUG_BUILD,
                     'heartbeatIntervalMilliseconds': constants.heartbeat_interval_seconds * 1000,
                     'usernameMaxChars': constants.username_max_chars,
                     'usernameMinChars': constants.username_min_chars,
                     'usernameInvalidCharsForRegex': constants.username_invalid_chars_regex,
                 }
             ),
-            'enable_live_reload': vidsetup.ENABLE_LIVE_RELOAD,
+            'enable_live_reload': build_config.ENABLE_LIVE_RELOAD,
             }
 
         write_jinja_response(self.response, target_page, params)        

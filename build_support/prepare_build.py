@@ -1,5 +1,5 @@
 
-import vidsetup
+import build_config
 import os, datetime, subprocess
 from build_support import gen_yaml
 
@@ -25,8 +25,8 @@ def run_grunt(grunt_arg, subprocess_function):
     
 def run_grunt_jobs():
     
-    if vidsetup.RUN_GRUNT:
-        if vidsetup.DEBUG_BUILD:
+    if build_config.RUN_GRUNT:
+        if build_config.DEBUG_BUILD:
             # If we are accessing the non-compressed static files, we are probably developing and therefore want to see updates
             run_grunt('serve', subprocess.Popen)    
         else: 
