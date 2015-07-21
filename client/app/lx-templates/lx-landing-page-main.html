@@ -124,6 +124,8 @@
 <!-- How to use ChatSurfing instructions modal -->
 <script type="text/ng-template" id="lx-how-to-use-chatsurfing-template-cache.html">
     <div class="modal-header">
+                <button type="button" class="close" ng-click="modalOkFn()">X</button>
+
        <h3 class="modal-title">How to use ChatSurfing</h3>
     </div>
     <div class="modal-body">
@@ -140,21 +142,18 @@
                 Please note that to protect our members privacy, messages sent before you joined the
                 room will not be displayed to you.</li>
             <li>If you want to request a video exchange with someone, then click on the camera symbol beside
-                their name and wait for them to accept or deny your offer.
-                (Due to limitations caused by certain network and firewall configurations we expect
-                90% of video calls to connect
-                without problems, and in the very near future this will improve to 100%.)</li>
+                their name and wait for them to accept or deny your offer.</li>
         </ul>
         <label>Advanced features</label>
         <ul>
-            <li>You can open as many chats as you like. Just click on the "Menu" symbol in the top left corner beside
-                the ChatSurfing logo to see the option for "New chat". You can also show the menu by swiping to the
-                right on a touch-sensitive device.
+            <li>You can open as many chats as you like. Just click on the button in the top left corner on the left side
+                of the ChatSurfing logo to see the option for "New chat". You can also show the menu by swiping from
+                left to right on a touch-sensitive device.
             </li>
-            <li>You can open video sessions with as many people as you like, however if your computer starts to slow down
+            <li>You can open video sessions with as many people as you like, however if your browser starts to slow down
                 this is a sign that you have probably opened too many video sessions.
             </li>
-            <li>If you wish to see who has invited you to exchange video, click on the "Menu" symbol at the top
+            <li>If you wish to see who has invited you to exchange video, click on the button at the top
                 left beside the ChatSurfing logo, and select "Notifications".
                 The notifications menu can also be seen by swiping left on a touch-sensitive device.
             </li>
@@ -165,7 +164,8 @@
         <label>Supported browsers and devices</label>
         <ul>
             <li>Video functionality is supported in Google Chrome, Firefox and Opera web browsers. We recommend using Chrome.</li>
-            <li>Unfortunately, due to technical limitations video functionality does not work on iPhones or iPads.</li>
+            <li>Unfortunately, due to technical limitations video functionality does not work on iPhones or iPads. We
+                hope to build an app in the future to allow support for these devices.</li>
         </ul>
     </div>
 
