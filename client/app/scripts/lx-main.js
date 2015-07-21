@@ -54,6 +54,8 @@ var videoApp = angular.module('videoApp', [
     'angular-jwt'
 ]);
 
-videoApp.run(function() {
 
+videoApp.run(function() {
+    gettextCatalog.currentLanguage = 'es';
+    gettextCatalog.debug = true;
 });
