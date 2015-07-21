@@ -17,6 +17,18 @@ var webRtcServices = angular.module('lxVideoSetup.services', []);
 // The following flag is only used for debugging, and should never be true for a production build
 var force_video_through_turn = false;
 
+// Note: the turn server ip and turn credentials are requested from the server for each user in maybeRequestTurn.
+// Each credential is time-stamped and time-limited and has a unique hash corresponding to the "turn username"
+// and the current time (for the turn server "turn username" is the expiration timestamp concatenated with the client id).
+// The hash is generated from a shared secret that only the turn server and the web server know. The client will
+// never see the shared secret, and will only be presented with valid credentials generated on the web server, which
+// are then passed over to the turn server for authentication.
+
+// Command on linux box to start the turn server:
+// (simplified) turnserver --lt-cred-mech --static-auth-secret [shared secret] --realm chatsurfing.com --max-bps 15000
+// (original) turnserver --verbose --lt-cred-mech --static-auth-secret [shared secret] -r chatsurfing.com
+// -X [server external address] --fingerprint -L [internal address] -E [internal address] --max-bps 15000 [optional --no-stun]
+
 
 webRtcServices.service('lxAdapterService', function ($log) {
     /* simple wrapper for global functions contained in adapter.js. This will make it
@@ -84,9 +96,10 @@ webRtcServices.factory('lxTurnService',
             try {
                 var turnServer = response.data;
                 // Create turnUris using the polyfill (adapter.js).
-                var iceServers = lxAdapterService.createIceServers(turnServer.uris,
-                    turnServer.username,
-                    turnServer.password);
+                var iceServers = lxAdapterService.createIceServers(
+                    turnServer.uris,
+                    turnServer.turn_username,
+                    turnServer.turn_password);
                 if (iceServers !== null) {
                     lxVideoParamsService.pcConfig.iceServers = lxVideoParamsService.pcConfig.iceServers.concat(iceServers);
                 }
@@ -117,8 +130,9 @@ webRtcServices.factory('lxTurnService',
         return {
 
             // Note, in the future if this is slowing down the start of the video, then we could
-            // pre-fetch the turn server and credentials rather than waiting for the user to request
-            // the video before getting the data.
+            // (possibly) pre-fetch the turn server and credentials rather than waiting for the user to request
+            // the video before getting the data. Note: if we pre-fetch, the downside is that credentials may
+            // be stale/expired if the user logged in a long time ago.
             maybeRequestTurn : function(scope, clientId, remoteClientId) {
 
                 // If the broswer supports WebRTC, then setup a turn server

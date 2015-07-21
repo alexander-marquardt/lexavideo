@@ -34,12 +34,12 @@ class TurnRestCredentials(BaseHandlerClientVerified):
         for option in turn_uri_combinations:
             uris.append("turn:%s:%s?transport=%s" % (turn_ip, option[0], option[1]))
 
-        temporary_username = "%d:%s" % (expire_ts, client_id)
-        temporary_password = b64encode(hmac.new(shared_secret, temporary_username, hashlib.sha1).digest())
+        turn_username = "%d:%s" % (expire_ts, client_id)
+        turn_password = b64encode(hmac.new(shared_secret, turn_username, hashlib.sha1).digest())
 
         response_dict = {
-            'username': temporary_username,
-            'password': temporary_password,
+            'turn_username': turn_username,
+            'turn_password': turn_password,
             'uris': uris
         }
 
