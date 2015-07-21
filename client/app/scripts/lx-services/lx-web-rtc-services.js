@@ -15,7 +15,7 @@ var webRtcServices = angular.module('lxVideoSetup.services', []);
 /* global reattachMediaStream */
 
 // The following flag is only used for debugging, and should never be true for a production build
-var force_video_through_turn = true;
+var force_video_through_turn = false;
 
 
 webRtcServices.service('lxAdapterService', function ($log) {

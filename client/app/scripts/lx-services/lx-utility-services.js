@@ -81,6 +81,42 @@ angular.module('lxUtility.services', [])
         };
     })
 
+    .factory('lxSetEnableShowVideoElementsService',
+    function(
+        $log
+        ) {
+
+
+        return {
+            lxSetEnableShowVideoElementsFn :function($scope) {
+                $log.debug('setting enableShowVideoElements to false');
+
+                $scope.videoStateInfoObject.enableShowVideoElements = false;
+
+                // we wait for the ng-view animation to end before we show the video elements. This
+                // is necessary because the if video is shown, then the animations don't work correctly.
+                // Note: the "one" handler is unbound after it's first invocation, which is exactly what we want.
+                $('.cl-ng-view').one('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function(){
+                    $scope.$apply(function() {
+                        $log.debug('setting enableShowVideoElements to true');
+                        $scope.videoStateInfoObject.enableShowVideoElements = true;
+                    });
+                });
+
+                // The following code is necessary because sometime the above ".one()" code doesn't fire if the user
+                // switches away from the window while the animation is going on. Therefore, if the user leaves the
+                // current window, automatically set enableShowVideoElements to true.
+                $(window).on('blur', function() {
+                    $log.debug('setting enableShowVideoElements to true after user has left window');
+                    $scope.videoStateInfoObject.enableShowVideoElements = true;
+
+                    // remove the event listener since we have now enabled the display of the video elements.
+                    $(window).off('blur');
+                });
+            }
+        }
+    })
+
     .factory('lxShowNumMessagesService',
     function(
         $timeout,

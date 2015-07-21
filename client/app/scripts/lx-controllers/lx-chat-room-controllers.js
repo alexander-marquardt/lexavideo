@@ -17,8 +17,10 @@ angular.module('LxChatRoom.controllers', [])
         $log,
         $scope,
         $timeout,
+        $window,
         lxAuthenticationHelper,
         lxHttpChannelService,
+        lxSetEnableShowVideoElementsService,
         lxJs,
         lxChatRoomMembersService
         ) {
@@ -26,15 +28,7 @@ angular.module('LxChatRoom.controllers', [])
         $scope.lxMainCtrlDataObj.currentView = 'LxChatMainView';
         $scope.mainMenuObject.showMainMenu = false;
 
-        // we wait for the ng-view animation to end before we show the video elements. This
-        // is necessary because the video interferes with the animations.
-        // Note: the "one" handler is unbound after it's first invocation, which is exactly what we want.
-        $scope.videoStateInfoObject.enableShowVideoElements = false;
-        $('.cl-ng-view').one('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function(){
-            $scope.$apply(function() {
-                $scope.videoStateInfoObject.enableShowVideoElements = true;
-            });
-        });
+        lxSetEnableShowVideoElementsService.lxSetEnableShowVideoElementsFn($scope);
 
         var normalizedChatRoomNameFromUrl = $routeParams.chatRoomName.toLowerCase();
         lxChatRoomMembersService.lifoQueueChatRoomNameOnNormalizedOpenRoomNamesList(normalizedChatRoomNameFromUrl, $scope.normalizedOpenRoomNamesList);
