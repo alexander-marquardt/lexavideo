@@ -46,6 +46,7 @@ var videoApp = angular.module('videoApp', [
     // vendor directives
     'scrollGlue.directives',
     'presenceModule',
+    'gettext',
 
     // angular services
     'ngAnimate',
@@ -55,7 +56,7 @@ var videoApp = angular.module('videoApp', [
 ]);
 
 
-videoApp.run(function() {
-    gettextCatalog.currentLanguage = 'es';
+videoApp.run(function(gettextCatalog) {
+    gettextCatalog.setCurrentLanguage('es');
     gettextCatalog.debug = true;
 });

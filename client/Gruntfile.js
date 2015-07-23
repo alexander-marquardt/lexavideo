@@ -27,6 +27,22 @@ module.exports = function (grunt) {
             dist: 'dist'
         },
 
+        nggettext_extract: {
+            pot: {
+                files: {
+                    'po/template.pot': ['<%= yeoman.app %>/*.html', '<%= yeoman.app %>/lx-templates/{,*/}*.html']
+                }
+            }
+        },
+
+        nggettext_compile: {
+            all: {
+                files: {
+                    '<%= yeoman.app %>/scripts/gettext/translations.js': ['po/*.po']
+                }
+            }
+        },
+
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             bower: {
@@ -371,6 +387,10 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask('gettext', function(target) {
+        grunt.log.write('Attempting to run nggettext_extract');
+        grunt.task.run(['nggettext_extract']);
+    });
 
     grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
         if (target === 'dist') {
