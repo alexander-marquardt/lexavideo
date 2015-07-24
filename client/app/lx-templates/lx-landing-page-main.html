@@ -23,8 +23,7 @@
                             it will only be shared with people that you choose.
                         </p>
                     </div>
-                    <div class="col-xs-12">&nbsp;
-                    </div>
+                    <div class="col-xs-12">&nbsp;</div>
                 </div>
                 <div class="row">
                     <div class="col-xs-10 col-sm-8 col-md-6">
@@ -32,11 +31,11 @@
                             <form name="createRoomForm" role="form" novalidate>
                                 <div class="form-group">
 
-                                    <label for="id-inputRoomName">Enter into a custom room</label>
+                                    <label for="id-inputRoomName" translate>Enter into a chat room</label>
                                     <div class="input-group">
                                         <input class=" form-control"
                                                id="id-inputRoomName"
-                                               placeholder="Name of chat room to create and/or join"
+                                               placeholder="{{'Name of chat room to create and/or join'|translate}}"
                                                name="chatRoomNameInputElem"
                                                ng-model="inputRoomObj.chatRoomName"
                                                ng-minlength="{{ minInputLength }}"

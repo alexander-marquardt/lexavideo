@@ -1,17 +1,62 @@
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Language-Team: \n"
-"MIME-Version: 1.0\n"
-"X-Generator: Poedit 1.8.3\n"
 "Last-Translator: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language-Team: \n"
 "Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: app/scripts/lx-directives/lx-landing-page-directives.js:111
+msgid "Chat room name is available!"
+msgstr "Nombre de sala de chat es disponible!"
+
+#: app/lx-templates/lx-landing-page-main.html:19
+msgid ""
+"ChatSurfing allows you to easily\n"
+"                            <strong>chat</strong> and <strong>video "
+"conference</strong>\n"
+"                            by entering into a chat room and inviting your "
+"friends and acquaintances to join you.\n"
+"                            For your privacy, your video is only enabled "
+"when you explicitly turn it on and\n"
+"                            it will only be shared with people that you "
+"choose."
+msgstr ""
+"ChatSurfing te permite <strong>chatear</strong> y <strong>video conferencia</"
+"strong> con facilidad.  Solo tienes que entrar en una sala de chat e invitar "
+"a tus amigos.\n"
+"Para tu privacidad, el vídeo sólo se activa cuando lo autorizas "
+"explícitamente y sólo se compartirá con la gente que has elidido."
+
+#: app/scripts/lx-directives/lx-landing-page-directives.js:112
+msgid "Create!"
+msgstr "Crear!"
+
+#: app/lx-templates/lx-landing-page-main.html:34
+msgid "Enter into a chat room"
+msgstr "Entra en una sala de chat"
+
+#: app/scripts/lx-directives/lx-landing-page-directives.js:144
+msgid "Enter!"
+msgstr "Entrar!"
 
 #: app/lx-templates/lx-landing-page-main.html:18
 msgid "Join a chat room"
 msgstr "Únete a una sala de chat"
+
+#: app/scripts/lx-directives/lx-landing-page-directives.js:119
+msgid "Join!"
+msgstr "Unir!"
+
+#: app/lx-templates/lx-landing-page-main.html:38
+msgid "Name of chat room to create and/or join"
+msgstr "Nombre de sala de chat para crear y/o unirte"
+
+#~ msgid "Enter into a custom room"
+#~ msgstr "Entra sala de chat"

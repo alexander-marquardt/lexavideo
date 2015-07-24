@@ -27,7 +27,7 @@ angular.module('lxLandingPage.directives', [])
     .directive('checkForRoomOccupancyDirective',
     function(
         $log,
-
+        gettextCatalog,
         lxHttpHandleRoomService,
         lxLandingPageConstantsService,
         lxDelayActionService) {
@@ -108,15 +108,15 @@ angular.module('lxLandingPage.directives', [])
                                         if (response.data.chatRoomName === inputElement.value.toLowerCase()) {
 
                                             if (response.data.roomIsRegistered === false || response.data.numInRoom === 0) {
-                                                ctrl.roomIsEmptyMessage = 'Chat room name is available!';
-                                                ctrl.submitButtonText = 'Create!';
+                                                ctrl.roomIsEmptyMessage = gettextCatalog.getString('Chat room name is available!');
+                                                ctrl.submitButtonText = gettextCatalog.getString('Create!');
                                                 ctrl.inputCssClass = 'cl-valid-input-glow';
                                             }
                                             else {
                                                 var msg = 'Chat ' + response.data.chatRoomName + ' has ' + response.data.numInRoom + ' occupant';
                                                 var plural = msg + 's';
                                                 ctrl.roomNumOccupantsMessage = response.data.numInRoom === 1 ? msg : plural;
-                                                ctrl.submitButtonText = 'Join!';
+                                                ctrl.submitButtonText = gettextCatalog.getString('Join!');
                                                 ctrl.inputCssClass = 'cl-warning-input-glow'
                                             }
                                         }
@@ -141,7 +141,7 @@ angular.module('lxLandingPage.directives', [])
 
                         } else {
                             // This basically just acts as a place holder that will never really be clickable.
-                            ctrl.submitButtonText = 'Enter!';
+                            ctrl.submitButtonText = gettextCatalog.getString('Enter!');
                             if (ctrl.$dirty ) {
                                 ctrl.inputCssClass = 'cl-invalid-input-glow';
                             }

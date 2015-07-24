@@ -4,6 +4,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: app/scripts/lx-directives/lx-landing-page-directives.js:111
+msgid "Chat room name is available!"
+msgstr ""
+
 #: app/lx-templates/lx-landing-page-main.html:19
 msgid ""
 "ChatSurfing allows you to easily\n"
@@ -13,6 +17,26 @@ msgid ""
 "                            it will only be shared with people that you choose."
 msgstr ""
 
+#: app/scripts/lx-directives/lx-landing-page-directives.js:112
+msgid "Create!"
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:34
+msgid "Enter into a chat room"
+msgstr ""
+
+#: app/scripts/lx-directives/lx-landing-page-directives.js:144
+msgid "Enter!"
+msgstr ""
+
 #: app/lx-templates/lx-landing-page-main.html:18
 msgid "Join a chat room"
+msgstr ""
+
+#: app/scripts/lx-directives/lx-landing-page-directives.js:119
+msgid "Join!"
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:38
+msgid "Name of chat room to create and/or join"
 msgstr ""

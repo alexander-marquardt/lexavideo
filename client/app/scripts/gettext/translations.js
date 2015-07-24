@@ -1,5 +1,5 @@
 angular.module('gettext').run(['gettextCatalog', function (gettextCatalog) {
 /* jshint -W100 */
-    gettextCatalog.setStrings('es', {"Join a chat room":"Únete a una sala de chat"});
+    gettextCatalog.setStrings('es', {"Chat room name is available!":"Nombre de sala de chat es disponible!","ChatSurfing allows you to easily\n                            <strong>chat</strong> and <strong>video conference</strong>\n                            by entering into a chat room and inviting your friends and acquaintances to join you.\n                            For your privacy, your video is only enabled when you explicitly turn it on and\n                            it will only be shared with people that you choose.":"ChatSurfing te permite <strong>chatear</strong> y <strong>video conferencia</strong> con facilidad.  Solo tienes que entrar en una sala de chat e invitar a tus amigos.\nPara tu privacidad, el vídeo sólo se activa cuando lo autorizas explícitamente y sólo se compartirá con la gente que has elidido.","Create!":"Crear!","Enter into a chat room":"Entra en una sala de chat","Enter!":"Entrar!","Join a chat room":"Únete a una sala de chat","Join!":"Unir!","Name of chat room to create and/or join":"Nombre de sala de chat para crear y/o unirte"});
 /* jshint +W100 */
 }]);
