@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*- 
 
 import re
-import datetime
 
 site_name_dot_com = 'chatsurfing.com'
 site_name_for_display = 'ChatSurfing'
@@ -79,3 +78,6 @@ channel_duration_minutes = 24 * 60 - 1  # minutes
 
 # If data is being relayed through the turn server, then we timeout after this number of minutes
 turn_relay_timeout_minutes = 60
+
+# Define what locales we support, eg 'en_US', 'es', 'es_ES', etc.)
+supported_locales = ('en', 'es')

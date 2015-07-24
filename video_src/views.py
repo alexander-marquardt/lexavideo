@@ -6,6 +6,7 @@ import build_config
 import webapp2
 
 from video_src import constants
+from video_src import utils
 from video_src.error_handling import handle_exceptions
 
 
@@ -74,17 +75,22 @@ class MainPage(webapp2.RequestHandler):
 
 
         target_page = 'index.html'
+
+        # Get the browser language
+        locale = utils.get_locale_from_request(self.request)
+
         params = {
             # Note: pass jinja variables using snake_case, and javascript variables using camelCase
             'site_name_dot_com': constants.site_name_dot_com,
             'site_name_for_display': constants.site_name_for_display,
-            'userInfoEmbeddedInHtmlJson': json.dumps(
+            'userInfoEmbeddedInHtml': json.dumps(
                 {
                     'debugBuildEnabled': build_config.DEBUG_BUILD,
                     'heartbeatIntervalMilliseconds': constants.heartbeat_interval_seconds * 1000,
                     'usernameMaxChars': constants.username_max_chars,
                     'usernameMinChars': constants.username_min_chars,
                     'usernameInvalidCharsForRegex': constants.username_invalid_chars_regex,
+                    'preferedLocale': locale
                 }
             ),
             'enable_live_reload': build_config.ENABLE_LIVE_RELOAD,
