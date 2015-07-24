@@ -17,6 +17,7 @@ angular.module('LxMainView.controllers', [])
         $scope,
         $window,
         $timeout,
+        gettextCatalog,
         lxAppWideConstantsService,
         lxAuthenticationHelper,
         lxChannelService,
@@ -194,6 +195,10 @@ angular.module('LxMainView.controllers', [])
             $scope.displayMainMenu($event, !$scope.mainMenuObject.showMainMenu);
         };
 
+        $scope.changeLanguage = function(locale) {
+            $window.localStorage.locale = locale;
+            gettextCatalog.setCurrentLanguage($window.localStorage.locale)
+        };
 
         // videoExchangeObjectsDict will be populated by calling
         // lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject(), and there will be one key
