@@ -58,6 +58,12 @@ is explained in the comments).
             </div>
         </div>
 
+        <div class="row cl-row-no-margins cl-title-row-top-bottom-margin cl-title-row-height">
+            <div class="col-xs-12 cl-col-no-padding">
+                <a ng-show="globalData.languageLocale == 'es'" href="" ng-click="changeLanguage('en')">View in English</a>
+                <a ng-show="globalData.languageLocale == 'en'" href="" ng-click="changeLanguage('es')">Ver en Español</a>
+            </div>
+        </div>
         {% include "lx-templates/lx-debugging-info.html" %}
 
     </div>

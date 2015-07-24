@@ -195,9 +195,10 @@ angular.module('LxMainView.controllers', [])
             $scope.displayMainMenu($event, !$scope.mainMenuObject.showMainMenu);
         };
 
-        $scope.changeLanguage = function(locale) {
-            $window.localStorage.locale = locale;
-            gettextCatalog.setCurrentLanguage($window.localStorage.locale)
+        $scope.changeLanguage = function(languageLocale) {
+            $rootScope.globalData.languageLocale = languageLocale;
+            $window.localStorage.languageLocale = languageLocale;
+            gettextCatalog.setCurrentLanguage(languageLocale)
         };
 
         // videoExchangeObjectsDict will be populated by calling
