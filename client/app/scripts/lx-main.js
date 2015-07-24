@@ -56,7 +56,11 @@ var videoApp = angular.module('videoApp', [
 ]);
 
 
-videoApp.run(function(gettextCatalog) {
-    gettextCatalog.setCurrentLanguage(userInfoEmbeddedInHtml.preferedLocale);
+videoApp.run(function(gettextCatalog, $window) {
+    if ($window.localStorage.locale) {
+        gettextCatalog.setCurrentLanguage($window.localStorage.locale)
+    } else {
+        gettextCatalog.setCurrentLanguage(userInfoEmbeddedInHtml.preferedLocale);
+    }
     gettextCatalog.debug = true;
 });
