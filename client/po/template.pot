@@ -4,6 +4,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: app/lx-templates/lx-landing-page-main.html:19
+msgid ""
+"ChatSurfing allows you to easily\n"
+"                            <strong>chat</strong> and <strong>video conference</strong>\n"
+"                            by entering into a chat room and inviting your friends and acquaintances to join you.\n"
+"                            For your privacy, your video is only enabled when you explicitly turn it on and\n"
+"                            it will only be shared with people that you choose."
+msgstr ""
+
 #: app/lx-templates/lx-landing-page-main.html:18
 msgid "Join a chat room"
 msgstr ""

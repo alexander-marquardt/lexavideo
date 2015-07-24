@@ -3,16 +3,13 @@
 <div class="row cl-row-no-margins cl-title-row-top-bottom-margin cl-title-row-height">
 
     <div class="col-xs-2 cl-col-no-padding">
-        <div class="btn-group">
-            <button type="button" class="btn btn-gray-light cl-menu-button"
-                    ng-click="toggleMainMenu($event)" lx-click-once-directive>
-                <span class="sr-only">Toggle menu</span>
-                <span class="cl-icon-bar"></span>
-                <span class="cl-icon-bar"></span>
-                <span class="cl-icon-bar"></span>
-            </button>
-
-        </div>
+        <button type="button" class="btn btn-gray-light cl-menu-button"
+                ng-click="toggleMainMenu($event)" lx-click-once-directive>
+            <span class="sr-only">Toggle menu</span>
+            <span class="cl-icon-bar"></span>
+            <span class="cl-icon-bar"></span>
+            <span class="cl-icon-bar"></span>
+        </button>
     </div>
 
     <div class="col-xs-8 text-center ">
@@ -20,14 +17,14 @@
     </div>
 
     <div class="col-xs-2 cl-col-no-padding">
-        <div class="btn-group pull-right" dropdown>
+        <div class="pull-right" dropdown>
             <button type="button" class="btn btn-gray-light cl-menu-button" dropdown-toggle>
-                <span class="sr-only">Change language</span>
-                <span style="font-size: 1.75em" class="icon-lx-select-language"></span>
+                <img ng-show="globalData.languageLocale == 'en'" src="/images/flags/english-flag.jpg"/>
+                <img ng-show="globalData.languageLocale == 'es'" src="/images/flags/spanish-flag.jpg"/>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-                <li role="menuitem"><a href="" ng-click="changeLanguage('en')">English</a></li>
-                <li role="menuitem"><a href="" ng-click="changeLanguage('es')">Español</a></li>
+                <li role="menuitem"><a href="" ng-click="changeLanguage('en')"><img src="/images/flags/english-flag.jpg"/> English</a></li>
+                <li role="menuitem"><a href="" ng-click="changeLanguage('es')"><img src="/images/flags/spanish-flag.jpg"/> Español </a></li>
             </ul>
         </div>
     </div>
