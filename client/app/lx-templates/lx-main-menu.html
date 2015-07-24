@@ -8,7 +8,9 @@ the "menu-button" icon
     <div ng-cloak ng-if="mainMenuObject.showMainMenu"
         class="col-xs-4 col-sm-3 col-md-2 cl-animate-main-control-menu cl-col-no-padding">
 
-        <div class="btn-group-vertical well cl-main-control-menu" role="group">
+        <div class="btn-group-vertical well cl-main-control-menu" role="group"
+                ng-click="mainMenuObject.showMainMenu = false">
+
             <a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}"
                class="btn btn-default"
                ng-class="chatRoomDisplayObject.lastChatRoomNameFromUrl?'':'disabled'">
