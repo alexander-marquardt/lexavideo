@@ -264,8 +264,9 @@ module.exports = function (grunt) {
         htmlmin: {
             dist: {
                 options: {
-                    collapseWhitespace: true,
-                    conservativeCollapse: true,
+                    // Cannot collapse whitespace or gettext/translation will not work
+                    collapseWhitespace: false,
+                    conservativeCollapse: false,
                     collapseBooleanAttributes: true,
                     removeCommentsFromCDATA: true,
                     removeOptionalTags: true
