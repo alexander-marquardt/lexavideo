@@ -20,7 +20,6 @@ angular.module('LxChatRoom.controllers', [])
         $window,
         lxAuthenticationHelper,
         lxHttpChannelService,
-        lxSetEnableShowVideoElementsService,
         lxJs,
         lxChatRoomMembersService
         ) {
@@ -28,7 +27,6 @@ angular.module('LxChatRoom.controllers', [])
         $scope.lxMainCtrlDataObj.currentView = 'LxChatMainView';
         $scope.mainMenuObject.showMainMenu = false;
 
-        lxSetEnableShowVideoElementsService.lxSetEnableShowVideoElementsFn($scope);
 
         var normalizedChatRoomNameFromUrl = $routeParams.chatRoomName.toLowerCase();
         lxChatRoomMembersService.lifoQueueChatRoomNameOnNormalizedOpenRoomNamesList(normalizedChatRoomNameFromUrl, $scope.normalizedOpenRoomNamesList);

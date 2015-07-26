@@ -16,8 +16,8 @@ angular.module('LxLandingPage.controllers', ['ngResource'])
         $scope,
         lxChatRoomMembersService,
         lxFormsInputService,
-        lxLandingPageConstantsService,
-        lxSetEnableShowVideoElementsService) {
+        lxLandingPageConstantsService
+        ) {
 
         // update the serverLoginPageConstantsService with the global vars embedded in the html.
         angular.extend(lxLandingPageConstantsService, lxLandingPageConstantsEmbeddedInHtml);
@@ -26,7 +26,6 @@ angular.module('LxLandingPage.controllers', ['ngResource'])
         $scope.mainMenuObject.showMainMenu = false;
 
         $scope.chatboxPanelElementObject.videoIsFocused = false;
-        lxSetEnableShowVideoElementsService.lxSetEnableShowVideoElementsFn($scope);
 
         /*
          The following regular expressions are used for detecting if a user has entered a dis-allowed character into the
