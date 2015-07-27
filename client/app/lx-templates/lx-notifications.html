@@ -21,7 +21,7 @@
                             <span class="cl-text-size-1_5em" style="line-height: 1em; vertical-align:middle">
                                     <span class="icon-lx-video-camera-filled "></span>
                             </span>
-                            <span style="vertical-align:middle">Video requests</span>
+                            <span style="vertical-align:middle" translate>Video requests</span>
                         </a>
                     </li>
             </ul>
@@ -31,8 +31,8 @@
         <div class="panel-body cl-notification-panel-body"
                 ng-class="{'cl-pulse-background-attention': notificationMenuObject.partialShowNotificationMenuAndGetAttention}">
 
-            <h4 ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" >The following people would like to exchange live video.</h4>
-            <h4 ng-if="!videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">You do not have any pending requests to exchange live video.</h4>
+            <h4 ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" translate>The following people would like to exchange live video.</h4>
+            <h4 ng-if="!videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers" translate>You do not have any pending requests to exchange live video.</h4>
 
             <div class="row ">
                 <div ng-repeat="remoteClientId in videoStateInfoObject.pendingRequestsForVideoSessionsList">
@@ -53,14 +53,13 @@
                             <button type="button"
                                     class="btn btn-sm btn-primary"
                                     ng-click="showVideoElementsAndStartVideoFnWrapper('denyVideoExchange', remoteClientId)">
-                            <span class="icon-lx-start-video-camera-wrapper-cfg">
-                                <span class="icon-lx-start-video-camera-cfg"></span>
-                                <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
-                                <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
-                            </span>
-                                Deny
+                                <span class="icon-lx-start-video-camera-wrapper-cfg">
+                                    <span class="icon-lx-start-video-camera-cfg"></span>
+                                    <span class="icon-lx-deny-start-video-camera-thick-forward-slash-cfg"></span>
+                                    <span class="icon-lx-deny-start-video-camera-thin-forward-slash-cfg"></span>
+                                </span>
+                                <span translate>Deny</span>
                             </button>
-
                         </div>
                     </div>
                 </div>

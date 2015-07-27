@@ -46,6 +46,7 @@ angular.module('lxChannel.services', [])
              $timeout,
              $rootScope,
              $window,
+             gettextCatalog,
              lxAccessVideoElementsAndAccessCameraService,
              lxAppWideConstantsService,
              lxCallService,
@@ -200,10 +201,10 @@ angular.module('lxChannel.services', [])
                             chatRoomId = messageObject.chatRoomId;
                             receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
                             receivedChatMessageObject.senderNameAsWritten = 'ChatSurfing Admin';
-                            receivedChatMessageObject.messageString =
+                            receivedChatMessageObject.messageString = gettextCatalog.getString(
                                 'It appears that you have been disconnected and re-connected to ChatSurfing. ' +
                                 'Messages sent to your currently open chat rooms while you were absent will not be ' +
-                                'delivered to you.';
+                                'delivered to you.');
                             // receivedMessageTime is used for triggering the watcher
                             receivedChatMessageObject.receivedMessageTime = new Date().getTime();
 

@@ -14,9 +14,12 @@ the "menu-button" icon
             <a href="/{{ chatRoomDisplayObject.lastChatRoomNameFromUrl }}"
                class="btn btn-default"
                ng-class="chatRoomDisplayObject.lastChatRoomNameFromUrl?'':'disabled'">
-                <span class="icon-lx-chat-bubble-dual"></span> My open chats
+                <span class="icon-lx-chat-bubble-dual"></span>
+                <span translate>My open chats</span>
             </a>
-            <a href="/" class="btn btn-default"><span class="icon-lx-new-chat"></span> New chat</a>
+            <a href="/" class="btn btn-default"><span class="icon-lx-new-chat"></span>
+                <span translate>New chat</span>
+            </a>
             <a href="" class="btn btn-default"
                 ng-click="toggleNotificationMenu($event)">
                 
@@ -24,10 +27,12 @@ the "menu-button" icon
                 <span ng-if="videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers">
                     [{{ videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers }}]
                 </span>
-                Notifications
+                <span translate>Notifications</span>
             </a>
             <a href="" class="btn btn-default"
-                    ng-click="closeAllChatRoomsInterfaceFn()"><span class="icon-lx-power-switch"></span> Logout</a>
+                    ng-click="closeAllChatRoomsInterfaceFn()"><span class="icon-lx-power-switch"></span>
+                <span translate>Logout</span>
+            </a>
 
 
         </div>

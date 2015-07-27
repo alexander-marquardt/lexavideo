@@ -12,9 +12,39 @@ msgstr ""
 "X-Generator: Poedit 1.8.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: app/lx-templates/lx-tc-access-camera.html:43
+msgid ""
+") at the right side of the URL bar, and click on it to modify\n"
+"        your permissions."
+msgstr ""
+") en el lado derecho de la barra de direcciones y haz clic en él para "
+"modificar tus permisos."
+
+#: app/lx-templates/lx-tc-access-camera.html:107
+msgid ") at the top left corner of your browser window."
+msgstr ") en la esquina superior izquierda de la ventana del navegador."
+
+#: app/lx-templates/lx-tc-access-camera.html:190
+#: app/lx-templates/lx-tc-access-camera.html:64
+msgid ") at the top right of your browser window."
+msgstr ") en la parte superior derecha de la ventana del navegador."
+
+#: app/lx-templates/lx-tc-access-camera.html:169
+msgid ") on the left side of the URL bar to allow access to your camera."
+msgstr ""
+") en el lado izquierdo de la barra de direcciones para permitir el acceso a "
+"tu cámara."
+
 #: app/lx-templates/lx-landing-page-main.html:149
 msgid "Advanced features"
 msgstr "Funcionalidades avanzadas"
+
+#: app/lx-templates/lx-tc-access-camera.html:108
+msgid ""
+"Alternatively, you can do the following to change your settings permanently:"
+msgstr ""
+"Alternativamente, puedes hacer lo siguiente para cambiar la configuración de "
+"forma permanente:"
 
 #: app/scripts/lx-directives/lx-landing-page-directives.js:111
 msgid "Chat room name is available!"
@@ -46,9 +76,43 @@ msgstr "ChatSurfing es fácil de usar"
 msgid "Click here for detailed instructions"
 msgstr "Haz clic aquí para instrucciones detalladas"
 
+#: app/lx-templates/lx-tc-access-camera.html:66
+msgid "Click on \"Content settings\"."
+msgstr "Haz clic en \"Configuración de contenido\"."
+
+#: app/lx-templates/lx-tc-access-camera.html:111
+#: app/lx-templates/lx-tc-access-camera.html:136
+msgid "Click on \"Permissions\"."
+msgstr "Haz clic en \"Permisos\"."
+
+#: app/lx-templates/lx-tc-access-camera.html:84
+msgid "Click on \"Privacy\"."
+msgstr "Haz clic en “Privacidad”"
+
+#: app/lx-templates/lx-tc-access-camera.html:65
+#: app/lx-templates/lx-tc-access-camera.html:83
+msgid "Click on \"Settings\"."
+msgstr "Haz clic en \"Configuración\"."
+
+#: app/lx-templates/lx-tc-access-camera.html:67
+msgid "Click on \"Website settings\"."
+msgstr "Haz clic en \"Configuración del sitio web\"."
+
+#: app/lx-templates/lx-tc-access-camera.html:186
+msgid "Click on the Opera symbol ("
+msgstr "Haz clic en el símbolo de Ópera ("
+
+#: app/lx-templates/lx-tc-access-camera.html:77
+msgid "Click on the drop-down menu ("
+msgstr "Haz clic en el menú desplegable ("
+
 #: app/scripts/lx-directives/lx-landing-page-directives.js:112
 msgid "Create!"
 msgstr "Crear nuevo"
+
+#: app/lx-templates/lx-notifications.html:61
+msgid "Deny"
+msgstr "Negar"
 
 #: app/lx-templates/lx-landing-page-main.html:163
 msgid ""
@@ -70,6 +134,40 @@ msgstr "Entrar!"
 msgid "How to use ChatSurfing"
 msgstr "Cómo usar ChatSurfing"
 
+#: app/lx-templates/lx-tc-access-camera.html:103
+msgid ""
+"If you do not see a camera dialog box, then try clicking on the camera "
+"symbol ("
+msgstr ""
+"Si no ves un cuadro de diálogo de la cámara, intenta hacer clic en el "
+"símbolo de la cámara ("
+
+#: app/lx-templates/lx-tc-access-camera.html:58
+msgid ""
+"If you do not see camera settings at the bottom of the screen after "
+"reloading, then please do the following:"
+msgstr ""
+"Si no ves ajustes de la cámara en la parte inferior de la pantalla después "
+"de la recarga, por favor, haz lo siguiente:"
+
+#: app/lx-templates/lx-tc-access-camera.html:184
+msgid ""
+"If you do not see the \"Allow media capture\" prompt, then please do the "
+"following:"
+msgstr ""
+"Si no ves la opción \"Permitir la captura de medios\" del sistema, haz lo "
+"siguiente:"
+
+#: app/lx-templates/lx-tc-access-camera.html:132
+msgid ""
+"If you do not see the Camera access prompt at the top left of your browser "
+"window after reloading the\n"
+"                page, then please do the following:"
+msgstr ""
+"Si no ves el indicador de acceso de la cámara en la parte superior izquierda "
+"de la ventana del navegador después de volver a cargar la página, haz lo "
+"siguiente:"
+
 #: app/lx-templates/lx-landing-page-main.html:142
 msgid ""
 "If you have entered into a \"Popular chat\" that already has people "
@@ -79,11 +177,10 @@ msgid ""
 "sent before you joined the\n"
 "                room will not be displayed to you."
 msgstr ""
-"Si ha entrado en un “chat Popular” que ya tiene personas chateando, puedes "
-"saludar a personas en la sala y participe en la conversación.\n"
-"                Tenga en cuenta que para proteger la privacidad de nuestros "
-"miembros, no se mostrarán mensajes enviados antes de que se unió a la sala "
-"de te."
+"Si has entrado en un “Chat popular” que ya tiene personas chateando, puedes "
+"saludar a personas en la sala y participe en la conversación. Tenga en "
+"cuenta que para proteger la privacidad de nuestros miembros, no se mostrarán "
+"mensajes enviados antes de que se unió a la sala de te."
 
 #: app/lx-templates/lx-landing-page-main.html:139
 msgid ""
@@ -96,9 +193,9 @@ msgid ""
 msgstr ""
 "Si quieres tener una conversación privada con alguien, puedes crear tu "
 "propia sala de chat escogiendo un nombre único que es poco probable ser "
-"elegido accidentalmente por otras personas . Luego invita a tus amigos a "
+"elegido accidentalmente por otras personas. Luego invita a tus amigos a "
 "unirse contigo por compartir el nombre de la sala (enviar un correo "
-"electrónico, mensaje de texto, etc..)."
+"electrónico, mensaje de texto, etc.)."
 
 #: app/lx-templates/lx-landing-page-main.html:146
 msgid ""
@@ -124,6 +221,84 @@ msgstr ""
 "seleccione \"Notificaciones\". El menú de notificaciones también se puede "
 "ver al deslizando a la izquierda en un dispositivo sensible al tacto."
 
+#: app/scripts/lx-services/lx-channel-services.js:204
+msgid ""
+"It appears that you have been disconnected and re-connected to ChatSurfing. "
+"Messages sent to your currently open chat rooms while you were absent will "
+"not be delivered to you."
+msgstr ""
+"Parece que has sido desconectado y re-conectado a ChatSurfing. Los mensajes "
+"enviados a tus salas de chat mientras estabas ausente no serán entregada a "
+"ti."
+
+#: app/lx-templates/lx-tc-access-camera.html:37
+msgid ""
+"It appears that you have denied access to your camera. This video chat will "
+"not function if your camera\n"
+"        is not enabled. Please look for the camera symbol ("
+msgstr ""
+"Parece que has negado el acceso a tu cámara. Este video chat no funcionará "
+"si la cámara no está habilitado. Por favor, busca el símbolo de la cámara ("
+
+#: app/lx-templates/lx-tc-access-camera.html:127
+msgid ""
+"It appears that you have denied access to your camera. This website will not "
+"function correctly if your camera\n"
+"            is not enabled. Reload this page and make sure that you select "
+"\"Allow\" when you are prompted for access to your\n"
+"            camera and microphone."
+msgstr ""
+"Parece que has negado el acceso a tu cámara. Este sitio web no funcionará "
+"correctamente si la cámara no está habilitado. Actualizar esta página y "
+"asegúrete de que seleccionas \"Permitir\" cuando se te pregunta por el "
+"acceso a la cámara y el micrófono."
+
+#: app/lx-templates/lx-tc-access-camera.html:152
+msgid ""
+"It appears that you have denied access to your camera. This website will not "
+"function correctly if your camera\n"
+"            is not enabled. To see the camera settings,\n"
+"            reload this page in your browser by clicking on the URL bar "
+"above, and then pressing go on the keypad."
+msgstr ""
+"Parece que has negado el acceso a tu cámara. Este sitio web no funcionará "
+"correctamente si la cámara no está habilitado. Para ver los ajustes de la "
+"cámara, vuelva a cargar esta página en su navegador haciendo clic en la "
+"barra de dirección de arriba, y luego presionando ir en el teclado."
+
+#: app/lx-templates/lx-tc-access-camera.html:164
+msgid ""
+"It appears that you have denied access to your camera. This website will not "
+"function correctly if your camera\n"
+"        is not enabled. Please click on the camera symbol ("
+msgstr ""
+"Parece que ha negado el acceso a su cámara. Este sitio web no funcionará "
+"correctamente si la cámara no está habilitado. Por favor, haz clic en el "
+"símbolo de la cámara ("
+
+#: app/lx-templates/lx-tc-access-camera.html:179
+msgid ""
+"It appears that you have denied access to your camera. This website will not "
+"function correctly if your camera\n"
+"        is not enabled. Reload this page and make sure that you select "
+"\"Allow\" when you are prompted for access to your\n"
+"        camera and microphone."
+msgstr ""
+"Parece que has negado el acceso a tu cámara. Este sitio web no funcionará "
+"correctamente si la cámara no está habilitado. Actualizar esta página y "
+"asegúrete de que seleccionas \"Permitir\" cuando se le pregunta por el "
+"acceso a la cámara y el micrófono."
+
+#: app/lx-templates/lx-tc-access-camera.html:54
+msgid ""
+"It appears that you have denied access to your camera. This website will not "
+"function correctly if your camera\n"
+"        is not enabled. Try reloading this page to see the camera settings."
+msgstr ""
+"Parece que has negado el acceso a tu cámara. Este sitio web no funcionará "
+"correctamente si la cámara no está habilitado. Intente volver a cargar esta "
+"página para ver los ajustes de la cámara."
+
 #: app/lx-templates/lx-landing-page-main.html:18
 msgid "Join a chat room"
 msgstr "Únete a una sala de chat"
@@ -141,13 +316,142 @@ msgstr ""
 msgid "Join!"
 msgstr "Unir!"
 
+#: app/lx-templates/lx-main-menu.html:34
+msgid "Logout"
+msgstr "Salir"
+
+#: app/lx-templates/lx-tc-access-camera.html:194
+msgid "Make sure that \"Clear cookies and data\" is selected and press OK."
+msgstr ""
+"Asegúrete de que \"Borrar cookies y datos\" está seleccionado y pulsa "
+"Aceptar."
+
+#: app/lx-templates/lx-tc-access-camera.html:112
+#: app/lx-templates/lx-tc-access-camera.html:137
+msgid ""
+"Modify the \"Use the Camera\" and \"Use the Microphone\" settings at the "
+"bottom\n"
+"                            of the Permissions window (you may have to "
+"scroll down to see them)."
+msgstr ""
+"Modifica la opción \"Usar la cámara\" y \"utilizar el micrófono\" ajustes en "
+"la parte inferior de la ventana Permisos (es posible que tienes que "
+"desplazarse hacia abajo para verlos)."
+
+#: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:12
+msgid ""
+"Most of the video functionality of this site will not work correctly on your "
+"device.\n"
+"        Please try accessing"
+msgstr ""
+"La mayor parte de la funcionalidad de video de este sitio no funcionará "
+"correctamente en el dispositivo. Por favor, intente acceder"
+
+#: app/lx-templates/lx-main-menu.html:18
+msgid "My open chats"
+msgstr "Mis chats abiertos"
+
 #: app/lx-templates/lx-landing-page-main.html:31
 msgid "Name of chat room to create and/or join"
 msgstr "Nombre de sala de chat para crear y/o unirte"
 
+#: app/lx-templates/lx-main-menu.html:21
+msgid "New chat"
+msgstr "Chat nuevo"
+
+#: app/lx-templates/lx-tc-access-camera.html:72
+msgid "Note: if you have trouble finding"
+msgstr "Nota: si tienes problemas para encontrar"
+
+#: app/lx-templates/lx-main-menu.html:30
+msgid "Notifications"
+msgstr "Notificaciones"
+
+#: app/lx-templates/lx-tc-access-camera.html:85
+msgid ""
+"Once you are in the Privacy menu, you can click on \"Clear Browsing Data\" "
+"at the bottom of the window."
+msgstr ""
+"Una vez en el menú de privacidad, puedes hacer clic en \"Eliminar datos de "
+"navegación\" en la parte inferior de la ventana."
+
+#: app/lx-templates/lx-tc-access-camera.html:68
+msgid "Once you are in the Website settings menu, you can search for"
+msgstr "Una vez en el menú Configuración del sitio web, puedes buscar"
+
+#: app/lx-templates/lx-tc-access-camera.html:14
+#: app/lx-templates/lx-tc-access-camera.html:148
+#: app/lx-templates/lx-tc-access-camera.html:176
+#: app/lx-templates/lx-tc-access-camera.html:24
+#: app/lx-templates/lx-tc-access-camera.html:4
+msgid "Please allow access to your camera"
+msgstr "Por favor, permite el acceso a su cámara"
+
+#: app/lx-templates/lx-tc-access-camera.html:26
+msgid ""
+"Please click on the \"Allow\" button at the bottom of your browser window."
+msgstr ""
+"Por favor, haz clic en el botón \"Permitir\" en la parte inferior de la "
+"ventana del navegador."
+
+#: app/lx-templates/lx-tc-access-camera.html:16
+#: app/lx-templates/lx-tc-access-camera.html:6
+msgid ""
+"Please click on the \"Allow\" button at the top of your navigator window."
+msgstr ""
+"Por favor, haga clic en el botón \"Permitir\" en la parte superior de la "
+"ventana del navegador."
+
+#: app/lx-templates/lx-tc-access-camera.html:100
+msgid ""
+"Please click on the \"Share Selected Devices\" in the camera dialog box at "
+"the top left of this window."
+msgstr ""
+"Por favor, haz clic en \"Compartir con los dispositivos seleccionados\" en "
+"el cuadro de diálogo de la cámara en la parte superior izquierda de esta "
+"ventana."
+
+#: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:33
+msgid "Please try using"
+msgstr "Por favor, intenta de usar"
+
+#: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:52
+msgid ""
+"Please upgrade your browser to a newer version in order to use the "
+"functionality of"
+msgstr ""
+"Por favor, actualiza tu navegador a una versión más reciente para poder "
+"utilizar la funcionalidad de"
+
+#: app/lx-templates/lx-tc-access-camera.html:195
+msgid ""
+"Reload the page and make sure that you allow media capture when prompted."
+msgstr ""
+"Actualizar la página y asegúrete de que permites la captura de los medios de "
+"comunicación cuando se te solicite."
+
+#: app/lx-templates/lx-tc-access-camera.html:110
+#: app/lx-templates/lx-tc-access-camera.html:135
+msgid "Right click anywhere on this page and select \"View Page Info\""
+msgstr ""
+"Haz clic derecho en cualquier lugar de esta página y seleccione \"Ver "
+"Información de la página\""
+
+#: app/lx-templates/lx-tc-access-camera.html:193
+msgid "Select \"Clear browsing data...\"."
+msgstr "Seleccione \"Eliminar datos de navegación ...\"."
+
+#: app/lx-templates/lx-tc-access-camera.html:192
+msgid "Select \"Settings\" from the menu."
+msgstr "Seleccione \"Configuración\" en el menú."
+
 #: app/lx-templates/lx-landing-page-main.html:166
 msgid "Supported browsers and devices"
 msgstr "Navegadores y dispositivos compatibles"
+
+#: app/lx-templates/lx-notifications.html:34
+msgid "The following people would like to exchange live video."
+msgstr "Las siguientes personas les gustaría intercambiar vídeo en directo."
 
 #: app/lx-templates/lx-landing-page-main.html:162
 msgid ""
@@ -176,6 +480,10 @@ msgstr ""
 "Funcionalidad de vídeo es compatible con navegadores web Google Chrome, "
 "Firefox y Opera. Recomendamos el uso de Chrome."
 
+#: app/lx-templates/lx-notifications.html:24
+msgid "Video requests"
+msgstr "Peticiones vídeo"
+
 #: app/lx-templates/lx-landing-page-main.html:151
 msgid ""
 "You can open as many chats as you like. Just click on the button in the top "
@@ -199,6 +507,120 @@ msgstr ""
 "Puedes abrir sesiones de video con tantas personas como quieras, sin embargo "
 "si su navegador comienza a ir mas despacio esta es una señal de que "
 "probablemente has abierto demasiadas sesiones de video."
+
+#: app/lx-templates/lx-notifications.html:35
+msgid "You do not have any pending requests to exchange live video."
+msgstr ""
+"No tienes ninguna solicitud pendiente para el intercambio de vídeo en "
+"directo."
+
+#: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:30
+msgid ""
+"Your browser does not support the video functionality required to use the "
+"video functionality of"
+msgstr ""
+"Tu navegador no soporta la funcionalidad de vídeo necesario para utilizar la "
+"funcionalidad de vídeo de"
+
+#: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:26
+msgid "Your browser is not supported!"
+msgstr "¡Tu navegador no es compatible!"
+
+#: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:48
+msgid "Your browser is out of date!"
+msgstr "Tu navegador no está actualizado!"
+
+#: app/lx-templates/lx-tc-access-camera.html:69
+msgid "and change the camera permissions."
+msgstr "y cambiar los permisos de la cámara."
+
+#: app/lx-templates/lx-tc-access-camera.html:60
+msgid "click on the drop-down menu ("
+msgstr "haz clic en el menú desplegable ("
+
+#: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:15
+msgid "from an Android device or a desktop computer."
+msgstr "desde un dispositivo Android o una computadora de escritorio."
+
+#: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:8
+msgid "iPad, iPhone, and iPod are not supported :-("
+msgstr "iPad, iPhone y iPod no son compatibles :-("
+
+#: app/lx-templates/lx-tc-access-camera.html:73
+msgid ""
+"in the \"Website settings\" menu mentioned above, you might\n"
+"                want to clear your browser cache. You can accomplish this as "
+"follows:"
+msgstr ""
+"en el menú \"Configuración del sitio web\" se mencionó anteriormente, es "
+"posible que desees borrar la caché del navegador. Esto se puede hacer de la "
+"siguiente manera:"
+
+#~ msgid ""
+#~ "Most of the video functionality of this site will not work correctly on "
+#~ "your device.\n"
+#~ "        Please try accessing {{ site_name_dot_com }} from an Android "
+#~ "device or a desktop computer."
+#~ msgstr ""
+#~ "La mayor parte de la funcionalidad de video de este sitio no funcionará "
+#~ "correctamente en el dispositivo. Por favor, intente acceder a  "
+#~ "{{ site_name_dot_com }} desde un dispositivo Android o una computadora de "
+#~ "escritorio."
+
+#~ msgid ""
+#~ "Your browser is does not support the video functionality required to use "
+#~ "the video functionality of"
+#~ msgstr ""
+#~ "Tu navegador no soporta la funcionalidad de vídeo necesario para utilizar "
+#~ "la funcionalidad de vídeo de"
+
+#~ msgid ""
+#~ "Alternatively, you can do the following change your settings permanently:"
+#~ msgstr ""
+#~ "Alternativamente, puedes hacer lo siguiente para cambiar la configuración "
+#~ "de forma permanente:"
+
+#~ msgid ""
+#~ "If you do not see a camera settings prompt at the bottom of the screen "
+#~ "after reloading, then please do the following:"
+#~ msgstr ""
+#~ "Si no ves una configuración de la cámara en la parte inferior de la "
+#~ "pantalla después de la recarga, por favor, haz lo siguiente:"
+
+#~ msgid ""
+#~ "Note: if you have trouble finding www.{{ site_name_dot_com }} in the "
+#~ "\"Website settings\" menu mentioned above, you might\n"
+#~ "                want to clear your browser cache. You can accomplish this "
+#~ "as follows:"
+#~ msgstr ""
+#~ "Nota:. Si tienes problemas para encontrar www.{{site_name_dot_com}} en "
+#~ "los \"Ajustes del sitio web\" menú se mencionó anteriormente, es posible "
+#~ "que tienes que borrar la caché del navegador. Esto se puede hacer de la "
+#~ "siguiente manera:"
+
+#~ msgid ""
+#~ "Once you are in the Website settings menu, you can search for www."
+#~ "{{ site_name_dot_com }} and\n"
+#~ "                     change the camera permissions."
+#~ msgstr ""
+#~ "Una vez en el menú Configuración del sitio web, puedes buscar por www."
+#~ "{{Site_name_dot_com}} y cambiar los permisos de la cámara."
+
+#~ msgid ""
+#~ "Please upgrade your browser to a newer version in order to use the "
+#~ "functionality of {{ site_name_dot_com }}."
+#~ msgstr ""
+#~ "Por favor, actualice su navegador a una versión más reciente para poder "
+#~ "utilizar la funcionalidad de {{ site_name_dot_com }}."
+
+#~ msgid ""
+#~ "Your browser is does not support the video functionality required to use "
+#~ "the video functionality of {{ site_name_dot_com }}.\n"
+#~ "        Please try using"
+#~ msgstr ""
+#~ "Tu navegador no soporta es la funcionalidad de vídeo necesario para "
+#~ "utilizar la funcionalidad de video de {{site_name_dot_com}}. Por favor, "
+#~ "intente de usar"
 
 #~ msgid "Enter into a chat room"
 #~ msgstr "Entra en una sala de chat"
