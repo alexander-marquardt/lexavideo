@@ -66,7 +66,7 @@ msgstr ""
 "conferencia</strong> con facilidad, por entrar en una sala de chat e invitar "
 "a tus amigos.\n"
 "Para tu privacidad, el vídeo sólo se activa cuando lo autorizas "
-"explícitamente y sólo se compartirá con la gente que has elidido."
+"explícitamente y sólo se compartirá con la gente que has elegido."
 
 #: app/lx-templates/lx-landing-page-main.html:135
 msgid "ChatSurfing is easy to use"
