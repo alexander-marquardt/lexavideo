@@ -49,6 +49,15 @@ module.exports = function (grunt) {
             bower: {
                 files: ['bower.json']
             },
+            po_changed: {
+                files: ['po/*.po'],
+                tasks: ['nggettext_compile']
+            },
+            update_pot: {
+                files: ['<%= yeoman.app %>/*.html', '<%= yeoman.app %>/lx-templates/{,*/}*.html',
+                       '<%= yeoman.app %>/scripts/*.js', '<%= yeoman.app %>/scripts/**/*.js'],
+                tasks: ['nggettext_extract']
+            },
             js: {
                 files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
                 tasks: ['newer:jshint:all'],
