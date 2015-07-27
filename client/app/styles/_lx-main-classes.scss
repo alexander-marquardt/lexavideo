@@ -386,3 +386,8 @@ span.cl-overlay-text-span a:hover {
     border-color: darken($brand-primary-darker, 12%);
   }
 }
+
+.cl-language-dropdown {
+  // make sure that the language dropdown appears over top of any other dropdowns.
+  z-index: $zindex-dropdown + 5;
+}
