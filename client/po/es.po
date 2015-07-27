@@ -12,11 +12,15 @@ msgstr ""
 "X-Generator: Poedit 1.8.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: app/lx-templates/lx-landing-page-main.html:149
+msgid "Advanced features"
+msgstr "Funcionalidades avanzadas"
+
 #: app/scripts/lx-directives/lx-landing-page-directives.js:111
 msgid "Chat room name is available!"
 msgstr "Nombre de sala de chat es disponible!"
 
-#: app/lx-templates/lx-landing-page-main.html:19
+#: app/lx-templates/lx-landing-page-main.html:100
 msgid ""
 "ChatSurfing allows you to easily\n"
 "                            <strong>chat</strong> and <strong>video "
@@ -28,35 +32,176 @@ msgid ""
 "                            it will only be shared with people that you "
 "choose."
 msgstr ""
-"ChatSurfing te permite <strong>chatear</strong> y <strong>video conferencia</"
-"strong> con facilidad.  Solo tienes que entrar en una sala de chat e invitar "
+"ChatSurfing te permite <strong>chatear</strong> y <strong>hacer video "
+"conferencia</strong> con facilidad, por entrar en una sala de chat e invitar "
 "a tus amigos.\n"
 "Para tu privacidad, el vídeo sólo se activa cuando lo autorizas "
 "explícitamente y sólo se compartirá con la gente que has elidido."
 
+#: app/lx-templates/lx-landing-page-main.html:135
+msgid "ChatSurfing is easy to use"
+msgstr "ChatSurfing es fácil de usar"
+
+#: app/lx-templates/lx-landing-page-main.html:107
+msgid "Click here for detailed instructions"
+msgstr "Haz clic aquí para instrucciones detalladas"
+
 #: app/scripts/lx-directives/lx-landing-page-directives.js:112
 msgid "Create!"
-msgstr "Crear!"
+msgstr "Crear nuevo"
 
-#: app/lx-templates/lx-landing-page-main.html:34
-msgid "Enter into a chat room"
-msgstr "Entra en una sala de chat"
+#: app/lx-templates/lx-landing-page-main.html:163
+msgid ""
+"Each user in the chat room will have a colored symbol beside their name "
+"where blue\n"
+"            means that they are active, yellow means that they are idle, and "
+"red means that they are away."
+msgstr ""
+"Cada usuario en la sala de chat tendrá un símbolo coloreado al lado de su "
+"nombre. Azul significa que está activo, amarillo significa que está "
+"inactivos y rojo significa que está fuera."
 
 #: app/scripts/lx-directives/lx-landing-page-directives.js:144
 msgid "Enter!"
 msgstr "Entrar!"
 
+#: app/lx-templates/lx-landing-page-main.html:131
+#: app/lx-templates/lx-landing-page-main.html:99
+msgid "How to use ChatSurfing"
+msgstr "Cómo usar ChatSurfing"
+
+#: app/lx-templates/lx-landing-page-main.html:142
+msgid ""
+"If you have entered into a \"Popular chat\" that already has people "
+"chatting, then just say hello to\n"
+"                people in the room and join in the conversation.\n"
+"                Please note that to protect our members privacy, messages "
+"sent before you joined the\n"
+"                room will not be displayed to you."
+msgstr ""
+"Si ha entrado en un “chat Popular” que ya tiene personas chateando, puedes "
+"saludar a personas en la sala y participe en la conversación.\n"
+"                Tenga en cuenta que para proteger la privacidad de nuestros "
+"miembros, no se mostrarán mensajes enviados antes de que se unió a la sala "
+"de te."
+
+#: app/lx-templates/lx-landing-page-main.html:139
+msgid ""
+"If you want to have a private conversation with someone, then enter a unique "
+"chat room name that is\n"
+"                unlikely to be accidentally chosen by other people. Then "
+"invite your friends to join\n"
+"                you by sharing your chosen room name (send them an email, "
+"text message, etc.)."
+msgstr ""
+"Si quieres tener una conversación privada con alguien, puedes crear tu "
+"propia sala de chat escogiendo un nombre único que es poco probable ser "
+"elegido accidentalmente por otras personas . Luego invita a tus amigos a "
+"unirse contigo por compartir el nombre de la sala (enviar un correo "
+"electrónico, mensaje de texto, etc..)."
+
+#: app/lx-templates/lx-landing-page-main.html:146
+msgid ""
+"If you want to request a video exchange with someone, then click on the "
+"camera symbol beside\n"
+"                their name and wait for them to accept or deny your offer."
+msgstr ""
+"Si deseas solicitar un intercambio de video con alguien, haz clic en el "
+"símbolo de la cámara al lado de su nombre y esperar a que aceptan o rechazan "
+"tu oferta."
+
+#: app/lx-templates/lx-landing-page-main.html:158
+msgid ""
+"If you wish to see who has invited you to exchange video, click on the "
+"button at the top\n"
+"                left beside the ChatSurfing logo, and select \"Notifications"
+"\".\n"
+"                The notifications menu can also be seen by swiping left on a "
+"touch-sensitive device."
+msgstr ""
+"Si deseas ver quién te ha invitado a intercambiar vídeo, haz clic en el "
+"botón en la parte superior a la izquierda al lado del logotipo ChatSurfing y "
+"seleccione \"Notificaciones\". El menú de notificaciones también se puede "
+"ver al deslizando a la izquierda en un dispositivo sensible al tacto."
+
 #: app/lx-templates/lx-landing-page-main.html:18
 msgid "Join a chat room"
 msgstr "Únete a una sala de chat"
+
+#: app/lx-templates/lx-landing-page-main.html:137
+msgid ""
+"Join a chat room from the main page by either typing in the name of a custom "
+"room, or by\n"
+"                clicking on one of the \"Popular Chats\" that are listed."
+msgstr ""
+"Únete a una sala de chat desde la página principal por escribir el nombre de "
+"la sala, o haciendo clic en una de las “Chats populares\"."
 
 #: app/scripts/lx-directives/lx-landing-page-directives.js:119
 msgid "Join!"
 msgstr "Unir!"
 
-#: app/lx-templates/lx-landing-page-main.html:38
+#: app/lx-templates/lx-landing-page-main.html:31
 msgid "Name of chat room to create and/or join"
 msgstr "Nombre de sala de chat para crear y/o unirte"
+
+#: app/lx-templates/lx-landing-page-main.html:166
+msgid "Supported browsers and devices"
+msgstr "Navegadores y dispositivos compatibles"
+
+#: app/lx-templates/lx-landing-page-main.html:162
+msgid ""
+"To exit a chat room, click on the \"X\" symbol beside the chat room name, "
+"just below the ChatSurfing logo."
+msgstr ""
+"Para salir de una sala de chat, haz clic en el símbolo \"X\" al lado del "
+"nombre de la sala de chat, justo debajo del logotipo ChatSurfing."
+
+#: app/lx-templates/lx-landing-page-main.html:169
+msgid ""
+"Unfortunately, due to technical limitations video functionality does not "
+"work on iPhones or iPads. We\n"
+"                hope to build an app in the future to allow support for "
+"these devices."
+msgstr ""
+"Lamentablemente, debido a limitaciones técnicas funcionalidad de vídeo no "
+"funciona en iPhones o iPads. Esperamos hacer una aplicación en el futuro "
+"para permitir el soporte para estos dispositivos."
+
+#: app/lx-templates/lx-landing-page-main.html:168
+msgid ""
+"Video functionality is supported in Google Chrome, Firefox and Opera web "
+"browsers. We recommend using Chrome."
+msgstr ""
+"Funcionalidad de vídeo es compatible con navegadores web Google Chrome, "
+"Firefox y Opera. Recomendamos el uso de Chrome."
+
+#: app/lx-templates/lx-landing-page-main.html:151
+msgid ""
+"You can open as many chats as you like. Just click on the button in the top "
+"left corner on the left side\n"
+"                of the ChatSurfing logo to see the option for \"New chat\". "
+"You can also show the menu by swiping from\n"
+"                left to right on a touch-sensitive device."
+msgstr ""
+"Puede abrir tantas charlas como quieras. Simplemente haz clic en el botón en "
+"la esquina superior izquierda en el lado izquierdo del logotipo ChatSurfing "
+"para ver la opción de \"Nuevo chat\". También puede mostrar el menú "
+"deslizando de izquierda a derecha en un dispositivo sensible al tacto."
+
+#: app/lx-templates/lx-landing-page-main.html:155
+msgid ""
+"You can open video sessions with as many people as you like, however if your "
+"browser starts to slow down\n"
+"                this is a sign that you have probably opened too many video "
+"sessions."
+msgstr ""
+"Puedes abrir sesiones de video con tantas personas como quieras, sin embargo "
+"si su navegador comienza a ir mas despacio esta es una señal de que "
+"probablemente has abierto demasiadas sesiones de video."
+
+#~ msgid "Enter into a chat room"
+#~ msgstr "Entra en una sala de chat"
 
 #~ msgid "Enter into a custom room"
 #~ msgstr "Entra sala de chat"

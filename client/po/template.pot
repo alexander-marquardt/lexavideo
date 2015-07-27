@@ -4,11 +4,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: app/lx-templates/lx-landing-page-main.html:149
+msgid "Advanced features"
+msgstr ""
+
 #: app/scripts/lx-directives/lx-landing-page-directives.js:111
 msgid "Chat room name is available!"
 msgstr ""
 
-#: app/lx-templates/lx-landing-page-main.html:19
+#: app/lx-templates/lx-landing-page-main.html:100
 msgid ""
 "ChatSurfing allows you to easily\n"
 "                            <strong>chat</strong> and <strong>video conference</strong>\n"
@@ -17,26 +21,106 @@ msgid ""
 "                            it will only be shared with people that you choose."
 msgstr ""
 
+#: app/lx-templates/lx-landing-page-main.html:135
+msgid "ChatSurfing is easy to use"
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:107
+msgid "Click here for detailed instructions"
+msgstr ""
+
 #: app/scripts/lx-directives/lx-landing-page-directives.js:112
 msgid "Create!"
 msgstr ""
 
-#: app/lx-templates/lx-landing-page-main.html:34
-msgid "Enter into a chat room"
+#: app/lx-templates/lx-landing-page-main.html:163
+msgid ""
+"Each user in the chat room will have a colored symbol beside their name where blue\n"
+"            means that they are active, yellow means that they are idle, and red means that they are away."
 msgstr ""
 
 #: app/scripts/lx-directives/lx-landing-page-directives.js:144
 msgid "Enter!"
 msgstr ""
 
+#: app/lx-templates/lx-landing-page-main.html:131
+#: app/lx-templates/lx-landing-page-main.html:99
+msgid "How to use ChatSurfing"
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:142
+msgid ""
+"If you have entered into a \"Popular chat\" that already has people chatting, then just say hello to\n"
+"                people in the room and join in the conversation.\n"
+"                Please note that to protect our members privacy, messages sent before you joined the\n"
+"                room will not be displayed to you."
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:139
+msgid ""
+"If you want to have a private conversation with someone, then enter a unique chat room name that is\n"
+"                unlikely to be accidentally chosen by other people. Then invite your friends to join\n"
+"                you by sharing your chosen room name (send them an email, text message, etc.)."
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:146
+msgid ""
+"If you want to request a video exchange with someone, then click on the camera symbol beside\n"
+"                their name and wait for them to accept or deny your offer."
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:158
+msgid ""
+"If you wish to see who has invited you to exchange video, click on the button at the top\n"
+"                left beside the ChatSurfing logo, and select \"Notifications\".\n"
+"                The notifications menu can also be seen by swiping left on a touch-sensitive device."
+msgstr ""
+
 #: app/lx-templates/lx-landing-page-main.html:18
 msgid "Join a chat room"
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:137
+msgid ""
+"Join a chat room from the main page by either typing in the name of a custom room, or by\n"
+"                clicking on one of the \"Popular Chats\" that are listed."
 msgstr ""
 
 #: app/scripts/lx-directives/lx-landing-page-directives.js:119
 msgid "Join!"
 msgstr ""
 
-#: app/lx-templates/lx-landing-page-main.html:38
+#: app/lx-templates/lx-landing-page-main.html:31
 msgid "Name of chat room to create and/or join"
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:166
+msgid "Supported browsers and devices"
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:162
+msgid "To exit a chat room, click on the \"X\" symbol beside the chat room name, just below the ChatSurfing logo."
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:169
+msgid ""
+"Unfortunately, due to technical limitations video functionality does not work on iPhones or iPads. We\n"
+"                hope to build an app in the future to allow support for these devices."
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:168
+msgid "Video functionality is supported in Google Chrome, Firefox and Opera web browsers. We recommend using Chrome."
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:151
+msgid ""
+"You can open as many chats as you like. Just click on the button in the top left corner on the left side\n"
+"                of the ChatSurfing logo to see the option for \"New chat\". You can also show the menu by swiping from\n"
+"                left to right on a touch-sensitive device."
+msgstr ""
+
+#: app/lx-templates/lx-landing-page-main.html:155
+msgid ""
+"You can open video sessions with as many people as you like, however if your browser starts to slow down\n"
+"                this is a sign that you have probably opened too many video sessions."
 msgstr ""
