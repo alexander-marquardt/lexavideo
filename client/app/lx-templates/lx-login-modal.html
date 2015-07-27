@@ -4,7 +4,7 @@
 
     <div ng-controller="LxLoginModalController">
         <div class="modal-header">
-            <h3 class="modal-title"> Please select a Username </h3>
+            <h3 class="modal-title" translate> Please select a Username </h3>
             <div class="modal-body">
                 <div class="clearfix">
                     <form name="loginUserForm" role="form" novalidate>
@@ -15,7 +15,7 @@
                                 <div class="input-group">
                                     <input class=" form-control"
                                            id="id-inputRoomName"
-                                           placeholder="Type your desired username"
+                                           placeholder="{{'Type your desired username'|translate}}"
                                            name="usernameInputElem"
                                            ng-model="inputUsernameObj.usernameAsWritten"
                                            ng-minlength="{{ usernameMinChars }}"

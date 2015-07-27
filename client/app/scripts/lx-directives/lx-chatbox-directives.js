@@ -91,6 +91,7 @@ angular.module('lxChatbox.directives', [])
         $compile,
         $log,
         $timeout,
+        gettextCatalog,
         lxShowNumMessagesService,
         lxSoundService,
         lxTimeService,
@@ -242,10 +243,11 @@ angular.module('lxChatbox.directives', [])
                     if (channelIsAlive === false) {
                         channelDeadMsgPayload = {
                             senderNameAsWritten: 'ChatSurfing Admin',
-                            messageString: 'Internet/Server error. ' +
+                            messageString: gettextCatalog.getString(
+                                'Internet/Server error. ' +
                                 'Your connection to ChatSurfing is not functioning correctly. ' +
                                 'Messages sent to you while your connection is down are ' +
-                                'permanently lost.',
+                                'permanently lost.'),
                             messageUniqueId: 'Not set',
                             transmittedToServer: false
                         };
@@ -255,7 +257,7 @@ angular.module('lxChatbox.directives', [])
                     if (previousChannelIsAlive === false && channelIsAlive) {
                         channelDeadMsgPayload = {
                             senderNameAsWritten: 'ChatSurfing Admin',
-                            messageString: 'Your connection to ChatSurfing appears to be working again',
+                            messageString: gettextCatalog.getString('Your connection to ChatSurfing appears to be working again'),
                             messageUniqueId: 'Not set',
                             transmittedToServer: true
                         };

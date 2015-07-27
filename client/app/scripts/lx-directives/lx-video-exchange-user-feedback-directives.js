@@ -25,6 +25,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
     function(
         $compile,
         $log,
+        gettextCatalog,
         lxPeerService
     ) {
 
@@ -65,25 +66,27 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
                     if (!remoteStreamIsActive) {
                         switch (remoteVideoSetting) {
                             case 'waitingForPermissionToEnableVideoExchange':
-                                message = 'Waiting for user ' + remoteUsernameAsWritten + ' to agree to exchange video';
+                                message = gettextCatalog.getString('Waiting for user') + ' ' + remoteUsernameAsWritten + ' ' +
+                                    gettextCatalog.getString('to agree to exchange video');
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
 
                             case 'denyVideoExchange':
-                                message = remoteUsernameAsWritten +  ' has denied your request to exchange video';
+                                message = remoteUsernameAsWritten + ' ' +  gettextCatalog.getString('has denied your request to exchange video');
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
 
                             case 'hangupVideoExchange':
-                                message = remoteUsernameAsWritten + ' has closed this video exchange. ' +
-                                          'However, a new video session will start immediately if they ' +
-                                          'call you again. If you do not want this to happen, you should ' +
-                                          'press the hang-up button now.';
+                                message = remoteUsernameAsWritten + ' ' + gettextCatalog.getString(
+                                      'has closed this video exchange. ' +
+                                      'However, a new video session will start immediately if they ' +
+                                      'call you again. If you do not want this to happen, you should ' +
+                                      'press the hang-up button now.');
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
 
                             case 'doVideoExchange':
-                                message = 'Establishing video connection with ' + remoteUsernameAsWritten;
+                                message = gettextCatalog.getString('Establishing video connection with') + ' ' + remoteUsernameAsWritten;
                                 showMessageInVideoWindow(scope, overlayElem, message, $compile);
                                 break;
                         }
@@ -109,7 +112,7 @@ lxSelectVideoTypePreferenceDirectives.directive('lxDisplayRemoteVideoStatus',
             scope.$watch(getIceConnectionState, function(iceConnectionState) {
                 if (iceConnectionState === 'disconnected') {
                     hideMessageInVideoWindow(scope, overlayElem);
-                    message = 'The video connection has been lost';
+                    message = gettextCatalog.getString('The video connection has been lost');
                     showMessageInVideoWindow(scope, overlayElem, message, $compile);
                 }
             });

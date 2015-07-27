@@ -6,7 +6,7 @@ angular.module('lxLogin.directives', [])
     .directive('checkForExistingUsernameDirective',
     function(
         $log,
-
+        gettextCatalog,
         lxHttpHandleLoginService,
         lxLandingPageConstantsService,
         lxDelayActionService) {
@@ -83,11 +83,11 @@ angular.module('lxLogin.directives', [])
                                             if (response.data.usernameNormalized === inputElement.value.toLowerCase()) {
 
                                                 if (response.data.usernameAvailable === true) {
-                                                    ctrl.usernameIsAvailableMessage = 'Username is available!';
+                                                    ctrl.usernameIsAvailableMessage = gettextCatalog.getString('Username is available!');
                                                     ctrl.inputCssClass = 'cl-valid-input-glow'
                                                 }
                                                 else {
-                                                    ctrl.usernameIsTakenMessage = 'Username is taken';
+                                                    ctrl.usernameIsTakenMessage = gettextCatalog.getString('Username is taken');
                                                     ctrl.inputCssClass = 'cl-invalid-input-glow';
                                                 }
                                             }
@@ -116,7 +116,7 @@ angular.module('lxLogin.directives', [])
                         }
                         else {
                             // This basically just acts as a place holder that will never really be clickable.
-                            ctrl.submitButtonText = 'Enter!';
+                            ctrl.submitButtonText = gettextCatalog.getString('Enter!');
                             if (ctrl.$dirty ) {
                                 ctrl.inputCssClass = 'cl-invalid-input-glow';
                             }

@@ -126,8 +126,13 @@ msgstr ""
 "inactivos y rojo significa que está fuera."
 
 #: app/scripts/lx-directives/lx-landing-page-directives.js:144
+#: app/scripts/lx-directives/lx-login-directives.js:119
 msgid "Enter!"
 msgstr "Entrar!"
+
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:89
+msgid "Establishing video connection with"
+msgstr "Establecimiento de la conexión de vídeo con"
 
 #: app/lx-templates/lx-landing-page-main.html:131
 #: app/lx-templates/lx-landing-page-main.html:99
@@ -221,6 +226,16 @@ msgstr ""
 "seleccione \"Notificaciones\". El menú de notificaciones también se puede "
 "ver al deslizando a la izquierda en un dispositivo sensible al tacto."
 
+#: app/scripts/lx-directives/lx-chatbox-directives.js:246
+msgid ""
+"Internet/Server error. Your connection to ChatSurfing is not functioning "
+"correctly. Messages sent to you while your connection is down are "
+"permanently lost."
+msgstr ""
+"Error de Internet / servidor. Tu conexión a ChatSurfing no está funcionando "
+"correctamente. Los mensajes enviados a ti mientras tu conexión no funcionaba "
+"están perdidos de forma permanente."
+
 #: app/scripts/lx-services/lx-channel-services.js:204
 msgid ""
 "It appears that you have been disconnected and re-connected to ChatSurfing. "
@@ -228,8 +243,8 @@ msgid ""
 "not be delivered to you."
 msgstr ""
 "Parece que has sido desconectado y re-conectado a ChatSurfing. Los mensajes "
-"enviados a tus salas de chat mientras estabas ausente no serán entregada a "
-"ti."
+"enviados a tus salas de chat mientras que estabas ausente no serán "
+"entregados a ti."
 
 #: app/lx-templates/lx-tc-access-camera.html:37
 msgid ""
@@ -411,6 +426,10 @@ msgstr ""
 "el cuadro de diálogo de la cámara en la parte superior izquierda de esta "
 "ventana."
 
+#: app/lx-templates/lx-login-modal.html:7
+msgid "Please select a Username"
+msgstr "Por favor seleccione un nombre de usuario"
+
 #: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:33
 msgid "Please try using"
 msgstr "Por favor, intenta de usar"
@@ -453,6 +472,10 @@ msgstr "Navegadores y dispositivos compatibles"
 msgid "The following people would like to exchange live video."
 msgstr "Las siguientes personas les gustaría intercambiar vídeo en directo."
 
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:115
+msgid "The video connection has been lost"
+msgstr "La conexión de vídeo se ha perdido"
+
 #: app/lx-templates/lx-landing-page-main.html:162
 msgid ""
 "To exit a chat room, click on the \"X\" symbol beside the chat room name, "
@@ -460,6 +483,14 @@ msgid ""
 msgstr ""
 "Para salir de una sala de chat, haz clic en el símbolo \"X\" al lado del "
 "nombre de la sala de chat, justo debajo del logotipo ChatSurfing."
+
+#: app/lx-templates/lx-login-modal.html:18
+msgid "Type your desired username"
+msgstr "Escribe el nombre de usuario que deseas"
+
+#: app/lx-templates/lx-chatbox.html:150
+msgid "Type your message here..."
+msgstr "Escribe tu mensaje aquí..."
 
 #: app/lx-templates/lx-landing-page-main.html:169
 msgid ""
@@ -472,6 +503,14 @@ msgstr ""
 "funciona en iPhones o iPads. Esperamos hacer una aplicación en el futuro "
 "para permitir el soporte para estos dispositivos."
 
+#: app/scripts/lx-directives/lx-login-directives.js:86
+msgid "Username is available!"
+msgstr "¡Nombre de usuario disponible!"
+
+#: app/scripts/lx-directives/lx-login-directives.js:90
+msgid "Username is taken"
+msgstr "Nombre de usuario no es disponible"
+
 #: app/lx-templates/lx-landing-page-main.html:168
 msgid ""
 "Video functionality is supported in Google Chrome, Firefox and Opera web "
@@ -483,6 +522,10 @@ msgstr ""
 #: app/lx-templates/lx-notifications.html:24
 msgid "Video requests"
 msgstr "Peticiones vídeo"
+
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:69
+msgid "Waiting for user"
+msgstr "Esperando al usuario"
 
 #: app/lx-templates/lx-landing-page-main.html:151
 msgid ""
@@ -530,6 +573,10 @@ msgstr "¡Tu navegador no es compatible!"
 msgid "Your browser is out of date!"
 msgstr "Tu navegador no está actualizado!"
 
+#: app/scripts/lx-directives/lx-chatbox-directives.js:260
+msgid "Your connection to ChatSurfing appears to be working again"
+msgstr "Tu conexión a ChatSurfing parece estar funcionando de nuevo"
+
 #: app/lx-templates/lx-tc-access-camera.html:69
 msgid "and change the camera permissions."
 msgstr "y cambiar los permisos de la cámara."
@@ -541,6 +588,20 @@ msgstr "haz clic en el menú desplegable ("
 #: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:15
 msgid "from an Android device or a desktop computer."
 msgstr "desde un dispositivo Android o una computadora de escritorio."
+
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:80
+msgid ""
+"has closed this video exchange. However, a new video session will start "
+"immediately if they call you again. If you do not want this to happen, you "
+"should press the hang-up button now."
+msgstr ""
+"ha cerrado este intercambio de vídeo. Sin embargo, una nueva sesión de vídeo "
+"se iniciará inmediatamente si te llaman de nuevo. Si no desea que esto "
+"ocurra, hay que pulsar el botón de colgar ahora."
+
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:75
+msgid "has denied your request to exchange video"
+msgstr "ha negado tu solicitud para el intercambio de vídeo"
 
 #: app/lx-templates/lx-tc-check-if-system-supports-web-rtc.html:8
 msgid "iPad, iPhone, and iPod are not supported :-("
@@ -555,6 +616,19 @@ msgstr ""
 "en el menú \"Configuración del sitio web\" se mencionó anteriormente, es "
 "posible que desees borrar la caché del navegador. Esto se puede hacer de la "
 "siguiente manera:"
+
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:70
+msgid "to agree to exchange video"
+msgstr "autorizar el intercambio de vídeo"
+
+#~ msgid ""
+#~ "has closed this video exchange.However, a new video session will start "
+#~ "immediately if they call you again. If you do not want this to happen, "
+#~ "you should press the hang-up button now."
+#~ msgstr ""
+#~ "ha cerrado este intercambio de vídeo. Sin embargo, una nueva sesión de "
+#~ "vídeo se iniciará inmediatamente si te llaman de nuevo. Si no deseas que "
+#~ "esto ocurra, hay que pulsar el botón de colgar ahora."
 
 #~ msgid ""
 #~ "Most of the video functionality of this site will not work correctly on "
