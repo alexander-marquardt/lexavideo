@@ -93,6 +93,13 @@ turn_shared_secret = default_turn_shared_secret
 if default_secret_key_value == turn_shared_secret:
     logging.error('You need to set turn_shared_secret value in %s' % __file__)
 
+# You must enter your own turn servers IP address here. Without a turn server, some WebRTC connections will
+# fail to be established.
+default_turn_ip = 'XXX.XXX.XXX.XXX'
+turn_ip = default_turn_ip
+if default_turn_ip == turn_ip:
+    logging.warning('You should set turn_ip to the IP address of your turn server.')
+
 # The token will expire very quickly, but if the user is still connected (ie. sending heartbeats)
 # then the session will be refreshed and given additional time before expiry.
 unregistered_user_token_session_expiry_minutes = 5
