@@ -1,5 +1,3 @@
-#lexavideo
-
 Introduction
 ============
 
