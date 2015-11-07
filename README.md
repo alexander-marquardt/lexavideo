@@ -22,10 +22,10 @@ Quick Start
 Before running LexaVideo
 ------------------------
 
-Lexalink requires that Python and the Google AppEngine are installed on your local computer. 
+LexaVideo requires that Python and the Google AppEngine are installed on your local computer. 
 This software was tested with AppEngine release 1.9.20, and Python 2.7
 
-Lexavideo uses yeoman, grunt, and bower as part of our build system. Make sure that you have node.js installed, and 
+LexaVideo uses yeoman, grunt, and bower as part of our build system. Make sure that you have node.js installed, and 
 are able to execute grunt.   
 
 How to run LexaVideo
