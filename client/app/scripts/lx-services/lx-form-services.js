@@ -5,7 +5,7 @@
 # LexaVideo -  a fully responsive web-app featuring real-time browser-based video conferencing and text chat.
 #
 # Original author: Alexander Marquardt
-# Documentation and additional information: http://www.lexavideo.com
+#
 # A demo version of LexaVideo can be seen at http://www.chatsurfing.com
 #
 # Please consider contributing your enhancements and modifications to the LexaVideo community.
