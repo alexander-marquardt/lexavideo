@@ -62,7 +62,7 @@ Releasing code to a production server
 =====================================
 
 While it is possible to directly upload code that runs directly from the 'client/app' directory (where we 
-have our client-side 'source' files, for performance reasons 
+have our client-side 'source' files), for performance reasons 
 this is not advisable. Instead one should ensure that files that will be used in production are combined, 
 minimized, and compressed. This is where grunt is very helpful, and where we have provided scripts to help ensure 
 that optimized files are updated.
