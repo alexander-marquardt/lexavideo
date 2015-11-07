@@ -7,3 +7,5 @@ LexaVideo was originally developed for ChatSurfing.com. Check out ChatSurfing.co
 
 This software relies on WebRTC for the video transmission, and is built using AngularJS and Python. 
 It is designed to run on Google AppEngine.
+
+See http://www.lexavideo.com for full details of how to use this software to build your video-enabled website.
