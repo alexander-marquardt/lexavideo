@@ -61,17 +61,26 @@ Here you will also find index.html, which is the parent html file that imports a
 Releasing code to a production server
 =====================================
 
+General information about uploading
+-----------------------------------
 While it is possible to directly upload code that runs directly from the 'client/app' directory (where we 
 have our client-side 'source' files), for performance reasons 
 this is not advisable. Instead one should ensure that files that will be used in production are combined, 
 minimized, and compressed. This is where grunt is very helpful, and where we have provided scripts to help ensure 
 that optimized files are updated.
 
+Building code before uploading
+------------------------------
 From the project home, you can execute the file 'build_app.py', which will modify the app.yaml to use files in the 
-'client/dist' directory instead of the 'client/app' directory. Note: this script requires that 
+'client/dist' directory instead of the 'client/app' directory. 
+Note: this script requires that 
 DEBUG_BUILD=False (don't worry if you forget, you will get a warning), which can be 
 modified in build_config.py. Warning: if you change DEBUG_BUILD to be False, then next time you are editing and testing
 'client/app' files, the files will not be used because you will be accessing files in the 'client/dist' directory instead of the 
 'client/app' directory. After uploading code to the server, set DEBUG_BUILD=True. Do not manually edit files in the 
 'client/dist' directory, as this is over-written by our build scripts.
  
+Uploading code to the server
+----------------------------
+From the project home, run 'upload_app.py', which is a wrapper for the standard appcfg.py update command. Using this
+script will catch and prevent many common errors when uploading code. 
