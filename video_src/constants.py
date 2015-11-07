@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*- 
 
 import re
+import logging
 
 site_name_dot_com = 'chatsurfing.com'
 site_name_for_display = 'ChatSurfing'
@@ -13,7 +14,7 @@ room_max_occupancy = 100 # arbitrarily limit the number of people in a chat room
 pickle_protocol = 2
 
 """"
-Make sure that unicode characters don't cause crashes.
+Make sure that unicode characters don't cause crashes when entered as a chat room name.
 Try testing the javascript and the server with the following string: Iñtërnâtiônàlizætiøn☃💩
 
 The following characters are reserved with special meaning in the URL, and should not be allowed in room names.
@@ -53,7 +54,20 @@ long_star_separator = '*'*80
 
 password_pepper = u'Pepper:Iñtërnâtiônàlizætiøn'
 
-secret_key = '13f2xi^7170a0a564fc2a26b8ffae123-5a17'
+
+default_secret_key_value = 'You must set the secret_key value to something that is unique and secret'
+secret_key = default_secret_key_value
+# Make sure that the site has set the secret_key to something other than the default.
+if secret_key == default_secret_key_value:
+    logging.error('You need to set secret_key in file %s' % __file__)
+
+# The following value is used when connecting to the turn server, and ensures that only our application can
+# use our turn server. If this is not set correctly, then other websites may use your turn server which will
+# increase your bandwidth costs.
+default_turn_shared_secret = 'You must set the turn_shared_secret value to something that is uniqe and secret'
+turn_shared_secret = default_turn_shared_secret
+if default_secret_key_value == turn_shared_secret:
+    logging.error('You need to set turn_shared_secret value in %s' % __file__)
 
 # The token will expire very quickly, but if the user is still connected (ie. sending heartbeats)
 # then the session will be refreshed and given additional time before expiry.

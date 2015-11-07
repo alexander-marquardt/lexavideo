@@ -1,5 +1,0 @@
-Setting up the turn server:
-
-The following command line has worked correctly for getting the turn server running:
-
-turnserver --verbose --lt-cred-mech --static-auth-secret foobar -r chatsurfing.com -X 130.211.82.191 --fingerprint -L 10.240.207.120 -E 10.240.207.120

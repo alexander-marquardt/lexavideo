@@ -13,7 +13,6 @@ from video_src import http_helpers
 from video_src.error_handling import handle_exceptions
 from request_handler_custom.base_handler import BaseHandlerClientVerified
 
-shared_secret = 'foobarBAM33ttXXvv99poo'
 turn_ip = '130.211.82.191'
 turn_uri_combinations = [('3478', 'udp'), ('3478', 'tcp'), ('3479', 'udp'), ('3479', 'tcp')]
 
@@ -35,7 +34,7 @@ class TurnRestCredentials(BaseHandlerClientVerified):
             uris.append("turn:%s:%s?transport=%s" % (turn_ip, option[0], option[1]))
 
         turn_username = "%d:%s" % (expire_ts, client_id)
-        turn_password = b64encode(hmac.new(shared_secret, turn_username, hashlib.sha1).digest())
+        turn_password = b64encode(hmac.new(constants.turn_shared_secret, turn_username, hashlib.sha1).digest())
 
         response_dict = {
             'turn_username': turn_username,
