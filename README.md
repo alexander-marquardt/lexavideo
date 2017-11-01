@@ -1,7 +1,7 @@
 Introduction
 ============
 
-NOTE: As of Oct 31 2017 google has [depreciated the Channel](https://cloud.google.com/appengine/docs/deprecations/channel) API that this application relied on, and therefore many functions are currently broken.
+NOTE: As of Oct 31 2017 google has [depreciated the Channel API](https://cloud.google.com/appengine/docs/deprecations/channel) that this application relied on, and therefore many functions are currently broken.
 
 Overview
 -----------
