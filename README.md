@@ -1,6 +1,8 @@
 Introduction
 ============
 
+NOTE: As of Oct 31 2017 google has depreciated the Channel API that this application relied on, and therefore many functions are currently broken.
+
 Overview
 -----------
 
@@ -10,12 +12,14 @@ video conferencing and text chat.
 This software relies on WebRTC for the video functionality, and is built using AngularJS and Python. 
 This software runs on Google AppEngine.
 
-NOTE: As of Oct 31 2017 google has disabled the Channel API that this application relied on, and therefore many functions are currently broken.
+NOTE: As of Oct 31 2017 google has depreciated the Channel API that this application relied on, and therefore many functions are currently broken.
 
 Demo
 ----
 LexaVideo was originally developed for ChatSurfing.com. Check out [ChatSurfing.com] (http://www.chatsurfing.com)
 for an active demo of this source code in action.
+
+NOTE: As of Oct 31 2017 google has depreciated the Channel API that this application relied on, and therefore many functions are currently broken.
 
 
 Quick Start
