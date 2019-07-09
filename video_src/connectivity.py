@@ -27,7 +27,8 @@ import json
 import logging
 import webapp2
 
-from google.appengine.api import channel
+from firechannel import send_message, create_channel
+
 from google.appengine.ext import ndb
 
 from video_src import clients
@@ -88,7 +89,7 @@ class AddClientToRoom(BaseHandlerClientVerified):
             'messagePayload': {},
             }
         logging.debug('Telling client that they were added to room after absence. message_obj: %s' % message_obj)
-        channel.send_message(client_id, json.dumps(message_obj))
+        send_message(client_id, json.dumps(message_obj))
 
 
 
@@ -123,7 +124,7 @@ class AddClientToRoom(BaseHandlerClientVerified):
     def post(self):
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
-        assert self.session.user_id == int(client_id.split('|')[0])
+        assert self.session.user_id == int(client_id.split('-')[0])
         room_id = data_object['chatRoomId']
 
         chat_room_obj = chat_room_module.ChatRoomModel.get_by_id(room_id)
@@ -172,7 +173,7 @@ class SynClientHeartbeat(BaseHandlerClientVerified):
         logging.debug('Heartbeat synchronization received from client_id %s. '
                      'Synchronization acknowledgement returned to same client on channel api' % (client_id))
 
-        channel.send_message(client_id, json.dumps(response_message_obj))
+        send_message(client_id, json.dumps(response_message_obj))
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
@@ -249,7 +250,7 @@ class CreateClientOnServer(BaseHandlerUserVerified):
     def post(self):
         data_object = json.loads(self.request.body)
         client_id = data_object['clientId']
-        assert self.session.user_id == int(client_id.split('|')[0])
+        assert self.session.user_id == int(client_id.split('-')[0])
         logging.debug('CreateClientOnServer called for client_id: %s' % client_id)
 
         client_obj = clients.ClientModel.get_by_id(client_id)
@@ -296,7 +297,7 @@ class RequestChannelToken(BaseHandlerClientVerified):
     def post(self):
         duration_minutes = constants.channel_duration_minutes
         client_id = self.session.client_obj.key.id()
-        channel_token = channel.create_channel(str(client_id), duration_minutes)
+        channel_token = create_channel(str(client_id), duration_minutes)
 
         logging.debug('New channel token created for client_id: %s' % client_id)
 

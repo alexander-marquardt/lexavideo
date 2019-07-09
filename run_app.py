@@ -28,6 +28,7 @@ from build_support import prepare_build
 import sys
 import build_config
 
+
 if build_config.DEBUG_BUILD:
     version_id = build_config.VERSION_ID
 else:

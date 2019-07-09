@@ -40,7 +40,7 @@ angular.module('lxAuthentication.services', [])
 
         function generateNewUniqueClientId(userId) {
             var uniqueClientIdentifier = Math.floor((Math.random() * 1000000000));
-            var clientId = userId + '|' + uniqueClientIdentifier;
+            var clientId = userId + '-' + uniqueClientIdentifier;
             return clientId;
         }
 
@@ -63,7 +63,7 @@ angular.module('lxAuthentication.services', [])
 
             if ($window.sessionStorage.clientId) {
                 clientId = $window.sessionStorage.clientId;
-                var splitArr = clientId.split('|');
+                var splitArr = clientId.split('-');
                 var useIdFromClientId = parseInt(splitArr[0]);
 
                 // If the userId pulled from the clientId in sessionStorage doesn't match the userId located in the
