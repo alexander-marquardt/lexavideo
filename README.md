@@ -15,7 +15,7 @@ This software runs on Google AppEngine.
 Demo
 ----
 LexaVideo was originally developed for ChatSurfing.com. ~Check out [ChatSurfing.com](http://www.chatsurfing.com)
-for an active demo of this source code in action~ Due to [removal of the Channel API](https://cloud.google.com/appengine/docs/deprecations/channel) this web applications does not currently work correctly.
+for an active demo of this source code in action~ Due to [removal of the Channel API](https://cloud.google.com/appengine/docs/deprecations/channel) this web application does not currently work correctly.
 
 Quick Start
 ===========
