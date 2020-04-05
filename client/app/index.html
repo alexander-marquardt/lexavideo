@@ -34,7 +34,29 @@
     </script>
 
 
-    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+    <!-- REMOVE THIS??? replaced by firebase ?-->
+    <!--  <script type="text/javascript" src="/_ah/channel/jsapi"></script>-->
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyBwy84HiRJB6yZCaOdOWXtDlQD1f_UOAhs",
+        authDomain: "virtualvideoapp.firebaseapp.com",
+        databaseURL: "https://virtualvideoapp.firebaseio.com",
+        projectId: "virtualvideoapp",
+        storageBucket: "virtualvideoapp.appspot.com",
+        messagingSenderId: "277017882803",
+        appId: "1:277017882803:web:7ff5468a256bc885e700c6"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

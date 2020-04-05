@@ -2,7 +2,7 @@
 import build_config
 import os, datetime, subprocess
 from build_support import gen_yaml
-
+import build_config
 
 
 def get_version_identifier():
@@ -46,4 +46,11 @@ def customize_files(version_id):
     gen_yaml.generate_app_yaml(version_id)
     run_grunt_jobs()
 
-        
+
+if __name__ == "__main__":
+    if build_config.DEBUG_BUILD:
+        version_id = build_config.VERSION_ID
+    else:
+        version_id = get_version_identifier()
+
+    customize_files(version_id)

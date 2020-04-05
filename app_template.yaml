@@ -135,7 +135,6 @@ handlers:
   #secure: always
 
 inbound_services:
-- channel_presence
 - warmup
 
 libraries:
