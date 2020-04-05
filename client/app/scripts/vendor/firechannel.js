@@ -59,8 +59,7 @@ window.Firechannel = (function() {
         handler.onopen ? handler.onopen() : this.onopen();
       }.bind(this))
       .catch(function(err) {
-        console.log("Error: " + err.code);
-        console.error(err.message);
+        console.log("Error: " + err.code + err.message);
       });
   };
 
