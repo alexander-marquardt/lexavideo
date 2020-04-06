@@ -101,7 +101,7 @@ angular.module('lxChannel.services', [])
                 var localVideoObject = scope.localVideoObject;
 
                 $rootScope.$apply(function() {
-                    var messageObject = JSON.parse(message.data);
+                    var messageObject = JSON.parse(message);
                     var remoteClientId = messageObject.fromClientId;
                     var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId];
                     var chatRoomId = null;
@@ -112,7 +112,7 @@ angular.module('lxChannel.services', [])
 
                     switch (messageObject.messageType) {
                         case 'sdp':
-                            //$log.debug('S->C: ' + message.data);
+                            //$log.debug('S->C: ' + message);
 
                             var sdpObject = messageObject.messagePayload;
 

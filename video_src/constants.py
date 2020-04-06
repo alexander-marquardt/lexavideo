@@ -118,7 +118,7 @@ db_presence_update_interval_seconds = 5 * 60
 leeway_seconds_for_determining_timeout = 5
 
 
-channel_duration_minutes = 24 * 60 - 1  # minutes
+channel_duration_minutes = 60 # will break if set to more than 60
 
 
 # If data is being relayed through the turn server, then we timeout after this number of minutes
