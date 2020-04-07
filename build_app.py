@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
-import build_config, sys, datetime
-from build_support import prepare_build
-
+import build_config, sys
+import prepare_build
 
 if build_config.DEBUG_BUILD:
     print "************************************"

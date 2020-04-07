@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-import os, datetime, re, codecs, subprocess, logging
-
 
 VERSION_ID = "2016-12-29-1204"
 

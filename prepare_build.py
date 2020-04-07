@@ -1,7 +1,5 @@
-
-import build_config
 import os, datetime, subprocess
-from build_support import gen_yaml
+import gen_yaml
 import build_config
 
 
@@ -19,7 +17,7 @@ def run_grunt(grunt_arg, subprocess_function):
     os.chdir("client")
     pargs = ['grunt', grunt_arg]
     process = subprocess_function(pargs,  stderr=subprocess.STDOUT)    
-    os.chdir("..")
+    os.chdir("")
     print "Switched directory back to: %s" % os.getcwd()
     
     
