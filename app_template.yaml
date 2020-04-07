@@ -129,10 +129,11 @@ handlers:
 - url: /_lx/admin/.*
   script: main.app
   login: admin
+  secure: always
 
 - url: /.*
   script: main.app
-  #secure: always
+  secure: always
 
 inbound_services:
 - warmup
