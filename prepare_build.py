@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os, datetime, subprocess
 import gen_yaml
 import build_config

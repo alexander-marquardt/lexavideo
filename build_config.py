@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 
-VERSION_ID = "2016-12-29-1204"
+VERSION_ID = "2020-04-07-0345"
 
 # The following must be set to False before uploading - this will combine and minimize javascript 
 # and css files. This combining/minimizing is only done on upload or on  development server initialization, so this will
