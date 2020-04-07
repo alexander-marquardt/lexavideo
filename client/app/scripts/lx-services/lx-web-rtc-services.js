@@ -60,6 +60,15 @@ webRtcServices.service('lxAdapterService', function ($log) {
 
         this.webrtcDetectedBrowser = window.adapter.browserDetails;
 
+        // Attach a media stream to an element.
+        var attachMediaStream = function(element, stream) {
+          element.srcObject = stream;
+        };
+
+        var reattachMediaStream = function(to, from) {
+          to.srcObject = from.srcObject;
+        };
+
         // only setup the remaining variables if we know that the adapter service has set them up.
         // If webrtcDetectedBrowser is null, then many of the following variables have not been initialized
         // and should not be accessed.
@@ -68,8 +77,8 @@ webRtcServices.service('lxAdapterService', function ($log) {
             this.RTCPeerConnection = RTCPeerConnection;
             this.RTCSessionDescription = RTCSessionDescription;
             this.getUserMedia = navigator.getUserMedia;
-            this.attachMediaStream = navigator.attachMediaStream;
-            this.reattachMediaStream = navigator.reattachMediaStream;
+            this.attachMediaStream = attachMediaStream;
+            this.reattachMediaStream = reattachMediaStream;
             this.RTCIceCandidate = RTCIceCandidate;
         }
         else {
