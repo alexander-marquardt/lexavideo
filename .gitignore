@@ -41,3 +41,5 @@ client/build_settings.json
 client/app/.idea/*
 client/.idea/*
 client/dist/*
+
+venv

@@ -2,7 +2,7 @@
 # and other files are correctly built - *even* on the development server, since we are using sass which requires
 # a pre-compilation step.
 
-application: virtualvideoapp
+application: chatsurfing
 version: VERSION_ID
 runtime: python27
 threadsafe: true
@@ -129,13 +129,13 @@ handlers:
 - url: /_lx/admin/.*
   script: main.app
   login: admin
+  secure: always
 
 - url: /.*
   script: main.app
-  #secure: always
+  secure: always
 
 inbound_services:
-- channel_presence
 - warmup
 
 libraries:
@@ -143,6 +143,9 @@ libraries:
   version: latest
 
 - name: webapp2
+  version: latest
+
+- name: ssl
   version: latest
 
 skip_files:

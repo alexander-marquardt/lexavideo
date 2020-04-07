@@ -194,7 +194,7 @@ class ClientModel(ndb.Model):
     @classmethod
     @ndb.transactional
     def txn_create_new_client_object(cls, client_id):
-        user_id = int(client_id.split('|')[0])
+        user_id = int(client_id.split('-')[0])
         client_obj = cls(id=client_id)
         client_obj.user_obj_key = ndb.Key('UserModel', user_id)
         client_obj.put()

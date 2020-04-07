@@ -83,7 +83,7 @@ default_secret_key_value = 'You must set the secret_key value to something that 
 secret_key = default_secret_key_value
 # Make sure that the site has set the secret_key to something other than the default.
 if secret_key == default_secret_key_value:
-    logging.error('You need to set secret_key in file %s' % __file__)
+    logging.warning('You need to set secret_key in file %s' % __file__)
 
 # The following value is used when connecting to the turn server, and ensures that only our application can
 # use our turn server. If this is not set correctly, then other websites may use your turn server which will
@@ -91,7 +91,7 @@ if secret_key == default_secret_key_value:
 default_turn_shared_secret = 'You must set the turn_shared_secret value to something that is uniqe and secret'
 turn_shared_secret = default_turn_shared_secret
 if default_secret_key_value == turn_shared_secret:
-    logging.error('You need to set turn_shared_secret value in %s' % __file__)
+    logging.warning('You need to set turn_shared_secret value in %s' % __file__)
 
 # You must enter your own turn servers IP address here. Without a turn server, some WebRTC connections will
 # fail to be established.
@@ -118,7 +118,7 @@ db_presence_update_interval_seconds = 5 * 60
 leeway_seconds_for_determining_timeout = 5
 
 
-channel_duration_minutes = 24 * 60 - 1  # minutes
+channel_duration_minutes = 60 # will break if set to more than 60
 
 
 # If data is being relayed through the turn server, then we timeout after this number of minutes

@@ -31,12 +31,9 @@ var webRtcServices = angular.module('lxVideoSetup.services', []);
 
 /* The following globally defined functions come from adapter.js, which is a "shim" to make sure that
    webRTC works in both Chrome and Firefox. */
-/* global webrtcDetectedBrowser */
-/* global getUserMedia */
 /* global RTCPeerConnection */
 /* global RTCSessionDescription */
 /* global RTCIceCandidate */
-/* global attachMediaStream */
 /* global reattachMediaStream */
 
 // The following flag is only used for debugging, and should never be true for a production build
@@ -60,16 +57,26 @@ webRtcServices.service('lxAdapterService', function ($log) {
        easier to do unit testing in the future.
      */
     try {
-        this.webrtcDetectedBrowser = webrtcDetectedBrowser;
+
+        this.webrtcDetectedBrowser = window.adapter.browserDetails;
+
+        // Attach a media stream to an element.
+        var attachMediaStream = function(element, stream) {
+          element.srcObject = stream;
+        };
+
+        var reattachMediaStream = function(to, from) {
+          to.srcObject = from.srcObject;
+        };
 
         // only setup the remaining variables if we know that the adapter service has set them up.
         // If webrtcDetectedBrowser is null, then many of the following variables have not been initialized
         // and should not be accessed.
-        if (webrtcDetectedBrowser) {
+        if (this.webrtcDetectedBrowser) {
             this.createIceServers = window.createIceServers;
             this.RTCPeerConnection = RTCPeerConnection;
             this.RTCSessionDescription = RTCSessionDescription;
-            this.getUserMedia = getUserMedia;
+            this.getUserMedia = navigator.getUserMedia;
             this.attachMediaStream = attachMediaStream;
             this.reattachMediaStream = reattachMediaStream;
             this.RTCIceCandidate = RTCIceCandidate;
@@ -638,7 +645,7 @@ webRtcServices.factory('lxMediaService',
                         $log.debug('Requested access to local media with mediaConstraints:\n' +
                             '  \'' + JSON.stringify(lxVideoParamsService.mediaConstraints) + '\'');
                         videoSignalingObject.localUserAccessCameraAndMicrophoneStatus = 'waitingForResponse';
-                    } 
+                    }
 
                     else {
                         $log.debug('getUserMedia request has already been made, and so we are not making a new call to getUserMedia');

@@ -25,7 +25,7 @@
 import json
 import logging
 
-from google.appengine.api import channel
+from firechannel import send_message
 
 from video_src import chat_room_module
 from video_src import http_helpers
@@ -47,7 +47,7 @@ from error_handling import handle_exceptions
 # def send_saved_messages(client_id):
 #     messages = models.Message.get_saved_messages(client_id)
 #     for message in messages:
-#         channel.send_message(client_id, message.msg)
+#         send_message(client_id, message.msg)
 #         logging.info('Delivered saved message to ' + client_id)
 #         message.key.delete()
 
@@ -80,7 +80,7 @@ def send_room_occupancy_to_clients(chat_room_obj, list_of_clients_to_update, rec
         message_obj['messagePayload']['dictOfClientObjects'] = dict_of_client_objects
 
         logging.info('Sending message to client %s. message_obj %s' % (client_id, json.dumps(message_obj)))
-        channel.send_message(client_id, json.dumps(message_obj))
+        send_message(client_id, json.dumps(message_obj))
 
 # Sends information about video settings, and which client should be designated as the 'rtcInitiator'
 @handle_exceptions
@@ -118,7 +118,7 @@ def send_video_call_settings_to_participants(from_client_id, to_client_id):
                            }
 
             logging.info('Sending client %s room status %s' % (client_id, json.dumps(message_obj)))
-            channel.send_message(client_id, json.dumps(message_obj))
+            send_message(client_id, json.dumps(message_obj))
             is_initiator = not is_initiator
 
 
@@ -137,7 +137,7 @@ class MessageRoom(BaseHandlerUserVerified):
         to_client_ids_list = chat_room_obj.get_list_of_other_client_ids(from_client_id)
 
         for to_client_id in to_client_ids_list:
-            channel.send_message(to_client_id, json.dumps(message_obj))
+            send_message(to_client_id, json.dumps(message_obj))
 
         http_helpers.set_http_ok_json_response(self.response, {})
 
@@ -145,7 +145,7 @@ class MessageRoom(BaseHandlerUserVerified):
     def post(self):
         message_obj = json.loads(self.request.body)
         from_client_id = message_obj['fromClientId']
-        assert(self.session.user_id == int(from_client_id.split('|')[0]))
+        assert(self.session.user_id == int(from_client_id.split('-')[0]))
         room_id = message_obj['chatRoomId']
         message_obj['fromUsernameAsWritten'] = self.session.username_as_written
 
@@ -201,14 +201,14 @@ class MessageClient(BaseHandlerUserVerified):
                 logging.info('sdp offer. Payload: %s' % repr(message_payload))
 
         logging.info('\n***\nSending message to client %s: %s\n' % (to_client_id,  json.dumps(message_obj)))
-        channel.send_message(to_client_id, json.dumps(message_obj))
+        send_message(to_client_id, json.dumps(message_obj))
         http_helpers.set_http_ok_json_response(self.response, {})
 
     @handle_exceptions
     def post(self):
         message_obj = json.loads(self.request.body)
         from_client_id = message_obj['fromClientId']
-        assert(self.session.user_id == int(from_client_id.split('|')[0]))
+        assert(self.session.user_id == int(from_client_id.split('-')[0]))
 
         try:
             self.handle_message_client(from_client_id, message_obj)

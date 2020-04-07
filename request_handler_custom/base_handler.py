@@ -106,7 +106,7 @@ class BaseHandlerUserVerified(webapp2.RequestHandler):
                         if 'clientId' in post_body_json:
                             client_id = post_body_json['clientId']
 
-                            assert self.session.user_id == int(client_id.split('|')[0])
+                            assert self.session.user_id == int(client_id.split('-')[0])
 
                             client_obj = ndb.Key('ClientModel', client_id).get()
                             self.session.client_obj = client_obj

@@ -32,6 +32,10 @@ angular.module('lxCheckCompatibility.services', [])
     // Provides flags that are used for checking if the current device/browser is supported.
     .factory('lxCheckCompatibilityService', function () {
 
+        var safariRequiredVersion = 11;
+        var mozillaRequiredVersion = 28; // firefox
+        var chromeRequiredVersion = 30;
+        var operaRequiredVersion = 20;
 
         function checkIfBrowserVersionIsSupported () {
 
@@ -52,14 +56,10 @@ angular.module('lxCheckCompatibility.services', [])
              * current version minus a few revisions so that users are not forced to upgrade just to use webRtc
              */
 
-
-            var mozillaRequiredVersion = 28; // firefox
-            var chromeRequiredVersion = 30;
-            var operaRequiredVersion = 20;
-
             if ($.browser.mozilla && $.browser.versionNumber <  mozillaRequiredVersion ||
                 $.browser.chrome && $.browser.versionNumber < chromeRequiredVersion ||
-                $.browser.opera && $.browser.versionNumber < operaRequiredVersion) {
+                $.browser.opera && $.browser.versionNumber < operaRequiredVersion
+                ) {
                 // The users browser is out of date and needs to be updated before they can access the website.
                 return false;
             } else {
@@ -70,14 +70,17 @@ angular.module('lxCheckCompatibility.services', [])
 
 
         var isIosDevice = $.browser.ipad || $.browser.iphone;
-        var isSupportedBrowser = $.browser.mozilla || $.browser.chrome || $.browser.opera;
-        var browserVersionIsSupported = checkIfBrowserVersionIsSupported();
-        var userDeviceBrowserAndVersionSupported = !isIosDevice && isSupportedBrowser && browserVersionIsSupported;
+        var isIosAndBrowserSupported =  $.browser.safari && ($.browser.versionNumber >= safariRequiredVersion);
 
+        // The following fields should only be used for non-Ios devices
+        var isSupportedBrowser = $.browser.mozilla || $.browser.chrome || $.browser.opera || $.browser.safari;
+        var browserVersionIsSupported = checkIfBrowserVersionIsSupported();
+        var userDeviceBrowserAndVersionSupported = isSupportedBrowser && browserVersionIsSupported;
 
 
         return {
             isIosDevice : isIosDevice,
+            isIosAndBrowserSupported: isIosAndBrowserSupported,
             isSupportedBrowser : isSupportedBrowser,
             browserVersionIsSupported : browserVersionIsSupported,
             userDeviceBrowserAndVersionSupported: userDeviceBrowserAndVersionSupported
