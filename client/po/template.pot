@@ -31,7 +31,7 @@ msgstr ""
 msgid "Alternatively, you can do the following to change your settings permanently:"
 msgstr ""
 
-#: app/scripts/lx-directives/lx-landing-page-directives.js:111
+#: app/scripts/lx-directives/lx-landing-page-directives.js:136
 msgid "Chat room name is available!"
 msgstr ""
 
@@ -82,7 +82,7 @@ msgstr ""
 msgid "Click on the drop-down menu ("
 msgstr ""
 
-#: app/scripts/lx-directives/lx-landing-page-directives.js:112
+#: app/scripts/lx-directives/lx-landing-page-directives.js:137
 msgid "Create!"
 msgstr ""
 
@@ -96,12 +96,12 @@ msgid ""
 "            means that they are active, yellow means that they are idle, and red means that they are away."
 msgstr ""
 
-#: app/scripts/lx-directives/lx-landing-page-directives.js:144
-#: app/scripts/lx-directives/lx-login-directives.js:119
+#: app/scripts/lx-directives/lx-landing-page-directives.js:169
+#: app/scripts/lx-directives/lx-login-directives.js:144
 msgid "Enter!"
 msgstr ""
 
-#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:89
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:111
 msgid "Establishing video connection with"
 msgstr ""
 
@@ -156,11 +156,11 @@ msgid ""
 "                The notifications menu can also be seen by swiping left on a touch-sensitive device."
 msgstr ""
 
-#: app/scripts/lx-directives/lx-chatbox-directives.js:246
+#: app/scripts/lx-directives/lx-chatbox-directives.js:269
 msgid "Internet/Server error. Your connection to ChatSurfing is not functioning correctly. Messages sent to you while your connection is down are permanently lost."
 msgstr ""
 
-#: app/scripts/lx-services/lx-channel-services.js:204
+#: app/scripts/lx-services/lx-channel-services.js:229
 msgid "It appears that you have been disconnected and re-connected to ChatSurfing. Messages sent to your currently open chat rooms while you were absent will not be delivered to you."
 msgstr ""
 
@@ -213,7 +213,7 @@ msgid ""
 "                clicking on one of the \"Popular Chats\" that are listed."
 msgstr ""
 
-#: app/scripts/lx-directives/lx-landing-page-directives.js:119
+#: app/scripts/lx-directives/lx-landing-page-directives.js:144
 msgid "Join!"
 msgstr ""
 
@@ -324,7 +324,7 @@ msgstr ""
 msgid "The following people would like to exchange live video."
 msgstr ""
 
-#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:115
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:137
 msgid "The video connection has been lost"
 msgstr ""
 
@@ -346,11 +346,11 @@ msgid ""
 "                hope to build an app in the future to allow support for these devices."
 msgstr ""
 
-#: app/scripts/lx-directives/lx-login-directives.js:86
+#: app/scripts/lx-directives/lx-login-directives.js:111
 msgid "Username is available!"
 msgstr ""
 
-#: app/scripts/lx-directives/lx-login-directives.js:90
+#: app/scripts/lx-directives/lx-login-directives.js:115
 msgid "Username is taken"
 msgstr ""
 
@@ -362,7 +362,7 @@ msgstr ""
 msgid "Video requests"
 msgstr ""
 
-#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:69
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:91
 msgid "Waiting for user"
 msgstr ""
 
@@ -395,7 +395,7 @@ msgstr ""
 msgid "Your browser is out of date!"
 msgstr ""
 
-#: app/scripts/lx-directives/lx-chatbox-directives.js:260
+#: app/scripts/lx-directives/lx-chatbox-directives.js:283
 msgid "Your connection to ChatSurfing appears to be working again"
 msgstr ""
 
@@ -411,11 +411,11 @@ msgstr ""
 msgid "from an Android device or a desktop computer."
 msgstr ""
 
-#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:80
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:102
 msgid "has closed this video exchange. However, a new video session will start immediately if they call you again. If you do not want this to happen, you should press the hang-up button now."
 msgstr ""
 
-#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:75
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:97
 msgid "has denied your request to exchange video"
 msgstr ""
 
@@ -429,6 +429,6 @@ msgid ""
 "                want to clear your browser cache. You can accomplish this as follows:"
 msgstr ""
 
-#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:70
+#: app/scripts/lx-directives/lx-video-exchange-user-feedback-directives.js:92
 msgid "to agree to exchange video"
 msgstr ""
