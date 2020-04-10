@@ -9,13 +9,7 @@
     "Gleb Mazovetskiy"
   ],
   "description": "bootstrap-sass is a Sass-powered version of Bootstrap, ready to drop right into your Sass powered applications.",
-  "main": [
-    "vendor/assets/stylesheets/bootstrap.scss",
-    "vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.eot",
-    "vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.svg",
-    "vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf",
-    "vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.woff"
-  ],
+  "main": ["vendor/assets/stylesheets/bootstrap.scss", "vendor/assets/javascripts/bootstrap.js"],
   "keywords": [
     "twbs",
     "bootstrap",
@@ -23,13 +17,6 @@
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
-    "lib",
-    "tasks",
-    "templates",
-    "test",
-    "*.gemspec",
-    "Rakefile",
-    "Gemfile"
+    "**/.*", "lib", "tasks", "templates", "test", "*.gemspec", "Rakefile", "Gemfile"
   ]
 }

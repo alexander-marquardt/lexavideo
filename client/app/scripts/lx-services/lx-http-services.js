@@ -132,15 +132,15 @@ angular.module('lxHttp.services', ['angular-jwt'])
             loginUserOnServer: function(scope, usernameAsWritten) {
                 var userObj = {usernameAsWritten: usernameAsWritten};
                 var httpPromise = $http.post('/_lx/login_user/', userObj);
-                httpPromise.success(function (data/*, status, headers, config */) {
-                        $log.info('User ' + usernameAsWritten + ' successfully created with userId: ' + data.userId);
-                        $window.localStorage.token = data.token;
+                httpPromise.then(function (data/*, status, headers, config */) {
+                        $log.info('User ' + usernameAsWritten + ' successfully created with userId: ' + data.data.userId);
+                        $window.localStorage.token = data.data.token;
 
-                        var tokenPayload = jwtHelper.decodeToken(data.token);
+                        var tokenPayload = jwtHelper.decodeToken(data.data.token);
                         scope.lxMainCtrlDataObj.userId = tokenPayload.userId;
                         scope.lxMainCtrlDataObj.usernameAsWritten = tokenPayload.usernameAsWritten;
                     })
-                    .error(function (/*data, status, headers, config*/) {
+                    .catch(function (/*data, status, headers, config*/) {
                         // Erase the token if the user fails to log in
                         $log.error('User ' + usernameAsWritten + ' failed to be created');
                         delete $window.localStorage.token;
@@ -151,11 +151,11 @@ angular.module('lxHttp.services', ['angular-jwt'])
             createClientOnServer: function(clientId) {
                 var clientObj = {clientId: clientId};
                 var httpPromise = $http.post('/_lx/create_client_on_server/', clientObj);
-                httpPromise.success(function (data, status/* , headers , config */) {
+                httpPromise.then(function (data, status/* , headers , config */) {
                         $log.info('client created on server for clientId: ' + clientId + '. data: ' + JSON.stringify(data) +
                             ' status: ' + status);
                     })
-                    .error(function (data, status, headers/*, config*/) {
+                    .catch(function (data, status, headers/*, config*/) {
 
                         var reportingFunc;
                         // if invalidUserAuthToken, then we have captured this error in the http interceptor and
@@ -280,7 +280,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
                 };
                 var httpPromise = $http.post('/_lx/channel/request_channel_token/', postData);
                 httpPromise.then(function(response){
-                    $log.info('Got channel data: ' + response.data);
+                    $log.info('Got channel data: ' + angular.toJson(response.data));
                 }, function(response){
                     $log.error('Failed to open channel for client id: ' + clientId +'\nStatus: ' + response.statusText +
                     '\ndata: ' + angular.toJson(response.data));
@@ -300,7 +300,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
                 $http.post('/_lx/channel/manual_disconnect/', 'from=' + clientId, {
                     // post as form data, not as the default json
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded;'}
-                }).success(function(){
+                }).then(function(){
                     $log.info('Successfully send manual disconnect to server for clientId: ' + clientId);
                 }).error(function(){
                     $log.warn('Failed to send manual disconnect to server for clientId: ' + clientId);

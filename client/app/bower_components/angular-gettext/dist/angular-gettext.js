@@ -120,10 +120,12 @@ angular.module('gettext').factory('gettextCatalog', ["gettextPlurals", "$http", 
                 method: 'GET',
                 url: url,
                 cache: catalog.cache
-            }).success(function (data) {
+            }).then(function (response) {
+                var data = response.data;
                 for (var lang in data) {
                     catalog.setStrings(lang, data[lang]);
                 }
+                return response;
             });
         }
     };
@@ -151,7 +153,7 @@ angular.module('gettext').directive('translate', ["gettextCatalog", "$parse", "$
         }
     }
 
-    var msie = parseInt((/msie (\d+)/.exec(angular.lowercase($window.navigator.userAgent)) || [])[1], 10);
+    var msie = parseInt((/msie (\d+)/.exec($window.navigator.userAgent.toLowerCase()) || [])[1], 10);
 
     return {
         restrict: 'AE',

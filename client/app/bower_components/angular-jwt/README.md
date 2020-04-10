@@ -199,6 +199,30 @@ angular.module('app', ['angular-jwt'])
 })
 ````
 
+### Sending the token as a URL Param
+
+````js
+angular.module('app', ['angular-jwt'])
+.config(function Config($httpProvider, jwtInterceptorProvider) {
+  jwtInterceptorProvider.urlParam = 'access_token';
+  // Please note we're annotating the function so that the $injector works when the file is minified
+  jwtInterceptorProvider.tokenGetter = ['myService', function(myService) {
+    myService.doSomething();
+    return localStorage.getItem('id_token');
+  }];
+  
+  $httpProvider.interceptors.push('jwtInterceptor');
+})
+.controller('Controller', function Controller($http) {
+  // If localStorage contains the id_token it will be sent in the request
+  // url will contain access_token=[yourToken]
+  $http({
+    url: '/hola',
+    method: 'GET'
+  });
+})
+````
+
 ### More examples
 
 You can see some more examples of how this works in [the tests](https://github.com/auth0/angular-jwt/blob/master/test/unit/angularJwt/services/interceptorSpec.js)
