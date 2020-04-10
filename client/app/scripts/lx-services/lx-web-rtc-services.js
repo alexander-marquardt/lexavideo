@@ -756,7 +756,6 @@ webRtcServices.factory('lxCallService',
                 // Also, once stopped, if the user starts a new video, then we will have to call
                 // getUserMedia again.
                 if (numOpenVideoExchanges === 0 && lxStreamService.localStream) {
-                    lxStreamService.localStream.stop();
                     lxStreamService.localStream = null;
                 }
                 lxWebRtcSessionService.stop(remoteClientId);
