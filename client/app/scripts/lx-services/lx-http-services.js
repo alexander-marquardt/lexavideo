@@ -132,17 +132,17 @@ angular.module('lxHttp.services', ['angular-jwt'])
             loginUserOnServer: function(scope, usernameAsWritten) {
                 var userObj = {usernameAsWritten: usernameAsWritten};
                 var httpPromise = $http.post('/_lx/login_user/', userObj);
-                httpPromise.then(function (data/*, status, headers, config */) {
-                        $log.info('User ' + usernameAsWritten + ' successfully created with userId: ' + data.data.userId);
-                        $window.localStorage.token = data.data.token;
+                httpPromise.then(function (response) {
+                        $log.info('User ' + usernameAsWritten + ' successfully created with userId: ' + response.data.userId);
+                        $window.localStorage.token = response.data.token;
 
-                        var tokenPayload = jwtHelper.decodeToken(data.data.token);
+                        var tokenPayload = jwtHelper.decodeToken(response.data.token);
                         scope.lxMainCtrlDataObj.userId = tokenPayload.userId;
                         scope.lxMainCtrlDataObj.usernameAsWritten = tokenPayload.usernameAsWritten;
                     })
-                    .catch(function (/*data, status, headers, config*/) {
+                    .catch(function (response) {
                         // Erase the token if the user fails to log in
-                        $log.error('User ' + usernameAsWritten + ' failed to be created');
+                        $log.error('User ' + usernameAsWritten + ' failed to be created. ' + 'response: ' + JSON.stringify(response));
                         delete $window.localStorage.token;
                     });
                 return httpPromise;
@@ -151,17 +151,16 @@ angular.module('lxHttp.services', ['angular-jwt'])
             createClientOnServer: function(clientId) {
                 var clientObj = {clientId: clientId};
                 var httpPromise = $http.post('/_lx/create_client_on_server/', clientObj);
-                httpPromise.then(function (data, status/* , headers , config */) {
-                        $log.info('client created on server for clientId: ' + clientId + '. data: ' + JSON.stringify(data) +
-                            ' status: ' + status);
+                httpPromise.then(function (response, status) {
+                        $log.info('client created on server for clientId: ' + clientId + '. data: ' + JSON.stringify(response));
                     })
-                    .catch(function (data, status, headers/*, config*/) {
+                    .catch(function (response) {
 
                         var reportingFunc;
                         // if invalidUserAuthToken, then we have captured this error in the http interceptor and
                         // already initiated a new login prompt - this is therefore not reported as an "error",
                         // since it is gracefully handled.
-                        if ('invalidUserAuthToken' in data) {
+                        if ('invalidUserAuthToken' in response.data) {
                             reportingFunc = $log.warn;
                         }
 
@@ -170,8 +169,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
                         else {
                             reportingFunc = $log.error;
                         }
-                        reportingFunc('clientId: ' + clientId + ' was not created. data: ' + JSON.stringify(data) +
-                                ' status: ' + status + ' headers: ' + JSON.stringify(headers()));
+                        reportingFunc('clientId: ' + clientId + ' was not created. response: ' + JSON.stringify(response));
                     });
                 return httpPromise;
             }
@@ -266,8 +264,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
                 httpPromise.then(function() {
                     $log.info('Removed clientId: ' + clientId + ' from room: ' + chatRoomId);
                 }, function(response) {
-                    $log.error('Failed to remove client from room. clientId: ' + clientId +'\nStatus: ' + response.statusText +
-                    '\ndata: ' + angular.toJson(response.data));
+                    $log.error('Failed to remove client from room. clientId: ' + clientId +'\nresponse: ' + JSON.stringify(response));
                 });
                 return httpPromise;
             },
@@ -280,10 +277,10 @@ angular.module('lxHttp.services', ['angular-jwt'])
                 };
                 var httpPromise = $http.post('/_lx/channel/request_channel_token/', postData);
                 httpPromise.then(function(response){
-                    $log.info('Got channel data: ' + angular.toJson(response.data));
+                    $log.info('Got channel response: ' + JSON.stringify(response));
+                    $log.info('Got channel response: ' + JSON.stringify(response));
                 }, function(response){
-                    $log.error('Failed to open channel for client id: ' + clientId +'\nStatus: ' + response.statusText +
-                    '\ndata: ' + angular.toJson(response.data));
+                    $log.error('Failed to open channel for client id: ' + clientId +'\nresponse: ' +  JSON.stringify(response));
                 });
 
                 return httpPromise;
@@ -372,7 +369,7 @@ angular.module('lxHttp.services', ['angular-jwt'])
                     'messagePayload': messagePayload
                 };
 
-                //$log.debug('C->S: ' + angular.toJson(messagePayload));
+                //$log.debug('C->S: ' + JSON.stringify(messagePayload));
                 // NOTE: AppRTCClient.java searches & parses this line; update there when
                 // changing here.
                 var path = '/_lx/message_client';
