@@ -73,7 +73,6 @@ webRtcServices.service('lxAdapterService', function ($log) {
         // If webrtcDetectedBrowser is null, then many of the following variables have not been initialized
         // and should not be accessed.
         if (this.webrtcDetectedBrowser) {
-            this.createIceServers = window.createIceServers;
             this.RTCPeerConnection = RTCPeerConnection;
             this.RTCSessionDescription = RTCSessionDescription;
             this.getUserMedia = navigator.getUserMedia;
@@ -128,10 +127,13 @@ webRtcServices.factory('lxTurnService',
             try {
                 var turnServer = response.data;
                 // Create turnUris using the polyfill (adapter.js).
-                var iceServers = lxAdapterService.createIceServers(
-                    turnServer.uris,
-                    turnServer.turn_username,
-                    turnServer.turn_password);
+                var iceServers = [
+                    {
+                      urls: turnServer.uris,
+                      username: turnServer.turn_username,
+                      credential: turnServer.turn_password
+                    }
+                ]
                 if (iceServers !== null) {
                     lxVideoParamsService.pcConfig.iceServers = lxVideoParamsService.pcConfig.iceServers.concat(iceServers);
                 }
