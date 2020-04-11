@@ -160,7 +160,7 @@ msgstr ""
 msgid "Internet/Server error. Your connection to ChatSurfing is not functioning correctly. Messages sent to you while your connection is down are permanently lost."
 msgstr ""
 
-#: app/scripts/lx-services/lx-channel-services.js:231
+#: app/scripts/lx-services/lx-channel-services.js:230
 msgid "It appears that you have been disconnected and re-connected to ChatSurfing. Messages sent to your currently open chat rooms while you were absent will not be delivered to you."
 msgstr ""
 

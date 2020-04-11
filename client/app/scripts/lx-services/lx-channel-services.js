@@ -100,211 +100,209 @@ angular.module('lxChannel.services', [])
 
                 var localVideoObject = scope.localVideoObject;
 
+                setTimeout(function () {
+                    $rootScope.$apply(function() {
+                        var messageObject = JSON.parse(message);
+                        var remoteClientId = messageObject.fromClientId;
+                        var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId];
+                        var chatRoomId = null;
+                        var receivedChatMessageObject;
+                        var remoteUsernameAsWritten;
 
-                var messageObject = JSON.parse(message);
-                var remoteClientId = messageObject.fromClientId;
-                var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId];
-                var chatRoomId = null;
-                var receivedChatMessageObject;
-                var remoteUsernameAsWritten;
+                        lxJs.assert(remoteClientId, 'remoteClientId is not set');
 
-                lxJs.assert(remoteClientId, 'remoteClientId is not set');
+                        switch (messageObject.messageType) {
+                            case 'sdp':
+                                //$log.debug('S->C: ' + message);
 
-                switch (messageObject.messageType) {
-                    case 'sdp':
-                        //$log.debug('S->C: ' + message);
-
-                        var sdpObject = messageObject.messagePayload;
+                                var sdpObject = messageObject.messagePayload;
 
 
-                        if (!(scope.videoExchangeObjectsDict[remoteClientId] && scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator) &&
-                            !lxWebRtcSessionService.webRtcSessionStarted[remoteClientId]) {
-                            // Callee is the client that is *not* the rtcInitiator (the rtcInitiator calls
-                            // the callee). The callee will only start negotiating video connection if they
-                            // receive an "offer" from the caller.
+                                if (!(scope.videoExchangeObjectsDict[remoteClientId] && scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator) &&
+                                    !lxWebRtcSessionService.webRtcSessionStarted[remoteClientId]) {
+                                    // Callee is the client that is *not* the rtcInitiator (the rtcInitiator calls
+                                    // the callee). The callee will only start negotiating video connection if they
+                                    // receive an "offer" from the caller.
 
-                            if (sdpObject.type === 'offer') {
-                                // Add offer to the beginning of msgQueue, since we can't handle
-                                // Early candidates before offer at present.
-                                lxChannelMessageService.unshift(remoteClientId, sdpObject);
+                                    if (sdpObject.type === 'offer') {
+                                        // Add offer to the beginning of msgQueue, since we can't handle
+                                        // Early candidates before offer at present.
+                                        lxChannelMessageService.unshift(remoteClientId, sdpObject);
 
-                                lxWebRtcSessionService.signalingReady[remoteClientId] = true;
-                                $log.debug('lxWebRtcSessionService.signalingReady = true');
+                                        lxWebRtcSessionService.signalingReady[remoteClientId] = true;
+                                        $log.debug('lxWebRtcSessionService.signalingReady = true');
 
-                                // We may have been waiting for signalingReady to be true to attempt to start the peer-to-peer video
-                                // call because this user is not the rtcInitiator.
-                                lxCallService.maybeStart(scope, remoteClientId);
-                            }
+                                        // We may have been waiting for signalingReady to be true to attempt to start the peer-to-peer video
+                                        // call because this user is not the rtcInitiator.
+                                        lxCallService.maybeStart(scope, remoteClientId);
+                                    }
 
-                            // Since the turn response is async and also GAE might disorder the
-                            // Message delivery due to possible datastore query at server side,
-                            // So callee needs to cache messages before peerConnection is created.
-                            else {
-                                lxChannelMessageService.push(remoteClientId, sdpObject);
-                            }
-                        } else {
-                            lxWebRtcSessionService.processSignalingMessage(sdpObject, localVideoObject,
-                                remoteVideoObject, scope.lxMainCtrlDataObj.clientId, remoteClientId);
-                        }
-                        break;
-
-                    case 'roomOccupancyMsg':
-                        $rootScope.$apply(function() {
-                            var chatRoomNameNormalized = messageObject.messagePayload.chatRoomNameNormalized;
-                            var chatRoomNameAsWritten = messageObject.messagePayload.chatRoomNameAsWritten;
-                            chatRoomId = messageObject.messagePayload.chatRoomId;
-                            var roomOccupancyDict = scope.roomOccupancyDict;
-                            roomOccupancyDict[chatRoomNameNormalized] = {};
-
-                            roomOccupancyDict[chatRoomNameNormalized].chatRoomNameAsWritten = chatRoomNameAsWritten;
-                            roomOccupancyDict[chatRoomNameNormalized].chatRoomId = chatRoomId;
-
-                            // status of who is currently in the room.
-                            $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
-                            roomOccupancyDict[chatRoomNameNormalized].dictOfClientObjects = messageObject.messagePayload.dictOfClientObjects;
-
-                            // copy the dictOfClientObjects into a listOfClientObjects, which is more convenient
-                            // for some functions.
-                            roomOccupancyDict[chatRoomNameNormalized].listOfClientObjects = [];
-                            angular.forEach(roomOccupancyDict[chatRoomNameNormalized].dictOfClientObjects, function(clientObject, clientId) {
-                                // manually add the clientId into the clientObject
-                                clientObject.clientId = clientId;
-                                roomOccupancyDict[chatRoomNameNormalized].listOfClientObjects.push(clientObject);
-                            });
-
-                            lxChatRoomMembersService.handleChatRoomIdFromServerUpdate(scope, chatRoomId, chatRoomNameNormalized);
-                        });
-                        break;
-
-                    case 'roomInitialVideoSettingsMsg':
-                        $rootScope.$apply(function() {
-                            // See server-side code for more info on rtcInitiator. Basically, if rtcInitiator is sent to the
-                            // client, it means that we should attempt to initiate a new rtc connection from scratch once
-                            // all pre-conditions are in place for setting up. We do it like this to effectively
-                            // deal with page reloads, or with someone leaving a room and then another person joining
-                            // that same room -- rtcInitiator is dynamically set on the server depending on if the
-                            // person is joining a room, or if the person is already in a room.
-                            if ('rtcInitiator' in messageObject.messagePayload) {
-
-                                // Kill the current webRtc session - this is probably not strictly necessary, and could be removed
-                                // if it is found to cause delays and/or any other problems.
-                                lxWebRtcSessionService.stop(remoteClientId);
-
-                                // Update the value of rtcInitiator that will be accessed throughout the code.
-                                scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator = messageObject.messagePayload.rtcInitiator;
-
-                                // signalingReady will initially be set to be true if this is
-                                // the rtcInitiator, or false otherwise. In the case that this value is initially false, it will be set to
-                                // true once this client has received an sdp 'offer' from the other client.
-                                // Note: rtcInitiator is the 2nd client to start their video
-                                lxWebRtcSessionService.signalingReady[remoteClientId] = messageObject.messagePayload.rtcInitiator;
-
-                                // when the server sends an rtcInitiator setting, this means that we are re-starting
-                                // the rtc negotiation and peer setup etc. from scratch. Set the following to false
-                                // so that the code inside maybeStart will execute all of the initializations that
-                                // are required for a new peer session.
-                                lxWebRtcSessionService.webRtcSessionStarted[remoteClientId] = false;
-
-                                lxCallService.maybeStart(scope, remoteClientId);
-
-                            }
-                        });
-                        break;
-
-                    case 'chatTextMsg':
-                        $rootScope.$apply(function() {
-                            chatRoomId = messageObject.chatRoomId;
-                            receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
-
-                            receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
-                            receivedChatMessageObject.senderNameAsWritten = messageObject.fromUsernameAsWritten;
-                            // receivedMessageTime is used for triggering the watcher
-                            receivedChatMessageObject.receivedMessageTime = new Date().getTime();
-                        });
-                        break;
-
-                    case 'clientReAddedToRoomAfterAbsence':
-                        $rootScope.$apply(function() {
-                            chatRoomId = messageObject.chatRoomId;
-                            receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
-                            receivedChatMessageObject.senderNameAsWritten = 'ChatSurfing Admin';
-                            receivedChatMessageObject.messageString = gettextCatalog.getString(
-                                'It appears that you have been disconnected and re-connected to ChatSurfing. ' +
-                                'Messages sent to your currently open chat rooms while you were absent will not be ' +
-                                'delivered to you.');
-                            // receivedMessageTime is used for triggering the watcher
-                            receivedChatMessageObject.receivedMessageTime = new Date().getTime();
-                        });
-                        break;
-
-                    case 'synAckHeartBeat':
-                        $rootScope.$apply(function() {
-                            lxJs.assert(remoteClientId === scope.lxMainCtrlDataObj.clientId, 'clientId mismatch');
-                            $log.log('Received heartbeat syn acknowledgement: ' + JSON.stringify(messageObject));
-                            scope.channelObject.channelIsAlive = true;
-                            $timeout.cancel(reInitializeChannelTimerId);
-                            lxHttpChannelService.sendAckHeartbeatToServer(scope.lxMainCtrlDataObj.clientId,
-                                scope.presenceStatus, scope.chatRoomDisplayObject.chatRoomId);
-                        });
-                        break;
-
-                    case 'videoExchangeStatusMsg':
-                        $rootScope.$apply(function() {
-                            remoteUsernameAsWritten = messageObject.fromUsernameAsWritten;
-
-                            if (!(remoteClientId in scope.videoExchangeObjectsDict)) {
-                                $log.info('videoExchangeStatusMsg causing creation of new videoExchangeObjectsDict entry for client ' + remoteClientId);
-                                scope.videoExchangeObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject();
-                            }
-
-                            var remoteVideoEnabledSetting = messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
-                            scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting = remoteVideoEnabledSetting;
-                            scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId] = remoteUsernameAsWritten;
-
-                            // If the remote user has hung-up then stop the remote stream
-                            if (remoteVideoEnabledSetting === 'hangupVideoExchange') {
-                                lxWebRtcSessionService.stop(remoteClientId);
-
-                                // If remote user hangs up before the local user has responded to the remote request,
-                                // then we need to remove the remoteClient from videoExchangeObjectsDict. This is a
-                                // special case, because if the user had already acknowledged the remote request, then
-                                // he would either have a video session open, or alternatively have denied and already removed
-                                // the remote client from videoExchangeObjectsDict.
-                                if (scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting === 'waitingForPermissionToEnableVideoExchange') {
-                                    delete scope.videoExchangeObjectsDict[remoteClientId];
-                                    delete scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId];
+                                    // Since the turn response is async and also GAE might disorder the
+                                    // Message delivery due to possible datastore query at server side,
+                                    // So callee needs to cache messages before peerConnection is created.
+                                    else {
+                                        lxChannelMessageService.push(remoteClientId, sdpObject);
+                                    }
+                                } else {
+                                    lxWebRtcSessionService.processSignalingMessage(sdpObject, localVideoObject,
+                                        remoteVideoObject, scope.lxMainCtrlDataObj.clientId, remoteClientId);
                                 }
-                            }
+                                break;
 
-                            // If the remote user has sent a request to exchange video and we are not already
-                            // exchanging video with them, then we add the clientId to the pending list.
-                            if (remoteVideoEnabledSetting === 'doVideoExchange') {
-                                // Check if remoteClientId is not already in currentOpenVideoSessionsList
-                                if (scope.videoStateInfoObject.currentOpenVideoSessionsList.indexOf(remoteClientId) === -1) {
-                                    // if remoteClientId is not already in pendingRequestsForVideoSessionsList
-                                    if (scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.indexOf(remoteClientId === -1)) {
-                                        scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.push(remoteClientId);
+
+
+
+                            case 'roomOccupancyMsg':
+                                var chatRoomNameNormalized = messageObject.messagePayload.chatRoomNameNormalized;
+                                var chatRoomNameAsWritten = messageObject.messagePayload.chatRoomNameAsWritten;
+                                chatRoomId = messageObject.messagePayload.chatRoomId;
+                                var roomOccupancyDict = scope.roomOccupancyDict;
+                                roomOccupancyDict[chatRoomNameNormalized] = {};
+
+                                roomOccupancyDict[chatRoomNameNormalized].chatRoomNameAsWritten = chatRoomNameAsWritten;
+                                roomOccupancyDict[chatRoomNameNormalized].chatRoomId = chatRoomId;
+
+                                // status of who is currently in the room.
+                                $log.debug('Room status received: ' + JSON.stringify(messageObject.messagePayload));
+                                roomOccupancyDict[chatRoomNameNormalized].dictOfClientObjects = messageObject.messagePayload.dictOfClientObjects;
+
+                                // copy the dictOfClientObjects into a listOfClientObjects, which is more convenient
+                                // for some functions.
+                                roomOccupancyDict[chatRoomNameNormalized].listOfClientObjects = [];
+                                angular.forEach(roomOccupancyDict[chatRoomNameNormalized].dictOfClientObjects, function(clientObject, clientId) {
+                                    // manually add the clientId into the clientObject
+                                    clientObject.clientId = clientId;
+                                    roomOccupancyDict[chatRoomNameNormalized].listOfClientObjects.push(clientObject);
+                                });
+
+                                lxChatRoomMembersService.handleChatRoomIdFromServerUpdate(scope, chatRoomId, chatRoomNameNormalized);
+
+                                break;
+
+                            case 'roomInitialVideoSettingsMsg':
+
+                                // See server-side code for more info on rtcInitiator. Basically, if rtcInitiator is sent to the
+                                // client, it means that we should attempt to initiate a new rtc connection from scratch once
+                                // all pre-conditions are in place for setting up. We do it like this to effectively
+                                // deal with page reloads, or with someone leaving a room and then another person joining
+                                // that same room -- rtcInitiator is dynamically set on the server depending on if the
+                                // person is joining a room, or if the person is already in a room.
+                                if ('rtcInitiator' in messageObject.messagePayload) {
+
+                                    // Kill the current webRtc session - this is probably not strictly necessary, and could be removed
+                                    // if it is found to cause delays and/or any other problems.
+                                    lxWebRtcSessionService.stop(remoteClientId);
+
+                                    // Update the value of rtcInitiator that will be accessed throughout the code.
+                                    scope.videoExchangeObjectsDict[remoteClientId].rtcInitiator = messageObject.messagePayload.rtcInitiator;
+
+                                    // signalingReady will initially be set to be true if this is
+                                    // the rtcInitiator, or false otherwise. In the case that this value is initially false, it will be set to
+                                    // true once this client has received an sdp 'offer' from the other client.
+                                    // Note: rtcInitiator is the 2nd client to start their video
+                                    lxWebRtcSessionService.signalingReady[remoteClientId] = messageObject.messagePayload.rtcInitiator;
+
+                                    // when the server sends an rtcInitiator setting, this means that we are re-starting
+                                    // the rtc negotiation and peer setup etc. from scratch. Set the following to false
+                                    // so that the code inside maybeStart will execute all of the initializations that
+                                    // are required for a new peer session.
+                                    lxWebRtcSessionService.webRtcSessionStarted[remoteClientId] = false;
+
+                                    lxCallService.maybeStart(scope, remoteClientId);
+
+                                }
+                                break;
+
+                            case 'chatTextMsg':
+                                chatRoomId = messageObject.chatRoomId;
+                                receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
+
+                                receivedChatMessageObject.messageString = messageObject.messagePayload.messageString;
+                                receivedChatMessageObject.senderNameAsWritten = messageObject.fromUsernameAsWritten;
+                                // receivedMessageTime is used for triggering the watcher
+                                receivedChatMessageObject.receivedMessageTime = new Date().getTime();
+                                break;
+
+                            case 'clientReAddedToRoomAfterAbsence':
+                                chatRoomId = messageObject.chatRoomId;
+                                receivedChatMessageObject = scope.receivedChatMessageObject[chatRoomId];
+                                receivedChatMessageObject.senderNameAsWritten = 'ChatSurfing Admin';
+                                receivedChatMessageObject.messageString = gettextCatalog.getString(
+                                    'It appears that you have been disconnected and re-connected to ChatSurfing. ' +
+                                    'Messages sent to your currently open chat rooms while you were absent will not be ' +
+                                    'delivered to you.');
+                                // receivedMessageTime is used for triggering the watcher
+                                receivedChatMessageObject.receivedMessageTime = new Date().getTime();
+
+                                break;
+
+                            case 'synAckHeartBeat':
+                                lxJs.assert(remoteClientId === scope.lxMainCtrlDataObj.clientId, 'clientId mismatch');
+                                $log.log('Received heartbeat syn acknowledgement: ' + JSON.stringify(messageObject));
+                                scope.channelObject.channelIsAlive = true;
+                                $timeout.cancel(reInitializeChannelTimerId);
+                                lxHttpChannelService.sendAckHeartbeatToServer(scope.lxMainCtrlDataObj.clientId,
+                                    scope.presenceStatus, scope.chatRoomDisplayObject.chatRoomId);
+                                break;
+
+                            case 'videoExchangeStatusMsg':
+                                remoteUsernameAsWritten = messageObject.fromUsernameAsWritten;
+
+                                if (!(remoteClientId in scope.videoExchangeObjectsDict)) {
+                                    $log.info('videoExchangeStatusMsg causing creation of new videoExchangeObjectsDict entry for client ' + remoteClientId);
+                                    scope.videoExchangeObjectsDict[remoteClientId] = lxCreateChatRoomObjectsService.createVideoExchangeSettingsObject();
+                                }
+
+                                var remoteVideoEnabledSetting = messageObject.messagePayload.videoElementsEnabledAndCameraAccessRequested;
+                                scope.videoExchangeObjectsDict[remoteClientId].remoteVideoEnabledSetting = remoteVideoEnabledSetting;
+                                scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId] = remoteUsernameAsWritten;
+
+                                // If the remote user has hung-up then stop the remote stream
+                                if (remoteVideoEnabledSetting === 'hangupVideoExchange') {
+                                    lxWebRtcSessionService.stop(remoteClientId);
+
+                                    // If remote user hangs up before the local user has responded to the remote request,
+                                    // then we need to remove the remoteClient from videoExchangeObjectsDict. This is a
+                                    // special case, because if the user had already acknowledged the remote request, then
+                                    // he would either have a video session open, or alternatively have denied and already removed
+                                    // the remote client from videoExchangeObjectsDict.
+                                    if (scope.videoExchangeObjectsDict[remoteClientId].localVideoEnabledSetting === 'waitingForPermissionToEnableVideoExchange') {
+                                        delete scope.videoExchangeObjectsDict[remoteClientId];
+                                        delete scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId];
                                     }
                                 }
-                            }
 
-                            // if remote user has sent status that is *not* 'doVideoExchange', then the remote
-                            // user should *not* appear in pendingRequestsForVideoSessionsList
-                            if (remoteVideoEnabledSetting !== 'doVideoExchange') {
-                                var indexOfRemoteId = scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.indexOf(remoteClientId);
-                                if (indexOfRemoteId >= 0) {
-                                    scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.splice(indexOfRemoteId, 1);
+                                // If the remote user has sent a request to exchange video and we are not already
+                                // exchanging video with them, then we add the clientId to the pending list.
+                                if (remoteVideoEnabledSetting === 'doVideoExchange') {
+                                    // Check if remoteClientId is not already in currentOpenVideoSessionsList
+                                    if (scope.videoStateInfoObject.currentOpenVideoSessionsList.indexOf(remoteClientId) === -1) {
+                                        // if remoteClientId is not already in pendingRequestsForVideoSessionsList
+                                        if (scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.indexOf(remoteClientId === -1)) {
+                                            scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.push(remoteClientId);
+                                        }
+                                    }
                                 }
-                            }
 
-                            scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers = scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.length;
-                            scope.videoStateInfoObject.numOpenVideoExchanges = scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
-                        });
-                        break;
+                                // if remote user has sent status that is *not* 'doVideoExchange', then the remote
+                                // user should *not* appear in pendingRequestsForVideoSessionsList
+                                if (remoteVideoEnabledSetting !== 'doVideoExchange') {
+                                    var indexOfRemoteId = scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.indexOf(remoteClientId);
+                                    if (indexOfRemoteId >= 0) {
+                                        scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.splice(indexOfRemoteId, 1);
+                                    }
+                                }
 
-                    default:
-                        $log.error('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
-                };
+                                scope.videoStateInfoObject.numVideoRequestsPendingFromRemoteUsers = scope.videoStateInfoObject.pendingRequestsForVideoSessionsList.length;
+                                scope.videoStateInfoObject.numOpenVideoExchanges = scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
+
+                                break;
+
+                            default:
+                                $log.error('Error: Unkonwn messageType received on Channel: ' + JSON.stringify(messageObject));
+                        }
+                    });
+                 }, 100);
             };
         };
 
