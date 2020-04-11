@@ -1,2 +1,2 @@
-- Investigate why iphone only shows one video stream at a time
 - Create/add Turn server
+- Ensure that video stream/camera is closed if the user hangs up and doesn't have video running any longer
