@@ -75,7 +75,7 @@ videoAppDirectives.directive('lxMainVideoElementDirective',
             restrict : 'A',
 
             link: function(scope, elem) {
-                var html = '<video class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>';
+                var html = '<video playsinline class="cl-video cl-video-sizing" autoplay="autoplay" muted="true"></video>';
                 var videoElem = angular.element(html);
                 var domVideoElem = videoElem[0];
                 elem.append(videoElem);

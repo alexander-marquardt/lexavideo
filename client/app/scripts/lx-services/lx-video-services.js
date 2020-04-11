@@ -72,13 +72,13 @@ angular.module('lxVideo.services', [])
 
         // This function is called each time
         if (!lxVideoElems.localVideoObject.localMiniVideoElem) {
-            miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
+            miniVideoElem = angular.element('<video playsinline class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
             lxVideoElems.localVideoObject.localMiniVideoElem = miniVideoElem[0];
 
         }
 
         if (!(remoteClientId in lxVideoElems.remoteVideoElementsDict)) {
-            miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay"></video>');
+            miniVideoElem = angular.element('<video playsinline class="cl-video cl-mini-video-sizing" autoplay="autoplay"></video>');
             lxVideoElems.remoteVideoElementsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(
                 miniVideoElem[0]);
         }
