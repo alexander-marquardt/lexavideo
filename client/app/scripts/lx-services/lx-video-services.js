@@ -27,29 +27,59 @@
 
 angular.module('lxVideo.services', [])
 
+
+.factory('lxVideoElems', function( ){
+
+    var localVideoObject = {
+      localMiniVideoElem: null,
+      localBigVideoElem: null,
+      isWebcamMuted: false,
+      isMicrophoneMuted: false
+    };
+
+    // remoteVideoElementsDict will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoElementsObject
+    // There will be one object for each remote client that the local user is exchanging video with.
+    // remoteVideoElementsDict[remoteClientId] = {
+    //    remoteMiniVideoElem: the dom element that will display the miniature version of the remote video,
+    //    isAudioMuted: boolean
+    // }
+    var remoteVideoElementsDict = {};
+
+    return {
+      localVideoObject: localVideoObject,
+      remoteVideoElementsDict: remoteVideoElementsDict
+    }
+
+})
+
 .factory('lxVideoService', function(
         $log,
         lxAccessVideoElementsAndAccessCameraService,
         lxCallService,
         lxCreateChatRoomObjectsService,
         lxJs,
-        lxTurnService
+        lxTurnService,
+        lxVideoElems
         ) {
+
+
 
     function createMiniVideoElement($scope, remoteClientId) {
 
         var miniVideoElem;
 
+
+
         // This function is called each time
-        if (!$scope.localVideoObject.localMiniVideoElem) {
+        if (lxVideoElems.localVideoObject.localMiniVideoElem) {
             miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
-            $scope.localVideoObject.localMiniVideoElem = miniVideoElem[0];
+            lxVideoElems.localVideoObject.localMiniVideoElem = miniVideoElem[0];
 
         }
 
-        if (!(remoteClientId in $scope.remoteVideoElementsDict)) {
+        if (!(remoteClientId in lxVideoElems.remoteVideoElementsDict)) {
             miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay"></video>');
-            $scope.remoteVideoElementsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(
+            lxVideoElems.remoteVideoElementsDict[remoteClientId] = lxCreateChatRoomObjectsService.createRemoteVideoElementsObject(
                 miniVideoElem[0]);
         }
     }
@@ -134,7 +164,7 @@ angular.module('lxVideo.services', [])
                 var numOpenVideoExchanges = $scope.videoStateInfoObject.currentOpenVideoSessionsList.length;
 
                 lxCallService.doHangup(remoteClientId, numOpenVideoExchanges);
-                delete $scope.remoteVideoElementsDict[remoteClientId];
+                delete lxVideoElems.remoteVideoElementsDict[remoteClientId];
                 delete $scope.videoExchangeObjectsDict[remoteClientId];
                 delete $scope.videoStateInfoObject.currentOpenVideoSessionsUserNamesDict[remoteClientId];
             }

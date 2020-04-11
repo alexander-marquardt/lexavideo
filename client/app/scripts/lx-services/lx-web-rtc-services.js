@@ -52,7 +52,7 @@ var force_video_through_turn = false;
 // -X [server external address] --fingerprint -L [internal address] -E [internal address] --max-bps 15000 [optional --no-stun]
 
 
-webRtcServices.service('lxAdapterService', function ($log) {
+webRtcServices.service('lxAdapterService', function ($log, $rootScope) {
     /* simple wrapper for global functions contained in adapter.js. This will make it
        easier to do unit testing in the future.
      */
@@ -62,11 +62,11 @@ webRtcServices.service('lxAdapterService', function ($log) {
 
         // Attach a media stream to an element.
         var attachMediaStream = function(element, stream) {
-          element.srcObject = stream;
+               element.srcObject = stream;
         };
 
         var reattachMediaStream = function(to, from) {
-          to.srcObject = from.srcObject;
+                to.srcObject = from.srcObject;
         };
 
         // only setup the remaining variables if we know that the adapter service has set them up.
@@ -563,14 +563,15 @@ webRtcServices.factory('lxMediaService',
         lxAdapterService,
         lxCallService,
         lxVideoParamsService,
-        lxStreamService)
+        lxStreamService,
+        lxVideoElems)
     {
 
 
         // This is a callback function that is executed after the user has given access to their camera and microphone.
         var onUserMediaSuccess = function(scope) {
 
-            var localVideoObject = scope.localVideoObject;
+            var localVideoObject = lxVideoElems.localVideoObject;
             var videoSignalingObject = scope.videoSignalingObject;
 
             return function(stream) {
@@ -673,7 +674,8 @@ webRtcServices.factory('lxCallService',
         lxChatRoomVarsService,
         lxChannelMessageService,
         lxStreamService,
-        lxSessionDescriptionService)
+        lxSessionDescriptionService,
+        lxVideoElems)
     {
 
 
@@ -696,8 +698,8 @@ webRtcServices.factory('lxCallService',
 
                 $log.log('************ Entering maybeStart *************');
 
-                var localVideoObject = scope.localVideoObject;
-                var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId];
+                var localVideoObject = lxVideoElems.localVideoObject;
+                var remoteVideoObject = lxVideoElems.remoteVideoElementsDict[remoteClientId];
                 var videoSignalingObject = scope.videoSignalingObject;
                 var clientId = scope.lxMainCtrlDataObj.clientId;
 

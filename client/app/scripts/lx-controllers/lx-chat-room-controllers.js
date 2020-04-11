@@ -97,15 +97,15 @@ angular.module('LxChatRoom.controllers', [])
         };
 
         $scope.toggleWebcamMuteInterfaceFn = function() {
-            lxCallService.toggleWebcamMute($scope.localVideoObject);
+            lxCallService.toggleWebcamMute(lxVideoElems.localVideoObject);
         };
 
         $scope.toggleMicrophoneMuteInterfaceFn = function() {
-            lxCallService.toggleMicrophoneMute($scope.localVideoObject);
+            lxCallService.toggleMicrophoneMute(lxVideoElems.localVideoObject);
         };
 
         $scope.toggleAudioMuteInterfaceFn = function(remoteClientId) {
-            lxCallService.toggleAudioMute($scope.remoteVideoElementsDict[remoteClientId]);
+            lxCallService.toggleAudioMute(lxVideoElems.remoteVideoElementsDict[remoteClientId]);
         };
 
         $scope.myUsername = lxVideoParamsService.myUsername;

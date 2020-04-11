@@ -49,7 +49,8 @@ angular.module('LxMainView.controllers', [])
         lxChatRoomMembersService,
         lxMainViewService,
         lxJs,
-        clickAnywhereButHereService
+        clickAnywhereButHereService,
+        lxVideoElems
         ) {
 
 
@@ -71,14 +72,6 @@ angular.module('LxMainView.controllers', [])
         };
 
         $scope.debugBuildEnabled = lxAppWideConstantsService.debugBuildEnabled;
-
-        // remoteVideoElementsDict will be populated with calls to lxCreateChatRoomObjectsService.createRemoteVideoElementsObject
-        // There will be one object for each remote client that the local user is exchanging video with.
-        // remoteVideoElementsDict[remoteClientId] = {
-        //    remoteMiniVideoElem: the dom element that will display the miniature version of the remote video,
-        //    isAudioMuted: boolean
-        // }
-        $scope.remoteVideoElementsDict = {};
 
         // Keeps track of which chat room the user has selected, pulled from the URL that is set by ngRoute
         // and ngView.
@@ -130,12 +123,7 @@ angular.module('LxMainView.controllers', [])
             socket: null // socket returned from channel.open and is remembereed so we can later close the channel
         };
 
-        $scope.localVideoObject = {
-            localMiniVideoElem: null,
-            localBigVideoElem: null,
-            isWebcamMuted: false,
-            isMicrophoneMuted: false
-        };
+
 
         $scope.notificationMenuObject = {
             showNotificationMenu: false,

@@ -35,7 +35,8 @@ var videoAppDirectives = angular.module('lxMainVideo.directives', []);
 videoAppDirectives.directive('lxShowMiniVideoElementDirective',
     function(
         $compile,
-        lxAdapterService
+        lxAdapterService,
+        lxVideoElems
         )
     {
         return {
@@ -47,12 +48,12 @@ videoAppDirectives.directive('lxShowMiniVideoElementDirective',
                 var clientId = scope.clientId;
 
                 if (clientId === 'localVideoElement') {
-                    elem.append(scope.localVideoObject.localMiniVideoElem);
-                    lxAdapterService.reattachMediaStream(scope.localVideoObject.localMiniVideoElem, scope.localVideoObject.localMiniVideoElem);
+                    elem.append(lxVideoElems.localVideoObject.localMiniVideoElem);
+                    lxAdapterService.reattachMediaStream(lxVideoElems.localVideoObject.localMiniVideoElem, lxVideoElems.localVideoObject.localMiniVideoElem);
                 }
                 // otherwise this is a remote video element.
                 else {
-                    var remoteVideoObject = scope.remoteVideoElementsDict[clientId];
+                    var remoteVideoObject = lxVideoElems.remoteVideoElementsDict[clientId];
                     elem.append(remoteVideoObject.remoteMiniVideoElem);
                     lxAdapterService.reattachMediaStream(remoteVideoObject.remoteMiniVideoElem, remoteVideoObject.remoteMiniVideoElem);
                 }
@@ -66,7 +67,8 @@ videoAppDirectives.directive('lxMainVideoElementDirective',
     function(
         lxAdapterService,
         lxPeerService,
-        lxStreamService
+        lxStreamService,
+        lxVideoElems
         )
     {
         return {
@@ -90,14 +92,14 @@ videoAppDirectives.directive('lxMainVideoElementDirective',
                         }
                         return selectedVideoElementClientId + videoStreamActive.toString();
                     },
-                    
+
                     function() {
                         var selectedVideoElementClientId = scope.videoDisplaySelection.currentlySelectedVideoElementClientId;
 
                         if (selectedVideoElementClientId === 'localVideoElement') {
-                            lxAdapterService.reattachMediaStream(domVideoElem, scope.localVideoObject.localMiniVideoElem);
+                            lxAdapterService.reattachMediaStream(domVideoElem, lxVideoElems.localVideoObject.localMiniVideoElem);
                         } else {
-                            var remoteVideoObject = scope.remoteVideoElementsDict[selectedVideoElementClientId];
+                            var remoteVideoObject = lxVideoElems.remoteVideoElementsDict[selectedVideoElementClientId];
                             lxAdapterService.reattachMediaStream(domVideoElem, remoteVideoObject.remoteMiniVideoElem);
                         }
                     }

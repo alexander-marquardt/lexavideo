@@ -83,7 +83,8 @@ angular.module('lxChannel.services', [])
              lxJs,
              lxMessageService,
              lxServerLoggingService,
-             lxWebRtcSessionService
+             lxWebRtcSessionService,
+             lxVideoElems
 
              ) {
 
@@ -98,12 +99,12 @@ angular.module('lxChannel.services', [])
         var onChannelMessage = function(scope) {
             return function(message) {
 
-                var localVideoObject = scope.localVideoObject;
+                var localVideoObject = lxVideoElems.localVideoObject;
 
                 $rootScope.$apply(function() {
                     var messageObject = JSON.parse(message);
                     var remoteClientId = messageObject.fromClientId;
-                    var remoteVideoObject = scope.remoteVideoElementsDict[remoteClientId];
+                    var remoteVideoObject = lxVideoElems.remoteVideoElementsDict[remoteClientId];
                     var chatRoomId = null;
                     var receivedChatMessageObject;
                     var remoteUsernameAsWritten;
