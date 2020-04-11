@@ -71,7 +71,7 @@ angular.module('lxVideo.services', [])
 
 
         // This function is called each time
-        if (lxVideoElems.localVideoObject.localMiniVideoElem) {
+        if (!lxVideoElems.localVideoObject.localMiniVideoElem) {
             miniVideoElem = angular.element('<video class="cl-video cl-mini-video-sizing" autoplay="autoplay" muted="true"></video>');
             lxVideoElems.localVideoObject.localMiniVideoElem = miniVideoElem[0];
 
