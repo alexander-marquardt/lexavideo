@@ -1,2 +1,5 @@
 - Create/add Turn server
 - Ensure that video stream/camera is closed if the user hangs up and doesn't have video running any longer
+- Add (optional) passwords to enter into rooms
+- Show all public chats (without passwords) in the popular chats category
+- Record the last X number of chat messages in Firebase (?? )
