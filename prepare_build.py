@@ -35,22 +35,17 @@ def run_grunt_jobs():
             run_grunt('build', subprocess.call)
 
         
-def customize_files(version_id):
+def customize_files():
     
     print "**********************************************************************"
-    print "Generating custom files: %s " % version_id
+    print "Generating custom files"
     print "Current path): %s" % os.getcwd()   
     print "%s" % datetime.datetime.now()
     print "**********************************************************************"
     
-    gen_yaml.generate_app_yaml(version_id)
+    gen_yaml.generate_app_yaml()
     run_grunt_jobs()
 
 
 if __name__ == "__main__":
-    if build_config.DEBUG_BUILD:
-        version_id = build_config.VERSION_ID
-    else:
-        version_id = get_version_identifier()
-
-    customize_files(version_id)
+    customize_files()

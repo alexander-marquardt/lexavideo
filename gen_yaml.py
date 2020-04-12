@@ -3,7 +3,7 @@
 import re, codecs
 import build_config
 
-def generate_app_yaml(version_id = None):
+def generate_app_yaml():
     # Goes through the "template" app.yaml file, and generates the "real" app.yaml by replacing certain build-specific
     # values 
     input_yaml_name = "app_template.yaml"
@@ -25,11 +25,9 @@ def generate_app_yaml(version_id = None):
         SKIP_DOT_DIRS = ''
         SKIP_APP_DIRS = ''
         SKIP_DIST_DIRS = '"- ^client/dist/.*"'
-        
-    if not version_id:
-        version_id = build_config.VERSION_ID
+
     
-    replacement_patterns_array = [(re.compile(r'(.*)(VERSION_ID)(.*)'),  version_id),
+    replacement_patterns_array = [
                                   (re.compile(r'(.*)(BASE_STATIC_DIR)(.*)'), build_config.BASE_STATIC_DIR),
                                   (re.compile(r'(.*)(STYLES_STATIC_DIR)(.*)'), build_config.STYLES_STATIC_DIR),
                                   (re.compile(r'(.*)(SKIP_DOT_DIRS)(.*)'), SKIP_DOT_DIRS),
