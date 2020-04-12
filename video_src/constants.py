@@ -27,6 +27,7 @@
 import re
 import logging
 
+project_name = 'chatsurfing'
 site_name_dot_com = 'chatsurfing.com'
 site_name_for_display = 'ChatSurfing'
 
@@ -89,14 +90,14 @@ if secret_key == default_secret_key_value:
 # use our turn server. If this is not set correctly, then other websites may use your turn server which will
 # increase your bandwidth costs.
 default_turn_shared_secret = 'You must set the turn_shared_secret value to something that is uniqe and secret'
-turn_shared_secret = default_turn_shared_secret
+turn_shared_secret = "AlexFromCanada19721234567890ABCDIsXXXTTTTfjgklfdsjgfkldsjkl"
 if default_secret_key_value == turn_shared_secret:
     logging.warning('You need to set turn_shared_secret value in %s' % __file__)
 
 # You must enter your own turn servers IP address here. Without a turn server, some WebRTC connections will
 # fail to be established.
 default_turn_ip = 'XXX.XXX.XXX.XXX'
-turn_ip = default_turn_ip
+turn_ip = '34.66.32.0'
 if default_turn_ip == turn_ip:
     logging.warning('You should set turn_ip to the IP address of your turn server.')
 
@@ -108,7 +109,7 @@ seconds_before_expiration_to_refresh_token = 60
 
 # The client periodically updates that server with their status, and if a heartbeat is missed then we can
 # presume that the user has closed the connection to our website.
-heartbeat_interval_seconds = 10 # reduce this speed for production
+heartbeat_interval_seconds = 30 # reduce this speed for production
 db_presence_update_interval_seconds = 5 * 60
 
 # when determining if a user is considered offline, we check if they have updated their presence state within an
@@ -118,7 +119,7 @@ db_presence_update_interval_seconds = 5 * 60
 leeway_seconds_for_determining_timeout = 5
 
 
-channel_duration_minutes = 60 # will break if set to more than 60
+channel_duration_minutes = 60 # This will break if it is ever set to more than 60
 
 
 # If data is being relayed through the turn server, then we timeout after this number of minutes

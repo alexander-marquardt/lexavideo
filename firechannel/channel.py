@@ -7,12 +7,13 @@ import uuid
 from .credentials import build_token, decode_token
 from .firebase import Firebase
 
+from video_src.constants import project_name
+
 _client = None
 _logger = logging.getLogger("firechannel.channel")
 
 #: Valid client id characters.
 VALID_CHARS = set(string.ascii_letters + string.digits + "-_")
-
 
 def get_client():
     """Get the current global client instance.
@@ -26,11 +27,7 @@ def get_client():
     """
     global _client
     if _client is None:
-        try:
-            from google.appengine.api import app_identity
-            _client = Firebase(app_identity.get_application_id())
-        except ImportError:
-            raise RuntimeError("Cannot use default client off of AppEngine.")
+        _client = _client = Firebase(project_name)
 
     return _client
 
