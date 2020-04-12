@@ -1,7 +1,6 @@
 - Create/add Turn server
 - Ensure that video stream/camera is closed if the user hangs up and doesn't have video running any longer
 - Fix / Investigate why with 4 or more people in a room, either video or audio between some of the participants seems to drop
-- Add google analytics
 - Add (optional) passwords to enter into rooms
 - Add ability to turn of mic to certain users, as well as globally turning mic off (which could then be enabled for some)
 - In private rooms , turn on video for all entrants (up to the firsx say 4 people) 
