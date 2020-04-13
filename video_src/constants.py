@@ -90,7 +90,7 @@ if secret_key == default_secret_key_value:
 # use our turn server. If this is not set correctly, then other websites may use your turn server which will
 # increase your bandwidth costs.
 default_turn_shared_secret = 'You must set the turn_shared_secret value to something that is uniqe and secret'
-turn_shared_secret = "AlexFromCanada19721234567890ABCDIsXXXTTTTfjgklfdsjgfkldsjkl"
+turn_shared_secret = "AlexTest"
 if default_secret_key_value == turn_shared_secret:
     logging.warning('You need to set turn_shared_secret value in %s' % __file__)
 

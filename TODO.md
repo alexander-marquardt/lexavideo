@@ -1,4 +1,6 @@
 - Create/add Turn server
+- ENSURE that ip for turn is not ephemeral
+- onaddstream is deprecated! Use peerConnection.ontrack instead. (?? error from Firefox)
 - Ensure that video stream/camera is closed if the user hangs up and doesn't have video running any longer
 - Fix / Investigate why with 4 or more people in a room, either video or audio between some of the participants seems to drop
 - Add (optional) passwords to enter into rooms
@@ -8,3 +10,10 @@
 - Record the last X number of chat messages in Firebase (?? )
 - Add a grid view (optional) if more than 3 people in a chat
 
+
+    TypeError: $http.post(...).then(...).error is not a function[Learn More]  lx-http-services.js:297:17
+	self.manuallyDisconnectChannel http://localhost:8080/scripts/lx-services/lx-http-services.js:297:17
+	self.initializeChannel/</$window.onbeforeunload http://localhost:8080/scripts/lx-services/lx-channel-services.js:422:29
+	<anonymous> chrome://browser/content/tab-content.js:84:43
+	this.E10SUtils.wrapHandlingUserInput resource:///modules/E10SUtils.jsm:122:7
+	<anonymous>
