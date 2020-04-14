@@ -90,14 +90,14 @@ if secret_key == default_secret_key_value:
 # use our turn server. If this is not set correctly, then other websites may use your turn server which will
 # increase your bandwidth costs.
 default_turn_shared_secret = 'You must set the turn_shared_secret value to something that is uniqe and secret'
-turn_shared_secret = "AlexTest"
+turn_shared_secret = "AlexFromCanada19721234567890ABCDIsXXXTTTTfjgklfdsjgfkldsjkl"
 if default_secret_key_value == turn_shared_secret:
     logging.warning('You need to set turn_shared_secret value in %s' % __file__)
 
 # You must enter your own turn servers IP address here. Without a turn server, some WebRTC connections will
 # fail to be established.
 default_turn_ip = 'XXX.XXX.XXX.XXX'
-turn_ip = '34.66.32.0'
+turn_ip = '34.70.171.46'
 if default_turn_ip == turn_ip:
     logging.warning('You should set turn_ip to the IP address of your turn server.')
 

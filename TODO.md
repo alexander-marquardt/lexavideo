@@ -1,5 +1,5 @@
-- Create/add Turn server
-- ENSURE that ip for turn is not ephemeral
+- Broke mute button by moving it out of scope - must fix this
+- Must add monitoring for failed WebRTC sessions (should never fail once Turn running - if it does , should generate log)
 - onaddstream is deprecated! Use peerConnection.ontrack instead. (?? error from Firefox)
 - Ensure that video stream/camera is closed if the user hangs up and doesn't have video running any longer
 - Fix / Investigate why with 4 or more people in a room, either video or audio between some of the participants seems to drop
