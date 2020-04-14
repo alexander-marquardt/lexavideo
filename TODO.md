@@ -11,6 +11,7 @@
 - Show all public chats (without passwords) in the popular chats category
 - Record the last X number of chat messages in Firebase (?? )
 - Add a grid view (optional) if more than 3 people in a chat
+- If iPhone user attempts to start video with Chrome - cancel it automatically - a warning is not enough
 
 
     TypeError: $http.post(...).then(...).error is not a function[Learn More]  lx-http-services.js:297:17
