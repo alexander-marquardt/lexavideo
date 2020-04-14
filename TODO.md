@@ -1,4 +1,6 @@
+- Check why chrome / iphone seems to crash when video starts (should give a warning)
 - Broke mute button by moving it out of scope - must fix this
+- After more than 3 people have video, some start to not hear audio
 - Must add monitoring for failed WebRTC sessions (should never fail once Turn running - if it does , should generate log)
 - onaddstream is deprecated! Use peerConnection.ontrack instead. (?? error from Firefox)
 - Ensure that video stream/camera is closed if the user hangs up and doesn't have video running any longer
