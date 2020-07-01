@@ -1,7 +1,6 @@
 Introduction
 ============
 
-NOTE: As of Oct 31 2017 google has [depreciated the Channel API](https://cloud.google.com/appengine/docs/deprecations/channel) that this application relied on, and therefore many functions are currently broken.
 
 Overview
 -----------
@@ -14,8 +13,8 @@ This software runs on Google AppEngine.
 
 Demo
 ----
-LexaVideo was originally developed for ChatSurfing.com. ~Check out [ChatSurfing.com](http://www.chatsurfing.com)
-for an active demo of this source code in action~ Due to [removal of the Channel API](https://cloud.google.com/appengine/docs/deprecations/channel) this web application does not currently work correctly.
+LexaVideo was originally developed for ChatSurfing.com. Check out [ChatSurfing.com](http://www.chatsurfing.com)
+for an active demo of this source code in action.
 
 Quick Start
 ===========
